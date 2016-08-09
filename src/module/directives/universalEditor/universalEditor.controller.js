@@ -204,23 +204,6 @@
             RestApiService.getItemsListWithParams(params);
         };
 
-        vm.getButton = function(type){
-
-            var button = false;
-
-            if(!entityObject.hasOwnProperty("actions") || entityObject.actions.length < 1){
-                return button;
-            }
-
-            angular.forEach(entityObject.actions,function(b){
-                if(b.type == type){
-                    button = b;
-                }
-            });
-
-            return button;
-        };
-
         vm.changeSortField = function (field) {
             vm.listLoaded = false;
             if(vm.sortField == field){
