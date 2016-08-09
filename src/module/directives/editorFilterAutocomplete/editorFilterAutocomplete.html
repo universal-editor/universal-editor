@@ -1,0 +1,18 @@
+
+<div class="editor-autocomplete-wrapper">
+    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>
+    <div class="filter-inner-wrapper">
+        <div data-ng-show="vm.preloadedData" class="selected-values">
+            <div data-ng-show="vm.selectedValue" class="autocomplete-item">{{vm.selectedValue[vm.filter_search]}}<span data-ng-click="vm.removeFromSelected()" class="remove-from-selected">×</span></div>
+        </div>
+        <div data-ng-show="vm.preloadedData" class="autocomplete-input-wrapper">
+            <input type="text" name="{{vm.filterName}}" data-ng-hide="vm.selectedValue" data-ng-model="vm.inputValue" class="form-control input-sm"/>
+            <div data-ng-show="vm.searching" class="loader-search-wrapper">
+                <div class="loader-search">{{'LOADING' | translate}}</div>
+            </div>
+            <div data-ng-if="vm.possibleValues.length &gt; 0" class="possible-values">
+                <div data-ng-repeat="possible in vm.possibleValues" data-ng-mouseover="vm.activeElement = $index" data-ng-click="vm.addToSelected(possible)" data-ng-class="vm.activeElement == $index ? 'active' : ''" class="possible-value-item">{{possible[vm.filter_search]}}</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+.select-wrapper
+    .row
+        .field-name-label.col-lg-6.col-md-6.col-sm-6.col-xs-6
+            .field-hint(data-ng-if="vm.hint")
+                .hint-text {{vm.hint}}
+            span(data-ng-class="vm.required ? 'editor-required' : '' ") {{vm.fieldDisplayName}}:
+        .col-lg-2.col-md-2.col-sm-2.col-xs-2(data-ng-if="vm.multiple && !vm.isTree")
+          select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple)
+              option(data-ng-repeat="option in vm.options", value="{{option[vm.field_id]}}") {{option[vm.field_search]}}
+          .processing-status-wrapper(data-ng-show="!!vm.loadingData")
+              .processing-status {{'PERFORMS_ACTIONS' | translate}}
+        .col-lg-2.col-md-2.col-sm-2.col-xs-2(data-ng-if="!vm.multiple && !vm.isTree")
+          select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", ng-options="option[vm.field_search] for option in vm.options track by option[vm.field_id]")
+              option(value="", data-ng-show="!vm.required && !vm.loadingData") --- {{'SELECT_VALUE' | translate}} ---
+          .processing-status-wrapper(data-ng-show="!!vm.loadingData")
+              .processing-status {{'PERFORMS_ACTIONS' | translate}}
+
+        .dropdown.col-lg-3.col-md-3.col-sm-3.col-xs-3(data-ng-if="vm.isTree")
+          .dropdown__host(data-ng-click="toggleDropdown($event)")
+            .dropdown__selected-items.dropdown__selected-items_with-borders.form-control(data-ng-if="vm.fieldValue.length && (vm.multiple || vm.treeParentField && vm.treeChildCountField)")
+              ul.selected-items
+                li.selected-items__item(data-ng-repeat="value in vm.fieldValue")
+                  .selected-item
+                    | {{value[vm.field_search]}}
+                    span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)") x
+
+            .dropdown__title.form-control(data-ng-class="{'dropdown__title_open': isOpen}")
+              input.dropdown__search-field(data-ng-show="vm.search"
+                data-ng-model="vm.filterText"
+                data-ng-focus="vm.focus($event)"
+                data-ng-change="vm.change()"
+                data-ng-click="vm.focus($event)"
+                placeholder="{{'SEARCH_ELEMENTS' | translate}}")
+              div(data-ng-if="!vm.search")
+                .dropdown__selected-items
+                  | {{vm.fieldValue | limitTo: 10 | selectedValues: vm.field_search}}
+                .dropdown__selected-items(data-ng-if="!vm.loadingData && !vm.fieldValue.length") --- {{'SELECT_VALUE' | translate}} ---
+
+          .dropdown__items.dropdown__items_with-padding(
+              data-ng-if="::(vm.treeParentField && vm.treeChildCountField)"
+              data-ng-class="{'dropdown__items_with-selected': vm.fieldValue.length > 2 || (vm.search && vm.fieldValue.length)}"
+              data-dropdown-items=""
+              data-options="vm.options"
+              data-is-open="isOpen && vm.options.length"
+              data-field-search="vm.field_search"
+              data-child-count-field="vm.treeChildCountField"
+              data-on-toggle="vm.toggle"
+              data-api="field.values_remote.api"
+              data-select-branches="vm.treeSelectBranches"
+              data-assets-path="vm.assetsPath")
+
+          .processing-status-wrapper(data-ng-show="!!vm.loadingData")
+                .processing-status {{'PERFORMS_ACTIONS' | translate}}
+    .field-error-wrapper
+        .error-item.alert.alert-danger(data-ng-repeat="err in vm.error") {{err}}

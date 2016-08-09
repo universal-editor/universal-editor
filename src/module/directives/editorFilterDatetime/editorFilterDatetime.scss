@@ -1,0 +1,17 @@
+.filter-datetime-wrapper .filter-start,
+.filter-datetime-wrapper .filter-end,
+.filter-datetime-wrapper .divider {
+    display: inline-block;
+}
+
+.filter-datetime-wrapper .divider {
+    padding: 0px 5px;
+}
+
+.editor-datetime, .editor-time {
+    display: inline-block;
+}
+
+.editor-datetime input {
+        width: 135px;
+}

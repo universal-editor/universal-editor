@@ -1,0 +1,16 @@
+
+<div class="filter-datetime-wrapper">
+    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>
+    <div class="filter-inner-wrapper">
+        <div class="filter-start">
+            <div class="editor-datetime">
+                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueStartDateTime" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>
+            </div>
+        </div><span class="divider">-</span>
+        <div class="filter-end">
+            <div class="editor-datetime">
+                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueEndDateTime" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>
+            </div>
+        </div>
+    </div>
+</div>

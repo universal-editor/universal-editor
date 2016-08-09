@@ -1,0 +1,17 @@
+.minicolors input {
+
+  &.wrong {
+    border : 1px solid red;
+    height: 32px;
+  }
+
+  height: 30px;
+}
+
+.minicolors {
+  position: relative;
+}
+
+.minicolors-swatch{
+  z-index: 50;
+}

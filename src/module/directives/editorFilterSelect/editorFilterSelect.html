@@ -1,0 +1,9 @@
+
+<div>
+    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>
+    <div class="filter-inner-wrapper">
+        <select ng-options="item[vm.field_id] as item[vm.field_search] for item in vm.selectedValues" data-ng-model="vm.filterValue" class="form-control">
+            <option value="">--- {{'SELECT_VALUE' | translate}} ---</option>
+        </select>
+    </div>
+</div>

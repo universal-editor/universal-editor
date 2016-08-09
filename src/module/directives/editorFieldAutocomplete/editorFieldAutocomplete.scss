@@ -1,0 +1,127 @@
+.selected-values {
+
+  .autocomplete-item {
+    background: #fff;
+    border: 1px solid #959EA9;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    color: #444;
+    margin: 2px;
+    padding: 0 5px;
+    display: inline-block;
+    height: 26px;
+    line-height: 25px;
+    .remove-from-selected {
+      margin: 0 0 0 5px;
+      padding: 0;
+      border: none;
+      background: 0 0;
+      cursor: pointer;
+      vertical-align: middle;
+      font: 700 16px Arial,sans-serif;
+      color: #585858;
+    }
+  }
+}
+.autocomplete-input-wrapper {
+  position: relative;
+
+  .form-control{
+    display: inline-block;
+  }
+}
+
+.possible-values {
+  position: absolute;
+  top: 22px;
+  background-color: #fff;
+  border: 1px solid #ECECEC;
+  border-bottom: none;
+  z-index: 10;
+  max-height: 162px;
+  overflow-y: scroll;
+
+  .possible-value-item {
+    padding: 5px 10px;
+    border-bottom: 1px solid #ECECEC;
+    cursor: pointer;
+    min-width: 150px;
+
+    &.active {
+      background-color: #f3f3f3;
+    }
+  }
+}
+
+.field-preloaded-data {
+  color: #677C95;
+  font-size: 12px;
+  margin: 10px 0px 0px 0px;
+}
+
+.loader-search,
+.loader-search:before,
+.loader-search:after {
+  background: #3e565b;
+  -webkit-animation: load1 1s infinite ease-in-out;
+  animation: load1 1s infinite ease-in-out;
+  width: 2px;
+  height: 12px;
+}
+.loader-search:before,
+.loader-search:after {
+  position: absolute;
+  top: 0;
+  content: '';
+}
+.loader-search:before {
+  left: -4px;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.loader-search {
+  text-indent: -9999em;
+  position: absolute;
+  font-size: 11px;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+  top: 0;
+}
+.loader-search:after {
+  left: 4px;
+}
+@-webkit-keyframes load1 {
+  0%,
+  80%,
+  100% {
+    top : 0px;
+    height: 12px;
+  }
+  40% {
+    top : 3px;
+    height: 6px;
+  }
+}
+@keyframes load1 {
+  0%,
+  80%,
+  100% {
+    top : 0px;
+    height: 12px;
+  }
+  40% {
+    top : 3px;
+    height: 6px;
+  }
+}
+
+.loader-search-wrapper {
+  display: inline-block;
+  width: 30px;
+  margin-left: 10px;
+  position: relative;
+  height : 12px;
+}
