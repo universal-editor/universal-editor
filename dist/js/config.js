@@ -116,24 +116,6 @@
                 "type": "delete"
             }
         ],
-        "actions": [
-            {
-                "type": "create",
-                "label": "Создать"
-            },
-            {
-                "type": "add",
-                "label": "Добавить"
-            },
-            {
-                "type": "update",
-                "label": "Обновить"
-            },
-            {
-                "type": "delete",
-                "label": "Удалить"
-            }
-        ],
         "listHeaderBar": [
             {
                 "type": "create",
@@ -266,24 +248,6 @@
             {
                 "label": "Удалить",
                 "type": "delete"
-            }
-        ],
-        "actions": [
-            {
-                "type": "create",
-                "label": "Создать"
-            },
-            {
-                "type": "add",
-                "label": "Добавить"
-            },
-            {
-                "type": "update",
-                "label": "Обновить"
-            },
-            {
-                "type": "delete",
-                "label": "Удалить"
             }
         ],
         "listHeaderBar": [
