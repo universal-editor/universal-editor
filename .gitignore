@@ -4,3 +4,4 @@ test
 tests
 .idea
 app/
+npm-debug.log
