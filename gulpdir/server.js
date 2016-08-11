@@ -26,7 +26,7 @@ gulp.task('html2js-dev', function () {
 });
 
 gulp.task('js-dev', function () {
-    return gulp.src(['./src/module/universal-editor.module.js','./src/*.js','./src/**/*.js','!./src/assets/**/*.js','!./src/assets/*.js'])
+    return gulp.src(['./src/module/universal-editor.module.js','./src/*.js','./src/**/*.js','!./src/config.js','!./src/assets/**/*.js','!./src/assets/*.js'])
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
         .pipe(plugins.concat("universal-editor.js"))
@@ -51,8 +51,8 @@ gulp.task('html-dev', function () {
 });
 
 gulp.task('files-dev',function(){
-   return gulp.src('./src/assets/**/*')
-       .pipe(gulp.dest('./app/assets'));
+    return gulp.src('./src/assets/**/*')
+        .pipe(gulp.dest('./app/assets'));
 });
 
 gulp.task('prebuild' , function () {

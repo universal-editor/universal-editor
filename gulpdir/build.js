@@ -60,7 +60,8 @@ gulp.task('html2js', function () {
 });
 
 gulp.task('js', function () {
-    return gulp.src(['./src/module/universal-editor.module.js','./src/module/universal-editor.configFile.js','./src/*.js','./src/**/*.js','!./src/assets/**/*.js','!./src/assets/*.js'])
+    return gulp.src(['./src/module/universal-editor.module.js', './src/*.js','./src/**/*.js',
+        '!./src/assets/**/*.js','!./src/assets/*.js','!./src/config.js'])
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
         .pipe(plugins.concat("universal-editor.js"))
@@ -89,11 +90,17 @@ gulp.task('files',function(){
         .pipe(gulp.dest('./dist/assets'));
 });
 
+gulp.task('config',function(){
+    return gulp.src('./src/config.js')
+        .pipe(gulp.dest('./dist/js'));
+});
+
 gulp.task('inject', function() {
     var target = gulp.src('./src/index.html');
-    var sourcesJs = gulp.src(['./dist/js/vendor.min.js','./dist/js/**/*.js'], {read: false});
+    var sourcesJs = gulp.src(['./dist/js/vendor.min.js','./dist/js/**/*.js','!./dist/js/config.js'], {read: false});
     var sourcesCss = gulp.src(['./dist/css/vendor.min.css','./dist/css/**/*.css'], {read: false});
     return target.pipe(plugins.inject(es.merge(sourcesJs,sourcesCss), {relative: false,  addRootSlash: false, ignorePath: 'dist'}))
+        .pipe(plugins.inject(gulp.src('./dist/js/config.js', {read: false}),{relative: false,  addRootSlash: false, ignorePath: 'dist', name: 'config'}))
         .pipe(gulp.dest('./dist'));
 });
 
@@ -105,6 +112,7 @@ gulp.task('build',function(){
         'css',
         'files',
         'libs-min',
+        'config',
         'inject'
     );
 });
@@ -123,6 +131,7 @@ gulp.task('serve:build', function () {
         'css',
         'files',
         'libs-min',
+        'config',
         'inject',
         'serve:dist'
     );

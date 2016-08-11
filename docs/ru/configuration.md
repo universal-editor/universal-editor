@@ -2,27 +2,131 @@
 
 ## Способы подключения
 
-### Локальная конфигурация
+Инициализация редактора происходит посредствам создания объекта класса.
 
-Содержимое локального конфигурационного файла представляет из себя AngularJS value-сервис.
-
-### Удалённая конфигурация
-
-Редактор имет возможность загружать конфигурационные данные с удаленного URL. Данная возможность имеет высший приоритет,
-т. е. в случае, если имеется локальная конфигурация, и была успешно загружена «удаленная», редактор будет использовать 
-послелнюю.
-
-URL удалённого конфига записывается в data-атрибуте: 
-
-```html
-<div id="universal-editor" data-config-url="/path/to/config.json" 
+```javascript
+    var editor = new UniversalEditor('universal-editor', config);
 ```
 
-Сервер должен вернуть конфигурацию в формате JSON.
+Где __'universal-editor'__ id html элемента на месте которого развернется редактор, __config__ - конфигурация.
+Конфигурация представляет из себя javascript-объект.
+
+Конфигурация может быть получен несколькими способами:
+* Формированием javascript-объекта
+* Получение json файла с конфигурацией от backend.
+
+### Формирование javascript-объекта
+
+Формируем javascript-объект конфигурации и передаем его при инициализации
+
+```javascript
+    var config = {};
+    var news = {
+            "name": "news",
+            "label": "Новости",
+            "backend": {
+                "url": "http://universal-backend.dev/rest/v1/news",
+                "sortBy": "-id",
+                "fields": {
+                    "primaryKey": "id",
+                    "parent": "parent_id"
+                }
+            },
+            "tabs": [
+                {
+                    "label": "Новость",
+                    "fields": [
+                        {
+                            "name": "published",
+                            "type": "checkbox",
+                            "list": true,
+                            "label": "Опубликовано",
+                            "values": {
+                                "1": ""
+                            }
+                        },
+                        {
+                            "name": "published_at",
+                            "type": "datetime",
+                            "list": true,
+                            "label": "Дата публикации"
+                        }
+                    ]
+                },
+                {
+                    "label": "Место",
+                    "fields": [
+                        {
+                            "name": "coordinates",
+                            "type": "map",
+                            "label": "Местоположение события"
+                        }
+                    ]
+                }
+            ],
+            "contextMenu": [
+                {
+                    "label": "Раскрыть",
+                    "type": "open"
+                },
+                {
+                    "label": "Редактировать",
+                    "type": "edit"
+                },
+                {
+                    "label": "Удалить",
+                    "type": "delete"
+                }
+            ],
+            "listHeaderBar": [
+                {
+                    "type": "create",
+                    "label": "Создать"
+                }
+            ],
+            "editFooterBar": [
+                {
+                    "type": "update",
+                    "label": "Сохранить"
+                },
+                {
+                    "type": "presave",
+                    "label": "Применить"
+                },
+                {
+                    "type": "delete",
+                    "label": "Удалить"
+                }
+            ]
+        };
+    config.entities = [];
+    config.entities.push(news);
+    var editor = new UniversalEditor('universal-editor', config);
+```
+
+### Получение json файла с конфигурацией от backend
+
+Объект конфигурации можно получить с backend и передать для инициализации приложения
+
+```javascript
+    (function($){
+        $.ajax({
+            url: 'assets/json/config.json',
+            type: 'GET'
+        }).done(function(data){
+            var editor = new UniversalEditor('universal-editor', data);
+        });
+    })(jQuery);
+```
+
+__Важно!__ Инициализация редактора должна находиться ниже создания модуля приложения. Генерация конфигурации и
+инициализация редактора должна находиться либо в index.html, либо в папке src в config.js.
+
+```javascript
+    angular.module('unEditor',['universal.editor']);
+```
 
 ## Формат
-
-Редактор принимает конфигурацию в JSON-формате:
 
 ```json
 {
