@@ -104,7 +104,7 @@
     var editor = new UniversalEditor('universal-editor', config);
 ```
 
-### Получение json файла с конфигурацией от backend.
+### Получение json файла с конфигурацией от backend
 
 Объект конфигурации можно получить с backend и передать для инициализации приложения
 
