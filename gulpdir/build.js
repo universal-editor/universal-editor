@@ -60,8 +60,8 @@ gulp.task('html2js', function () {
 });
 
 gulp.task('js', function () {
-    return gulp.src(['./src/module/universal-editor.module.js','./src/module/universal-editor.configFile.js',
-        './src/*.js','./src/**/*.js','!./src/assets/**/*.js','!./src/assets/*.js','!./src/config.js'])
+    return gulp.src(['./src/module/universal-editor.module.js', './src/*.js','./src/**/*.js',
+        '!./src/assets/**/*.js','!./src/assets/*.js','!./src/config.js'])
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
         .pipe(plugins.concat("universal-editor.js"))

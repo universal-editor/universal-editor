@@ -1,3 +1,9 @@
+/**
+ * Constructor for create editor
+ * @param {string} id - Id html element instead of which will be the editor
+ * @param {Object} config - Configuration object
+ * @constructor
+ */
 function UniversalEditor(id, config) {
     'use strict';
 
