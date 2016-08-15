@@ -1,18 +1,11 @@
-.editor-autocomplete-wrapper
-    .row
-        .field-name-label.col-lg-6.col-md-6.col-sm-6.col-xs-6
-            .field-hint(data-ng-if="vm.hint")
-                .hint-text {{vm.hint}}
-            span(data-ng-class="vm.required ? 'editor-required' : '' ") {{vm.fieldDisplayName}}:
-        .col-lg-2.col-md-2.col-sm-2.col-xs-2
-            .selected-values(data-ng-show="vm.preloadedData")
-                .autocomplete-item(data-ng-repeat="acItem in vm.selectedValues") {{acItem[vm.field_search]}}
-                    span.remove-from-selected(data-ng-click="vm.removeFromSelected(acItem)", data-ng-if="!vm.readonly") ×
-            .autocomplete-input-wrapper(data-ng-show="vm.preloadedData && vm.selectedValues.length < vm.maxItemsCount")
-                input.form-control.input-sm(type="text", data-ng-hide="(!vm.multiple && vm.selectedValues.length >= 1)", ng-disabled="vm.readonly", data-ng-model="vm.inputValue")
-                .loader-search-wrapper(data-ng-show="vm.searching")
-                    .loader-search {{'LOADING' | translate}}
-                .possible-values(data-ng-if="!vm.readonly && (vm.possibleValues.length > 0)")
-                    .possible-value-item(data-ng-repeat="possible in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(possible)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{possible[vm.field_search]}}
-    .field-error-wrapper
-        .error-item.alert.alert-danger(data-ng-repeat="err in vm.error") {{err}}
+div
+    .col-lg-2.col-md-2.col-sm-2.col-xs-2
+        .selected-values(data-ng-show="vm.preloadedData")
+            .autocomplete-item(data-ng-repeat="acItem in vm.selectedValues") {{acItem[vm.field_search]}}
+                span.remove-from-selected(data-ng-click="vm.removeFromSelected(acItem)", data-ng-if="!vm.readonly") ×
+        .autocomplete-input-wrapper(data-ng-show="vm.preloadedData && vm.selectedValues.length < vm.maxItemsCount")
+            input.form-control.input-sm(type="text", data-ng-hide="(!vm.multiple && vm.selectedValues.length >= 1)", ng-disabled="vm.readonly", data-ng-model="vm.inputValue")
+            .loader-search-wrapper(data-ng-show="vm.searching")
+                .loader-search {{'LOADING' | translate}}
+            .possible-values(data-ng-if="!vm.readonly && (vm.possibleValues.length > 0)")
+                .possible-value-item(data-ng-repeat="possible in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(possible)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{possible[vm.field_search]}}
