@@ -23,12 +23,9 @@
         }
 
         vm.fieldName = $scope.field.name;
-        vm.fieldDisplayName = $scope.field.label;
         vm.fieldValue = undefined;
         vm.readonly = $scope.field.readonly || false;
-        vm.hint = $scope.field.hint || false;
-        vm.required = $scope.field.required || false;
-        vm.error = [];
+        $scope.$parent.vm.error = [];
         vm.parentFieldIndex = $scope.parentFieldIndex || false;
         vm.mask = $scope.field.mask || false;
 
@@ -162,15 +159,15 @@
 
             if($scope.field.hasOwnProperty("maxLength") && val.length > $scope.field.maxLength){
                 var maxError = "Для поля превышено максимальное допустимое значение в " + $scope.field.maxLength + " символов. Сейчас введено " + val.length + " символов.";
-                if (vm.error.indexOf(maxError) < 0) {
-                    vm.error.push(maxError);
+                if ($scope.$parent.vm.error.indexOf(maxError) < 0) {
+                    $scope.$parent.vm.error.push(maxError);
                 }
             }
 
             if($scope.field.hasOwnProperty("minLength") && val.length < $scope.field.minLength){
                 var minError = "Минимальное значение поля не может быть меньше " + $scope.field.minLength + " символов. Сейчас введено " + val.length + " символов.";
-                if(vm.error.indexOf(minError) < 0){
-                    vm.error.push(minError);
+                if($scope.$parent.vm.error.indexOf(minError) < 0){
+                    $scope.$parent.vm.error.push(minError);
                 }
             }
         };
@@ -264,8 +261,8 @@
          */
 
         $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
-            if (vm.error.indexOf(data) < 0) {
-                vm.error.push(data);
+            if ($scope.$parent.vm.error.indexOf(data) < 0) {
+                $scope.$parent.vm.error.push(data);
             }
         });
 
@@ -277,13 +274,13 @@
         $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
                 angular.forEach(data, function (error) {
-                    if (vm.error.indexOf(error) < 0) {
-                        vm.error.push(error);
+                    if ($scope.$parent.vm.error.indexOf(error) < 0) {
+                        $scope.$parent.vm.error.push(error);
                     }
                 });
             } else {
-                if (vm.error.indexOf(data) < 0) {
-                    vm.error.push(data);
+                if ($scope.$parent.vm.error.indexOf(data) < 0) {
+                    $scope.$parent.vm.error.push(data);
                 }
             }
         });
@@ -302,7 +299,7 @@
         $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
-            vm.error = [];
+            $scope.$parent.vm.error = [];
         }, true);
 
     }

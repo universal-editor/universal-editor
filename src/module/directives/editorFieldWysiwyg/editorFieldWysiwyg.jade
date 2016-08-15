@@ -1,17 +1,10 @@
 div
-    .row
-        .field-name-label.col-lg-6.col-md-6.col-sm-6.col-xs-6
-            .field-hint(data-ng-if="vm.hint")
-                .hint-text {{vm.hint}}
-            span(data-ng-class="vm.required ? 'editor-required' : '' ") {{vm.fieldDisplayName}}:
-        div.field-textarea-wrapper.col-lg-6.col-md-6.col-sm-6.col-xs-6(data-ng-if="vm.multiple")
-            .item-textarea-wrapper(data-ng-repeat="field_item in vm.fieldValue track by $index")
-                div
-                    textarea(data-ui-tinymce="vm.wysiwygOptions", data-ng-model="vm.fieldValue[$index]")
-                    .btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
-            .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-if="!vm.readonly") {{'BUTTON.ADD' | translate}}
-        div.field-textarea-wrapper.col-lg-6.col-md-6.col-sm-6.col-xs-6(data-ng-if="!vm.multiple")
+    div.field-textarea-wrapper.col-lg-6.col-md-6.col-sm-6.col-xs-6(data-ng-if="vm.multiple")
+        .item-textarea-wrapper(data-ng-repeat="field_item in vm.fieldValue track by $index")
             div
-                textarea(data-ui-tinymce="vm.wysiwygOptions", data-ng-model="vm.fieldValue")
-    .field-error-wrapper
-        .error-item.alert.alert-danger(data-ng-repeat="err in vm.error") {{err}}
+                textarea(data-ui-tinymce="vm.wysiwygOptions", data-ng-model="vm.fieldValue[$index]")
+                .btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
+        .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-if="!vm.readonly") {{'BUTTON.ADD' | translate}}
+    div.field-textarea-wrapper.col-lg-6.col-md-6.col-sm-6.col-xs-6(data-ng-if="!vm.multiple")
+        div
+            textarea(data-ui-tinymce="vm.wysiwygOptions", data-ng-model="vm.fieldValue")

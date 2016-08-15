@@ -5,9 +5,9 @@
         .module('universal.editor')
         .directive('fieldWrapper',fieldWrapper);
 
-    fieldWrapper.$inject = ['$templateCache','FieldBuilder','configData','$timeout','RestApiService'];
+    fieldWrapper.$inject = ['$templateCache','FieldBuilder','configData','$timeout'];
 
-    function fieldWrapper($templateCache,FieldBuilder,configData,$timeout,RestApiService){
+    function fieldWrapper($templateCache,FieldBuilder,configData,$timeout){
         return {
             restrict : 'A',
             replace : true,
@@ -23,41 +23,16 @@
         };
 
         function link(scope, elem, attrs, ctrl){
+            var element = elem.find('.field-element');
             elem.on('$destroy', function () {
                 scope.$destroy();
             });
 
             $timeout(function () {
-                elem.addClass("field-wrapper-" + scope.field.type);
+                element.addClass("field-wrapper-" + scope.field.type);
             },0);
 
-            var entityObject = RestApiService.getEntityObject();
-
-            if(scope.parentField){
-                angular.forEach(entityObject.tabs, function (tab) {
-                    angular.forEach(tab.fields, function (field) {
-                        if(field.name == scope.parentField){
-                            angular.forEach(field.fields, function (innerField) {
-                                if(innerField.name == scope.fieldName){
-                                    scope.field = innerField;
-                                    return;
-                                }
-                            });
-                        }
-                    });
-                });
-            } else {
-                angular.forEach(entityObject.tabs, function (tab) {
-                    angular.forEach(tab.fields, function (field) {
-                        if(field.name == scope.fieldName){
-                            scope.field = field;
-                            return;
-                        }
-                    });
-                });
-            }
-
-            elem.append(new FieldBuilder(scope).build());
+            element.append(new FieldBuilder(scope).build());
         }
     }
 })();
