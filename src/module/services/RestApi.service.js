@@ -413,11 +413,7 @@
                 }
             }, function (reject) {
                 if ((reject.status === 422 || reject.status === 400) && reject.data) {
-                    var wrongFields = reject.data;
-                    
-                    if (reject.data.hasOwnProperty('data')) {
-                        wrongFields = reject.data.data;
-                    }
+                    var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
                     
                     angular.forEach(wrongFields, function (err) {
                         if (err.hasOwnProperty('field')) {
