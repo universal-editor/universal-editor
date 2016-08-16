@@ -311,7 +311,7 @@
             var tmpUrl;
 
 
-            if(self.isProcessing){
+            if (self.isProcessing) {
                 return;
             }
 
@@ -319,39 +319,39 @@
 
             var params = {};
             var _method = 'PUT';
-            var _url = entityObject.backend.url + "/" + self.editedEntityId;
+            var _url = entityObject.backend.url + '/' + self.editedEntityId;
 
-            if(typeof request !== 'undefined'){
+            if (typeof request !== 'undefined') {
                 params = typeof request.params !== 'undefined' ? request.params : params;
                 _method = typeof request.method !== 'undefined' ? request.method : _method;
                 _url = typeof request.url !== 'undefined' ? request.url : _url;
             }
 
             $http({
-                method : _method,
-                url : _url,
-                data : item,
+                method: _method,
+                url: _url,
+                data: item,
                 params: params
             }).then(function (response) {
                 self.isProcessing = false;
-                $rootScope.$broadcast("uploader:remove_session");
-                $rootScope.$broadcast("editor:entity_success");
+                $rootScope.$broadcast('uploader:remove_session');
+                $rootScope.$broadcast('editor:entity_success');
                 var params = {};
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
-                if($state.params.back){
+                if ($state.params.back) {
                     params.type = $state.params.back;
                 }
-                $state.go('editor.type.list', params, { reload: true });                   
+                $state.go('editor.type.list', params, {reload: true});
             }, function (reject) {
-                if (reject.data.error && reject.data.hasOwnProperty("data") && reject.data.data.length > 0){
+                if (reject.data.error && reject.data.hasOwnProperty('data') && reject.data.data.length > 0) {
                     angular.forEach(reject.data.data, function (err) {
-                        if(err.hasOwnProperty("field")){
-                            $rootScope.$broadcast("editor:api_error_field_"+ err.field,err.message);
-                            if(err.hasOwnProperty("fields")){
-                                angular.forEach(err.fields, function (innerError,key) {
-                                    $rootScope.$broadcast("editor:api_error_field_"+ err.field + "_" + key + "_" + innerError.field,innerError.message);
+                        if (err.hasOwnProperty('field')) {
+                            $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
+                            if (err.hasOwnProperty('fields')) {
+                                angular.forEach(err.fields, function (innerError, key) {
+                                    $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
                                 });
                             }
                         }
@@ -366,14 +366,14 @@
             var request = arrItem[1];
             var tmpUrl;
 
-            if(self.isProcessing){
+            if (self.isProcessing) {
                 return;
             }
 
             self.isProcessing = true;
 
-            if(self.editedEntityId !== ""){
-                tmpUrl = entityObject.backend.url + "/" + self.editedEntityId;
+            if (self.editedEntityId !== '') {
+                tmpUrl = entityObject.backend.url + '/' + self.editedEntityId;
             } else {
                 tmpUrl = entityObject.backend.url;
             }
@@ -382,43 +382,49 @@
             var _url = tmpUrl;
             var idField = 'id';
 
-            if(entityObject.backend.hasOwnProperty('fields')){
+            if (entityObject.backend.hasOwnProperty('fields')) {
                 idField = entityObject.backend.fields.primaryKey || idField;
             }
-            if(typeof request !== 'undefined'){
+            if (typeof request !== 'undefined') {
                 params = typeof request.params !== 'undefined' ? request.params : params;
                 _method = typeof request.method !== 'undefined' ? request.method : _method;
                 _url = typeof request.url !== 'undefined' ? request.url : _url;
             }
             $http({
-                method : 'POST',
-                url : _url,
-                data : item,
+                method: 'POST',
+                url: _url,
+                data: item,
                 params: params
             }).then(function (response) {
                 self.isProcessing = false;
-                switch (response.statusText){
-                    case "OK":
-                        $rootScope.$broadcast("editor:presave_entity_updated","");
+                switch (response.statusText) {
+                    case 'OK':
+                        $rootScope.$broadcast('editor:presave_entity_updated', '');
                         break;
-                    case "Created":
-                        $state.go('editor.type.entity',{
-                            uid : response.data[idField]
-                        },{
-                            notify : false
+                    case 'Created':
+                        $state.go('editor.type.entity', {
+                            uid: response.data[idField]
+                        }, {
+                            notify: false
                         });
-                        $rootScope.$broadcast("editor:presave_entity_created",response.data[idField]);
+                        $rootScope.$broadcast('editor:presave_entity_created', response.data[idField]);
 
                         break;
                 }
             }, function (reject) {
-                if (reject.data.error && reject.data.hasOwnProperty("data") && reject.data.data.length > 0){
-                    angular.forEach(reject.data.data, function (err) {
-                        if(err.hasOwnProperty("field")){
-                            $rootScope.$broadcast("editor:api_error_field_"+ err.field,err.message);
-                            if(err.hasOwnProperty("fields")){
-                                angular.forEach(err.fields, function (innerError,key) {
-                                    $rootScope.$broadcast("editor:api_error_field_"+ err.field + "_" + key + "_" + innerError.field,innerError.message);
+                if ((reject.status === 422 || reject.status === 400) && reject.data) {
+                    var wrongFields = reject.data;
+                    
+                    if (reject.data.hasOwnProperty('data')) {
+                        wrongFields = reject.data.data;
+                    }
+                    
+                    angular.forEach(wrongFields, function (err) {
+                        if (err.hasOwnProperty('field')) {
+                            $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
+                            if (err.hasOwnProperty('fields')) {
+                                angular.forEach(err.fields, function (innerError, key) {
+                                    $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
                                 });
                             }
                         }

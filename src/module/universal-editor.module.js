@@ -26,16 +26,15 @@
 
     EditorHttpInterceptor.$inject = ['$q','$rootScope','toastr','$translate'];
 
-    function EditorHttpInterceptor($q,$rootScope,toastr, $translate){
+    function EditorHttpInterceptor($q, $rootScope, toastr, $translate) {
         return {
-            'request' : function (config) {
-                $rootScope.$broadcast('editor:request_start','');
+            'request': function (config) {
+                $rootScope.$broadcast('editor:request_start', '');
 
                 // Заменяем пустые массивы на null так как при отправке такие массивы игнорируются
-
                 if (config.data && typeof config.data === 'object') {
-                    angular.forEach(config.data,function (value,key) {
-                        if(angular.isArray(value) && value.length === 0){
+                    angular.forEach(config.data, function (value, key) {
+                        if (angular.isArray(value) && value.length === 0) {
                             config.data[key] = null;
                         }
                     });
@@ -43,81 +42,32 @@
 
                 return config;
             },
-
-            //TODO Handle errors
-
-            'responseError' : function(rejection) {
-                if(rejection.status === -1){
-                    Raven.captureMessage('Сервис временно недоступен.');
-                    // OLDER VERSION OF ERROR - $rootScope.$broadcast('editor:server_error','Сервер вернул невалидные данные. Обработка данных невозможна.');
-                    $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function (translation) {
-                        toastr.error(translation);
-                    });
-                    return $q.reject(rejection);
-                }
-
+            'responseError': function (rejection) {
                 try {
                     var json = JSON.parse(JSON.stringify(rejection));
-                } catch(e) {
-                    Raven.captureException(e);
-                    $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function (translation) {
-                        toastr.error(translation);
-                    });
-                    return;
-                }
-
-                if(!angular.isObject(rejection)){
-                    Raven.captureMessage('Сервис временно недоступен.');
-                    $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function (translation) {
-                        toastr.error(translation);
-                    });
-                    return $q.reject(rejection);
-                }
-
-                if(rejection.data.hasOwnProperty("code") && rejection.data.hasOwnProperty("type")){
-                    if(rejection.data.type == "error" && rejection.data.code == "auth_needed"){
-                        Raven.captureMessage('Требуется повторная авторизация, перезагрузите страницу.');
-                        $translate('RESPONSE_ERROR.RELOAD_PAGE').then(function (translation) {
-                            toastr.error(translation);
-                        });
-                    }
-
-                    if(rejection.data.type == "error" && rejection.data.code == "auth_incorrect"){
-                        Raven.captureMessage('Требуется повторная авторизация, перезагрузите страницу.');
-                        $translate('RESPONSE_ERROR.RELOAD_PAGE').then(function (translation) {
-                            toastr.error(translation);
-                        });
-                    }
-
-                    if(rejection.data.type == "error" && rejection.data.code == "not_found"){
-                        Raven.captureMessage('Запись не найдена.');
-                        $translate('RESPONSE_ERROR.NOT_FOUND').then(function (translation) {
-                            toastr.error(translation);
-                        });
-                    }
-
-                    if(rejection.data.type == "error" && rejection.data.code == "wrong_entity"){
-                        Raven.captureMessage('Сервис временно недоступен.');
-                        $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function (translation) {
-                            toastr.error(translation);
-                        });
-                    }
-
-                    if(rejection.data.type == "error" && rejection.data.code == "invalid_data"){
+                    
+                    if (rejection.data !== null && rejection.data.hasOwnProperty('message') && rejection.data.message.length > 0) {
+                        toastr.error(rejection.data.message);
+                    } else if (rejection.status === 422 || rejection.status === 400) {
                         $translate('RESPONSE_ERROR.INVALID_DATA').then(function (translation) {
+                            toastr.warning(translation);
+                        });
+                    } else if (rejection.status === 401) {
+                        $translate('RESPONSE_ERROR.UNAUTHORIZED').then(function (translation) {
+                            toastr.warning(translation);
+                        });
+                    } else if (rejection.status === 403) {
+                        $translate('RESPONSE_ERROR.FORBIDDEN').then(function (translation) {
                             toastr.error(translation);
                         });
-                    }
-
-                    if(rejection.data.type == "critical"){
-                        Raven.captureMessage('Сервис временно недоступен.');
+                    } else {
                         $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function (translation) {
                             toastr.error(translation);
                         });
                     }
-                } else {
-                    Raven.captureMessage('Сервис временно недоступен.');
-                    $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function (translation) {
+                } catch (e) {
+                    console.error(e);
+                    $translate('RESPONSE_ERROR.UNEXPECTED_RESPONSE').then(function (translation) {
                         toastr.error(translation);
                     });
                 }
