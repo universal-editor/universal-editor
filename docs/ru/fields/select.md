@@ -38,7 +38,7 @@
     },
     "depend": {
         "fieldName": "other_field_name",
-        "filterable": "filterable_field"
+        "filter": "filterable_field"
     }
 }
 ```
