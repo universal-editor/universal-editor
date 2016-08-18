@@ -18,7 +18,7 @@
     "readonly": true,
     "list": true,
     "multiname": "new_value",
-    "requiredField": "nameField"
+    "requiredField": "nameField",
     "values": {
         "a": "Variable 1",
         "b": "Variable 2",
