@@ -387,9 +387,6 @@ body {
     * {
       box-sizing: border-box;
     }
-    &__host {
-      background-color: #fff;
-    }
     &__title {
       position: relative;
       background-color: #fff;
@@ -440,6 +437,8 @@ body {
           line-height: 25px;
           border: 1px solid #acacac;
           border-radius: 3px;
+          background-color: #fff;
+
           .selected-item {
             overflow: hidden;
             text-overflow: ellipsis;
@@ -459,13 +458,12 @@ body {
     }
     &__items {
       position: absolute;
-      left: 0px;
       z-index: 999;
       border: 1px solid #999;
       border-radius: 2px;
       max-height: 300px;
       overflow-y: auto;
-      width: 100%;
+      width: 92%;
       background-color: #fff;
       box-sizing: border-box;
       &_with-padding {

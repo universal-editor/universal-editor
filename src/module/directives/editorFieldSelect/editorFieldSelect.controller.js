@@ -55,12 +55,13 @@
         //vm.multiname = $scope.field.multiname || "value";
 
         // Настройки режима "Дерево"
+
         if ($scope.field.hasOwnProperty("valuesRemote") && $scope.field.tree &&
-            $scope.field.tree.parentField && $scope.field.tree.childCountField) {
-            vm.treeParentField = $scope.field.tree.parentField;
-            vm.treeChildCountField = $scope.field.tree.childCountField;
-            vm.treeSelectBranches = $scope.field.tree.selectBranches;
-            vm.isTree = vm.treeParentField && vm.treeChildCountField;
+            $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {
+            vm.treeParentField = $scope.field.valuesRemote.fields.parent;
+            vm.treeChildCountField = $scope.field.valuesRemote.fields.childCount;
+            vm.treeSelectBranches = $scope.field.selectBranches;
+            vm.isTree = $scope.field.tree && vm.treeParentField && vm.treeChildCountField;
         }
 
         if(vm.depend){

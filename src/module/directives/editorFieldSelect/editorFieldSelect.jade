@@ -11,15 +11,15 @@ div
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
 
     .dropdown.col-lg-3.col-md-3.col-sm-3.col-xs-3(data-ng-if="vm.isTree")
-        .dropdown__host(data-ng-click="toggleDropdown($event)")
-            .dropdown__selected-items.dropdown__selected-items_with-borders.form-control(data-ng-if="vm.fieldValue.length && (vm.multiple || vm.treeParentField && vm.treeChildCountField)")
+        .dropdown__host
+            .dropdown__selected-items.dropdown__selected-items_with-borders(data-ng-if="vm.fieldValue.length && (vm.multiple || vm.treeParentField && vm.treeChildCountField)")
                 ul.selected-items
                     li.selected-items__item(data-ng-repeat="value in vm.fieldValue")
                         .selected-item
                             | {{value[vm.field_search]}}
                             span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)") x
 
-            .dropdown__title.form-control(data-ng-class="{'dropdown__title_open': isOpen}")
+            .dropdown__title.form-control(data-ng-class="{'dropdown__title_open': isOpen}",data-ng-click="toggleDropdown($event)")
                 input.dropdown__search-field(data-ng-show="vm.search"
                 data-ng-model="vm.filterText"
                 data-ng-focus="vm.focus($event)"
