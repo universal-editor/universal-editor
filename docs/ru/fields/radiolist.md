@@ -30,7 +30,8 @@
             "label": "title"
         },
         "url": "/rest/v1/categories",
-    }
+    },
+    "defaultValue" : "a"
 }
 ```
 

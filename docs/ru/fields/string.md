@@ -18,7 +18,8 @@
     "requiredField": "nameField",
     "minLength": 10,
     "maxLength": 200,
-    "mask": "(999) 999 - 99 - 99"
+    "mask": "(999) 999 - 99 - 99",
+    "defaultValue" : "Привет мир"
 }
 ```
 
@@ -55,4 +56,5 @@
     * Email - \*@\*
     * Дата - 99.99.99
     * Время - 99:99
+* **defaultValue** : значение поля по-умолчанию.
     

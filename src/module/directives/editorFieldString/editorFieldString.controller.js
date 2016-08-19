@@ -37,7 +37,8 @@
             }
         } else {
             vm.multiple = false;
-            vm.fieldValue = "";
+            vm.fieldValue = $scope.field.defaultValue || "" ;
+            console.log(vm.fieldValue);
         }
 
         /*
@@ -173,7 +174,7 @@
         };
 
         function clear() {
-            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
+            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : ($scope.field.defaultValue || "");
         }
 
         /* Слушатели событий бродкаста. */
@@ -216,7 +217,7 @@
             }
 
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [""] : "";
+                vm.fieldValue = vm.multiple ? [($scope.field.defaultValue || "")] : ($scope.field.defaultValue || "");
                 if (data.hasOwnProperty($scope.field.name)) {
                     vm.fieldValue = data[$scope.field.name];
                 }

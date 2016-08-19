@@ -21,7 +21,8 @@
                         "type": "string",
                         "list": true,
                         "label": "Имя",
-                        "required": true
+                        "required": true,
+                        "defaultValue": "c92723"
                     },
                     {
                         "name": "email",
@@ -40,7 +41,7 @@
                             "male" : "Мужской",
                             "female" : "Женский"
                         },
-                        "showOnly" : "edit"
+                        "defaultValue": "fem"
                     },
                     {
                         "name": "country",
@@ -65,12 +66,14 @@
                                 "name": "color",
                                 "type": "colorpicker",
                                 "list": true,
-                                "label": "Любимый цвет"
+                                "label": "Любимый цвет",
+                                "defaultValue": "#c92723"
                             },
                             {
                                 "name": "text",
                                 "type": "textarea",
-                                "label": "Дополнительные заметки"
+                                "label": "Дополнительные заметки",
+                                "defaultValue": "c92723"
                             }
                         ]
                     }
@@ -89,9 +92,9 @@
                     },
                     {
                         "name": "created_at",
-                        "type": "datetime",
-                        "readonly": true,
-                        "label": "Дата создания"
+                        "type": "date",
+                        "label": "Дата создания",
+                        "defaultValue": "12.12.2012"
                     },
                     {
                         "name": "updated_at",
@@ -204,7 +207,14 @@
                     {
                         "name": "text",
                         "type": "wysiwyg",
-                        "label": "Текст"
+                        "label": "Текст",
+                        "expandable" : true
+                    },
+                    {
+                        "name": "coordinates",
+                        "type": "map",
+                        "label": "Местоположение события",
+                        "expandable" : true
                     }
                 ]
             },
@@ -214,7 +224,8 @@
                     {
                         "name": "coordinates",
                         "type": "map",
-                        "label": "Местоположение события"
+                        "label": "Местоположение события",
+                        "expandable" : true
                     }
                 ]
             },
