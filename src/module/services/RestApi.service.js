@@ -444,7 +444,7 @@
 
             angular.forEach(entityObject.tabs, function (tab) {
                 angular.forEach(tab.fields, function (field) {
-                    if(field.hasOwnProperty("expand") && field.expand === true){
+                    if(field.hasOwnProperty("expandable") && field.expandable === true){
                         expandFields.push(field.name);
                     }
                 });
