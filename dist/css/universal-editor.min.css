@@ -57,8 +57,8 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .filter-inner-wrapper{display:table-cell}.filter-wrapper{margin-bottom:5px}.dropdown__selected-items.dropdown__selected-items_with-borders.form-control{height:auto}
 .field-wrapper-select .select-wrapper>div>.processing-status-wrapper{margin:-16px 0 0 20px;position:absolute}
 .field-wrapper-select .dropdown{position:relative;min-width:400px;border-radius:2px}
-.field-wrapper-select .dropdown *{box-sizing:border-box}.field-wrapper-select .dropdown__title{position:relative;background-color:#fff;line-height:25px}
-.field-wrapper-select .dropdown__title:before{content:'';position:absolute;margin-top:-4px;top:50%;right:5px;display:block;width:0;height:0;border-top:8px solid #2a3534;border-right:4px solid transparent;border-left:4px solid transparent;z-index:998}
+.field-wrapper-select .dropdown *{box-sizing:border-box}.field-wrapper-select .dropdown__title{position:relative;background-color:#fff}
+.field-wrapper-select .dropdown__title:before{content:'';position:absolute;margin-top:-4px;top:50%;right:10px;display:block;width:0;height:0;border-top:8px solid #2a3534;border-right:4px solid transparent;border-left:4px solid transparent;z-index:998}
 .field-wrapper-select .dropdown__title_open:before{transform:rotate(180deg)}.field-wrapper-select .dropdown__selected-items{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .field-wrapper-select .dropdown__selected-items_with-borders{border-radius:2px;padding:0}
 .field-wrapper-select .dropdown__selected-items .selected-items{margin:0;padding:1px;list-style:none}
@@ -66,7 +66,7 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .field-wrapper-select .dropdown__selected-items .selected-items__item{float:left;margin:2px;padding:0 5px;height:26px;max-width:99%;line-height:25px;border:1px solid #acacac;border-radius:3px;background-color:#fff}
 .field-wrapper-select .dropdown__selected-items .selected-items__item .selected-item{overflow:hidden;text-overflow:ellipsis}
 .field-wrapper-select .dropdown__selected-items .selected-items__item .selected-item__btn_delete{margin:0 0 0 5px;padding:0;border:0;background:0;cursor:pointer;vertical-align:middle;font:700 16px Arial,sans-serif;color:#585858}
-.field-wrapper-select .dropdown__items{position:absolute;z-index:999;border:1px solid #999;border-radius:2px;max-height:300px;overflow-y:auto;width:92%;background-color:#fff;box-sizing:border-box}
+.field-wrapper-select .dropdown__items{position:absolute;z-index:999;border:1px solid #ccc;border-radius:4px;max-height:300px;overflow-y:auto;width:92%;background-color:#fff;box-sizing:border-box}
 .field-wrapper-select .dropdown__items_with-padding{padding:0 15px}.field-wrapper-select .dropdown-items__children{padding-left:15px}
 .field-wrapper-select .dropdown-items__item{min-height:50px}.field-wrapper-select .dropdown .option{position:relative;line-height:50px;border-bottom:1px solid #c6cfd1}
 .field-wrapper-select .dropdown .option:hover{background-color:#fafafa}.field-wrapper-select .dropdown .option__checkbox{position:relative;float:left;height:50px;width:20px}
@@ -76,7 +76,8 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .field-wrapper-select .dropdown .option__label_no-multiple{margin-left:5px}.field-wrapper-select .dropdown .option__child-count{position:relative;color:#999}
 .field-wrapper-select .dropdown .option__child-count:after{content:'';position:absolute;top:6px;right:-15px;display:block;width:0;height:0;border-top:5px solid #2a3534;border-right:3px solid transparent;border-left:3px solid transparent}
 .field-wrapper-select .dropdown .option__child-count_open:after{transform:rotate(180deg)}
-.field-wrapper-select .dropdown .option__children{padding-left:15px}.field-wrapper-select .dropdown__search-field{position:relative;padding:0;background-color:#fff;border:0;height:23px;width:100%;box-sizing:border-box;overflow:hidden;text-overflow:ellipsis}
-.field-wrapper-select .dropdown__search-field:focus{outline:0}.field-wrapper-select .select-wrapper .dropdown .processing-status-wrapper{margin-top:2px}
+.field-wrapper-select .dropdown .option__children{padding-left:15px}.field-wrapper-select .dropdown__search-field{position:relative;padding:0;background-color:#fff;border:0;height:22px;width:100%;box-sizing:border-box;overflow:hidden;text-overflow:ellipsis}
+.field-wrapper-select .dropdown__search-field:focus{outline:0}.field-wrapper-select .dropdown .processing-status{margin-top:5px}
+.field-wrapper-select .select-wrapper .dropdown .processing-status-wrapper{margin-top:2px}
 .item-datepicker-wrapper,.item-colorpicker-wrapper,.item-string-wrapper,.item-textarea-wrapper,.item-timepicker-wrapper,.item-array-wrapper,.item-map-wrapper{padding-bottom:10px}
 .radio,.checkbox{margin-top:0}.editor-field-array .field-name-label.label-array{background-color:#d3dfe2;text-align:center;padding:10px 0}

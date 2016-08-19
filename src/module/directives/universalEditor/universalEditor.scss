@@ -390,13 +390,13 @@ body {
     &__title {
       position: relative;
       background-color: #fff;
-      line-height: 25px;
+
       &:before {
         content: '';
         position: absolute;
         margin-top: -4px;
         top: 50%;
-        right: 5px;
+        right: 10px;
         display: block;
         width: 0;
         height: 0;
@@ -459,8 +459,8 @@ body {
     &__items {
       position: absolute;
       z-index: 999;
-      border: 1px solid #999;
-      border-radius: 2px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
       max-height: 300px;
       overflow-y: auto;
       width: 92%;
@@ -556,7 +556,7 @@ body {
       padding: 0px;
       background-color: #fff;
       border: none;
-      height: 23px;
+      height: 22px;
       width: 100%;
       box-sizing: border-box;
       overflow: hidden;
@@ -564,6 +564,9 @@ body {
       &:focus {
         outline: none;
       }
+    }
+    .processing-status{
+      margin-top: 5px;
     }
   }
   .select-wrapper .dropdown .processing-status-wrapper {
