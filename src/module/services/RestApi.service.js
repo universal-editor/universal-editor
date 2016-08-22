@@ -646,7 +646,8 @@
                     if(item.entities[0] == entityType) {
                         mixMode.existence = true;
                         mixMode.entity = item.entities[1];
-                        mixMode.entityTypeName = item.fieldType;
+                        mixMode.entityTypeName = item.fields.type;
+                        mixMode.prependIcon = item.fields.prependIcon;
                     }
                 });
             }

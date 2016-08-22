@@ -90,6 +90,11 @@ gulp.task('files',function(){
         .pipe(gulp.dest('./dist/assets'));
 });
 
+gulp.task('bootstrap-fonts',function(){
+    return gulp.src('./bower_components/bootstrap/fonts/**/*')
+        .pipe(gulp.dest('./dist/fonts'));
+});
+
 gulp.task('config',function(){
     return gulp.src('./src/config.js')
         .pipe(gulp.dest('./dist/js'));
