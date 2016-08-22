@@ -176,7 +176,11 @@
 
 
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [] : moment();
+                var defaultValue = moment();
+                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue, 'HH:mm').isValid()){
+                    defaultValue = moment($scope.field.defaultValue, 'HH:mm');
+                }
+                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
                 return;
             }
 

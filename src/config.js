@@ -41,7 +41,7 @@
                             "male" : "Мужской",
                             "female" : "Женский"
                         },
-                        "defaultValue": "fem"
+                        "defaultValue": "female"
                     },
                     {
                         "name": "country",
@@ -49,13 +49,12 @@
                         "list": true,
                         "label": "Страна",
                         "filterable": true,
-                        "valuesRemote": {
-                            "fields": {
-                                "value": "id",
-                                "label": "name"
-                            },
-                            "url": "http://universal-backend.dev/rest/v1/country"
-                        }
+                        "values": {
+                            "1": "Россия",
+                            "2": "Китай",
+                            "3": "Япония"
+                        },
+                        "defaultValue": "3"
                     },
                     {
                         "name": "notes",
@@ -92,9 +91,8 @@
                     },
                     {
                         "name": "created_at",
-                        "type": "date",
-                        "label": "Дата создания",
-                        "defaultValue": "12.12.2012"
+                        "type": "time",
+                        "label": "Дата создания"
                     },
                     {
                         "name": "updated_at",
@@ -161,8 +159,11 @@
                         "list": true,
                         "label": "Опубликовано",
                         "values": {
-                            "1": ""
+                            "1": "Россия",
+                            "2": "Китай",
+                            "3": "Япония"
                         }
+
                     },
                     {
                         "name": "published_at",
@@ -209,12 +210,6 @@
                         "type": "wysiwyg",
                         "label": "Текст",
                         "expandable" : true
-                    },
-                    {
-                        "name": "coordinates",
-                        "type": "map",
-                        "label": "Местоположение события",
-                        "expandable" : true
                     }
                 ]
             },
@@ -225,7 +220,9 @@
                         "name": "coordinates",
                         "type": "map",
                         "label": "Местоположение события",
-                        "expandable" : true
+                        "expandable" : true,
+                        "multiple": true,
+                        "defaultValue" : "37.617313,55.756039"
                     }
                 ]
             },
@@ -234,8 +231,7 @@
                 "fields": [
                     {
                         "name": "created_at",
-                        "type": "datetime",
-                        "readonly": true,
+                        "type": "time",
                         "label": "Дата создания"
                     },
                     {

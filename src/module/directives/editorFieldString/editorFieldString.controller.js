@@ -38,7 +38,6 @@
         } else {
             vm.multiple = false;
             vm.fieldValue = $scope.field.defaultValue || "" ;
-            console.log(vm.fieldValue);
         }
 
         /*
@@ -217,7 +216,7 @@
             }
 
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [($scope.field.defaultValue || "")] : ($scope.field.defaultValue || "");
+                vm.fieldValue = vm.multiple ? [($scope.field.defaultValue || '')] : ($scope.field.defaultValue || '');
                 if (data.hasOwnProperty($scope.field.name)) {
                     vm.fieldValue = data[$scope.field.name];
                 }

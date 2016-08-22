@@ -174,7 +174,7 @@
             }
             if (data.editorEntityType === "new") {
                 var defaultValue = moment();
-                if(moment($scope.field.defaultValue).isValid()){
+                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue).isValid()){
                     defaultValue = moment($scope.field.defaultValue);
                 }
                 vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;

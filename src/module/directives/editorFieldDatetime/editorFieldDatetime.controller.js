@@ -162,10 +162,10 @@
             }
             if (data.editorEntityType === "new") {
                 var defaultValue = moment().utc();
-                if(moment($scope.field.defaultValue).isValid()){
-                    defaultValue = moment($scope.field.defaultValue).utc();
+                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue).isValid()){
+                    defaultValue = moment($scope.field.defaultValue, 'YYYY-MM-DD HH:mm').utc();
                 }
-                vm.fieldValue = vm.multiple ? [] : moment.utc();
+                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
                 return;
             }
 

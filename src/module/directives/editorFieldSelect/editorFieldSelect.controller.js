@@ -279,6 +279,11 @@
                     }
                     vm.fieldValue = obj;
                 }
+                if (!!$scope.field.defaultValue && !vm.isTree) {
+                    var obj = {};
+                    obj[vm.field_id] = $scope.field.defaultValue;
+                    vm.fieldValue = obj;
+                }
                 return;
             }
 
