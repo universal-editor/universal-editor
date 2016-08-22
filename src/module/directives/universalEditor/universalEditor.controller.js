@@ -189,7 +189,9 @@
         vm.clearFilter = function () {
             FilterFieldsStorage.setInitialValues();
             RestApiService.setFilterParams({});
-            RestApiService.getItemsList();
+            if($state.is('editor.type.list')){
+                RestApiService.getItemsList();
+            }
         };
         
 
@@ -251,7 +253,9 @@
 
 
         $scope.$on('editor:items_list', function (event, data) {
-
+            if($state.is('editor.type.new')){
+                return;
+            }
             vm.metaKey = true;
             vm.listLoaded = true;
             vm.items = data[itemsKey];
