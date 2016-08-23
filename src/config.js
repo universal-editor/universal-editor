@@ -21,7 +21,8 @@
                         "type": "string",
                         "list": true,
                         "label": "Имя",
-                        "required": true
+                        "required": true,
+                        "width": 3
                     },
                     {
                         "name": "email",
@@ -70,7 +71,9 @@
                             {
                                 "name": "text",
                                 "type": "textarea",
-                                "label": "Дополнительные заметки"
+                                "label": "Дополнительные заметки",
+                                "height": 10,
+                                "width": 6
                             }
                         ]
                     }

@@ -8,7 +8,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFieldAutocomplete/editorFieldAutocomplete.html',
     '\n' +
     '<div>\n' +
-    '    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">\n' +
+    '    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
     '        <div data-ng-show="vm.preloadedData" class="selected-values">\n' +
     '            <div data-ng-repeat="acItem in vm.selectedValues" class="autocomplete-item">{{acItem[vm.field_search]}}<span data-ng-click="vm.removeFromSelected(acItem)" data-ng-if="!vm.readonly" class="remove-from-selected">×</span></div>\n' +
     '        </div>\n' +
