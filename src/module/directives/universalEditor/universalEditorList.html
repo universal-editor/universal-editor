@@ -56,7 +56,7 @@
                             <div data-ng-repeat="link in vm.mixContextLinks track by $index" data-ng-if="vm.mixEntityType &amp;&amp; item[vm.subType] === vm.mixEntityType" class="context-menu-item">
                                 <div data-ng-if="link.type == 'request'" data-ng-click="vm.contextAction(link,item[vm.idField])">{{link.label}}</div>
                                 <div data-ng-if="link.type == 'edit'" data-editor-button-edit="" data-entity-subtype="{{item[vm.subType]}}" data-entity-id="{{item[vm.idField]}}" data-button-label="{{link.label}}" data-button-request="{{link.request}}"></div>
-                                <div data-ng-if="link.type == 'delete'" data-editor-button-delete="" data-entity-id="{{item[vm.idField]}}" data-button-label="{{link.label}}" data-button-request="{{link.request}}" data-button-class="context"></div>
+                                <div data-ng-if="link.type == 'delete'" data-entity-type="mix" data-editor-button-delete="" data-entity-id="{{item[vm.idField]}}" data-button-label="{{link.label}}" data-button-request="{{link.request}}" data-button-class="context"></div>
                                 <div data-ng-if="link.type == 'download'" data-editor-button-download="" data-item-value="item" data-button-label="{{link.label}}" data-button-request="{{link.request}}" data-index="{{$index}}" data-button-class="context"></div>
                                 <div data-ng-if="link.type == 'targetBlank'" data-editor-button-target-blank="" data-item-value="item" data-button-label="{{link.label}}" data-button-request="{{link.request}}" data-index="{{$index}}" data-button-class="context"></div>
                             </div>
