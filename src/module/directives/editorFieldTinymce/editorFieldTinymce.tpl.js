@@ -5,7 +5,7 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorFieldWysiwyg/editorFieldWysiwyg.html',
+  $templateCache.put('module/directives/editorFieldTinymce/editorFieldTinymce.html',
     '\n' +
     '<div>\n' +
     '    <div data-ng-if="vm.multiple" class="field-textarea-wrapper col-lg-6 col-md-6 col-sm-6 col-xs-6">\n' +

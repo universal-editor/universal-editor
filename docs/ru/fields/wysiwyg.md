@@ -1,4 +1,4 @@
-# WYSIWYG
+# Tinymce
 
 Является подобием поля [Textarea](textarea.md), с тем отличием, что для редактирования в данном случае 
 будет применен визуальный редактор MCE Editor.
@@ -7,7 +7,7 @@
 {
     "name": "html_text",
     "label": "Форматированный текст",
-    "type": "wysiwyg",
+    "type": "tinymce",
     "hint": "Это большое и красивое текстовое поле",
     "required": true,
     "expandable": true,

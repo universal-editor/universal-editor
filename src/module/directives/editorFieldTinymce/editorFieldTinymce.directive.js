@@ -3,17 +3,17 @@
 
     angular
         .module('universal.editor')
-        .directive('editorFieldWysiwyg',editorFieldWysiwyg);
+        .directive('editorFieldTinymce',editorFieldTinymce);
 
-    editorFieldWysiwyg.$inject = ['$templateCache'];
+    editorFieldTinymce.$inject = ['$templateCache'];
 
-    function editorFieldWysiwyg($templateCache){
+    function editorFieldTinymce($templateCache){
         return {
             restrict : 'A',
             replace : true,
             scope : true,
-            template : $templateCache.get('module/directives/editorFieldWysiwyg/editorFieldWysiwyg.html'),
-            controller: 'EditorFieldWysiwygController',
+            template : $templateCache.get('module/directives/editorFieldTinymce/editorFieldTinymce.html'),
+            controller: 'EditorFieldTinymceController',
             controllerAs : 'vm',
             link : link
         };

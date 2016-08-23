@@ -203,7 +203,7 @@
                     },
                     {
                         "name": "text",
-                        "type": "wysiwyg",
+                        "type": "tinymce",
                         "label": "Текст"
                     }
                 ]

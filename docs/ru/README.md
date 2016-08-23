@@ -6,7 +6,7 @@
         * [String](fields/string.md)
         * [Colorpicker](fields/colorpicker.md)
         * [Textarea](fields/textarea.md)
-        * [WYSIWYG](fields/wysiwyg.md)
+        * [Tinymce](fields/tinymce.md)
         * [Date](fields/date.md)
         * [Time](fields/time.md)
         * [Datetime](fields/datetime.md)

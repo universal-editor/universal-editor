@@ -3,11 +3,11 @@
 
     angular
         .module('universal.editor')
-        .controller('EditorFieldWysiwygController',EditorFieldWysiwygController);
+        .controller('EditorFieldTinymceController',EditorFieldTinymceController);
 
-    EditorFieldWysiwygController.$inject = ['$scope','EditEntityStorage','ArrayFieldStorage'];
+    EditorFieldTinymceController.$inject = ['$scope','EditEntityStorage','ArrayFieldStorage'];
 
-    function EditorFieldWysiwygController($scope,EditEntityStorage,ArrayFieldStorage){
+    function EditorFieldTinymceController($scope,EditEntityStorage,ArrayFieldStorage){
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
