@@ -382,6 +382,9 @@
             var _url = tmpUrl;
             var idField = 'id';
 
+            if($state.is('editor.type.entity')){
+                _method = 'PUT';
+            }
             if (entityObject.backend.hasOwnProperty('fields')) {
                 idField = entityObject.backend.fields.primaryKey || idField;
             }
@@ -390,8 +393,9 @@
                 _method = typeof request.method !== 'undefined' ? request.method : _method;
                 _url = typeof request.url !== 'undefined' ? request.url : _url;
             }
+
             $http({
-                method: 'POST',
+                method: _method,
                 url: _url,
                 data: item,
                 params: params
