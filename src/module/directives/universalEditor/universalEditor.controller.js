@@ -177,8 +177,8 @@
                 params.parent = $state.params.parent;
                 isReload = false;
             }
+            RestApiService.getItemsList();
             $state.go('editor.type.list', params, {reload: isReload});
-
         };
 
         vm.applyFilter = function () {

@@ -128,14 +128,12 @@
                 controllerAs : "vm",
                 onEnter : ["RestApiService", "$stateParams", function (RestApiService,$stateParams) {
                     RestApiService.setEntityType($stateParams.type);
+                    RestApiService.setQueryParams({});
                 }]
             })
             .state('editor.type.list',{
                 url : "/list?parent",
-                templateUrl : "module/directives/universalEditor/universalEditorList.html",
-                onEnter : ["RestApiService", function (RestApiService) {
-                    RestApiService.getItemsList();
-                }]
+                templateUrl : "module/directives/universalEditor/universalEditorList.html"
             })
             .state('editor.type.new',{
                 url : '/new?parent&type',
