@@ -382,7 +382,7 @@
             var _url = tmpUrl;
             var idField = 'id';
 
-            if($state.is('editor.type.entity')){
+            if ($state.is('editor.type.entity')) {
                 _method = 'PUT';
             }
             if (entityObject.backend.hasOwnProperty('fields')) {
