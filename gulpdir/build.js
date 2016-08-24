@@ -109,6 +109,11 @@ gulp.task('inject', function() {
         .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('bootstrap-fonts',function(){
+    return gulp.src('./bower_components/bootstrap/fonts/**/*')
+        .pipe(gulp.dest('./dist/fonts'));
+});
+
 gulp.task('build',function(){
     runSequence(
         'jade',
@@ -118,6 +123,7 @@ gulp.task('build',function(){
         'files',
         'libs-min',
         'config',
+        'bootstrap-fonts',
         'inject'
     );
 });
@@ -137,6 +143,7 @@ gulp.task('serve:build', function () {
         'files',
         'libs-min',
         'config',
+        'bootstrap-fonts',
         'inject',
         'serve:dist'
     );
