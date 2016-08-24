@@ -1,5 +1,5 @@
 div
-    .col-lg-2.col-md-2.col-sm-2.col-xs-2
+    .col-lg-2.col-md-2.col-sm-3.col-xs-3
         .selected-values(data-ng-show="vm.preloadedData")
             .autocomplete-item(data-ng-repeat="acItem in vm.selectedValues") {{acItem[vm.field_search]}}
                 span.remove-from-selected(data-ng-click="vm.removeFromSelected(acItem)", data-ng-if="!vm.readonly") ×

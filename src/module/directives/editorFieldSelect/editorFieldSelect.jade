@@ -1,10 +1,10 @@
 div
-    .col-lg-2.col-md-2.col-sm-2.col-xs-2(data-ng-if="vm.multiple && !vm.isTree")
+    .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="vm.multiple && !vm.isTree")
         select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple)
             option(data-ng-repeat="option in vm.options", value="{{option[vm.field_id]}}") {{option[vm.field_search]}}
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
-    .col-lg-2.col-md-2.col-sm-2.col-xs-2(data-ng-if="!vm.multiple && !vm.isTree")
+    .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple && !vm.isTree")
         select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", ng-options="option[vm.field_search] for option in vm.options track by option[vm.field_id]")
             option(value="", data-ng-show="!vm.required && !vm.loadingData") --- {{'SELECT_VALUE' | translate}} ---
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
