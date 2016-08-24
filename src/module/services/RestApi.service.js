@@ -382,6 +382,9 @@
             var _url = tmpUrl;
             var idField = 'id';
 
+            if ($state.is('editor.type.entity')) {
+                _method = 'PUT';
+            }
             if (entityObject.backend.hasOwnProperty('fields')) {
                 idField = entityObject.backend.fields.primaryKey || idField;
             }
@@ -390,8 +393,9 @@
                 _method = typeof request.method !== 'undefined' ? request.method : _method;
                 _url = typeof request.url !== 'undefined' ? request.url : _url;
             }
+
             $http({
-                method: 'POST',
+                method: _method,
                 url: _url,
                 data: item,
                 params: params
@@ -466,7 +470,7 @@
             });
         };
 
-        this.deleteItemById = function (id,request) {
+        this.deleteItemById = function (id,request, type) {
 
             var par =  {};
 
@@ -478,11 +482,19 @@
             var _method = 'DELETE';
             var _url  = entityObject.backend.url + '/' + id;
 
-            if(typeof request !== 'undefined'){
+            if (type === 'mix'){
+                var config = configData.entities.filter(function (item) {
+                    return item.name === mixEntity.entity;
+                })[0];
+                _url = config.backend.url + '/' + id;
+            }
+
+            if (typeof request !== 'undefined') {
                 par = typeof request.params !== 'undefined' ? request.params : par;
                 _method = typeof request.method !== 'undefined' ? request.method : _method;
                 _url = typeof request.url !== 'undefined' ? request.url : _url;
             }
+
             $http({
                 method : _method,
                 url : _url,
