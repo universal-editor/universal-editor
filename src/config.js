@@ -32,6 +32,19 @@
                         "required": true
                     },
                     {
+                        "name": "parent_id",
+                        "type": "autocomplete",
+                        "list": true,
+                        "label": "Руководитель",
+                        "valuesRemote": {
+                            "fields": {
+                                "value": "id",
+                                "label": "name"
+                            },
+                            "url": "http://universal-backend.dev/rest/v1/staff",
+                        }
+                    },
+                    {
                         "name": "gender",
                         "type": "radiolist",
                         "list": true,
