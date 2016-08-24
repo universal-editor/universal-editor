@@ -42,7 +42,7 @@
                 return;
             }
             if(confirm("Удалить запись «" + vm.entityId + "»?")){
-                RestApiService.deleteItemById(vm.entityId,request);
+                RestApiService.deleteItemById(vm.entityId,request, $scope.entityType);
             }
         });
     }

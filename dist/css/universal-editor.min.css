@@ -18,9 +18,8 @@
 .filter-date-wrapper .divider{padding:0 5px}.editor-date,.editor-time{display:inline-block}
 .editor-date input{width:85px}.editor-time input{width:70px}.filter-datetime-wrapper .filter-start,.filter-datetime-wrapper .filter-end,.filter-datetime-wrapper .divider{display:inline-block}
 .filter-datetime-wrapper .divider{padding:0 5px}.editor-datetime,.editor-time{display:inline-block}
-.editor-datetime input{width:135px}.filter-time-wrapper .filter-start,.filter-time-wrapper .filter-end,.filter-time-wrapper .divider{display:inline-block}
-.filter-time-wrapper .divider{padding:0 5px}.field-wrapper{margin:0 10px;padding:10px 0}
-body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;background-color:#e1e9eb}
+.editor-datetime input{width:135px}.field-wrapper{margin:0 10px;padding:10px 0}.filter-time-wrapper .filter-start,.filter-time-wrapper .filter-end,.filter-time-wrapper .divider{display:inline-block}
+.filter-time-wrapper .divider{padding:0 5px}body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;background-color:#e1e9eb}
 .universal-editor .editor-header{padding:20px 0 5px 0}.universal-editor .editor-header .filter-button{min-width:110px;margin-right:10px}
 .universal-editor .editor-header .header-action-button{border:0;display:inline-block;margin-right:10px;outline:0}
 .universal-editor .groups-action{margin-bottom:10px}.universal-editor .editor-entity-actions{background:#ebf1f3;padding:10px;border-top:1px solid #e1e9eb}
@@ -32,7 +31,7 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .universal-editor table thead td.active.desc:after{content:"";width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid #000;display:block;float:right;transform:scale(-1,-1);margin-top:3px}
 .universal-editor table tbody td{font-size:12px}.editor-action-button{margin-right:10px;display:inline-block;outline:0;width:100%}
 .editor-action-button.small{padding:0 5px;height:15px;font-size:8px;line-height:15px}
-.items-list .child{margin-left:30px}.zhs-item{background-color:#dbe4b6}.editor-body{padding:22px 20px;position:relative;background-color:#cbd6da}
+.items-list .child{margin-left:30px}.editor-body{padding:22px 20px;position:relative;background-color:#cbd6da}
 .editor-body .close-editor{display:block;position:absolute;top:22px;right:22px;width:13px;height:13px;cursor:pointer}
 .editor-body .field-error-bottom-wrapper,.editor-body .field-notify-bottom-wrapper{background-color:#ebf1f3;padding:1px}
 .editor-body .tab-content-wrapper{background:#ebf1f3}.error-item{padding:3px;margin:5px}
@@ -81,3 +80,4 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .field-wrapper-select .dropdown__search-field:focus{outline:0}.field-wrapper-select .select-wrapper .dropdown .processing-status-wrapper{margin-top:2px}
 .item-datepicker-wrapper,.item-colorpicker-wrapper,.item-string-wrapper,.item-textarea-wrapper,.item-timepicker-wrapper,.item-array-wrapper,.item-map-wrapper{padding-bottom:10px}
 .radio,.checkbox{margin-top:0}.editor-field-array .field-name-label.label-array{background-color:#d3dfe2;text-align:center;padding:10px 0}
+.icon-mix-mode{padding-right:10px}
