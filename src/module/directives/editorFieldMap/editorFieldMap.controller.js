@@ -208,13 +208,13 @@
                     });
                 }
             }
-            $scope.$evalAsync(function(){
-                if(!vm.multiple){
-                    if(!!vm.fieldValue){
+            $scope.$evalAsync(function () {
+                if (!vm.multiple) {
+                    if (!!vm.fieldValue) {
                         vm.mapParam.center = vm.fieldValue;
                     }
-                }else{
-                    if(vm.fieldValue.length > 0){
+                } else {
+                    if (vm.fieldValue.length > 0) {
                         vm.mapParam.center = vm.fieldValue[0];
                     }
                 }
