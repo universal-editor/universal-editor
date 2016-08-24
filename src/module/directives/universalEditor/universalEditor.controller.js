@@ -60,7 +60,9 @@
         }
 
         var mixEntity = RestApiService.getMixModeByEntity();
+        vm.isMixMode = mixEntity.existence;
         if(mixEntity.existence){
+            vm.prependIcon = mixEntity.prependIcon || 'title';
             vm.subType = mixEntity.entityTypeName || "type";
             vm.mixEntityType = mixEntity.entity;
             mixEntityObject = configData.entities.filter(function (item) {
@@ -87,7 +89,6 @@
                 }
             });
         });
-
         angular.forEach(entityObject.editFooterBar, function (editFooterBar) {
             switch (editFooterBar.type){
                 case 'add':

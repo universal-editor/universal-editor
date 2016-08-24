@@ -52,6 +52,10 @@ ul.nav.nav-tabs(data-ng-if="vm.configData.entities.length > 1")
                         div(data-ng-if="link.type == 'download'", data-editor-button-download="", data-item-value="item", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-index="{{$index}}", data-button-class="context")
                         div(data-ng-if="link.type == 'targetBlank'", data-editor-button-target-blank="", data-item-value="item", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-index="{{$index}}", data-button-class="context")
                td(data-ng-repeat="fieldItem in vm.tableFields track by $index")
+                  span.glyphicon(
+                  data-ng-class="{'glyphicon-folder-open icon-mix-mode' : (vm.isMixMode && !((vm.entityType !== item[vm.subType]) && item[vm.subType] !== undefined))}",
+                  data-ng-if='vm.prependIcon === fieldItem.field'
+                  )
                   span(style="padding-left: {{ item.parentPadding ? item.parentPadding * 10 : 0 }}px;") {{item[fieldItem.field]}}
             tr(data-ng-if="vm.items.length == 0")
                td(colspan="{{vm.tableFields.length + 1}}")
