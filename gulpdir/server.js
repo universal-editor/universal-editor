@@ -55,6 +55,11 @@ gulp.task('files-dev',function(){
         .pipe(gulp.dest('./app/assets'));
 });
 
+gulp.task('files-tinymce-dev',function(){
+    return gulp.src('./bower_components/tinymce-plugin/dist/mce-files/**/*')
+        .pipe(gulp.dest('./app/tinymce-plugin/mce-files'));
+});
+
 gulp.task('prebuild' , function () {
     runSequence(
         'jade-dev',
@@ -71,6 +76,7 @@ gulp.task('serve', function () {
         'js-dev',
         'css-dev',
         'files-dev',
+        'files-tinymce-dev',
         function () {
             gulp.src('./src/index.html')
                 .pipe(plugins.usemin({

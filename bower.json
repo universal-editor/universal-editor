@@ -41,7 +41,8 @@
     "angular-toastr": "~1.7.0",
     "angular-translate": "^2.11.0",
     "angular-translate-loader-static-files": "^2.11.0",
-    "bootstrap-css-only": "^3.3.6"
+    "bootstrap-css-only": "^3.3.6",
+    "tinymce-plugin": "https://github.com/universal-editor/tinymce-plugin.git"
   },
   "overrides": {
     "ya-map": {

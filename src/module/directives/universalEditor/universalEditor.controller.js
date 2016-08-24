@@ -17,7 +17,6 @@
             itemsKey,
             mixEntityObject;
 
-        tinyMCE.baseURL = '../assets/mce-files';
         vm.assetsPath = '../assets';
 
         if ($scope.entity === undefined || angular.isUndefined(entityObject)){

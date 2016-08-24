@@ -6,7 +6,6 @@
         [
             'universal.editor.templates',
             'minicolors',
-            'ui.tinymce',
             'datePicker',
             'checklist-model',
             'angularMoment',

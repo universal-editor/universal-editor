@@ -104,6 +104,11 @@ gulp.task('inject', function() {
         .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('files-tinymce',function(){
+    return gulp.src('./bower_components/tinymce-plugin/dist/mce-files/**/*')
+        .pipe(gulp.dest('./dist/tinymce-plugin/mce-files'));
+});
+
 gulp.task('build',function(){
     runSequence(
         'jade',
@@ -113,6 +118,7 @@ gulp.task('build',function(){
         'files',
         'libs-min',
         'config',
+        'files-tinymce',
         'inject'
     );
 });
@@ -133,6 +139,7 @@ gulp.task('serve:build', function () {
         'libs-min',
         'config',
         'inject',
+        'files-tinymce',
         'serve:dist'
     );
 });
