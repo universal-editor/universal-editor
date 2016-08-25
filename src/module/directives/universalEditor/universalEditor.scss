@@ -498,7 +498,9 @@ body {
           -webkit-border-radius: 3px;
           border-radius: 3px;
         }
-
+        &.multi_radio:before{
+          border-radius: 10px;
+        }
         .checkbox {
           &__check {
             position: absolute;
@@ -508,6 +510,10 @@ body {
             left: 4px;
             width: 12px;
             height: 11px;
+            &.multi_radio{
+              margin-top: -7px;
+              margin-left: -2px;
+            }
           }
         }
       }

@@ -71,7 +71,9 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .field-wrapper-select .dropdown-items__item{min-height:50px}.field-wrapper-select .dropdown .option{position:relative;line-height:50px;border-bottom:1px solid #c6cfd1}
 .field-wrapper-select .dropdown .option:hover{background-color:#fafafa}.field-wrapper-select .dropdown .option__checkbox{position:relative;float:left;height:50px;width:20px}
 .field-wrapper-select .dropdown .option__checkbox:before{position:absolute;top:50%;margin-top:-9px;left:0;display:block;width:17px;height:17px;content:'';border:1px solid #c6cfd1;-webkit-border-radius:3px;border-radius:3px}
+.field-wrapper-select .dropdown .option__checkbox.multi_radio:before{border-radius:10px}
 .field-wrapper-select .dropdown .option__checkbox .checkbox__check{position:absolute;display:none;top:50%;margin-top:-5px;left:4px;width:12px;height:11px}
+.field-wrapper-select .dropdown .option__checkbox .checkbox__check.multi_radio{margin-top:-7px;margin-left:-2px}
 .field-wrapper-select .dropdown .option__label{margin-left:25px}.field-wrapper-select .dropdown .option__label:hover{cursor:pointer;background-color:#fafafa}
 .field-wrapper-select .dropdown .option__label_no-multiple{margin-left:5px}.field-wrapper-select .dropdown .option__child-count{position:relative;color:#999}
 .field-wrapper-select .dropdown .option__child-count:after{content:'';position:absolute;top:6px;right:-15px;display:block;width:0;height:0;border-top:5px solid #2a3534;border-right:3px solid transparent;border-left:3px solid transparent}

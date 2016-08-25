@@ -280,6 +280,9 @@
                     }
                     vm.fieldValue = obj;
                 }
+                if(vm.isTree){
+                    vm.fieldValue = [];
+                }
                 return;
             }
 
@@ -377,7 +380,6 @@
                 }
             });
         }
-
         var allOptions;
 
         // dropdown functions
@@ -494,7 +496,7 @@
                 if (opt.childOpts && opt.childOpts.length) {
                     opt.childOpts = filter(opt.childOpts, filterText);
                 }
-                return opt[vm.field_search].indexOf(filterText) > -1 || (opt.childOpts && opt.childOpts.length);
+                return (opt[vm.field_search].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length);
             });
 
             return result;
