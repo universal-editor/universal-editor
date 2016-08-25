@@ -26,17 +26,12 @@ module.run(['$templateCache', function($templateCache) {
     '    </div>\n' +
     '    <div data-ng-if="vm.isTree" class="dropdown col-lg-3 col-md-3 col-sm-3 col-xs-3">\n' +
     '        <div class="dropdown__host">\n' +
-    '            <div data-ng-if="vm.fieldValue.length &amp;&amp; (vm.multiple || vm.treeParentField &amp;&amp; vm.treeChildCountField)" class="dropdown__selected-items dropdown__selected-items_with-borders">\n' +
-    '                <ul class="selected-items">\n' +
-    '                    <li data-ng-repeat="value in vm.fieldValue" class="selected-items__item">\n' +
-    '                        <div class="selected-item">{{value[vm.field_search]}}<span data-ng-click="vm.remove($event, value)" class="selected-item__btn_delete">x</span></div>\n' +
-    '                    </li>\n' +
-    '                </ul>\n' +
-    '            </div>\n' +
-    '            <div data-ng-class="{\'dropdown__title_open\': isOpen}" data-ng-click="toggleDropdown($event)" class="dropdown__title form-control">\n' +
-    '                <input data-ng-show="vm.search" data-ng-model="vm.filterText" data-ng-focus="vm.focus($event)" data-ng-change="vm.change()" data-ng-click="vm.focus($event)" placeholder="{{\'SEARCH_ELEMENTS\' | translate}}" ng-keyup="vm.clickEsc($event)" class="dropdown__search-field"/>\n' +
+    '            <div data-ng-class="{\'dropdown__title_open\': isOpen}" data-ng-click="toggleDropdown($event)" data-ng-style="{&quot;cursor&quot; : vm.search ? &quot;text&quot; : &quot;pointer&quot;}" class="dropdown__title form-control">\n' +
+    '                <div data-ng-repeat="value in vm.fieldValue" data-ng-if="vm.fieldValue.length &amp;&amp; (vm.multiple || vm.treeParentField &amp;&amp; vm.treeChildCountField)" class="selected-items__item">\n' +
+    '                    <div class="selected-item">{{value[vm.field_search]}}<span data-ng-click="vm.remove($event, value)" class="selected-item__btn_delete">x</span></div>\n' +
+    '                </div>\n' +
+    '                <input data-ng-show="vm.search" data-ng-model="vm.filterText" data-ng-focus="vm.focus($event)" data-ng-change="vm.change()" data-ng-click="vm.focus($event)" placeholder="{{\'SEARCH_ELEMENTS\' | translate}}" ng-keyup="vm.clickEsc($event)" data-ng-style="vm.styleInput" size="{{vm.sizeInput}}" class="dropdown__search-field"/>\n' +
     '                <div data-ng-if="!vm.search">\n' +
-    '                    <div class="dropdown__selected-items">{{vm.fieldValue | limitTo: 10 | selectedValues: vm.field_search}}</div>\n' +
     '                    <div data-ng-if="!vm.loadingData &amp;&amp; !vm.fieldValue.length" class="dropdown__selected-items">--- {{\'SELECT_VALUE\' | translate}} ---</div>\n' +
     '                </div>\n' +
     '            </div>\n' +

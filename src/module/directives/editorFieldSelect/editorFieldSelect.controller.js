@@ -56,12 +56,13 @@
 
         // Настройки режима "Дерево"
 
-        if ($scope.field.hasOwnProperty("valuesRemote") && $scope.field.tree &&
+        if ($scope.field.hasOwnProperty('valuesRemote') && $scope.field.tree &&
             $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {
             vm.treeParentField = $scope.field.valuesRemote.fields.parent;
             vm.treeChildCountField = $scope.field.valuesRemote.fields.childCount;
             vm.treeSelectBranches = $scope.field.selectBranches;
             vm.isTree = $scope.field.tree && vm.treeParentField && vm.treeChildCountField;
+            vm.styleInput = {'width' : '135px'};
         }
 
         if(vm.depend){
@@ -116,12 +117,15 @@
             });
         } else if ($scope.field.hasOwnProperty("valuesRemote")) {
             if (vm.isTree) {
+                console.log("dfg");
                 if (_selectedIds.length && !vm.options.length) {
                     getRemoteSelectedValues();
                 }
                 else if (!_selectedIds.length) {
                     getRemoteValues();
                 }
+            } else {
+                getRemoteValues();
             }
         } else {
             console.error('EditorFieldSelectController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
@@ -479,11 +483,14 @@
 
         function change() {
             if (!vm.filterText) {
+                vm.styleInput = {'width' : '135px'};
                 if (allOptions) {
                     vm.options = allOptions;
                 }
                 return;
             }
+            vm.styleInput = {'width' : 'inherit'};
+            vm.sizeInput = vm.filterText.length;
             if (!allOptions) {
                 allOptions = angular.copy(vm.options);
             }
