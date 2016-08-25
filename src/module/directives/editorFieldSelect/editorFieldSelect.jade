@@ -25,7 +25,8 @@ div
                 data-ng-focus="vm.focus($event)"
                 data-ng-change="vm.change()"
                 data-ng-click="vm.focus($event)"
-                placeholder="{{'SEARCH_ELEMENTS' | translate}}")
+                placeholder="{{'SEARCH_ELEMENTS' | translate}}",
+                ng-keyup="vm.clickEsc($event)")
                 div(data-ng-if="!vm.search")
                     .dropdown__selected-items
                         | {{vm.fieldValue | limitTo: 10 | selectedValues: vm.field_search}}

@@ -405,11 +405,6 @@ body {
         border-left: 4px solid transparent;
         z-index: 998;
       }
-      &_open {
-        &:before {
-          transform: rotate(180deg);
-        }
-      }
     }
     &__selected-items {
       overflow: hidden;

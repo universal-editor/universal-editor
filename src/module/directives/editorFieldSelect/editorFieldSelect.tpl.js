@@ -34,7 +34,7 @@ module.run(['$templateCache', function($templateCache) {
     '                </ul>\n' +
     '            </div>\n' +
     '            <div data-ng-class="{\'dropdown__title_open\': isOpen}" data-ng-click="toggleDropdown($event)" class="dropdown__title form-control">\n' +
-    '                <input data-ng-show="vm.search" data-ng-model="vm.filterText" data-ng-focus="vm.focus($event)" data-ng-change="vm.change()" data-ng-click="vm.focus($event)" placeholder="{{\'SEARCH_ELEMENTS\' | translate}}" class="dropdown__search-field"/>\n' +
+    '                <input data-ng-show="vm.search" data-ng-model="vm.filterText" data-ng-focus="vm.focus($event)" data-ng-change="vm.change()" data-ng-click="vm.focus($event)" placeholder="{{\'SEARCH_ELEMENTS\' | translate}}" ng-keyup="vm.clickEsc($event)" class="dropdown__search-field"/>\n' +
     '                <div data-ng-if="!vm.search">\n' +
     '                    <div class="dropdown__selected-items">{{vm.fieldValue | limitTo: 10 | selectedValues: vm.field_search}}</div>\n' +
     '                    <div data-ng-if="!vm.loadingData &amp;&amp; !vm.fieldValue.length" class="dropdown__selected-items">--- {{\'SELECT_VALUE\' | translate}} ---</div>\n' +

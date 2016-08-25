@@ -59,7 +59,7 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .field-wrapper-select .dropdown{position:relative;min-width:400px;border-radius:2px}
 .field-wrapper-select .dropdown *{box-sizing:border-box}.field-wrapper-select .dropdown__title{position:relative;background-color:#fff}
 .field-wrapper-select .dropdown__title:before{content:'';position:absolute;margin-top:-4px;top:50%;right:10px;display:block;width:0;height:0;border-top:8px solid #2a3534;border-right:4px solid transparent;border-left:4px solid transparent;z-index:998}
-.field-wrapper-select .dropdown__title_open:before{transform:rotate(180deg)}.field-wrapper-select .dropdown__selected-items{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.field-wrapper-select .dropdown__selected-items{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .field-wrapper-select .dropdown__selected-items_with-borders{border-radius:2px;padding:0}
 .field-wrapper-select .dropdown__selected-items .selected-items{margin:0;padding:1px;list-style:none}
 .field-wrapper-select .dropdown__selected-items .selected-items:after{content:'';display:table;clear:both}

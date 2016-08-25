@@ -6,7 +6,7 @@ div(data-ng-show="isOpen")
       .option__label(data-ng-click="onToggle($event, option, true)") 
         span(data-ng-bind="option[fieldSearch]")
         = ' '
-        span.option__child-count(data-ng-if="option[childCountField]" data-ng-class="{'option__child-count_open': option.isOpen}") ({{option.child_count}})
+        span.option__child-count(data-ng-if="option[childCountField]" data-ng-class="{'option__child-count_open': option.isOpen}") ({{option[childCountField]}})
     .processing-status-wrapper(data-ng-if="option[childCountField]" data-ng-show="!!option.loadingData")
           .processing-status Выполняется действие
     .dropdown-items__children(data-ng-if="option.childOpts"

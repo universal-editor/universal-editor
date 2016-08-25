@@ -567,6 +567,11 @@
                 }
             }
         }
+        vm.clickEsc = function(event){
+            if(event.keyCode === 27){
+                $scope.isOpen = false;
+            }
+        }
     }
 
     angular
