@@ -40,7 +40,6 @@
         }
 
         vm.assetsPath = '../assets';
-
         var _selectedIds = [];
         vm.fieldName = $scope.field.name;
         vm.options = [];
@@ -52,6 +51,7 @@
         vm.depend = $scope.field.depend || false;
         vm.parentValue = !vm.depend;
         vm.search = $scope.field.search;
+        vm.placeholder = $scope.field.placeholder || '';
         //vm.multiname = $scope.field.multiname || "value";
 
         // Настройки режима "Дерево"
@@ -62,7 +62,7 @@
             vm.treeChildCountField = $scope.field.valuesRemote.fields.childCount;
             vm.treeSelectBranches = $scope.field.selectBranches;
             vm.isTree = vm.treeParentField && vm.treeChildCountField;
-            vm.styleInput = {'width' : '135px'};
+            vm.sizeInput = vm.placeholder.length;
         }
 
         if(vm.depend){
@@ -441,6 +441,13 @@
                     }
                 }
             }
+            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+                vm.placeholder = $scope.field.placeholder || '';
+                vm.sizeInput = vm.placeholder.length;
+            } else {
+                vm.placeholder = '';
+                vm.sizeInput = vm.filterText.length || 1;
+            }
             e.stopPropagation();
         }
 
@@ -471,6 +478,13 @@
                     }
                 }
             }
+            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+                vm.placeholder = $scope.field.placeholder || '';
+                vm.sizeInput = vm.placeholder.length;
+            } else {
+                vm.placeholder = '';
+                vm.sizeInput = vm.filterText.length || 1;
+            }
             e.stopPropagation();
         }
 
@@ -481,14 +495,20 @@
         }
 
         function change() {
+            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+                vm.placeholder = $scope.field.placeholder || '';
+                vm.sizeInput = vm.placeholder.length;
+            } else {
+                vm.placeholder = '';
+                vm.sizeInput = vm.filterText.length || 1;
+            }
             if (!vm.filterText) {
-                vm.styleInput = {'width' : '135px'};
+                vm.sizeInput = vm.placeholder.length;
                 if (allOptions) {
                     vm.options = allOptions;
                 }
                 return;
             }
-            vm.styleInput = {'width' : 'inherit'};
             vm.sizeInput = vm.filterText.length;
             if (!allOptions) {
                 allOptions = angular.copy(vm.options);

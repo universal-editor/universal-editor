@@ -11,7 +11,7 @@ module.run(['$templateCache', function($templateCache) {
     '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <select ng-options="item[vm.field_id] as item[vm.field_search] for item in vm.selectedValues" data-ng-model="vm.filterValue" class="form-control">\n' +
-    '            <option value="">--- {{\'SELECT_VALUE\' | translate}} ---</option>\n' +
+    '            <option value="">{{vm.placeholder}}</option>\n' +
     '        </select>\n' +
     '    </div>\n' +
     '</div>');

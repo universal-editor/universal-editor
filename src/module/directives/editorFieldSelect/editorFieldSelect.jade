@@ -6,7 +6,7 @@ div
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
     .col-lg-2.col-md-2.col-sm-2.col-xs-2(data-ng-if="!vm.multiple && !vm.isTree")
         select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", ng-options="option[vm.field_search] for option in vm.options track by option[vm.field_id]")
-            option(value="", data-ng-show="!vm.required && !vm.loadingData") --- {{'SELECT_VALUE' | translate}} ---
+            option(value="", data-ng-show="!vm.required && !vm.loadingData") {{vm.placeholder}}
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
 
@@ -30,13 +30,13 @@ div
                 data-ng-focus="vm.focus($event)",
                 data-ng-change="vm.change()",
                 data-ng-click="vm.focus($event)",
-                placeholder="{{'SEARCH_ELEMENTS' | translate}}",
+                placeholder="{{vm.placeholder}}",
                 ng-keyup="vm.clickEsc($event)",
                 data-ng-style='vm.styleInput',
                 size='{{vm.sizeInput}}'
                 )
                 div(data-ng-if="!vm.search")
-                    .dropdown__selected-items(data-ng-if="!vm.loadingData && !vm.fieldValue.length") --- {{'SELECT_VALUE' | translate}} ---
+                    .dropdown__selected-items(data-ng-if="!vm.loadingData && !vm.fieldValue.length") {{vm.placeholder}}
 
                 .dropdown__items.dropdown__items_with-padding(
                 data-ng-if="::(vm.treeParentField && vm.treeChildCountField)"
