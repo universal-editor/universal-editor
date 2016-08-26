@@ -22,11 +22,7 @@
                         "list": true,
                         "label": "Имя",
                         "required": true,
-<<<<<<< HEAD
                         "defaultValue": "c92723"
-=======
-                        "width": 3
->>>>>>> master
                     },
                     {
                         "name": "email",
@@ -76,12 +72,7 @@
                                 "name": "text",
                                 "type": "textarea",
                                 "label": "Дополнительные заметки",
-<<<<<<< HEAD
                                 "defaultValue": "c92723"
-=======
-                                "height": 10,
-                                "width": 6
->>>>>>> master
                             }
                         ]
                     }
