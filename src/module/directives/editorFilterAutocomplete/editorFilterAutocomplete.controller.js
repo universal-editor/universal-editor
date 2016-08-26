@@ -15,15 +15,15 @@
         var possibleValues = angular.element($element[0].getElementsByClassName('possible-values')[0]);
 
         var remote = $scope.filter.valuesRemote;
-        vm.field_id = "id";
-        vm.field_search = "title";
+        vm.filter_id = "id";
+        vm.filter_search = "title";
         if (remote) {
             if(remote.fields){
                 if (remote.fields.value) {
-                    vm.field_id = remote.fields.value;
+                    vm.filter_id = remote.fields.value;
                 }
                 if (remote.fields.label) {
-                    vm.field_search = remote.fields.label;
+                    vm.filter_search = remote.fields.label;
                 }
             }
         }
@@ -62,6 +62,8 @@
                         break;
                     }
 
+                    possibleValues = angular.element($element[0].getElementsByClassName('possible-values')[0]);
+
                     if(vm.activeElement < vm.possibleValues.length -1){
                         $timeout(function () {
                             vm.activeElement++;
@@ -73,7 +75,7 @@
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
 
-                            if(activeTop >= wrapperHeight + wrapperScroll){
+                            if(activeTop >= (wrapperHeight + wrapperScroll - activeHeight)){
                                 possibleValues[0].scrollTop += activeHeight + 1;
                             }
                         },1);
@@ -84,6 +86,8 @@
                     if(vm.possibleValues.length < 1){
                         break;
                     }
+
+                    possibleValues = angular.element($element[0].getElementsByClassName('possible-values')[0]);
 
                     if(vm.activeElement > 0){
                         $timeout(function () {
