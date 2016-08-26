@@ -1,6 +1,6 @@
 ul.nav.nav-tabs(data-ng-if="vm.configData.entities.length > 1")
    li.item(data-ng-repeat="entityItem in vm.configData.entities track by $index", data-ng-class="(entityItem.name === entity) ? 'active' : ''")
-      a(href="#/editor/{{entityItem.name}}/list") {{entityItem.label}}
+      a(data-ui-sref='editor.type.list({type: entityItem.name})', ui-sref-opts="{reload: true, inherit: false}") {{entityItem.label}}
 .universal-editor
    div
       .editor-header
