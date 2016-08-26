@@ -117,7 +117,6 @@
             });
         } else if ($scope.field.hasOwnProperty("valuesRemote")) {
             if (vm.isTree) {
-                console.log("dfg");
                 if (_selectedIds.length && !vm.options.length) {
                     getRemoteSelectedValues();
                 }
