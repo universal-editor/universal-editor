@@ -56,12 +56,12 @@
 
         // Настройки режима "Дерево"
 
-        if ($scope.field.hasOwnProperty('valuesRemote') && $scope.field.tree &&
+        if ($scope.field.hasOwnProperty('valuesRemote') &&
             $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {
             vm.treeParentField = $scope.field.valuesRemote.fields.parent;
             vm.treeChildCountField = $scope.field.valuesRemote.fields.childCount;
             vm.treeSelectBranches = $scope.field.selectBranches;
-            vm.isTree = $scope.field.tree && vm.treeParentField && vm.treeChildCountField;
+            vm.isTree = vm.treeParentField && vm.treeChildCountField;
             vm.styleInput = {'width' : '135px'};
         }
 
