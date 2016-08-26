@@ -385,7 +385,6 @@
                 RestApiService
                     .getUrlResource($scope.field.valuesRemote.url + "?filter=" + JSON.stringify(urlParam))
                     .then(function (response){
-                        console.log(response);
                         angular.forEach(response.data.items, function (v) {
                             if(!alreadySelected(v) && !alreadyInPossible(v)){
                                 vm.possibleValues.push(v);
@@ -491,6 +490,9 @@
               vm.preloadedData = true;
               console.error('EditorFieldAutocompleteController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
           }
+        }
+        vm.focusPossible = function(isActive){
+            vm.isActivePossible = isActive;
         }
     }
 })();

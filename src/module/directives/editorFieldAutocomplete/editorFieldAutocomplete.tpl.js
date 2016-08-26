@@ -13,11 +13,11 @@ module.run(['$templateCache', function($templateCache) {
     '            <div data-ng-repeat="acItem in vm.selectedValues" class="autocomplete-item">{{acItem[vm.field_search]}}<span data-ng-click="vm.removeFromSelected(acItem)" data-ng-if="!vm.readonly" class="remove-from-selected">×</span></div>\n' +
     '        </div>\n' +
     '        <div data-ng-show="vm.preloadedData &amp;&amp; vm.selectedValues.length &lt; vm.maxItemsCount" class="autocomplete-input-wrapper">\n' +
-    '            <input type="text" data-ng-hide="(!vm.multiple &amp;&amp; vm.selectedValues.length &gt;= 1)" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" class="form-control input-sm"/>\n' +
+    '            <input type="text" data-ng-hide="(!vm.multiple &amp;&amp; vm.selectedValues.length &gt;= 1)" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" class="form-control input-sm"/>\n' +
     '            <div data-ng-show="vm.searching" class="loader-search-wrapper">\n' +
     '                <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
     '            </div>\n' +
-    '            <div data-ng-if="!vm.readonly &amp;&amp; (vm.possibleValues.length &gt; 0)" class="possible-values">\n' +
+    '            <div data-ng-if="!vm.readonly &amp;&amp; (vm.possibleValues.length &gt; 0)" data-ng-class="{&quot;active&quot; : vm.isActivePossible}" class="possible-values">\n' +
     '                <div data-ng-repeat="possible in vm.possibleValues" data-ng-mouseover="vm.activeElement = $index" data-ng-click="vm.addToSelected(possible)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{possible[vm.field_search]}}</div>\n' +
     '            </div>\n' +
     '        </div>\n' +

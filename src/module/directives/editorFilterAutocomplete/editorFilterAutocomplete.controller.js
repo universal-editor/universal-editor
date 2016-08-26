@@ -289,5 +289,9 @@
               console.error('EditorFieldAutocompleteController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
           }
         }
+        vm.focusPossible = function(isActive){
+            console.log(isActive);
+            vm.isActivePossible = isActive;
+        }
     }
 })();
