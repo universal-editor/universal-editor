@@ -114,7 +114,7 @@
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
 
-                            if(activeTop >= (wrapperHeight + wrapperScroll - activeHeight)){
+                            if (activeTop >= (wrapperHeight + wrapperScroll - activeHeight)) {
                                 possibleValues[0].scrollTop += activeHeight + 1;
                             }
                         },1);
@@ -139,7 +139,7 @@
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
 
-                            if(activeTop < wrapperScroll){
+                            if (activeTop < wrapperScroll) {
                                 possibleValues[0].scrollTop -= activeHeight + 1;
                             }
                         },1);
@@ -491,7 +491,7 @@
               console.error('EditorFieldAutocompleteController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
           }
         }
-        vm.focusPossible = function(isActive){
+        vm.focusPossible = function(isActive) {
             vm.isActivePossible = isActive;
         }
     }
