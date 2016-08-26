@@ -17,7 +17,8 @@
                 buttonLabel : "@",
                 buttonRequest : "@",
                 entityName : "@",
-                buttonClass: "@"
+                buttonClass: "@",
+                entityType: "@"
             },
             controller : 'EditorButtonDeleteController',
             controllerAs : 'vm',

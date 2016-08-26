@@ -55,6 +55,11 @@ gulp.task('files-dev',function(){
         .pipe(gulp.dest('./app/assets'));
 });
 
+gulp.task('bootstrap-fonts-dev',function(){
+    return gulp.src('./bower_components/bootstrap/fonts/**/*')
+        .pipe(gulp.dest('./app/fonts'));
+});
+
 gulp.task('prebuild' , function () {
     runSequence(
         'jade-dev',
@@ -70,6 +75,7 @@ gulp.task('serve', function () {
         'html2js-dev',
         'js-dev',
         'css-dev',
+        'bootstrap-fonts-dev',
         'files-dev',
         function () {
             gulp.src('./src/index.html')

@@ -9,7 +9,7 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '<div class="field-wrapper">\n' +
     '    <div data-ng-class="!vm.isArray ? \'row\' : \'\' ">\n' +
-    '        <div data-ng-if="!vm.isArray" class="field-name-label col-lg-6 col-md-6 col-sm-6 col-xs-6">\n' +
+    '        <div data-ng-if="!vm.isArray" class="field-name-label col-lg-6 col-md-6 col-sm-5 col-xs-4">\n' +
     '            <div data-ng-if="vm.hint" class="field-hint">\n' +
     '                <div class="hint-text">{{vm.hint}}</div>\n' +
     '            </div><span data-ng-class="vm.required ? \'editor-required\' : \'\' ">{{vm.fieldDisplayName}}:</span>\n' +

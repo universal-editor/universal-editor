@@ -15,15 +15,15 @@
         var possibleValues = angular.element($element[0].getElementsByClassName('possible-values')[0]);
 
         var remote = $scope.filter.valuesRemote;
-        vm.field_id = "id";
-        vm.field_search = "title";
+        vm.filter_id = "id";
+        vm.filter_search = "title";
         if (remote) {
-            if(remote.fields){
+            if (remote.fields) {
                 if (remote.fields.value) {
-                    vm.field_id = remote.fields.value;
+                    vm.filter_id = remote.fields.value;
                 }
                 if (remote.fields.label) {
-                    vm.field_search = remote.fields.label;
+                    vm.filter_search = remote.fields.label;
                 }
             }
         }
@@ -191,7 +191,6 @@
         /* PRIVATE METHODS */
 
         function autocompleteSearch(searchString){
-
             if(searchString === "" || searchString.length <= vm.minCount){
                 return;
             }
