@@ -175,16 +175,15 @@
               "valuesRemote": {
                 "fields": {
                   "value": "id",
-                  "label": "title"
+                  "label": "title",
+                  "parent": "parent_id",
+                  "childCount": "child_count"
                 },
                 "url": "http://universal-backend.dev/rest/v1/news/category"
               },
               "search": true,
-              "tree": {
-                "parentField": "parent_id",
-                "childCountField": "child_count",
-                "selectBranches": true
-              }
+              "tree": true,
+              "selectBranches": true
             },
             {
               "name": "title",

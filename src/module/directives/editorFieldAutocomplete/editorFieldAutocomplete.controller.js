@@ -101,6 +101,8 @@
                         break;
                     }
 
+                    possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+
                     if(vm.activeElement < vm.possibleValues.length -1){
                         $timeout(function () {
                             vm.activeElement++;
@@ -112,7 +114,7 @@
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
 
-                            if(activeTop >= wrapperHeight + wrapperScroll){
+                            if (activeTop >= (wrapperHeight + wrapperScroll - activeHeight)) {
                                 possibleValues[0].scrollTop += activeHeight + 1;
                             }
                         },1);
@@ -123,6 +125,8 @@
                     if(vm.possibleValues.length < 1){
                         break;
                     }
+
+                    possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
 
                     if(vm.activeElement > 0){
                         $timeout(function () {
@@ -135,7 +139,7 @@
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
 
-                            if(activeTop < wrapperScroll){
+                            if (activeTop < wrapperScroll) {
                                 possibleValues[0].scrollTop -= activeHeight + 1;
                             }
                         },1);
@@ -491,6 +495,9 @@
               vm.preloadedData = true;
               console.error('EditorFieldAutocompleteController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
           }
+        }
+        vm.focusPossible = function(isActive) {
+            vm.isActivePossible = isActive;
         }
     }
 })();

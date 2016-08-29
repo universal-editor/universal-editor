@@ -28,7 +28,7 @@
         vm.filterName = $scope.filter.name;
         vm.filterDisplayName = $scope.filter.label;
         vm.selectedValues = [];
-
+        vm.placeholder = $scope.filter.placeholder || '';
         FilterFieldsStorage.addFilterController(this);
 
         if($scope.filter.hasOwnProperty("values")){

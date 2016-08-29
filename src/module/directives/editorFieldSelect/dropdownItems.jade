@@ -1,13 +1,20 @@
 div(data-ng-show="isOpen")
   .dropdown-items__item(data-ng-repeat="option in options track by $index")
     .option
-      .option__checkbox(data-ng-if="::selectBranches || !option[childCountField]" data-ng-click="onToggle($event, option)")
-        .checkbox__check(data-ng-style="{'display': option.checked ? 'block' : '', 'background-image':'url('+ assetsPath +'/images/checkbox_green.png)'}")
-      .option__label(data-ng-click="onToggle($event, option, true)") 
+      .option__checkbox(
+        data-ng-if="::selectBranches || !option[childCountField]",
+        data-ng-click="onToggle($event, option)",
+        data-ng-class='{"multi_radio" : !multiple}'
+        )
+        .checkbox__check(
+            data-ng-style="{'display': option.checked ? 'block' : '', 'background-image':'url('+ assetsPath + (!multiple ? '/images/radio_green.png)' : '/images/checkbox_green.png)')}",
+            data-ng-class='{"multi_radio" : !multiple}'
+            )
+      .option__label(data-ng-click="onToggle($event, option, true)")
         span(data-ng-bind="option[fieldSearch]")
         = ' '
-        span.option__child-count(data-ng-if="option[childCountField]" data-ng-class="{'option__child-count_open': option.isOpen}") ({{option.child_count}})
-    .processing-status-wrapper(data-ng-if="option[childCountField]" data-ng-show="!!option.loadingData")
+        span.option__child-count(data-ng-if="option[childCountField]", data-ng-class="{'option__child-count_open': option.isOpen}") ({{option[childCountField]}})
+    .processing-status-wrapper(data-ng-if="option[childCountField]", data-ng-show="!!option.loadingData")
           .processing-status Выполняется действие
     .dropdown-items__children(data-ng-if="option.childOpts"
         data-dropdown-items=""
@@ -18,4 +25,5 @@ div(data-ng-show="isOpen")
         data-on-toggle="onToggle"
         data-api="api"
         data-select-branches="selectBranches"
-        data-assets-path="assetsPath")
+        data-assets-path="assetsPath",
+        data-multiple="multiple")

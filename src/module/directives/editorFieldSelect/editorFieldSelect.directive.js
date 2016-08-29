@@ -34,6 +34,7 @@
             });
 
             scope.toggleDropdown = function(e) {
+                elem.find('input')[0].focus();
                 var dHeight = $(document).height();
                 var dropdownHost = $(elem).find('.dropdown__host');
                 var dropdownHeight = dropdownHost.height();

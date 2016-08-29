@@ -383,19 +383,17 @@ body {
     * {
       box-sizing: border-box;
     }
-    &__host {
-      background-color: #fff;
-    }
     &__title {
       position: relative;
       background-color: #fff;
-      line-height: 25px;
+      height: 100%;
+      padding: 4px;
       &:before {
         content: '';
         position: absolute;
         margin-top: -4px;
-        top: 50%;
-        right: 5px;
+        top: 18px;
+        right: 10px;
         display: block;
         width: 0;
         height: 0;
@@ -403,69 +401,55 @@ body {
         border-right: 4px solid transparent;
         border-left: 4px solid transparent;
         z-index: 998;
+        cursor: pointer;
       }
-      &_open {
-        &:before {
-          transform: rotate(180deg);
-        }
+      &:after{
+        content: '';
+        display: table;
+        clear: both;
       }
     }
-    &__selected-items {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      &_with-borders {
-        border-radius: 2px;
-        padding: 0;
-      }
-      .selected-items {
-        margin: 0;
-        padding: 1px;
-        list-style: none;
-        &:after {
-          content: '';
-          display: table;
-          clear: both;
-        }
-        &__item {
-          float: left;
-          margin: 2px;
-          padding: 0 5px;
-          height: 26px;
-          max-width: 99%;
-          line-height: 25px;
-          border: 1px solid #acacac;
-          border-radius: 3px;
-          .selected-item {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            &__btn_delete {
-              margin: 0 0 0 5px;
-              padding: 0;
-              border: none;
-              background: 0 0;
-              cursor: pointer;
-              vertical-align: middle;
-              font: 700 16px Arial,sans-serif;
-              color: #585858;
-            }
-          }
+    .selected-items__item {
+      float: left;
+      margin: 2px;
+      padding: 0 5px;
+      height: 20px;
+      max-width: 99%;
+      line-height: 19px;
+      border: 1px solid #acacac;
+      border-radius: 3px;
+      background-color: #CBD6DA;
+
+      .selected-item {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &__btn_delete {
+          margin: 0 0 0 5px;
+          padding: 0;
+          border: none;
+          background: 0 0;
+          cursor: pointer;
+          vertical-align: middle;
+          font: 700 16px Arial,sans-serif;
+          color: #585858;
         }
       }
     }
     &__items {
+      border: 1px solid #ccc;
+      border-radius: 0 0 4px 4px;
+      border-top: 0;
       position: absolute;
-      left: 0px;
+      top: 100%;
       z-index: 999;
-      border: 1px solid #999;
-      border-radius: 2px;
       max-height: 300px;
       overflow-y: auto;
       width: 100%;
+      box-sizing: content-box;
       background-color: #fff;
-      box-sizing: border-box;
       &_with-padding {
-        padding: 0 15px;
+        margin-left: -5px;
+        margin-top: -2px;
       }
     }
     &-items {
@@ -480,6 +464,7 @@ body {
       position: relative;
       line-height: 50px;
       border-bottom: 1px solid #c6cfd1;
+      padding-left: 15px;
       &:hover {
         background-color: #fafafa;
       }
@@ -501,7 +486,9 @@ body {
           -webkit-border-radius: 3px;
           border-radius: 3px;
         }
-
+        &.multi_radio:before{
+          border-radius: 10px;
+        }
         .checkbox {
           &__check {
             position: absolute;
@@ -511,6 +498,10 @@ body {
             left: 4px;
             width: 12px;
             height: 11px;
+            &.multi_radio{
+              margin-top: -7px;
+              margin-left: -2px;
+            }
           }
         }
       }
@@ -550,18 +541,27 @@ body {
       }
     }
     &__search-field {
+      float: left;
       position: relative;
       padding: 0px;
+      margin-left: 3px;
       background-color: #fff;
       border: none;
-      height: 23px;
-      width: 100%;
+      height: 24px;
+      max-width: 100%;
       box-sizing: border-box;
       overflow: hidden;
       text-overflow: ellipsis;
       &:focus {
         outline: none;
       }
+    }
+    .processing-status{
+      margin-top: 5px;
+    }
+    &__selected-items{
+      padding: 2px 0;
+      text-align: center;
     }
   }
   .select-wrapper .dropdown .processing-status-wrapper {
