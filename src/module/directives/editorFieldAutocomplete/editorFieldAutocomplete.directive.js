@@ -23,6 +23,11 @@
         };
 
         function link(scope, elem, attrs, ctrl){
+
+            scope.inputFocus = function() {
+                elem.find('input')[0].focus();
+            };
+
             elem.on('$destroy', function () {
                 scope.$destroy();
             });

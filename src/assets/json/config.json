@@ -53,7 +53,52 @@
                   "label": "name"
                 },
                 "url": "http://universal-backend.dev/rest/v1/country"
-              }
+              },
+              "placeholder": "выберите значение"
+            },
+            {
+              "name": "parent_id",
+              "type": "autocomplete",
+              "list": true,
+              "label": "Руководитель",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id"
+                },
+                "url": "http://universal-backend.dev/rest/v1/staff"
+              },
+              "multiple": false
+            },
+            {
+              "name": "parent_id1",
+              "type": "autocomplete",
+              "list": true,
+              "label": "Руководитель",
+              "values": {
+                "a": "Variable 1",
+                "b": "Variable 2",
+                "c": "Variable 3"
+              },
+              "multiple": true
+            },
+            {
+              "name":"ek_ids",
+              "type":"select",
+              "valuesRemote":{
+                "fields": {
+                  "value": "id",
+                  "label": "name",
+                  "parent": "id_parent",
+                  "childCount": "count_children"
+                },
+                "url": "http://universal-backend.dev/rest/v1/country"
+              },
+              "list":true,
+              "label":"Привязка к элементам Единого каталога",
+              "multiple":true,
+              "search":true,
+              "selectBranches":false,
+              "placeholder": "Поиск по элементам"
             },
             {
               "name": "notes",
