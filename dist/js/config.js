@@ -22,7 +22,7 @@
                         "list": true,
                         "label": "Имя",
                         "required": true,
-                        "width": 3
+                        "defaultValue": "c92723"
                     },
                     {
                         "name": "email",
@@ -41,7 +41,7 @@
                             "male" : "Мужской",
                             "female" : "Женский"
                         },
-                        "showOnly" : "edit"
+                        "defaultValue": "female"
                     },
                     {
                         "name": "country",
@@ -49,13 +49,12 @@
                         "list": true,
                         "label": "Страна",
                         "filterable": true,
-                        "valuesRemote": {
-                            "fields": {
-                                "value": "id",
-                                "label": "name"
-                            },
-                            "url": "http://universal-backend.dev/rest/v1/country"
-                        }
+                        "values": {
+                            "1": "Россия",
+                            "2": "Китай",
+                            "3": "Япония"
+                        },
+                        "defaultValue": "3"
                     },
                     {
                         "name": "notes",
@@ -66,14 +65,14 @@
                                 "name": "color",
                                 "type": "colorpicker",
                                 "list": true,
-                                "label": "Любимый цвет"
+                                "label": "Любимый цвет",
+                                "defaultValue": "#c92723"
                             },
                             {
                                 "name": "text",
                                 "type": "textarea",
                                 "label": "Дополнительные заметки",
-                                "height": 10,
-                                "width": 6
+                                "defaultValue": "c92723"
                             }
                         ]
                     }
@@ -92,8 +91,7 @@
                     },
                     {
                         "name": "created_at",
-                        "type": "datetime",
-                        "readonly": true,
+                        "type": "time",
                         "label": "Дата создания"
                     },
                     {
@@ -161,8 +159,11 @@
                         "list": true,
                         "label": "Опубликовано",
                         "values": {
-                            "1": ""
+                            "1": "Россия",
+                            "2": "Китай",
+                            "3": "Япония"
                         }
+
                     },
                     {
                         "name": "published_at",
@@ -207,7 +208,8 @@
                     {
                         "name": "text",
                         "type": "wysiwyg",
-                        "label": "Текст"
+                        "label": "Текст",
+                        "expandable" : true
                     }
                 ]
             },
@@ -217,7 +219,10 @@
                     {
                         "name": "coordinates",
                         "type": "map",
-                        "label": "Местоположение события"
+                        "label": "Местоположение события",
+                        "expandable" : true,
+                        "multiple": true,
+                        "defaultValue" : "37.617313,55.756039"
                     }
                 ]
             },
@@ -226,8 +231,7 @@
                 "fields": [
                     {
                         "name": "created_at",
-                        "type": "datetime",
-                        "readonly": true,
+                        "type": "time",
                         "label": "Дата создания"
                     },
                     {

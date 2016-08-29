@@ -48,8 +48,6 @@
 
         EditEntityStorage.addFieldController(this);
 
-        vm.fieldValue = $scope.field.defaultValue || null;
-
         if (vm.parentFieldIndex) {
             vm.fieldValue = [];
             var value = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
@@ -174,6 +172,7 @@
                 }, true);
             }
             if (data.editorEntityType === "new") {
+                vm.fieldValue = $scope.field.defaultValue || null;
                 return;
             }
 

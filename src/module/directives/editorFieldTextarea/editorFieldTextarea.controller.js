@@ -198,7 +198,8 @@
             }
 
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [""] : "";
+                var defaultValue = !!$scope.field.defaultValue ? $scope.field.defaultValue : '';
+                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
                 return;
             }
 

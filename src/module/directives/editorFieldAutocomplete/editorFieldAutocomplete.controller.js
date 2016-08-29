@@ -249,8 +249,13 @@
 
 
 
-            if( data.editorEntityType === "new" ){
-                vm.fieldValue = vm.multiple ? [] : undefined;
+            if( data.editorEntityType === 'new' ){
+                if(!!$scope.field.defaultValue){
+                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
+                    loadValues();
+                }else{
+                    vm.fieldValue = vm.multiple ? [] : undefined;
+                }
                 if(data.hasOwnProperty($scope.fieldName)) {
                     vm.fieldValue = data[$scope.fieldName];
                     loadValues();                                        
@@ -443,7 +448,7 @@
                   }
               });
               vm.preloadedData = true;
-          } else if ($scope.field.hasOwnProperty("valuesRemote")){
+          } else if ($scope.field.hasOwnProperty('valuesRemote')){
 
               if(vm.fieldValue === undefined || vm.fieldValue === null){
                   vm.preloadedData = true;
@@ -454,18 +459,18 @@
 
               if(vm.multiple && angular.isArray(vm.fieldValue) && vm.fieldValue.length > 0 ){
                   urlParam = {};
-                  urlParam[vm.field_id] = vm.fieldValue;
-              } else if (!vm.multiple && vm.fieldValue !== ""){
+                  urlParam[vm.field_id] = '%' + vm.fieldValue + '%';
+              } else if (!vm.multiple && vm.fieldValue !== ''){
                   urlParam = {};
                   urlParam[vm.field_id] = [];
-                  urlParam[vm.field_id].push(vm.fieldValue);
+                  urlParam[vm.field_id].push( '%' + vm.fieldValue + '%');
               } else {
                   vm.preloadedData = true;
                   return;
               }
 
               RestApiService
-                  .getUrlResource($scope.field.valuesRemote.url + "?filter=" + JSON.stringify(urlParam))
+                  .getUrlResource($scope.field.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
                   .then(function (response) {
                       angular.forEach(response.data.items, function (v) {
                           if( Array.isArray(vm.fieldValue) &&

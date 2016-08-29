@@ -21,7 +21,6 @@
         } else {
             fieldErrorName = $scope.fieldName;
         }
-
         vm.fieldName = $scope.field.name;
         vm.fieldValue = '';
         vm.readonly = $scope.field.readonly || false;
@@ -175,7 +174,11 @@
 
         $scope.$on('editor:entity_loaded', function (event, data) {
             if( data.editorEntityType === "new" || data[$scope.field.name] === null ){
-                vm.fieldValue = vm.multiple ? [] : '';
+                if(!!$scope.field.defaultValue){
+                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue.split(',')] : $scope.field.defaultValue.split(',');
+                }else{
+                    vm.fieldValue = vm.multiple ? [] : '';
+                }
                 return;
             }
             if(!$scope.parentField){

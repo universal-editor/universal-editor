@@ -29,7 +29,8 @@
             "label": "title"
         },
         "url": "/api/service/v1/json/categories",
-    }
+    },
+    "defaultValue" : ["a", "b"]
 }
 ```
 
@@ -67,3 +68,4 @@
     * **url**: URL API.
 
 Одновременно может быть указан только один из форматов получения данных для поля: `values` или `valuesRemote`.
+* **defaultValue** : значение поля по-умолчанию (массив значений ключей).
