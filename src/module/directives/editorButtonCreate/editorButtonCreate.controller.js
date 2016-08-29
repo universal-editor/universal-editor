@@ -21,7 +21,6 @@
 
             var newPageType = $scope.type || $state.params.type;
 
-            EditEntityStorage.createNewEntity();
             $state.go('editor.type.new',{
                 parent: parentId,
                 type: newPageType

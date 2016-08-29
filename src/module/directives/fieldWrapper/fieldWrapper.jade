@@ -1,6 +1,6 @@
 .field-wrapper
     div(data-ng-class="!vm.isArray ? 'row' : '' ")
-        .field-name-label.col-lg-6.col-md-6.col-sm-6.col-xs-6(data-ng-if="!vm.isArray")
+        .field-name-label.col-lg-6.col-md-6.col-sm-5.col-xs-4(data-ng-if="!vm.isArray")
             .field-hint(data-ng-if="vm.hint")
                 .hint-text {{vm.hint}}
             span(data-ng-class="vm.required ? 'editor-required' : '' ") {{vm.fieldDisplayName}}:

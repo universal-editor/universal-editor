@@ -8,7 +8,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFieldSelect/editorFieldSelect.html',
     '\n' +
     '<div>\n' +
-    '    <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">\n' +
+    '    <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
     '        <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" class="form-control">\n' +
     '            <option data-ng-repeat="option in vm.options" value="{{option[vm.field_id]}}">{{option[vm.field_search]}}</option>\n' +
     '        </select>\n' +
@@ -16,7 +16,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <div class="processing-status">{{\'PERFORMS_ACTIONS\' | translate}}</div>\n' +
     '        </div>\n' +
     '    </div>\n' +
-    '    <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-2 col-xs-2">\n' +
+    '    <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
     '        <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" ng-options="option[vm.field_search] for option in vm.options track by option[vm.field_id]" class="form-control">\n' +
     '            <option value="" data-ng-show="!vm.required &amp;&amp; !vm.loadingData">{{vm.placeholder}}</option>\n' +
     '        </select>\n' +

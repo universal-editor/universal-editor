@@ -1,6 +1,6 @@
 
 <ul data-ng-if="vm.configData.entities.length &gt; 1" class="nav nav-tabs">
-    <li data-ng-repeat="entityItem in vm.configData.entities track by $index" data-ng-class="(entityItem.name === entity) ? 'active' : ''" class="item"><a href="#/editor/{{entityItem.name}}/list">{{entityItem.label}}</a></li>
+    <li data-ng-repeat="entityItem in vm.configData.entities track by $index" data-ng-class="(entityItem.name === entity) ? 'active' : ''" class="item"><a data-ui-sref="editor.type.list({type: entityItem.name})" ui-sref-opts="{reload: true, inherit: false}">{{entityItem.label}}</a></li>
 </ul>
 <div class="universal-editor">
     <div>
@@ -56,13 +56,13 @@
                             <div data-ng-repeat="link in vm.mixContextLinks track by $index" data-ng-if="vm.mixEntityType &amp;&amp; item[vm.subType] === vm.mixEntityType" class="context-menu-item">
                                 <div data-ng-if="link.type == 'request'" data-ng-click="vm.contextAction(link,item[vm.idField])">{{link.label}}</div>
                                 <div data-ng-if="link.type == 'edit'" data-editor-button-edit="" data-entity-subtype="{{item[vm.subType]}}" data-entity-id="{{item[vm.idField]}}" data-button-label="{{link.label}}" data-button-request="{{link.request}}"></div>
-                                <div data-ng-if="link.type == 'delete'" data-editor-button-delete="" data-entity-id="{{item[vm.idField]}}" data-button-label="{{link.label}}" data-button-request="{{link.request}}" data-button-class="context"></div>
+                                <div data-ng-if="link.type == 'delete'" data-entity-type="mix" data-editor-button-delete="" data-entity-id="{{item[vm.idField]}}" data-button-label="{{link.label}}" data-button-request="{{link.request}}" data-button-class="context"></div>
                                 <div data-ng-if="link.type == 'download'" data-editor-button-download="" data-item-value="item" data-button-label="{{link.label}}" data-button-request="{{link.request}}" data-index="{{$index}}" data-button-class="context"></div>
                                 <div data-ng-if="link.type == 'targetBlank'" data-editor-button-target-blank="" data-item-value="item" data-button-label="{{link.label}}" data-button-request="{{link.request}}" data-index="{{$index}}" data-button-class="context"></div>
                             </div>
                         </div>
                     </td>
-                    <td data-ng-repeat="fieldItem in vm.tableFields track by $index"><span style="padding-left: {{ item.parentPadding ? item.parentPadding * 10 : 0 }}px;">{{item[fieldItem.field]}}</span></td>
+                    <td data-ng-repeat="fieldItem in vm.tableFields track by $index"><span data-ng-class="{'glyphicon-folder-open icon-mix-mode' : (vm.isMixMode &amp;&amp; !((vm.entityType !== item[vm.subType]) &amp;&amp; item[vm.subType] !== undefined))}" data-ng-if="vm.prependIcon === fieldItem.field" class="glyphicon"></span><span style="padding-left: {{ item.parentPadding ? item.parentPadding * 10 : 0 }}px;">{{item[fieldItem.field]}}</span></td>
                 </tr>
                 <tr data-ng-if="vm.items.length == 0">
                     <td colspan="{{vm.tableFields.length + 1}}">{{'ELEMENT_NO' | translate}}</td>

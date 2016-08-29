@@ -95,6 +95,7 @@
 
         $httpProvider.defaults.paramSerializer = '$httpParamSerializerJQLike';
         $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8";
+        $httpProvider.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8";
         $httpProvider.defaults.transformRequest = function(data){
 
 
@@ -128,14 +129,12 @@
                 controllerAs : "vm",
                 onEnter : ["RestApiService", "$stateParams", function (RestApiService,$stateParams) {
                     RestApiService.setEntityType($stateParams.type);
+                    RestApiService.setQueryParams({});
                 }]
             })
             .state('editor.type.list',{
                 url : "/list?parent",
-                templateUrl : "module/directives/universalEditor/universalEditorList.html",
-                onEnter : ["RestApiService", function (RestApiService) {
-                    RestApiService.getItemsList();
-                }]
+                templateUrl : "module/directives/universalEditor/universalEditorList.html"
             })
             .state('editor.type.new',{
                 url : '/new?parent&type',

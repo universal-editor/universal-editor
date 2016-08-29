@@ -60,7 +60,9 @@
         }
 
         var mixEntity = RestApiService.getMixModeByEntity();
+        vm.isMixMode = mixEntity.existence;
         if(mixEntity.existence){
+            vm.prependIcon = mixEntity.prependIcon || 'title';
             vm.subType = mixEntity.entityTypeName || "type";
             vm.mixEntityType = mixEntity.entity;
             mixEntityObject = configData.entities.filter(function (item) {
@@ -87,7 +89,6 @@
                 }
             });
         });
-
         angular.forEach(entityObject.editFooterBar, function (editFooterBar) {
             switch (editFooterBar.type){
                 case 'add':
@@ -177,8 +178,8 @@
                 params.parent = $state.params.parent;
                 isReload = false;
             }
+            RestApiService.getItemsList();
             $state.go('editor.type.list', params, {reload: isReload});
-
         };
 
         vm.applyFilter = function () {
@@ -189,7 +190,9 @@
         vm.clearFilter = function () {
             FilterFieldsStorage.setInitialValues();
             RestApiService.setFilterParams({});
-            RestApiService.getItemsList();
+            if ($state.is('editor.type.list')) {
+                RestApiService.getItemsList();
+            }
         };
         
 
@@ -251,7 +254,9 @@
 
 
         $scope.$on('editor:items_list', function (event, data) {
-
+            if ($state.is('editor.type.new')) {
+                return;
+            }
             vm.metaKey = true;
             vm.listLoaded = true;
             vm.items = data[itemsKey];

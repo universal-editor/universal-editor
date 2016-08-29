@@ -15,7 +15,8 @@
     "readonly": true,
     "list": true,
     "multiname": "new_value",
-    "requiredField": "nameField"
+    "requiredField": "nameField",
+    "defaultValue" : "12.12.2012"
 }
 ```
 
@@ -43,3 +44,4 @@
 `['value1', 'value2', 'value3']`. Если ключ установлен, например: `multiname:"value"`, то на бекенд отправится 
 массив вида `[["value"=>"value1"], ["value"=>"value2"], ["value"=>"value3"]`.
 * **requiredField**: параметр делает поле неактивным при пустом значении другого поля, указанного в данном параметре.
+* **defaultValue** : значение поля по-умолчанию(если дата указанна не корректно, то установиться текущая дата).

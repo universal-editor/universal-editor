@@ -161,7 +161,11 @@
                 }, true);
             }
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [] : moment.utc();
+                var defaultValue = moment().utc();
+                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue).isValid()){
+                    defaultValue = moment($scope.field.defaultValue, 'YYYY-MM-DD HH:mm').utc();
+                }
+                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
                 return;
             }
 

@@ -18,7 +18,7 @@
         vm.filter_id = "id";
         vm.filter_search = "title";
         if (remote) {
-            if(remote.fields){
+            if (remote.fields) {
                 if (remote.fields.value) {
                     vm.filter_id = remote.fields.value;
                 }
@@ -195,7 +195,6 @@
         /* PRIVATE METHODS */
 
         function autocompleteSearch(searchString){
-
             if(searchString === "" || searchString.length <= vm.minCount){
                 return;
             }
