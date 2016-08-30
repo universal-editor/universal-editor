@@ -17,7 +17,8 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '    </div>\n' +
     '    <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <div data-ng-click="vm.isShowPossible($event)" class="select-input-wrapper">\n' +
+    '        <div data-ng-click="vm.isShowPossible($event)" data-ng-class="!vm.search ? &quot;but-for-search&quot; : &quot;&quot;" class="select-input-wrapper">\n' +
+    '            <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" class="form-control"/>\n' +
     '            <div data-ng-if="!vm.search" class="form-control">\n' +
     '                <div class="dropdown__selected-items">{{vm.placeholder}}</div>\n' +
     '            </div>\n' +

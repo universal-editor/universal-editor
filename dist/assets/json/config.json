@@ -55,8 +55,8 @@
                 "url": "http://universal-backend.dev/rest/v1/country"
               },
               "multiple": false,
-              "placeholder": "Выберете эелемент"
-
+              "placeholder": "Выберете эелемент",
+              "search":true
             },
             {
               "name": "country1",
@@ -71,9 +71,26 @@
                 },
                 "url": "http://universal-backend.dev/rest/v1/country"
               },
+              "multiple": false,
+              "placeholder": "Поиск по элементам",
+              "search":false
+            },
+            {
+              "name": "country2",
+              "type": "select",
+              "list": true,
+              "label": "Страна",
+              "filterable": true,
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/country"
+              },
               "multiple": true,
-              "placeholder": "Поиск по элементам"
-
+              "placeholder": "Поиск по элементам",
+              "search":false
             },
             {
               "name":"ek_ids",

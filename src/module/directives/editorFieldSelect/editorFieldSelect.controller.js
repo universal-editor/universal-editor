@@ -56,6 +56,7 @@
         vm.placeholder = $scope.field.placeholder || '';
         vm.showPossible = false;
         vm.activeElement = 0;
+        vm.isSelection = false;
 
         if ($scope.field.hasOwnProperty('valuesRemote') &&
             $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {
@@ -108,6 +109,7 @@
          * Инициализация данных при загрузке поля. Необходимая часть для полей инициализирующие данные для которых
          * хранятся удалённо.
          */
+        var allOptions;
 
         if ($scope.field.hasOwnProperty("values")) {
             angular.forEach($scope.field.values, function (v, key) {
@@ -116,6 +118,7 @@
                 obj[vm.field_search] = v;
                 vm.options.push(obj);
             });
+            allOptions = angular.copy(vm.options);
         } else if ($scope.field.hasOwnProperty("valuesRemote")) {
             if (vm.isTree) {
                 if (_selectedIds.length && !vm.options.length) {
@@ -139,6 +142,7 @@
                     angular.forEach(response.data.items, function (v) {
                         vm.options.push(v);
                     });
+                    allOptions = angular.copy(vm.options);
                     if (isRemoteSelectedValues) {
                         setSelectedValuesFromRemote();
                     } else {
@@ -275,7 +279,7 @@
             }
 
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [] : undefined;
+                vm.fieldValue = vm.multiple ? [] : {};
                 if (data.hasOwnProperty($scope.field.name)) {
                     var obj = {};
                     obj[vm.field_id] = data[$scope.field.name];
@@ -368,7 +372,12 @@
             return vm.fieldValue;
         }, function (newVal) {
             if (!vm.multiple && !vm.isTree) {
+                if (vm.search) {
+                    vm.filterText = '';
+                    change();
+                }
                 vm.placeholder = (!!newVal && !!newVal[vm.field_search]) ? newVal[vm.field_search] : $scope.field.placeholder;
+                vm.isSelection = (!!newVal && !!newVal[vm.field_search]);
             }
             if (vm.isTree && !vm.search) {
                 vm.placeholder = $scope.field.placeholder || '';
@@ -388,6 +397,7 @@
                             angular.forEach(response.data.items, function (v) {
                                 vm.options.push(v);
                             });
+                            allOptions = angular.copy(vm.options);
                             vm.parentValue = true;
                         }, function (reject) {
                             console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + $scope.field.fieldName + '\" с удаленного ресурса');
@@ -397,7 +407,6 @@
                 }
             });
         }
-        var allOptions;
 
         // dropdown functions
         vm.toggle = toggle;
@@ -518,6 +527,9 @@
                 vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
             if (!vm.filterText) {
+                if (!vm.multiple && !vm.isTree) {
+                    vm.placeholder = (!!vm.fieldValue && !!vm.fieldValue[vm.field_search]) ? vm.fieldValue[vm.field_search] : $scope.field.placeholder;
+                }
                 vm.sizeInput = vm.placeholder.length;
                 if (allOptions) {
                     vm.options = allOptions;
@@ -622,6 +634,7 @@
             obj[vm.field_id] = val[vm.field_id];
             obj[vm.field_search] = val[vm.field_search];
             vm.fieldValue = obj;
+            vm.filterText = '';
             $timeout(function() {
                 vm.showPossible = false;
             },0);
@@ -629,7 +642,7 @@
 
         vm.isShowPossible = function(event) {
             vm.activeElement = 0;
-            vm.showPossible = !vm.showPossible;
+            vm.showPossible = true;
             event.stopPropagation();
         };
         if (!vm.multiple && !vm.isTree) {

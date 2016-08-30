@@ -595,7 +595,7 @@ body {
   position: relative;
   cursor: pointer;
 
-  &:before{
+  &.but-for-search:before{
     content: '';
     position: absolute;
     margin-top: -4px;
@@ -607,7 +607,37 @@ body {
     border-top: 8px solid #2a3534;
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
-    z-index: 998;
+    z-index: 55;
     cursor: pointer;
+  }
+  .color-placeholder{
+    &::-webkit-input-placeholder{
+      color: #000;
+    }
+    &::-moz-placeholder{
+      color: #000;
+    }
+    &:-moz-placeholder{
+      color: #000;
+    }
+    &:-ms-input-placeholder{
+      color: #000;
+    }
+
+    &:focus::-webkit-input-placeholder{
+      color: #999;
+    }
+    &:focus::-moz-placeholder{
+      color: #999;
+    }
+    &:focus:-moz-placeholder{
+      color: #999;
+    }
+    &:focus:-ms-input-placeholder{
+      color: #999;
+    }
+    //:focus.placeholder{
+     // color: #000;
+    //}
   }
 }

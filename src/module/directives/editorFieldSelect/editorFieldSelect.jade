@@ -5,7 +5,14 @@ div
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
     .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple && !vm.isTree")
-        div.select-input-wrapper(data-ng-click="vm.isShowPossible($event)")
+        div.select-input-wrapper(data-ng-click="vm.isShowPossible($event)", data-ng-class='!vm.search ? "but-for-search" : ""')
+            input.form-control(
+                data-ng-if="vm.search",
+                placeholder="{{vm.placeholder}}",
+                data-ng-class='vm.isSelection ? "color-placeholder" : ""',
+                data-ng-model="vm.filterText",
+                data-ng-change="vm.change()"
+                )
             div.form-control(data-ng-if="!vm.search")
                 .dropdown__selected-items {{vm.placeholder}}
             .possible-values(
