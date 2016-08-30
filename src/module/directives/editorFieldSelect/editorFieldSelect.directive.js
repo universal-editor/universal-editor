@@ -30,6 +30,7 @@
             scope.isOpen = false;
 
             $document.on('click', function() {
+                scope.vm.showPossible = false;
                 scope.isOpen = false;
             });
 

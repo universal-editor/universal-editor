@@ -413,9 +413,9 @@ body {
       float: left;
       margin: 2px;
       padding: 0 5px;
-      height: 20px;
+      height: 25px;
       max-width: 99%;
-      line-height: 19px;
+      line-height: 25px;
       border: 1px solid #acacac;
       border-radius: 3px;
       background-color: #CBD6DA;
@@ -568,9 +568,7 @@ body {
     margin-top: 2px;
   }
 }
-//.field-inner-wrapper {
-//  display: table-cell;
-//}
+
 .item{
   &-datepicker-wrapper,
   &-colorpicker-wrapper,
@@ -592,4 +590,24 @@ body {
 }
 .icon-mix-mode{
   padding-right: 10px;
+}
+.select-input-wrapper{
+  position: relative;
+  cursor: pointer;
+
+  &:before{
+    content: '';
+    position: absolute;
+    margin-top: -4px;
+    top: 18px;
+    right: 10px;
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 8px solid #2a3534;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    z-index: 998;
+    cursor: pointer;
+  }
 }

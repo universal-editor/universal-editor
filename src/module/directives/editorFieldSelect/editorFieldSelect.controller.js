@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('EditorFieldSelectController', EditorFieldSelectController);
 
-    EditorFieldSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', '$timeout', 'configData'];
+    EditorFieldSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', '$timeout', 'configData', '$document', '$element'];
 
-    function EditorFieldSelectController($rootScope, $scope, EditEntityStorage, RestApiService, ArrayFieldStorage, $timeout, configData) {
+    function EditorFieldSelectController($rootScope, $scope, EditEntityStorage, RestApiService, ArrayFieldStorage, $timeout, configData, $document, $element) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
@@ -39,6 +39,8 @@
             }
         }
 
+        var possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+
         vm.assetsPath = '../assets';
         var _selectedIds = [];
         vm.fieldName = $scope.field.name;
@@ -52,9 +54,8 @@
         vm.parentValue = !vm.depend;
         vm.search = $scope.field.search;
         vm.placeholder = $scope.field.placeholder || '';
-        //vm.multiname = $scope.field.multiname || "value";
-
-        // Настройки режима "Дерево"
+        vm.showPossible = false;
+        vm.activeElement = 0;
 
         if ($scope.field.hasOwnProperty('valuesRemote') &&
             $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {
@@ -366,6 +367,12 @@
         $scope.$watch(function () {
             return vm.fieldValue;
         }, function (newVal) {
+            if (!vm.multiple && !vm.isTree) {
+                vm.placeholder = (!!newVal && !!newVal[vm.field_search]) ? newVal[vm.field_search] : $scope.field.placeholder;
+            }
+            if (vm.isTree && !vm.search) {
+                vm.placeholder = $scope.field.placeholder || '';
+            }
             $scope.$parent.vm.error = [];
             $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
         }, true);
@@ -453,7 +460,7 @@
                 vm.sizeInput = vm.placeholder.length;
             } else {
                 vm.placeholder = '';
-                vm.sizeInput = vm.filterText.length || 1;
+                vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
             e.stopPropagation();
         }
@@ -485,12 +492,13 @@
                     }
                 }
             }
-            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+
+            if (vm.fieldValue.length === 0 && !vm.filterText) {
                 vm.placeholder = $scope.field.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;
             } else {
                 vm.placeholder = '';
-                vm.sizeInput = vm.filterText.length || 1;
+                vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
             e.stopPropagation();
         }
@@ -502,12 +510,12 @@
         }
 
         function change() {
-            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+            if (vm.fieldValue.length === 0 && !vm.filterText) {
                 vm.placeholder = $scope.field.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;
             } else {
                 vm.placeholder = '';
-                vm.sizeInput = vm.filterText.length || 1;
+                vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
             if (!vm.filterText) {
                 vm.sizeInput = vm.placeholder.length;
@@ -516,7 +524,7 @@
                 }
                 return;
             }
-            vm.sizeInput = vm.filterText.length;
+            vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             if (!allOptions) {
                 allOptions = angular.copy(vm.options);
             }
@@ -602,10 +610,102 @@
                 }
             }
         }
+
         vm.clickEsc = function(event){
             if(event.keyCode === 27){
                 $scope.isOpen = false;
             }
+        };
+
+        vm.addToSelected = function(val) {
+            var obj = {};
+            obj[vm.field_id] = val[vm.field_id];
+            obj[vm.field_search] = val[vm.field_search];
+            vm.fieldValue = obj;
+            $timeout(function() {
+                vm.showPossible = false;
+            },0);
+        };
+
+        vm.isShowPossible = function(event) {
+            vm.activeElement = 0;
+            vm.showPossible = !vm.showPossible;
+            event.stopPropagation();
+        };
+        if (!vm.multiple && !vm.isTree) {
+            $document.bind("keydown", function (event) {
+                if (vm.showPossible) {
+                    switch(event.which) {
+                        case 27:
+                            event.preventDefault();
+                            $timeout(function() {
+                                vm.showPossible = false;
+                            },0);
+                            break;
+                        case 13:
+                            event.preventDefault();
+                            if(vm.options.length < 1){
+                                break;
+                            }
+
+                            $timeout(function () {
+                                vm.addToSelected(vm.options[vm.activeElement]);
+                            },0);
+
+                            break;
+                        case 40:
+                            event.preventDefault();
+                            if(vm.options.length < 1){
+                                break;
+                            }
+
+                            possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+
+                            if(vm.activeElement < vm.options.length -1){
+                                $timeout(function () {
+                                    vm.activeElement++;
+                                },0);
+
+                                $timeout(function () {
+                                    var activeTop  = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
+                                        activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
+                                        wrapperScroll = possibleValues[0].scrollTop,
+                                        wrapperHeight = possibleValues[0].clientHeight;
+
+                                    if (activeTop >= (wrapperHeight + wrapperScroll - activeHeight)) {
+                                        possibleValues[0].scrollTop += activeHeight + 1;
+                                    }
+                                },1);
+                            }
+                            break;
+                        case 38:
+                            event.preventDefault();
+                            if(vm.options.length < 1){
+                                break;
+                            }
+
+                            possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+
+                            if(vm.activeElement > 0){
+                                $timeout(function () {
+                                    vm.activeElement--;
+                                },0);
+
+                                $timeout(function () {
+                                    var activeTop  = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
+                                        activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
+                                        wrapperScroll = possibleValues[0].scrollTop,
+                                        wrapperHeight = possibleValues[0].clientHeight;
+
+                                    if (activeTop < wrapperScroll) {
+                                        possibleValues[0].scrollTop -= activeHeight + 1;
+                                    }
+                                },1);
+                            }
+                            break;
+                    }
+                }
+            });
         }
     }
 

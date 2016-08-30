@@ -5,8 +5,15 @@ div
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
     .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple && !vm.isTree")
-        select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", ng-options="option[vm.field_search] for option in vm.options track by option[vm.field_id]")
-            option(value="", data-ng-show="!vm.required && !vm.loadingData") {{vm.placeholder}}
+        div.select-input-wrapper(data-ng-click="vm.isShowPossible($event)")
+            div.form-control(data-ng-if="!vm.search")
+                .dropdown__selected-items {{vm.placeholder}}
+            .possible-values(
+                data-ng-if="!vm.readonly && (vm.options.length > 0) && vm.showPossible",
+                data-ng-class='{"active" : vm.isActivePossible}'
+                )
+                .possible-value-item(data-ng-repeat="option in vm.options", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}
+
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
 
@@ -23,7 +30,7 @@ div
                     )
                     .selected-item
                         | {{value[vm.field_search]}}
-                        span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)") x
+                        span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)") ×
 
                 input.dropdown__search-field(data-ng-show="vm.search"
                 data-ng-model="vm.filterText",

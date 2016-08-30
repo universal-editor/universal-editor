@@ -53,7 +53,79 @@
                   "label": "name"
                 },
                 "url": "http://universal-backend.dev/rest/v1/country"
-              }
+              },
+              "multiple": false,
+              "placeholder": "Выберете эелемент"
+
+            },
+            {
+              "name": "country1",
+              "type": "select",
+              "list": true,
+              "label": "Страна",
+              "filterable": true,
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/country"
+              },
+              "multiple": true,
+              "placeholder": "Поиск по элементам"
+
+            },
+            {
+              "name":"ek_ids",
+              "type":"select",
+              "valuesRemote":{
+                "fields": {
+                  "value": "id",
+                  "label": "name",
+                  "parent": "id_parent",
+                  "childCount": "count_children"
+                },
+                "url": "http://universal-backend.dev/rest/v1/country"
+              },
+              "list":true,
+              "label":"страны",
+              "multiple":true,
+              "search":false,
+              "selectBranches":false,
+              "placeholder": "Поиск по элементам"
+            },
+            {
+              "name":"ek_ids1",
+              "type":"select",
+              "valuesRemote":{
+                "fields": {
+                  "value": "id",
+                  "label": "name",
+                  "parent": "id_parent",
+                  "childCount": "count_children"
+                },
+                "url": "http://universal-backend.dev/rest/v1/country"
+              },
+              "list":true,
+              "label":"страны",
+              "multiple":true,
+              "search":true,
+              "selectBranches":false,
+              "placeholder": "Поиск по элементам"
+            },
+            {
+              "name": "parent_id",
+              "type": "autocomplete",
+              "list": true,
+              "label": "Руководитель",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/staff"
+              },
+              "multiple": false
             },
             {
               "name": "notes",
