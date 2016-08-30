@@ -25,6 +25,10 @@
         function link(scope, elem, attrs, ctrl){
 
             scope.inputFocus = function() {
+                if (!scope.vm.multiple) {
+                    elem.find('.autocomplete-field-search').removeClass('hidden');
+                    elem.find('.autocomplete-item').addClass('opacity-item');
+                }
                 elem.find('input')[0].focus();
             };
 

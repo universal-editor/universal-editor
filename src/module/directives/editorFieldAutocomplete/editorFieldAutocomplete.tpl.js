@@ -10,9 +10,8 @@ module.run(['$templateCache', function($templateCache) {
     '<div>\n' +
     '    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
     '        <div data-ng-show="vm.preloadedData &amp;&amp; vm.selectedValues.length &lt; vm.maxItemsCount" data-ng-class="{&quot;active&quot; : vm.isActivePossible}" data-ng-click="inputFocus()" class="autocomplete-input-wrapper form-control">\n' +
-    '            <input data-ng-if="!vm.multiple" type="text" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" class="autocomplete-field-search"/>\n' +
     '            <div data-ng-repeat="acItem in vm.selectedValues" data-ng-show="vm.preloadedData" class="autocomplete-item">{{acItem[vm.field_search]}}<span data-ng-click="vm.removeFromSelected(acItem)" data-ng-if="!vm.readonly" class="remove-from-selected">×</span></div>\n' +
-    '            <input data-ng-if="vm.multiple" type="text" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" class="autocomplete-field-search"/>\n' +
+    '            <input type="text" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" class="autocomplete-field-search"/>\n' +
     '            <div data-ng-show="vm.searching" class="loader-search-wrapper">\n' +
     '                <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
     '            </div>\n' +

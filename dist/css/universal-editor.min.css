@@ -84,4 +84,4 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .field-wrapper-select .dropdown__selected-items{padding:2px 0;text-align:center}.field-wrapper-select .select-wrapper .dropdown .processing-status-wrapper{margin-top:2px}
 .item-datepicker-wrapper,.item-colorpicker-wrapper,.item-string-wrapper,.item-textarea-wrapper,.item-timepicker-wrapper,.item-array-wrapper,.item-map-wrapper{padding-bottom:10px}
 .radio,.checkbox{margin-top:0}.editor-field-array .field-name-label.label-array{background-color:#d3dfe2;text-align:center;padding:10px 0}
-.icon-mix-mode{padding-right:10px}
+.icon-mix-mode{padding-right:10px}.hidden{display:none}

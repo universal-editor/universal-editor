@@ -2,9 +2,8 @@
 <div>
     <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
         <div data-ng-show="vm.preloadedData &amp;&amp; vm.selectedValues.length &lt; vm.maxItemsCount" data-ng-class="{&quot;active&quot; : vm.isActivePossible}" data-ng-click="inputFocus()" class="autocomplete-input-wrapper form-control">
-            <input data-ng-if="!vm.multiple" type="text" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" class="autocomplete-field-search"/>
             <div data-ng-repeat="acItem in vm.selectedValues" data-ng-show="vm.preloadedData" class="autocomplete-item">{{acItem[vm.field_search]}}<span data-ng-click="vm.removeFromSelected(acItem)" data-ng-if="!vm.readonly" class="remove-from-selected">×</span></div>
-            <input data-ng-if="vm.multiple" type="text" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" class="autocomplete-field-search"/>
+            <input type="text" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" class="autocomplete-field-search"/>
             <div data-ng-show="vm.searching" class="loader-search-wrapper">
                 <div class="loader-search">{{'LOADING' | translate}}</div>
             </div>

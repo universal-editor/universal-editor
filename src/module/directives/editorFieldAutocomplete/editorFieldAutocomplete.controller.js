@@ -55,6 +55,7 @@
         vm.sizeInput = 1;
         vm.classInput = {'width': '1px'};
 
+
         if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true){
             vm.multiple = true;
             vm.fieldValue = [];
@@ -64,6 +65,7 @@
         } else {
             vm.multiple = false;
             vm.fieldValue = undefined;
+            vm.classInput.float = 'left';
         }
 
         if(vm.parentFieldIndex){
@@ -210,12 +212,12 @@
         };
 
         function clear() {
-            console.log("dzsfg");
             if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
                 vm.fieldValue = [];
             } else {
                 vm.fieldValue = undefined;
             }
+            $element.find('.autocomplete-field-search').removeClass('hidden');
             vm.inputValue = "";
             vm.sizeInput = 1;
             vm.selectedValues = [];
@@ -223,6 +225,7 @@
 
         $scope.$on('editor:entity_loaded', function (event, data) {
             vm.preloadedData = false;
+            $element.find('.autocomplete-field-search').removeClass('hidden');
             vm.inputValue = "";
             vm.selectedValues = [];
 
@@ -259,7 +262,6 @@
 
 
             if( data.editorEntityType === 'new' ){
-                //vm.classInput = (!vm.multiple && vm.selectedValues.length >= 1)  ? {'float' : 'left', 'width': '1px'} : {};
                 if(!!$scope.field.defaultValue){
                     vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
                     loadValues();
@@ -341,7 +343,7 @@
             vm.possibleValues = [];
             vm.sizeInput = newValue.length || 1;
             if (vm.sizeInput === 1) {
-                vm.classInput = {'width': '1px'};
+                vm.classInput.width = '1px';
             } else {
                 vm.classInput.width = 'initial';
             }
@@ -363,6 +365,7 @@
                 vm.selectedValues = [];
             }
             vm.selectedValues.push(obj);
+            $element.find('.autocomplete-field-search').removeClass('hidden');
             vm.inputValue = "";
             vm.sizeInput = 1;
             vm.possibleValues = [];
@@ -460,7 +463,6 @@
           if($scope.field.hasOwnProperty("values")){
               angular.forEach($scope.field.values, function (v,key) {
                   var obj = {};
-                  console.log("adzfg");
                   if(Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple){
                       if (angular.isArray($scope.field.values)) {
                           obj[vm.field_id] = v;
@@ -529,8 +531,10 @@
             if (!vm.multiple) {
                 if ($element.find('.autocomplete-item').length > 0) {
                     if (isActive){
+                        $element.find('.autocomplete-field-search').removeClass('hidden');
                         $element.find('.autocomplete-item').addClass('opacity-item');
                     } else {
+                        $element.find('.autocomplete-field-search').addClass('hidden');
                         $element.find('.autocomplete-item').removeClass('opacity-item');
                     }
                 }

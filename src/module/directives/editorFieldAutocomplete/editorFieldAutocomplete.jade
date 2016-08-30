@@ -5,10 +5,9 @@ div
         data-ng-class='{"active" : vm.isActivePossible}',
         data-ng-click="inputFocus()"
         )
-            input.autocomplete-field-search(data-ng-if="!vm.multiple", type="text",ng-disabled="vm.readonly",data-ng-model="vm.inputValue",data-ng-focus="vm.focusPossible(true)",data-ng-blur="vm.focusPossible(false)",size="{{vm.sizeInput}}",data-ng-style='vm.classInput')
             .autocomplete-item(data-ng-repeat="acItem in vm.selectedValues", data-ng-show="vm.preloadedData") {{acItem[vm.field_search]}}
                 span.remove-from-selected(data-ng-click="vm.removeFromSelected(acItem)", data-ng-if="!vm.readonly") ×
-            input.autocomplete-field-search(data-ng-if="vm.multiple", type="text",ng-disabled="vm.readonly",data-ng-model="vm.inputValue",data-ng-focus="vm.focusPossible(true)",data-ng-blur="vm.focusPossible(false)",size="{{vm.sizeInput}}",data-ng-style='vm.classInput')
+            input.autocomplete-field-search(type="text",ng-disabled="vm.readonly",data-ng-model="vm.inputValue",data-ng-focus="vm.focusPossible(true)",data-ng-blur="vm.focusPossible(false)",size="{{vm.sizeInput}}",data-ng-style='vm.classInput')
             .loader-search-wrapper(data-ng-show="vm.searching")
                 .loader-search {{'LOADING' | translate}}
             .possible-values(
