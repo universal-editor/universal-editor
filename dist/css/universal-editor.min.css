@@ -57,7 +57,8 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .context-menu-wrapper .context-menu-item:hover{background-color:#eeeded}.context-menu-wrapper .editor-action-button{color:#000;text-transform:none;font-size:12px;text-shadow:none;padding:0;margin:0;background:transparent;border:0;border-radius:0;height:15px;line-height:15px;text-align:left}
 .editor-entity-actions .editor-action-button{width:auto}.context-column{width:15px}
 .field-name-label{text-align:right;margin-bottom:5px}.filter-name-label{display:table-cell;width:200px}
-.filter-inner-wrapper{display:table-cell}.filter-wrapper{margin-bottom:5px}.dropdown__selected-items.dropdown__selected-items_with-borders.form-control{height:auto}
+.filter-inner-wrapper{display:table-cell}.filter-inner-wrapper .autocomplete-input-wrapper{width:170px}
+.filter-wrapper{margin-bottom:5px}.dropdown__selected-items.dropdown__selected-items_with-borders.form-control{height:auto}
 .field-wrapper-select .select-wrapper>div>.processing-status-wrapper{margin:-16px 0 0 20px;position:absolute}
 .field-wrapper-select .dropdown{position:relative;min-width:400px;border-radius:2px}
 .field-wrapper-select .dropdown *{box-sizing:border-box}.field-wrapper-select .dropdown__title{position:relative;background-color:#fff;height:100%;padding:4px}

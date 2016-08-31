@@ -2,16 +2,18 @@
     .filter-name-label
         span {{vm.filterDisplayName}}
     .filter-inner-wrapper
-      .selected-values(data-ng-show="vm.preloadedData")
-          .autocomplete-item(data-ng-show="vm.selectedValue") {{vm.selectedValue[vm.filter_search]}}
-              span.remove-from-selected(data-ng-click="vm.removeFromSelected()") ×
-      .autocomplete-input-wrapper(data-ng-show="vm.preloadedData")
-          input.form-control.input-sm(
-            type="text", name="{{vm.filterName}}",
-            data-ng-hide="vm.selectedValue",
+      .autocomplete-input-wrapper.form-control(data-ng-show="vm.preloadedData")
+          .selected-values(data-ng-show="vm.preloadedData")
+              .autocomplete-item(data-ng-repeat="acItem in vm.selectedValues") {{acItem[vm.filter_search]}}
+                  span.remove-from-selected(data-ng-click="vm.removeFromSelected()") ×
+          input.autocomplete-field-search(
+            type="text",
+            name="{{vm.filterName}}",
             data-ng-model="vm.inputValue",
             data-ng-focus="vm.focusPossible(true)",
-            data-ng-blur="vm.focusPossible(false)"
+            data-ng-blur="vm.focusPossible(false)",
+            size="{{vm.sizeInput}}",
+            data-ng-style='vm.classInput'
             )
           .loader-search-wrapper(data-ng-show="vm.searching")
               .loader-search {{'LOADING' | translate}}

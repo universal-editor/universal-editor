@@ -24,12 +24,14 @@
                 }
                 if (remote.fields.label) {
                     vm.filter_search = remote.fields.label;
+                } else {
+                    vm.filter_search = vm.filter_id;
                 }
             }
         }
         vm.filterName = $scope.filter.name;
         vm.filterDisplayName = $scope.filter.label;
-        vm.selectedValue = false;
+        vm.selectedValues = [];
         vm.activeElement = 0;
         vm.preloadedData = false;
         vm.searching = false;
@@ -136,7 +138,7 @@
 
         this.setInitialValue = function () {
             vm.filterValue = '';
-            vm.selectedValue = false;
+            vm.selectedValues = [];
             vm.inputValue = '';
         };
 
@@ -179,7 +181,8 @@
         /* PUBLIC METHODS */
 
         vm.addToSelected = function (obj) {
-            vm.selectedValue = obj;
+            vm.selectedValues = [];
+            vm.selectedValues.push(obj);
             vm.filterValue = obj['id'];
 
 
@@ -188,7 +191,7 @@
         };
 
         vm.removeFromSelected = function () {
-          vm.selectedValue = false;
+          vm.selectedValues = [];
           vm.filterValue = '';
         };
 
@@ -204,11 +207,12 @@
             if($scope.filter.hasOwnProperty("values")){
                 angular.forEach($scope.filter.values, function (v,key) {
                     var obj = {};
-                    if(containsString(v,searchString) && !alreadySelected(v)){
-                        obj[vm.filter_id] = key;
-                        obj[vm.filter_search] = v;
+                    obj[vm.filter_id] = key;
+                    obj[vm.filter_search] = v;
+                    if(containsString(v,searchString) && !alreadySelected(obj)){
                         vm.possibleValues.push(obj);
                     }
+                    console.log(vm.possibleValues);
                 });
                 vm.activeElement = 0;
                 vm.searching = false;
@@ -233,7 +237,7 @@
         }
 
         function containsString(str,search){
-            if(str.toLowerCase().indexOf(search.toLowerCase()) >= 0){
+            if (str.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
                 return true;
             } else {
                 return false;
@@ -254,16 +258,29 @@
 
         function alreadySelected(obj){
             var inSelected = false;
-            if(vm.selectedValue[vm.filter_id] == obj[vm.filter_id]){
-                inSelected = true;
-            }
+            angular.forEach(vm.selectedValues, function (v) {
+                if(v[vm.filter_id] == obj[vm.filter_id]){
+                    inSelected = true;
+                }
+            });
             return inSelected;
         }
 
         function loadValues() {
-          if($scope.filter.hasOwnProperty("values")){
+          if ($scope.filter.hasOwnProperty("values")) {
+              angular.forEach($scope.filter.values, function (v,key) {
+                  var obj = {};
+                  if (angular.isArray($scope.filter.values)) {
+                      obj[vm.filter_id] = v;
+                  } else {
+                      obj[vm.filter_id] = key;
+                  }
+                  obj[vm.field_search] = v;
+                  if (Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && !vm.multiple) {
+                      vm.selectedValues.push(obj);
+                  }
+              });
               vm.preloadedData = true;
-              vm.selectedValue = ($scope.filter.values.length >= 1) ? $scope.filter.values[0] : false;
           } else if ($scope.filter.hasOwnProperty("valuesRemote")){
               if(vm.filterValue === undefined || vm.filterValue === ''){
                   vm.preloadedData = true;
@@ -278,7 +295,9 @@
                   .getUrlResource($scope.filter.valuesRemote.url + "?filter=" + JSON.stringify(urlParam))
                   .then(function (response) {
                       vm.preloadedData = true;
-                      vm.selectedValue = (response.data.items.length >= 1) ? response.data.items[0] : false;
+                      if (response.data.items.length >= 1) {
+                          vm.selectedValues.push(response.data.items[0]);
+                      }
                   }, function (reject) {
                       vm.preloadedData = true;
                       console.error('EditorFieldAutocompleteController: Не удалось получить значения для поля \"' + $scope.filter.name + '\" с удаленного ресурса');

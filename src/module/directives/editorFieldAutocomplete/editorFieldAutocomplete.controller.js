@@ -393,13 +393,13 @@
             if ($scope.field.hasOwnProperty("values")) {
                 angular.forEach($scope.field.values, function (v,key) {
                     var obj = {};
-                    if (containsString(v,searchString) && !alreadySelected(v)) {
-                        if (angular.isArray($scope.field.values)) {
-                            obj[vm.field_id] = v;
-                        } else {
-                            obj[vm.field_id] = key;
-                        }
-                        obj[vm.field_search] = v;
+                    if (angular.isArray($scope.field.values)) {
+                        obj[vm.field_id] = v;
+                    } else {
+                        obj[vm.field_id] = key;
+                    }
+                    obj[vm.field_search] = v;
+                    if (containsString(v,searchString) && !alreadySelected(obj)) {
                         vm.possibleValues.push(obj);
                     }
                 });

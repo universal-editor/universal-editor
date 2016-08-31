@@ -2,11 +2,11 @@
 <div class="editor-autocomplete-wrapper">
     <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>
     <div class="filter-inner-wrapper">
-        <div data-ng-show="vm.preloadedData" class="selected-values">
-            <div data-ng-show="vm.selectedValue" class="autocomplete-item">{{vm.selectedValue[vm.filter_search]}}<span data-ng-click="vm.removeFromSelected()" class="remove-from-selected">×</span></div>
-        </div>
-        <div data-ng-show="vm.preloadedData" class="autocomplete-input-wrapper">
-            <input type="text" name="{{vm.filterName}}" data-ng-hide="vm.selectedValue" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" class="form-control input-sm"/>
+        <div data-ng-show="vm.preloadedData" class="autocomplete-input-wrapper form-control">
+            <div data-ng-show="vm.preloadedData" class="selected-values">
+                <div data-ng-repeat="acItem in vm.selectedValues" class="autocomplete-item">{{acItem[vm.filter_search]}}<span data-ng-click="vm.removeFromSelected()" class="remove-from-selected">×</span></div>
+            </div>
+            <input type="text" name="{{vm.filterName}}" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" class="autocomplete-field-search"/>
             <div data-ng-show="vm.searching" class="loader-search-wrapper">
                 <div class="loader-search">{{'LOADING' | translate}}</div>
             </div>

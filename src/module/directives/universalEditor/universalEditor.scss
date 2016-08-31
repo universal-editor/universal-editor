@@ -360,6 +360,10 @@ body {
 
 .filter-inner-wrapper {
   display: table-cell;
+
+  .autocomplete-input-wrapper{
+    width: 170px;
+  }
 }
 
 .filter-wrapper {
