@@ -360,6 +360,9 @@ body {
 
 .filter-inner-wrapper {
   display: table-cell;
+  .select-input-wrapper{
+    width: 170px;
+  }
 }
 
 .filter-wrapper {

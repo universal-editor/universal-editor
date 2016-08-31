@@ -9,9 +9,9 @@
         .module('universal.editor')
         .directive('editorFilterSelect',editorFilterSelect);
 
-    editorFilterSelect.$inject = ['$templateCache'];
+    editorFilterSelect.$inject = ['$templateCache', '$document'];
 
-    function editorFilterSelect($templateCache){
+    function editorFilterSelect($templateCache, $document){
         return {
             restrict : 'A',
             replace : true,
@@ -23,6 +23,11 @@
         };
 
         function link(scope, elem, attrs, ctrl){
+
+            $document.on('click', function() {
+                scope.vm.showPossible = false;
+            });
+
             elem.on('$destroy', function () {
                 scope.$destroy();
             });
