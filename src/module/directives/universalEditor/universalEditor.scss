@@ -60,6 +60,10 @@ body {
 
     tfoot {
       background-color: #cbd6da;
+
+      &>tr>td{
+        border: none;
+      }
     }
 
     td {
@@ -592,4 +596,7 @@ body {
 }
 .icon-mix-mode{
   padding-right: 10px;
+}
+.pagination{
+  margin-top: 8px;
 }

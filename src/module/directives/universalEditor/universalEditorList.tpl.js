@@ -77,16 +77,14 @@ module.run(['$templateCache', function($templateCache) {
     '                </tr>\n' +
     '            </tbody>\n' +
     '            <tfoot>\n' +
-    '                <tr data-ng-if="vm.metaKey">\n' +
-    '                    <td colspan="{{vm.tableFields.length + 1}}">\n' +
-    '                        <div class="meta-info">{{\'ELEMENTS\' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{\'FROM\' | translate}} {{vm.metaData.totalCount}}</div>\n' +
-    '                    </td>\n' +
-    '                </tr>\n' +
     '                <tr>\n' +
-    '                    <td colspan="{{vm.tableFields.length + 1}}" data-ng-if="vm.pagination &amp;&amp; vm.metaKey">\n' +
+    '                    <td colspan="{{vm.tableFields.length}}" data-ng-if="vm.pagination &amp;&amp; vm.metaKey">\n' +
     '                        <ul class="pagination">\n' +
     '                            <li data-ng-repeat="pageItem in vm.pageItemsArray" data-ng-class="pageItem.self ? \'active\' : \'\'"><a data-ng-if="!pageItem.self" href="{{pageItem.href}}" data-ng-click="vm.changePage($event,pageItem.href)">{{pageItem.label}}</a><span data-ng-if="pageItem.self">{{pageItem.label}}</span></li>\n' +
     '                        </ul>\n' +
+    '                    </td>\n' +
+    '                    <td data-ng-if="vm.metaKey">\n' +
+    '                        <div class="meta-info">{{\'ELEMENTS\' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{\'FROM\' | translate}} {{vm.metaData.totalCount}}</div>\n' +
     '                    </td>\n' +
     '                </tr>\n' +
     '            </tfoot>\n' +

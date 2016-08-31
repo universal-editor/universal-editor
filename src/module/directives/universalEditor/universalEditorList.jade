@@ -61,12 +61,12 @@ ul.nav.nav-tabs(data-ng-if="vm.configData.entities.length > 1")
                td(colspan="{{vm.tableFields.length + 1}}")
                   | {{'ELEMENT_NO' | translate}}
          tfoot
-            tr(data-ng-if="vm.metaKey")
-               td(colspan="{{vm.tableFields.length + 1}}")
-                  .meta-info {{'ELEMENTS' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{'FROM' | translate}} {{vm.metaData.totalCount}}
             tr
-               td(colspan="{{vm.tableFields.length + 1}}", data-ng-if="vm.pagination && vm.metaKey")
+               td(colspan="{{vm.tableFields.length}}", data-ng-if="vm.pagination && vm.metaKey")
                   ul.pagination
                      li(data-ng-repeat="pageItem in vm.pageItemsArray", data-ng-class="pageItem.self ? 'active' : ''")
                         a(data-ng-if="!pageItem.self", href="{{pageItem.href}}", data-ng-click="vm.changePage($event,pageItem.href)") {{pageItem.label}}
                         span(data-ng-if="pageItem.self") {{pageItem.label}}
+               td(data-ng-if="vm.metaKey")
+                  .meta-info {{'ELEMENTS' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{'FROM' | translate}} {{vm.metaData.totalCount}}
+
