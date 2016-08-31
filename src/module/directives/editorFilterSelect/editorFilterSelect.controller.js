@@ -30,9 +30,13 @@
         vm.selectedValues = [];
         vm.placeholder = $scope.filter.placeholder || '';
         vm.activeElement = 0;
+        vm.search = $scope.filter.search;
         var possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+        vm.change = change;
+        vm.isSelection = false;
 
         FilterFieldsStorage.addFilterController(this);
+        var allOptions;
 
         if ($scope.filter.hasOwnProperty("values")) {
             if ($location.search()[vm.filterName]) {
@@ -45,8 +49,10 @@
                 vm.selectedValues.push(obj);
                 if ($location.search()[vm.filterName] && key == vm.filterValue) {
                     vm.placeholder = v;
+                    vm.isSelection = true;
                 }
             });
+            allOptions = angular.copy(vm.selectedValues);
         } else if ($scope.filter.hasOwnProperty("valuesRemote")) {
             RestApiService
                 .getUrlResource($scope.filter.valuesRemote.url)
@@ -57,16 +63,19 @@
                     angular.forEach(response.data.items, function (v) {
                         vm.selectedValues.push(v);
                         if ($location.search()[vm.filterName] && v[vm.field_id] == vm.filterValue) {
-                            vm.placeholder = v[vm.field_search];
+                            $timeout(function () {
+                                vm.placeholder = v[vm.field_search];
+                                vm.isSelection = true;
+                            }, 0);
                         }
                     });
+                    allOptions = angular.copy(vm.selectedValues);
                 }, function (reject) {
                     console.error('EditorFilterSelectController: Не удалось получить значения для поля \"' + $scope.filter.fieldName + '\" с удаленного ресурса');
                 });
         } else {
             console.error('EditorFilterSelectController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
         }
-
         this.getFilterValue = function () {
 
             var field = {};
@@ -109,7 +118,9 @@
         $scope.$watch(function () {
             return vm.filterValue;
         }, function (newVal) {
+            vm.isSelection = false;
             if (newVal !== undefined) {
+                vm.isSelection = vm.showPossible;
                 $location.search(vm.filterName, newVal);
             }
         });
@@ -125,6 +136,7 @@
 
         vm.isShowPossible = function (event) {
             vm.activeElement = 0;
+            change();
             vm.showPossible = true;
             event.stopPropagation();
         };
@@ -202,5 +214,45 @@
                 }
             }
         });
+
+        function change() {
+            var filterName =  allOptions.filter(function (opt) {
+                return opt[vm.field_id] == vm.filterValue;
+            });
+            if (!!vm.filterValue && !vm.filterText) {
+                vm.isSelection = false;
+                vm.placeholder = $scope.filter.placeholder || '';
+            } else {
+                vm.placeholder = '';
+            }
+            if (!vm.filterText) {
+                vm.placeholder = $scope.filter.placeholder;
+                if (!!vm.filterValue && filterName.length > 0) {
+                    vm.placeholder = filterName[0][vm.field_search];
+                    vm.isSelection = true;
+                }
+
+                if (allOptions) {
+                    vm.selectedValues = allOptions;
+                }
+                return;
+            }
+            if (!allOptions) {
+                allOptions = angular.copy(vm.selectedValues);
+            }
+            vm.selectedValues = filter(angular.copy(allOptions), vm.filterText);
+        }
+
+        function filter(opts, filterText) {
+            var result = [];
+            result = opts.filter(function (opt) {
+                if (opt.childOpts && opt.childOpts.length) {
+                    opt.childOpts = filter(opt.childOpts, filterText);
+                }
+                return (opt[vm.field_search].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length);
+            });
+
+            return result;
+        }
     }
 })();

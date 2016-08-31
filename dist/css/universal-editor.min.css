@@ -85,8 +85,8 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .radio,.checkbox{margin-top:0}.editor-field-array .field-name-label.label-array{background-color:#d3dfe2;text-align:center;padding:10px 0}
 .icon-mix-mode{padding-right:10px}.select-input-wrapper{position:relative;cursor:pointer}
 .select-input-wrapper.but-for-search:before{content:'';position:absolute;margin-top:-4px;top:18px;right:10px;display:block;width:0;height:0;border-top:8px solid #2a3534;border-right:4px solid transparent;border-left:4px solid transparent;z-index:55;cursor:pointer}
-.select-input-wrapper .color-placeholder::-webkit-input-placeholder{color:#000}.select-input-wrapper .color-placeholder::-moz-placeholder{color:#000}
-.select-input-wrapper .color-placeholder:-moz-placeholder{color:#000}.select-input-wrapper .color-placeholder:-ms-input-placeholder{color:#000}
+.select-input-wrapper .color-placeholder::-webkit-input-placeholder{color:#555}.select-input-wrapper .color-placeholder::-moz-placeholder{color:#555}
+.select-input-wrapper .color-placeholder:-moz-placeholder{color:#555}.select-input-wrapper .color-placeholder:-ms-input-placeholder{color:#555}
 .select-input-wrapper .color-placeholder:focus::-webkit-input-placeholder{color:#999}
 .select-input-wrapper .color-placeholder:focus::-moz-placeholder{color:#999}.select-input-wrapper .color-placeholder:focus:-moz-placeholder{color:#999}
 .select-input-wrapper .color-placeholder:focus:-ms-input-placeholder{color:#999}

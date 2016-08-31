@@ -615,16 +615,16 @@ body {
   }
   .color-placeholder{
     &::-webkit-input-placeholder{
-      color: #000;
+      color: #555;
     }
     &::-moz-placeholder{
-      color: #000;
+      color: #555;
     }
     &:-moz-placeholder{
-      color: #000;
+      color: #555;
     }
     &:-ms-input-placeholder{
-      color: #000;
+      color: #555;
     }
 
     &:focus::-webkit-input-placeholder{
