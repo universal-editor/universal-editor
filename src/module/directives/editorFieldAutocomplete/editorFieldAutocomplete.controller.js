@@ -427,11 +427,7 @@
         }
 
         function containsString(str,search){
-            if (str.toLowerCase().indexOf(search.toLowerCase()) >= 0){
-                return true;
-            } else {
-                return false;
-            }
+            return (str.toLowerCase().indexOf(search.toLowerCase()) >= 0);
         }
 
         function alreadyInPossible(obj){

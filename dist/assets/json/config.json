@@ -83,31 +83,6 @@
               "multiple": true
             },
             {
-              "name": "parent_id2",
-              "type": "autocomplete",
-              "list": true,
-              "label": "Руководитель",
-              "valuesRemote": {
-                "fields": {
-                  "value": "id"
-                },
-                "url": "http://universal-backend.dev/rest/v1/staff"
-              },
-              "multiple": false
-            },
-            {
-              "name": "parent_id3",
-              "type": "autocomplete",
-              "list": true,
-              "label": "Руководитель",
-              "values": [
-                "Variable 1",
-                "Variable 2",
-                "Variable 3"
-              ],
-              "multiple": true
-            },
-            {
               "name":"ek_ids",
               "type":"select",
               "valuesRemote":{

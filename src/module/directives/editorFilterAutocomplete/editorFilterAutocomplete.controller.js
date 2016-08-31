@@ -3,11 +3,11 @@
 
     angular
         .module('universal.editor')
-        .controller('EditorFilterAutocompleteController',EditorFilterAutocompleteController);
+        .controller('EditorFilterAutocompleteController', EditorFilterAutocompleteController);
 
-    EditorFilterAutocompleteController.$inject = ['$scope','$element', 'FilterFieldsStorage','$location','RestApiService','$timeout','ArrayFieldStorage'];
+    EditorFilterAutocompleteController.$inject = ['$scope', '$element', 'FilterFieldsStorage', '$location', 'RestApiService', '$timeout', 'ArrayFieldStorage'];
 
-    function EditorFilterAutocompleteController($scope,$element,FilterFieldsStorage,$location,RestApiService, $timeout,ArrayFieldStorage){
+    function EditorFilterAutocompleteController($scope, $element, FilterFieldsStorage, $location, RestApiService, $timeout, ArrayFieldStorage) {
         /* jshint validthis: true */
         var vm = this;
         var filterErrorName = $scope.filterName;
@@ -39,6 +39,10 @@
 
         vm.filterValue = $location.search()[vm.filterName] || '';
         vm.inputValue = '';
+        vm.sizeInput = 1;
+        vm.classInput = {
+            'width': '1px'
+        };
 
         loadValues();
 
@@ -46,33 +50,33 @@
         FilterFieldsStorage.addFilterController(this);
 
         $element.find("input").bind("keydown", function (event) {
-            switch(event.which){
+            switch (event.which) {
                 case 13:
                     event.preventDefault();
-                    if(vm.possibleValues.length < 1){
+                    if (vm.possibleValues.length < 1) {
                         break;
                     }
 
                     $timeout(function () {
                         vm.addToSelected(vm.possibleValues[vm.activeElement]);
-                    },0);
+                    }, 0);
 
                     break;
                 case 40:
                     event.preventDefault();
-                    if(vm.possibleValues.length < 1){
+                    if (vm.possibleValues.length < 1) {
                         break;
                     }
 
                     possibleValues = angular.element($element[0].getElementsByClassName('possible-values')[0]);
 
-                    if(vm.activeElement < vm.possibleValues.length -1){
+                    if (vm.activeElement < vm.possibleValues.length - 1) {
                         $timeout(function () {
                             vm.activeElement++;
-                        },0);
+                        }, 0);
 
                         $timeout(function () {
-                            var activeTop  = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
+                            var activeTop = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
                                 activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
@@ -80,24 +84,24 @@
                             if (activeTop >= (wrapperHeight + wrapperScroll - activeHeight)) {
                                 possibleValues[0].scrollTop += activeHeight + 1;
                             }
-                        },1);
+                        }, 1);
                     }
                     break;
                 case 38:
                     event.preventDefault();
-                    if(vm.possibleValues.length < 1){
+                    if (vm.possibleValues.length < 1) {
                         break;
                     }
 
                     possibleValues = angular.element($element[0].getElementsByClassName('possible-values')[0]);
 
-                    if(vm.activeElement > 0){
+                    if (vm.activeElement > 0) {
                         $timeout(function () {
                             vm.activeElement--;
-                        },0);
+                        }, 0);
 
                         $timeout(function () {
-                            var activeTop  = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
+                            var activeTop = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
                                 activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
@@ -105,7 +109,7 @@
                             if (activeTop < wrapperScroll) {
                                 possibleValues[0].scrollTop -= activeHeight + 1;
                             }
-                        },1);
+                        }, 1);
                     }
                     break;
             }
@@ -117,7 +121,7 @@
 
         this.getFilterValue = function () {
             var field = {};
-            if(vm.filterValue !== ""){
+            if (vm.filterValue !== "") {
                 field[vm.filterName] = vm.filterValue;
                 return field;
             } else {
@@ -159,23 +163,29 @@
         $scope.$watch(function () {
             return vm.inputValue;
         }, function (newVal) {
-            if(inputTimeout) {
-              $timeout.cancel(inputTimeout);
+            if (inputTimeout) {
+                $timeout.cancel(inputTimeout);
             }
             vm.possibleValues = [];
-            inputTimeout = $timeout(function(){
+            vm.sizeInput = newVal.length || 1;
+            if (vm.sizeInput === 1) {
+                vm.classInput.width = '1px';
+            } else {
+                vm.classInput.width = 'initial';
+            }
+            inputTimeout = $timeout(function () {
                 autocompleteSearch(newVal);
-            },300);
+            }, 300);
         });
 
         $scope.$watch(function () {
             return vm.filterValue;
         }, function (newVal) {
-          if(newVal !== ""){
-              $location.search(vm.filterName,newVal);
-          } else {
-              $location.search(vm.filterName,null);
-          }
+            if (newVal !== "") {
+                $location.search(vm.filterName, newVal);
+            } else {
+                $location.search(vm.filterName, null);
+            }
         });
 
         /* PUBLIC METHODS */
@@ -191,28 +201,27 @@
         };
 
         vm.removeFromSelected = function () {
-          vm.selectedValues = [];
-          vm.filterValue = '';
+            vm.selectedValues = [];
+            vm.filterValue = '';
         };
 
         /* PRIVATE METHODS */
 
-        function autocompleteSearch(searchString){
-            if(searchString === "" || searchString.length <= vm.minCount){
+        function autocompleteSearch(searchString) {
+            if (searchString === "" || searchString.length <= vm.minCount) {
                 return;
             }
 
             vm.searching = true;
 
-            if($scope.filter.hasOwnProperty("values")){
-                angular.forEach($scope.filter.values, function (v,key) {
+            if ($scope.filter.hasOwnProperty("values")) {
+                angular.forEach($scope.filter.values, function (v, key) {
                     var obj = {};
                     obj[vm.filter_id] = key;
                     obj[vm.filter_search] = v;
-                    if(containsString(v,searchString) && !alreadySelected(obj)){
+                    if (containsString(v, searchString) && !alreadySelected(obj)) {
                         vm.possibleValues.push(obj);
                     }
-                    console.log(vm.possibleValues);
                 });
                 vm.activeElement = 0;
                 vm.searching = false;
@@ -221,9 +230,9 @@
                 urlParam[vm.filter_search] = "%" + searchString + "%";
                 RestApiService
                     .getUrlResource($scope.filter.valuesRemote.url + "?filter=" + JSON.stringify(urlParam))
-                    .then(function (response){
+                    .then(function (response) {
                         angular.forEach(response.data.items, function (v) {
-                            if(!alreadySelected(v) && !alreadyInPossible(v)){
+                            if (!alreadySelected(v) && !alreadyInPossible(v)) {
                                 vm.possibleValues.push(v);
                             }
                         });
@@ -236,30 +245,26 @@
             }
         }
 
-        function containsString(str,search){
-            if (str.toLowerCase().indexOf(search.toLowerCase()) >= 0) {
-                return true;
-            } else {
-                return false;
-            }
+        function containsString(str, search) {
+            return (str.toLowerCase().indexOf(search.toLowerCase()) >= 0);
         }
 
-        function alreadyInPossible(obj){
-          var inPossible = false;
+        function alreadyInPossible(obj) {
+            var inPossible = false;
 
-          angular.forEach(vm.possibleValues,function (v) {
-            if(v[vm.filter_id] == obj[vm.filter_id]){
-              inPossible = true;
-            }
-          });
+            angular.forEach(vm.possibleValues, function (v) {
+                if (v[vm.filter_id] == obj[vm.filter_id]) {
+                    inPossible = true;
+                }
+            });
 
-          return inPossible;
+            return inPossible;
         }
 
-        function alreadySelected(obj){
+        function alreadySelected(obj) {
             var inSelected = false;
             angular.forEach(vm.selectedValues, function (v) {
-                if(v[vm.filter_id] == obj[vm.filter_id]){
+                if (v[vm.filter_id] == obj[vm.filter_id]) {
                     inSelected = true;
                 }
             });
@@ -267,48 +272,66 @@
         }
 
         function loadValues() {
-          if ($scope.filter.hasOwnProperty("values")) {
-              angular.forEach($scope.filter.values, function (v,key) {
-                  var obj = {};
-                  if (angular.isArray($scope.filter.values)) {
-                      obj[vm.filter_id] = v;
-                  } else {
-                      obj[vm.filter_id] = key;
-                  }
-                  obj[vm.field_search] = v;
-                  if (Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && !vm.multiple) {
-                      vm.selectedValues.push(obj);
-                  }
-              });
-              vm.preloadedData = true;
-          } else if ($scope.filter.hasOwnProperty("valuesRemote")){
-              if(vm.filterValue === undefined || vm.filterValue === ''){
-                  vm.preloadedData = true;
-                  return;
-              }
+            var search = $location.search();
+            if ($scope.filter.hasOwnProperty("values")) {
+                console.log("zdfg");
+                angular.forEach($scope.filter.values, function (v, key) {
+                    var obj = {};
+                    if (angular.isArray($scope.filter.values)) {
+                        obj[vm.filter_id] = v;
+                    } else {
+                        obj[vm.filter_id] = key;
+                    }
+                    obj[vm.filter_search] = v;
+                    if (!!search && search.hasOwnProperty(vm.filterName) && search[vm.filterName] == obj[vm.filter_id]) {
+                        vm.selectedValues.push(obj);
+                    }
+                });
+                vm.preloadedData = true;
+            } else if ($scope.filter.hasOwnProperty("valuesRemote")) {
+                if (vm.filterValue === undefined || vm.filterValue === '') {
+                    vm.preloadedData = true;
+                    return;
+                }
 
-              var urlParam;
-              urlParam = {};
-              urlParam[vm.filter_id] = [];
-              urlParam[vm.filter_id].push(vm.filterValue);
-              RestApiService
-                  .getUrlResource($scope.filter.valuesRemote.url + "?filter=" + JSON.stringify(urlParam))
-                  .then(function (response) {
-                      vm.preloadedData = true;
-                      if (response.data.items.length >= 1) {
-                          vm.selectedValues.push(response.data.items[0]);
-                      }
-                  }, function (reject) {
-                      vm.preloadedData = true;
-                      console.error('EditorFieldAutocompleteController: Не удалось получить значения для поля \"' + $scope.filter.name + '\" с удаленного ресурса');
-                  });
-          } else {
-              vm.preloadedData = true;
-              console.error('EditorFieldAutocompleteController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
-          }
+                var urlParam;
+                urlParam = {};
+                urlParam[vm.filter_id] = [];
+                urlParam[vm.filter_id].push(vm.filterValue);
+                RestApiService
+                    .getUrlResource($scope.filter.valuesRemote.url + "?filter=" + JSON.stringify(urlParam))
+                    .then(function (response) {
+                        if (!!search && search.hasOwnProperty(vm.filterName)) {
+                            angular.forEach(response.data.items, function (v) {
+                                if (search[vm.filterName] == v[vm.filter_id]) {
+                                    vm.selectedValues.push(v);
+                                }
+                            });
+                        }
+                        vm.preloadedData = true;
+                    }, function (reject) {
+                        vm.preloadedData = true;
+                        console.error('EditorFieldAutocompleteController: Не удалось получить значения для поля \"' + $scope.filter.name + '\" с удаленного ресурса');
+                    });
+            } else {
+                vm.preloadedData = true;
+                console.error('EditorFieldAutocompleteController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
+            }
         }
-        vm.focusPossible = function(isActive) {
+
+        vm.focusPossible = function (isActive) {
             vm.isActivePossible = isActive;
+            if (!vm.multiple) {
+                if ($element.find('.autocomplete-item').length > 0) {
+                    if (isActive) {
+                        $element.find('.autocomplete-field-search').removeClass('hidden');
+                        $element.find('.autocomplete-item').addClass('opacity-item');
+                    } else {
+                        $element.find('.autocomplete-field-search').addClass('hidden');
+                        $element.find('.autocomplete-item').removeClass('opacity-item');
+                    }
+                }
+            }
         }
     }
 })();
