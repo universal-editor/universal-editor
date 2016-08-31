@@ -54,6 +54,8 @@
         vm.pagination = entityObject.backend.hasOwnProperty("pagination") ? entityObject.backend.pagination : true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
+        vm.pageLimites = [10, 20, 50];
+        vm.currentPage = RestApiService.getPerPage();
 
         if(entityObject.backend.hasOwnProperty('fields')){
             vm.idField = entityObject.backend.fields.primaryKey || vm.idField;
@@ -326,7 +328,8 @@
                 vm.metaKey = false;
             }
             if(vm.pagination && vm.metaKey){
-
+                var per_page = RestApiService.getPerPage();
+                qParams['per-page'] = per_page;
                 vm.metaData = data[metaKey];
                 vm.metaData.fromItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage ) + 1;
                 vm.metaData.toItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage ) + data[itemsKey].length;
@@ -515,6 +518,11 @@
             if(event.keyCode === 13){
                 vm.applyFilter();
             }
+        };
+
+        vm.setSizePage = function(size) {
+            RestApiService.setPerPage(size);
+            $state.reload();
         }
     }
 })();

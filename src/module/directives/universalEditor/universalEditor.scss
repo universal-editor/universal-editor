@@ -64,6 +64,9 @@ body {
       &>tr>td{
         border: none;
       }
+      .dropdown-menu{
+        min-width: 10px;
+      }
     }
 
     td {
@@ -598,5 +601,5 @@ body {
   padding-right: 10px;
 }
 .pagination{
-  margin-top: 8px;
+  margin-top: 0;
 }

@@ -28,6 +28,7 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .universal-editor .editor-filter{margin-bottom:10px;border-bottom:1px solid #9ca9ae;background:#cbd6da;-webkit-border-radius:0 3px 3px;border-radius:0 3px 3px;padding:10px;min-width:600px;display:inline-block;width:auto}
 .universal-editor .editor-filter .buttons-wrapper{margin-top:10px}.universal-editor .meta-info{text-align:right;padding:10px;padding-bottom:0;font-size:11px;color:#6a7b8b}
 .universal-editor table{background-color:#fff;border-spacing:0}.universal-editor table tfoot{background-color:#cbd6da}
+.universal-editor table tfoot>tr>td{border:0}.universal-editor table tfoot .dropdown-menu{min-width:10px}
 .universal-editor table td{vertical-align:top;position:relative}.universal-editor table thead td{font-weight:700;cursor:pointer}
 .universal-editor table thead td.actions-header{cursor:default}.universal-editor table thead td.active.asc:after{content:"";width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid #000;display:block;float:right;transform:scale(-1,-1);margin-top:3px}
 .universal-editor table thead td.active.desc:after{content:"";width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid #000;display:block;float:right;transform:scale(-1,-1);margin-top:3px}
@@ -82,4 +83,4 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .field-wrapper-select .dropdown__selected-items{padding:2px 0;text-align:center}.field-wrapper-select .select-wrapper .dropdown .processing-status-wrapper{margin-top:2px}
 .item-datepicker-wrapper,.item-colorpicker-wrapper,.item-string-wrapper,.item-textarea-wrapper,.item-timepicker-wrapper,.item-array-wrapper,.item-map-wrapper{padding-bottom:10px}
 .radio,.checkbox{margin-top:0}.editor-field-array .field-name-label.label-array{background-color:#d3dfe2;text-align:center;padding:10px 0}
-.icon-mix-mode{padding-right:10px}
+.icon-mix-mode{padding-right:10px}.pagination{margin-top:0}

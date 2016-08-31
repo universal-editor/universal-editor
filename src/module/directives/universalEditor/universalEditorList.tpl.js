@@ -78,13 +78,17 @@ module.run(['$templateCache', function($templateCache) {
     '            </tbody>\n' +
     '            <tfoot>\n' +
     '                <tr>\n' +
-    '                    <td colspan="{{vm.tableFields.length}}" data-ng-if="vm.pagination &amp;&amp; vm.metaKey">\n' +
-    '                        <ul class="pagination">\n' +
+    '                    <td colspan="{{vm.tableFields.length + 1}}">\n' +
+    '                        <ul data-ng-if="vm.pagination &amp;&amp; vm.metaKey" class="pagination col-lg-6 col-md-6 col-sm-6 col-xs-6">\n' +
     '                            <li data-ng-repeat="pageItem in vm.pageItemsArray" data-ng-class="pageItem.self ? \'active\' : \'\'"><a data-ng-if="!pageItem.self" href="{{pageItem.href}}" data-ng-click="vm.changePage($event,pageItem.href)">{{pageItem.label}}</a><span data-ng-if="pageItem.self">{{pageItem.label}}</span></li>\n' +
     '                        </ul>\n' +
-    '                    </td>\n' +
-    '                    <td data-ng-if="vm.metaKey">\n' +
-    '                        <div class="meta-info">{{\'ELEMENTS\' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{\'FROM\' | translate}} {{vm.metaData.totalCount}}</div>\n' +
+    '                        <div class="dropup col-lg-2 col-md-2 col-sm-2 col-xs-2">\n' +
+    '                            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">{{vm.currentPage}}</button>\n' +
+    '                            <ul class="dropdown-menu">\n' +
+    '                                <li data-ng-repeat="element in vm.pageLimites track by $index"><a href="#" data-ng-click="vm.setSizePage(element)">{{element}}</a></li>\n' +
+    '                            </ul>\n' +
+    '                        </div>\n' +
+    '                        <div data-ng-if="vm.metaKey" class="meta-info col-lg-4 col-md-4 col-sm-4 col-xs-4">{{\'ELEMENTS\' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{\'FROM\' | translate}} {{vm.metaData.totalCount}}</div>\n' +
     '                    </td>\n' +
     '                </tr>\n' +
     '            </tfoot>\n' +

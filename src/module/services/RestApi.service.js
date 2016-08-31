@@ -14,7 +14,8 @@
             filterParams,
             itemsKey,
             entityObject,
-            mixEntity;
+            mixEntity,
+            per_page = 10;
 
         self.isProcessing = false;
         self.methodType = "";
@@ -59,6 +60,14 @@
             } else {
                 queryTempParams = undefined;
             }
+        };
+
+        this.getPerPage = function(params) {
+            return per_page;
+        };
+
+        this.setPerPage = function(params) {
+            per_page = !!params ? params : 20;
         };
 
         this.setFilterParams = function(params){
@@ -138,10 +147,6 @@
                 delete params.root;
             }
 
-            //if(Object.keys(params).length === 0){
-            //   params = undefined;
-            // }
-
             self.isProcessing = true;
 
             var expandFields = [];
@@ -157,6 +162,9 @@
             if (expandFields.length > 0){
                 params.expand = expandFields.join(',');
             }
+
+            params['per-page'] = per_page;
+
             $http({
                 method : _method,
                 url : _url,
