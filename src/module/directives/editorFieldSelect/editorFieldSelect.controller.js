@@ -94,8 +94,9 @@
                 if (ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name)) {
                     if (vm.isTree) {
                         _selectedIds.push(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name));
-                    } else {
-                        vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
+                   } else {
+                        vm.fieldValue = {};
+                        vm.fieldValue[vm.field_id] = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
                     }
                 }
             }
