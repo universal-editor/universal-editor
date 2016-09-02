@@ -94,7 +94,7 @@
                     $rootScope.$emit('editor:create_entity',[entityObject, request]);
                     break;
                 case "update":
-                    $rootScope.$emit('editor:update_entity',[entityObject, request]);
+                    $rootScope.$broadcast('editor:update_entity',[entityObject, request]);
                     break;
             }
         };
@@ -119,7 +119,7 @@
                     angular.merge(entityObject,fCtrl.getFieldValue());
                 }
             });
-            $rootScope.$emit('editor:presave_entity',[entityObject, request]);
+            $rootScope.$broadcast('editor:presave_entity',[entityObject, request]);
         };
 
         this.getEntity = function(){

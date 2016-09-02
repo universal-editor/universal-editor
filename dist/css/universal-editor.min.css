@@ -18,8 +18,9 @@
 .filter-date-wrapper .divider{padding:0 5px}.editor-date,.editor-time{display:inline-block}
 .editor-date input{width:85px}.editor-time input{width:70px}.filter-datetime-wrapper .filter-start,.filter-datetime-wrapper .filter-end,.filter-datetime-wrapper .divider{display:inline-block}
 .filter-datetime-wrapper .divider{padding:0 5px}.editor-datetime,.editor-time{display:inline-block}
-.editor-datetime input{width:135px}.field-wrapper{margin:0 10px;padding:10px 0}.filter-time-wrapper .filter-start,.filter-time-wrapper .filter-end,.filter-time-wrapper .divider{display:inline-block}
-.filter-time-wrapper .divider{padding:0 5px}body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;background-color:#e1e9eb}
+.editor-datetime input{width:135px}.filter-time-wrapper .filter-start,.filter-time-wrapper .filter-end,.filter-time-wrapper .divider{display:inline-block}
+.filter-time-wrapper .divider{padding:0 5px}.field-wrapper{margin:0 10px;padding:10px 0}
+body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;background-color:#e1e9eb}
 .universal-editor .editor-header{padding:20px 0 5px 0}.universal-editor .editor-header .filter-button{min-width:110px;margin-right:10px}
 .universal-editor .editor-header .header-action-button{border:0;display:inline-block;margin-right:10px;outline:0}
 .universal-editor .groups-action{margin-bottom:10px}.universal-editor .editor-entity-actions{background:#ebf1f3;padding:10px;border-top:1px solid #e1e9eb}

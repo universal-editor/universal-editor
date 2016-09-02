@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UniversalEditorController',UniversalEditorController);
 
-    UniversalEditorController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','configObject','toastr', '$translate', 'ConfigDataProvider', 'EditEntityStorage'];
+    UniversalEditorController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','configObject','toastr', '$translate', 'ConfigDataProvider', 'EditEntityStorage', '$window'];
 
-    function UniversalEditorController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,configObject,toastr, $translate, ConfigDataProvider, EditEntityStorage){
+    function UniversalEditorController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,configObject,toastr, $translate, ConfigDataProvider, EditEntityStorage, $window){
         $scope.entity = RestApiService.getEntityType();
         var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
@@ -421,14 +421,31 @@
 
         $scope.$on('editor:entity_loaded', function (event,data) {
             if (configData.hasOwnProperty('ui') && configData.ui.alertNotSaved && $state.is('editor.type.entity')) {
+                var dataEntity = data;
+
+                $rootScope.$on('editor:update_entity',function(event,data) {
+                    dataEntity = data[0];
+                });
+
+                $rootScope.$on('editor:presave_entity',function(event,data) {
+                    dataEntity = data[0];
+                });
+
                 alertNotSaved = $rootScope.$on('$stateChangeStart', function(event) {
-                    var isAdmin = isSave(data);
-                    if(!isAdmin && !confirm('Данные были изменены. Перейти?')) {
+                    console.log('старое',dataEntity);
+                    var save = isSave(dataEntity);
+                    if(!save && !confirm('Внесенные изменения не сохранятся. Перейти на другу страницу?')) {
                         event.preventDefault();
                         return;
                     }
                     alertNotSaved();
                 });
+                $window.onbeforeunload = function() {
+                    var save = isSave(dataEntity);
+                    if(!save) {
+                        return 'Внесенные изменения не сохранятся.';
+                    }
+                }
             }
             vm.editorEntityType = data.editorEntityType;
             vm.entityId = data[vm.idField];
@@ -534,6 +551,7 @@
             for(var key in dataEntity){
                 dataEdit[key] = data[key];
             }
+            console.log('новое',dataEntity, 'старое' ,dataEdit);
             return angular.equals(dataEntity, dataEdit);
         }
 

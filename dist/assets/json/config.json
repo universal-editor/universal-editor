@@ -1,4 +1,7 @@
 {
+  "ui": {
+    "alertNotSaved": true
+  },
   "entities": [
     {
       "name": "staff",
