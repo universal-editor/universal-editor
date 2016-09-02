@@ -40,7 +40,6 @@
         }
 
         vm.assetsPath = '../assets';
-
         var _selectedIds = [];
         vm.fieldName = $scope.field.name;
         vm.options = [];
@@ -52,15 +51,18 @@
         vm.depend = $scope.field.depend || false;
         vm.parentValue = !vm.depend;
         vm.search = $scope.field.search;
+        vm.placeholder = $scope.field.placeholder || '';
         //vm.multiname = $scope.field.multiname || "value";
 
         // Настройки режима "Дерево"
-        if ($scope.field.hasOwnProperty("valuesRemote") && $scope.field.tree &&
-            $scope.field.tree.parentField && $scope.field.tree.childCountField) {
-            vm.treeParentField = $scope.field.tree.parentField;
-            vm.treeChildCountField = $scope.field.tree.childCountField;
-            vm.treeSelectBranches = $scope.field.tree.selectBranches;
+
+        if ($scope.field.hasOwnProperty('valuesRemote') &&
+            $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {
+            vm.treeParentField = $scope.field.valuesRemote.fields.parent;
+            vm.treeChildCountField = $scope.field.valuesRemote.fields.childCount;
+            vm.treeSelectBranches = $scope.field.selectBranches;
             vm.isTree = vm.treeParentField && vm.treeChildCountField;
+            vm.sizeInput = vm.placeholder.length;
         }
 
         if(vm.depend){
@@ -92,8 +94,9 @@
                 if (ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name)) {
                     if (vm.isTree) {
                         _selectedIds.push(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name));
-                    } else {
-                        vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
+                   } else {
+                        vm.fieldValue = {};
+                        vm.fieldValue[vm.field_id] = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
                     }
                 }
             }
@@ -121,6 +124,8 @@
                 else if (!_selectedIds.length) {
                     getRemoteValues();
                 }
+            } else {
+                getRemoteValues();
             }
         } else {
             console.error('EditorFieldSelectController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
@@ -279,6 +284,16 @@
                     }
                     vm.fieldValue = obj;
                 }
+
+                if (vm.isTree) {
+                    vm.fieldValue = [];
+                }
+
+                if (!!$scope.field.defaultValue && !vm.isTree) {
+                    var obj = {};
+                    obj[vm.field_id] = $scope.field.defaultValue;
+                    vm.fieldValue = obj;
+                }
                 return;
             }
 
@@ -376,7 +391,6 @@
                 }
             });
         }
-
         var allOptions;
 
         // dropdown functions
@@ -435,6 +449,13 @@
                     }
                 }
             }
+            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+                vm.placeholder = $scope.field.placeholder || '';
+                vm.sizeInput = vm.placeholder.length;
+            } else {
+                vm.placeholder = '';
+                vm.sizeInput = vm.filterText.length || 1;
+            }
             e.stopPropagation();
         }
 
@@ -465,6 +486,13 @@
                     }
                 }
             }
+            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+                vm.placeholder = $scope.field.placeholder || '';
+                vm.sizeInput = vm.placeholder.length;
+            } else {
+                vm.placeholder = '';
+                vm.sizeInput = vm.filterText.length || 1;
+            }
             e.stopPropagation();
         }
 
@@ -475,12 +503,21 @@
         }
 
         function change() {
+            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+                vm.placeholder = $scope.field.placeholder || '';
+                vm.sizeInput = vm.placeholder.length;
+            } else {
+                vm.placeholder = '';
+                vm.sizeInput = vm.filterText.length || 1;
+            }
             if (!vm.filterText) {
+                vm.sizeInput = vm.placeholder.length;
                 if (allOptions) {
                     vm.options = allOptions;
                 }
                 return;
             }
+            vm.sizeInput = vm.filterText.length;
             if (!allOptions) {
                 allOptions = angular.copy(vm.options);
             }
@@ -493,7 +530,7 @@
                 if (opt.childOpts && opt.childOpts.length) {
                     opt.childOpts = filter(opt.childOpts, filterText);
                 }
-                return opt[vm.field_search].indexOf(filterText) > -1 || (opt.childOpts && opt.childOpts.length);
+                return (opt[vm.field_search].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length);
             });
 
             return result;
@@ -564,6 +601,11 @@
                         }
                     }
                 }
+            }
+        }
+        vm.clickEsc = function(event){
+            if(event.keyCode === 27){
+                $scope.isOpen = false;
             }
         }
     }

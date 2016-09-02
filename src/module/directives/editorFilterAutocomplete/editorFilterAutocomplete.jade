@@ -6,8 +6,17 @@
           .autocomplete-item(data-ng-show="vm.selectedValue") {{vm.selectedValue[vm.filter_search]}}
               span.remove-from-selected(data-ng-click="vm.removeFromSelected()") ×
       .autocomplete-input-wrapper(data-ng-show="vm.preloadedData")
-          input.form-control.input-sm(type="text", name="{{vm.filterName}}", data-ng-hide="vm.selectedValue", data-ng-model="vm.inputValue")
+          input.form-control.input-sm(
+            type="text", name="{{vm.filterName}}",
+            data-ng-hide="vm.selectedValue",
+            data-ng-model="vm.inputValue",
+            data-ng-focus="vm.focusPossible(true)",
+            data-ng-blur="vm.focusPossible(false)"
+            )
           .loader-search-wrapper(data-ng-show="vm.searching")
               .loader-search {{'LOADING' | translate}}
-          .possible-values(data-ng-if="vm.possibleValues.length > 0")
+          .possible-values(
+            data-ng-if="vm.possibleValues.length > 0",
+            data-ng-class='{"active" : vm.isActivePossible}'
+            )
               .possible-value-item(data-ng-repeat="possible in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(possible)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{possible[vm.filter_search]}}

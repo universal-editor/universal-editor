@@ -136,7 +136,7 @@
 
         $scope.$on('editor:entity_loaded', function (event, data) {
             if( data.editorEntityType === "new" ){
-                vm.fieldValue = vm.multiple ? [defaultColor] : defaultColor;
+                vm.fieldValue = vm.multiple ? [($scope.field.defaultValue || defaultColor)] : ($scope.field.defaultValue || defaultColor);
                 return;
             }
 

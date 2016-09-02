@@ -12,14 +12,15 @@
             restrict : 'A',
             replace : true,
             scope : {
-              options: '=',
-              isOpen: '=',
-              fieldSearch: '=',
-              childCountField: '=',
-              onToggle: '=',
-              api: '=',
-              selectBranches: '=',
-              assetsPath: '='
+                options: '=',
+                isOpen: '=',
+                fieldSearch: '=',
+                childCountField: '=',
+                onToggle: '=',
+                api: '=',
+                selectBranches: '=',
+                assetsPath: '=',
+                multiple: '='
             },
             template : $templateCache.get('module/directives/editorFieldSelect/dropdownItems.html'),
             controller: 'DropdownItemsController',

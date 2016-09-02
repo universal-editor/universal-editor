@@ -101,6 +101,8 @@
                         break;
                     }
 
+                    possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+
                     if(vm.activeElement < vm.possibleValues.length -1){
                         $timeout(function () {
                             vm.activeElement++;
@@ -112,7 +114,7 @@
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
 
-                            if(activeTop >= wrapperHeight + wrapperScroll){
+                            if (activeTop >= (wrapperHeight + wrapperScroll - activeHeight)) {
                                 possibleValues[0].scrollTop += activeHeight + 1;
                             }
                         },1);
@@ -123,6 +125,8 @@
                     if(vm.possibleValues.length < 1){
                         break;
                     }
+
+                    possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
 
                     if(vm.activeElement > 0){
                         $timeout(function () {
@@ -135,7 +139,7 @@
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
 
-                            if(activeTop < wrapperScroll){
+                            if (activeTop < wrapperScroll) {
                                 possibleValues[0].scrollTop -= activeHeight + 1;
                             }
                         },1);
@@ -249,8 +253,13 @@
 
 
 
-            if( data.editorEntityType === "new" ){
-                vm.fieldValue = vm.multiple ? [] : undefined;
+            if( data.editorEntityType === 'new' ){
+                if(!!$scope.field.defaultValue){
+                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
+                    loadValues();
+                }else{
+                    vm.fieldValue = vm.multiple ? [] : undefined;
+                }
                 if(data.hasOwnProperty($scope.fieldName)) {
                     vm.fieldValue = data[$scope.fieldName];
                     loadValues();                                        
@@ -443,7 +452,7 @@
                   }
               });
               vm.preloadedData = true;
-          } else if ($scope.field.hasOwnProperty("valuesRemote")){
+          } else if ($scope.field.hasOwnProperty('valuesRemote')){
 
               if(vm.fieldValue === undefined || vm.fieldValue === null){
                   vm.preloadedData = true;
@@ -455,7 +464,7 @@
               if(vm.multiple && angular.isArray(vm.fieldValue) && vm.fieldValue.length > 0 ){
                   urlParam = {};
                   urlParam[vm.field_id] = vm.fieldValue;
-              } else if (!vm.multiple && vm.fieldValue !== ""){
+              } else if (!vm.multiple && vm.fieldValue !== ''){
                   urlParam = {};
                   urlParam[vm.field_id] = [];
                   urlParam[vm.field_id].push(vm.fieldValue);
@@ -465,7 +474,7 @@
               }
 
               RestApiService
-                  .getUrlResource($scope.field.valuesRemote.url + "?filter=" + JSON.stringify(urlParam))
+                  .getUrlResource($scope.field.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
                   .then(function (response) {
                       angular.forEach(response.data.items, function (v) {
                           if( Array.isArray(vm.fieldValue) &&
@@ -486,6 +495,9 @@
               vm.preloadedData = true;
               console.error('EditorFieldAutocompleteController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
           }
+        }
+        vm.focusPossible = function(isActive) {
+            vm.isActivePossible = isActive;
         }
     }
 })();

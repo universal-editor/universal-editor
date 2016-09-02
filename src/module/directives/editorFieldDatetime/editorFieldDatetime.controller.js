@@ -161,7 +161,11 @@
                 }, true);
             }
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [] : moment.utc();
+                var defaultValue = moment().utc();
+                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue).isValid()){
+                    defaultValue = moment($scope.field.defaultValue, 'YYYY-MM-DD HH:mm').utc();
+                }
+                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
                 return;
             }
 
@@ -176,7 +180,7 @@
                 }
             } else {
                 if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.field.name] !== null ? moment.utc(data[$scope.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
+                    vm.fieldValue = data[$scope.parentField][$scope.field.name] !== null ? moment.utc(data[$scope.parentField][$scope.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
                 } else {
                     vm.fieldValue = [];
                     angular.forEach(data[$scope.parentField][$scope.field.name], function (timeItem) {

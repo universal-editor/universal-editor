@@ -3,4 +3,4 @@ div
         span {{vm.filterDisplayName}}
     .filter-inner-wrapper
         select.form-control(ng-options="item[vm.field_id] as item[vm.field_search] for item in vm.selectedValues", data-ng-model="vm.filterValue")
-            option(value="") --- {{'SELECT_VALUE' | translate}} ---
+            option(value="") {{vm.placeholder}}
