@@ -228,7 +228,11 @@
             }
 
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [($scope.field.defaultValue || '')] : ($scope.field.defaultValue || '');
+                if ($scope.field.defaultValue) {
+                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
+                } else {
+                    vm.fieldValue = vm.multiple ? [] : '';
+                }
                 if (data.hasOwnProperty($scope.field.name)) {
                     vm.fieldValue = data[$scope.field.name];
                 }
