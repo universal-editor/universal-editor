@@ -194,7 +194,7 @@
                                 "value": "id",
                                 "label": "title"
                             },
-                            "url": "http://universal-backend.dev/rest/v1/news/category"
+                            "url": "http://universal-backend.dev/rest/v1/news/categories"
                         },
                         "search": true,
                         "tree": {
@@ -221,6 +221,31 @@
                         "name": "text",
                         "type": "wysiwyg",
                         "label": "Текст"
+                    },
+                    {
+                        "name": "tags",
+                        "type": "autocomplete",
+                        "label": "Теги",
+                        "multiple": true,
+                        "valuesRemote": {
+                            "fields": {
+                                "value": "id",
+                                "label": "name"
+                            },
+                            "url": "http://universal-backend.dev/rest/v1/tags"
+                        },
+                    },
+                    {
+                        "name": "author_id",
+                        "type": "autocomplete",
+                        "label": "Автор",
+                        "valuesRemote": {
+                            "fields": {
+                                "value": "id",
+                                "label": "name"
+                            },
+                            "url": "http://universal-backend.dev/rest/v1/staff"
+                        },
                     }
                 ]
             },
