@@ -463,11 +463,11 @@
 
               if (vm.multiple && angular.isArray(vm.fieldValue) && vm.fieldValue.length > 0 ) {
                   urlParam = {};
-                  urlParam[vm.field_id] = '%' + vm.fieldValue + '%';
+                  urlParam[vm.field_id] = vm.fieldValue;
               } else if (!vm.multiple && vm.fieldValue !== '') {
                   urlParam = {};
                   urlParam[vm.field_id] = [];
-                  urlParam[vm.field_id].push( '%' + vm.fieldValue + '%');
+                  urlParam[vm.field_id].push(vm.fieldValue);
               } else {
                   vm.preloadedData = true;
                   return;

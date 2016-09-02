@@ -143,8 +143,11 @@
         $scope.$on('editor:entity_loaded', function (event, data) {
 
             if( data.editorEntityType === "new" ){
-                var defaultValue = !!$scope.field.defaultValue ? $scope.field.defaultValue : '';
-                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
+                if ($scope.field.defaultValue) {
+                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
+                } else {
+                    vm.fieldValue = vm.multiple ? [] : '';
+                }
                 return;
             }
 
