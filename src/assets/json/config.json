@@ -209,6 +209,7 @@
               "type": "autocomplete",
               "label": "Теги",
               "multiple": true,
+              "expandable": true,
               "valuesRemote": {
                 "fields": {
                   "value": "id",
