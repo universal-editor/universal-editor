@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UniversalEditorController',UniversalEditorController);
 
-    UniversalEditorController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','configObject','toastr', '$translate', 'ConfigDataProvider'];
+    UniversalEditorController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','configObject','toastr', '$translate', 'ConfigDataProvider', 'EditEntityStorage'];
 
-    function UniversalEditorController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,configObject,toastr, $translate, ConfigDataProvider){
+    function UniversalEditorController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,configObject,toastr, $translate, ConfigDataProvider, EditEntityStorage){
         $scope.entity = RestApiService.getEntityType();
         var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
@@ -15,7 +15,8 @@
             pageItems = 3,
             metaKey,
             itemsKey,
-            mixEntityObject;
+            mixEntityObject,
+            alertNotSaved;
 
         tinyMCE.baseURL = '../assets/mce-files';
         vm.assetsPath = '../assets';
@@ -148,7 +149,7 @@
                 vm.tabsVisibility.push("");
             }
         });
-        
+
 
         vm.getScope = function(){
             return $scope;
@@ -171,10 +172,10 @@
 
             var params = {};
             var isReload = false;
-            if($state.params.back){ 
+            if($state.params.back){
                 params.back = $state.params.back;
             }
-            if($state.params.parent){ 
+            if($state.params.parent){
                 params.parent = $state.params.parent;
                 isReload = false;
             }
@@ -194,7 +195,7 @@
                 RestApiService.getItemsList();
             }
         };
-        
+
 
         if (!RestApiService.isProcessing) {
             vm.clearFilter();
@@ -419,6 +420,16 @@
         });
 
         $scope.$on('editor:entity_loaded', function (event,data) {
+            if (configData.hasOwnProperty('ui') && configData.ui.alertNotSaved && $state.is('editor.type.entity')) {
+                alertNotSaved = $rootScope.$on('$stateChangeStart', function(event) {
+                    var isAdmin = isSave(data);
+                    if(!isAdmin && !confirm('Данные были изменены. Перейти?')) {
+                        event.preventDefault();
+                        return;
+                    }
+                    alertNotSaved();
+                });
+            }
             vm.editorEntityType = data.editorEntityType;
             vm.entityId = data[vm.idField];
             vm.entityLoaded = true;
@@ -515,6 +526,16 @@
             if(event.keyCode === 13){
                 vm.applyFilter();
             }
+        };
+
+        function isSave(data){
+            var dataEntity = EditEntityStorage.getEntityValue();
+            var dataEdit = {};
+            for(var key in dataEntity){
+                dataEdit[key] = data[key];
+            }
+            return angular.equals(dataEntity, dataEdit);
         }
+
     }
 })();

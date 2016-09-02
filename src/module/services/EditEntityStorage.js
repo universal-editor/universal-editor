@@ -99,6 +99,18 @@
             }
         };
 
+        this.getEntityValue = function() {
+            var entityObject = {};
+
+            angular.forEach(fieldControllers,function(fCtrl){
+                if(!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false){
+                    angular.merge(entityObject,fCtrl.getFieldValue());
+                }
+            });
+
+            return entityObject;
+        };
+
         this.editEntityPresave = function (request) {
             var entityObject = {};
 
