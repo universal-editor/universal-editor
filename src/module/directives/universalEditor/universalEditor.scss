@@ -477,6 +477,9 @@ body {
       }
       &__item {
         min-height: 50px;
+        &.active{
+          background-color: #f3f3f3;
+        }
       }
     }
     .option {

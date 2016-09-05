@@ -1,5 +1,9 @@
 div(data-ng-show="isOpen")
-  .dropdown-items__item(data-ng-repeat="option in options track by $index")
+  .dropdown-items__item(
+    data-ng-repeat="option in options track by $index",
+    data-ng-class="activeElement == $index ? 'active' : ''",
+    data-ng-mouseover="setActiveElement($event, $index)"
+    )
     .option
       .option__checkbox(
         data-ng-if="::selectBranches || !option[childCountField]",
@@ -26,4 +30,6 @@ div(data-ng-show="isOpen")
         data-api="api"
         data-select-branches="selectBranches"
         data-assets-path="assetsPath",
-        data-multiple="multiple")
+        data-multiple="multiple",
+        data-active-element="activeElement",
+        data-set-active-element="setActiveElement")

@@ -472,7 +472,9 @@
                 vm.placeholder = '';
                 vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
-            e.stopPropagation();
+            if (!!e) {
+                e.stopPropagation();
+            }
         }
 
         function uncheckAll(arr) {
@@ -652,34 +654,47 @@
             setColorPlaceholder();
         };
 
-        if (!vm.multiple && !vm.isTree) {
-            $document.bind("keydown", function (event) {
-                if (vm.showPossible) {
-                    switch(event.which) {
-                        case 27:
-                            event.preventDefault();
+
+        $document.bind("keydown", function (event) {
+            if (vm.showPossible || $scope.isOpen) {
+                switch(event.which) {
+                    case 27:
+                        event.preventDefault();
+                        if (!vm.multiple && !vm.isTree) {
                             $timeout(function() {
                                 vm.showPossible = false;
                             },0);
-                            break;
-                        case 13:
-                            event.preventDefault();
-                            if(vm.options.length < 1){
+                        }
+                        break;
+                    case 13:
+                        event.preventDefault();
+                        if ((!vm.multiple && !vm.isTree) || vm.isTree) {
+                            if (vm.options.length < 1) {
                                 break;
                             }
-
-                            $timeout(function () {
+                        }
+                        $timeout(function () {
+                            if ((!vm.multiple && !vm.isTree)) {
                                 vm.addToSelected(vm.options[vm.activeElement]);
-                            },0);
+                            } else if (vm.isTree) {
+                                vm.toggle(undefined, vm.options[vm.activeElement], true);
+                            }
 
-                            break;
-                        case 40:
-                            event.preventDefault();
+                        },0);
+
+                        break;
+                    case 40:
+                        event.preventDefault();
+                        if ((!vm.multiple && !vm.isTree) || (vm.isTree)) {
                             if(vm.options.length < 1){
                                 break;
                             }
 
-                            possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                            if (!vm.multiple && !vm.isTree) {
+                                possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                            } else if (vm.isTree) {
+                                possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
+                            }
 
                             if(vm.activeElement < vm.options.length -1){
                                 $timeout(function () {
@@ -697,14 +712,20 @@
                                     }
                                 },1);
                             }
-                            break;
-                        case 38:
-                            event.preventDefault();
+                        }
+                        break;
+                    case 38:
+                        event.preventDefault();
+                        if ((!vm.multiple && !vm.isTree) || (vm.isTree)) {
                             if(vm.options.length < 1){
                                 break;
                             }
 
-                            possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                            if (!vm.multiple && !vm.isTree) {
+                                possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                            } else if (vm.isTree) {
+                                possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
+                            }
 
                             if(vm.activeElement > 0){
                                 $timeout(function () {
@@ -722,10 +743,17 @@
                                     }
                                 },1);
                             }
-                            break;
-                    }
+                        }
+                        break;
                 }
-            });
+            }
+        });
+
+        vm.setActiveElement = function(event, index) {
+            event.stopPropagation();
+            $timeout(function () {
+                vm.activeElement = index;
+            },0);
         }
 
         function setColorPlaceholder() {
