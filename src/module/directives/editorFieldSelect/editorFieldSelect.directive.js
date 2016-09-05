@@ -34,6 +34,9 @@
                     scope.$apply(function() {
                         scope.vm.showPossible = false;
                         scope.isOpen = false;
+                        var formControl = elem.find('.select-input');
+                        formControl.removeClass('active');
+                        scope.vm.focusPossible(false);
                     });
                 }
             });
@@ -50,6 +53,10 @@
                   $(elem).find('.dropdown__items').css('max-height', '');
                 }
                 scope.isOpen = !scope.isOpen;
+                if (scope.isOpen) {
+                    var formControl = elem.find('.select-input');
+                    formControl.addClass('active');
+                }
             };
         }
     }

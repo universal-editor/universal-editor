@@ -11,9 +11,11 @@ div
                 placeholder="{{vm.placeholder}}",
                 data-ng-class='vm.isSelection ? "color-placeholder" : ""',
                 data-ng-model="vm.filterText",
-                data-ng-change="vm.change()"
+                data-ng-change="vm.change()",
+                data-ng-focus="vm.focusPossible(true)",
+                data-ng-blur="vm.focusPossible(false)"
                 )
-            div.form-control(data-ng-if="!vm.search")
+            .form-control.select-input(data-ng-if="!vm.search")
                 .dropdown__selected-items(
                     data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""'
                     ) {{vm.placeholder}}
@@ -28,7 +30,7 @@ div
 
     .dropdown.col-lg-3.col-md-3.col-sm-3.col-xs-3(data-ng-if="vm.isTree")
         .dropdown__host
-            .dropdown__title.form-control(
+            .dropdown__title.form-control.select-input(
                 data-ng-class="{'dropdown__title_open': isOpen}",
                 data-ng-click="toggleDropdown($event)",
                 data-ng-style='{"cursor" : vm.search ? "text" : "pointer"}'
@@ -52,7 +54,7 @@ div
                 div(data-ng-if="!vm.search")
                     .dropdown__selected-items.dropdown-tree(data-ng-if="!vm.loadingData && !vm.fieldValue.length") {{vm.placeholder}}
 
-                .dropdown__items.dropdown__items_with-padding(
+                .dropdown__items.dropdown__items_with-padding.active(
                 data-ng-if="::(vm.treeParentField && vm.treeChildCountField)"
                 data-ng-class="{'dropdown__items_with-selected': vm.fieldValue.length > 2 || (vm.search && vm.fieldValue.length)}"
                 data-dropdown-items=""

@@ -462,6 +462,13 @@ body {
       &_with-padding {
         margin-left: -5px;
         margin-top: -2px;
+
+        &.active{
+          border-color: #66afe9;
+          outline: 0;
+          -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 3px 4px rgba(102, 175, 233, 0.3);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 3px 4px rgba(102, 175, 233, 0.3);
+        }
       }
     }
     &-items {
@@ -656,4 +663,10 @@ body {
       color: #555;
     }
   }
+}
+.select-input.active {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
 }

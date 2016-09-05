@@ -140,6 +140,11 @@
             vm.activeElement = 0;
             change();
             vm.showPossible = !vm.showPossible;
+            var formControl = $element.find('.select-input');
+            if (vm.showPossible) {
+                formControl.addClass('active');
+                vm.focusPossible(true);
+            }
             setColorPlaceholder();
         };
 
@@ -262,6 +267,10 @@
             if (!vm.search) {
                 vm.colorPlaceholder = !(vm.placeholder === $scope.filter.placeholder) && !vm.showPossible;
             }
+        }
+
+        vm.focusPossible = function(isActive) {
+            vm.isActivePossible = isActive;
         }
     }
 })();

@@ -2,20 +2,23 @@ div
     .filter-name-label
         span {{vm.filterDisplayName}}
     .filter-inner-wrapper
-        //select.form-control(ng-options="item[vm.field_id] as item[vm.field_search] for item in vm.selectedValues", data-ng-model="vm.filterValue")
-            option(value="") {{vm.placeholder}}
         div.select-input-wrapper(data-ng-click="vm.isShowPossible($event)", data-ng-class='!vm.search ? "but-for-search" : ""')
             input.form-control(
                 data-ng-if="vm.search",
                 placeholder="{{vm.placeholder}}",
                 data-ng-class='vm.isSelection ? "color-placeholder" : ""',
                 data-ng-model="vm.filterText",
-                data-ng-change="vm.change()"
+                data-ng-change="vm.change()",
+                data-ng-focus="vm.focusPossible(true)",
+                data-ng-blur="vm.focusPossible(false)"
                 )
-            div.form-control(data-ng-if="!vm.search")
+            div.form-control.select-input(
+                data-ng-if="!vm.search",
+                data-ng-focus="vm.focusPossible(true)"
+                )
                 .dropdown__selected-items(data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""') {{vm.placeholder}}
             .possible-values(
-            data-ng-if="!vm.readonly && (vm.selectedValues.length > 0) && vm.showPossible",
-            data-ng-class='{"active" : vm.isActivePossible}'
-            )
+                data-ng-if="!vm.readonly && (vm.selectedValues.length > 0) && vm.showPossible",
+                data-ng-class='{"active" : vm.isActivePossible}'
+                )
                 .possible-value-item(data-ng-repeat="option in vm.selectedValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}

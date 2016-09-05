@@ -644,6 +644,11 @@
         vm.isShowPossible = function(event) {
             vm.activeElement = 0;
             vm.showPossible = !vm.showPossible;
+            var formControl = $element.find('.select-input');
+            if (vm.showPossible) {
+                formControl.addClass('active');
+                vm.focusPossible(true);
+            }
             setColorPlaceholder();
         };
 
@@ -722,10 +727,15 @@
                 }
             });
         }
+
         function setColorPlaceholder() {
             if (!vm.search) {
                 vm.colorPlaceholder = !(vm.placeholder === $scope.field.placeholder) && !vm.showPossible;
             }
+        }
+
+        vm.focusPossible = function(isActive) {
+            vm.isActivePossible = isActive;
         }
     }
 

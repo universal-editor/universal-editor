@@ -2,11 +2,9 @@
 <div>
     <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>
     <div class="filter-inner-wrapper">
-        <!--select.form-control(ng-options="item[vm.field_id] as item[vm.field_search] for item in vm.selectedValues", data-ng-model="vm.filterValue")option(value="") {{vm.placeholder}}
-        -->
         <div data-ng-click="vm.isShowPossible($event)" data-ng-class="!vm.search ? &quot;but-for-search&quot; : &quot;&quot;" class="select-input-wrapper">
-            <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" class="form-control"/>
-            <div data-ng-if="!vm.search" class="form-control">
+            <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" class="form-control"/>
+            <div data-ng-if="!vm.search" data-ng-focus="vm.focusPossible(true)" class="form-control select-input">
                 <div data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder-div&quot; : &quot;&quot;" class="dropdown__selected-items">{{vm.placeholder}}</div>
             </div>
             <div data-ng-if="!vm.readonly &amp;&amp; (vm.selectedValues.length &gt; 0) &amp;&amp; vm.showPossible" data-ng-class="{&quot;active&quot; : vm.isActivePossible}" class="possible-values">
