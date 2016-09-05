@@ -510,13 +510,11 @@
                 vm.placeholder = '';
                 vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
-            e.stopPropagation();
         }
 
         function focus(e) {
             $scope.toggleDropdown(e);
             $scope.isOpen = true;
-            e.stopPropagation();
         }
 
         function change() {
@@ -643,9 +641,10 @@
 
         vm.isShowPossible = function(event) {
             vm.activeElement = 0;
-            vm.showPossible = true;
-            event.stopPropagation();
+            vm.showPossible = !vm.showPossible;
+            //event.stopPropagation();
         };
+
         if (!vm.multiple && !vm.isTree) {
             $document.bind("keydown", function (event) {
                 if (vm.showPossible) {

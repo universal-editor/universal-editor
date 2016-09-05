@@ -25,7 +25,11 @@
         function link(scope, elem, attrs, ctrl){
 
             $document.on('click', function() {
-                scope.vm.showPossible = false;
+                if (!elem.find('.filter-inner-wrapper')[0].contains(event.target) ) {
+                    scope.$apply(function() {
+                        scope.vm.showPossible = false;
+                    });
+                }
             });
 
             elem.on('$destroy', function () {

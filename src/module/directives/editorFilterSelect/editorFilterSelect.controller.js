@@ -137,8 +137,7 @@
         vm.isShowPossible = function (event) {
             vm.activeElement = 0;
             change();
-            vm.showPossible = true;
-            event.stopPropagation();
+            vm.showPossible = !vm.showPossible;
         };
 
         $document.bind("keydown", function (event) {

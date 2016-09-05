@@ -41,16 +41,14 @@ div
 
                 input.dropdown__search-field(data-ng-show="vm.search"
                 data-ng-model="vm.filterText",
-                data-ng-focus="vm.focus($event)",
                 data-ng-change="vm.change()",
-                data-ng-click="vm.focus($event)",
                 placeholder="{{vm.placeholder}}",
-                ng-keyup="vm.clickEsc($event)",
+                data-ng-keyup="vm.clickEsc($event)",
                 data-ng-style='vm.styleInput',
                 size='{{vm.sizeInput}}'
                 )
                 div(data-ng-if="!vm.search")
-                    .dropdown__selected-items(data-ng-if="!vm.loadingData && !vm.fieldValue.length") {{vm.placeholder}}
+                    .dropdown__selected-items.dropdown-tree(data-ng-if="!vm.loadingData && !vm.fieldValue.length") {{vm.placeholder}}
 
                 .dropdown__items.dropdown__items_with-padding(
                 data-ng-if="::(vm.treeParentField && vm.treeChildCountField)"

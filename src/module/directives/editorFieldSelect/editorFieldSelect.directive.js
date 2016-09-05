@@ -29,13 +29,16 @@
 
             scope.isOpen = false;
 
-            $document.on('click', function() {
-                scope.vm.showPossible = false;
-                scope.isOpen = false;
+            $document.on('click', function(event) {
+                if (!elem[0].contains(event.target)) {
+                    scope.$apply(function() {
+                        scope.vm.showPossible = false;
+                        scope.isOpen = false;
+                    });
+                }
             });
 
             scope.toggleDropdown = function(e) {
-                elem.find('input')[0].focus();
                 var dHeight = $(document).height();
                 var dropdownHost = $(elem).find('.dropdown__host');
                 var dropdownHeight = dropdownHost.height();
@@ -47,7 +50,6 @@
                   $(elem).find('.dropdown__items').css('max-height', '');
                 }
                 scope.isOpen = !scope.isOpen;
-                e.stopPropagation();
             };
         }
     }
