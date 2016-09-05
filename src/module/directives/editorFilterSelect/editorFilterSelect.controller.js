@@ -66,6 +66,9 @@
                             $timeout(function () {
                                 vm.placeholder = v[vm.field_search];
                                 vm.isSelection = true;
+                                if (!vm.search) {
+                                    vm.colorPlaceholder = !(vm.placeholder === $scope.filter.placeholder) && !vm.showPossible;
+                                }
                             }, 0);
                         }
                     });
@@ -138,6 +141,9 @@
             vm.activeElement = 0;
             change();
             vm.showPossible = !vm.showPossible;
+            if (!vm.search) {
+                vm.colorPlaceholder = !(vm.placeholder === $scope.filter.placeholder) && !vm.showPossible;
+            }
         };
 
         $document.bind("keydown", function (event) {

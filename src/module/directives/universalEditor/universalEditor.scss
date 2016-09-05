@@ -362,6 +362,14 @@ body {
   display: table-cell;
   .select-input-wrapper{
     width: 170px;
+
+    .dropdown__selected-items{
+      color: #999;
+
+      &.color-placeholder-div{
+        color: #555;
+      }
+    }
   }
 }
 
@@ -563,8 +571,12 @@ body {
       margin-top: 5px;
     }
     &__selected-items{
-      padding: 2px 0;
-      text-align: center;
+      padding: 0 0 2px 0;
+      color: #999;
+      &.dropdown-tree{
+        padding-left: 4px;
+        padding-top: 2px;
+      }
     }
   }
   .select-wrapper .dropdown .processing-status-wrapper {
@@ -638,6 +650,9 @@ body {
     }
     &:focus:-ms-input-placeholder{
       color: #999;
+    }
+    &-div{
+      color: #555;
     }
   }
 }

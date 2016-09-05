@@ -14,7 +14,9 @@ div
                 data-ng-change="vm.change()"
                 )
             div.form-control(data-ng-if="!vm.search")
-                .dropdown__selected-items {{vm.placeholder}}
+                .dropdown__selected-items(
+                    data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""'
+                    ) {{vm.placeholder}}
             .possible-values(
                 data-ng-if="!vm.readonly && (vm.options.length > 0) && vm.showPossible",
                 data-ng-class='{"active" : vm.isActivePossible}'

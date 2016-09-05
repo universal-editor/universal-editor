@@ -642,7 +642,9 @@
         vm.isShowPossible = function(event) {
             vm.activeElement = 0;
             vm.showPossible = !vm.showPossible;
-            //event.stopPropagation();
+            if (!vm.search) {
+                vm.colorPlaceholder = !(vm.placeholder === $scope.field.placeholder) && !vm.showPossible;
+            }
         };
 
         if (!vm.multiple && !vm.isTree) {
