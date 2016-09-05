@@ -610,7 +610,7 @@ body {
   position: relative;
   cursor: pointer;
 
-  &.but-for-search:before{
+  &:before{
     content: '';
     position: absolute;
     margin-top: -4px;

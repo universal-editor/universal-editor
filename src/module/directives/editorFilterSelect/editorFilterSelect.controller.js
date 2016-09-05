@@ -66,9 +66,7 @@
                             $timeout(function () {
                                 vm.placeholder = v[vm.field_search];
                                 vm.isSelection = true;
-                                if (!vm.search) {
-                                    vm.colorPlaceholder = !(vm.placeholder === $scope.filter.placeholder) && !vm.showPossible;
-                                }
+                                setColorPlaceholder();
                             }, 0);
                         }
                     });
@@ -134,6 +132,7 @@
             $timeout(function () {
                 vm.placeholder = (!!val && !!val[vm.field_search]) ? val[vm.field_search] : $scope.filter.placeholder;
                 vm.showPossible = false;
+                setColorPlaceholder();
             }, 0);
         };
 
@@ -141,9 +140,7 @@
             vm.activeElement = 0;
             change();
             vm.showPossible = !vm.showPossible;
-            if (!vm.search) {
-                vm.colorPlaceholder = !(vm.placeholder === $scope.filter.placeholder) && !vm.showPossible;
-            }
+            setColorPlaceholder();
         };
 
         $document.bind("keydown", function (event) {
@@ -258,6 +255,12 @@
             });
 
             return result;
+        }
+
+        function setColorPlaceholder() {
+            if (!vm.search) {
+                vm.colorPlaceholder = !(vm.placeholder === $scope.filter.placeholder) && !vm.showPossible;
+            }
         }
     }
 })();
