@@ -39,7 +39,7 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .editor-body .tab-content-wrapper{background:#ebf1f3}.error-item{padding:3px;margin:5px}
 .notify-item{padding:3px;border:1px solid #02ae00;border-radius:3px;font-size:11px;margin:5px;background:rgba(40,255,35,0.19)}
 .field-hint{position:relative;display:inline-block;margin-right:5px;width:12px;height:12px;margin-bottom:5px}
-.field-hint .hint-text{display:none;position:absolute;top:15px;left:0;width:150px;padding:5px;font-size:12px;background-color:#cbd6da;color:#555;border-radius:3px;border:1px solid #949494;z-index:30}
+.field-hint .hint-text{display:none;position:absolute;top:15px;left:0;width:150px;padding:5px;font-size:12px;background-color:#cbd6da;color:#555;border-radius:3px;border:1px solid #949494;z-index:1000;text-align:start}
 .field-hint:hover .hint-text{display:block}.field-hint:before{content:"?";display:block;width:12px;height:12px;border:1px solid #949494;text-align:center;color:#949494;font-size:10px;line-height:13px;border-radius:2px}
 .field-name-label .editor-required{font-weight:bold}.processing-status,.processing-status:before,.processing-status:after{background:#3e565b;-webkit-animation:load2 1s infinite ease-in-out;animation:load2 1s infinite ease-in-out;width:2px;height:12px}
 .processing-status:before,.processing-status:after{position:absolute;top:0;content:''}
@@ -70,7 +70,7 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .field-wrapper-select .dropdown__items{border:1px solid #ccc;border-radius:0 0 4px 4px;border-top:0;position:absolute;top:100%;z-index:999;max-height:300px;overflow-y:auto;width:100%;box-sizing:content-box;background-color:#fff}
 .field-wrapper-select .dropdown__items_with-padding{margin-left:-5px;margin-top:-2px}
 .field-wrapper-select .dropdown-items__children{padding-left:15px}.field-wrapper-select .dropdown-items__item{min-height:50px}
-.field-wrapper-select .dropdown .option{position:relative;line-height:50px;border-bottom:1px solid #c6cfd1;padding-left:15px}
+.field-wrapper-select .dropdown .option{position:relative;line-height:50px;border-bottom:1px solid #ececec;padding-left:15px}
 .field-wrapper-select .dropdown .option:hover{background-color:#fafafa}.field-wrapper-select .dropdown .option__checkbox{position:relative;float:left;height:50px;width:20px}
 .field-wrapper-select .dropdown .option__checkbox:before{position:absolute;top:50%;margin-top:-9px;left:0;display:block;width:17px;height:17px;content:'';border:1px solid #c6cfd1;-webkit-border-radius:3px;border-radius:3px}
 .field-wrapper-select .dropdown .option__checkbox.multi_radio:before{border-radius:10px}

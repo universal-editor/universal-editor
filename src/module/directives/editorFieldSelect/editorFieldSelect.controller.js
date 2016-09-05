@@ -518,6 +518,7 @@
         }
 
         function change() {
+            vm.activeElement = 0;
             if (vm.fieldValue.length === 0 && !vm.filterText) {
                 vm.placeholder = $scope.field.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;

@@ -218,6 +218,7 @@
         });
 
         function change() {
+            vm.activeElement = 0;
             var filterName =  allOptions.filter(function (opt) {
                 return opt[vm.field_id] == vm.filterValue;
             });

@@ -188,7 +188,8 @@ body {
     color: #555;
     border-radius: 3px;
     border: 1px solid #949494;
-    z-index: 30;
+    z-index: 1000;
+    text-align: start;
   }
 
   &:hover .hint-text {
@@ -474,7 +475,7 @@ body {
     .option {
       position: relative;
       line-height: 50px;
-      border-bottom: 1px solid #c6cfd1;
+      border-bottom: 1px solid #ECECEC;
       padding-left: 15px;
       &:hover {
         background-color: #fafafa;
