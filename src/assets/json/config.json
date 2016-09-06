@@ -425,7 +425,6 @@
               "type": "select",
               "list": true,
               "label": "Дерево с поиском",
-              "multiple": true,
               "search": true,
               "selectBranches": true,
               "placeholder": "Найти",
