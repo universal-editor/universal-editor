@@ -1,7 +1,7 @@
 
 <div>
     <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
-        <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" class="form-control">
+        <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" size="3" class="form-control">
             <option data-ng-repeat="option in vm.options" value="{{option[vm.field_id]}}">{{option[vm.field_search]}}</option>
         </select>
         <div data-ng-show="!!vm.loadingData" class="processing-status-wrapper">

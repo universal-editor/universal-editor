@@ -1,6 +1,6 @@
 div
     .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="vm.multiple && !vm.isTree")
-        select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple)
+        select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple, size="3")
             option(data-ng-repeat="option in vm.options", value="{{option[vm.field_id]}}") {{option[vm.field_search]}}
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}

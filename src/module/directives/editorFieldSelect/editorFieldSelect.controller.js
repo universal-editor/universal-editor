@@ -125,7 +125,9 @@
                 obj[vm.field_search] = v;
                 vm.options.push(obj);
             });
-
+            $scope.$evalAsync(function() {
+                setSizeSelect();
+            });
             allOptions = angular.copy(vm.options);
         } else if ($scope.field.hasOwnProperty("valuesRemote")) {
             if (vm.isTree) {
@@ -156,6 +158,7 @@
                     angular.forEach(response.data.items, function (v) {
                         vm.options.push(v);
                     });
+                    setSizeSelect();
                     allOptions = angular.copy(vm.options);
                     if (isRemoteSelectedValues) {
                         setSelectedValuesFromRemote();
@@ -411,6 +414,9 @@
                             angular.forEach(response.data.items, function (v) {
                                 vm.options.push(v);
                             });
+                            $timeout(function() {
+                                setSizeSelect();
+                            },0);
                             allOptions = angular.copy(vm.options);
                             vm.parentValue = true;
                         }, function (reject) {
@@ -801,6 +807,20 @@
                 !vm.filterText
             ) {
                 remove(null, vm.fieldValue[vm.fieldValue.length - 1]);
+            }
+        };
+
+        function setSizeSelect() {
+            var size = vm.options.length;
+            var select = $element.find('select');
+            if (!!select.length) {
+                if (size <= 3) {
+                    select[0].size = 3;
+                } else if(size >= 7) {
+                    select[0].size = 7;
+                } else {
+                    select[0].size = size;
+                }
             }
         }
     }
