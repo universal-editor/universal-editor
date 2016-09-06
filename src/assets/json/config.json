@@ -191,7 +191,7 @@
                   "parent": "parent_id",
                   "childCount": "child_count"
                 },
-                "url": "http://universal-backend.dev/rest/v1/news/category"
+                "url": "http://universal-backend.dev/rest/v1/news/category?expand=child_count"
               },
               "search": true,
               "tree": true,
