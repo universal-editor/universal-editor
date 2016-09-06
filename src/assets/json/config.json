@@ -72,22 +72,18 @@
               "multiple": false
             },
             {
-              "name": "notes",
-              "label": "Заметки",
-              "type": "array",
-              "fields": [
-                {
-                  "name": "color",
-                  "type": "colorpicker",
-                  "list": true,
-                  "label": "Любимый цвет"
-                },
-                {
-                  "name": "text",
-                  "type": "textarea",
-                  "label": "Дополнительные заметки"
-                }
-              ]
+              "name": "colors",
+              "type": "colorpicker",
+              "list": true,
+              "multiple": true,
+              "multiname": "color",
+              "expandable": true,
+              "label": "Любимые цвета"
+            },
+            {
+              "name": "text",
+              "type": "textarea",
+              "label": "Дополнительные заметки"
             }
           ]
         },
@@ -219,6 +215,35 @@
               "name": "text",
               "type": "wysiwyg",
               "label": "Текст"
+            },
+            {
+              "name": "authors",
+              "type": "autocomplete",
+              "label": "Авторы",
+              "multiple": true,
+              "expandable": true,
+              "multiname": "staff_id",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/staff"
+              }
+            },
+            {
+              "name": "tags",
+              "type": "autocomplete",
+              "label": "Теги",
+              "multiple": true,
+              "expandable": true,
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/tags"
+              }
             }
           ]
         },
