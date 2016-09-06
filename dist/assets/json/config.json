@@ -393,6 +393,46 @@
               "selectBranches":false,
               "placeholder": "Поиск по элементам",
               "hint": "Select c поиском, множественный режим, режим дерева"
+            },
+            {
+              "name":"country5",
+              "type":"select",
+              "valuesRemote":{
+                "fields": {
+                  "value": "id",
+                  "label": "name",
+                  "parent": "id_parent",
+                  "childCount": "count_children"
+                },
+                "url": "http://universal-backend.dev/rest/v1/country"
+              },
+              "list":true,
+              "label":"страны",
+              "multiple":false,
+              "search":false,
+              "selectBranches":false,
+              "placeholder": "Поиск по элементам",
+              "hint": "Select без поиска, режим дерева"
+            },
+            {
+              "name":"country6",
+              "type":"select",
+              "valuesRemote":{
+                "fields": {
+                  "value": "id",
+                  "label": "name",
+                  "parent": "id_parent",
+                  "childCount": "count_children"
+                },
+                "url": "http://universal-backend.dev/rest/v1/country"
+              },
+              "list":true,
+              "label":"страны",
+              "multiple":false,
+              "search":true,
+              "selectBranches":false,
+              "placeholder": "Поиск по элементам",
+              "hint": "Select c поиском, режим дерева"
             }
           ]
         }

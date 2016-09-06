@@ -765,6 +765,16 @@
         vm.clickSelect = function() {
             $element.find('input')[0].focus();
         };
+
+        vm.deleteToSelected = function(event) {
+            if (event.which == 8 &&
+                !!vm.fieldValue &&
+                !!vm.fieldValue.length &&
+                !vm.filterText
+            ) {
+                remove(null, vm.fieldValue[vm.fieldValue.length - 1]);
+            }
+        }
     }
 
     angular

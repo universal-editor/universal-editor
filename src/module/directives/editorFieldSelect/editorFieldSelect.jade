@@ -56,7 +56,8 @@ div
                     data-ng-style='vm.styleInput',
                     size='{{vm.sizeInput}}',
                     data-ng-focus="toggleDropdown()",
-                    data-ng-blur="vm.isBlur()"
+                    data-ng-blur="vm.isBlur()",
+                    data-ng-keydown="vm.deleteToSelected($event)"
                     )
                 input.focus-input(
                     data-ng-if="!vm.search",

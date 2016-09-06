@@ -37,7 +37,7 @@ module.run(['$templateCache', function($templateCache) {
     '                <div data-ng-repeat="value in vm.fieldValue" data-ng-if="vm.fieldValue.length &amp;&amp; (vm.multiple || vm.treeParentField &amp;&amp; vm.treeChildCountField)" class="selected-items__item">\n' +
     '                    <div class="selected-item">{{value[vm.field_search]}}<span data-ng-click="vm.remove($event, value)" class="selected-item__btn_delete">×</span></div>\n' +
     '                </div>\n' +
-    '                <input data-ng-if="vm.search" data-ng-model="vm.filterText" data-ng-change="vm.change()" placeholder="{{vm.placeholder}}" data-ng-style="vm.styleInput" size="{{vm.sizeInput}}" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" class="dropdown__search-field"/>\n' +
+    '                <input data-ng-if="vm.search" data-ng-model="vm.filterText" data-ng-change="vm.change()" placeholder="{{vm.placeholder}}" data-ng-style="vm.styleInput" size="{{vm.sizeInput}}" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" data-ng-keydown="vm.deleteToSelected($event)" class="dropdown__search-field"/>\n' +
     '                <input data-ng-if="!vm.search" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
     '                <div data-ng-if="!vm.search">\n' +
     '                    <div data-ng-if="!vm.loadingData &amp;&amp; !vm.fieldValue.length" class="dropdown__selected-items dropdown-tree">{{vm.placeholder}}</div>\n' +
