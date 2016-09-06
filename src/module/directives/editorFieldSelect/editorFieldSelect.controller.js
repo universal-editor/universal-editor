@@ -537,6 +537,13 @@
                 if (allOptions) {
                     vm.options = allOptions;
                 }
+                for (var j = 0 ; j < vm.fieldValue.length; j++) {
+                    for (var i = 0, len = vm.options.length; i < len; i++) {
+                        if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                            vm.options[i].checked = true;
+                        }
+                    }
+                }
                 return;
             }
             vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
@@ -544,6 +551,13 @@
                 allOptions = angular.copy(vm.options);
             }
             vm.options = filter(angular.copy(allOptions), vm.filterText);
+            for (var j = 0 ; j < vm.fieldValue.length; j++) {
+                for (var i = 0, len = vm.options.length; i < len; i++) {
+                    if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                        vm.options[i].checked = true;
+                    }
+                }
+            }
         }
 
         function filter(opts, filterText) {
@@ -760,6 +774,7 @@
             $scope.isOpen = false;
             var formControl = $element.find('.select-input');
             formControl.removeClass('active');
+            setColorPlaceholder();
         };
 
         vm.clickSelect = function() {
