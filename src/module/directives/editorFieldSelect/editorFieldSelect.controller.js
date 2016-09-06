@@ -474,6 +474,7 @@
             }
             if (!!e) {
                 e.stopPropagation();
+                e.preventDefault();
             }
         }
 

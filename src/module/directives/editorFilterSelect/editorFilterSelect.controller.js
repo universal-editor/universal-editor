@@ -143,12 +143,14 @@
             var formControl = $element.find('.select-input');
             if (vm.showPossible) {
                 formControl.addClass('active');
-                vm.focusPossible(true);
             }
             setColorPlaceholder();
         };
 
         $document.bind("keydown", function (event) {
+            if (event.which === 9) {
+                vm.isBlur();
+            }
             if (vm.showPossible) {
                 switch (event.which) {
                     case 27:
@@ -269,8 +271,14 @@
             }
         }
 
-        vm.focusPossible = function(isActive) {
-            vm.isActivePossible = isActive;
-        }
+        vm.isBlur = function() {
+            vm.showPossible = false;
+            var formControl = $element.find('.select-input');
+            formControl.removeClass('active');
+        };
+
+        vm.clickSelect = function() {
+            $element.find('input')[0].focus();
+        };
     }
 })();

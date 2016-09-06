@@ -27,10 +27,7 @@
             $document.on('click', function() {
                 if (!elem.find('.filter-inner-wrapper')[0].contains(event.target) ) {
                     scope.$apply(function() {
-                        scope.vm.showPossible = false;
-                        var formControl = elem.find('.select-input');
-                        formControl.removeClass('active');
-                        scope.vm.focusPossible(false);
+                        scope.vm.isBlur()
                     });
                 }
             });

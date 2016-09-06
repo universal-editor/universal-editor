@@ -34,6 +34,7 @@
                     scope.$apply(function() {
                         scope.vm.isBlur();
                     });
+
                 }
             });
 
