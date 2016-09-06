@@ -426,7 +426,6 @@
               "list": true,
               "label": "Дерево с поиском",
               "search": true,
-              "selectBranches": true,
               "placeholder": "Найти",
               "hint": "Режим дерева, поиск можно выбирать ветви. Значения для списка запрашиваются с сервера.",
               "valuesRemote": {
