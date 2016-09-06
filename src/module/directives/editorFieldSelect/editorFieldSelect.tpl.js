@@ -9,7 +9,7 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '<div>\n' +
     '    <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" class="form-control">\n' +
+    '        <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" size="3" class="form-control">\n' +
     '            <option data-ng-repeat="option in vm.options" value="{{option[vm.field_id]}}">{{option[vm.field_search]}}</option>\n' +
     '        </select>\n' +
     '        <div data-ng-show="!!vm.loadingData" class="processing-status-wrapper">\n' +
@@ -17,12 +17,13 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '    </div>\n' +
     '    <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <div data-ng-click="vm.isShowPossible($event)" data-ng-class="!vm.search ? &quot;but-for-search&quot; : &quot;&quot;" class="select-input-wrapper">\n' +
-    '            <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" class="form-control"/>\n' +
+    '        <div data-ng-click="vm.clickSelect()" data-ng-class="!vm.search ? &quot;but-for-search&quot; : &quot;&quot;" class="select-input-wrapper">\n' +
+    '            <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="form-control select-input"/>\n' +
+    '            <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
     '            <div data-ng-if="!vm.search" class="form-control select-input">\n' +
     '                <div data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder-div&quot; : &quot;&quot;" class="dropdown__selected-items">{{vm.placeholder}}</div>\n' +
     '            </div>\n' +
-    '            <div data-ng-if="!vm.readonly &amp;&amp; (vm.options.length &gt; 0) &amp;&amp; vm.showPossible" data-ng-class="{&quot;active&quot; : vm.isActivePossible}" class="possible-values">\n' +
+    '            <div data-ng-if="!vm.readonly &amp;&amp; (vm.options.length &gt; 0) &amp;&amp; vm.showPossible" class="possible-values active">\n' +
     '                <div data-ng-repeat="option in vm.options" data-ng-mouseover="vm.activeElement = $index" data-ng-click="vm.addToSelected(option)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{option[vm.field_search]}}</div>\n' +
     '            </div>\n' +
     '        </div>\n' +
@@ -32,11 +33,12 @@ module.run(['$templateCache', function($templateCache) {
     '    </div>\n' +
     '    <div data-ng-if="vm.isTree" class="dropdown col-lg-3 col-md-3 col-sm-3 col-xs-3">\n' +
     '        <div class="dropdown__host">\n' +
-    '            <div data-ng-class="{\'dropdown__title_open\': isOpen}" data-ng-click="toggleDropdown($event)" data-ng-style="{&quot;cursor&quot; : vm.search ? &quot;text&quot; : &quot;pointer&quot;}" class="dropdown__title form-control select-input">\n' +
+    '            <div data-ng-class="{\'dropdown__title_open\': isOpen}" data-ng-click="vm.clickSelect()" data-ng-style="{&quot;cursor&quot; : vm.search ? &quot;text&quot; : &quot;pointer&quot;}" class="dropdown__title form-control select-input">\n' +
     '                <div data-ng-repeat="value in vm.fieldValue" data-ng-if="vm.fieldValue.length &amp;&amp; (vm.multiple || vm.treeParentField &amp;&amp; vm.treeChildCountField)" class="selected-items__item">\n' +
     '                    <div class="selected-item">{{value[vm.field_search]}}<span data-ng-click="vm.remove($event, value)" class="selected-item__btn_delete">×</span></div>\n' +
     '                </div>\n' +
-    '                <input data-ng-show="vm.search" data-ng-model="vm.filterText" data-ng-change="vm.change()" placeholder="{{vm.placeholder}}" data-ng-keyup="vm.clickEsc($event)" data-ng-style="vm.styleInput" size="{{vm.sizeInput}}" class="dropdown__search-field"/>\n' +
+    '                <input data-ng-if="vm.search" data-ng-model="vm.filterText" data-ng-change="vm.change()" placeholder="{{vm.placeholder}}" data-ng-style="vm.styleInput" size="{{vm.sizeInput}}" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" class="dropdown__search-field"/>\n' +
+    '                <input data-ng-if="!vm.search" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
     '                <div data-ng-if="!vm.search">\n' +
     '                    <div data-ng-if="!vm.loadingData &amp;&amp; !vm.fieldValue.length" class="dropdown__selected-items dropdown-tree">{{vm.placeholder}}</div>\n' +
     '                </div>\n' +

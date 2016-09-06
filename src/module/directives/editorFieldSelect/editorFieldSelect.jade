@@ -1,27 +1,33 @@
 div
     .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="vm.multiple && !vm.isTree")
-        select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple)
+        select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple, size="3")
             option(data-ng-repeat="option in vm.options", value="{{option[vm.field_id]}}") {{option[vm.field_search]}}
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
     .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple && !vm.isTree")
-        div.select-input-wrapper(data-ng-click="vm.isShowPossible($event)", data-ng-class='!vm.search ? "but-for-search" : ""')
-            input.form-control(
+        div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='!vm.search ? "but-for-search" : ""')
+            input.form-control.select-input(
                 data-ng-if="vm.search",
                 placeholder="{{vm.placeholder}}",
                 data-ng-class='vm.isSelection ? "color-placeholder" : ""',
                 data-ng-model="vm.filterText",
                 data-ng-change="vm.change()",
-                data-ng-focus="vm.focusPossible(true)",
-                data-ng-blur="vm.focusPossible(false)"
+                data-ng-focus="vm.isShowPossible()",
+                data-ng-blur="vm.isBlur()"
+                )
+
+            input.focus-input(
+                data-ng-if="!vm.search",
+                data-ng-focus="vm.isShowPossible()",
+                data-ng-blur="vm.isBlur()"
                 )
             .form-control.select-input(data-ng-if="!vm.search")
                 .dropdown__selected-items(
                     data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""'
                     ) {{vm.placeholder}}
-            .possible-values(
-                data-ng-if="!vm.readonly && (vm.options.length > 0) && vm.showPossible",
-                data-ng-class='{"active" : vm.isActivePossible}'
+
+            .possible-values.active(
+                data-ng-if="!vm.readonly && (vm.options.length > 0) && vm.showPossible"
                 )
                 .possible-value-item(data-ng-repeat="option in vm.options", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}
 
@@ -32,7 +38,7 @@ div
         .dropdown__host
             .dropdown__title.form-control.select-input(
                 data-ng-class="{'dropdown__title_open': isOpen}",
-                data-ng-click="toggleDropdown($event)",
+                data-ng-click="vm.clickSelect()",
                 data-ng-style='{"cursor" : vm.search ? "text" : "pointer"}'
                 )
                 .selected-items__item(
@@ -43,14 +49,20 @@ div
                         | {{value[vm.field_search]}}
                         span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)") ×
 
-                input.dropdown__search-field(data-ng-show="vm.search"
-                data-ng-model="vm.filterText",
-                data-ng-change="vm.change()",
-                placeholder="{{vm.placeholder}}",
-                data-ng-keyup="vm.clickEsc($event)",
-                data-ng-style='vm.styleInput',
-                size='{{vm.sizeInput}}'
-                )
+                input.dropdown__search-field(data-ng-if="vm.search"
+                    data-ng-model="vm.filterText",
+                    data-ng-change="vm.change()",
+                    placeholder="{{vm.placeholder}}",
+                    data-ng-style='vm.styleInput',
+                    size='{{vm.sizeInput}}',
+                    data-ng-focus="toggleDropdown()",
+                    data-ng-blur="vm.isBlur()"
+                    )
+                input.focus-input(
+                    data-ng-if="!vm.search",
+                    data-ng-focus="toggleDropdown()",
+                    data-ng-blur="vm.isBlur()"
+                    )
                 div(data-ng-if="!vm.search")
                     .dropdown__selected-items.dropdown-tree(data-ng-if="!vm.loadingData && !vm.fieldValue.length") {{vm.placeholder}}
 

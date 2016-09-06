@@ -32,16 +32,13 @@
             $document.on('click', function(event) {
                 if (!elem[0].contains(event.target)) {
                     scope.$apply(function() {
-                        scope.vm.showPossible = false;
-                        scope.isOpen = false;
-                        var formControl = elem.find('.select-input');
-                        formControl.removeClass('active');
-                        scope.vm.focusPossible(false);
+                        scope.vm.isBlur();
                     });
                 }
             });
 
-            scope.toggleDropdown = function(e) {
+            scope.toggleDropdown = function() {
+                elem.find('input')[0].focus();
                 var dHeight = $(document).height();
                 var dropdownHost = $(elem).find('.dropdown__host');
                 var dropdownHeight = dropdownHost.height();

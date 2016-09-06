@@ -625,12 +625,6 @@
             }
         }
 
-        vm.clickEsc = function(event){
-            if(event.keyCode === 27){
-                $scope.isOpen = false;
-            }
-        };
-
         vm.addToSelected = function(val) {
             var obj = {};
             obj[vm.field_id] = val[vm.field_id];
@@ -643,13 +637,12 @@
             },0);
         };
 
-        vm.isShowPossible = function(event) {
+        vm.isShowPossible = function() {
             vm.activeElement = 0;
             vm.showPossible = !vm.showPossible;
             var formControl = $element.find('.select-input');
             if (vm.showPossible) {
                 formControl.addClass('active');
-                vm.focusPossible(true);
             }
             setColorPlaceholder();
         };
@@ -660,11 +653,10 @@
                 switch(event.which) {
                     case 27:
                         event.preventDefault();
-                        if (!vm.multiple && !vm.isTree) {
-                            $timeout(function() {
-                                vm.showPossible = false;
-                            },0);
-                        }
+                        $timeout(function() {
+                            vm.showPossible = false;
+                            $scope.isOpen = false;
+                        },0);
                         break;
                     case 13:
                         event.preventDefault();
@@ -754,7 +746,7 @@
             $timeout(function () {
                 vm.activeElement = index;
             },0);
-        }
+        };
 
         function setColorPlaceholder() {
             if (!vm.search) {
@@ -762,9 +754,16 @@
             }
         }
 
-        vm.focusPossible = function(isActive) {
-            vm.isActivePossible = isActive;
-        }
+        vm.isBlur = function() {
+            vm.showPossible = false;
+            $scope.isOpen = false;
+            var formControl = $element.find('.select-input');
+            formControl.removeClass('active');
+        };
+
+        vm.clickSelect = function() {
+            $element.find('input')[0].focus();
+        };
     }
 
     angular
