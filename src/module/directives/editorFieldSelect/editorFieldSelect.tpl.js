@@ -22,7 +22,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
     '            <div data-ng-if="!vm.search" class="form-control select-input">\n' +
     '                <div data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder-div&quot; : &quot;&quot;" class="dropdown__selected-items">{{vm.placeholder}}</div>\n' +
-    '            </div>\n' +
+    '            </div><span data-ng-if="vm.isSpanSelectDelete" data-ng-click="vm.deleteToSelectedNotTree($event)" class="selecte-delete">×</span>\n' +
     '            <div data-ng-if="!vm.readonly &amp;&amp; (vm.options.length &gt; 0) &amp;&amp; vm.showPossible" data-ng-class="vm.possibleLocation ? &quot;possible-bottom&quot; : &quot;possible-top&quot;" class="possible-values active">\n' +
     '                <div class="possible-scroll">\n' +
     '                    <div data-ng-repeat="option in vm.options" data-ng-mouseover="vm.activeElement = $index" data-ng-mousedown="vm.addToSelected(option)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{option[vm.field_search]}}</div>\n' +

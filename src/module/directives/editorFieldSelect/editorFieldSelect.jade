@@ -25,7 +25,7 @@ div
                 .dropdown__selected-items(
                     data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""'
                     ) {{vm.placeholder}}
-
+            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelectedNotTree($event)") ×
             .possible-values.active(
                 data-ng-if="!vm.readonly && (vm.options.length > 0) && vm.showPossible",
                 data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'

@@ -58,6 +58,7 @@
         vm.activeElement = 0;
         vm.isSelection = false;
         vm.possibleLocation = true;
+        vm.isSpanSelectDelete = false;
 
         if ($scope.field.hasOwnProperty('valuesRemote') &&
             $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {
@@ -114,12 +115,6 @@
         var allOptions;
 
         if ($scope.field.hasOwnProperty("values")) {
-            if (!vm.multiple && !vm.isTree) {
-                var obj = {};
-                obj[vm.field_id] = null;
-                obj[vm.field_search] = " ";
-                vm.options.push(obj);
-            }
             angular.forEach($scope.field.values, function (v, key) {
                 var obj = {};
                 obj[vm.field_id] = key;
@@ -150,12 +145,6 @@
             RestApiService
                 .getUrlResource($scope.field.valuesRemote.url)
                 .then(function (response) {
-                    if (!vm.multiple && !vm.isTree) {
-                        var obj = {};
-                        obj[vm.field_id] = null;
-                        obj[vm.field_search] = " ";
-                        vm.options.push(obj);
-                    }
                     angular.forEach(response.data.items, function (v) {
                         vm.options.push(v);
                     });
@@ -672,6 +661,7 @@
             vm.fieldValue = obj;
             vm.filterText = '';
             $timeout(function() {
+                vm.isSpanSelectDelete = true;
                 vm.showPossible = false;
                 setColorPlaceholder();
             },0);
@@ -843,6 +833,12 @@
             var elem = angular.element($element.find(className)[0]);
             return $window.innerHeight - elem.offset().top;
         };
+
+        vm.deleteToSelectedNotTree = function(event) {
+            vm.isSpanSelectDelete = false;
+            vm.fieldValue = {};
+            event.stopPropagation();
+        }
     }
 
     angular
