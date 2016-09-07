@@ -484,6 +484,11 @@
                         item.checked = false;
                     }
                 }
+                if (!vm.multiple) {
+                    $timeout(function() {
+                        $scope.isOpen = false;
+                    },0);
+                }
             }
             if (vm.fieldValue.length === 0 && !vm.filterText) {
                 vm.placeholder = $scope.field.placeholder || '';

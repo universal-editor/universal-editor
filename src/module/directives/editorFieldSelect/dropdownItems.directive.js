@@ -22,7 +22,8 @@
                 assetsPath: '=',
                 multiple: '=',
                 activeElement: '=',
-                setActiveElement: '='
+                setActiveElement: '=',
+                lvlDropdown: '='
             },
             template : $templateCache.get('module/directives/editorFieldSelect/dropdownItems.html'),
             controller: 'DropdownItemsController',

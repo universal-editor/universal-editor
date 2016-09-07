@@ -1,5 +1,5 @@
 div(data-ng-show="isOpen")
-    .dropdown-scroll
+    div(data-ng-class='{"dropdown-scroll" : (lvlDropdown == 1)}')
       .dropdown-items__item(
         data-ng-repeat="option in options track by $index",
         data-ng-class="activeElement == $index ? 'active' : ''",
@@ -33,4 +33,5 @@ div(data-ng-show="isOpen")
             data-assets-path="assetsPath",
             data-multiple="multiple",
             data-active-element="activeElement",
-            data-set-active-element="setActiveElement")
+            data-set-active-element="setActiveElement",
+            data-lvl-dropdown="lvlDropdown + 1")
