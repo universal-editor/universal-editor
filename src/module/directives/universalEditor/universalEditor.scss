@@ -500,7 +500,7 @@ body {
         padding-left: 15px;
       }
       &__item {
-        min-height: 50px;
+        min-height: 31px;
         &.active{
           background-color: #f3f3f3;
         }
@@ -508,7 +508,7 @@ body {
     }
     .option {
       position: relative;
-      line-height: 50px;
+      line-height: 31px;
       border-bottom: 1px solid #ECECEC;
       padding-left: 15px;
       &:hover {
@@ -516,8 +516,8 @@ body {
       }
       &__checkbox {
         position: relative;
-        float: left;
-        height: 50px;
+        float: right;
+        height: 31px;
         width: 20px;
         &:before {
           position: absolute;
@@ -552,7 +552,6 @@ body {
         }
       }
       &__label {
-        margin-left: 25px;
         &:hover {
           cursor: pointer;
           background-color: #fafafa;
