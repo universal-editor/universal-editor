@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('EditorFieldSelectController', EditorFieldSelectController);
 
-    EditorFieldSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', '$timeout', 'configData', '$document', '$element'];
+    EditorFieldSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', '$timeout', 'configData', '$document', '$element', '$window'];
 
-    function EditorFieldSelectController($rootScope, $scope, EditEntityStorage, RestApiService, ArrayFieldStorage, $timeout, configData, $document, $element) {
+    function EditorFieldSelectController($rootScope, $scope, EditEntityStorage, RestApiService, ArrayFieldStorage, $timeout, configData, $document, $element, $window) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
@@ -57,6 +57,7 @@
         vm.showPossible = false;
         vm.activeElement = 0;
         vm.isSelection = false;
+        vm.possibleLocation = false;
 
         if ($scope.field.hasOwnProperty('valuesRemote') &&
             $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {
@@ -678,6 +679,15 @@
             if (vm.showPossible) {
                 formControl.addClass('active');
             }
+            var dHeight = $window.innerHeight;
+            var dropdownHost = $element.find('.select-input-wrapper');
+            var dropdownHeight = dropdownHost.height();
+            var dropdownOffset = dropdownHost.offset();
+            var dropdownBottom = dropdownOffset.top + dropdownHeight;
+            console.log(dHeight, dropdownBottom);
+            $scope.$evalAsync(function() {
+                vm.possibleLocation = !(dHeight - dropdownBottom < 162);
+            });
             setColorPlaceholder();
         };
 
@@ -823,6 +833,11 @@
                 }
             }
         }
+
+        vm.getDistanceByClass = function (className) {
+            var elem = angular.element($element.find(className)[0]);
+            return $window.innerHeight - elem.offset().top;
+        };
     }
 
     angular

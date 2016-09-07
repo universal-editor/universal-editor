@@ -45,10 +45,12 @@
                 var dropdownHeight = dropdownHost.height();
                 var dropdownOffset = dropdownHost.offset();
                 var dropdownBottom = dropdownOffset.top + dropdownHeight;
-                if (dHeight - dropdownBottom < 500) {
-                  $(elem).find('.dropdown__items').css('max-height', (dHeight - dropdownBottom) + 'px');
+                elem.find('.dropdown__items').removeClass('dropdown-top');
+                elem.find('.dropdown__items').removeClass('dropdown-bottom');
+                if (dHeight - dropdownBottom < 300) {
+                    elem.find('.dropdown__items').addClass('dropdown-top');
                 } else {
-                  $(elem).find('.dropdown__items').css('max-height', '');
+                    elem.find('.dropdown__items').addClass('dropdown-bottom');
                 }
                 scope.isOpen = !scope.isOpen;
                 if (scope.isOpen) {
