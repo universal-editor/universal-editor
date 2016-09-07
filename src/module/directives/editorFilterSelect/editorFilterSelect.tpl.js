@@ -16,7 +16,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <div data-ng-if="!vm.search" class="form-control select-input">\n' +
     '                <div data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder-div&quot; : &quot;&quot;" class="dropdown__selected-items">{{vm.placeholder}}</div>\n' +
     '            </div>\n' +
-    '            <div data-ng-if="!vm.readonly &amp;&amp; (vm.selectedValues.length &gt; 0) &amp;&amp; vm.showPossible" class="possible-values active">\n' +
+    '            <div data-ng-if="!vm.readonly &amp;&amp; (vm.selectedValues.length &gt; 0) &amp;&amp; vm.showPossible" class="possible-values active possible-bottom">\n' +
     '                <div data-ng-repeat="option in vm.selectedValues" data-ng-mouseover="vm.activeElement = $index" data-ng-click="vm.addToSelected(option)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{option[vm.field_search]}}</div>\n' +
     '            </div>\n' +
     '        </div>\n' +
