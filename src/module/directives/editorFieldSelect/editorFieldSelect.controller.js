@@ -57,7 +57,7 @@
         vm.showPossible = false;
         vm.activeElement = 0;
         vm.isSelection = false;
-        vm.possibleLocation = false;
+        vm.possibleLocation = true;
 
         if ($scope.field.hasOwnProperty('valuesRemote') &&
             $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {

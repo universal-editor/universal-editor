@@ -41,6 +41,10 @@
   max-height: 162px;
   overflow-y: scroll;
 
+  .possible-scroll{
+    overflow-y: scroll;
+    max-height: 162px;
+  }
   &.possible-top{
     margin-bottom: -4px;
     bottom: 100%;
@@ -57,6 +61,7 @@
     border-top: 0;
   }
   &.active{
+    overflow: hidden;
     border-color: #66afe9;
     outline: 0;
   }

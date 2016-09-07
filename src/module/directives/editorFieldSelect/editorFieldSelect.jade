@@ -30,7 +30,8 @@ div
                 data-ng-if="!vm.readonly && (vm.options.length > 0) && vm.showPossible",
                 data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'
                 )
-                .possible-value-item(data-ng-repeat="option in vm.options", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected(option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}
+                .possible-scroll
+                    .possible-value-item(data-ng-repeat="option in vm.options", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected(option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}
 
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
