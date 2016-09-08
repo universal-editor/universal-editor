@@ -39,11 +39,12 @@
 
         vm.filterValue = $location.search()[vm.filterName] || '';
         vm.inputValue = '';
-        vm.sizeInput = 1;
         vm.classInput = {
-            'width': '1px'
+            'width': '99%',
+            'padding-right': '25px'
         };
         vm.showPossible = false;
+        vm.placeholder = '';
 
         loadValues();
 
@@ -59,7 +60,7 @@
                     }
 
                     $timeout(function () {
-                        vm.addToSelected(vm.possibleValues[vm.activeElement]);
+                        vm.addToSelected(event, vm.possibleValues[vm.activeElement]);
                     }, 0);
 
                     break;
@@ -145,6 +146,7 @@
             vm.filterValue = '';
             vm.selectedValues = [];
             vm.inputValue = '';
+            vm.placeholder = '';
         };
 
         /*
@@ -168,12 +170,6 @@
                 $timeout.cancel(inputTimeout);
             }
             vm.possibleValues = [];
-            vm.sizeInput = newVal.length || 1;
-            if (vm.sizeInput === 1) {
-                vm.classInput.width = '1px';
-            } else {
-                vm.classInput.width = 'initial';
-            }
             inputTimeout = $timeout(function () {
                 autocompleteSearch(newVal);
             }, 300);
@@ -191,19 +187,20 @@
 
         /* PUBLIC METHODS */
 
-        vm.addToSelected = function (obj) {
+        vm.addToSelected = function (event, obj) {
             vm.selectedValues = [];
             vm.selectedValues.push(obj);
             vm.filterValue = obj['id'];
-
-
             vm.inputValue = '';
             vm.possibleValues = [];
+            vm.placeholder = obj[vm.filter_search];
+            event.stopPropagation();
         };
 
-        vm.removeFromSelected = function () {
+        vm.removeFromSelected = function (event) {
             vm.selectedValues = [];
             vm.filterValue = '';
+            vm.placeholder = '';
         };
 
         /* PRIVATE METHODS */
@@ -275,7 +272,6 @@
         function loadValues() {
             var search = $location.search();
             if ($scope.filter.hasOwnProperty("values")) {
-                console.log("zdfg");
                 angular.forEach($scope.filter.values, function (v, key) {
                     var obj = {};
                     if (angular.isArray($scope.filter.values)) {
@@ -286,6 +282,7 @@
                     obj[vm.filter_search] = v;
                     if (!!search && search.hasOwnProperty(vm.filterName) && search[vm.filterName] == obj[vm.filter_id]) {
                         vm.selectedValues.push(obj);
+                        vm.placeholder = obj[vm.filter_search];
                     }
                 });
                 vm.preloadedData = true;
@@ -306,6 +303,7 @@
                             angular.forEach(response.data.items, function (v) {
                                 if (search[vm.filterName] == v[vm.filter_id]) {
                                     vm.selectedValues.push(v);
+                                    vm.placeholder = v[vm.filter_search];
                                 }
                             });
                         }

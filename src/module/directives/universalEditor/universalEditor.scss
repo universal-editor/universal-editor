@@ -480,7 +480,7 @@ body {
           background: 0 0;
           cursor: pointer;
           vertical-align: middle;
-          font: 700 14px Arial,sans-serif;
+          font: 700 16px Arial,sans-serif;
           color: #585858;
         }
       }
@@ -744,6 +744,10 @@ body {
   font: 700 16px Arial,sans-serif;
   color: #585858;
   cursor: pointer;
+
+  &-autocomplete{
+    right: 10px;
+  }
 }
 .select-input.active {
   border-color: #66afe9;

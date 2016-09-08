@@ -55,6 +55,7 @@
         vm.sizeInput = 1;
         vm.classInput = {'width': '1px'};
         vm.showPossible = false;
+        vm.placeholder = '';
 
         if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true){
             vm.multiple = true;
@@ -65,7 +66,8 @@
         } else {
             vm.multiple = false;
             vm.fieldValue = undefined;
-            vm.classInput.float = 'left';
+            vm.classInput.width = '99%';
+            vm.classInput['padding-right'] = '25px';
         }
 
         if(vm.parentFieldIndex){
@@ -96,7 +98,7 @@
                     }
 
                     $timeout(function () {
-                        vm.addToSelected(vm.possibleValues[vm.activeElement]);
+                        vm.addToSelected(event, vm.possibleValues[vm.activeElement]);
                     },0);
 
                     break;
@@ -221,6 +223,8 @@
             vm.inputValue = "";
             vm.sizeInput = 1;
             vm.selectedValues = [];
+            vm.placeholder = '';
+
         }
 
         $scope.$on('editor:entity_loaded', function (event, data) {
@@ -228,6 +232,7 @@
             $element.find('.autocomplete-field-search').removeClass('hidden');
             vm.inputValue = "";
             vm.selectedValues = [];
+            vm.placeholder = '';
 
             //-- functional for required fields
             if ($scope.field.requiredField) {
@@ -339,13 +344,15 @@
             if(inputTimeout) {
               $timeout.cancel(inputTimeout);
             }
-
+            vm.showPossible = true;
             vm.possibleValues = [];
-            vm.sizeInput = newValue.length || 1;
-            if (vm.sizeInput === 1) {
-                vm.classInput.width = '1px';
-            } else {
-                vm.classInput.width = 'initial';
+            if (vm.multiple) {
+                vm.sizeInput = newValue.length || 1;
+                if (vm.sizeInput === 1) {
+                    vm.classInput.width = '1px';
+                } else {
+                    vm.classInput.width = 'initial';
+                }
             }
             inputTimeout = $timeout(function(){
                 autocompleteSearch(newValue);
@@ -360,21 +367,28 @@
 
         /* PUBLIC METHODS */
 
-        vm.addToSelected = function (obj) {
+        vm.addToSelected = function (event, obj) {
             if (!vm.multiple) {
                 vm.selectedValues = [];
             }
             vm.selectedValues.push(obj);
+            vm.placeholder = obj[vm.field_search];
             $element.find('.autocomplete-field-search').removeClass('hidden');
             vm.inputValue = "";
             vm.sizeInput = 1;
             vm.possibleValues = [];
+            if (!vm.multiple) {
+                event.stopPropagation();
+            }
         };
 
-        vm.removeFromSelected = function (obj) {
+        vm.removeFromSelected = function (event, obj) {
             angular.forEach(vm.selectedValues, function (val,key) {
                 if(val[vm.field_id] == obj[vm.field_id]){
                     vm.selectedValues.splice(key,1);
+                    if (!vm.multiple) {
+                        vm.placeholder = '';
+                    }
                 }
             });
         };
@@ -474,6 +488,7 @@
                       }
                       obj[vm.field_search] = v;
                       vm.selectedValues.push(obj);
+                      vm.placeholder = obj[vm.field_search];
                   }
               });
               vm.preloadedData = true;
@@ -509,6 +524,7 @@
                               vm.selectedValues.push(v);
                           } else if (vm.fieldValue == v[vm.field_id] && !vm.multiple) {
                               vm.selectedValues.push(v);
+                              vm.placeholder = v[vm.field_search];
                           }
                       });
                       vm.preloadedData = true;
