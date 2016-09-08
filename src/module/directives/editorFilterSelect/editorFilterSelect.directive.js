@@ -9,9 +9,9 @@
         .module('universal.editor')
         .directive('editorFilterSelect',editorFilterSelect);
 
-    editorFilterSelect.$inject = ['$templateCache'];
+    editorFilterSelect.$inject = ['$templateCache', '$document'];
 
-    function editorFilterSelect($templateCache){
+    function editorFilterSelect($templateCache, $document){
         return {
             restrict : 'A',
             replace : true,
@@ -23,6 +23,15 @@
         };
 
         function link(scope, elem, attrs, ctrl){
+
+            $document.on('click', function() {
+                if (!elem.find('.filter-inner-wrapper')[0].contains(event.target) ) {
+                    scope.$apply(function() {
+                        scope.vm.isBlur()
+                    });
+                }
+            });
+
             elem.on('$destroy', function () {
                 scope.$destroy();
             });

@@ -456,7 +456,7 @@
         }
 
         function loadValues() {
-          if($scope.field.hasOwnProperty("values")){
+          if ($scope.field.hasOwnProperty("values")) {
               angular.forEach($scope.field.values, function (v,key) {
                   var obj = {};
                   if(Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple){
@@ -480,20 +480,20 @@
               vm.preloadedData = true;
           } else if ($scope.field.hasOwnProperty('valuesRemote')) {
 
-              if(vm.fieldValue === undefined || vm.fieldValue === null){
+              if (vm.fieldValue === undefined || vm.fieldValue === null) {
                   vm.preloadedData = true;
                   return;
               }
 
               var urlParam;
 
-              if(vm.multiple && angular.isArray(vm.fieldValue) && vm.fieldValue.length > 0 ){
+              if (vm.multiple && angular.isArray(vm.fieldValue) && vm.fieldValue.length > 0 ) {
                   urlParam = {};
-                  urlParam[vm.field_id] = '%' + vm.fieldValue + '%';
-              } else if (!vm.multiple && vm.fieldValue !== ''){
+                  urlParam[vm.field_id] = vm.fieldValue;
+              } else if (!vm.multiple && vm.fieldValue !== '') {
                   urlParam = {};
                   urlParam[vm.field_id] = [];
-                  urlParam[vm.field_id].push( '%' + vm.fieldValue + '%');
+                  urlParam[vm.field_id].push(vm.fieldValue);
               } else {
                   vm.preloadedData = true;
                   return;
@@ -503,12 +503,12 @@
                   .getUrlResource($scope.field.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
                   .then(function (response) {
                       angular.forEach(response.data.items, function (v) {
-                          if( Array.isArray(vm.fieldValue) &&
+                          if ( Array.isArray(vm.fieldValue) &&
                               ( vm.fieldValue.indexOf(v[vm.field_id]) >= 0 || vm.fieldValue.indexOf(String(v[vm.field_id])) >= 0) &&
                               vm.multiple
-                          ){
+                          ) {
                               vm.selectedValues.push(v);
-                          } else if (vm.fieldValue == v[vm.field_id] && !vm.multiple){
+                          } else if (vm.fieldValue == v[vm.field_id] && !vm.multiple) {
                               vm.selectedValues.push(v);
                           }
                       });

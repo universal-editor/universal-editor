@@ -20,7 +20,10 @@
                 api: '=',
                 selectBranches: '=',
                 assetsPath: '=',
-                multiple: '='
+                multiple: '=',
+                activeElement: '=',
+                setActiveElement: '=',
+                lvlDropdown: '='
             },
             template : $templateCache.get('module/directives/editorFieldSelect/dropdownItems.html'),
             controller: 'DropdownItemsController',

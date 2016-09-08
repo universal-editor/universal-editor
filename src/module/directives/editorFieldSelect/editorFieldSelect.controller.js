@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('EditorFieldSelectController', EditorFieldSelectController);
 
-    EditorFieldSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', '$timeout', 'configData'];
+    EditorFieldSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', '$timeout', 'configData', '$document', '$element', '$window'];
 
-    function EditorFieldSelectController($rootScope, $scope, EditEntityStorage, RestApiService, ArrayFieldStorage, $timeout, configData) {
+    function EditorFieldSelectController($rootScope, $scope, EditEntityStorage, RestApiService, ArrayFieldStorage, $timeout, configData, $document, $element, $window) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
@@ -39,6 +39,8 @@
             }
         }
 
+        var possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+
         vm.assetsPath = '../assets';
         var _selectedIds = [];
         vm.fieldName = $scope.field.name;
@@ -52,9 +54,11 @@
         vm.parentValue = !vm.depend;
         vm.search = $scope.field.search;
         vm.placeholder = $scope.field.placeholder || '';
-        //vm.multiname = $scope.field.multiname || "value";
-
-        // Настройки режима "Дерево"
+        vm.showPossible = false;
+        vm.activeElement = 0;
+        vm.isSelection = false;
+        vm.possibleLocation = true;
+        vm.isSpanSelectDelete = false;
 
         if ($scope.field.hasOwnProperty('valuesRemote') &&
             $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {
@@ -79,7 +83,9 @@
         } else {
             vm.multiple = false;
             vm.fieldValue = "";
+            vm.styleInput = {'width': '99%'}
         }
+
         if (vm.parentFieldIndex) {
             if (vm.multiple) {
                 vm.fieldValue = [];
@@ -94,8 +100,9 @@
                 if (ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name)) {
                     if (vm.isTree) {
                         _selectedIds.push(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name));
-                    } else {
-                        vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
+                   } else {
+                        vm.fieldValue = {};
+                        vm.fieldValue[vm.field_id] = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
                     }
                 }
             }
@@ -107,6 +114,7 @@
          * Инициализация данных при загрузке поля. Необходимая часть для полей инициализирующие данные для которых
          * хранятся удалённо.
          */
+        var allOptions;
 
         if ($scope.field.hasOwnProperty("values")) {
             angular.forEach($scope.field.values, function (v, key) {
@@ -115,6 +123,10 @@
                 obj[vm.field_search] = v;
                 vm.options.push(obj);
             });
+            $scope.$evalAsync(function() {
+                setSizeSelect();
+            });
+            allOptions = angular.copy(vm.options);
         } else if ($scope.field.hasOwnProperty("valuesRemote")) {
             if (vm.isTree) {
                 if (_selectedIds.length && !vm.options.length) {
@@ -138,6 +150,8 @@
                     angular.forEach(response.data.items, function (v) {
                         vm.options.push(v);
                     });
+                    setSizeSelect();
+                    allOptions = angular.copy(vm.options);
                     if (isRemoteSelectedValues) {
                         setSelectedValuesFromRemote();
                     } else {
@@ -274,7 +288,7 @@
             }
 
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [] : undefined;
+                vm.fieldValue = vm.multiple ? [] : {};
                 if (data.hasOwnProperty($scope.field.name)) {
                     var obj = {};
                     obj[vm.field_id] = data[$scope.field.name];
@@ -366,6 +380,21 @@
         $scope.$watch(function () {
             return vm.fieldValue;
         }, function (newVal) {
+            if (!vm.multiple && !vm.isTree) {
+                if (vm.search) {
+                    vm.filterText = '';
+                    change();
+                }
+                vm.placeholder = (!!newVal && !!newVal[vm.field_search]) ? newVal[vm.field_search] : $scope.field.placeholder;
+                vm.isSelection = (!!newVal && !!newVal[vm.field_search]);
+            }
+            if (vm.isTree && !vm.search) {
+                vm.placeholder = $scope.field.placeholder || '';
+            }
+            if (vm.isTree && !vm.multiple) {
+                vm.placeholder = (!!newVal.length && !!newVal[0][vm.field_search]) ? newVal[0][vm.field_search] : $scope.field.placeholder;
+            }
+            vm.setColorPlaceholder();
             $scope.$parent.vm.error = [];
             $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
         }, true);
@@ -381,6 +410,10 @@
                             angular.forEach(response.data.items, function (v) {
                                 vm.options.push(v);
                             });
+                            $timeout(function() {
+                                setSizeSelect();
+                            },0);
+                            allOptions = angular.copy(vm.options);
                             vm.parentValue = true;
                         }, function (reject) {
                             console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + $scope.field.fieldName + '\" с удаленного ресурса');
@@ -390,7 +423,6 @@
                 }
             });
         }
-        var allOptions;
 
         // dropdown functions
         vm.toggle = toggle;
@@ -441,21 +473,32 @@
                         vm.fieldValue.splice(0);
                         uncheckAll(vm.options);
                         item.checked = true;
+                        vm.isSpanSelectDelete = true;
                         vm.fieldValue.push(item);
                     } else {
                         vm.fieldValue.splice(0);
                         item.checked = false;
+                        vm.isSpanSelectDelete = false;
                     }
                 }
+                if (!vm.multiple) {
+                    $timeout(function() {
+                        vm.isBlur();
+                        $element.find('input')[0].blur();
+                    },0);
+                }
             }
-            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+            if (vm.fieldValue.length === 0 && !vm.filterText) {
                 vm.placeholder = $scope.field.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;
             } else {
-                vm.placeholder = '';
-                vm.sizeInput = vm.filterText.length || 1;
+                vm.placeholder = (vm.multiple) ? '' : vm.fieldValue[0][vm.field_search];
+                vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
-            e.stopPropagation();
+            if (!!e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
         }
 
         function uncheckAll(arr) {
@@ -485,42 +528,61 @@
                     }
                 }
             }
-            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+
+            if (vm.fieldValue.length === 0 && !vm.filterText) {
                 vm.placeholder = $scope.field.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;
             } else {
                 vm.placeholder = '';
-                vm.sizeInput = vm.filterText.length || 1;
+                vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
-            e.stopPropagation();
         }
 
         function focus(e) {
             $scope.toggleDropdown(e);
             $scope.isOpen = true;
-            e.stopPropagation();
         }
 
         function change() {
-            if (vm.fieldValue.length === 0 && vm.filterText.length === 0) {
+            vm.activeElement = 0;
+            if (vm.fieldValue.length === 0 && !vm.filterText) {
                 vm.placeholder = $scope.field.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;
             } else {
                 vm.placeholder = '';
-                vm.sizeInput = vm.filterText.length || 1;
+                vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
             if (!vm.filterText) {
+                if (!vm.multiple && !vm.isTree) {
+                    vm.placeholder = (!!vm.fieldValue && !!vm.fieldValue[vm.field_search]) ? vm.fieldValue[vm.field_search] : $scope.field.placeholder;
+                } else if (!vm.multiple && vm.isTree) {
+                    vm.placeholder = (!!vm.fieldValue.length && !!vm.fieldValue[0][vm.field_search]) ? vm.fieldValue[0][vm.field_search] : $scope.field.placeholder;
+                }
                 vm.sizeInput = vm.placeholder.length;
                 if (allOptions) {
                     vm.options = allOptions;
                 }
+                for (var j = 0 ; j < vm.fieldValue.length; j++) {
+                    for (var i = 0, len = vm.options.length; i < len; i++) {
+                        if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                            vm.options[i].checked = true;
+                        }
+                    }
+                }
                 return;
             }
-            vm.sizeInput = vm.filterText.length;
+            vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             if (!allOptions) {
                 allOptions = angular.copy(vm.options);
             }
             vm.options = filter(angular.copy(allOptions), vm.filterText);
+            for (var j = 0 ; j < vm.fieldValue.length; j++) {
+                for (var i = 0, len = vm.options.length; i < len; i++) {
+                    if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                        vm.options[i].checked = true;
+                    }
+                }
+            }
         }
 
         function filter(opts, filterText) {
@@ -602,11 +664,197 @@
                 }
             }
         }
-        vm.clickEsc = function(event){
-            if(event.keyCode === 27){
-                $scope.isOpen = false;
+
+        vm.addToSelected = function(val) {
+            var obj = {};
+            obj[vm.field_id] = val[vm.field_id];
+            obj[vm.field_search] = val[vm.field_search];
+            vm.fieldValue = obj;
+            vm.filterText = '';
+            $timeout(function() {
+                vm.isSpanSelectDelete = true;
+                vm.showPossible = false;
+                vm.setColorPlaceholder();
+            },0);
+        };
+
+        vm.isShowPossible = function() {
+            vm.activeElement = 0;
+            vm.showPossible = !vm.showPossible;
+            var formControl = $element.find('.select-input');
+            if (vm.showPossible) {
+                formControl.addClass('active');
+            }
+            var dHeight = $window.innerHeight;
+            var dropdownHost = $element.find('.select-input-wrapper');
+            var dropdownHeight = dropdownHost.height();
+            var dropdownOffset = dropdownHost.offset();
+            var dropdownBottom = dropdownOffset.top + dropdownHeight;
+            $scope.$evalAsync(function() {
+                vm.possibleLocation = !(dHeight - dropdownBottom < 162);
+            });
+            vm.setColorPlaceholder();
+        };
+
+
+        $document.bind("keydown", function (event) {
+            if (vm.showPossible || $scope.isOpen) {
+                switch(event.which) {
+                    case 27:
+                        event.preventDefault();
+                        $timeout(function() {
+                            vm.showPossible = false;
+                            $scope.isOpen = false;
+                        },0);
+                        break;
+                    case 13:
+                        event.preventDefault();
+                        if ((!vm.multiple && !vm.isTree) || vm.isTree) {
+                            if (vm.options.length < 1) {
+                                break;
+                            }
+                        }
+                        $timeout(function () {
+                            if ((!vm.multiple && !vm.isTree)) {
+                                vm.addToSelected(vm.options[vm.activeElement]);
+                            } else if (vm.isTree) {
+                                vm.toggle(undefined, vm.options[vm.activeElement], true);
+                            }
+
+                        },0);
+
+                        break;
+                    case 40:
+                        event.preventDefault();
+                        if ((!vm.multiple && !vm.isTree) || (vm.isTree)) {
+                            if(vm.options.length < 1){
+                                break;
+                            }
+
+                            if (!vm.multiple && !vm.isTree) {
+                                possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                            } else if (vm.isTree) {
+                                possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
+                            }
+
+                            if(vm.activeElement < vm.options.length -1){
+                                $timeout(function () {
+                                    vm.activeElement++;
+                                },0);
+
+                                $timeout(function () {
+                                    var activeTop  = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
+                                        activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
+                                        wrapperScroll = possibleValues[0].scrollTop,
+                                        wrapperHeight = possibleValues[0].clientHeight;
+
+                                    if (activeTop >= (wrapperHeight + wrapperScroll - activeHeight)) {
+                                        possibleValues[0].scrollTop += activeHeight + 1;
+                                    }
+                                },1);
+                            }
+                        }
+                        break;
+                    case 38:
+                        event.preventDefault();
+                        if ((!vm.multiple && !vm.isTree) || (vm.isTree)) {
+                            if(vm.options.length < 1){
+                                break;
+                            }
+
+                            if (!vm.multiple && !vm.isTree) {
+                                possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                            } else if (vm.isTree) {
+                                possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
+                            }
+
+                            if(vm.activeElement > 0){
+                                $timeout(function () {
+                                    vm.activeElement--;
+                                },0);
+
+                                $timeout(function () {
+                                    var activeTop  = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
+                                        activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
+                                        wrapperScroll = possibleValues[0].scrollTop,
+                                        wrapperHeight = possibleValues[0].clientHeight;
+
+                                    if (activeTop < wrapperScroll) {
+                                        possibleValues[0].scrollTop -= activeHeight + 1;
+                                    }
+                                },1);
+                            }
+                        }
+                        break;
+                }
+            }
+        });
+
+        vm.setActiveElement = function(event, index) {
+            event.stopPropagation();
+            $timeout(function () {
+                vm.activeElement = index;
+            },0);
+        };
+
+         vm.setColorPlaceholder = function() {
+            if (!vm.search && !vm.isTree) {
+                vm.colorPlaceholder = !(vm.placeholder === $scope.field.placeholder) && !vm.showPossible;
+            } else {
+                vm.colorPlaceholder = !(vm.placeholder === $scope.field.placeholder) && !$scope.isOpen;
+            }
+        };
+
+        vm.isBlur = function() {
+            vm.showPossible = false;
+            $scope.isOpen = false;
+            var formControl = $element.find('.select-input');
+            formControl.removeClass('active');
+            vm.setColorPlaceholder();
+        };
+
+        vm.clickSelect = function() {
+            $element.find('input')[0].focus();
+        };
+
+        vm.deleteToSelected = function(event, isKeydown) {
+            if (isKeydown &&
+                event.which == 8 &&
+                !!vm.fieldValue &&
+                !!vm.fieldValue.length &&
+                !vm.filterText &&
+                vm.multiple
+            ) {
+                remove(null, vm.fieldValue[vm.fieldValue.length - 1]);
+            } else if(!vm.isTree && !isKeydown) {
+                vm.isSpanSelectDelete = false;
+                vm.fieldValue = {};
+                event.stopPropagation();
+            } else if(vm.isTree && !isKeydown){
+                vm.isSpanSelectDelete = false;
+                remove(null, vm.fieldValue[0]);
+                event.stopPropagation();
+            }
+        };
+
+        function setSizeSelect() {
+            var size = vm.options.length;
+            var select = $element.find('select');
+            if (!!select.length) {
+                if (size <= 3) {
+                    select[0].size = 3;
+                } else if(size >= 7) {
+                    select[0].size = 7;
+                } else {
+                    select[0].size = size;
+                }
             }
         }
+
+        vm.getDistanceByClass = function (className) {
+            var elem = angular.element($element.find(className)[0]);
+            return $window.innerHeight - elem.offset().top;
+        };
     }
 
     angular
