@@ -483,7 +483,8 @@
                 }
                 if (!vm.multiple) {
                     $timeout(function() {
-                        $scope.isOpen = false;
+                        vm.isBlur();
+                        $element.find('input')[0].blur();
                     },0);
                 }
             }

@@ -34,6 +34,7 @@
         var possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
         vm.change = change;
         vm.isSelection = false;
+        vm.isSpanSelectDelete = false;
 
         FilterFieldsStorage.addFilterController(this);
         var allOptions;
@@ -41,6 +42,7 @@
         if ($scope.filter.hasOwnProperty("values")) {
             if ($location.search()[vm.filterName]) {
                 vm.filterValue = parseInt($location.search()[vm.filterName]);
+                vm.isSpanSelectDelete = true;
             }
             angular.forEach($scope.filter.values, function (v, key) {
                 var obj = {};
@@ -59,6 +61,7 @@
                 .then(function (response) {
                     if ($location.search()[vm.filterName]) {
                         vm.filterValue = parseInt($location.search()[vm.filterName]);
+                        vm.isSpanSelectDelete = true;
                     }
                     angular.forEach(response.data.items, function (v) {
                         vm.selectedValues.push(v);
@@ -132,6 +135,7 @@
             $timeout(function () {
                 vm.placeholder = (!!val && !!val[vm.field_search]) ? val[vm.field_search] : $scope.filter.placeholder;
                 vm.showPossible = false;
+                vm.isSpanSelectDelete = true;
                 setColorPlaceholder();
             }, 0);
         };
@@ -279,6 +283,14 @@
 
         vm.clickSelect = function() {
             $element.find('input')[0].focus();
+        };
+
+        vm.deleteToSelected = function(event, isKeydown) {
+            vm.isSpanSelectDelete = false;
+            vm.filterValue = null;
+            vm.placeholder = $scope.filter.placeholder || '';
+            setColorPlaceholder();
+            event.stopPropagation();
         };
     }
 })();
