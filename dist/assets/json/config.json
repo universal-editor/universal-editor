@@ -404,6 +404,22 @@
               }
             },
             {
+              "name": "select-remote-tree-branch",
+              "type": "select",
+              "list": true,
+              "label": "Дерево с ветвями",
+              "selectBranches": true,
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "title",
+                  "parent": "parent_id",
+                  "childCount": "child_count"
+                },
+                "url": "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+              }
+            },
+            {
               "name": "select-remote-tree-multiple",
               "type": "select",
               "list": true,
@@ -425,9 +441,7 @@
               "type": "select",
               "list": true,
               "label": "Дерево с поиском",
-              "multiple": true,
               "search": true,
-              "selectBranches": true,
               "placeholder": "Найти",
               "hint": "Режим дерева, поиск можно выбирать ветви. Значения для списка запрашиваются с сервера.",
               "valuesRemote": {

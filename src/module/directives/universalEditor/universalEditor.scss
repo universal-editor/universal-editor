@@ -461,7 +461,7 @@ body {
       padding: 0 5px;
       height: 24px;
       max-width: 99%;
-      line-height: 25px;
+      line-height: 22px;
       border: 1px solid #acacac;
       border-radius: 3px;
       background-color: #CBD6DA;
@@ -476,7 +476,7 @@ body {
           background: 0 0;
           cursor: pointer;
           vertical-align: middle;
-          font: 700 16px Arial,sans-serif;
+          font: 700 14px Arial,sans-serif;
           color: #585858;
         }
       }
@@ -643,7 +643,7 @@ body {
       color: #999;
       &.dropdown-tree{
         padding-left: 4px;
-        padding-top: 2px;
+        padding-top: 4px;
         min-height: 28px;
       }
     }
@@ -730,8 +730,8 @@ body {
 }
 .selecte-delete{
   position: absolute;
-  top: 10px;
-  right: 20px;
+  top: 9px;
+  right: 25px;
   font: 700 16px Arial,sans-serif;
   color: #585858;
   cursor: pointer;
