@@ -14,12 +14,13 @@ div
                 data-ng-focus="vm.focusPossible(true)",
                 data-ng-blur="vm.focusPossible(false)",
                 size="{{vm.sizeInput}}",
-                data-ng-style='vm.classInput'
+                data-ng-style='vm.classInput',
+                data-ng-keydown="vm.deleteToAutocomplete($event)"
                 )
             .loader-search-wrapper(data-ng-show="vm.searching")
                 .loader-search {{'LOADING' | translate}}
             .possible-values.possible-autocomplete.active.possible-bottom(
-                data-ng-if="!vm.readonly && (vm.possibleValues.length > 0)",
+                data-ng-if="!vm.readonly && (vm.possibleValues.length > 0) && vm.showPossible",
                 )
                 .possible-scroll
                     .possible-value-item(data-ng-repeat="possible in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(possible)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{possible[vm.field_search]}}

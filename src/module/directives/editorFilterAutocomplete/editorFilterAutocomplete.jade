@@ -19,9 +19,8 @@
               span.remove-from-selected(data-ng-click="vm.removeFromSelected()") ×
           .loader-search-wrapper(data-ng-show="vm.searching")
               .loader-search {{'LOADING' | translate}}
-          .possible-values.possible-autocomplete(
-            data-ng-if="vm.possibleValues.length > 0",
-            data-ng-class='{"active" : vm.isActivePossible}'
+          .possible-values.possible-autocomplete.active.possible-bottom(
+            data-ng-if="vm.possibleValues.length > 0 && vm.showPossible"
             )
               .possible-scroll
                 .possible-value-item(data-ng-repeat="possible in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(possible)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{possible[vm.filter_search]}}

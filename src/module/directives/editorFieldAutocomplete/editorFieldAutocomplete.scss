@@ -7,8 +7,8 @@
   margin: 2px;
   padding: 0 5px;
   display: inline-block;
-  height: 26px;
-  line-height: 25px;
+  height: 24px;
+  line-height: 22px;
   &.opacity-item{
     opacity: 0.2;
   }
@@ -19,14 +19,14 @@
     background: 0 0;
     cursor: pointer;
     vertical-align: middle;
-    font: 700 16px Arial,sans-serif;
+    font: 700 14px Arial,sans-serif;
     color: #585858;
   }
 }
 .autocomplete-input-wrapper {
   position: relative;
   height: 100%;
-  padding: 4px 6px;
+  padding: 2px;
   &:after{
     content: '';
     display: table;
@@ -42,7 +42,7 @@
     margin-left: 3px;
     background-color: #fff;
     border: none;
-    height: 24px;
+    height: 28px;
     max-width: 100%;
     box-sizing: border-box;
     overflow: hidden;
@@ -106,13 +106,13 @@
   }
   &.possible-autocomplete{
     box-sizing: content-box;
-    margin-left: -7px;
+    margin-left: -3px;
   }
 }
 .field-preloaded-data {
   color: #677C95;
   font-size: 12px;
-  margin: 10px 0px 0px 0px;
+  margin: 10px 0 0 0;
 }
 
 .loader-search,

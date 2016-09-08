@@ -54,7 +54,7 @@
         vm.minCount = $scope.field.minCount || 2;
         vm.sizeInput = 1;
         vm.classInput = {'width': '1px'};
-
+        vm.showPossible = false;
 
         if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true){
             vm.multiple = true;
@@ -388,7 +388,6 @@
             if(searchString === "" || searchString.length <= vm.minCount){
                 return;
             }
-            console.log('adsf');
             vm.searching = true;
             if ($scope.field.hasOwnProperty("values")) {
                 angular.forEach($scope.field.values, function (v,key) {
@@ -534,6 +533,17 @@
                         $element.find('.autocomplete-item').removeClass('opacity-item');
                     }
                 }
+            }
+        };
+
+        vm.deleteToAutocomplete = function(event) {
+            if (event.which == 8 &&
+                !!vm.selectedValues &&
+                !!vm.selectedValues.length &&
+                !vm.inputValue &&
+                vm.multiple
+            ) {
+                vm.removeFromSelected(vm.selectedValues[vm.selectedValues.length - 1]);
             }
         };
     }

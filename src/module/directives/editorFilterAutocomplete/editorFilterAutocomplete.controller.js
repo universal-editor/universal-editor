@@ -43,6 +43,7 @@
         vm.classInput = {
             'width': '1px'
         };
+        vm.showPossible = false;
 
         loadValues();
 
