@@ -25,7 +25,7 @@ div
                 .dropdown__selected-items(
                     data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""'
                     ) {{vm.placeholder}}
-
+            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelectedNotTree($event)") ×
             .possible-values.active(
                 data-ng-if="!vm.readonly && (vm.options.length > 0) && vm.showPossible",
                 data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'
@@ -66,7 +66,7 @@ div
                     data-ng-focus="toggleDropdown()",
                     data-ng-blur="vm.isBlur()"
                     )
-                div(data-ng-if="!vm.search")
+                .dropdown__selected(data-ng-if="!vm.search")
                     .dropdown__selected-items.dropdown-tree(data-ng-if="!vm.loadingData && !vm.fieldValue.length") {{vm.placeholder}}
 
                 .dropdown__items.dropdown__items_with-padding.active.dropdown-bottom(

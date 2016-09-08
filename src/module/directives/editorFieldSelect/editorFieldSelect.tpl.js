@@ -22,7 +22,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
     '            <div data-ng-if="!vm.search" class="form-control select-input">\n' +
     '                <div data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder-div&quot; : &quot;&quot;" class="dropdown__selected-items">{{vm.placeholder}}</div>\n' +
-    '            </div>\n' +
+    '            </div><span data-ng-if="vm.isSpanSelectDelete" data-ng-click="vm.deleteToSelectedNotTree($event)" class="selecte-delete">×</span>\n' +
     '            <div data-ng-if="!vm.readonly &amp;&amp; (vm.options.length &gt; 0) &amp;&amp; vm.showPossible" data-ng-class="vm.possibleLocation ? &quot;possible-bottom&quot; : &quot;possible-top&quot;" class="possible-values active">\n' +
     '                <div class="possible-scroll">\n' +
     '                    <div data-ng-repeat="option in vm.options" data-ng-mouseover="vm.activeElement = $index" data-ng-mousedown="vm.addToSelected(option)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{option[vm.field_search]}}</div>\n' +
@@ -41,7 +41,7 @@ module.run(['$templateCache', function($templateCache) {
     '                </div>\n' +
     '                <input data-ng-if="vm.search" data-ng-model="vm.filterText" data-ng-change="vm.change()" placeholder="{{vm.placeholder}}" data-ng-style="vm.styleInput" size="{{vm.sizeInput}}" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" data-ng-keydown="vm.deleteToSelected($event)" class="dropdown__search-field"/>\n' +
     '                <input data-ng-if="!vm.search" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
-    '                <div data-ng-if="!vm.search">\n' +
+    '                <div data-ng-if="!vm.search" class="dropdown__selected">\n' +
     '                    <div data-ng-if="!vm.loadingData &amp;&amp; !vm.fieldValue.length" class="dropdown__selected-items dropdown-tree">{{vm.placeholder}}</div>\n' +
     '                </div>\n' +
     '                <div data-ng-if="::(vm.treeParentField &amp;&amp; vm.treeChildCountField)" data-ng-class="{\'dropdown__items_with-selected\': vm.fieldValue.length &gt; 2 || (vm.search &amp;&amp; vm.fieldValue.length)}" data-dropdown-items="" data-options="vm.options" data-is-open="isOpen &amp;&amp; vm.options.length" data-field-search="vm.field_search" data-child-count-field="vm.treeChildCountField" data-on-toggle="vm.toggle" data-api="field.values_remote.api" data-select-branches="vm.treeSelectBranches" data-assets-path="vm.assetsPath" data-multiple="vm.multiple" data-active-element="vm.activeElement" data-set-active-element="vm.setActiveElement" data-lvl-dropdown="1" class="dropdown__items dropdown__items_with-padding active dropdown-bottom"></div>\n' +

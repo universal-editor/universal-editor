@@ -380,6 +380,9 @@ body {
 .dropdown__selected-items.dropdown__selected-items_with-borders.form-control{
   height: auto;
 }
+.dropdown__selected{
+  min-height: 28px;
+}
 .field-wrapper-select {
 
   & .select-wrapper{
@@ -399,7 +402,7 @@ body {
       position: relative;
       background-color: #fff;
       height: 100%;
-      padding: 4px;
+      padding: 2px;
       &:before {
         content: '';
         position: absolute;
@@ -425,7 +428,7 @@ body {
       float: left;
       margin: 2px;
       padding: 0 5px;
-      height: 25px;
+      height: 24px;
       max-width: 99%;
       line-height: 25px;
       border: 1px solid #acacac;
@@ -479,7 +482,7 @@ body {
       }
 
       &_with-padding {
-        margin-left: -5px;
+        margin-left: -3px;
         overflow: hidden;
 
         &.active{
@@ -490,7 +493,7 @@ body {
         }
 
         .dropdown-scroll{
-          overflow-y: scroll;
+          overflow-y: auto;
           max-height: 300px;
         }
       }
@@ -592,7 +595,7 @@ body {
       margin-left: 3px;
       background-color: #fff;
       border: none;
-      height: 24px;
+      height: 28px;
       max-width: 100%;
       box-sizing: border-box;
       overflow: hidden;
@@ -602,7 +605,7 @@ body {
       }
     }
     .processing-status{
-      margin-top: 5px;
+      margin-top: 3px;
     }
     &__selected-items{
       padding: 0 0 2px 0;
@@ -610,7 +613,7 @@ body {
       &.dropdown-tree{
         padding-left: 4px;
         padding-top: 2px;
-        min-height: 24px;
+        min-height: 28px;
       }
     }
   }
@@ -689,6 +692,16 @@ body {
     &-div{
       color: #555;
     }
+  }
+  .select-input{
+    padding-right: 35px;
+  }
+  .selecte-delete{
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font: 700 16px Arial,sans-serif;
+    color: #585858;
   }
 }
 .select-input.active {
