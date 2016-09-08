@@ -423,6 +423,37 @@ body {
         display: table;
         clear: both;
       }
+
+      .color-placeholder{
+        &::-webkit-input-placeholder{
+          color: #555;
+        }
+        &::-moz-placeholder{
+          color: #555;
+        }
+        &:-moz-placeholder{
+          color: #555;
+        }
+        &:-ms-input-placeholder{
+          color: #555;
+        }
+
+        &:focus::-webkit-input-placeholder{
+          color: #999;
+        }
+        &:focus::-moz-placeholder{
+          color: #999;
+        }
+        &:focus:-moz-placeholder{
+          color: #999;
+        }
+        &:focus:-ms-input-placeholder{
+          color: #999;
+        }
+        &-div{
+          color: #555;
+        }
+      }
     }
     .selected-items__item {
       float: left;
@@ -591,7 +622,7 @@ body {
     &__search-field {
       float: left;
       position: relative;
-      padding: 0px;
+      padding: 0 35px 0 0;
       margin-left: 3px;
       background-color: #fff;
       border: none;
@@ -696,13 +727,14 @@ body {
   .select-input{
     padding-right: 35px;
   }
-  .selecte-delete{
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font: 700 16px Arial,sans-serif;
-    color: #585858;
-  }
+}
+.selecte-delete{
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font: 700 16px Arial,sans-serif;
+  color: #585858;
+  cursor: pointer;
 }
 .select-input.active {
   border-color: #66afe9;

@@ -25,7 +25,7 @@ div
                 .dropdown__selected-items(
                     data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""'
                     ) {{vm.placeholder}}
-            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelectedNotTree($event)") ×
+            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelected($event, false)") ×
             .possible-values.active(
                 data-ng-if="!vm.readonly && (vm.options.length > 0) && vm.showPossible",
                 data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'
@@ -45,7 +45,7 @@ div
                 )
                 .selected-items__item(
                     data-ng-repeat="value in vm.fieldValue",
-                    data-ng-if="vm.fieldValue.length && (vm.multiple || vm.treeParentField && vm.treeChildCountField)"
+                    data-ng-if="vm.fieldValue.length && (vm.multiple || vm.treeParentField && vm.treeChildCountField) && vm.multiple"
                     )
                     .selected-item
                         | {{value[vm.field_search]}}
@@ -59,7 +59,8 @@ div
                     size='{{vm.sizeInput}}',
                     data-ng-focus="toggleDropdown()",
                     data-ng-blur="vm.isBlur()",
-                    data-ng-keydown="vm.deleteToSelected($event)"
+                    data-ng-keydown="vm.deleteToSelected($event, true)",
+                    data-ng-class='vm.colorPlaceholder ? "color-placeholder" : ""',
                     )
                 input.focus-input(
                     data-ng-if="!vm.search",
@@ -67,8 +68,8 @@ div
                     data-ng-blur="vm.isBlur()"
                     )
                 .dropdown__selected(data-ng-if="!vm.search")
-                    .dropdown__selected-items.dropdown-tree(data-ng-if="!vm.loadingData && !vm.fieldValue.length") {{vm.placeholder}}
-
+                    .dropdown__selected-items.dropdown-tree(data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""', data-ng-if="!vm.loadingData") {{vm.placeholder}}
+                span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelected($event, false)") ×
                 .dropdown__items.dropdown__items_with-padding.active.dropdown-bottom(
                     data-ng-if="::(vm.treeParentField && vm.treeChildCountField)",
                     data-ng-class="{'dropdown__items_with-selected': vm.fieldValue.length > 2 || (vm.search && vm.fieldValue.length)}",

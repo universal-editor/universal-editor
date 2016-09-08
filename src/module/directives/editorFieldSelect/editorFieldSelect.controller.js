@@ -83,7 +83,9 @@
         } else {
             vm.multiple = false;
             vm.fieldValue = "";
+            vm.styleInput = {'width': '99%'}
         }
+
         if (vm.parentFieldIndex) {
             if (vm.multiple) {
                 vm.fieldValue = [];
@@ -389,6 +391,10 @@
             if (vm.isTree && !vm.search) {
                 vm.placeholder = $scope.field.placeholder || '';
             }
+            if (vm.isTree && !vm.multiple) {
+                vm.placeholder = (!!newVal.length && !!newVal[0][vm.field_search]) ? newVal[0][vm.field_search] : $scope.field.placeholder;
+            }
+            vm.setColorPlaceholder();
             $scope.$parent.vm.error = [];
             $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
         }, true);
@@ -467,10 +473,12 @@
                         vm.fieldValue.splice(0);
                         uncheckAll(vm.options);
                         item.checked = true;
+                        vm.isSpanSelectDelete = true;
                         vm.fieldValue.push(item);
                     } else {
                         vm.fieldValue.splice(0);
                         item.checked = false;
+                        vm.isSpanSelectDelete = false;
                     }
                 }
                 if (!vm.multiple) {
@@ -483,7 +491,7 @@
                 vm.placeholder = $scope.field.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;
             } else {
-                vm.placeholder = '';
+                vm.placeholder = (vm.multiple) ? '' : vm.fieldValue[0][vm.field_search];
                 vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
             if (!!e) {
@@ -546,6 +554,8 @@
             if (!vm.filterText) {
                 if (!vm.multiple && !vm.isTree) {
                     vm.placeholder = (!!vm.fieldValue && !!vm.fieldValue[vm.field_search]) ? vm.fieldValue[vm.field_search] : $scope.field.placeholder;
+                } else if (!vm.multiple && vm.isTree) {
+                    vm.placeholder = (!!vm.fieldValue.length && !!vm.fieldValue[0][vm.field_search]) ? vm.fieldValue[0][vm.field_search] : $scope.field.placeholder;
                 }
                 vm.sizeInput = vm.placeholder.length;
                 if (allOptions) {
@@ -663,7 +673,7 @@
             $timeout(function() {
                 vm.isSpanSelectDelete = true;
                 vm.showPossible = false;
-                setColorPlaceholder();
+                vm.setColorPlaceholder();
             },0);
         };
 
@@ -679,11 +689,10 @@
             var dropdownHeight = dropdownHost.height();
             var dropdownOffset = dropdownHost.offset();
             var dropdownBottom = dropdownOffset.top + dropdownHeight;
-            console.log(dHeight, dropdownBottom);
             $scope.$evalAsync(function() {
                 vm.possibleLocation = !(dHeight - dropdownBottom < 162);
             });
-            setColorPlaceholder();
+            vm.setColorPlaceholder();
         };
 
 
@@ -787,31 +796,43 @@
             },0);
         };
 
-        function setColorPlaceholder() {
-            if (!vm.search) {
+         vm.setColorPlaceholder = function() {
+            if (!vm.search && !vm.isTree) {
                 vm.colorPlaceholder = !(vm.placeholder === $scope.field.placeholder) && !vm.showPossible;
+            } else {
+                vm.colorPlaceholder = !(vm.placeholder === $scope.field.placeholder) && !$scope.isOpen;
             }
-        }
+        };
 
         vm.isBlur = function() {
             vm.showPossible = false;
             $scope.isOpen = false;
             var formControl = $element.find('.select-input');
             formControl.removeClass('active');
-            setColorPlaceholder();
+            vm.setColorPlaceholder();
         };
 
         vm.clickSelect = function() {
             $element.find('input')[0].focus();
         };
 
-        vm.deleteToSelected = function(event) {
-            if (event.which == 8 &&
+        vm.deleteToSelected = function(event, isKeydown) {
+            if (isKeydown &&
+                event.which == 8 &&
                 !!vm.fieldValue &&
                 !!vm.fieldValue.length &&
-                !vm.filterText
+                !vm.filterText &&
+                vm.multiple
             ) {
                 remove(null, vm.fieldValue[vm.fieldValue.length - 1]);
+            } else if(!vm.isTree && !isKeydown) {
+                vm.isSpanSelectDelete = false;
+                vm.fieldValue = {};
+                event.stopPropagation();
+            } else if(vm.isTree && !isKeydown){
+                vm.isSpanSelectDelete = false;
+                remove(null, vm.fieldValue[0]);
+                event.stopPropagation();
             }
         };
 
@@ -833,12 +854,6 @@
             var elem = angular.element($element.find(className)[0]);
             return $window.innerHeight - elem.offset().top;
         };
-
-        vm.deleteToSelectedNotTree = function(event) {
-            vm.isSpanSelectDelete = false;
-            vm.fieldValue = {};
-            event.stopPropagation();
-        }
     }
 
     angular

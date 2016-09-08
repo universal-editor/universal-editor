@@ -57,6 +57,7 @@
                     var formControl = elem.find('.select-input');
                     formControl.addClass('active');
                 }
+                scope.vm.setColorPlaceholder();
             };
         }
     }
