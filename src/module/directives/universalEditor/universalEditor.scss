@@ -365,16 +365,17 @@ body {
   .autocomplete-input-wrapper {
     width: 170px;
   }
-  .select-input-wrapper{
+  .select-input-wrapper {
     width: 170px;
 
-    .dropdown__selected-items{
+    .dropdown__selected-items {
       color: #999;
 
-      &.color-placeholder-div{
+      &.color-placeholder-div {
         color: #555;
       }
     }
+  }
 }
 
 .filter-wrapper {
@@ -750,7 +751,7 @@ body {
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
 }
-.focus-input{
+.focus-input {
   position: absolute;
   height: 0;
   width: 0;
