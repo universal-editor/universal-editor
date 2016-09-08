@@ -36,10 +36,10 @@
               "label": "Пол",
               "filterable": true,
               "values": {
-                "male" : "Мужской",
-                "female" : "Женский"
+                "male": "Мужской",
+                "female": "Женский"
               },
-              "showOnly" : "edit"
+              "showOnly": "edit"
             },
             {
               "name": "country",
@@ -53,7 +53,23 @@
                   "label": "name"
                 },
                 "url": "http://universal-backend.dev/rest/v1/country"
-              }
+              },
+              "multiple": false,
+              "placeholder": "Выберете эелемент"
+            },
+            {
+              "name": "parent_id",
+              "type": "autocomplete",
+              "list": true,
+              "label": "Руководитель",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/staff"
+              },
+              "multiple": false
             },
             {
               "name": "colors",
@@ -255,6 +271,208 @@
               "type": "datetime",
               "readonly": true,
               "label": "Дата обновления"
+            }
+          ]
+        }
+      ],
+      "contextMenu": [
+        {
+          "label": "Раскрыть",
+          "type": "open"
+        },
+        {
+          "label": "Редактировать",
+          "type": "edit"
+        },
+        {
+          "label": "Удалить",
+          "type": "delete"
+        }
+      ],
+      "listHeaderBar": [
+        {
+          "type": "create",
+          "label": "Создать"
+        }
+      ],
+      "editFooterBar": [
+        {
+          "type": "update",
+          "label": "Сохранить"
+        },
+        {
+          "type": "presave",
+          "label": "Применить"
+        },
+        {
+          "type": "delete",
+          "label": "Удалить"
+        }
+      ]
+    },
+    {
+      "name": "elements",
+      "label": "Элементы",
+      "backend": {
+        "url": "http://universal-backend.dev/rest/v1/staff",
+        "sortBy": "-id",
+        "fields": {
+          "primaryKey": "id",
+          "parent": "parent_id"
+        }
+      },
+      "tabs": [
+        {
+          "label": "Select",
+          "fields": [
+            {
+              "name": "select-simple",
+              "type": "select",
+              "list": true,
+              "label": "Простой",
+              "filterable": true,
+              "values": {
+                "1": "Яблоко",
+                "2": "Апельсин",
+                "3": "Груша",
+                "4": "Дыня",
+                "5": "Арбуз"
+              },
+              "hint": "Значения для списка прописаны в конфигурации поля."
+            },
+            {
+              "name": "select-simple-multiple",
+              "type": "select",
+              "list": true,
+              "label": "Множественный режим",
+              "filterable": true,
+              "values": {
+                "1": "Яблоко",
+                "2": "Апельсин",
+                "3": "Груша",
+                "4": "Дыня",
+                "5": "Арбуз"
+              },
+              "multiple": true,
+              "hint": "Множественный режим. Значения для списка прописаны в конфигурации поля."
+            },
+            {
+              "name": "select-remote",
+              "type": "select",
+              "list": true,
+              "label": "Значения с сервера",
+              "hint": "Значения для списка запрашиваются с сервера.",
+              "filterable": true,
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/country"
+              }
+            },
+            {
+              "name": "select-remote-search",
+              "type": "select",
+              "list": true,
+              "label": "Поиск",
+              "filterable": true,
+              "placeholder": "Найти",
+              "search": true,
+              "hint": "Поиск по значениям, плейсхолдер. Значения для списка запрашиваются с сервера.",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/country"
+              }
+            },
+            {
+              "name": "select-remote-tree",
+              "type": "select",
+              "list": true,
+              "label": "Дерево",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "title",
+                  "parent": "parent_id",
+                  "childCount": "child_count"
+                },
+                "url": "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+              }
+            },
+            {
+              "name": "select-remote-tree-branch",
+              "type": "select",
+              "list": true,
+              "label": "Дерево с ветвями",
+              "selectBranches": true,
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "title",
+                  "parent": "parent_id",
+                  "childCount": "child_count"
+                },
+                "url": "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+              }
+            },
+            {
+              "name": "select-remote-tree-multiple",
+              "type": "select",
+              "list": true,
+              "label": "Множественное дерево",
+              "multiple": true,
+              "hint": "Множественный режим, режим дерева. Значения для списка запрашиваются с сервера.",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "title",
+                  "parent": "parent_id",
+                  "childCount": "child_count"
+                },
+                "url": "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+              }
+            },
+            {
+              "name": "select-remote-tree-search",
+              "type": "select",
+              "list": true,
+              "label": "Дерево с поиском",
+              "search": true,
+              "placeholder": "Найти",
+              "hint": "Режим дерева, поиск можно выбирать ветви. Значения для списка запрашиваются с сервера.",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "title",
+                  "parent": "parent_id",
+                  "childCount": "child_count"
+                },
+                "url": "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+              }
+            },
+            {
+              "name": "select-remote-tree-full",
+              "type": "select",
+              "list": true,
+              "label": "Множественное дерево с поиском и ветвями",
+              "multiple": true,
+              "search": true,
+              "selectBranches": true,
+              "placeholder": "Найти",
+              "hint": "Множественный режим дерева, поиск, можно выбирать ветви. Значения для списка запрашиваются с сервера.",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "title",
+                  "parent": "parent_id",
+                  "childCount": "child_count"
+                },
+                "url": "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+              }
             }
           ]
         }

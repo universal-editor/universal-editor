@@ -438,33 +438,33 @@
         }
 
         function loadValues() {
-          if($scope.field.hasOwnProperty("values")){
+          if ($scope.field.hasOwnProperty("values")) {
               angular.forEach($scope.field.values, function (v,key) {
                   var obj = {};
-                  if(Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple){
+                  if (Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple) {
                       obj[vm.field_id] = key;
                       obj[vm.field_search] = v;
                       vm.selectedValues.push(obj);
-                  } else if (vm.fieldValue == key && !vm.multiple){
+                  } else if (vm.fieldValue == key && !vm.multiple) {
                       obj[vm.field_id] = key;
                       obj[vm.field_search] = v;
                       vm.selectedValues.push(obj);
                   }
               });
               vm.preloadedData = true;
-          } else if ($scope.field.hasOwnProperty('valuesRemote')){
+          } else if ($scope.field.hasOwnProperty('valuesRemote')) {
 
-              if(vm.fieldValue === undefined || vm.fieldValue === null){
+              if (vm.fieldValue === undefined || vm.fieldValue === null) {
                   vm.preloadedData = true;
                   return;
               }
 
               var urlParam;
 
-              if(vm.multiple && angular.isArray(vm.fieldValue) && vm.fieldValue.length > 0 ){
+              if (vm.multiple && angular.isArray(vm.fieldValue) && vm.fieldValue.length > 0 ) {
                   urlParam = {};
                   urlParam[vm.field_id] = vm.fieldValue;
-              } else if (!vm.multiple && vm.fieldValue !== ''){
+              } else if (!vm.multiple && vm.fieldValue !== '') {
                   urlParam = {};
                   urlParam[vm.field_id] = [];
                   urlParam[vm.field_id].push(vm.fieldValue);
@@ -477,12 +477,12 @@
                   .getUrlResource($scope.field.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
                   .then(function (response) {
                       angular.forEach(response.data.items, function (v) {
-                          if( Array.isArray(vm.fieldValue) &&
+                          if ( Array.isArray(vm.fieldValue) &&
                               ( vm.fieldValue.indexOf(v[vm.field_id]) >= 0 || vm.fieldValue.indexOf(String(v[vm.field_id])) >= 0) &&
                               vm.multiple
-                          ){
+                          ) {
                               vm.selectedValues.push(v);
-                          } else if (vm.fieldValue == v[vm.field_id] && !vm.multiple){
+                          } else if (vm.fieldValue == v[vm.field_id] && !vm.multiple) {
                               vm.selectedValues.push(v);
                           }
                       });
