@@ -16,8 +16,10 @@ module.run(['$templateCache', function($templateCache) {
     '            <div data-ng-show="vm.searching" class="loader-search-wrapper">\n' +
     '                <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
     '            </div>\n' +
-    '            <div data-ng-if="vm.possibleValues.length &gt; 0" data-ng-class="{&quot;active&quot; : vm.isActivePossible}" class="possible-values">\n' +
-    '                <div data-ng-repeat="possible in vm.possibleValues" data-ng-mouseover="vm.activeElement = $index" data-ng-click="vm.addToSelected(possible)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{possible[vm.filter_search]}}</div>\n' +
+    '            <div data-ng-if="vm.possibleValues.length &gt; 0" data-ng-class="{&quot;active&quot; : vm.isActivePossible}" class="possible-values possible-autocomplete">\n' +
+    '                <div class="possible-scroll">\n' +
+    '                    <div data-ng-repeat="possible in vm.possibleValues" data-ng-mouseover="vm.activeElement = $index" data-ng-click="vm.addToSelected(possible)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{possible[vm.filter_search]}}</div>\n' +
+    '                </div>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +

@@ -22,7 +22,7 @@
         } else {
             fieldErrorName = $scope.fieldName;
         }
-        var possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+        var possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
 
         var remote = $scope.field.valuesRemote;
         vm.field_id = "id";
@@ -106,7 +106,7 @@
                         break;
                     }
 
-                    possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                    possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
 
                     if(vm.activeElement < vm.possibleValues.length -1){
                         $timeout(function () {
@@ -131,7 +131,7 @@
                         break;
                     }
 
-                    possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                    possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
 
                     if(vm.activeElement > 0){
                         $timeout(function () {
@@ -388,7 +388,7 @@
             if(searchString === "" || searchString.length <= vm.minCount){
                 return;
             }
-
+            console.log('adsf');
             vm.searching = true;
             if ($scope.field.hasOwnProperty("values")) {
                 angular.forEach($scope.field.values, function (v,key) {

@@ -12,7 +12,7 @@
         var vm = this;
         var filterErrorName = $scope.filterName;
         var inputTimeout;
-        var possibleValues = angular.element($element[0].getElementsByClassName('possible-values')[0]);
+        var possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
         var remote = $scope.filter.valuesRemote;
         vm.filter_id = "id";
@@ -68,7 +68,7 @@
                         break;
                     }
 
-                    possibleValues = angular.element($element[0].getElementsByClassName('possible-values')[0]);
+                    possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
                     if (vm.activeElement < vm.possibleValues.length - 1) {
                         $timeout(function () {
@@ -93,7 +93,7 @@
                         break;
                     }
 
-                    possibleValues = angular.element($element[0].getElementsByClassName('possible-values')[0]);
+                    possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
                     if (vm.activeElement > 0) {
                         $timeout(function () {
