@@ -559,7 +559,7 @@
                 !vm.inputValue &&
                 vm.multiple
             ) {
-                vm.removeFromSelected(vm.selectedValues[vm.selectedValues.length - 1]);
+                vm.removeFromSelected(event, vm.selectedValues[vm.selectedValues.length - 1]);
             }
         };
     }

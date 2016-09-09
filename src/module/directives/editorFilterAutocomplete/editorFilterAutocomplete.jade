@@ -13,7 +13,8 @@
             data-ng-focus="vm.focusPossible(true)",
             data-ng-blur="vm.focusPossible(false)",
             data-ng-style='vm.classInput',
-            placeholder="{{vm.placeholder}}"
+            placeholder="{{vm.placeholder}}",
+            data-ng-class='!vm.isActivePossible ? "color-placeholder" : ""'
             )
           span.selecte-delete.selecte-delete-autocomplete(
             data-ng-if="!vm.multiple && !!vm.selectedValues.length",

@@ -50,6 +50,21 @@
     &:focus {
       outline: none;
     }
+
+    &.color-placeholder{
+      &::-webkit-input-placeholder{
+        color: #555;
+      }
+      &::-moz-placeholder{
+        color: #555;
+      }
+      &:-moz-placeholder{
+        color: #555;
+      }
+      &:-ms-input-placeholder{
+        color: #555;
+      }
+    }
   }
   &.active{
     border-color: #66afe9;

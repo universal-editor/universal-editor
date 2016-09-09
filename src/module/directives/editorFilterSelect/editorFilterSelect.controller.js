@@ -279,6 +279,7 @@
             vm.showPossible = false;
             var formControl = $element.find('.select-input');
             formControl.removeClass('active');
+            setColorPlaceholder();
         };
 
         vm.clickSelect = function() {

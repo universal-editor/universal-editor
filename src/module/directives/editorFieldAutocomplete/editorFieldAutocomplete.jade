@@ -16,7 +16,8 @@ div
                 size="{{vm.sizeInput}}",
                 data-ng-style='vm.classInput',
                 data-ng-keydown="vm.deleteToAutocomplete($event)",
-                placeholder="{{vm.placeholder}}"
+                placeholder="{{vm.placeholder}}",
+                data-ng-class='!vm.isActivePossible ? "color-placeholder" : ""'
                 )
             span.selecte-delete.selecte-delete-autocomplete(
                 data-ng-if="!vm.multiple && !!vm.selectedValues.length",
