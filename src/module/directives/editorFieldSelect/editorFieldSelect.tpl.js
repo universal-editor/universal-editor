@@ -9,9 +9,11 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '<div>\n' +
     '    <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" size="3" class="form-control">\n' +
-    '            <option data-ng-repeat="option in vm.options" value="{{option[vm.field_id]}}">{{option[vm.field_search]}}</option>\n' +
-    '        </select>\n' +
+    '        <div class="select-border">\n' +
+    '            <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" size="3" class="form-control">\n' +
+    '                <option data-ng-repeat="option in vm.options" value="{{option[vm.field_id]}}">{{option[vm.field_search]}}</option>\n' +
+    '            </select>\n' +
+    '        </div>\n' +
     '        <div data-ng-show="!!vm.loadingData" class="processing-status-wrapper">\n' +
     '            <div class="processing-status">{{\'PERFORMS_ACTIONS\' | translate}}</div>\n' +
     '        </div>\n' +

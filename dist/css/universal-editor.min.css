@@ -117,4 +117,5 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .select-input-wrapper .select-input{padding-right:35px}.select-input-wrapper .dropdown__selected-items{white-space:nowrap;overflow:hidden}
 .selecte-delete{position:absolute;top:9px;right:25px;font:700 16px Arial,sans-serif;color:#585858;cursor:pointer}
 .selecte-delete-autocomplete{right:10px}.select-input.active{border-color:#66afe9;outline:0;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6)}
-.focus-input{position:absolute;height:0;width:0;border:0}
+.focus-input{position:absolute;height:0;width:0;border:0}.select-border{border:1px solid #ccc;border-radius:4px}
+.select-border .form-control{border:0}
