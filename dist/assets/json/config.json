@@ -1,4 +1,7 @@
 {
+  "ui": {
+    "assetsPath": "/assets"
+  },
   "entities": [
     {
       "name": "staff",
@@ -244,16 +247,6 @@
                 },
                 "url": "http://universal-backend.dev/rest/v1/tags"
               }
-            }
-          ]
-        },
-        {
-          "label": "Место",
-          "fields": [
-            {
-              "name": "coordinates",
-              "type": "map",
-              "label": "Местоположение события"
             }
           ]
         },

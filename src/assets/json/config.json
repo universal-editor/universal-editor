@@ -1,4 +1,7 @@
 {
+  "ui": {
+    "assetsPath": "/assets"
+  },
   "entities": [
     {
       "name": "staff",

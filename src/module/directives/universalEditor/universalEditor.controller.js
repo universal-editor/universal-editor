@@ -17,8 +17,8 @@
             itemsKey,
             mixEntityObject;
 
-        tinyMCE.baseURL = '../assets/mce-files';
-        vm.assetsPath = '../assets';
+        tinyMCE.baseURL = '/assets/universal-editor/mce-files';
+        vm.assetsPath = '/assets/universal-editor';
 
         if ($scope.entity === undefined || angular.isUndefined(entityObject)){
             console.error("Editor: Сущность с типом \"" + $scope.entity + "\" не описана в конфигурационном файле");
@@ -54,6 +54,10 @@
         vm.pagination = entityObject.backend.hasOwnProperty("pagination") ? entityObject.backend.pagination : true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
+
+        if (!!vm.configData.ui && !!vm.configData.ui.assetsPath) {
+            vm.assetsPath = vm.configData.ui.assetsPath;
+        }
 
         if(entityObject.backend.hasOwnProperty('fields')){
             vm.idField = entityObject.backend.fields.primaryKey || vm.idField;
