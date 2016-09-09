@@ -180,7 +180,7 @@
                             break;
                         }
 
-                        possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                        possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
 
                         if (vm.activeElement < vm.selectedValues.length - 1) {
                             $timeout(function () {
@@ -205,7 +205,7 @@
                             break;
                         }
 
-                        possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                        possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
 
                         if (vm.activeElement > 0) {
                             $timeout(function () {
@@ -279,6 +279,7 @@
             vm.showPossible = false;
             var formControl = $element.find('.select-input');
             formControl.removeClass('active');
+            setColorPlaceholder();
         };
 
         vm.clickSelect = function() {

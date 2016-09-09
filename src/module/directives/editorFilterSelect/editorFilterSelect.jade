@@ -15,12 +15,15 @@ div
                 data-ng-if="!vm.search",
                 data-ng-focus="vm.isShowPossible()"
                 )
-            div.form-control.select-input(
+            .form-control.select-input(
                 data-ng-if="!vm.search"
                 )
                 .dropdown__selected-items(data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""') {{vm.placeholder}}
+
             span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelected($event, false)") ×
+
             .possible-values.active.possible-bottom(
                 data-ng-if="!vm.readonly && (vm.selectedValues.length > 0) && vm.showPossible"
                 )
-                .possible-value-item(data-ng-repeat="option in vm.selectedValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}
+                .possible-scroll
+                    .possible-value-item(data-ng-repeat="option in vm.selectedValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}

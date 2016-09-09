@@ -39,7 +39,7 @@
             }
         }
 
-        var possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+        var possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
 
         vm.assetsPath = '../assets';
         var _selectedIds = [];
@@ -732,7 +732,7 @@
                             }
 
                             if (!vm.multiple && !vm.isTree) {
-                                possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                                possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
                             } else if (vm.isTree) {
                                 possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
                             }
@@ -763,7 +763,7 @@
                             }
 
                             if (!vm.multiple && !vm.isTree) {
-                                possibleValues = angular.element($element[0].getElementsByClassName("possible-values")[0]);
+                                possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
                             } else if (vm.isTree) {
                                 possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
                             }

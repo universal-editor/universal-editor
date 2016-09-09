@@ -2,21 +2,28 @@
     .filter-name-label
         span {{vm.filterDisplayName}}
     .filter-inner-wrapper
-      .selected-values(data-ng-show="vm.preloadedData")
-          .autocomplete-item(data-ng-show="vm.selectedValue") {{vm.selectedValue[vm.filter_search]}}
-              span.remove-from-selected(data-ng-click="vm.removeFromSelected()") ×
-      .autocomplete-input-wrapper(data-ng-show="vm.preloadedData")
-          input.form-control.input-sm(
-            type="text", name="{{vm.filterName}}",
-            data-ng-hide="vm.selectedValue",
+      .autocomplete-input-wrapper.form-control(data-ng-show="vm.preloadedData",
+        data-ng-class='{"active" : vm.isActivePossible}',
+        data-ng-click="inputFocus()"
+        )
+          input.autocomplete-field-search(
+            type="text",
+            name="{{vm.filterName}}",
             data-ng-model="vm.inputValue",
             data-ng-focus="vm.focusPossible(true)",
-            data-ng-blur="vm.focusPossible(false)"
+            data-ng-blur="vm.focusPossible(false)",
+            data-ng-style='vm.classInput',
+            placeholder="{{vm.placeholder}}",
+            data-ng-class='!vm.isActivePossible ? "color-placeholder" : ""'
             )
+          span.selecte-delete.selecte-delete-autocomplete(
+            data-ng-if="!vm.multiple && !!vm.selectedValues.length",
+            data-ng-click="vm.removeFromSelected($event)"
+            ) ×
           .loader-search-wrapper(data-ng-show="vm.searching")
               .loader-search {{'LOADING' | translate}}
-          .possible-values(
-            data-ng-if="vm.possibleValues.length > 0",
-            data-ng-class='{"active" : vm.isActivePossible}'
+          .possible-values.possible-autocomplete.active.possible-bottom(
+            data-ng-if="vm.possibleValues.length > 0 && vm.showPossible"
             )
-              .possible-value-item(data-ng-repeat="possible in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(possible)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{possible[vm.filter_search]}}
+              .possible-scroll
+                .possible-value-item(data-ng-repeat="possible in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected($event,possible)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{possible[vm.filter_search]}}

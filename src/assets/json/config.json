@@ -475,6 +475,74 @@
               }
             }
           ]
+        },
+        {
+          "label": "Autocomplete",
+          "fields": [
+            {
+              "name": "autocomplete-valuesRemote",
+              "type": "autocomplete",
+              "list": true,
+              "label": "Поле autocomplete",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/staff"
+              },
+              "multiple": false
+            },
+            {
+              "name": "autocomplete-multiple-valuesRemote",
+              "type": "autocomplete",
+              "list": true,
+              "label": "Поле autocomplete в режиме multiple",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/staff"
+              },
+              "multiple": true
+            },
+            {
+              "name": "autocomplete-values",
+              "type": "autocomplete",
+              "list": true,
+              "label": "Поле autocomplete с константными данными в виде объекта",
+              "values": {
+                "1": "Яблоко",
+                "2": "Апельсин",
+                "3": "Груша",
+                "4": "Дыня",
+                "5": "Арбуз"
+              },
+              "multiple": false
+            },
+            {
+              "name": "autocomplete-multiple-values-array",
+              "type": "autocomplete",
+              "list": true,
+              "label": "Поле autocomplete с константными данными в виде массива",
+              "values": [
+                "Яблоко",
+                "Апельсин",
+                "Груша",
+                "Дыня",
+                "Арбуз",
+                "Мандарин",
+                "Помидор",
+                "Огурец",
+                "Морковь",
+                "Картошка",
+                "Тыква",
+                "Банан"
+              ],
+              "multiple": true
+            }
+          ]
         }
       ],
       "contextMenu": [
