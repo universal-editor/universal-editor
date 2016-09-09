@@ -349,7 +349,7 @@
             if (vm.multiple) {
                 vm.sizeInput = newValue.length || 1;
                 if (vm.sizeInput === 1) {
-                    vm.classInput.width = '1px';
+                    vm.classInput.width = '5px';
                 } else {
                     vm.classInput.width = 'initial';
                 }
@@ -370,9 +370,9 @@
         vm.addToSelected = function (event, obj) {
             if (!vm.multiple) {
                 vm.selectedValues = [];
+                vm.placeholder = obj[vm.field_search];
             }
             vm.selectedValues.push(obj);
-            vm.placeholder = obj[vm.field_search];
             $element.find('.autocomplete-field-search').removeClass('hidden');
             vm.inputValue = "";
             vm.sizeInput = 1;
