@@ -348,8 +348,8 @@
             vm.possibleValues = [];
             if (vm.multiple) {
                 vm.sizeInput = newValue.length || 1;
-                if (vm.sizeInput === 1) {
-                    vm.classInput.width = '5px';
+                if (vm.sizeInput === 1 && (newValue.length != 1)) {
+                    vm.classInput.width = '1px';
                 } else {
                     vm.classInput.width = 'initial';
                 }
