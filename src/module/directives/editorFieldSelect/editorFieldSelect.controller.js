@@ -25,7 +25,6 @@
         var tmpObject = {};
 
         var remote = $scope.field.valuesRemote;
-
         vm.field_id = "id";
         vm.field_search = "title";
         if (remote) {
@@ -41,7 +40,10 @@
 
         var possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
 
-        vm.assetsPath = '../assets';
+        vm.assetsPath = '/assets/universal-editor';
+        if (!!configData.ui && !!configData.ui.assetsPath) {
+            vm.assetsPath = configData.ui.assetsPath;
+        }
         var _selectedIds = [];
         vm.fieldName = $scope.field.name;
         vm.options = [];
