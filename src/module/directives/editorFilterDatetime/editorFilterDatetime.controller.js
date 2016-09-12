@@ -16,12 +16,7 @@
         vm.filterValueStartDateTime = "";
         vm.filterValueEndDateTime = "";
 
-        /* Initial method : Регистрация экземпляра поля в FilterFieldsStorage */
         FilterFieldsStorage.addFilterController(this);
-
-        /*
-         * Filter system method: Возвращает текущее значение поля
-         */
 
         this.getFilterValue = function () {
 
@@ -31,22 +26,16 @@
                 return false;
             } else {
                 if(vm.filterValueStartDateTime !== "" && vm.filterValueEndDateTime === ""){
-                    field[vm.filterName] = ">=" + moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
+                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
                 } else if (vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime !== ""){
-                    field[vm.filterName] = "<=" + moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
+                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
                 } else {
-                    field[vm.filterName] = [];
-                    field[vm.filterName].push(">=" + moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss"));
-                    field[vm.filterName].push("<=" + moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss"));
+                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
+                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
                 }
                 return field;
             }
         };
-
-        /*
-         * Filter system method: Возврашает значение поля которое используется при создании
-         * новой сущности, т.е. дефолтное значение поля
-         */
 
         this.getInitialValue = function () {
             var filter = {};
@@ -58,11 +47,6 @@
             vm.filterValueStartDateTime = "";
             vm.filterValueEndDateTime = "";
         };
-
-        /*
-         * При удалении директивы она должна отправлять запрос в FilterFieldsStorage
-         * чтобы последний удалил её из списка отслеживаемых фильтров.
-         */
 
         $scope.$on('$destroy', function () {
             FilterFieldsStorage.deleteFilterController(vm);

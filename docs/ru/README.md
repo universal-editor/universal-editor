@@ -4,6 +4,7 @@
 * [Настройка конфигурации редактора](configuration.md)
     * Типы полей:
         * [String](fields/string.md)
+        * [Number](fields/number.md)
         * [Colorpicker](fields/colorpicker.md)
         * [Textarea](fields/textarea.md)
         * [WYSIWYG](fields/wysiwyg.md)

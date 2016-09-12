@@ -248,16 +248,6 @@
           ]
         },
         {
-          "label": "Место",
-          "fields": [
-            {
-              "name": "coordinates",
-              "type": "map",
-              "label": "Местоположение события"
-            }
-          ]
-        },
-        {
           "label": "Служебное",
           "fields": [
             {
