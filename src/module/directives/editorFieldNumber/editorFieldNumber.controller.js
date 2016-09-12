@@ -32,11 +32,7 @@
         vm.max = $scope.field.max;
         vm.min = $scope.field.min;
         vm.defaultValue = !isNaN(parseFloat($scope.field.defaultValue)) ? $scope.field.defaultValue : null;
-
-                /* Слушатель события на покидание инпута. Необходим для превалидации поля на минимальное и максимальное значение */
-
         vm.inputLeave = function (val) {
-
             if (!val) {
                 return;
             }
@@ -77,11 +73,6 @@
             vm.fieldValue = vm.defaultValue || null ;
         }
 
-        /*
-         * Если поле является частью двумерного массива - оно не сможет получить значение при загрузке сущности
-         * поэтому оно всегда берёт значение поля из хранилища для полей-массивов.
-         */
-
         if (vm.parentFieldIndex) {
             if (vm.multiple) {
                 vm.fieldValue = [];
@@ -97,19 +88,11 @@
             }
         }
 
-        /* Initial method : Регистрация экземпляра поля в EditEntityStorage */
         EditEntityStorage.addFieldController(this);
 
-        /*
-         * Field system method: Возвращает текущее значение поля с учетом
-         * наличия у поля родителя ( поля типа "массив" )
-         */
-
         this.getFieldValue = function () {
-
             var field = {},
                 wrappedFieldValue;
-
             if (vm.multiname) {
                 wrappedFieldValue = [];
                 angular.forEach(vm.fieldValue, function (valueItem) {
@@ -148,9 +131,7 @@
          */
 
         this.getInitialValue = function () {
-
             var field = {};
-
             if ($scope.parentField) {
                 if (vm.multiple) {
                     field[$scope.parentField] = {};
@@ -169,10 +150,6 @@
 
             return field;
         };
-        /*
-         * Публичные методы для представления
-         * Добавление нового итема и удаление. Необходимы для multiple-полей
-         */
 
         vm.addItem = function () {
           vm.fieldValue.push(vm.defaultValue);
@@ -192,16 +169,7 @@
             vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : (vm.defaultValue || null);
         }
 
-        /* Слушатели событий бродкаста. */
-
-        /*
-         * Событие загрузки сущности ( созданной или пустой, т.е. создаваемой ).
-         * Поле забирает данные из объекта сущности с учетом наличия родительского поля.
-         */
-
         $scope.$on('editor:entity_loaded', function (event, data) {
-
-            //-- functional for required fields
             if ($scope.field.requiredField) {
                 $scope.$watch(function () {
                     var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
@@ -274,22 +242,11 @@
             }
         });
 
-        /*
-         * При обновлении / создании сущности может быть получена ошибка.
-         * В таком случае происходит броадкаст следующего события.
-         * Название события генерируется сервисом RestApiService.
-         */
-
         $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if ($scope.$parent.vm.error.indexOf(data) < 0) {
                 $scope.$parent.vm.error.push(data);
             }
         });
-
-        /*
-         * При удалении директивы она должна отправлять запрос в EditEntityStorage
-         * чтобы последний удалил её из списка отслеживаемых полей.
-         */
 
         $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
@@ -305,16 +262,12 @@
             }
         });
 
-        /* Удаление контроллера поля из сервиса управления данными полей. Происходит при исчезании поля */
-
         $scope.$on('$destroy', function () {
             EditEntityStorage.deleteFieldController(vm);
             if (vm.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
             }
         });
-
-        /* Очистка массива ошибок при внесении пользователем изменений в поле */
 
         $scope.$watch(function () {
             return vm.fieldValue;
