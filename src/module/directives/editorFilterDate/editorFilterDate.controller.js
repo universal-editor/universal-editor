@@ -42,15 +42,12 @@
                 var et = moment.isMoment(vm.filterValueEndTime) ? " " + moment(vm.filterValueEndTime).format("HH:mm:ss") : "";
 
                 if(vm.filterValueStartDate !== "" && vm.filterValueEndDate === ""){
-
-
-                    field[vm.filterName] = ">=" + moment(vm.filterValueStartDate).format("YYYY-MM-DD") + st;
+                    field[">=" + vm.filterName] = moment(vm.filterValueStartDate).format("YYYY-MM-DD") + st;
                 } else if (vm.filterValueStartDate === "" && vm.filterValueEndDate !== ""){
-                    field[vm.filterName] = "<=" + moment(vm.filterValueEndDate).format("YYYY-MM-DD") + et;
+                    field["<=" + vm.filterName] = moment(vm.filterValueEndDate).format("YYYY-MM-DD") + et;
                 } else {
-                    field[vm.filterName] = [];
-                    field[vm.filterName].push(">=" + moment(vm.filterValueStartDate).format("YYYY-MM-DD") + st);
-                    field[vm.filterName].push("<=" + moment(vm.filterValueEndDate).format("YYYY-MM-DD") + et);
+                    field[">=" + vm.filterName] = moment(vm.filterValueStartDate).format("YYYY-MM-DD") + st;
+                    field["<=" + vm.filterName] = moment(vm.filterValueEndDate).format("YYYY-MM-DD") + et;
                 }
                 return field;
             }

@@ -34,13 +34,12 @@
                 return false;
             } else {
                 if(vm.filterValueStartTime !== "" && vm.filterValueEndTime === ""){
-                    field[vm.filterName] = ">=" + moment(vm.filterValueStartTime).format("HH:mm:ss");
+                    field[">=" + vm.filterName] = moment(vm.filterValueStartTime).format("HH:mm:ss");
                 } else if (vm.filterValueStartTime === "" && vm.filterValueEndTime !== ""){
-                    field[vm.filterName] = "<=" + moment(vm.filterValueEndTime).format("HH:mm:ss");
+                    field["<=" + vm.filterName] = moment(vm.filterValueEndTime).format("HH:mm:ss");
                 } else {
-                    field[vm.filterName] = [];
-                    field[vm.filterName].push(">=" + moment(vm.filterValueStartTime).format("HH:mm:ss"));
-                    field[vm.filterName].push("<=" + moment(vm.filterValueEndTime).format("HH:mm:ss"));
+                    field[">=" + vm.filterName] = moment(vm.filterValueStartTime).format("HH:mm:ss");
+                    field["<=" + vm.filterName] = moment(vm.filterValueEndTime).format("HH:mm:ss");
                 }
                 return field;
             }

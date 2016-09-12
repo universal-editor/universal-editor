@@ -3,18 +3,17 @@
 
     angular
         .module('universal.editor')
-        .controller('EditorFilterDateTimeController',EditorFilterDateTimeController);
+        .controller('EditorFilterNumberController',EditorFilterNumberController);
 
-    EditorFilterDateTimeController.$inject = ['$scope','FilterFieldsStorage','moment'];
+    EditorFilterNumberController.$inject = ['$scope','FilterFieldsStorage','$location','RestApiService'];
 
-    function EditorFilterDateTimeController($scope,FilterFieldsStorage,moment){
+    function EditorFilterNumberController($scope,FilterFieldsStorage,$location,RestApiService){
         /* jshint validthis: true */
         var vm = this;
 
         vm.filterName = $scope.filter.name;
         vm.filterDisplayName = $scope.filter.label;
-        vm.filterValueStartDateTime = "";
-        vm.filterValueEndDateTime = "";
+        vm.filterValue = $location.search()[vm.filterName] || null;
 
         /* Initial method : Регистрация экземпляра поля в FilterFieldsStorage */
         FilterFieldsStorage.addFilterController(this);
@@ -27,18 +26,11 @@
 
             var field = {};
 
-            if(vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime === ""){
-                return false;
-            } else {
-                if(vm.filterValueStartDateTime !== "" && vm.filterValueEndDateTime === ""){
-                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
-                } else if (vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime !== ""){
-                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
-                } else {
-                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
-                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
-                }
+            if(vm.filterValue !== null){
+                field[vm.filterName] = vm.filterValue;
                 return field;
+            } else {
+                return false;
             }
         };
 
@@ -48,15 +40,18 @@
          */
 
         this.getInitialValue = function () {
+
             var filter = {};
-            filter[vm.filterName] = "";
+
+            filter[vm.filterName] = null;
+
             return filter;
         };
 
         this.setInitialValue = function () {
-            vm.filterValueStartDateTime = "";
-            vm.filterValueEndDateTime = "";
+            vm.filterValue = null;
         };
+
 
         /*
          * При удалении директивы она должна отправлять запрос в FilterFieldsStorage
@@ -66,5 +61,22 @@
         $scope.$on('$destroy', function () {
             FilterFieldsStorage.deleteFilterController(vm);
         });
+
+        /*
+         * При изменении значения поля - меняется параметр url.
+         * При инициализации поля - текущее значение поля берется соответствующее значению параметра url
+         */
+
+        $scope.$watch(function () {
+            return vm.filterValue;
+        }, function (newVal) {
+            if(newVal !== null){
+                $location.search(vm.filterName,newVal);
+            } else {
+                $location.search(vm.filterName,null);
+            }
+        });
+
+
     }
 })();
