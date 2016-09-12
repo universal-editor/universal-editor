@@ -3,11 +3,11 @@
 
     angular
         .module('universal.editor')
-        .controller('EditorFieldTextareaController', EditorFieldTextareaController);
+        .controller('EditorFieldNumberController', EditorFieldNumberController);
 
-    EditorFieldTextareaController.$inject = ['$scope', 'EditEntityStorage', 'ArrayFieldStorage'];
+    EditorFieldNumberController.$inject = ['$scope', 'EditEntityStorage', 'ArrayFieldStorage'];
 
-    function EditorFieldTextareaController($scope, EditEntityStorage, ArrayFieldStorage) {
+    function EditorFieldNumberController($scope, EditEntityStorage, ArrayFieldStorage) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
@@ -21,14 +21,36 @@
         } else {
             fieldErrorName = $scope.fieldName;
         }
-        vm.rows = $scope.field.height;
+
         vm.cols = $scope.field.width;
-        vm.classTextarea = 'col-lg-6 col-md-6 col-sm-7 col-xs-8';
+        vm.classTextarea = 'col-lg-2 col-md-2 col-sm-3 col-xs-3';
         vm.fieldName = $scope.field.name;
-        vm.fieldValue = "";
+        vm.fieldValue = undefined;
         vm.readonly = $scope.field.readonly || false;
         $scope.$parent.vm.error = [];
         vm.parentFieldIndex = $scope.parentFieldIndex || false;
+        vm.max = $scope.field.max;
+        vm.min = $scope.field.min;
+        vm.defaultValue = !isNaN(parseFloat($scope.field.defaultValue)) ? $scope.field.defaultValue : null;
+        vm.inputLeave = function (val) {
+            if (!val) {
+                return;
+            }
+
+            if($scope.field.hasOwnProperty("max") && val > $scope.field.max){
+                var maxError = "Для поля превышено максимальное допустимое значение " + $scope.field.max + ". Сейчас введено " + val + ".";
+                if ($scope.$parent.vm.error.indexOf(maxError) < 0) {
+                    $scope.$parent.vm.error.push(maxError);
+                }
+            }
+
+            if($scope.field.hasOwnProperty("min") && val < $scope.field.min){
+                var minError = "Минимальное значение поля не может быть меньше " + $scope.field.min + ". Сейчас введено " + val + ".";
+                if($scope.$parent.vm.error.indexOf(minError) < 0){
+                    $scope.$parent.vm.error.push(minError);
+                }
+            }
+        };
 
         if (!!vm.cols) {
             if (vm.cols > 6) {
@@ -48,7 +70,7 @@
             }
         } else {
             vm.multiple = false;
-            vm.fieldValue = "";
+            vm.fieldValue = vm.defaultValue || null ;
         }
 
         if (vm.parentFieldIndex) {
@@ -62,17 +84,15 @@
                     }
                 });
             } else {
-                vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name) || "";
+                vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name) || null;
             }
         }
 
         EditEntityStorage.addFieldController(this);
 
         this.getFieldValue = function () {
-
-            var field = {};
-            var wrappedFieldValue;
-
+            var field = {},
+                wrappedFieldValue;
             if (vm.multiname) {
                 wrappedFieldValue = [];
                 angular.forEach(vm.fieldValue, function (valueItem) {
@@ -98,7 +118,6 @@
                     field[$scope.parentField] = {};
                     field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
                 }
-
             } else {
                 field[vm.fieldName] = wrappedFieldValue;
             }
@@ -106,23 +125,26 @@
             return field;
         };
 
+        /*
+         * Field system method: Возврашает значение поля которое используется при создании
+         * новой сущности, т.е. дефолтное значение поля
+         */
+
         this.getInitialValue = function () {
-
             var field = {};
-
             if ($scope.parentField) {
                 if (vm.multiple) {
                     field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = [""];
+                    field[$scope.parentField][vm.fieldName] = [];
                 } else {
                     field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = "";
+                    field[$scope.parentField][vm.fieldName] = null;
                 }
             } else {
                 if (vm.multiple) {
-                    field[vm.fieldName] = [""];
+                    field[vm.fieldName] = [];
                 } else {
-                    field[vm.fieldName] = "";
+                    field[vm.fieldName] = null;
                 }
             }
 
@@ -130,7 +152,7 @@
         };
 
         vm.addItem = function () {
-            vm.fieldValue.push("");
+          vm.fieldValue.push(vm.defaultValue);
         };
 
         vm.removeItem = function (index) {
@@ -141,33 +163,13 @@
             });
         };
 
-        vm.inputLeave = function (val) {
-            if (!val) {
-                return;
-            }
-
-            if($scope.field.hasOwnProperty("maxLength") && val.length > $scope.field.maxLength){
-                var maxError = "Для поля превышено максимальное допустимое значение в " + $scope.field.maxLength + " символов. Сейчас введено " + val.length + " символов.";
-                if ($scope.$parent.vm.error.indexOf(maxError) < 0) {
-                    $scope.$parent.vm.error.push(maxError);
-                }
-            }
-
-            if($scope.field.hasOwnProperty("minLength") && val.length < $scope.field.minLength){
-                var minError = "Минимальное значение поля не может быть меньше " + $scope.field.minLength + " символов. Сейчас введено " + val.length + " символов.";
-                if($scope.$parent.vm.error.indexOf(minError) < 0){
-                    $scope.$parent.vm.error.push(minError);
-                }
-            }
-        };
+       
 
         function clear() {
-            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
+            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : (vm.defaultValue || null);
         }
 
         $scope.$on('editor:entity_loaded', function (event, data) {
-
-            //-- functional for required fields
             if ($scope.field.requiredField) {
                 $scope.$watch(function () {
                     var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
@@ -177,7 +179,7 @@
                         var keys = Object.keys(value);
                         for (var i = keys.length; i--;) {
                             var propValue = value[keys[i]];
-                            if (propValue !== null && propValue !== undefined && propValue !== "") {
+                            if (propValue !== null && propValue !== undefined && propValue !== null) {
                                 if (angular.isObject(propValue) && !endRecursion) {
                                     arguments.callee(propValue);
                                 }
@@ -198,10 +200,13 @@
             }
 
             if (data.editorEntityType === "new") {
-                if ($scope.field.defaultValue) {
-                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
+                if (vm.defaultValue) {
+                    vm.fieldValue = vm.multiple ? [vm.defaultValue] : vm.defaultValue;
                 } else {
-                    vm.fieldValue = vm.multiple ? [] : '';
+                    vm.fieldValue = vm.multiple ? [] : null;
+                }
+                if (data.hasOwnProperty($scope.field.name)) {
+                    vm.fieldValue = data[$scope.field.name];
                 }
                 return;
             }
@@ -238,6 +243,12 @@
         });
 
         $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
+            if ($scope.$parent.vm.error.indexOf(data) < 0) {
+                $scope.$parent.vm.error.push(data);
+            }
+        });
+
+        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
                 angular.forEach(data, function (error) {
                     if ($scope.$parent.vm.error.indexOf(error) < 0) {
@@ -263,5 +274,6 @@
         }, function () {
             $scope.$parent.vm.error = [];
         }, true);
+
     }
 })();

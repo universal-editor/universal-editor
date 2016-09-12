@@ -2,22 +2,22 @@
     'use strict';
 
     /**
-     * @desc String-type field.
-     * @example <div editor-field-map=""></div>
+     * @desc number-type field.
+     * @example <div editor-field-number=""></div>
      */
     angular
         .module('universal.editor')
-        .directive('editorFieldMap',editorFieldMap);
+        .directive('editorFieldNumber',editorFieldNumber);
 
-    editorFieldMap.$inject = ['$templateCache'];
+    editorFieldNumber.$inject = ['$templateCache'];
 
-    function editorFieldMap($templateCache){
+    function editorFieldNumber($templateCache){
         return {
             restrict : 'A',
             replace : true,
             scope : true,
-            template : $templateCache.get('module/directives/editorFieldMap/editorFieldMap.html'),
-            controller: 'EditorFieldMapController',
+            template : $templateCache.get('module/directives/editorFieldNumber/editorFieldNumber.html'),
+            controller: 'EditorFieldNumberController',
             controllerAs : 'vm',
             link : link
         };

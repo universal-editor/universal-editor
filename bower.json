@@ -36,7 +36,6 @@
     "ng-file-upload": "~10.0.2",
     "angular-cookies": "~1.4.8",
     "angular-ui-router": "~0.2.18",
-    "ya-map": "angular-yandex-map#~1.0.9",
     "angular-ui-mask": "~1.6.7",
     "angular-toastr": "~1.7.0",
     "angular-translate": "^2.11.0",
@@ -44,11 +43,6 @@
     "bootstrap": "~3.1.1"
   },
   "overrides": {
-    "ya-map": {
-      "main": [
-        "ya-map-2.1.min.js"
-      ]
-    },
     "tinymce-dist": {
       "main": [
         "tinymce.js"

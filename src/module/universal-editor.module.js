@@ -13,7 +13,6 @@
             'ngCookies',
             'ngFileUpload',
             'ui.router',
-            'yaMap',
             'ngRaven',
             'ui.mask',
             'toastr',
@@ -45,7 +44,7 @@
             'responseError': function (rejection) {
                 try {
                     var json = JSON.parse(JSON.stringify(rejection));
-                    
+
                     if (rejection.data !== null && rejection.data.hasOwnProperty('message') && rejection.data.message.length > 0) {
                         toastr.error(rejection.data.message);
                     } else if (rejection.status === 422 || rejection.status === 400) {
