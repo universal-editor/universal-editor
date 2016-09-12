@@ -27,14 +27,7 @@
             var field = {};
 
             if(vm.filterValue.trim() !== ""){
-                field[vm.filterName] = vm.filterValue;
-                /*
-                    if(angular.isNumber(vm.filterValue)){
-                        field[vm.filterName] = vm.filterValue;
-                    } else {
-                        field[vm.filterName] = "%" + vm.filterValue + "%";
-                    }
-                 */
+                field[vm.filterName] = '%' + vm.filterValue + '%';
                 return field;
             } else {
                 return false;
