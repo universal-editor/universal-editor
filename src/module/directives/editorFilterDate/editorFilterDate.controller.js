@@ -17,13 +17,8 @@
         vm.filterValueStartTime = "";
         vm.filterValueEndDate = "";
         vm.filterValueEndTime = "";
-
-        /* Initial method : Регистрация экземпляра поля в FilterFieldsStorage */
+        
         FilterFieldsStorage.addFilterController(this);
-
-        /*
-         * Filter system method: Возвращает текущее значение поля
-         */
 
         this.getFilterValue = function () {
 
@@ -53,11 +48,6 @@
             }
         };
 
-        /*
-         * Filter system method: Возврашает значение поля которое используется при создании
-         * новой сущности, т.е. дефолтное значение поля
-         */
-
         this.getInitialValue = function () {
 
             var filter = {};
@@ -73,11 +63,6 @@
             vm.filterValueEndDate = "";
             vm.filterValueEndTime = "";
         };
-
-        /*
-         * При удалении директивы она должна отправлять запрос в FilterFieldsStorage
-         * чтобы последний удалил её из списка отслеживаемых фильтров.
-         */
 
         $scope.$on('$destroy', function () {
             FilterFieldsStorage.deleteFilterController(vm);
