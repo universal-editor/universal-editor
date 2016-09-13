@@ -6,8 +6,8 @@ Universal editor to edit the entities from RESTful service.
 
 Install dependences:
 
-* `npm install`
-* `bower install`
+1. `npm install`
+1. `bower install`
 
 Run build:
 
