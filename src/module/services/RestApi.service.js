@@ -15,7 +15,7 @@
             itemsKey,
             entityObject,
             mixEntity,
-            per_page = 10;
+            per_page = 20;
 
         self.isProcessing = false;
         self.methodType = "";

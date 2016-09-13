@@ -66,6 +66,11 @@ body {
       }
       .dropdown-menu{
         min-width: 10px;
+
+        &>li>a{
+          padding-left: 18px;
+          padding-right: 18px;
+        }
       }
     }
 
@@ -690,7 +695,9 @@ body {
 .pagination {
   margin-top: 0;
 }
-
+.page-size{
+  padding-left: 0;
+}
 .hidden {
   display: none;
 }

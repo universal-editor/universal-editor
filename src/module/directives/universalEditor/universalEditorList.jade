@@ -67,10 +67,12 @@ ul.nav.nav-tabs(data-ng-if="vm.configData.entities.length > 1")
                      li(data-ng-repeat="pageItem in vm.pageItemsArray", data-ng-class="pageItem.self ? 'active' : ''")
                         a(data-ng-if="!pageItem.self", href="{{pageItem.href}}", data-ng-click="vm.changePage($event,pageItem.href)") {{pageItem.label}}
                         span(data-ng-if="pageItem.self") {{pageItem.label}}
-                  .dropup.col-lg-2.col-md-2.col-sm-2.col-xs-2
-                     button.btn.btn-primary.dropdown-toggle(data-toggle="dropdown") {{vm.currentPage}}
-                     ul.dropdown-menu
-                        li(data-ng-repeat='element in vm.pageLimites track by $index')
-                           a(href="#", data-ng-click='vm.setSizePage(element)') {{element}}
+                  .page-size.col-lg-2.col-md-2.col-sm-2.col-xs-2
+                     .dropup
+                        button.btn.btn-primary.dropdown-toggle(data-toggle="dropdown") {{vm.currentPage}}&nbsp
+                           span.caret
+                        ul.dropdown-menu
+                           li(data-ng-repeat='element in vm.pageLimites track by $index')
+                              a(href="#", data-ng-click='vm.setSizePage(element)') {{element}}
                   .meta-info.col-lg-4.col-md-4.col-sm-4.col-xs-4(data-ng-if="vm.metaKey") {{'ELEMENTS' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{'FROM' | translate}} {{vm.metaData.totalCount}}
 
