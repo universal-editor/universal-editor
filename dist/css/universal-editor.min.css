@@ -1,4 +1,4 @@
-.editor-entity-actions .loader-search-wrapper{width:7px !important}.field-array-wrapper .add-more{margin-top:10px}
+.field-array-wrapper .add-more{margin-top:10px}.editor-entity-actions .loader-search-wrapper{width:7px !important}
 .autocomplete-item{background:#cbd6da;border:1px solid #959ea9;-webkit-border-radius:4px;border-radius:4px;color:#444;margin:2px;padding:0 5px;display:inline-block;height:24px;line-height:22px}
 .autocomplete-item.opacity-item{opacity:.2}.autocomplete-item .remove-from-selected{margin:0 0 0 5px;padding:0;border:0;background:0;cursor:pointer;vertical-align:middle;font:700 16px Arial,sans-serif;color:#585858}
 .autocomplete-input-wrapper{position:relative;height:100%;padding:2px}.autocomplete-input-wrapper:after{content:'';display:table;clear:both}
@@ -28,8 +28,7 @@
 .editor-date input{width:85px}.editor-time input{width:70px}.filter-datetime-wrapper .filter-start,.filter-datetime-wrapper .filter-end,.filter-datetime-wrapper .divider{display:inline-block}
 .filter-datetime-wrapper .divider{padding:0 5px}.editor-datetime,.editor-time{display:inline-block}
 .editor-datetime input{width:135px}.filter-time-wrapper .filter-start,.filter-time-wrapper .filter-end,.filter-time-wrapper .divider{display:inline-block}
-.filter-time-wrapper .divider{padding:0 5px}.field-wrapper{margin:0 10px;padding:10px 0}
-body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;background-color:#e1e9eb}
+.filter-time-wrapper .divider{padding:0 5px}body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;background-color:#e1e9eb}
 .universal-editor .editor-header{padding:20px 0 5px 0}.universal-editor .editor-header .filter-button{min-width:110px;margin-right:10px}
 .universal-editor .editor-header .header-action-button{border:0;display:inline-block;margin-right:10px;outline:0}
 .universal-editor .groups-action{margin-bottom:10px}.universal-editor .editor-entity-actions{background:#ebf1f3;padding:10px;border-top:1px solid #e1e9eb}
@@ -118,4 +117,4 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .selecte-delete{position:absolute;top:9px;right:25px;font:700 16px Arial,sans-serif;color:#585858;cursor:pointer}
 .selecte-delete-autocomplete{right:10px}.select-input.active{border-color:#66afe9;outline:0;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6)}
 .focus-input{position:absolute;height:0;width:0;border:0}.select-border{border:1px solid #ccc;border-radius:4px}
-.select-border .form-control{border:0}
+.select-border .form-control{border:0}.field-wrapper{margin:0 10px;padding:10px 0}

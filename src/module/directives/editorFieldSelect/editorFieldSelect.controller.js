@@ -556,6 +556,12 @@
             }
             if (!vm.filterText) {
                 if (!vm.multiple && !vm.isTree) {
+                    if (vm.options && vm.options.length && vm.fieldValue) {
+                        var finded = vm.options.filter(function(record) { return record[vm.field_id] === vm.fieldValue[vm.field_id]; });
+                        if (finded) {
+                            vm.fieldValue = finded[0];
+                        }
+                    }
                     vm.placeholder = (!!vm.fieldValue && !!vm.fieldValue[vm.field_search]) ? vm.fieldValue[vm.field_search] : $scope.field.placeholder;
                 } else if (!vm.multiple && vm.isTree) {
                     vm.placeholder = (!!vm.fieldValue.length && !!vm.fieldValue[0][vm.field_search]) ? vm.fieldValue[0][vm.field_search] : $scope.field.placeholder;
