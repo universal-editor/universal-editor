@@ -21,12 +21,24 @@
         } else {
             fieldErrorName = $scope.fieldName;
         }
-
+        vm.rows = $scope.field.height;
+        vm.cols = $scope.field.width;
+        vm.classTextarea = 'col-lg-6 col-md-6 col-sm-7 col-xs-8';
         vm.fieldName = $scope.field.name;
         vm.fieldValue = "";
         vm.readonly = $scope.field.readonly || false;
         $scope.$parent.vm.error = [];
         vm.parentFieldIndex = $scope.parentFieldIndex || false;
+
+        if (!!vm.cols) {
+            if (vm.cols > 6) {
+                vm.cols = 6;
+            }
+            if (vm.cols < 1) {
+                vm.cols = 1;
+            }
+            vm.classTextarea = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
+        }
 
         if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
             vm.multiple = true;
@@ -186,7 +198,11 @@
             }
 
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [""] : "";
+                if ($scope.field.defaultValue) {
+                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
+                } else {
+                    vm.fieldValue = vm.multiple ? [] : '';
+                }
                 return;
             }
 

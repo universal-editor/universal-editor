@@ -55,9 +55,9 @@ gulp.task('files-dev',function(){
         .pipe(gulp.dest('./app/assets'));
 });
 
-gulp.task('files-tinymce-dev',function(){
-    return gulp.src('./bower_components/tinymce-plugin/dist/mce-files/**/*')
-        .pipe(gulp.dest('./app/tinymce-plugin/mce-files'));
+gulp.task('bootstrap-fonts-dev',function(){
+    return gulp.src('./bower_components/bootstrap/fonts/**/*')
+        .pipe(gulp.dest('./app/fonts'));
 });
 
 gulp.task('prebuild' , function () {
@@ -75,8 +75,8 @@ gulp.task('serve', function () {
         'html2js-dev',
         'js-dev',
         'css-dev',
+        'bootstrap-fonts-dev',
         'files-dev',
-        'files-tinymce-dev',
         function () {
             gulp.src('./src/index.html')
                 .pipe(plugins.usemin({

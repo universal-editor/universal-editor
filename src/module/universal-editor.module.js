@@ -12,7 +12,6 @@
             'ngCookies',
             'ngFileUpload',
             'ui.router',
-            'yaMap',
             'ngRaven',
             'ui.mask',
             'toastr',
@@ -44,7 +43,7 @@
             'responseError': function (rejection) {
                 try {
                     var json = JSON.parse(JSON.stringify(rejection));
-                    
+
                     if (rejection.data !== null && rejection.data.hasOwnProperty('message') && rejection.data.message.length > 0) {
                         toastr.error(rejection.data.message);
                     } else if (rejection.status === 422 || rejection.status === 400) {
@@ -94,6 +93,7 @@
 
         $httpProvider.defaults.paramSerializer = '$httpParamSerializerJQLike';
         $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8";
+        $httpProvider.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8";
         $httpProvider.defaults.transformRequest = function(data){
 
 

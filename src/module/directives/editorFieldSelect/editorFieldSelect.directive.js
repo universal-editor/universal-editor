@@ -29,23 +29,35 @@
 
             scope.isOpen = false;
 
-            $document.on('click', function() {
-                scope.isOpen = false;
+            $document.on('click', function(event) {
+                if (!elem[0].contains(event.target)) {
+                    scope.$apply(function() {
+                        scope.vm.isBlur();
+                    });
+
+                }
             });
 
-            scope.toggleDropdown = function(e) {
+            scope.toggleDropdown = function() {
+                elem.find('input')[0].focus();
                 var dHeight = $(document).height();
                 var dropdownHost = $(elem).find('.dropdown__host');
                 var dropdownHeight = dropdownHost.height();
                 var dropdownOffset = dropdownHost.offset();
                 var dropdownBottom = dropdownOffset.top + dropdownHeight;
-                if (dHeight - dropdownBottom < 500) {
-                  $(elem).find('.dropdown__items').css('max-height', (dHeight - dropdownBottom) + 'px');
+                elem.find('.dropdown__items').removeClass('dropdown-top');
+                elem.find('.dropdown__items').removeClass('dropdown-bottom');
+                if (dHeight - dropdownBottom < 300) {
+                    elem.find('.dropdown__items').addClass('dropdown-top');
                 } else {
-                  $(elem).find('.dropdown__items').css('max-height', '');
+                    elem.find('.dropdown__items').addClass('dropdown-bottom');
                 }
                 scope.isOpen = !scope.isOpen;
-                e.stopPropagation();
+                if (scope.isOpen) {
+                    var formControl = elem.find('.select-input');
+                    formControl.addClass('active');
+                }
+                scope.vm.setColorPlaceholder();
             };
         }
     }

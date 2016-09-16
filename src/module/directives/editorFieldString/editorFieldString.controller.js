@@ -22,12 +22,24 @@
             fieldErrorName = $scope.fieldName;
         }
 
+        vm.cols = $scope.field.width;
+        vm.classTextarea = 'col-lg-2 col-md-2 col-sm-3 col-xs-3';
         vm.fieldName = $scope.field.name;
         vm.fieldValue = undefined;
         vm.readonly = $scope.field.readonly || false;
         $scope.$parent.vm.error = [];
         vm.parentFieldIndex = $scope.parentFieldIndex || false;
         vm.mask = $scope.field.mask || false;
+
+        if (!!vm.cols) {
+            if (vm.cols > 6) {
+                vm.cols = 6;
+            }
+            if (vm.cols < 1) {
+                vm.cols = 1;
+            }
+            vm.classTextarea = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
+        }
 
         if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
             vm.multiple = true;
@@ -37,7 +49,7 @@
             }
         } else {
             vm.multiple = false;
-            vm.fieldValue = "";
+            vm.fieldValue = $scope.field.defaultValue || "" ;
         }
 
         /*
@@ -173,7 +185,7 @@
         };
 
         function clear() {
-            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
+            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : ($scope.field.defaultValue || "");
         }
 
         /* Слушатели событий бродкаста. */
@@ -216,7 +228,11 @@
             }
 
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [""] : "";
+                if ($scope.field.defaultValue) {
+                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
+                } else {
+                    vm.fieldValue = vm.multiple ? [] : '';
+                }
                 if (data.hasOwnProperty($scope.field.name)) {
                     vm.fieldValue = data[$scope.field.name];
                 }

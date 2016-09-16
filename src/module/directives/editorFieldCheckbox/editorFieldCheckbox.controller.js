@@ -196,9 +196,16 @@
                 }, true);
             }
             if (data.editorEntityType === "new") {
+                vm.fieldValue = [];
+                angular.forEach($scope.field.defaultValue, function (item) {
+                    if (vm.multiname) {
+                        vm.fieldValue.push(item[vm.multiname]);
+                    } else {
+                        vm.fieldValue.push(item);
+                    }
+                });
                 return;
             }
-
             if (!$scope.parentField) {
                 vm.fieldValue = [];
                 if (data[$scope.field.name]) {

@@ -17,7 +17,7 @@
             itemsKey,
             mixEntityObject;
 
-        vm.assetsPath = '../assets';
+        vm.assetsPath = '/assets/universal-editor';
 
         if ($scope.entity === undefined || angular.isUndefined(entityObject)){
             console.error("Editor: Сущность с типом \"" + $scope.entity + "\" не описана в конфигурационном файле");
@@ -54,12 +54,18 @@
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
 
+        if (!!vm.configData.ui && !!vm.configData.ui.assetsPath) {
+            vm.assetsPath = vm.configData.ui.assetsPath;
+        }
+
         if(entityObject.backend.hasOwnProperty('fields')){
             vm.idField = entityObject.backend.fields.primaryKey || vm.idField;
         }
 
         var mixEntity = RestApiService.getMixModeByEntity();
+        vm.isMixMode = mixEntity.existence;
         if(mixEntity.existence){
+            vm.prependIcon = mixEntity.prependIcon || 'title';
             vm.subType = mixEntity.entityTypeName || "type";
             vm.mixEntityType = mixEntity.entity;
             mixEntityObject = configData.entities.filter(function (item) {
@@ -86,7 +92,6 @@
                 }
             });
         });
-
         angular.forEach(entityObject.editFooterBar, function (editFooterBar) {
             switch (editFooterBar.type){
                 case 'add':
