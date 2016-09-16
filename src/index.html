@@ -26,8 +26,6 @@
     <script src="../bower_components/angular-raven/angular-raven.js"></script>
     <script src="../bower_components/jquery-minicolors/jquery.minicolors.js"></script>
     <script src="../bower_components/angular-minicolors/angular-minicolors.js"></script>
-    <script src="../bower_components/tinymce-dist/tinymce.js"></script>
-    <script src="../bower_components/angular-ui-tinymce/src/tinymce.js"></script>
     <script src="../bower_components/moment/moment.js"></script>
     <script src="../bower_components/angular-moment/angular-moment.js"></script>
     <script src="../bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js"></script>
@@ -42,13 +40,12 @@
     <script src="../bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
     <script src="../bower_components/angular-translate/angular-translate.js"></script>
     <script src="../bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
-    <script src="../bower_components/tinymce-plugin/dist/tinymce-plugin.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <script src="universal-editor.js"></script>
     <!-- endinject -->
     <script type="text/javascript">
-        angular.module('unEditor',['universal.editor', 'tinymce.plugin']);
+        angular.module('unEditor',['universal.editor']);
     </script>
     <!-- config:js -->
     <!-- build:js config.js -->
