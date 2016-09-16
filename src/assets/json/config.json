@@ -213,12 +213,12 @@
               "list": true,
               "label": "Краткое описание",
               "required": true
-            },
-            {
-              "name": "text",
-              "type": "wysiwyg",
-              "label": "Текст"
-            },
+            }
+          ]
+        },
+        {
+          "label": "Место",
+          "fields": [
             {
               "name": "authors",
               "type": "autocomplete",
