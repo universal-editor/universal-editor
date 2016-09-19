@@ -11,25 +11,24 @@
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
-
-        if ($scope.parentField) {
-            if ($scope.parentFieldIndex) {
-                fieldErrorName = $scope.parentField + "_" + $scope.parentFieldIndex + "_" + $scope.fieldName;
+        if (vm.parentField) {
+            if (vm.parentFieldIndex) {
+                fieldErrorName = vm.parentField + "_" + vm.parentFieldIndex + "_" + vm.field.name;
             } else {
-                fieldErrorName = $scope.parentField + "_" + $scope.fieldName;
+                fieldErrorName = vm.parentField + "_" + vm.field.name;
             }
         } else {
-            fieldErrorName = $scope.fieldName;
+            fieldErrorName = vm.field.name;
         }
 
-        vm.cols = $scope.field.width;
+        vm.cols = vm.field.width;
         vm.classTextarea = 'col-lg-2 col-md-2 col-sm-3 col-xs-3';
-        vm.fieldName = $scope.field.name;
+        vm.fieldName = vm.field.name;
         vm.fieldValue = undefined;
-        vm.readonly = $scope.field.readonly || false;
-        $scope.$parent.vm.error = [];
-        vm.parentFieldIndex = $scope.parentFieldIndex || false;
-        vm.mask = $scope.field.mask || false;
+        vm.readonly = vm.field.readonly || false;
+        vm.setEmpty();
+        vm.parentFieldIndex = vm.parentFieldIndex || false;
+        vm.mask = vm.field.mask || false;
 
         if (!!vm.cols) {
             if (vm.cols > 6) {
@@ -41,15 +40,15 @@
             vm.classTextarea = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
         }
 
-        if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
+        if (vm.field.hasOwnProperty("multiple") && vm.field.multiple === true) {
             vm.multiple = true;
             vm.fieldValue = [];
-            if ($scope.field.multiname || angular.isString($scope.field.multiname)) {
-                vm.multiname = ('' + $scope.field.multiname) || "value";
+            if (vm.field.multiname || angular.isString(vm.field.multiname)) {
+                vm.multiname = ('' + vm.field.multiname) || "value";
             }
         } else {
             vm.multiple = false;
-            vm.fieldValue = $scope.field.defaultValue || "" ;
+            vm.fieldValue = vm.field.defaultValue || "" ;
         }
 
         /*
@@ -60,7 +59,7 @@
         if (vm.parentFieldIndex) {
             if (vm.multiple) {
                 vm.fieldValue = [];
-                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
+                angular.forEach(ArrayFieldStorage.getFieldValue(vm.parentField, vm.parentFieldIndex, vm.field.name), function (item) {
                     if (vm.multiname) {
                         vm.fieldValue.push(item[vm.multiname]);
                     } else {
@@ -68,7 +67,7 @@
                     }
                 });
             } else {
-                vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name) || "";
+                vm.fieldValue = ArrayFieldStorage.getFieldValue(vm.parentField, vm.parentFieldIndex, vm.field.name) || "";
             }
         }
 
@@ -101,14 +100,14 @@
                 wrappedFieldValue = vm.fieldValue;
             }
 
-            if ($scope.parentField) {
+            if (vm.parentField) {
                 if (vm.parentFieldIndex) {
-                    field[$scope.parentField] = [];
-                    field[$scope.parentField][vm.parentFieldIndex] = {};
-                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
+                    field[vm.parentField] = [];
+                    field[vm.parentField][vm.parentFieldIndex] = {};
+                    field[vm.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
                 } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
+                    field[vm.parentField] = {};
+                    field[vm.parentField][vm.fieldName] = wrappedFieldValue;
                 }
             } else {
                 field[vm.fieldName] = wrappedFieldValue;
@@ -126,13 +125,13 @@
 
             var field = {};
 
-            if ($scope.parentField) {
+            if (vm.parentField) {
                 if (vm.multiple) {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = [""];
+                    field[vm.parentField] = {};
+                    field[vm.parentField][vm.fieldName] = [""];
                 } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = "";
+                    field[vm.parentField] = {};
+                    field[vm.parentField][vm.fieldName] = "";
                 }
             } else {
                 if (vm.multiple) {
@@ -164,28 +163,27 @@
         /* Слушатель события на покидание инпута. Необходим для превалидации поля на минимальное и максимальное значение */
 
         vm.inputLeave = function (val) {
-
             if (!val) {
                 return;
             }
 
-            if($scope.field.hasOwnProperty("maxLength") && val.length > $scope.field.maxLength){
-                var maxError = "Для поля превышено максимальное допустимое значение в " + $scope.field.maxLength + " символов. Сейчас введено " + val.length + " символов.";
-                if ($scope.$parent.vm.error.indexOf(maxError) < 0) {
-                    $scope.$parent.vm.error.push(maxError);
+            if(vm.field.hasOwnProperty("maxLength") && val.length > vm.field.maxLength){
+                var maxError = "Для поля превышено максимальное допустимое значение в " + vm.field.maxLength + " символов. Сейчас введено " + val.length + " символов.";
+                if (vm.errorIndexOf(maxError) < 0) {
+                    vm.setError(maxError);
                 }
             }
 
-            if($scope.field.hasOwnProperty("minLength") && val.length < $scope.field.minLength){
-                var minError = "Минимальное значение поля не может быть меньше " + $scope.field.minLength + " символов. Сейчас введено " + val.length + " символов.";
-                if($scope.$parent.vm.error.indexOf(minError) < 0){
-                    $scope.$parent.vm.error.push(minError);
+            if(vm.field.hasOwnProperty("minLength") && val.length < vm.field.minLength){
+                var minError = "Минимальное значение поля не может быть меньше " + vm.field.minLength + " символов. Сейчас введено " + val.length + " символов.";
+                if(vm.errorIndexOf(minError) < 0){
+                    vm.setError(minError);
                 }
             }
         };
 
         function clear() {
-            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : ($scope.field.defaultValue || "");
+            vm.fieldValue = vm.field.hasOwnProperty("multiple") && vm.field.multiple === true ? [] : (vm.field.defaultValue || "");
         }
 
         /* Слушатели событий бродкаста. */
@@ -198,9 +196,9 @@
         $scope.$on('editor:entity_loaded', function (event, data) {
 
             //-- functional for required fields
-            if ($scope.field.requiredField) {
+            if (vm.field.requiredField) {
                 $scope.$watch(function () {
-                    var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
+                    var f_value = EditEntityStorage.getValueField(vm.field.requiredField);
                     var result = false;
                     var endRecursion = false;
                     (function (value) {
@@ -222,48 +220,48 @@
                         clear();
                         vm.readonly = true;
                     } else {
-                        vm.readonly = $scope.field.readonly || false;
+                        vm.readonly = vm.field.readonly || false;
                     }
                 }, true);
             }
 
             if (data.editorEntityType === "new") {
-                if ($scope.field.defaultValue) {
-                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
+                if (vm.field.defaultValue) {
+                    vm.fieldValue = vm.multiple ? [vm.field.defaultValue] : vm.field.defaultValue;
                 } else {
                     vm.fieldValue = vm.multiple ? [] : '';
                 }
-                if (data.hasOwnProperty($scope.field.name)) {
-                    vm.fieldValue = data[$scope.field.name];
+                if (data.hasOwnProperty(vm.field.name)) {
+                    vm.fieldValue = data[vm.field.name];
                 }
                 return;
             }
 
-            if (!$scope.parentField) {
+            if (!vm.parentField) {
                 if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.field.name];
+                    vm.fieldValue = data[vm.field.name];
                 } else if (vm.multiname) {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (item) {
+                    angular.forEach(data[vm.field.name], function (item) {
                         vm.fieldValue.push(item[vm.multiname]);
                     });
                 } else {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (item) {
+                    angular.forEach(data[vm.field.name], function (item) {
                         vm.fieldValue.push(item);
                     });
                 }
             } else {
                 if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.parentField][$scope.field.name];
+                    vm.fieldValue = data[vm.parentField][vm.field.name];
                 } else if (vm.multiname) {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
+                    angular.forEach(data[vm.parentField][vm.field.name], function (item) {
                         vm.fieldValue.push(item[vm.multiname]);
                     });
                 } else {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
+                    angular.forEach(data[vm.parentField][vm.field.name], function (item) {
                         vm.fieldValue.push(item);
                     });
                 }
@@ -277,8 +275,8 @@
          */
 
         $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
-            if ($scope.$parent.vm.error.indexOf(data) < 0) {
-                $scope.$parent.vm.error.push(data);
+            if (vm.errorIndexOf(data) < 0) {
+                vm.setError(data);
             }
         });
 
@@ -290,13 +288,13 @@
         $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
                 angular.forEach(data, function (error) {
-                    if ($scope.$parent.vm.error.indexOf(error) < 0) {
-                        $scope.$parent.vm.error.push(error);
+                    if (vm.errorIndexOf(error) < 0) {
+                        vm.setError(error);
                     }
                 });
             } else {
-                if ($scope.$parent.vm.error.indexOf(data) < 0) {
-                    $scope.$parent.vm.error.push(data);
+                if (vm.errorIndexOf(data) < 0) {
+                    vm.setError(data);
                 }
             }
         });
@@ -306,7 +304,7 @@
         $scope.$on('$destroy', function () {
             EditEntityStorage.deleteFieldController(vm);
             if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
+                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
             }
         });
 
@@ -315,7 +313,7 @@
         $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
-            $scope.$parent.vm.error = [];
+            vm.setEmpty();
         }, true);
 
     }

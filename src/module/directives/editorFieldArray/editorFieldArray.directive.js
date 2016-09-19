@@ -13,9 +13,16 @@
 
     function editorFieldArray($templateCache){
         return {
-            restrict : 'A',
+            restrict : 'E',
             replace : true,
-            scope : true,
+            scope : {
+                field: "=",
+                setError: "=",
+                setEmpty: "=",
+                errorIndexOf: "=",
+                parentField: "=",
+                parentFieldIndex: "="
+            },
             transclude : true,
             template : $templateCache.get('module/directives/editorFieldArray/editorFieldArray.html'),
             controller: 'EditorFieldArrayController',

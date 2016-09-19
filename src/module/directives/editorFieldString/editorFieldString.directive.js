@@ -13,13 +13,21 @@
 
     function editorFieldString($templateCache){
         return {
-            restrict : 'A',
+            restrict : 'E',
             replace : true,
-            scope : true,
+            scope : {
+                field: "=",
+                setError: "=",
+                setEmpty: "=",
+                errorIndexOf: "=",
+                parentField: "=",
+                parentFieldIndex: "="
+            },
             template : $templateCache.get('module/directives/editorFieldString/editorFieldString.html'),
             controller: 'EditorFieldStringController',
             controllerAs : 'vm',
-            link : link
+            link : link,
+            bindToController: true
         };
 
         function link(scope, elem, attrs, ctrl){

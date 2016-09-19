@@ -68,13 +68,13 @@
         $scope.$on("editor:api_error_field_"+ fieldErrorName, function (event,data) {
             if(angular.isArray(data)){
                 angular.forEach(data, function (error) {
-                    if(vm.error.indexOf(error) < 0){
-                        vm.error.push(error);
+                    if($scope.errorIndexOf(error) < 0){
+                        $scope.setError(error);
                     }
                 });
             } else {
-                if(vm.error.indexOf(data) < 0){
-                    vm.error.push(data);
+                if($scope.errorIndexOf(data) < 0){
+                    $scope.setError(data);
                 }
             }
         });

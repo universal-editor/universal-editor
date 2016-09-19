@@ -40,5 +40,17 @@
         vm.hint = $scope.field.hint || false;
         vm.required = $scope.field.required || false;
         vm.isArray = ($scope.field.type == 'array');
+
+        $scope.setError = function(error) {
+            vm.error.push(error);
+        };
+
+        $scope.setEmpty = function() {
+            vm.error = [];
+        };
+
+        $scope.errorIndexOf = function(error) {
+            return vm.error.indexOf(error);
+        };
     }
 })();
