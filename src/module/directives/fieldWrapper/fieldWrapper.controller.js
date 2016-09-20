@@ -39,7 +39,7 @@
         vm.fieldDisplayName = $scope.field.label;
         vm.hint = $scope.field.hint || false;
         vm.required = $scope.field.required || false;
-        vm.isArray = ($scope.field.type == 'array');
+        vm.isArray = ($scope.field.type == 'ue-array');
 
         $scope.setError = function(error) {
             vm.error.push(error);
