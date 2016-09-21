@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeStringController', UeStringController);
 
-    UeStringController.$inject = ['$scope', 'EditEntityStorage', 'ArrayFieldStorage'];
+    UeStringController.$inject = ['$scope', '$element', 'EditEntityStorage', 'ArrayFieldStorage'];
 
-    function UeStringController($scope, EditEntityStorage, ArrayFieldStorage) {
+    function UeStringController($scope, $element ,EditEntityStorage, ArrayFieldStorage) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
@@ -299,15 +299,6 @@
             }
         });
 
-        /* Удаление контроллера поля из сервиса управления данными полей. Происходит при исчезании поля */
-
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
-            }
-        });
-
         /* Очистка массива ошибок при внесении пользователем изменений в поле */
 
         $scope.$watch(function () {
@@ -316,5 +307,19 @@
             vm.setErrorEmpty();
         }, true);
 
+        /* Удаление контроллера поля из сервиса управления данными полей. Происходит при исчезании поля */
+
+        this.$onDestroy = function() {
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
+            }
+        };
+
+        this.$postLink = function() {
+            $element.on('$destroy', function () {
+                $scope.$destroy();
+            });
+        };
     }
 })();

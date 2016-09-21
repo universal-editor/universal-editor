@@ -20,14 +20,14 @@
           "fields": [
             {
               "name": "name",
-              "type": "string",
+              "type": "ue-string",
               "list": true,
               "label": "Имя",
               "required": true
             },
             {
               "name": "email",
-              "type": "string",
+              "type": "ue-string",
               "list": true,
               "label": "Эл. почта",
               "required": true
@@ -320,7 +320,7 @@
           "fields": [
             {
               "name": "select-simple",
-              "type": "select",
+              "type": "ue-select",
               "list": true,
               "label": "Простой",
               "filterable": true,
@@ -335,7 +335,7 @@
             },
             {
               "name": "select-simple-multiple",
-              "type": "select",
+              "type": "ue-select",
               "list": true,
               "label": "Множественный режим",
               "filterable": true,
@@ -351,7 +351,7 @@
             },
             {
               "name": "select-remote",
-              "type": "select",
+              "type": "ue-select",
               "list": true,
               "label": "Значения с сервера",
               "hint": "Значения для списка запрашиваются с сервера.",
@@ -366,7 +366,7 @@
             },
             {
               "name": "select-remote-search",
-              "type": "select",
+              "type": "ue-select",
               "list": true,
               "label": "Поиск",
               "filterable": true,
@@ -383,7 +383,7 @@
             },
             {
               "name": "select-remote-tree",
-              "type": "select",
+              "type": "ue-select",
               "list": true,
               "label": "Дерево",
               "valuesRemote": {
@@ -398,7 +398,7 @@
             },
             {
               "name": "select-remote-tree-branch",
-              "type": "select",
+              "type": "ue-select",
               "list": true,
               "label": "Дерево с ветвями",
               "selectBranches": true,
@@ -414,7 +414,7 @@
             },
             {
               "name": "select-remote-tree-multiple",
-              "type": "select",
+              "type": "ue-select",
               "list": true,
               "label": "Множественное дерево",
               "multiple": true,
@@ -431,7 +431,7 @@
             },
             {
               "name": "select-remote-tree-search",
-              "type": "select",
+              "type": "ue-select",
               "list": true,
               "label": "Дерево с поиском",
               "search": true,
@@ -449,7 +449,7 @@
             },
             {
               "name": "select-remote-tree-full",
-              "type": "select",
+              "type": "ue-select",
               "list": true,
               "label": "Множественное дерево с поиском и ветвями",
               "multiple": true,
@@ -474,7 +474,7 @@
           "fields": [
             {
               "name": "autocomplete-valuesRemote",
-              "type": "autocomplete",
+              "type": "ue-autocomplete",
               "list": true,
               "label": "Поле autocomplete",
               "valuesRemote": {
@@ -488,7 +488,7 @@
             },
             {
               "name": "autocomplete-multiple-valuesRemote",
-              "type": "autocomplete",
+              "type": "ue-autocomplete",
               "list": true,
               "label": "Поле autocomplete в режиме multiple",
               "valuesRemote": {
@@ -502,7 +502,7 @@
             },
             {
               "name": "autocomplete-values",
-              "type": "autocomplete",
+              "type": "ue-autocomplete",
               "list": true,
               "label": "Поле autocomplete с константными данными в виде объекта",
               "values": {
@@ -516,7 +516,7 @@
             },
             {
               "name": "autocomplete-multiple-values-array",
-              "type": "autocomplete",
+              "type": "ue-autocomplete",
               "list": true,
               "label": "Поле autocomplete с константными данными в виде массива",
               "values": [
@@ -534,6 +534,236 @@
                 "Банан"
               ],
               "multiple": true
+            }
+          ]
+        }
+      ],
+      "contextMenu": [
+        {
+          "label": "Раскрыть",
+          "type": "open"
+        },
+        {
+          "label": "Редактировать",
+          "type": "edit"
+        },
+        {
+          "label": "Удалить",
+          "type": "delete"
+        }
+      ],
+      "listHeaderBar": [
+        {
+          "type": "create",
+          "label": "Создать"
+        }
+      ],
+      "editFooterBar": [
+        {
+          "type": "update",
+          "label": "Сохранить"
+        },
+        {
+          "type": "presave",
+          "label": "Применить"
+        },
+        {
+          "type": "delete",
+          "label": "Удалить"
+        }
+      ]
+    },
+    {
+      "name": "newConfig",
+      "label": "Сотрудники",
+      "backend": {
+        "url": "http://universal-backend.dev/rest/v1/staff",
+        "sortBy": "-id",
+        "fields": {
+          "primaryKey": "id",
+          "parent": "parent_id"
+        }
+      },
+      "tabs": [
+        {
+          "label": "Карточка",
+          "fields": [
+            {
+              "name": "name",
+              "type": "ue-string",
+              "list": true,
+              "label": "Имя",
+              "required": true
+            },
+            {
+              "name": "fired",
+              "type": "ue-checkbox",
+              "label": "Уволен",
+              "values": {
+                "1": ""
+              }
+            },
+            {
+              "name": "gender",
+              "type": "ue-radiolist",
+              "list": true,
+              "label": "Пол",
+              "filterable": true,
+              "values": {
+                "male": "Мужской",
+                "female": "Женский"
+              }
+            },
+            {
+              "name": "country",
+              "type": "ue-select",
+              "list": true,
+              "label": "Страна",
+              "filterable": true,
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/country"
+              },
+              "multiple": false,
+              "placeholder": "Выберете эелемент"
+            },
+            {
+              "name": "parent_id",
+              "type": "ue-autocomplete",
+              "list": true,
+              "label": "Руководитель",
+              "valuesRemote": {
+                "fields": {
+                  "value": "id",
+                  "label": "name"
+                },
+                "url": "http://universal-backend.dev/rest/v1/staff"
+              },
+              "multiple": false
+            },
+            {
+              "name": "colors",
+              "type": "ue-colorpicker",
+              "list": true,
+              "multiple": true,
+              "multiname": "color",
+              "expandable": true,
+              "label": "Любимые цвета"
+            },
+            {
+              "name": "text",
+              "type": "ue-textarea",
+              "label": "Дополнительные заметки"
+            },
+            {
+              "name": "colors11",
+              "type": "ue-colorpicker",
+              "list": true,
+              "multiple": true,
+              "multiname": "color",
+              "expandable": true,
+              "label": "Любимые цвета"
+            },
+            {
+              "name": "updated_at1",
+              "type": "ue-date",
+              "label": "Дата обновления"
+            },
+            {
+              "name": "updated_at12",
+              "type": "ue-datetime",
+              "label": "Дата обновления"
+            },
+            {
+              "name": "updated_time1",
+              "type": "ue-time",
+              "label": "Дата обновления"
+            },
+            {
+              "name": "number1244",
+              "type": "ue-number",
+              "label": "Дополнительные заметки"
+            },
+            {
+              "name": "gender11",
+              "type": "ue-radiolist",
+              "list": true,
+              "label": "Пол",
+              "filterable": true,
+              "values": {
+                "male": "Мужской",
+                "female": "Женский"
+              }
+            },
+            {
+              "name": "I'm array",
+              "type": "ue-array",
+              "label": "ФИО",
+              "fields": [
+                {
+                  "name": "names",
+                  "type": "ue-string",
+                  "label": "Имя"
+                },
+                {
+                  "name": "fired11",
+                  "type": "ue-checkbox",
+                  "label": "Уволен",
+                  "values": {
+                    "1": "",
+                    "2": "",
+                    "3": ""
+                  }
+                },
+                {
+                  "name": "colors111",
+                  "type": "ue-colorpicker",
+                  "list": true,
+                  "multiple": true,
+                  "multiname": "color",
+                  "expandable": true,
+                  "label": "Любимые цвета"
+                },
+                {
+                  "name": "updated_at44",
+                  "type": "ue-date",
+                  "label": "Дата обновления"
+                },
+                {
+                  "name": "updated_at13",
+                  "type": "ue-datetime",
+                  "label": "Дата обновления"
+                },
+                {
+                  "name": "updated_time13",
+                  "type": "ue-time",
+                  "label": "Дата обновления"
+                },
+                {
+                  "name": "text4r",
+                  "type": "ue-textarea",
+                  "label": "Дополнительные заметки"
+                },
+                {
+                  "name": "number12",
+                  "type": "ue-number",
+                  "label": "Дополнительные заметки"
+                },
+                {
+                  "name": "gender222",
+                  "type": "ue-radiolist",
+                  "list": true,
+                  "label": "Пол",
+                  "filterable": true,
+                  "values": {
+                    "male": "Мужской",
+                    "female": "Женский"
+                  }
+                }
+              ]
             }
           ]
         }

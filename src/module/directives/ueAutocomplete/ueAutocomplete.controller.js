@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
-    UeAutocompleteController.$inject = ['$scope','$element','EditEntityStorage','RestApiService','$timeout','ArrayFieldStorage'];
+    UeAutocompleteController.$inject = ['$scope', '$element', '$document', 'EditEntityStorage', 'RestApiService', '$timeout', 'ArrayFieldStorage'];
 
-    function UeAutocompleteController($scope,$element,EditEntityStorage,RestApiService,$timeout,ArrayFieldStorage){
+    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, RestApiService, $timeout, ArrayFieldStorage){
         /* jshint validthis: true */
         var vm = this,
             inputTimeout;
@@ -316,13 +316,6 @@
             loadValues();
         });
 
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if(vm.parentFieldIndex){
-                ArrayFieldStorage.fieldDestroy(vm.parentField,vm.parentFieldIndex,vm.field.name,vm.fieldValue);
-            }
-        });
-
         $scope.$on("editor:api_error_field_"+ fieldErrorName, function (event,data) {
             if(angular.isArray(data)){
                 angular.forEach(data, function (error) {
@@ -560,6 +553,37 @@
                 vm.multiple
             ) {
                 vm.removeFromSelected(event, vm.selectedValues[vm.selectedValues.length - 1]);
+            }
+        };
+
+        this.$postLink = function() {
+            $document.on('click', function(event) {
+                if (!$element[0].contains(event.target)) {
+                    $scope.$apply(function() {
+                        vm.showPossible = false;
+                    });
+
+                }
+            });
+
+            $scope.inputFocus = function() {
+                if (!vm.multiple) {
+                    $element.find('.autocomplete-field-search').removeClass('hidden');
+                    $element.find('.autocomplete-item').addClass('opacity-item');
+                }
+                vm.showPossible = true;
+                $element.find('input')[0].focus();
+            };
+
+            $element.on('$destroy', function () {
+                $scope.$destroy();
+            });
+        };
+
+        this.$onDestroy = function() {
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
             }
         };
     }
