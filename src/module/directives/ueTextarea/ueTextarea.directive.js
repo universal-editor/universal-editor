@@ -1,35 +1,27 @@
 (function () {
     'use strict';
 
+    var ueTextarea = {
+        bindings : {
+            field: "=",
+            setError: "=",
+            setErrorEmpty: "=",
+            errorIndexOf: "=",
+            parentField: "=",
+            parentFieldIndex: "="
+        },
+        template : ['$templateCache', function ($templateCache) {
+            return $templateCache.get('module/directives/ueTextarea/ueTextarea.html');
+        }],
+        controller: 'UeTextareaController',
+        controllerAs : 'vm'
+    };
+
+    /**
+     * @desc String-type field.
+     * @example <ue-textarea></ue-textarea>
+     */
     angular
         .module('universal.editor')
-        .directive('ueTextarea',ueTextarea);
-
-    ueTextarea.$inject = ['$templateCache'];
-
-    function ueTextarea($templateCache){
-        return {
-            restrict : 'E',
-            replace : true,
-            scope : {
-                field: "=",
-                setError: "=",
-                setErrorEmpty: "=",
-                errorIndexOf: "=",
-                parentField: "=",
-                parentFieldIndex: "="
-            },
-            template : $templateCache.get('module/directives/ueTextarea/ueTextarea.html'),
-            controller: 'UeTextareaController',
-            controllerAs : 'vm',
-            link : link,
-            bindToController: true
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
+        .component('ueTextarea',ueTextarea);
 })();

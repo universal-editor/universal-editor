@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeColorpickerController',UeColorpickerController);
 
-    UeColorpickerController.$inject = ['$scope','EditEntityStorage','ArrayFieldStorage'];
+    UeColorpickerController.$inject = ['$scope', '$element', 'EditEntityStorage','ArrayFieldStorage'];
 
-    function UeColorpickerController($scope,EditEntityStorage,ArrayFieldStorage){
+    function UeColorpickerController($scope, $element, EditEntityStorage,ArrayFieldStorage){
         /* jshint validthis: true */
         var vm = this;
         var regExpPattern = /^#[0-9a-f]{3,6}$/i;
@@ -185,17 +185,23 @@
             }
         });
 
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if(vm.parentFieldIndex){
-                ArrayFieldStorage.fieldDestroy(vm.parentField,vm.parentFieldIndex,vm.field.name,vm.fieldValue);
-            }
-        });
-
         $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
             vm.setErrorEmpty();
         });
+
+        this.$onDestroy = function() {
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
+            }
+        };
+
+        this.$postLink = function() {
+            $element.on('$destroy', function () {
+                $scope.$destroy();
+            });
+        };
     }
 })();

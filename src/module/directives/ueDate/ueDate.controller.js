@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeDateController', UeDateController);
 
-    UeDateController.$inject = ['$scope', 'EditEntityStorage', 'moment', 'ArrayFieldStorage'];
+    UeDateController.$inject = ['$scope', '$element', 'EditEntityStorage', 'moment', 'ArrayFieldStorage'];
 
-    function UeDateController($scope, EditEntityStorage, moment, ArrayFieldStorage) {
+    function UeDateController($scope, $element, EditEntityStorage, moment, ArrayFieldStorage) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
@@ -149,13 +149,13 @@
                     var f_value = EditEntityStorage.getValueField(vm.field.requiredField);
                     var result = false;
                     var endRecursion = false;
-                    (function (value) {
+                    (function check(value) {
                         var keys = Object.keys(value);
                         for (var i = keys.length; i--;) {
                             var propValue = value[keys[i]];
                             if (propValue !== null && propValue !== undefined && propValue !== "") {
                                 if (angular.isObject(propValue) && !endRecursion) {
-                                    arguments.callee(propValue);
+                                    check(propValue);
                                 }
                                 result = true;
                                 endRecursion = true;
@@ -215,13 +215,6 @@
             }
         });
 
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
-            }
-        });
-
         $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
                 angular.forEach(data, function (error) {
@@ -241,5 +234,18 @@
         }, function () {
             vm.setErrorEmpty();
         }, true);
+
+        this.$onDestroy = function(){
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
+            }
+        };
+
+        this.$postLink = function(){
+            $element.on('$destroy', function () {
+                $scope.$destroy();
+            });
+        }
     }
 })();

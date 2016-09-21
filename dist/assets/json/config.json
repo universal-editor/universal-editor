@@ -34,7 +34,7 @@
             },
             {
               "name": "gender",
-              "type": "radiolist",
+              "type": "ue-radiolist",
               "list": true,
               "label": "Пол",
               "filterable": true,
@@ -46,7 +46,7 @@
             },
             {
               "name": "country",
-              "type": "select",
+              "type": "ue-select",
               "list": true,
               "label": "Страна",
               "filterable": true,
@@ -62,7 +62,7 @@
             },
             {
               "name": "parent_id",
-              "type": "autocomplete",
+              "type": "ue-autocomplete",
               "list": true,
               "label": "Руководитель",
               "valuesRemote": {
@@ -76,7 +76,7 @@
             },
             {
               "name": "colors",
-              "type": "colorpicker",
+              "type": "ue-colorpicker",
               "list": true,
               "multiple": true,
               "multiname": "color",
@@ -85,7 +85,7 @@
             },
             {
               "name": "text",
-              "type": "textarea",
+              "type": "ue-textarea",
               "label": "Дополнительные заметки"
             }
           ]
@@ -95,7 +95,7 @@
           "fields": [
             {
               "name": "fired",
-              "type": "checkbox",
+              "type": "ue-checkbox",
               "label": "Уволен",
               "values": {
                 "1": ""
@@ -103,13 +103,13 @@
             },
             {
               "name": "created_at",
-              "type": "datetime",
+              "type": "ue-datetime",
               "readonly": true,
               "label": "Дата создания"
             },
             {
               "name": "updated_at",
-              "type": "datetime",
+              "type": "ue-datetime",
               "readonly": true,
               "label": "Дата обновления"
             }
@@ -168,7 +168,7 @@
           "fields": [
             {
               "name": "published",
-              "type": "checkbox",
+              "type": "ue-checkbox",
               "list": true,
               "label": "Опубликовано",
               "values": {
@@ -177,13 +177,13 @@
             },
             {
               "name": "published_at",
-              "type": "datetime",
+              "type": "ue-datetime",
               "list": true,
               "label": "Дата публикации"
             },
             {
               "name": "category_id",
-              "type": "select",
+              "type": "ue-select",
               "label": "Категория",
               "list": true,
               "filterable": true,
@@ -202,14 +202,14 @@
             },
             {
               "name": "title",
-              "type": "string",
+              "type": "ue-string",
               "list": true,
               "label": "Заголовок",
               "required": true
             },
             {
               "name": "description",
-              "type": "textarea",
+              "type": "ue-textarea",
               "list": true,
               "label": "Краткое описание",
               "required": true
@@ -221,7 +221,7 @@
           "fields": [
             {
               "name": "authors",
-              "type": "autocomplete",
+              "type": "ue-autocomplete",
               "label": "Авторы",
               "multiple": true,
               "expandable": true,
@@ -236,7 +236,7 @@
             },
             {
               "name": "tags",
-              "type": "autocomplete",
+              "type": "ue-autocomplete",
               "label": "Теги",
               "multiple": true,
               "expandable": true,
@@ -255,13 +255,13 @@
           "fields": [
             {
               "name": "created_at",
-              "type": "datetime",
+              "type": "ue-datetime",
               "readonly": true,
               "label": "Дата создания"
             },
             {
               "name": "updated_at",
-              "type": "datetime",
+              "type": "ue-datetime",
               "readonly": true,
               "label": "Дата обновления"
             }
@@ -656,7 +656,8 @@
             {
               "name": "text",
               "type": "ue-textarea",
-              "label": "Дополнительные заметки"
+              "label": "Дополнительные заметки",
+              "requiredField": "colors"
             },
             {
               "name": "colors11",

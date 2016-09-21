@@ -240,13 +240,13 @@
                     var f_value = EditEntityStorage.getValueField(vm.field.requiredField);
                     var result = false;
                     var endRecursion = false;
-                    (function (value) {
+                    (function check(value) {
                         var keys = Object.keys(value);
                         for (var i = keys.length; i--;) {
                             var propValue = value[keys[i]];
                             if (propValue !== null && propValue !== undefined && propValue !== "") {
                                 if (angular.isObject(propValue) && !endRecursion) {
-                                    arguments.callee(propValue);
+                                    check(propValue);
                                 }
                                 result = true;
                                 endRecursion = true;

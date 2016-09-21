@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeNumberController', UeNumberController);
 
-    UeNumberController.$inject = ['$scope', 'EditEntityStorage', 'ArrayFieldStorage'];
+    UeNumberController.$inject = ['$scope', '$element', 'EditEntityStorage', 'ArrayFieldStorage'];
 
-    function UeNumberController($scope, EditEntityStorage, ArrayFieldStorage) {
+    function UeNumberController($scope, $element, EditEntityStorage, ArrayFieldStorage) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
@@ -175,13 +175,13 @@
                     var f_value = EditEntityStorage.getValueField(vm.field.requiredField);
                     var result = false;
                     var endRecursion = false;
-                    (function (value) {
+                    (function check(value) {
                         var keys = Object.keys(value);
                         for (var i = keys.length; i--;) {
                             var propValue = value[keys[i]];
                             if (propValue !== null && propValue !== undefined && propValue !== null) {
                                 if (angular.isObject(propValue) && !endRecursion) {
-                                    arguments.callee(propValue);
+                                    check(propValue);
                                 }
                                 result = true;
                                 endRecursion = true;
@@ -262,18 +262,23 @@
             }
         });
 
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
-            }
-        });
-
         $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
             vm.setErrorEmpty();
         }, true);
 
+        this.$onDestroy = function() {
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
+            }
+        };
+
+        this.$postLink = function() {
+            $element.on('$destroy', function () {
+                $scope.$destroy();
+            });
+        }
     }
 })();

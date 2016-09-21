@@ -263,13 +263,13 @@
                     var f_value = EditEntityStorage.getValueField(vm.field.requiredField);
                     var result = false;
                     var endRecursion = false;
-                    (function (value) {
+                    (function check(value) {
                         var keys = Object.keys(value);
                         for (var i = keys.length; i--;) {
                             var propValue = value[keys[i]];
                             if (propValue !== null && propValue !== undefined && propValue !== "") {
                                 if (angular.isObject(propValue) && !endRecursion) {
-                                    arguments.callee(propValue);
+                                    check(propValue);
                                 }
                                 result = true;
                                 endRecursion = true;
@@ -367,13 +367,6 @@
                 if (vm.errorIndexOf(data) < 0) {
                     vm.setError(data);
                 }
-            }
-        });
-
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
             }
         });
 
@@ -861,6 +854,52 @@
             var elem = angular.element($element.find(className)[0]);
             return $window.innerHeight - elem.offset().top;
         };
+
+        this.$onDestroy = function() {
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
+            }
+        };
+
+        this.$postLink = function() {
+            $element.on('$destroy', function () {
+                $scope.$destroy();
+            });
+
+            $scope.isOpen = false;
+
+            $document.on('click', function(event) {
+                if (!$element[0].contains(event.target)) {
+                    $scope.$apply(function() {
+                        $scope.vm.isBlur();
+                    });
+
+                }
+            });
+
+            $scope.toggleDropdown = function() {
+                $element.find('input')[0].focus();
+                var dHeight = $document.height();
+                var dropdownHost = $element.find('.dropdown__host');
+                var dropdownHeight = dropdownHost.height();
+                var dropdownOffset = dropdownHost.offset();
+                var dropdownBottom = dropdownOffset.top + dropdownHeight;
+                $element.find('.dropdown__items').removeClass('dropdown-top');
+                $element.find('.dropdown__items').removeClass('dropdown-bottom');
+                if (dHeight - dropdownBottom < 300) {
+                    $element.find('.dropdown__items').addClass('dropdown-top');
+                } else {
+                    $element.find('.dropdown__items').addClass('dropdown-bottom');
+                }
+                $scope.isOpen = !$scope.isOpen;
+                if ($scope.isOpen) {
+                    var formControl = $element.find('.select-input');
+                    formControl.addClass('active');
+                }
+                vm.setColorPlaceholder();
+            };
+        }
     }
 
     angular

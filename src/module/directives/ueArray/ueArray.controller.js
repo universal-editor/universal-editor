@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeArrayController',UeArrayController);
 
-    UeArrayController.$inject = ['$scope','$rootScope','configData','EditEntityStorage','$timeout','ArrayFieldStorage'];
+    UeArrayController.$inject = ['$scope', '$rootScope', '$element', 'configData', 'EditEntityStorage', '$timeout', 'ArrayFieldStorage'];
 
-    function UeArrayController($scope,$rootScope,configData,EditEntityStorage,$timeout,ArrayFieldStorage){
+    function UeArrayController($scope, $rootScope, $element, configData, EditEntityStorage, $timeout, ArrayFieldStorage){
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
@@ -90,6 +90,16 @@
 
         vm.addItem = function () {
             vm.fieldsArray.push("");
+        };
+
+        this.$onDestroy = function() {
+
+        };
+
+        this.$postLink = function(){
+            $element.on('$destroy', function () {
+                $scope.$destroy();
+            });
         };
     }
 })();

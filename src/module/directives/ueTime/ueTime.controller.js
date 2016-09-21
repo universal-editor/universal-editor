@@ -142,7 +142,7 @@
             vm.fieldValue = vm.field.hasOwnProperty("multiple") && vm.field.multiple === true ? [] : "";
         }
 
-        $scope.$on('editor:entity_loaded', function (event, data) {
+        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function (event, data) {
 
             //-- functional for required fields
             if (vm.field.requiredField) {
@@ -150,13 +150,13 @@
                     var f_value = EditEntityStorage.getValueField(vm.field.requiredField);
                     var result = false;
                     var endRecursion = false;
-                    (function (value) {
+                    (function check(value) {
                         var keys = Object.keys(value);
                         for (var i = keys.length; i--;) {
                             var propValue = value[keys[i]];
                             if (propValue !== null && propValue !== undefined && propValue !== "") {
                                 if (angular.isObject(propValue) && !endRecursion) {
-                                    arguments.callee(propValue);
+                                    check(propValue);
                                 }
                                 result = true;
                                 endRecursion = true;
@@ -218,20 +218,13 @@
             }
         });
 
-        $scope.$watch(function () {
+        var destroyWatchFieldValue = $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
             vm.setErrorEmpty();
         }, true);
 
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
-            }
-        });
-
-        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
+        var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
                 angular.forEach(data, function (error) {
                     if (vm.errorIndexOf(error) < 0) {
@@ -244,5 +237,22 @@
                 }
             }
         });
+
+        this.$onDestroy = function() {
+            //destroyWatchEntityLoaded();
+            destroyEntityLoaded();
+            destroyWatchFieldValue();
+            destroyErrorField();
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
+            }
+        };
+
+        this.$postLink = function(){
+            $element.on('$destroy', function () {
+                $scope.$destroy();
+            });
+        };
     }
 })();

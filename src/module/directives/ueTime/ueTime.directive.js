@@ -1,39 +1,27 @@
 (function () {
     'use strict';
 
+    var ueTime = {
+        bindings : {
+            field: "=",
+            setError: "=",
+            setErrorEmpty: "=",
+            errorIndexOf: "=",
+            parentField: "=",
+            parentFieldIndex: "="
+        },
+        template : ['$templateCache', function ($templateCache) {
+            return $templateCache.get('module/directives/ueTime/ueTime.html');
+        }],
+        controller: 'UeTimeController',
+        controllerAs : 'vm'
+    };
+
     /**
      * @desc String-type field.
-     * @example <div editor-field-time=""></div>
+     * @example <ue-time></ue-time>
      */
     angular
         .module('universal.editor')
-        .directive('ueTime', ueTime);
-
-    ueTime.$inject = ['$templateCache'];
-
-    function ueTime($templateCache){
-        return {
-            restrict : 'E',
-            replace : true,
-            scope : {
-                field: "=",
-                setError: "=",
-                setErrorEmpty: "=",
-                errorIndexOf: "=",
-                parentField: "=",
-                parentFieldIndex: "="
-            },
-            template : $templateCache.get('module/directives/ueTime/ueTime.html'),
-            controller: 'UeTimeController',
-            controllerAs : 'vm',
-            link : link,
-            bindToController: true
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
+        .component('ueTime', ueTime);
 })();
