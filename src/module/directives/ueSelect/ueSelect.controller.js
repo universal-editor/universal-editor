@@ -22,8 +22,6 @@
             fieldErrorName = vm.field.name;
         }
 
-        var tmpObject = {};
-
         var remote = vm.field.valuesRemote;
         vm.field_id = "id";
         vm.field_search = "title";

@@ -25,7 +25,7 @@
                 setActiveElement: '=',
                 lvlDropdown: '='
             },
-            template : $templateCache.get('module/directives/editorFieldSelect/dropdownItems.html'),
+            template : $templateCache.get('module/directives/ueSelect/dropdownItems.html'),
             controller: 'DropdownItemsController',
             controllerAs : 'vm',
             compile : compile
