@@ -258,7 +258,9 @@
         }, true);
 
         this.$onDestroy = function() {
-            destroyWatchEntityLoaded();
+            if (angular.isFunction(destroyWatchEntityLoaded)) {
+                destroyWatchEntityLoaded();
+            }
             destroyEntityLoaded();
             destroyErrorField();
             destroyWatchFieldValue();

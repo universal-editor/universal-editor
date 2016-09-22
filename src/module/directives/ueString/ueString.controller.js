@@ -192,12 +192,12 @@
          * Событие загрузки сущности ( созданной или пустой, т.е. создаваемой ).
          * Поле забирает данные из объекта сущности с учетом наличия родительского поля.
          */
-
-        $scope.$on('editor:entity_loaded', function (event, data) {
+        var destroyWatchEntityLoaded;
+        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function (event, data) {
 
             //-- functional for required fields
             if (vm.field.requiredField) {
-                $scope.$watch(function () {
+                destroyWatchEntityLoaded = $scope.$watch(function () {
                     var f_value = EditEntityStorage.getValueField(vm.field.requiredField);
                     var result = false;
                     var endRecursion = false;
@@ -269,23 +269,11 @@
         });
 
         /*
-         * При обновлении / создании сущности может быть получена ошибка.
-         * В таком случае происходит броадкаст следующего события.
-         * Название события генерируется сервисом RestApiService.
-         */
-
-        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
-            if (vm.errorIndexOf(data) < 0) {
-                vm.setError(data);
-            }
-        });
-
-        /*
          * При удалении директивы она должна отправлять запрос в EditEntityStorage
          * чтобы последний удалил её из списка отслеживаемых полей.
          */
 
-        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
+        var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
                 angular.forEach(data, function (error) {
                     if (vm.errorIndexOf(error) < 0) {
@@ -301,7 +289,7 @@
 
         /* Очистка массива ошибок при внесении пользователем изменений в поле */
 
-        $scope.$watch(function () {
+        var destroyWatchFieldValue = $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
             vm.setErrorEmpty();
@@ -310,6 +298,12 @@
         /* Удаление контроллера поля из сервиса управления данными полей. Происходит при исчезании поля */
 
         this.$onDestroy = function() {
+            if (angular.isFunction(destroyWatchEntityLoaded)) {
+                destroyWatchEntityLoaded();
+            }
+            destroyEntityLoaded();
+            destroyErrorField();
+            destroyWatchFieldValue();
             EditEntityStorage.deleteFieldController(vm);
             if (vm.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);

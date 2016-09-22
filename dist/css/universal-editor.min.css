@@ -2,9 +2,9 @@
 .filter-date-wrapper .divider{padding:0 5px}.editor-date,.editor-time{display:inline-block}
 .editor-date input{width:85px}.editor-time input{width:70px}.filter-datetime-wrapper .filter-start,.filter-datetime-wrapper .filter-end,.filter-datetime-wrapper .divider{display:inline-block}
 .filter-datetime-wrapper .divider{padding:0 5px}.editor-datetime,.editor-time{display:inline-block}
-.editor-datetime input{width:135px}.filter-time-wrapper .filter-start,.filter-time-wrapper .filter-end,.filter-time-wrapper .divider{display:inline-block}
-.filter-time-wrapper .divider{padding:0 5px}.field-wrapper{margin:0 10px;padding:10px 0}
-.field-array-wrapper .add-more{margin-top:10px}.autocomplete-item{background:#cbd6da;border:1px solid #959ea9;-webkit-border-radius:4px;border-radius:4px;color:#444;margin:2px;padding:0 5px;display:inline-block;height:24px;line-height:22px}
+.editor-datetime input{width:135px}.field-wrapper{margin:0 10px;padding:10px 0}.filter-time-wrapper .filter-start,.filter-time-wrapper .filter-end,.filter-time-wrapper .divider{display:inline-block}
+.filter-time-wrapper .divider{padding:0 5px}.field-array-wrapper .add-more{margin-top:10px}
+.autocomplete-item{background:#cbd6da;border:1px solid #959ea9;-webkit-border-radius:4px;border-radius:4px;color:#444;margin:2px;padding:0 5px;display:inline-block;height:24px;line-height:22px}
 .autocomplete-item.opacity-item{opacity:.2}.autocomplete-item .remove-from-selected{margin:0 0 0 5px;padding:0;border:0;background:0;cursor:pointer;vertical-align:middle;font:700 16px Arial,sans-serif;color:#585858}
 .autocomplete-input-wrapper{position:relative;height:100%;padding:2px}.autocomplete-input-wrapper:after{content:'';display:table;clear:both}
 .autocomplete-input-wrapper .form-control{display:inline-block}.autocomplete-input-wrapper .autocomplete-field-search{display:inline-block;position:relative;padding:0;margin-left:3px;background-color:#fff;border:0;height:28px;max-width:100%;box-sizing:border-box;overflow:hidden;text-overflow:ellipsis}

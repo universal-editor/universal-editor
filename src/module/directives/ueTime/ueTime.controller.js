@@ -141,12 +141,12 @@
         function clear() {
             vm.fieldValue = vm.field.hasOwnProperty("multiple") && vm.field.multiple === true ? [] : "";
         }
-
+        var destroyWatchEntityLoaded;
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function (event, data) {
 
             //-- functional for required fields
             if (vm.field.requiredField) {
-                $scope.$watch(function () {
+                destroyWatchEntityLoaded = $scope.$watch(function () {
                     var f_value = EditEntityStorage.getValueField(vm.field.requiredField);
                     var result = false;
                     var endRecursion = false;
@@ -239,7 +239,9 @@
         });
 
         this.$onDestroy = function() {
-            //destroyWatchEntityLoaded();
+            if (angular.isFunction(destroyWatchEntityLoaded)) {
+                destroyWatchEntityLoaded();
+            }
             destroyEntityLoaded();
             destroyWatchFieldValue();
             destroyErrorField();

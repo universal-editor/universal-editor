@@ -134,7 +134,7 @@
             });
         };
 
-        $scope.$on('editor:entity_loaded', function (event, data) {
+        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function (event, data) {
             if( data.editorEntityType === "new" ){
                 vm.fieldValue = vm.multiple ? [(vm.field.defaultValue || defaultColor)] : (vm.field.defaultValue || defaultColor);
                 return;
@@ -171,7 +171,7 @@
             }
         });
 
-        $scope.$on("editor:api_error_field_"+ fieldErrorName, function (event,data) {
+        var destroyErrorField= $scope.$on("editor:api_error_field_"+ fieldErrorName, function (event,data) {
             if(angular.isArray(data)){
                 angular.forEach(data, function (error) {
                     if(vm.errorIndexOf(error) < 0){
@@ -185,13 +185,16 @@
             }
         });
 
-        $scope.$watch(function () {
+        var destroyWatchFieldValue = $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
             vm.setErrorEmpty();
         });
 
         this.$onDestroy = function() {
+            destroyEntityLoaded();
+            destroyErrorField();
+            destroyWatchFieldValue();
             EditEntityStorage.deleteFieldController(vm);
             if (vm.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
