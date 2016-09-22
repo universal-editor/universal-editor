@@ -135,7 +135,7 @@
                 templateUrl : "module/directives/universalEditor/universalEditorList.html"
             })
             .state('editor.type.new',{
-                url : '/new?parent&type',
+                url : '/new?back&parent&type',
                 templateUrl : "module/directives/universalEditor/universalEditorForm.html",
                 onEnter : ["EditEntityStorage", function (EditEntityStorage) {
                     EditEntityStorage.createNewEntity();

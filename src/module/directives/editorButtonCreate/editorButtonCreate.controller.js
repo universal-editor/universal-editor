@@ -20,10 +20,12 @@
             var parentId = $location.search().parent !== '' ? $location.search().parent : undefined;
 
             var newPageType = $scope.type || $state.params.type;
+            var newPageBack = $state.params.type || $scope.type;
 
             $state.go('editor.type.new',{
                 parent: parentId,
-                type: newPageType
+                type: newPageType,
+                back: newPageBack
             });
         });
     }

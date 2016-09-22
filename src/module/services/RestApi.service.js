@@ -287,6 +287,9 @@
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
+                if ($state.params.back) {
+                    params.type = $state.params.back;
+                }
                 $state.go('editor.type.list', params,{reload: true});
             }, function (reject) {
                 if (reject.data.error && reject.data.hasOwnProperty("data") && reject.data.data.length > 0){
