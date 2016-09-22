@@ -26,7 +26,27 @@ ul.nav.nav-tabs(data-ng-if="vm.configData.entities.length > 1")
          button.btn.btn-sm.btn-default(data-ng-if="vm.parentButton && !vm.entityLoaded && !vm.loadingData", data-ng-click="vm.getParent()") {{'BUTTON.HIGHER_LEVEL' | translate}}
       .processing-status-wrapper(data-ng-show="vm.loadingData")
          .processing-status {{'PERFORMS_ACTIONS' | translate}}
-      table.table.table-bordered(data-ng-hide="vm.entityLoaded || vm.loadingData", class="items-list")
+      ue-table(
+         data-table-fields='vm.tableFields',
+         data-sort-field='vm.sortField',
+         data-sorting-direction='vm.sortingDirection',
+         data-change-sort-field='vm.changeSortField',
+         data-list-loaded='vm.listLoaded',
+         data-items='vm.items',
+         data-toggle-context-view='vm.toggleContextView',
+         data-context-links='vm.contextLinks',
+         data-context-id='vm.contextId',
+         data-context-action='vm.contextAction',
+         data-mix-context-links='vm.mixContextLinks',
+         data-mix-entity-type='vm.mixEntityType',
+         data-prepend-icon='vm.prependIcon',
+         data-page-items-array='vm.pageItemsArray',
+         data-meta-key='vm.metaKey',
+         data-id-field='vm.idField',
+         data-pagination='vm.pagination',
+         data-change-page='vm.changePage'
+      )
+      //table.table.table-bordered(data-ng-hide="vm.entityLoaded || vm.loadingData", class="items-list")
          thead
             tr
                td.actions-header.context-column
