@@ -157,6 +157,7 @@
             if (expandFields.length > 0){
                 params.expand = expandFields.join(',');
             }
+
             $http({
                 method : _method,
                 url : _url,
@@ -221,7 +222,7 @@
 
             $http({
                 method : 'GET',
-                url : entityObject.backend.url + '?' + params,
+                url : entityObject.backend.url + '?' + params
             }).then(function (response) {
                 self.isProcessing = false;
                 $rootScope.$broadcast('editor:items_list',response.data);
