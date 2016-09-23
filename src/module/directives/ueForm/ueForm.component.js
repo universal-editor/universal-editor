@@ -1,21 +1,21 @@
 (function () {
     'use strict';
 
-    var ueTable = {
+    var ueForm = {
         bindings : {
         },
         template : ['$templateCache', function ($templateCache) {
-            return $templateCache.get('module/directives/ueTable/ueTable.html');
+            return $templateCache.get('module/directives/ueForm/ueForm.html');
         }],
-        controller: 'UeTableController',
+        controller: 'UeFormController',
         controllerAs : 'vm'
     };
 
     /**
      * @desc String-type field.
-     * @example <ue-table></ue-table>
+     * @example <ue-form></ue-for,>
      */
     angular
         .module('universal.editor')
-        .component('ueTable',ueTable);
+        .component('ueForm',ueForm);
 })();

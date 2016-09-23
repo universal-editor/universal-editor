@@ -120,30 +120,33 @@
             .state('editor.type',{
                 url : "/:type",
                 template : "<div data-ui-view></div>",
-                resolve : {
-                    configObject : configResolver
-                },
-                controller : "UniversalEditorController",
-                controllerAs : "vm",
                 onEnter : ["RestApiService", "$stateParams", function (RestApiService,$stateParams) {
                     RestApiService.setEntityType($stateParams.type);
                     RestApiService.setQueryParams({});
                 }]
             })
             .state('editor.type.list',{
+                resolve : {
+                    configObject : configResolver,
+                    typeState: function() {
+                        return 'ue-table';
+                    }
+                },
+                controller : "UniversalEditorController",
+                controllerAs : "vm",
                 url : "/list?parent",
-                templateUrl : "module/directives/universalEditor/universalEditorList.html"
+                templateUrl : "module/directives/universalEditor/universalEditor.html"
             })
             .state('editor.type.new',{
                 url : '/new?parent&type',
-                templateUrl : "module/directives/universalEditor/universalEditorForm.html",
+                templateUrl : "module/directives/universalEditor/universalEditor.html",
                 onEnter : ["EditEntityStorage", function (EditEntityStorage) {
                     EditEntityStorage.createNewEntity();
                 }]
             })
             .state('editor.type.entity',{
                 url : '/:uid?back&parent',
-                templateUrl : "module/directives/universalEditor/universalEditorForm.html",
+                templateUrl : "module/directives/universalEditor/universalEditor.html",
                 onEnter : ["RestApiService", "$rootScope", "$stateParams", function (RestApiService,$rootScope,$stateParams) {
                     RestApiService.getItemById($stateParams.uid);
                 }]
