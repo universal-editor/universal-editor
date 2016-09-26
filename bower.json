@@ -26,8 +26,6 @@
     "angular-raven": "~0.6.2",
     "jquery-minicolors": "~2.1.7",
     "angular-minicolors": "~0.0.7",
-    "tinymce-dist": "4.3.12",
-    "angular-ui-tinymce": "~0.0.10",
     "angular-moment": "~0.10.3",
     "moment": "~2.10.6",
     "angular-datepicker": "~2.0.3",
@@ -41,13 +39,6 @@
     "angular-translate": "^2.11.0",
     "angular-translate-loader-static-files": "^2.11.0",
     "bootstrap": "~3.1.1"
-  },
-  "overrides": {
-    "tinymce-dist": {
-      "main": [
-        "tinymce.js"
-      ]
-    }
   },
   "resolutions": {
     "angular": "~1.5.7"
