@@ -79,9 +79,9 @@
         .module('universal.editor')
         .config(universalEditorConfig);
 
-    universalEditorConfig.$inject = ['minicolorsProvider','$httpProvider','$stateProvider','$urlRouterProvider','$provide', 'ConfigDataProviderProvider', '$injector'];
+    universalEditorConfig.$inject = ['minicolorsProvider','$httpProvider','$stateProvider','$urlRouterProvider','$provide', 'ConfigDataProviderProvider', '$injector', 'configData'];
 
-    function universalEditorConfig(minicolorsProvider,$httpProvider,$stateProvider,$urlRouterProvider,$provide, ConfigDataProviderProvider, $injector){
+    function universalEditorConfig(minicolorsProvider,$httpProvider,$stateProvider,$urlRouterProvider,$provide, ConfigDataProviderProvider, $injector, configData){
 
         var dataResolver;
 
@@ -110,47 +110,81 @@
 
         var defaultRoute = ConfigDataProviderProvider.getDefaultEntity();
 
-        $urlRouterProvider.otherwise("/editor/" + defaultRoute +"/list");
+        //$urlRouterProvider.otherwise("/editor/" + defaultRoute +"/list");
 
-        $stateProvider
-            .state('editor',{
-                url : "/editor",
-                template : "<div data-ui-view></div>",
-            })
-            .state('editor.type',{
-                url : "/:type",
-                template : "<div data-ui-view></div>",
-                onEnter : ["RestApiService", "$stateParams", function (RestApiService,$stateParams) {
-                    RestApiService.setEntityType($stateParams.type);
-                    RestApiService.setQueryParams({});
-                }]
-            })
-            .state('editor.type.list',{
-                resolve : {
-                    configObject : configResolver,
-                    typeState: function() {
-                        return 'ue-table';
+        $urlRouterProvider.otherwise(configData.entities[0].states[0].url);
+
+        angular.forEach(configData.entities, function(entity) {
+            angular.forEach(entity.states, function(state) {
+                $stateProvider.state(state.name, {
+                    url: state.url,
+                    templateUrl : "module/directives/universalEditor/universalEditor.html",
+                    controller : "UniversalEditorController",
+                    controllerAs : "vm",
+                    resolve : {
+                        component: function() {
+                            return state.component;
+                        }
                     }
-                },
-                controller : "UniversalEditorController",
-                controllerAs : "vm",
-                url : "/list?parent",
-                templateUrl : "module/directives/universalEditor/universalEditor.html"
-            })
-            .state('editor.type.new',{
-                url : '/new?parent&type',
-                templateUrl : "module/directives/universalEditor/universalEditor.html",
-                onEnter : ["EditEntityStorage", function (EditEntityStorage) {
-                    EditEntityStorage.createNewEntity();
-                }]
-            })
-            .state('editor.type.entity',{
-                url : '/:uid?back&parent',
-                templateUrl : "module/directives/universalEditor/universalEditor.html",
-                onEnter : ["RestApiService", "$rootScope", "$stateParams", function (RestApiService,$rootScope,$stateParams) {
-                    RestApiService.getItemById($stateParams.uid);
-                }]
+                });
             });
+        });
+
+        //$stateProvider
+        //    .state('editor',{
+        //        url : "/editor",
+        //        template : "<div data-ui-view></div>",
+        //    })
+        //    .state('editor.type',{
+        //        url : "/:type",
+        //        template : "<div data-ui-view></div>",
+        //        onEnter : ["RestApiService", "$stateParams", function (RestApiService,$stateParams) {
+        //            RestApiService.setEntityType($stateParams.type);
+        //            RestApiService.setQueryParams({});
+        //        }]
+        //    })
+        //    .state('editor.type.list',{
+        //        url : "/list?parent",
+        //        resolve : {
+        //            configObject : configResolver,
+        //            typeState: function() {
+        //                return 'ue-table';
+        //            }
+        //        },
+        //        controller : "UniversalEditorController",
+        //        controllerAs : "vm",
+        //        templateUrl : "module/directives/universalEditor/universalEditor.html"
+        //    })
+        //    .state('editor.type.new',{
+        //        url : '/new?parent&type',
+        //        resolve : {
+        //            configObject : configResolver,
+        //            typeState: function() {
+        //                return 'ue-form';
+        //            }
+        //        },
+        //        controller : "UniversalEditorController",
+        //        controllerAs : "vm",
+        //        templateUrl : "module/directives/universalEditor/universalEditor.html",
+        //        onEnter : ["EditEntityStorage", function (EditEntityStorage) {
+        //            EditEntityStorage.createNewEntity();
+        //        }]
+        //    })
+        //    .state('editor.type.entity',{
+        //        url : '/:uid?back&parent',
+        //        resolve : {
+        //            configObject : configResolver,
+        //            typeState: function() {
+        //                return 'ue-form';
+        //            }
+        //        },
+        //        controller : "UniversalEditorController",
+        //        controllerAs : "vm",
+        //        templateUrl : "module/directives/universalEditor/universalEditor.html",
+        //        onEnter : ["RestApiService", "$rootScope", "$stateParams", function (RestApiService,$rootScope,$stateParams) {
+        //            RestApiService.getItemById($stateParams.uid);
+        //        }]
+        //    });
         /* DATE INPUT DECORATOR*/
 
         $provide.decorator('mFormatFilter', function () {

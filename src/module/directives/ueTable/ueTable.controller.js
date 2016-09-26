@@ -9,34 +9,54 @@
 
     function UeTableController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,toastr, $translate, ConfigDataProvider) {
         $scope.entity = RestApiService.getEntityType();
-        var entityObject = RestApiService.getEntityObject();
+
+            //RestApiService.getEntityObject();
         /* jshint validthis: true */
         var vm = this,
             pageItems = 3,
             metaKey,
             itemsKey,
             mixEntityObject;
-
+        var entityObject = vm.setting;
         vm.configData = configData;
         vm.correctEntityType = true;
         vm.entityLoaded = false;
         vm.listLoaded = false;
         vm.loadingData = true;
-        vm.tabs = entityObject.tabs;
         vm.tableFields = [];
         vm.items = [];
         vm.links = [];
         vm.errors = [];
         vm.notifys = [];
         vm.tabsVisibility = [];
-        vm.currentTab = vm.tabs[0].label;
         vm.entityId = "";
         vm.editorEntityType = "new";
         vm.sortField = "";
         vm.sortingDirection = true;
         vm.pageItemsArray = [];
-        vm.contextLinks = entityObject.contextMenu;
-        vm.listHeaderBar = entityObject.listHeaderBar;
+
+        //временно захардкоженно меню
+        vm.contextLinks = [
+            {
+                "label": "Раскрыть",
+                "type": "open"
+            },
+            {
+                "label": "Редактировать",
+                "type": "edit"
+            },
+            {
+                "label": "Удалить",
+                "type": "delete"
+            }
+        ];
+        //временно захардкоженно listHeaderBar
+        vm.listHeaderBar = [
+            {
+                "type": "create",
+                "label": "Создать"
+            }
+        ];
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
         vm.contextId = undefined;
@@ -44,46 +64,46 @@
         vm.parentButton = false;
         vm.filterFields = [];
         vm.visibleFilter = true;
-        vm.pagination = entityObject.backend.hasOwnProperty("pagination") ? entityObject.backend.pagination : true;
+        vm.pagination = entityObject.dataSource.hasOwnProperty("pagination") ? entityObject.dataSource.pagination : true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
 
-        if(entityObject.backend.hasOwnProperty('fields')){
-            vm.idField = entityObject.backend.fields.primaryKey || vm.idField;
+        if(entityObject.dataSource.hasOwnProperty('primaryKey')){
+            vm.idField = entityObject.dataSource.primaryKey || vm.idField;
         }
 
-        var mixEntity = RestApiService.getMixModeByEntity();
-
-        vm.isMixMode = mixEntity.existence;
-
-        if(mixEntity.existence){
-            vm.prependIcon = mixEntity.prependIcon || 'title';
-            vm.subType = mixEntity.entityTypeName || "type";
-            vm.mixEntityType = mixEntity.entity;
-            mixEntityObject = configData.entities.filter(function (item) {
-                return item.name === vm.mixEntityType;
-            })[0];
-            vm.mixedListHeaderBar = mixEntityObject.listHeaderBar;
-            vm.mixContextLinks = mixEntityObject.contextMenu;
-        }
+        //var mixEntity = RestApiService.getMixModeByEntity();
+        //
+        //vm.isMixMode = mixEntity.existence;
+        //
+        //if(mixEntity.existence){
+        //    vm.prependIcon = mixEntity.prependIcon || 'title';
+        //    vm.subType = mixEntity.entityTypeName || "type";
+        //    vm.mixEntityType = mixEntity.entity;
+        //    mixEntityObject = configData.entities.filter(function (item) {
+        //        return item.name === vm.mixEntityType;
+        //    })[0];
+        //    vm.mixedListHeaderBar = mixEntityObject.listHeaderBar;
+        //    vm.mixContextLinks = mixEntityObject.contextMenu;
+        //}
         vm.metaKey = false;
         metaKey = "_meta";
         itemsKey = "items";
 
-        angular.forEach(entityObject.tabs, function (tab) {
-            angular.forEach(tab.fields, function (field) {
-                if (field.list === true && (field.valuesRemote || field.values)) {
-                    vm.autoCompleteFields.push(field);
-                }
+        //angular.forEach(entityObject.tabs, function (tab) {
+            angular.forEach(entityObject.dataSource.fields, function (field) {
+                //if (field.list === true && (field.valuesRemote || field.values)) {
+                //    vm.autoCompleteFields.push(field);
+                //}
 
-                if(field.hasOwnProperty("list") && field.list === true){
+                if(field.component.hasOwnProperty("settings") && field.component.settings.list === true){
                     vm.tableFields.push({
                         field : field.name,
-                        displayName : field.label || field.name
+                        displayName : field.component.settings.label || field.name
                     });
                 }
             });
-        });
+        //});
 
         angular.forEach(entityObject.editFooterBar, function (editFooterBar) {
             switch (editFooterBar.type){
@@ -115,36 +135,20 @@
             }
         });
 
-        if(mixEntity.existence){
-            angular.forEach(mixEntityObject.tabs, function (tab) {
-                angular.forEach(tab.fields, function (field) {
-                    if(field.hasOwnProperty("list") && field.list === true && !isInTableFields(field.name) ){
-                        vm.tableFields.push({
-                            field : field.name,
-                            displayName : field.label || field.name
-                        });
-                    }
-                });
-            });
-        }
+        //if(mixEntity.existence){
+        //    angular.forEach(mixEntityObject.tabs, function (tab) {
+        //        angular.forEach(tab.fields, function (field) {
+        //            if(field.hasOwnProperty("list") && field.list === true && !isInTableFields(field.name) ){
+        //                vm.tableFields.push({
+        //                    field : field.name,
+        //                    displayName : field.label || field.name
+        //                });
+        //            }
+        //        });
+        //    });
+        //}
 
-        vm.sortField = entityObject.backend.sortBy || vm.tableFields[0].field;
-
-        angular.forEach(vm.tabs, function (tab,ind) {
-            if(tab.fields.length > 0){
-                vm.tabsVisibility.push(tab.fields[0].name);
-                angular.forEach(tab.fields,function(field){
-                    if(field.hasOwnProperty("filterable") && field.filterable === false) {
-                        // ;)
-                    } else {
-                        vm.filterFields.push(field);
-                    }
-                });
-            } else {
-                vm.tabsVisibility.push("");
-            }
-        });
-
+        vm.sortField = entityObject.dataSource.sortBy || vm.tableFields[0].field;
 
         vm.getScope = function(){
             return $scope;
@@ -183,12 +187,12 @@
             RestApiService.getItemsList();
         };
 
+        $rootScope.$broadcast('editor:set_entity_type', entityObject);
+
         vm.clearFilter = function () {
             FilterFieldsStorage.setInitialValues();
             RestApiService.setFilterParams({});
-            if ($state.is('editor.type.list')) {
-                RestApiService.getItemsList();
-            }
+            RestApiService.getItemsList();
         };
 
 
@@ -242,9 +246,6 @@
             }
         };
 
-        $rootScope.$broadcast('editor:set_entity_type',$scope.entity);
-
-
         $scope.$on('editor:items_list', function (event, data) {
             if ($state.is('editor.type.new')) {
                 return;
@@ -253,10 +254,10 @@
             vm.listLoaded = true;
             vm.items = data[itemsKey];
 
-            if (angular.isDefined(entityObject.backend.keys)) {
-                metaKey = entityObject.backend.keys.meta || metaKey;
-                itemsKey = entityObject.backend.keys.items || itemsKey;
-                vm.metaKey = (entityObject.backend.keys.meta != false);
+            if (angular.isDefined(entityObject.dataSource.keys)) {
+                metaKey = entityObject.dataSource.keys.meta || metaKey;
+                itemsKey = entityObject.dataSource.keys.items || itemsKey;
+                vm.metaKey = (entityObject.dataSource.keys.meta != false);
             }
 
             vm.autoCompleteFields.forEach(function (field) {
@@ -327,13 +328,13 @@
                     qParams.page = 1;
                     vm.pageItemsArray.push({
                         label : "<<",
-                        href : entityObject.backend.url + "?" + $httpParamSerializer(qParams)
+                        href : entityObject.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
 
                     qParams.page = data[metaKey].currentPage - 1;
                     vm.pageItemsArray.push({
                         label : "<",
-                        href : entityObject.backend.url + "?" + $httpParamSerializer(qParams)
+                        href : entityObject.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
                 }
 
@@ -341,7 +342,7 @@
                     qParams.page = data[metaKey].currentPage - pageItems - 1;
                     vm.pageItemsArray.push({
                         label : "...",
-                        href : entityObject.backend.url + "?" + $httpParamSerializer(qParams)
+                        href : entityObject.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
                 }
 
@@ -355,7 +356,7 @@
                     qParams.page = startIndex;
                     vm.pageItemsArray.push({
                         label : startIndex,
-                        href : entityObject.backend.url + "?" + $httpParamSerializer(qParams)
+                        href : entityObject.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
 
                     startIndex++;
@@ -378,7 +379,7 @@
                     qParams.page = tempCurrentPage;
                     vm.pageItemsArray.push({
                         label : tempCurrentPage,
-                        href : entityObject.backend.url + "?" + $httpParamSerializer(qParams)
+                        href : entityObject.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
 
                     tempCurrentPage++;
@@ -388,7 +389,7 @@
                     qParams.page = data[metaKey].currentPage + pageItems + 1;
                     vm.pageItemsArray.push({
                         label : "...",
-                        href : entityObject.backend.url + "?" + $httpParamSerializer(qParams)
+                        href : entityObject.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
                 }
 
@@ -396,13 +397,13 @@
                     qParams.page = data[metaKey].currentPage + 1;
                     vm.pageItemsArray.push({
                         label : ">",
-                        href : entityObject.backend.url + "?" + $httpParamSerializer(qParams)
+                        href : entityObject.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
 
                     qParams.page = data[metaKey].pageCount;
                     vm.pageItemsArray.push({
                         label : ">>",
-                        href : entityObject.backend.url + "?" + $httpParamSerializer(qParams)
+                        href : entityObject.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
                 }
             }

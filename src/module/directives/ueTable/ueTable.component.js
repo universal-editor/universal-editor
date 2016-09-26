@@ -3,6 +3,7 @@
 
     var ueTable = {
         bindings : {
+            setting: "="
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/directives/ueTable/ueTable.html');

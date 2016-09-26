@@ -21,16 +21,18 @@
         self.editedEntityId = null;
 
         $rootScope.$on('editor:set_entity_type', function (event,type) {
-            filterParams = undefined;
-            entityType = type;
-            itemsKey = "items";
-            entityObject = configData.entities.filter(function (item) {
-                return item.name === entityType;
-            })[0];
-            mixEntity = self.getMixModeByEntity();
-            if (angular.isDefined(entityObject.backend.keys)) {
-                itemsKey = entityObject.backend.keys.items || itemsKey;
-            }
+            //filterParams = undefined;
+            //entityType = type;
+            entityObject = type;
+            //itemsKey = "items";
+            //entityObject = configData.entities.filter(function (item) {
+            //    return item.name === entityType;
+            //})[0];
+            //mixEntity = self.getMixModeByEntity();
+            itemsKey = "items"
+            //if (angular.isDefined(entityObject.backend.keys)) {
+             //   itemsKey = entityObject.backend.keys.items || itemsKey;
+            //}
         });
 
         $rootScope.$on('editor:create_entity', function (event,entity) {
@@ -79,7 +81,7 @@
 
             var params = this.getQueryParams();
             var _method = 'GET';
-            var _url = entityObject.backend.url;
+            var _url = entityObject.dataSource.url;
 
             if(typeof request !== 'undefined'){
                 params = typeof request.params !== 'undefined' ? request.params : params;
@@ -111,14 +113,14 @@
                 }
             }
 
-            if(mixEntity.existence){
-                params = params || {};
-                angular.extend(params,{
-                    mixed: mixEntity.entity
-                });
-            }
+            //if(mixEntity.existence){
+            //    params = params || {};
+            //    angular.extend(params,{
+            //        mixed: mixEntity.entity
+            //    });
+            //}
 
-            if(entityObject.backend.hasOwnProperty("parentField")){
+            if(entityObject.dataSource.hasOwnProperty("parentField")){
                 params = params || {};
 
                 if(!params.hasOwnProperty("filter")){
@@ -126,11 +128,11 @@
                 }
             }
 
-            if (entityObject.backend.hasOwnProperty("sortBy")
-                && !params.hasOwnProperty(entityObject.backend.sortBy) && !params.sort) {
+            if (entityObject.dataSource.hasOwnProperty("sortBy")
+                && !params.hasOwnProperty(entityObject.dataSource.sortBy) && !params.sort) {
                 params = params || {};
                 angular.extend(params, {
-                    sort: entityObject.backend.sortBy
+                    sort: entityObject.dataSource.sortBy
                 });
             }
 
@@ -146,13 +148,13 @@
 
             var expandFields = [];
 
-            angular.forEach(entityObject.tabs, function (tab) {
-                angular.forEach(tab.fields, function (field) {
+            //angular.forEach(entityObject.tabs, function (tab) {
+                angular.forEach(entityObject.dataSource.fields, function (field) {
                     if(field.hasOwnProperty("expandable") && field.expandable === true){
                         expandFields.push(field.name);
                     }
                 });
-            });
+            //});
 
             if (expandFields.length > 0){
                 params.expand = expandFields.join(',');
@@ -187,18 +189,18 @@
                 return;
             }
 
-            if(mixEntity.existence){
-                params = params || {};
-                if(typeof params == 'object'){
-                    angular.extend(params,{
-                        mixed: mixEntity.entity
-                    });
-                } else {
-                    params = params + '&mixed=' + mixEntity.entity;
-                }
-            }
+            //if(mixEntity.existence){
+            //    params = params || {};
+            //    if(typeof params == 'object'){
+            //        angular.extend(params,{
+            //            mixed: mixEntity.entity
+            //        });
+            //    } else {
+            //        params = params + '&mixed=' + mixEntity.entity;
+            //    }
+            //}
 
-            if(entityObject.backend.fields.parent){
+            if(entityObject.dataSource.fields.parent){
                 params = params || {};
 
                 if(!params.hasOwnProperty("filter")){
@@ -221,7 +223,7 @@
 
             $http({
                 method : 'GET',
-                url : entityObject.backend.url + '?' + params,
+                url : entityObject.dataSource.url + '?' + params,
             }).then(function (response) {
                 self.isProcessing = false;
                 $rootScope.$broadcast('editor:items_list',response.data);
