@@ -118,7 +118,7 @@
             angular.forEach(entity.states, function(state) {
                 $stateProvider.state(state.name, {
                     url: state.url,
-                    templateUrl : "module/directives/universalEditor/universalEditor.html",
+                    templateUrl : "module/components/universalEditor/universalEditor.html",
                     controller : "UniversalEditorController",
                     controllerAs : "vm",
                     resolve : {

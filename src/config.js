@@ -20,8 +20,7 @@ var staffDataSource = {
                 name: 'ue-number',
                 settings: {
                     label: '№',
-                    validators: [],
-                    list: true
+                    validators: []
                 }
             }
         },
@@ -31,8 +30,7 @@ var staffDataSource = {
                 name: 'ue-number',
                 settings: {
                     label: 'Начальник',
-                    validators: [],
-                    list: true
+                    validators: []
                 }
             }
         },
@@ -44,8 +42,7 @@ var staffDataSource = {
                     label: 'Имя',
                     validators: [
                         // @todo Примеры
-                    ],
-                    list: true
+                    ]
                 }
             }
         },
@@ -56,8 +53,7 @@ var staffDataSource = {
                 name: 'ue-string',
                 settings: {
                     label: 'Эл. почта',
-                    validators: [],
-                    list: true
+                    validators: []
                 }
             }
         }
@@ -109,9 +105,27 @@ var ue = new UniversalEditor('universal-editor', {
                         name: 'ue-table',
                         settings: {
                             dataSource: staffDataSource,
-                            header: {
-                                component: {name: 'my-mega-component'}
-                            },
+                            header:[
+                                {
+                                    name: 'ue-button-create',
+                                    settings: {
+                                        label: 'создать'
+                                    }
+                                },
+                                {
+                                    name: 'ue-button-download',
+                                    settings: {
+                                        label: 'создать',
+                                        url: ''
+                                    }
+                                },
+                                {
+                                    name: 'ue-button-create',
+                                    settings: {
+                                        label: 'создать'
+                                    }
+                                }
+                            ],
                             columns: ['name', 'email']
                         }
                     }

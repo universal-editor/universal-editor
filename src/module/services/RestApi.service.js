@@ -81,12 +81,11 @@
 
             var params = this.getQueryParams();
             var _method = 'GET';
-            var _url = entityObject.dataSource.url;
+            var _url = request.url;
 
             if(typeof request !== 'undefined'){
                 params = typeof request.params !== 'undefined' ? request.params : params;
                 _method = typeof request.method !== 'undefined' ? request.method : _method;
-                _url = typeof request.url !== 'undefined' ? request.url : _url;
                 if(request.sort !== undefined){
                     params.sort = request.sort;
                 }
