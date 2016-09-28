@@ -10,10 +10,10 @@ module.run(['$templateCache', function($templateCache) {
     '<div data-ng-show="vm.entityLoaded" class="editor-body">\n' +
     '    <div data-ng-click="vm.closeButton()" ng-style="{\'background-image\':\'url(\'+ vm.assetsPath +\'/images/close.jpg)\'}" class="close-editor"></div>\n' +
     '    <div class="nav nav-tabs">\n' +
-    '        <li data-ng-repeat="(tkey,tab) in vm.tabs" data-ng-class="vm.currentTab == tab.label ? \'active\' : \'\'" data-ng-click="vm.currentTab = tab.label"><a href="">{{tab.label}}</a></li>\n' +
+    '        <li data-ng-repeat="tab in vm.tabs" data-ng-class="vm.currentTab == tab.label ? \'active\' : \'\'" data-ng-click="vm.currentTab = tab.label"><a href="">{{tab.label}}</a></li>\n' +
     '    </div>\n' +
     '    <div class="tab-content-wrapper">\n' +
-    '        <div data-ng-repeat="(tkey,tab) in vm.tabs" data-ng-show="vm.currentTab == tab.label" class="tab-item-content">\n' +
+    '        <div data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label" class="tab-item-content">\n' +
     '            <div class="field-content-wrapper">\n' +
     '                <div data-ng-repeat="field in tab.fields" data-field-wrapper="" data-field-name="{{field.name}}" data-ng-if="(vm.editorEntityType == \'new\' &amp;&amp; field.showOnly == \'create\') || (vm.editorEntityType == \'exist\' &amp;&amp; field.showOnly == \'edit\') || !field.showOnly"></div>\n' +
     '            </div>\n' +

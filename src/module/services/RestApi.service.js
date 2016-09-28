@@ -29,7 +29,7 @@
             //    return item.name === entityType;
             //})[0];
             //mixEntity = self.getMixModeByEntity();
-            itemsKey = "items"
+            itemsKey = "items";
             //if (angular.isDefined(entityObject.backend.keys)) {
              //   itemsKey = entityObject.backend.keys.items || itemsKey;
             //}
@@ -222,13 +222,13 @@
 
             $http({
                 method : 'GET',
-                url : entityObject.dataSource.url + '?' + params,
+                url : entityObject.dataSource.url + '?' + params
             }).then(function (response) {
                 self.isProcessing = false;
                 $rootScope.$broadcast('editor:items_list',response.data);
-                if($location.search().hasOwnProperty("id")){
-                    self.getItemById($location.search().id);
-                }
+                //if($location.search().hasOwnProperty("id")){
+                //    self.getItemById($location.search().id);
+                //}
             }, function (reject) {
                 self.isProcessing = false;
             });
@@ -437,7 +437,7 @@
 
         this.getItemById = function (id,par) {
 
-            var qParams = typeof par !== "undefined" ? par : {};
+            var qParams = {};
             if(self.isProcessing){
                 return;
             }
@@ -447,12 +447,10 @@
             var expandFields = [];
             var expandParam = "";
 
-            angular.forEach(entityObject.tabs, function (tab) {
-                angular.forEach(tab.fields, function (field) {
-                    if(field.hasOwnProperty("expandable") && field.expandable === true){
-                        expandFields.push(field.name);
-                    }
-                });
+            angular.forEach(entityObject.dataSource.fields, function (field) {
+                if(field.hasOwnProperty("expandable") && field.expandable === true){
+                    expandFields.push(field.name);
+                }
             });
 
             if (expandFields.length > 0){
@@ -461,7 +459,7 @@
 
             $http({
                 method : 'GET',
-                url : entityObject.backend.url + '/' + id,
+                url : entityObject.dataSource.url + '/' + id,
                 params : qParams
             }).then(function (response) {
                 self.isProcessing = false;
@@ -574,19 +572,21 @@
             return defer.promise;
         };
 
-        this.contextMenuAction = function(contextItem,id){
-            var reqParams = contextItem.request.params || {};
-            var url = contextItem.request.url.replace(":id",id);
-
+        this.contextMenuAction = function(request){
+            var reqParams = request.params || {};
+            var url = request.url;
+            if(request.id) {
+                url = request.url.replace(":id", id);
+            }
             self.isProcessing = true;
 
             $http({
-                method : contextItem.request.method,
+                method : request.method,
                 url : url,
                 params : reqParams
             }).then(function (response) {
                 self.isProcessing = false;
-                self.getItemsList();
+                $rootScope.$broadcast('editor:entity_success_deleted',response);
             }, function (reject) {
                 self.isProcessing = false;
             });

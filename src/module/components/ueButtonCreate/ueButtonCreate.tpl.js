@@ -7,6 +7,6 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueButtonCreate/ueButtonCreate.html',
     '\n' +
-    '<button class="btn btn-lg btn-success">{{vm.label}}</button>');
+    '<button>{{vm.label}}</button>');
 }]);
 })();

@@ -18,26 +18,28 @@
 
         vm.assetsPath = '/assets/universal-editor';
 
-        console.log(vm);
         vm.configData = configData;
         vm.correctEntityType = true;
         vm.entityLoaded = false;
         vm.listLoaded = false;
         vm.loadingData = true;
-        vm.tabs = entityObject.tabs;
+        vm.tabs = [];
+        //vm.tabs = vm.setting.body;
+        //console.log(vm.tabs);
         vm.tableFields = [];
         vm.links = [];
         vm.errors = [];
         vm.notifys = [];
         vm.tabsVisibility = [];
-        vm.currentTab = vm.tabs[0].label;
+        vm.currentTab = vm.setting.body[0].component.settings.label;
         vm.entityId = "";
         vm.editorEntityType = "new";
-        vm.listHeaderBar = entityObject.listHeaderBar;
+        //vm.listHeaderBar = entityObject.listHeaderBar;
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
         vm.parentButton = false;
         vm.filterFields = [];
+        vm.idField = 'id';
         vm.visibleFilter = true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
@@ -46,87 +48,62 @@
             vm.assetsPath = vm.configData.ui.assetsPath;
         }
 
-        if(entityObject.backend.hasOwnProperty('fields')){
-            vm.idField = entityObject.backend.fields.primaryKey || vm.idField;
+        if(vm.setting.dataSource.hasOwnProperty('primaryKey')){
+            vm.idField = vm.setting.dataSource.primaryKey || vm.idField;
         }
-
-        var mixEntity = RestApiService.getMixModeByEntity();
-        vm.isMixMode = mixEntity.existence;
         itemsKey = "items";
 
-        angular.forEach(entityObject.tabs, function (tab) {
-            angular.forEach(tab.fields, function (field) {
-                if (field.list === true && (field.valuesRemote || field.values)) {
-                    vm.autoCompleteFields.push(field);
-                }
+        //angular.forEach(entityObject.editFooterBar, function (editFooterBar) {
+        //    switch (editFooterBar.type){
+        //        case 'add':
+        //            vm.editFooterBarNew.push(editFooterBar);
+        //            break;
+        //        case 'presave':
+        //            vm.editFooterBarNew.push(editFooterBar);
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //        case 'update':
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //        case 'delete':
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //        case 'request':
+        //            vm.editFooterBarNew.push(editFooterBar);
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //        case 'targetBlank':
+        //            vm.editFooterBarNew.push(editFooterBar);
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //        case 'download':
+        //            vm.editFooterBarNew.push(editFooterBar);
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //    }
+        //});
 
-                if(field.hasOwnProperty("list") && field.list === true){
-                    vm.tableFields.push({
-                        field : field.name,
-                        displayName : field.label || field.name
+        //angular.forEach(vm.setting.dataSource.fields, function(field) {
+         //   angular.forEach()
+        //    console.log(field);
+        //});
+
+        angular.forEach(vm.setting.body, function(tab) {
+            var newTab = {};
+            newTab.label = tab.component.settings.label;
+            newTab.fields = [];
+            angular.forEach(tab.component.settings.fields, function(field) {
+                if(angular.isString(field)) {
+                    var newField =vm.setting.dataSource.fields.filter(function(k){
+                        return k.name == field;
                     });
+                    if(newField.length > 0) {
+                        newTab.fields.push(newField[0]);
+                    }
                 }
             });
+            vm.tabs.push(newTab);
         });
-        angular.forEach(entityObject.editFooterBar, function (editFooterBar) {
-            switch (editFooterBar.type){
-                case 'add':
-                    vm.editFooterBarNew.push(editFooterBar);
-                    break;
-                case 'presave':
-                    vm.editFooterBarNew.push(editFooterBar);
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-                case 'update':
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-                case 'delete':
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-                case 'request':
-                    vm.editFooterBarNew.push(editFooterBar);
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-                case 'targetBlank':
-                    vm.editFooterBarNew.push(editFooterBar);
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-                case 'download':
-                    vm.editFooterBarNew.push(editFooterBar);
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-            }
-        });
-
-        if(mixEntity.existence){
-            angular.forEach(mixEntityObject.tabs, function (tab) {
-                angular.forEach(tab.fields, function (field) {
-                    if(field.hasOwnProperty("list") && field.list === true && !isInTableFields(field.name) ){
-                        vm.tableFields.push({
-                            field : field.name,
-                            displayName : field.label || field.name
-                        });
-                    }
-                });
-            });
-        }
-
-        angular.forEach(vm.tabs, function (tab,ind) {
-            if(tab.fields.length > 0){
-                vm.tabsVisibility.push(tab.fields[0].name);
-                angular.forEach(tab.fields,function(field){
-                    if(field.hasOwnProperty("filterable") && field.filterable === false) {
-                        // ;)
-                    } else {
-                        vm.filterFields.push(field);
-                    }
-                });
-            } else {
-                vm.tabsVisibility.push("");
-            }
-        });
-
-
         vm.getScope = function(){
             return $scope;
         };
@@ -159,39 +136,13 @@
             $state.go('editor.type.list', params, {reload: isReload});
         };
 
-        vm.applyFilter = function () {
-            RestApiService.setFilterParams(FilterFieldsStorage.getFilterValue());
-            RestApiService.getItemsList();
-        };
-
-        vm.clearFilter = function () {
-            FilterFieldsStorage.setInitialValues();
-            RestApiService.setFilterParams({});
-            if ($state.is('editor.type.list')) {
-                RestApiService.getItemsList();
-            }
-        };
-
-
-        if (!RestApiService.isProcessing) {
-            vm.clearFilter();
-        }
-
-        vm.contextAction = function (button,id) {
-            RestApiService.contextMenuAction(button,id);
-        };
-
-        vm.getParent = function () {
-            RestApiService.loadParent($location.search().parent);
-        };
-
         vm.toggleFilterVisibility = function () {
             if(!vm.entityLoaded){
                 vm.visibleFilter = !vm.visibleFilter;
             }
         };
 
-        $rootScope.$broadcast('editor:set_entity_type',$scope.entity);
+        $rootScope.$broadcast('editor:set_entity_type', vm.setting);
 
         $scope.$on('editor:entity_loaded', function (event,data) {
             vm.editorEntityType = data.editorEntityType;
@@ -202,6 +153,8 @@
         $scope.$on('editor:server_error', function (event,data) {
             vm.errors.push(data);
         });
+
+        RestApiService.getItemById($state.params.pk, vm.setting.dataSource);
 
         $scope.$on('editor:presave_entity_created', function (event,data) {
             $translate('CHANGE_RECORDS.CREATE').then(function (translation) {

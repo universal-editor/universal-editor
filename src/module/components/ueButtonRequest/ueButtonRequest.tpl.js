@@ -5,7 +5,7 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/components/ueButtonDownload/ueButtonDownload.html',
+  $templateCache.put('module/components/ueButtonRequest/ueButtonRequest.html',
     '\n' +
     '<div>\n' +
     '    <button>{{vm.label}}</button>\n' +

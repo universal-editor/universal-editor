@@ -10,8 +10,9 @@
     function FieldWrapperController($scope, RestApiService){
         var vm = this;
         vm.error = [];
-        var entityObject = RestApiService.getEntityObject();
 
+        var entityObject = RestApiService.getEntityObject();
+        console.log(entityObject);
         if($scope.parentField){
             angular.forEach(entityObject.tabs, function (tab) {
                 angular.forEach(tab.fields, function (field) {
@@ -26,13 +27,23 @@
                 });
             });
         } else {
-            angular.forEach(entityObject.tabs, function (tab) {
-                angular.forEach(tab.fields, function (field) {
-                    if(field.name == $scope.fieldName){
-                        $scope.field = field;
-                        return;
-                    }
-                });
+            //angular.forEach(entityObject.body, function (tab) {
+            //    angular.forEach(tab.component.settings.fields, function (field) {
+            //        if(angular.isString(field) && (field == $scope.fieldName)){
+            //            $scope.field = field;
+            //            return;
+            //        }
+            //        //if(field.name == $scope.fieldName){
+            //        //    $scope.field = field;
+            //        //    return;
+            //        //}
+            //    });
+            //});
+            angular.forEach(entityObject.dataSource.fields, function(field) {
+                if(field.name == $scope.fieldName){
+                    $scope.field = field;
+                    return;
+                }
             });
         }
 

@@ -219,9 +219,9 @@
             });
         };
 
-        vm.contextAction = function (button,id) {
-            RestApiService.contextMenuAction(button,id);
-        };
+        //vm.contextAction = function (button,id) {
+        //    RestApiService.contextMenuAction(button,id);
+        //};
 
         vm.toggleContextView = function (id) {
             if(vm.contextId == id){
@@ -489,7 +489,7 @@
             if(event.keyCode === 13){
                 vm.applyFilter();
             }
-        }
+        };
 
         vm.$postLink = function() {
             var elementHead = $element.find('.header-action-button');

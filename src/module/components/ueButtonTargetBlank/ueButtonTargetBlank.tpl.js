@@ -8,9 +8,10 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueButtonTargetBlank/ueButtonTargetBlank.html',
     '\n' +
     '<div>\n' +
-    '    <button data-ng-if="vm.class == \'editor\'" class="btn btn-md btn-success">{{vm.label}}</button>\n' +
-    '    <button data-ng-if="vm.class == \'header\'" class="btn btn-lg btn-success">{{vm.label}}</button>\n' +
-    '    <button data-ng-if="vm.class == \'context\'" class="editor-action-button">{{vm.label}}</button>\n' +
+    '    <button>{{vm.label}}</button>\n' +
+    '    <!--button.btn.btn-md.btn-success(data-ng-if="vm.class == \'editor\'") {{vm.label}}-->\n' +
+    '    <!--button.btn.btn-lg.btn-success(data-ng-if="vm.class == \'header\'") {{vm.label}}-->\n' +
+    '    <!--button.editor-action-button(data-ng-if="vm.class == \'context\'") {{vm.label}}-->\n' +
     '</div>');
 }]);
 })();

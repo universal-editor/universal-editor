@@ -9,30 +9,23 @@
 
     function UeButtonDownloadController($rootScope,$scope,$element,RestApiService,configData, $window){
         var vm = this;
-        var params;
-        var request;
-        try {
-            request = JSON.parse(vm.buttonRequest);
-        } catch(e){
 
-        }
-        vm.label = vm.buttonLabel;
-        vm.class = vm.buttonClass;
+        vm.label = vm.setting.label;
 
         $element.bind("click", function () {
-            var url = request.url;
+            var url = vm.setting.url;
             for (var key in vm.itemValue) {
-                if (vm.itemValue[key]) {
-                    url = url.replace(":" + key, vm.itemValue[key]);
+                if (vm.setting.itemValue[key]) {
+                    url = url.replace(":" + key, vm.setting.itemValue[key]);
                 }
             }            
             location.assign(url);
         });
 
         vm.$postLink = function() {
-            scope.editor = RestApiService.getEntityType();
-            elem.on('$destroy', function () {
-                scope.$destroy();
+            $scope.editor = RestApiService.getEntityType();
+            $element.on('$destroy', function () {
+                $scope.$destroy();
             });
         }
 }})();

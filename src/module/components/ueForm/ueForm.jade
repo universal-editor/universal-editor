@@ -1,10 +1,10 @@
 div(data-ng-show="vm.entityLoaded", class="editor-body")
     .close-editor(data-ng-click="vm.closeButton()", ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}")
     .nav.nav-tabs
-        li(data-ng-repeat="(tkey,tab) in vm.tabs", data-ng-class="vm.currentTab == tab.label ? 'active' : ''", data-ng-click="vm.currentTab = tab.label")
+        li(data-ng-repeat="tab in vm.tabs", data-ng-class="vm.currentTab == tab.label ? 'active' : ''", data-ng-click="vm.currentTab = tab.label")
             a(href="") {{tab.label}}
     .tab-content-wrapper
-        .tab-item-content(data-ng-repeat="(tkey,tab) in vm.tabs" data-ng-show="vm.currentTab == tab.label")
+        .tab-item-content(data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label")
             .field-content-wrapper
                 div(data-ng-repeat="field in tab.fields" data-field-wrapper="" data-field-name="{{field.name}}"
                 data-ng-if="(vm.editorEntityType == 'new' && field.showOnly == 'create') || (vm.editorEntityType == 'exist' && field.showOnly == 'edit') || !field.showOnly")

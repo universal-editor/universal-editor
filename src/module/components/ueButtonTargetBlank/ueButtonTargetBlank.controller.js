@@ -16,12 +16,11 @@
         } catch(e){
 
         }
-        vm.class = vm.buttonClass;
-        vm.label = vm.buttonLabel;
+        vm.label = vm.setting.label;
         $element.bind("click", function () {
-            var url = request.url;
-            for (var key in vm.itemValue) {
-                if (vm.itemValue[key]) {
+            var url = vm.setting.url;
+            for (var key in vm.setting.itemValue) {
+                if (vm.setting.itemValue[key]) {
                     url = url.replace(":" + key, vm.itemValue[key]);
                 }
             }

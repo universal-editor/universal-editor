@@ -109,20 +109,29 @@ var ue = new UniversalEditor('universal-editor', {
                                 {
                                     name: 'ue-button-create',
                                     settings: {
-                                        label: 'создать'
+                                        label: 'создать1'
                                     }
                                 },
                                 {
                                     name: 'ue-button-download',
                                     settings: {
-                                        label: 'создать',
-                                        url: ''
+                                        label: 'скачай меня полностью',
+                                        url: 'https://docs.google.com/document/d/1wdB_hXLGN83tMuwETLfwUVAOMgejN-OQIayAlKL93Co/edit?ts=57d802f7#heading=h.o18u6n6jb0lx'
                                     }
                                 },
                                 {
-                                    name: 'ue-button-create',
+                                    name: 'ue-button-target-blank',
                                     settings: {
-                                        label: 'создать'
+                                        label: 'открой меня полностью',
+                                        url: 'https://docs.google.com/document/d/1wdB_hXLGN83tMuwETLfwUVAOMgejN-OQIayAlKL93Co/edit?ts=57d802f7#heading=h.o18u6n6jb0lx'
+                                    }
+                                },
+                                {
+                                    name: 'ue-button-request',
+                                    settings: {
+                                        label: 'GET меня полностью',
+                                        url: '//universal-backend.dev/rest/v1/country',
+                                        method: 'GET'
                                     }
                                 }
                             ],
@@ -146,6 +155,7 @@ var ue = new UniversalEditor('universal-editor', {
                                             fields: [
                                                 'id',
                                                 {
+                                                    name: "fio",
                                                     component: {
                                                         name: 'ue-form-group',
                                                         settings: {

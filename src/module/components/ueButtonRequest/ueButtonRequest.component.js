@@ -1,19 +1,19 @@
 (function () {
     'use strict';
 
-    var ueButtonDownload = {
+    var ueButtonRequest = {
         template : ['$templateCache', function ($templateCache) {
-            return $templateCache.get('module/components/ueButtonDownload/ueButtonDownload.html');
+            return $templateCache.get('module/components/ueButtonRequest/ueButtonRequest.html');
         }],
         bindings : {
             setting: '='
             //itemValue : "=",
         },
-        controller : 'UeButtonDownloadController',
+        controller : 'UeButtonRequestController',
         controllerAs : 'vm'
     };
 
     angular
         .module('universal.editor')
-        .component('ueButtonDownload',ueButtonDownload);
+        .component('ueButtonRequest',ueButtonRequest);
 })();
