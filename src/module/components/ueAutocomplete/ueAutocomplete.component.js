@@ -3,12 +3,11 @@
 
     var ueAutocomplete = {
         bindings : {
-            field: "=",
-            setError: "=",
-            setErrorEmpty: "=",
-            errorIndexOf: "=",
-            parentField: "=",
-            parentFieldIndex: "="
+            setting: '='
+            //field: "=",
+            //setError: "=",
+            //setErrorEmpty: "=",
+            //errorIndexOf: "=",
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueAutocomplete/ueAutocomplete.html');

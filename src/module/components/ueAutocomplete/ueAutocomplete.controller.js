@@ -13,18 +13,18 @@
             inputTimeout;
         var fieldErrorName;
 
-        if(vm.parentField){
-            if(vm.parentFieldIndex){
-                fieldErrorName = vm.parentField + "_" + vm.parentFieldIndex + "_" + vm.fieldName;
+        if(vm.setting.parentField){
+            if(vm.setting.parentFieldIndex){
+                fieldErrorName = vm.setting.parentField + "_" + vm.setting.parentFieldIndex + "_" + vm.fieldName;
             } else {
-                fieldErrorName = vm.parentField + "_" + vm.fieldName;
+                fieldErrorName = vm.setting.parentField + "_" + vm.fieldName;
             }
         } else {
             fieldErrorName = vm.field.name;
         }
         var possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
 
-        var remote = vm.field.valuesRemote;
+        var remote = vm.setting.component.settings.valuesRemote;
         vm.field_id = "id";
         vm.field_search = "title";
         if (remote) {
@@ -40,28 +40,27 @@
             }
         }
 
-        vm.fieldName = vm.field.name;
-        vm.readonly = vm.field.readonly || false;
-        vm.setErrorEmpty();
+        vm.fieldName = vm.setting.name;
+        vm.readonly = vm.setting.readonly || false;
+        vm.setting.setErrorEmpty();
         vm.selectedValues = [];
         vm.inputValue = "";
         vm.possibleValues = [];
         vm.activeElement = 0;
         vm.preloadedData = false;
-        vm.parentFieldIndex = vm.parentFieldIndex || false;
         vm.searching = false;
-        vm.maxItemsCount = vm.field.maxItems || Number.POSITIVE_INFINITY;
-        vm.minCount = vm.field.minCount || 2;
+        vm.maxItemsCount = vm.setting.maxItems || Number.POSITIVE_INFINITY;
+        vm.minCount = vm.setting.minCount || 2;
         vm.sizeInput = 1;
         vm.classInput = {'width': '1px'};
         vm.showPossible = false;
         vm.placeholder = '';
 
-        if (vm.field.hasOwnProperty("multiple") && vm.field.multiple === true){
+        if (vm.setting.hasOwnProperty("multiple") && vm.setting.multiple === true){
             vm.multiple = true;
             vm.fieldValue = [];
-            if (vm.field.multiname || angular.isString(vm.field.multiname)) {
-                vm.multiname = ('' + vm.field.multiname) || "value";
+            if (vm.setting.multiname || angular.isString(vm.setting.multiname)) {
+                vm.multiname = ('' + vm.setting.multiname) || "value";
             }
         } else {
             vm.multiple = false;
@@ -70,10 +69,10 @@
             vm.classInput['padding-right'] = '25px';
         }
 
-        if(vm.parentFieldIndex){
+        if(vm.setting.parentFieldIndex){
             if(vm.multiple){
                 vm.fieldValue = [];
-                angular.forEach(ArrayFieldStorage.getFieldValue(vm.parentField,vm.parentFieldIndex,vm.field.name), function (item) {
+                angular.forEach(ArrayFieldStorage.getFieldValue(vm.setting.parentField,vm.setting.parentFieldIndex,vm.setting.name), function (item) {
                     if (vm.multiname) {
                         vm.fieldValue.push(item[vm.multiname]);
                     } else {
@@ -81,7 +80,7 @@
                     }
                 });
             } else {
-                vm.fieldValue = ArrayFieldStorage.getFieldValue(vm.parentField,vm.parentFieldIndex,vm.field.name) || vm.fieldValue;
+                vm.fieldValue = ArrayFieldStorage.getFieldValue(vm.setting.parentField,vm.setting.parentFieldIndex,vm.setting.name) || vm.fieldValue;
             }
             vm.preloadedData = false;
             loadValues();
@@ -175,14 +174,14 @@
               } else {
                   wrappedFieldValue = vm.selectedValues.length > 0 ? vm.selectedValues[0][vm.field_id] : "";
               }
-            if(vm.parentField){
-                if(vm.parentFieldIndex){
-                    field[vm.parentField] = [];
-                    field[vm.parentField][vm.parentFieldIndex] = {};
-                    field[vm.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
+            if(vm.setting.parentField){
+                if(vm.setting.parentFieldIndex){
+                    field[vm.setting.parentField] = [];
+                    field[vm.setting.parentField][vm.setting.parentFieldIndex] = {};
+                    field[vm.setting.parentField][vm.setting.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
                 } else {
-                    field[vm.parentField] = {};
-                    field[vm.parentField][vm.fieldName] = wrappedFieldValue;
+                    field[vm.setting.parentField] = {};
+                    field[vm.setting.parentField][vm.fieldName] = wrappedFieldValue;
                 }
             } else {
                 field[vm.fieldName] = wrappedFieldValue;
@@ -194,13 +193,13 @@
 
             var field = {};
 
-            if(vm.parentField){
+            if(vm.setting.parentField){
                 if(vm.multiple){
-                    field[vm.parentField] = {};
-                    field[vm.parentField][vm.fieldName] = [];
+                    field[vm.setting.parentField] = {};
+                    field[vm.setting.parentField][vm.fieldName] = [];
                 } else {
-                    field[vm.parentField] = {};
-                    field[vm.parentField][vm.fieldName] = undefined;
+                    field[vm.setting.parentField] = {};
+                    field[vm.setting.parentField][vm.fieldName] = undefined;
                 }
             } else {
                 if(vm.multiple){
@@ -214,7 +213,7 @@
         };
 
         function clear() {
-            if (vm.field.hasOwnProperty("multiple") && vm.field.multiple === true) {
+            if (vm.setting.hasOwnProperty("multiple") && vm.field.multiple === true) {
                 vm.fieldValue = [];
             } else {
                 vm.fieldValue = undefined;
@@ -237,9 +236,9 @@
             vm.placeholder = '';
 
             //-- functional for required fields
-            if (vm.field.requiredField) {
+            if (vm.setting.requiredField) {
                 destroyWatchEntityLoaded = $scope.$watch(function () {
-                    var f_value = EditEntityStorage.getValueField(vm.field.requiredField);
+                    var f_value = EditEntityStorage.getValueField(vm.setting.requiredField);
                     var result = false;
                     var endRecursion = false;
                     (function check(value) {
@@ -261,7 +260,7 @@
                         clear();
                         vm.readonly = true;
                     } else {
-                        vm.readonly = vm.field.readonly || false;
+                        vm.readonly = vm.setting.readonly || false;
                     }
                 }, true);
             }
@@ -269,8 +268,8 @@
 
 
             if( data.editorEntityType === 'new' ){
-                if(!!vm.field.defaultValue){
-                    vm.fieldValue = vm.multiple ? [vm.field.defaultValue] : vm.field.defaultValue;
+                if(!!vm.setting.defaultValue){
+                    vm.fieldValue = vm.multiple ? [vm.setting.defaultValue] : vm.setting.defaultValue;
                     loadValues();
                 }else{
                     vm.fieldValue = vm.multiple ? [] : undefined;
@@ -285,31 +284,31 @@
             }
 
 
-            if(!vm.parentField){
+            if(!vm.setting.parentField){
                 if(!vm.multiple){
-                    vm.fieldValue = data[vm.field.name];
+                    vm.fieldValue = data[vm.setting.name];
                 } else if (vm.multiname) {
                     vm.fieldValue = [];
-                    angular.forEach(data[vm.field.name], function (item) {
+                    angular.forEach(data[vm.setting.name], function (item) {
                         vm.fieldValue.push(item[vm.multiname]);
                     });
                 } else {
                     vm.fieldValue = [];
-                    angular.forEach(data[vm.field.name], function (item) {
+                    angular.forEach(data[vm.setting.name], function (item) {
                         vm.fieldValue.push(item);
                     });
                 }
             } else {
                 if(!vm.multiple){
-                    vm.fieldValue = data[vm.parentField][vm.field.name];
+                    vm.fieldValue = data[vm.setting.parentField][vm.setting.name];
                 } else if (vm.multiname) {
                     vm.fieldValue = [];
-                    angular.forEach(data[vm.parentField][vm.field.name], function (item) {
+                    angular.forEach(data[vm.setting.parentField][vm.setting.name], function (item) {
                         vm.fieldValue.push(item[vm.multiname]);
                     });
                 } else {
                     vm.fieldValue = [];
-                    angular.forEach(data[vm.parentField][vm.field.name], function (item) {
+                    angular.forEach(data[vm.setting.parentField][vm.setting.name], function (item) {
                         vm.fieldValue.push(item);
                     });
                 }
@@ -321,13 +320,13 @@
         var destroyErrorField = $scope.$on("editor:api_error_field_"+ fieldErrorName, function (event,data) {
             if(angular.isArray(data)){
                 angular.forEach(data, function (error) {
-                    if(vm.errorIndexOf(error) < 0){
-                        vm.setError(error);
+                    if(vm.setting.errorIndexOf(error) < 0){
+                        vm.setting.setError(error);
                     }
                 });
             } else {
-                if(vm.errorIndexOf(data) < 0){
-                    vm.setError(data);
+                if(vm.setting.errorIndexOf(data) < 0){
+                    vm.setting.setError(data);
                 }
             }
         });
@@ -357,7 +356,7 @@
         var destroyWatchFieldValue = $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
-            vm.setErrorEmpty();
+            vm.setting.setErrorEmpty();
         });
 
         /* PUBLIC METHODS */
@@ -392,16 +391,16 @@
 
         function autocompleteSearch(searchString){
 
-            vm.setErrorEmpty();
+            vm.setting.setErrorEmpty();
 
             if(searchString === "" || searchString.length <= vm.minCount){
                 return;
             }
             vm.searching = true;
-            if (vm.field.hasOwnProperty("values")) {
-                angular.forEach(vm.field.values, function (v,key) {
+            if (vm.setting.hasOwnProperty("values")) {
+                angular.forEach(vm.setting.values, function (v,key) {
                     var obj = {};
-                    if (angular.isArray(vm.field.values)) {
+                    if (angular.isArray(vm.setting.values)) {
                         obj[vm.field_id] = v;
                     } else {
                         obj[vm.field_id] = key;
@@ -418,7 +417,7 @@
                 urlParam[vm.field_search] = "%" + searchString + "%";
 
                 RestApiService
-                    .getUrlResource(vm.field.valuesRemote.url + "?filter=" + JSON.stringify(urlParam))
+                    .getUrlResource(vm.setting.valuesRemote.url + "?filter=" + JSON.stringify(urlParam))
                     .then(function (response){
                         angular.forEach(response.data.items, function (v) {
                             if(!alreadySelected(v) && !alreadyInPossible(v)){
@@ -428,7 +427,7 @@
                         vm.activeElement = 0;
                         vm.searching = false;
                     }, function (reject) {
-                        console.error('EditorFieldAutocompleteController: Не удалось получить значения для поля \"' + vm.field.name + '\" с удаленного ресурса');
+                        console.error('EditorFieldAutocompleteController: Не удалось получить значения для поля \"' + vm.setting.name + '\" с удаленного ресурса');
                         vm.searching = false;
                     });
             }
@@ -464,11 +463,11 @@
         }
 
         function loadValues() {
-          if (vm.field.hasOwnProperty("values")) {
-              angular.forEach(vm.field.values, function (v,key) {
+          if (vm.setting.hasOwnProperty("values")) {
+              angular.forEach(vm.setting.values, function (v,key) {
                   var obj = {};
                   if(Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple){
-                      if (angular.isArray(vm.field.values)) {
+                      if (angular.isArray(vm.setting.values)) {
                           obj[vm.field_id] = v;
                       } else {
                           obj[vm.field_id] = key;
@@ -476,7 +475,7 @@
                       obj[vm.field_search] = v;
                       vm.selectedValues.push(obj);
                   } else if (vm.fieldValue == key && !vm.multiple){
-                      if (angular.isArray(vm.field.values)) {
+                      if (angular.isArray(vm.setting.values)) {
                           obj[vm.field_id] = v;
                       } else {
                           obj[vm.field_id] = key;
@@ -487,7 +486,7 @@
                   }
               });
               vm.preloadedData = true;
-          } else if (vm.field.hasOwnProperty('valuesRemote')) {
+          } else if (vm.setting.hasOwnProperty('valuesRemote')) {
 
               if (vm.fieldValue === undefined || vm.fieldValue === null) {
                   vm.preloadedData = true;
@@ -509,7 +508,7 @@
               }
 
               RestApiService
-                  .getUrlResource(vm.field.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
+                  .getUrlResource(vm.setting.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
                   .then(function (response) {
                       angular.forEach(response.data.items, function (v) {
                           if ( Array.isArray(vm.fieldValue) &&
@@ -525,7 +524,7 @@
                       vm.preloadedData = true;
                   }, function (reject) {
                       vm.preloadedData = true;
-                      console.error('EditorFieldAutocompleteController: Не удалось получить значения для поля \"' + vm.field.name + '\" с удаленного ресурса');
+                      console.error('EditorFieldAutocompleteController: Не удалось получить значения для поля \"' + vm.setting.name + '\" с удаленного ресурса');
                   });
           } else {
               vm.preloadedData = true;
@@ -591,8 +590,8 @@
             destroyWatchInputValue();
             destroyWatchFieldValue();
             EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
+            if (vm.setting.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy(vm.setting.parentField, vm.setting.parentFieldIndex, vm.setting.name, vm.fieldValue);
             }
         };
     }

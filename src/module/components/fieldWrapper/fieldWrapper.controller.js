@@ -5,63 +5,41 @@
         .module('universal.editor')
         .controller('FieldWrapperController',FieldWrapperController);
 
-    FieldWrapperController.$inject = ['$scope', 'RestApiService'];
+    FieldWrapperController.$inject = ['$scope', 'RestApiService', 'FieldBuilder', '$timeout', '$element'];
 
-    function FieldWrapperController($scope, RestApiService){
+    function FieldWrapperController($scope, RestApiService, FieldBuilder, $timeout, $element){
         var vm = this;
         vm.error = [];
 
-        var entityObject = RestApiService.getEntityObject();
-        console.log(entityObject);
-        if($scope.parentField){
-            angular.forEach(entityObject.tabs, function (tab) {
-                angular.forEach(tab.fields, function (field) {
-                    if(field.name == $scope.parentField){
-                        angular.forEach(field.fields, function (innerField) {
-                            if(innerField.name == $scope.fieldName){
-                                $scope.field = innerField;
-                                return;
-                            }
-                        });
-                    }
-                });
-            });
-        } else {
-            //angular.forEach(entityObject.body, function (tab) {
-            //    angular.forEach(tab.component.settings.fields, function (field) {
-            //        if(angular.isString(field) && (field == $scope.fieldName)){
-            //            $scope.field = field;
-            //            return;
-            //        }
-            //        //if(field.name == $scope.fieldName){
-            //        //    $scope.field = field;
-            //        //    return;
-            //        //}
-            //    });
-            //});
-            angular.forEach(entityObject.dataSource.fields, function(field) {
-                if(field.name == $scope.fieldName){
-                    $scope.field = field;
-                    return;
-                }
-            });
-        }
+        vm.fieldDisplayName = vm.setting.component.settings.label;
+        vm.hint = vm.setting.hint || false;
+        vm.required = vm.setting.required || false;
+        //убрать кастыль
+        vm.isArray = (vm.setting.type == 'ue-array');
 
-        vm.fieldDisplayName = $scope.field.label;
-        vm.hint = $scope.field.hint || false;
-        vm.required = $scope.field.required || false;
-        vm.isArray = ($scope.field.type == 'ue-array');
-
-        $scope.setError = function(error) {
+        vm.setting.setError = function(error) {
             vm.error.push(error);
         };
 
-        $scope.setEmpty = function() {
+        vm.setting.setErrorEmpty = function() {
             vm.error = [];
         };
 
-        $scope.errorIndexOf = function(error) {
+        vm.setting.errorIndexOf = function(error) {
             return vm.error.indexOf(error);
         };
+        $scope.setting = vm.setting;
+        vm.$postLink = function() {
+            var element = $element.find('.field-element');
+            $element.on('$destroy', function () {
+                $scope.$destroy();
+            });
+
+            $timeout(function () {
+                element.addClass("field-wrapper-" + $scope.setting.component.name);
+            },0);
+
+            element.append(new FieldBuilder($scope).build());
+        }
     }
 })();

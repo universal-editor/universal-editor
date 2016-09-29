@@ -10,18 +10,11 @@
     function FieldBuilder($compile){
         var Field = function (scope) {
             this.scope = scope.$new();
-            this.scope.field = scope.field;
-            this.scope.setError = scope.setError;
-            this.scope.setErrorEmpty = scope.setEmpty;
-            this.scope.errorIndexOf = scope.errorIndexOf;
-            this.scope.parentField = scope.parentField;
-            this.scope.parentFieldIndex = scope.parentFieldIndex;
+            this.scope.setting = scope.setting;
         };
         
         Field.prototype.build = function () {
-            var element = '<' + this.scope.field.type +' data-field="field" data-set-error="setError"' +
-                'data-set-error-empty="setErrorEmpty" data-error-index-of="errorIndexOf" ' +
-                'data-parent-field="parentField" data-parent-field-index="parentFieldIndex"></' + this.scope.field.type + '>';
+            var element = '<' + this.scope.setting.component.name +' data-setting="setting"></' + this.scope.setting.component.name + '>';
             return $compile(element)(this.scope);
         };
 

@@ -15,7 +15,7 @@ module.run(['$templateCache', function($templateCache) {
     '    <div class="tab-content-wrapper">\n' +
     '        <div data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label" class="tab-item-content">\n' +
     '            <div class="field-content-wrapper">\n' +
-    '                <div data-ng-repeat="field in tab.fields" data-field-wrapper="" data-field-name="{{field.name}}" data-ng-if="(vm.editorEntityType == \'new\' &amp;&amp; field.showOnly == \'create\') || (vm.editorEntityType == \'exist\' &amp;&amp; field.showOnly == \'edit\') || !field.showOnly"></div>\n' +
+    '                <field-wrapper data-ng-repeat="field in tab.fields" data-setting="field" data-ng-if="(vm.editorEntityType == \'new\' &amp;&amp; field.showOnly == \'create\') || (vm.editorEntityType == \'exist\' &amp;&amp; field.showOnly == \'edit\') || !field.showOnly"></field-wrapper>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +

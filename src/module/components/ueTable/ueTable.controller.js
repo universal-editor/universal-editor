@@ -64,12 +64,12 @@
         vm.parentButton = false;
         vm.filterFields = [];
         vm.visibleFilter = true;
-        vm.pagination = vm.setting.dataSource.hasOwnProperty("pagination") ? vm.setting.dataSource.pagination : true;
+        vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty("pagination") ? vm.setting.component.settings.dataSource.pagination : true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
 
-        if(vm.setting.dataSource.hasOwnProperty('primaryKey')){
-            vm.idField = vm.setting.dataSource.primaryKey || vm.idField;
+        if(vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')){
+            vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
         }
 
         //var mixEntity = RestApiService.getMixModeByEntity();
@@ -90,8 +90,8 @@
         metaKey = "_meta";
         itemsKey = "items";
 
-        angular.forEach(vm.setting.dataSource.fields, function (field) {
-            if(field.component.hasOwnProperty("settings") && (vm.setting.columns.indexOf(field.name) != -1)){
+        angular.forEach(vm.setting.component.settings.dataSource.fields, function (field) {
+            if(field.component.hasOwnProperty("settings") && (vm.setting.component.settings.columns.indexOf(field.name) != -1)){
                 vm.tableFields.push({
                     field : field.name,
                     displayName : field.component.settings.label || field.name
@@ -99,7 +99,7 @@
             }
         });
 
-        angular.forEach(vm.setting.editFooterBar, function (editFooterBar) {
+        angular.forEach(vm.setting.component.settings.editFooterBar, function (editFooterBar) {
             switch (editFooterBar.type){
                 case 'add':
                     vm.editFooterBarNew.push(editFooterBar);
@@ -142,7 +142,7 @@
         //    });
         //}
 
-        vm.sortField = vm.setting.dataSource.sortBy || vm.tableFields[0].field;
+        vm.sortField = vm.setting.component.settings.dataSource.sortBy || vm.tableFields[0].field;
 
         vm.getScope = function(){
             return $scope;
@@ -172,21 +172,21 @@
                 params.parent = $state.params.parent;
                 isReload = false;
             }
-            RestApiService.getItemsList({url: vm.setting.dataSource.url});
+            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
             $state.go('editor.type.list', params, {reload: isReload});
         };
 
         vm.applyFilter = function () {
             RestApiService.setFilterParams(FilterFieldsStorage.getFilterValue());
-            RestApiService.getItemsList({url: vm.setting.dataSource.url});
+            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
         };
 
-        $rootScope.$broadcast('editor:set_entity_type', vm.setting);
+        $rootScope.$broadcast('editor:set_entity_type', vm.setting.component.settings);
 
         vm.clearFilter = function () {
             FilterFieldsStorage.setInitialValues();
-            RestApiService.setFilterParams({});
-            RestApiService.getItemsList({url: vm.setting.dataSource.url});
+            //RestApiService.setFilterParams({});
+            //RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
         };
 
 
@@ -215,7 +215,7 @@
 
             RestApiService.getItemsList({
                 sort : vm.sortingDirection ? field : "-" + field,
-                url: vm.setting.dataSource.url
+                url: vm.setting.component.settings.dataSource.url
             });
         };
 
@@ -249,10 +249,10 @@
             vm.listLoaded = true;
             vm.items = data[itemsKey];
 
-            if (angular.isDefined(vm.setting.dataSource.keys)) {
-                metaKey = vm.setting.dataSource.keys.meta || metaKey;
-                itemsKey = vm.setting.dataSource.keys.items || itemsKey;
-                vm.metaKey = (vm.setting.dataSource.keys.meta != false);
+            if (angular.isDefined(vm.setting.component.settings.dataSource.keys)) {
+                metaKey = vm.setting.component.settings.dataSource.keys.meta || metaKey;
+                itemsKey = vm.setting.component.settings.dataSource.keys.items || itemsKey;
+                vm.metaKey = (vm.setting.component.settings.dataSource.keys.meta != false);
             }
 
             vm.autoCompleteFields.forEach(function (field) {
@@ -323,13 +323,13 @@
                     qParams.page = 1;
                     vm.pageItemsArray.push({
                         label : "<<",
-                        href : vm.setting.dataSource.url + "?" + $httpParamSerializer(qParams)
+                        href : vm.setting.component.settings.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
 
                     qParams.page = data[metaKey].currentPage - 1;
                     vm.pageItemsArray.push({
                         label : "<",
-                        href : vm.setting.dataSource.url + "?" + $httpParamSerializer(qParams)
+                        href : vm.setting.component.settings.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
                 }
 
@@ -337,7 +337,7 @@
                     qParams.page = data[metaKey].currentPage - pageItems - 1;
                     vm.pageItemsArray.push({
                         label : "...",
-                        href : vm.setting.dataSource.url + "?" + $httpParamSerializer(qParams)
+                        href : vm.setting.component.settings.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
                 }
 
@@ -351,7 +351,7 @@
                     qParams.page = startIndex;
                     vm.pageItemsArray.push({
                         label : startIndex,
-                        href : vm.setting.dataSource.url + "?" + $httpParamSerializer(qParams)
+                        href : vm.setting.component.settings.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
 
                     startIndex++;
@@ -374,7 +374,7 @@
                     qParams.page = tempCurrentPage;
                     vm.pageItemsArray.push({
                         label : tempCurrentPage,
-                        href : vm.setting.dataSource.url + "?" + $httpParamSerializer(qParams)
+                        href : vm.setting.component.settings.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
 
                     tempCurrentPage++;
@@ -384,7 +384,7 @@
                     qParams.page = data[metaKey].currentPage + pageItems + 1;
                     vm.pageItemsArray.push({
                         label : "...",
-                        href : vm.setting.dataSource.url + "?" + $httpParamSerializer(qParams)
+                        href : vm.setting.component.settings.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
                 }
 
@@ -392,13 +392,13 @@
                     qParams.page = data[metaKey].currentPage + 1;
                     vm.pageItemsArray.push({
                         label : ">",
-                        href : vm.setting.dataSource.url + "?" + $httpParamSerializer(qParams)
+                        href : vm.setting.component.settings.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
 
                     qParams.page = data[metaKey].pageCount;
                     vm.pageItemsArray.push({
                         label : ">>",
-                        href : vm.setting.dataSource.url + "?" + $httpParamSerializer(qParams)
+                        href : vm.setting.component.settings.dataSource.url + "?" + $httpParamSerializer(qParams)
                     });
                 }
             }
@@ -491,13 +491,18 @@
             }
         };
 
+        vm.$onInit = function() {
+            RestApiService.setFilterParams({});
+            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
+        };
+
         vm.$postLink = function() {
             var elementHead = $element.find('.header-action-button');
-            angular.forEach(vm.setting.header, function(button) {
+            angular.forEach(vm.setting.component.settings.header, function(button) {
                 var scope = $scope.$new();
                 scope.settings = button.settings;
                 elementHead.append($compile('<' + button.name + ' data-setting="settings"></' + button.name + '>')(scope));
             });
-        }
+        };
     }
 })();

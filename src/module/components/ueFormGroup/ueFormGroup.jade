@@ -1,0 +1,12 @@
+.editor-field-array
+    .field-name-label.label-array
+        .field-hint(data-ng-if="vm.hint")
+            .hint-text {{vm.hint}}
+        | {{vm.fieldDisplayName}}
+    .field-array-wrapper
+        data-field-wrapper(
+            data-ng-repeat="field in vm.innerFields",
+            data-field-name="{{field}}",
+            data-parent-field="{{vm.fieldName}}",
+            data-setting="field"
+            )

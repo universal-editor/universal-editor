@@ -6,8 +6,11 @@ div(data-ng-show="vm.entityLoaded", class="editor-body")
     .tab-content-wrapper
         .tab-item-content(data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label")
             .field-content-wrapper
-                div(data-ng-repeat="field in tab.fields" data-field-wrapper="" data-field-name="{{field.name}}"
-                data-ng-if="(vm.editorEntityType == 'new' && field.showOnly == 'create') || (vm.editorEntityType == 'exist' && field.showOnly == 'edit') || !field.showOnly")
+                field-wrapper(
+                    data-ng-repeat="field in tab.fields",
+                    data-setting="field",
+                    data-ng-if="(vm.editorEntityType == 'new' && field.showOnly == 'create') || (vm.editorEntityType == 'exist' && field.showOnly == 'edit') || !field.showOnly"
+                    )
     .field-error-bottom-wrapper
         .error-item.alert.alert-danger(data-ng-repeat="err in vm.errors") {{err}}
     .field-notify-bottom-wrapper

@@ -3,12 +3,9 @@
 
     var ueString = {
         bindings : {
-            field: "=",
-            setError: "=",
-            setErrorEmpty: "=",
-            errorIndexOf: "=",
-            parentField: "=",
-            parentFieldIndex: "="
+            setting: '='
+            //parentField: "=",
+            //parentFieldIndex: "="
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueString/ueString.html');

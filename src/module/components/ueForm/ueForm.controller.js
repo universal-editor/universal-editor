@@ -31,7 +31,7 @@
         vm.errors = [];
         vm.notifys = [];
         vm.tabsVisibility = [];
-        vm.currentTab = vm.setting.body[0].component.settings.label;
+        vm.currentTab = vm.setting.component.settings.body[0].component.settings.label;
         vm.entityId = "";
         vm.editorEntityType = "new";
         //vm.listHeaderBar = entityObject.listHeaderBar;
@@ -48,8 +48,8 @@
             vm.assetsPath = vm.configData.ui.assetsPath;
         }
 
-        if(vm.setting.dataSource.hasOwnProperty('primaryKey')){
-            vm.idField = vm.setting.dataSource.primaryKey || vm.idField;
+        if(vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')){
+            vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
         }
         itemsKey = "items";
 
@@ -88,22 +88,25 @@
         //    console.log(field);
         //});
 
-        angular.forEach(vm.setting.body, function(tab) {
+        angular.forEach(vm.setting.component.settings.body, function(tab) {
             var newTab = {};
             newTab.label = tab.component.settings.label;
             newTab.fields = [];
             angular.forEach(tab.component.settings.fields, function(field) {
                 if(angular.isString(field)) {
-                    var newField =vm.setting.dataSource.fields.filter(function(k){
+                    var newField = vm.setting.component.settings.dataSource.fields.filter(function(k) {
                         return k.name == field;
                     });
                     if(newField.length > 0) {
                         newTab.fields.push(newField[0]);
                     }
+                } else {
+                    newTab.fields.push(field);
                 }
             });
             vm.tabs.push(newTab);
         });
+
         vm.getScope = function(){
             return $scope;
         };
@@ -142,7 +145,7 @@
             }
         };
 
-        $rootScope.$broadcast('editor:set_entity_type', vm.setting);
+        $rootScope.$broadcast('editor:set_entity_type', vm.setting.component.settings);
 
         $scope.$on('editor:entity_loaded', function (event,data) {
             vm.editorEntityType = data.editorEntityType;
@@ -154,7 +157,7 @@
             vm.errors.push(data);
         });
 
-        RestApiService.getItemById($state.params.pk, vm.setting.dataSource);
+        RestApiService.getItemById($state.params.pk, vm.setting.component.settings.dataSource);
 
         $scope.$on('editor:presave_entity_created', function (event,data) {
             $translate('CHANGE_RECORDS.CREATE').then(function (translation) {

@@ -3,12 +3,7 @@
 
     var ueRadiolist = {
         bindings : {
-            field: "=",
-            setError: "=",
-            setErrorEmpty: "=",
-            errorIndexOf: "=",
-            parentField: "=",
-            parentFieldIndex: "="
+            setting: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueRadiolist/ueRadiolist.html');

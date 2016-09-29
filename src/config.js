@@ -56,13 +56,44 @@ var staffDataSource = {
                     validators: []
                 }
             }
+        },
+        {
+            name: "gender",
+            component: {
+                name: "ue-radiolist",
+                settings:{
+                    "label": "Пол",
+                    "values": {
+                        "male": "Мужской",
+                        "female": "Женский"
+                    },
+                    "showOnly": "edit"
+                }
+            }
+        },
+        {
+            "name": "parent_id",
+            component: {
+                "name": "ue-autocomplete",
+                settings: {
+                    "list": true,
+                    "label": "Руководитель",
+                    "valuesRemote": {
+                        "fields": {
+                            "value": "id",
+                            "label": "name"
+                        },
+                        "url": "http://universal-backend.dev/rest/v1/staff"
+                    }
+                }
+            }
         }
     ]
 };
 
 var messagesDataSource = {
     type: 'REST',
-    url: '//universal-backend.dev/rest/v1/messages',
+    url: '//universal-backend.dev/rest/v1/staff',
     sortBy: '-id',
     primaryKey: 'id',
     fields: [
@@ -77,7 +108,7 @@ var messagesDataSource = {
             }
         },
         {
-            name: 'text',
+            name: 'email',
             component: {
                 name: 'ue-string',
                 settings: {
@@ -110,28 +141,6 @@ var ue = new UniversalEditor('universal-editor', {
                                     name: 'ue-button-create',
                                     settings: {
                                         label: 'создать1'
-                                    }
-                                },
-                                {
-                                    name: 'ue-button-download',
-                                    settings: {
-                                        label: 'скачай меня полностью',
-                                        url: 'https://docs.google.com/document/d/1wdB_hXLGN83tMuwETLfwUVAOMgejN-OQIayAlKL93Co/edit?ts=57d802f7#heading=h.o18u6n6jb0lx'
-                                    }
-                                },
-                                {
-                                    name: 'ue-button-target-blank',
-                                    settings: {
-                                        label: 'открой меня полностью',
-                                        url: 'https://docs.google.com/document/d/1wdB_hXLGN83tMuwETLfwUVAOMgejN-OQIayAlKL93Co/edit?ts=57d802f7#heading=h.o18u6n6jb0lx'
-                                    }
-                                },
-                                {
-                                    name: 'ue-button-request',
-                                    settings: {
-                                        label: 'GET меня полностью',
-                                        url: '//universal-backend.dev/rest/v1/country',
-                                        method: 'GET'
                                     }
                                 }
                             ],
@@ -179,15 +188,16 @@ var ue = new UniversalEditor('universal-editor', {
                                                         name: 'ue-table',
                                                         settings: {
                                                             label: 'Messages',
-                                                            dataSource: messagesDataSource
+                                                            dataSource: messagesDataSource,
+                                                            columns: ['id', 'title']
                                                         }
                                                     }
                                                 },
                                                 {
                                                     component: {
-                                                        name: 'ue-button',
+                                                        name: 'ue-button-request',
                                                         settings: {
-                                                            label: 'This is button!!!11',
+                                                            label: 'This is button!!!',
                                                             request: {
                                                                 url: '//ya.ru'
                                                             }

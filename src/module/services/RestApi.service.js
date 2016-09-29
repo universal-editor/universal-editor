@@ -93,7 +93,7 @@
             queryTempParams = params;
 
             if(self.isProcessing){
-                return;
+                //return;
             }
 
             if($location.search().hasOwnProperty("parent")){

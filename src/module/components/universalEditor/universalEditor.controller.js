@@ -13,7 +13,8 @@
         vm.configData = configData;
         var element = $element.find('.universal-editor');
         var scope = $scope.$new();
-        scope.settings = component.settings;
+        scope.settings = {};
+        scope.settings.component = component;
         element.append($compile('<' + component.name + ' data-setting="settings"></' + component.name + '>')(scope));
     }
 })();
