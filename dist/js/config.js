@@ -149,7 +149,19 @@ var ue = new UniversalEditor('universal-editor', {
                                 {
                                     name: 'ue-button-edit',
                                     settings: {
-                                        label: 'создать1'
+                                        label: 'Редактировать'
+                                    }
+                                },
+                                {
+                                    name: 'ue-button-delete',
+                                    settings: {
+                                        label: 'Удалить'
+                                    }
+                                },
+                                {
+                                    name: 'ue-button-open',
+                                    settings: {
+                                        label: 'Раскрыть'
                                     }
                                 }
                             ]

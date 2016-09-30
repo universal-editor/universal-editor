@@ -2,8 +2,7 @@ div
     .editor-header
         button.btn.btn-lg.btn-default.filter-button(data-ng-click="vm.toggleFilterVisibility()", data-ng-class="{ disabled : vm.entityLoaded }")
             | {{ 'BUTTON.FILTER' | translate}} {{ vm.visibleFilter ? "+" : "-" }}
-        .header-action-button
-            //(ng-repeat="button in vm.listHeaderBar track by $index")
+        button-wrapper.header-action-button(ng-repeat="button in vm.listHeaderBar track by $index", data-setting="button", data-button-class="header")
             //ue-button-create(data-ng-if="button.type == 'create'", data-button-label="{{button.label}}")
             //div.btn.btn-lg.btn-success(data-ng-if="button.type == 'request'", data-ng-click="vm.contextAction(button)") {{button.label}}
             //div(data-ng-if="button.type == 'targetBlank'", data-editor-button-target-blank="", data-item-value="item", data-button-label="{{button.label}}", data-button-request="{{button.request}}", data-index="{{$index}}", data-button-class="header")
@@ -37,13 +36,14 @@ div
                     span.context-toggle(data-ng-click="vm.toggleContextView(item[vm.idField])", data-ng-show="vm.contextLinks.length") Toggle buttons
                     .context-menu-wrapper(data-ng-show="vm.contextId == item[vm.idField]")
                         .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index", data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)")
-                            div(data-ng-if="link.type == 'request'", data-ng-click="vm.contextAction(link,item[vm.idField])") {{link.label}}
-                            ue-button-edit(data-ng-if="link.type == 'edit'", data-entity-subtype="{{item[vm.subType]}}",data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}")
-                            ue-button-delete(data-ng-if="link.type == 'delete'",data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-button-class="context")
-                            ue-button-open(data-ng-if="link.type == 'open'", data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}")
-                            div(data-ng-if="link.type == 'download'", data-editor-button-download="", data-item-value="item", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-index="{{$index}}", data-button-class="context")
-                            div(data-ng-if="link.type == 'targetBlank'", data-editor-button-target-blank="", data-item-value="item", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-index="{{$index}}", data-button-class="context")
-                        .context-menu-item(data-ng-repeat="link in vm.mixContextLinks track by $index", data-ng-if="vm.mixEntityType && item[vm.subType] === vm.mixEntityType")
+                            button-wrapper(data-setting="link", data-entity-id="{{item[vm.idField]}}", data-button-class="context")
+                            //div(data-ng-if="link.type == 'request'", data-ng-click="vm.contextAction(link,item[vm.idField])") {{link.label}}
+                            //ue-button-edit(data-ng-if="link.type == 'edit'", data-entity-subtype="{{item[vm.subType]}}",data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}")
+                            //ue-button-delete(data-ng-if="link.type == 'delete'",data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-button-class="context")
+                            //ue-button-open(data-ng-if="link.type == 'open'", data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}")
+                            //div(data-ng-if="link.type == 'download'", data-editor-button-download="", data-item-value="item", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-index="{{$index}}", data-button-class="context")
+                            //div(data-ng-if="link.type == 'targetBlank'", data-editor-button-target-blank="", data-item-value="item", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-index="{{$index}}", data-button-class="context")
+                        //.context-menu-item(data-ng-repeat="link in vm.mixContextLinks track by $index", data-ng-if="vm.mixEntityType && item[vm.subType] === vm.mixEntityType")
                             div(data-ng-if="link.type == 'request'", data-ng-click="vm.contextAction(link,item[vm.idField])") {{link.label}}
                             div(data-ng-if="link.type == 'edit'", data-editor-button-edit="", data-entity-subtype="{{item[vm.subType]}}",data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}")
                             ue-delete-button(data-ng-if="link.type == 'delete'", data-entity-type="mix", data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-button-class="context")

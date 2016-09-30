@@ -6,10 +6,11 @@
             return $templateCache.get('module/components/ueButtonEdit/ueButtonEdit.html');
         }],
         bindings : {
-            entityId : "@",
-            buttonLabel : "@",
-            buttonRequest : "@",
-            entitySubtype : "@"
+            setting: '='
+            //entityId : "@",
+            //buttonLabel : "@",
+            //buttonRequest : "@",
+            //entitySubtype : "@"
         },
         controller : 'UeButtonEditController',
         controllerAs : 'vm'

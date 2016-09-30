@@ -11,19 +11,18 @@
         var vm = this;
         var params;
         var request;
-        try {
-            request = JSON.parse($scope.buttonRequest);
-            params = request.params;
-        } catch(e){
-
+        if(vm.setting.component.settings.request) {
+            request = JSON.parse(vm.setting.component.settings.request);
         }
 
-        vm.label = vm.buttonLabel;
+        vm.label = vm.setting.component.settings.label;
         vm.processing = RestApiService.isProcessing;
 
-        var watchEntityId = $scope.$watch('entityId', function (entityId) {
-            vm.entityId = entityId;
-        });
+        //var watchEntityId = $scope.$watch('entityId', function (entityId) {
+        //    vm.entityId = entityId;
+        //});
+
+        vm.entityId = vm.setting.entityId;
 
         var watchRest = $scope.$watch(function () {
             return RestApiService.isProcessing;
@@ -32,7 +31,7 @@
         });
 
         vm.$onDestroy = function () {
-            watchEntityId();
+            //watchEntityId();
             watchRest();
         };
 
@@ -41,7 +40,7 @@
                 return;
             }
             if(confirm("Удалить запись «" + vm.entityId + "»?")){
-                RestApiService.deleteItemById(vm.entityId,request, $scope.entityType);
+                RestApiService.deleteItemById(vm.entityId, request, $scope.entityType, vm.setting);
             }
         });
 

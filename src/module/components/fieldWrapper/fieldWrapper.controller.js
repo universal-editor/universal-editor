@@ -14,7 +14,7 @@
         vm.fieldDisplayName = vm.setting.component.settings.label;
         vm.hint = vm.setting.hint || false;
         vm.required = vm.setting.required || false;
-        //убрать кастыль
+
         vm.isArray = (vm.setting.type == 'ue-array');
 
         vm.setting.setError = function(error) {

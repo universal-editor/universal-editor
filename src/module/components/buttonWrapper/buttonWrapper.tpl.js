@@ -5,8 +5,8 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/components/ueButtonCreate/ueButtonCreate.html',
+  $templateCache.put('module/components/buttonWrapper/buttonWrapper.html',
     '\n' +
-    '<button class="btn btn-lg btn-success">{{vm.label}}</button>');
+    '<div class="button-wrapper"></div>');
 }]);
 })();

@@ -32,32 +32,30 @@
             watchRest();
         };
 
-        vm.label = vm.buttonLabel;
+        vm.label = vm.setting.component.settings.label;
 
+        var stateParams = {
+            pk : vm.setting.entityId
+        };
 
         $element.bind("click", function () {
             if(vm.processing){
                 return;
             }
 
-            var stateParams = {
-                uid : $scope.entityId
-            };
-
             var stateOptions = {};
             
-            if($scope.entitySubtype){
-                stateParams.type = $scope.entitySubtype;
-                stateParams.back = $state.params.type;
-                stateOptions.reload = true;
-            } else {
-                stateParams.type = $state.params.type;
-            }
-            if ($location.search().parent) {
-                stateParams.parent = $location.search().parent;
-            }
-
-            $state.go('editor.type.entity',stateParams, stateOptions);
+            //if($scope.entitySubtype){
+            //    stateParams.type = $scope.entitySubtype;
+            //    stateParams.back = $state.params.type;
+            //    stateOptions.reload = true;
+            //} else {
+            //    stateParams.type = $state.params.type;
+            //}
+            //if ($location.search().parent) {
+            //    stateParams.parent = $location.search().parent;
+            //}
+            $state.go(vm.setting.component.settings.state,stateParams, stateOptions);
         });
 
         vm.$postLink = function() {

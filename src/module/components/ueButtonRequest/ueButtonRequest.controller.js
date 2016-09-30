@@ -9,10 +9,11 @@
 
     function UeButtonRequestController($rootScope,$scope,$element,RestApiService,configData, $window){
         var vm = this;
-        vm.label = vm.setting.label;
+
+        vm.label = vm.setting.component.settings.label;
 
         $element.bind("click", function () {
-            RestApiService.contextMenuAction(vm.setting);
+            RestApiService.contextMenuAction(vm.setting.component.settings.request);
         });
 
         vm.$postLink = function() {

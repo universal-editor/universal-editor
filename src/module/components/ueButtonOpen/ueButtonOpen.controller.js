@@ -19,15 +19,19 @@
 
         }
 
-        vm.label = vm.buttonLabel;
+        vm.label = vm.setting.component.settings.label;
 
         vm.processing = RestApiService.isProcessing;
+
+
 
         var watchRest = $scope.$watch(function () {
             return RestApiService.isProcessing;
         }, function (val) {
             vm.processing = val;
         });
+
+        var id = vm.setting.entityId;
 
         vm.$onDestroy = function(){
             watchRest();
@@ -37,7 +41,8 @@
             if(vm.processing){
                 return;
             }
-            RestApiService.loadChilds(vm.entityId,request);
+            var url = RestApiService.getEntityObject().dataSource.url;
+            RestApiService.loadChilds(id,request, url);
         });
 
         vm.$postLink = function() {

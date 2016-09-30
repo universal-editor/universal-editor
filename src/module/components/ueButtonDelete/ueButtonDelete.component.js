@@ -6,12 +6,13 @@
             return $templateCache.get('module/components/ueButtonDelete/ueButtonDelete.html');
         }],
         bindings : {
-            entityId : "@",
-            buttonLabel : "@",
-            buttonRequest : "@",
-            entityName : "@",
-            buttonClass: "@",
-            entityType: "@"
+            setting: '='
+            //entityId : "@",
+            //buttonLabel : "@",
+            //buttonRequest : "@",
+            //entityName : "@",
+            //buttonClass: "@",
+            //entityType: "@"
         },
         controller : 'UeButtonDeleteController',
         controllerAs : 'vm'

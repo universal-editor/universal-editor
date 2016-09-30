@@ -6,9 +6,7 @@
             return $templateCache.get('module/components/ueButtonOpen/ueButtonOpen.html');
         }],
         bindings : {
-            entityId : "@",
-            buttonLabel : "@",
-            buttonRequest : "@"
+            setting: '='
         },
         controller : 'UeButtonOpenController',
         controllerAs : 'vm'

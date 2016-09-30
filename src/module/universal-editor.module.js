@@ -117,7 +117,7 @@
         angular.forEach(configData.entities, function(entity) {
             angular.forEach(entity.states, function(state) {
                 $stateProvider.state(state.name, {
-                    url: state.url,
+                    url: (state.url + "?parent&back"),
                     templateUrl : "module/components/universalEditor/universalEditor.html",
                     controller : "UniversalEditorController",
                     controllerAs : "vm",

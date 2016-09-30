@@ -98,7 +98,7 @@
 
             if($location.search().hasOwnProperty("parent")){
                 var filterObject = {};
-                filterObject[entityObject.backend.fields.parent] = $location.search().parent;
+                filterObject[entityObject.dataSource.parentField] = $location.search().parent;
                 angular.extend(params,{filter : JSON.stringify(filterObject)});
             }
 
@@ -469,7 +469,7 @@
             });
         };
 
-        this.deleteItemById = function (id,request, type) {
+        this.deleteItemById = function (id,request, type, setting) {
 
             var par =  {};
 
@@ -479,13 +479,18 @@
 
             self.isProcessing = true;
             var _method = 'DELETE';
-            var _url  = entityObject.backend.url + '/' + id;
+
+            var _url  = entityObject.dataSource.url + '/' + id;
+
+            if (setting.buttonClass === 'edit') {
+                _url = entityObject.dataSource.url.replace(':pk', id);
+            }
 
             if (type === 'mix'){
                 var config = configData.entities.filter(function (item) {
                     return item.name === mixEntity.entity;
                 })[0];
-                _url = config.backend.url + '/' + id;
+                _url = config.dataSource.url + '/' + id;
             }
 
             if (typeof request !== 'undefined') {
@@ -493,8 +498,8 @@
                 _method = typeof request.method !== 'undefined' ? request.method : _method;
                 _url = typeof request.url !== 'undefined' ? request.url : _url;
             }
-
-            $http({
+            var state = setting.component.settings.state;
+            return $http({
                 method : _method,
                 url : _url,
                 params : par
@@ -510,7 +515,7 @@
                 if($state.params.back){
                     params.type = $state.params.back;
                 }
-                $state.go('editor.type.list', params, { reload: true });   
+                $state.go(state, params, { reload: true });
             }, function (reject) {
                 self.isProcessing = false;
             });
@@ -592,10 +597,12 @@
             });
         };
 
-        this.loadChilds = function(entityId,request){
+        this.loadChilds = function(entityId,request, url){
             $location.search("parent",entityId);
+            var newRequest = angular.merge({}, request);
+            newRequest.url = url;
 
-            self.getItemsList(request).then(function(response){
+            self.getItemsList(newRequest).then(function(response){
                 $timeout(function () {
                     $location.search("parent",entityId);
                 }, 0);

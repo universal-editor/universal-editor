@@ -17,7 +17,7 @@
             metaKey,
             itemsKey,
             mixEntityObject;
-        //console.log(vm.setting);
+
         vm.configData = configData;
         vm.correctEntityType = true;
         vm.entityLoaded = false;
@@ -34,29 +34,22 @@
         vm.sortField = "";
         vm.sortingDirection = true;
         vm.pageItemsArray = [];
-
-        //временно захардкоженно меню
-        vm.contextLinks = [
-            {
-                "label": "Раскрыть",
-                "type": "open"
-            },
-            {
-                "label": "Редактировать",
-                "type": "edit"
-            },
-            {
-                "label": "Удалить",
-                "type": "delete"
-            }
-        ];
-        //временно захардкоженно listHeaderBar
-        vm.listHeaderBar = [
-            {
-                "type": "create",
-                "label": "Создать"
-            }
-        ];
+        vm.contextLinks = vm.setting.component.settings.contextMenu;
+        vm.listHeaderBar = vm.setting.component.settings.header;
+        //vm.contextLinks = [
+        //    {
+        //        "label": "Раскрыть",
+        //        "type": "open"
+        //    },
+        //    {
+        //        "label": "Редактировать",
+        //        "type": "edit"
+        //    },
+        //    {
+        //        "label": "Удалить",
+        //        "type": "delete"
+        //    }
+        //];
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
         vm.contextId = undefined;
@@ -468,6 +461,7 @@
         }, function (processingStatus) {
             vm.loadingData = processingStatus;
         });
+
         function isInTableFields(name) {
             var index = vm.tableFields.findIndex(function(field) {
                 return field.field === name;
@@ -494,15 +488,6 @@
         vm.$onInit = function() {
             RestApiService.setFilterParams({});
             RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
-        };
-
-        vm.$postLink = function() {
-            var elementHead = $element.find('.header-action-button');
-            angular.forEach(vm.setting.component.settings.header, function(button) {
-                var scope = $scope.$new();
-                scope.settings = button.settings;
-                elementHead.append($compile('<' + button.name + ' data-setting="settings"></' + button.name + '>')(scope));
-            });
         };
     }
 })();

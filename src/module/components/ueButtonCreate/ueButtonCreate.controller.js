@@ -10,7 +10,7 @@
     function UeButtonCreateController($scope,$element,EditEntityStorage,$location,$state){
         var vm = this;
 
-        vm.label = vm.setting.label;
+        vm.label = vm.setting.component.settings.label;
 
         $element.bind("click", function () {
             if($location.search().hasOwnProperty("id")){
@@ -19,7 +19,7 @@
 
             var parentId = $location.search().parent !== '' ? $location.search().parent : undefined;
 
-            var newPageType = vm.setting.type || $state.params.type;
+            var newPageType = vm.setting.component.settings.type || $state.params.type;
 
             $state.go('editor.type.new',{
                 parent: parentId,

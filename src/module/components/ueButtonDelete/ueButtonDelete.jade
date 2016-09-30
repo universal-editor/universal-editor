@@ -1,6 +1,6 @@
 div
-    button.btn.btn-md.btn-success(data-ng-class="{ processing : vm.processing}", data-ng-if="vm.buttonClass == 'editor'")
+    button.btn.btn-md.btn-success(data-ng-class="{ processing : vm.processing}", data-ng-if="vm.setting.buttonClass == 'editor'")
         | {{vm.label}}
         .loader-search-wrapper(data-ng-show="vm.processing")
             .loader-search {{'LOADING' | translate}}
-    button.editor-action-button(data-ng-if="vm.buttonClass == 'context'") {{vm.label}}
+    button.editor-action-button(data-ng-if="vm.setting.buttonClass == 'context'") {{vm.label}}

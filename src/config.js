@@ -138,18 +138,62 @@ var ue = new UniversalEditor('universal-editor', {
                             dataSource: staffDataSource,
                             header:[
                                 {
-                                    name: 'ue-button-create',
-                                    settings: {
-                                        label: 'создать1'
+                                    component: {
+                                        name: 'ue-button-create',
+                                        settings: {
+                                            label: 'создать'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-request',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: '//ya.ru'
+                                            }
+                                        }
                                     }
                                 }
                             ],
                             columns: ['name', 'email'],
                             contextMenu:[
                                 {
-                                    name: 'ue-button-edit',
-                                    settings: {
-                                        label: 'создать1'
+                                    component: {
+                                        name: 'ue-button-edit',
+                                        settings: {
+                                            label: 'Редактировать',
+                                            state: 'edit'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-delete',
+                                        settings: {
+                                            label: 'Удалить',
+                                            state: 'index'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-open',
+                                        settings: {
+                                            label: 'Раскрыть'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-request',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: '//ya.ru'
+                                            }
+                                        }
                                     }
                                 }
                             ]
