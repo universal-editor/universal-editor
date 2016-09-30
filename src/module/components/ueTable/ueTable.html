@@ -16,15 +16,13 @@
         div(data-ng-if="button.type == 'download'", data-editor-button-download="", data-item-value="item", data-button-label="{{button.label}}", data-button-request="{{button.request}}", data-index="{{$index}}", data-button-class="header")
         -->
     </div>
-    <div data-ng-hide="vm.visibleFilter || (vm.entityLoaded || vm.loadingData)" class="editor-filter">
-        <div ng-keyup="vm.clickEnter($event)" class="editor-filter-wrapper">
-            <div data-ng-repeat="filter in vm.filterFields" data-filter-wrapper="" data-filter-name="{{filter.name}}"></div>
-            <div class="buttons-wrapper">
-                <button data-ng-click="vm.applyFilter()" class="btn btn-sm btn-success">{{'BUTTON.APPLY' | translate}}</button>
-                <button data-ng-click="vm.clearFilter()" class="btn btn-sm btn-default">{{'BUTTON.CLEAN' | translate}}</button>
-            </div>
-        </div>
-    </div>
+    <!--.editor-filter(data-ng-hide="vm.visibleFilter || (vm.entityLoaded || vm.loadingData)")
+    .editor-filter-wrapper(ng-keyup="vm.clickEnter($event)")
+        div(data-ng-repeat="filter in vm.filterFields", data-filter-wrapper="", data-filter-name="{{filter.name}}")
+        .buttons-wrapper
+            button.btn.btn-sm.btn-success(data-ng-click="vm.applyFilter()") {{'BUTTON.APPLY' | translate}}
+            button.btn.btn-sm.btn-default(data-ng-click="vm.clearFilter()") {{'BUTTON.CLEAN' | translate}}
+    -->
     <div class="groups-action">
         <button data-ng-if="vm.parentButton &amp;&amp; !vm.entityLoaded &amp;&amp; !vm.loadingData" data-ng-click="vm.getParent()" class="btn btn-sm btn-default">{{'BUTTON.HIGHER_LEVEL' | translate}}</button>
     </div>

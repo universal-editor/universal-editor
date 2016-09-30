@@ -9,7 +9,6 @@
 
     function UeButtonRequestController($rootScope,$scope,$element,RestApiService,configData, $window){
         var vm = this;
-        console.log(vm);
         vm.label = vm.setting.label;
 
         $element.bind("click", function () {

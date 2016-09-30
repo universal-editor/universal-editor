@@ -99,35 +99,35 @@
             }
         });
 
-        angular.forEach(vm.setting.component.settings.editFooterBar, function (editFooterBar) {
-            switch (editFooterBar.type){
-                case 'add':
-                    vm.editFooterBarNew.push(editFooterBar);
-                    break;
-                case 'presave':
-                    vm.editFooterBarNew.push(editFooterBar);
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-                case 'update':
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-                case 'delete':
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-                case 'request':
-                    vm.editFooterBarNew.push(editFooterBar);
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-                case 'targetBlank':
-                    vm.editFooterBarNew.push(editFooterBar);
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-                case 'download':
-                    vm.editFooterBarNew.push(editFooterBar);
-                    vm.editFooterBarExist.push(editFooterBar);
-                    break;
-            }
-        });
+        //angular.forEach(vm.setting.component.settings.editFooterBar, function (editFooterBar) {
+        //    switch (editFooterBar.type){
+        //        case 'add':
+        //            vm.editFooterBarNew.push(editFooterBar);
+        //            break;
+        //        case 'presave':
+        //            vm.editFooterBarNew.push(editFooterBar);
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //        case 'update':
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //        case 'delete':
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //        case 'request':
+        //            vm.editFooterBarNew.push(editFooterBar);
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //        case 'targetBlank':
+        //            vm.editFooterBarNew.push(editFooterBar);
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //        case 'download':
+        //            vm.editFooterBarNew.push(editFooterBar);
+        //            vm.editFooterBarExist.push(editFooterBar);
+        //            break;
+        //    }
+        //});
 
         //if(mixEntity.existence){
         //    angular.forEach(mixEntityObject.tabs, function (tab) {

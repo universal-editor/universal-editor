@@ -13,7 +13,7 @@ div
             div.btn.btn-lg.btn-success(data-ng-if="button.type == 'request'", data-ng-click="vm.contextAction(button)") {{button.label}}
             div(data-ng-if="button.type == 'targetBlank'", data-editor-button-target-blank="", data-item-value="item", data-button-label="{{button.label}}", data-button-request="{{button.request}}", data-index="{{$index}}", data-button-class="header")
             div(data-ng-if="button.type == 'download'", data-editor-button-download="", data-item-value="item", data-button-label="{{button.label}}", data-button-request="{{button.request}}", data-index="{{$index}}", data-button-class="header")
-    .editor-filter(data-ng-hide="vm.visibleFilter || (vm.entityLoaded || vm.loadingData)")
+    //.editor-filter(data-ng-hide="vm.visibleFilter || (vm.entityLoaded || vm.loadingData)")
         .editor-filter-wrapper(ng-keyup="vm.clickEnter($event)")
             div(data-ng-repeat="filter in vm.filterFields", data-filter-wrapper="", data-filter-name="{{filter.name}}")
             .buttons-wrapper

@@ -144,7 +144,12 @@ var ue = new UniversalEditor('universal-editor', {
                                     }
                                 }
                             ],
-                            columns: ['name', 'email']
+                            columns: ['name', 'email'],
+                            contextMenu:[
+                                {
+
+                                }
+                            ]
                         }
                     }
                 },

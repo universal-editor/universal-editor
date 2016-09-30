@@ -7,7 +7,6 @@
         }],
         bindings : {
             setting: '='
-            //itemValue : "=",
         },
         controller : 'UeButtonRequestController',
         controllerAs : 'vm'

@@ -1,11 +1,11 @@
 
-<div class="field-wrapper">
-    <div data-ng-class="!vm.isArray ? 'row' : '' ">
-        <div data-ng-if="!vm.isArray" class="field-name-label col-lg-6 col-md-6 col-sm-5 col-xs-4">
+<div data-ng-class="!vm.isArray ? 'row' : '' " class="field-wrapper">
+    <div class="form-group">
+        <label data-ng-if="!vm.isArray" class="field-name-label">
             <div data-ng-if="vm.hint" class="field-hint">
                 <div class="hint-text">{{vm.hint}}</div>
             </div><span data-ng-class="vm.required ? 'editor-required' : '' ">{{vm.fieldDisplayName}}:</span>
-        </div>
+        </label>
         <div class="field-element"></div>
     </div>
     <div data-ng-if="!vm.isArray" class="field-error-wrapper">

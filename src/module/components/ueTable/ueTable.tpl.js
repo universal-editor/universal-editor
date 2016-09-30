@@ -24,15 +24,13 @@ module.run(['$templateCache', function($templateCache) {
     '        div(data-ng-if="button.type == \'download\'", data-editor-button-download="", data-item-value="item", data-button-label="{{button.label}}", data-button-request="{{button.request}}", data-index="{{$index}}", data-button-class="header")\n' +
     '        -->\n' +
     '    </div>\n' +
-    '    <div data-ng-hide="vm.visibleFilter || (vm.entityLoaded || vm.loadingData)" class="editor-filter">\n' +
-    '        <div ng-keyup="vm.clickEnter($event)" class="editor-filter-wrapper">\n' +
-    '            <div data-ng-repeat="filter in vm.filterFields" data-filter-wrapper="" data-filter-name="{{filter.name}}"></div>\n' +
-    '            <div class="buttons-wrapper">\n' +
-    '                <button data-ng-click="vm.applyFilter()" class="btn btn-sm btn-success">{{\'BUTTON.APPLY\' | translate}}</button>\n' +
-    '                <button data-ng-click="vm.clearFilter()" class="btn btn-sm btn-default">{{\'BUTTON.CLEAN\' | translate}}</button>\n' +
-    '            </div>\n' +
-    '        </div>\n' +
-    '    </div>\n' +
+    '    <!--.editor-filter(data-ng-hide="vm.visibleFilter || (vm.entityLoaded || vm.loadingData)")\n' +
+    '    .editor-filter-wrapper(ng-keyup="vm.clickEnter($event)")\n' +
+    '        div(data-ng-repeat="filter in vm.filterFields", data-filter-wrapper="", data-filter-name="{{filter.name}}")\n' +
+    '        .buttons-wrapper\n' +
+    '            button.btn.btn-sm.btn-success(data-ng-click="vm.applyFilter()") {{\'BUTTON.APPLY\' | translate}}\n' +
+    '            button.btn.btn-sm.btn-default(data-ng-click="vm.clearFilter()") {{\'BUTTON.CLEAN\' | translate}}\n' +
+    '    -->\n' +
     '    <div class="groups-action">\n' +
     '        <button data-ng-if="vm.parentButton &amp;&amp; !vm.entityLoaded &amp;&amp; !vm.loadingData" data-ng-click="vm.getParent()" class="btn btn-sm btn-default">{{\'BUTTON.HIGHER_LEVEL\' | translate}}</button>\n' +
     '    </div>\n' +

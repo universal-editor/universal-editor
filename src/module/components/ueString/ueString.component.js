@@ -4,8 +4,6 @@
     var ueString = {
         bindings : {
             setting: '='
-            //parentField: "=",
-            //parentFieldIndex: "="
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueString/ueString.html');

@@ -22,7 +22,7 @@
         }
 
         vm.cols = vm.setting.width;
-        vm.classTextarea = 'col-lg-2 col-md-2 col-sm-3 col-xs-3';
+        vm.classTextarea = '';//'col-lg-2 col-md-2 col-sm-3 col-xs-3';
         vm.fieldName = vm.setting.name;
         vm.fieldValue = undefined;
         vm.readonly = vm.setting.readonly || false;
@@ -37,7 +37,7 @@
             if (vm.cols < 1) {
                 vm.cols = 1;
             }
-            vm.classTextarea = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
+            //vm.classTextarea = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
         }
 
         if (vm.setting.hasOwnProperty("multiple") && vm.setting.multiple === true) {
