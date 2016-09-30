@@ -147,7 +147,10 @@ var ue = new UniversalEditor('universal-editor', {
                             columns: ['name', 'email'],
                             contextMenu:[
                                 {
-
+                                    name: 'ue-button-edit',
+                                    settings: {
+                                        label: 'создать1'
+                                    }
                                 }
                             ]
                         }

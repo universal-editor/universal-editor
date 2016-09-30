@@ -20,8 +20,7 @@ var staffDataSource = {
                 name: 'ue-number',
                 settings: {
                     label: '№',
-                    validators: [],
-                    list: true
+                    validators: []
                 }
             }
         },
@@ -31,8 +30,7 @@ var staffDataSource = {
                 name: 'ue-number',
                 settings: {
                     label: 'Начальник',
-                    validators: [],
-                    list: true
+                    validators: []
                 }
             }
         },
@@ -44,8 +42,7 @@ var staffDataSource = {
                     label: 'Имя',
                     validators: [
                         // @todo Примеры
-                    ],
-                    list: true
+                    ]
                 }
             }
         },
@@ -56,8 +53,38 @@ var staffDataSource = {
                 name: 'ue-string',
                 settings: {
                     label: 'Эл. почта',
-                    validators: [],
-                    list: true
+                    validators: []
+                }
+            }
+        },
+        {
+            name: "gender",
+            component: {
+                name: "ue-radiolist",
+                settings:{
+                    "label": "Пол",
+                    "values": {
+                        "male": "Мужской",
+                        "female": "Женский"
+                    },
+                    "showOnly": "edit"
+                }
+            }
+        },
+        {
+            "name": "parent_id",
+            component: {
+                "name": "ue-autocomplete",
+                settings: {
+                    "list": true,
+                    "label": "Руководитель",
+                    "valuesRemote": {
+                        "fields": {
+                            "value": "id",
+                            "label": "name"
+                        },
+                        "url": "http://universal-backend.dev/rest/v1/staff"
+                    }
                 }
             }
         }
@@ -66,7 +93,7 @@ var staffDataSource = {
 
 var messagesDataSource = {
     type: 'REST',
-    url: '//universal-backend.dev/rest/v1/messages',
+    url: '//universal-backend.dev/rest/v1/staff',
     sortBy: '-id',
     primaryKey: 'id',
     fields: [
@@ -81,7 +108,7 @@ var messagesDataSource = {
             }
         },
         {
-            name: 'text',
+            name: 'email',
             component: {
                 name: 'ue-string',
                 settings: {
@@ -109,10 +136,23 @@ var ue = new UniversalEditor('universal-editor', {
                         name: 'ue-table',
                         settings: {
                             dataSource: staffDataSource,
-                            header: {
-                                component: {name: 'my-mega-component'}
-                            },
-                            columns: ['name', 'email']
+                            header:[
+                                {
+                                    name: 'ue-button-create',
+                                    settings: {
+                                        label: 'создать1'
+                                    }
+                                }
+                            ],
+                            columns: ['name', 'email'],
+                            contextMenu:[
+                                {
+                                    name: 'ue-button-edit',
+                                    settings: {
+                                        label: 'создать1'
+                                    }
+                                }
+                            ]
                         }
                     }
                 },
@@ -132,6 +172,7 @@ var ue = new UniversalEditor('universal-editor', {
                                             fields: [
                                                 'id',
                                                 {
+                                                    name: "fio",
                                                     component: {
                                                         name: 'ue-form-group',
                                                         settings: {
@@ -155,15 +196,16 @@ var ue = new UniversalEditor('universal-editor', {
                                                         name: 'ue-table',
                                                         settings: {
                                                             label: 'Messages',
-                                                            dataSource: messagesDataSource
+                                                            dataSource: messagesDataSource,
+                                                            columns: ['id', 'title']
                                                         }
                                                     }
                                                 },
                                                 {
                                                     component: {
-                                                        name: 'ue-button',
+                                                        name: 'ue-button-request',
                                                         settings: {
-                                                            label: 'This is button!!!11',
+                                                            label: 'This is button!!!',
                                                             request: {
                                                                 url: '//ya.ru'
                                                             }
