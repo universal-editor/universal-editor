@@ -35,6 +35,7 @@
         vm.entityId = "";
         vm.editorEntityType = "new";
         //vm.listHeaderBar = entityObject.listHeaderBar;
+        vm.editFooterBar = vm.setting.component.settings.footer;
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
         vm.parentButton = false;
@@ -135,8 +136,8 @@
                 params.parent = $state.params.parent;
                 isReload = false;
             }
-            RestApiService.getItemsList();
-            $state.go('editor.type.list', params, {reload: isReload});
+            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
+            $state.go('index', params, {reload: isReload});
         };
 
         vm.toggleFilterVisibility = function () {
@@ -144,8 +145,6 @@
                 vm.visibleFilter = !vm.visibleFilter;
             }
         };
-
-        $rootScope.$broadcast('editor:set_entity_type', vm.setting.component.settings);
 
         $scope.$on('editor:entity_loaded', function (event,data) {
             vm.editorEntityType = data.editorEntityType;

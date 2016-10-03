@@ -20,12 +20,10 @@
 
         }
 
-        vm.label = vm.buttonLabel;
-        vm.processing = RestApiService.isProcessing;
+        vm.label = vm.setting.component.settings.label;
+        vm.entityId = vm.setting.entityId;
 
-        var watchEntityId = $scope.$watch('entityId', function (entityId) {
-            vm.entityId = entityId;
-        });
+        vm.processing = RestApiService.isProcessing;
 
         var watchRest = $scope.$watch(function () {
             return RestApiService.isProcessing;
@@ -34,7 +32,6 @@
         });
 
         vm.$onDestroy = function () {
-            watchEntityId();
             watchRest();
         };
 
@@ -43,7 +40,6 @@
                 return;
             }
             RestApiService.editedEntityId = vm.entityId;
-            //TODO Call another method
             EditEntityStorage.editEntityPresave(request);
         });
 

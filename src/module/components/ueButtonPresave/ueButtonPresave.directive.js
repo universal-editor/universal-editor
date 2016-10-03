@@ -6,9 +6,10 @@
             return $templateCache.get('module/components/ueButtonPresave/ueButtonPresave.html');
         }],
         bindings : {
-            entityId : "@",
-            buttonLabel : "@",
-            buttonRequest : "@"
+            setting: '='
+            //entityId : "@",
+            //buttonLabel : "@",
+            //buttonRequest : "@"
         },
         controller : 'UeButtonPresaveController',
         controllerAs : 'vm'

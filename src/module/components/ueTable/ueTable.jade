@@ -1,6 +1,6 @@
 div
     .editor-header
-        button.btn.btn-lg.btn-default.filter-button(data-ng-click="vm.toggleFilterVisibility()", data-ng-class="{ disabled : vm.entityLoaded }")
+        //button.btn.btn-lg.btn-default.filter-button(data-ng-click="vm.toggleFilterVisibility()", data-ng-class="{ disabled : vm.entityLoaded }")
             | {{ 'BUTTON.FILTER' | translate}} {{ vm.visibleFilter ? "+" : "-" }}
         button-wrapper.header-action-button(ng-repeat="button in vm.listHeaderBar track by $index", data-setting="button", data-button-class="header")
             //ue-button-create(data-ng-if="button.type == 'create'", data-button-label="{{button.label}}")

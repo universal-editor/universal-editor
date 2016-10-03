@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../bower_components/angular-datepicker/dist/angular-datepicker.css" />
     <link rel="stylesheet" href="../bower_components/angular-toastr/dist/angular-toastr.css" />
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="../bower_components/angular-bootstrap/ui-bootstrap-csp.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <link href="universal-editor.css" rel="stylesheet"/>
@@ -40,12 +41,14 @@
     <script src="../bower_components/angular-translate/angular-translate.js"></script>
     <script src="../bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
     <script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="../bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     <script src="universal-editor.js"></script>
     <!-- endinject -->
     <script type="text/javascript">
-        angular.module('unEditor',['universal.editor']);
+        angular.module('unEditor',['universal.editor','ui.bootstrap']);
     </script>
     <!-- config:js -->
     <!-- build:js config.js -->

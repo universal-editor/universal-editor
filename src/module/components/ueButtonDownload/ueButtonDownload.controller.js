@@ -10,10 +10,10 @@
     function UeButtonDownloadController($rootScope,$scope,$element,RestApiService,configData, $window){
         var vm = this;
 
-        vm.label = vm.setting.label;
+        vm.label = vm.setting.component.settings.label;
 
         $element.bind("click", function () {
-            var url = vm.setting.url;
+            var url = vm.setting.component.settings.request.url;
             for (var key in vm.itemValue) {
                 if (vm.setting.itemValue[key]) {
                     url = url.replace(":" + key, vm.setting.itemValue[key]);

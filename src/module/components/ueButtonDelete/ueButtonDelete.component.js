@@ -7,12 +7,6 @@
         }],
         bindings : {
             setting: '='
-            //entityId : "@",
-            //buttonLabel : "@",
-            //buttonRequest : "@",
-            //entityName : "@",
-            //buttonClass: "@",
-            //entityType: "@"
         },
         controller : 'UeButtonDeleteController',
         controllerAs : 'vm'

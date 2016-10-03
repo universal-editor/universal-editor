@@ -71,9 +71,6 @@
             }
         }
 
-        /* Initial method : Регистрация экземпляра поля в EditEntityStorage */
-        EditEntityStorage.addFieldController(this);
-
         /*
          * Field system method: Возвращает текущее значение поля с учетом
          * наличия у поля родителя ( поля типа "массив" )
@@ -315,5 +312,8 @@
                 $scope.$destroy();
             });
         };
+
+        /* Initial method : Регистрация экземпляра поля в EditEntityStorage */
+        EditEntityStorage.addFieldController(this);
     }
 })();

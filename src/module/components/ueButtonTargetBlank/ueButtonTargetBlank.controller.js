@@ -16,12 +16,12 @@
         } catch(e){
 
         }
-        vm.label = vm.setting.label;
+        vm.label = vm.setting.component.settings.label;
         $element.bind("click", function () {
-            var url = vm.setting.url;
+            var url = vm.setting.component.settings.request.url;
             for (var key in vm.setting.itemValue) {
                 if (vm.setting.itemValue[key]) {
-                    url = url.replace(":" + key, vm.itemValue[key]);
+                    url = url.replace(":" + key, vm.setting.itemValue[key]);
                 }
             }
             window.open(url, '_blank');

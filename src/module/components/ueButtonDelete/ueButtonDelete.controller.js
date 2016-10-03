@@ -18,10 +18,6 @@
         vm.label = vm.setting.component.settings.label;
         vm.processing = RestApiService.isProcessing;
 
-        //var watchEntityId = $scope.$watch('entityId', function (entityId) {
-        //    vm.entityId = entityId;
-        //});
-
         vm.entityId = vm.setting.entityId;
 
         var watchRest = $scope.$watch(function () {
@@ -31,7 +27,6 @@
         });
 
         vm.$onDestroy = function () {
-            //watchEntityId();
             watchRest();
         };
 

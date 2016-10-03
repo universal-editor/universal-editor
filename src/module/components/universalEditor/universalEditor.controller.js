@@ -11,6 +11,7 @@
         var vm = this;
         vm.entity = RestApiService.getEntityType();
         vm.configData = configData;
+        $rootScope.$broadcast('editor:set_entity_type', component.settings);
         var element = $element.find('.universal-editor');
         var scope = $scope.$new();
         scope.settings = {};

@@ -155,6 +155,39 @@ var ue = new UniversalEditor('universal-editor', {
                                             }
                                         }
                                     }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-request',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: '//ya.ru'
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-target-blank',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-download',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                            }
+                                        }
+                                    }
                                 }
                             ],
                             columns: ['name', 'email'],
@@ -215,6 +248,7 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'Tab 1',
                                             fields: [
                                                 'id',
+                                                //'name', 'email'
                                                 {
                                                     name: "fio",
                                                     component: {
@@ -251,7 +285,8 @@ var ue = new UniversalEditor('universal-editor', {
                                                         settings: {
                                                             label: 'This is button!!!',
                                                             request: {
-                                                                url: '//ya.ru'
+                                                                url: '//ya.ru',
+                                                                method: 'GET'
                                                             }
                                                         }
                                                     }
@@ -261,12 +296,80 @@ var ue = new UniversalEditor('universal-editor', {
                                     }
                                 }
                             ],
-                            footer: {
-                                "default-data-controls": true,
-                                component: {
-                                    name: 'my-super-component'
+                            footer: [
+                                //"default-data-controls": true,
+                                //component: {
+                                //    name: 'my-super-component'
+                                //}
+                                {
+                                    component: {
+                                        name: 'ue-button-update',
+                                        settings: {
+                                            label: 'Обновить',
+                                            state: 'index'
+                                        }
+                                    }
+                                },
+                                //{
+                                //    component: {
+                                //        name: 'ue-button-save',
+                                //        settings: {
+                                //            label: 'Добавить',
+                                //            state: 'index'
+                                //        }
+                                //    }
+                                //},
+                                {
+                                    component: {
+                                        name: 'ue-button-delete',
+                                        settings: {
+                                            label: 'Удалить',
+                                            state: 'index'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-presave',
+                                        settings: {
+                                            label: 'Сохранить'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-request',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: '//ya.ru'
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-target-blank',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-download',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                            }
+                                        }
+                                    }
                                 }
-                            }
+                            ]
                         }
                     }
                 }

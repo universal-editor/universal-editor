@@ -10,12 +10,10 @@
     function UeButtonUpdateController($scope,$element,$rootScope,EditEntityStorage,RestApiService){
         var vm = this;
 
-        vm.label = vm.buttonLabel;
+        vm.label = vm.setting.component.settings.label;
         vm.processing = RestApiService.isProcessing;
 
-        var watchEntityId = $scope.$watch('entityId', function (entityId) {
-            vm.entityId = entityId;
-        });
+        vm.entityId = vm.setting.entityId;
 
         var watchRest = $scope.$watch(function () {
             return RestApiService.isProcessing;
@@ -24,7 +22,6 @@
         });
 
         vm.$onDestroy = function () {
-            watchEntityId();
             watchRest();
         };
 

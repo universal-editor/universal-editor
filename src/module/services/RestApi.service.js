@@ -112,13 +112,6 @@
                 }
             }
 
-            //if(mixEntity.existence){
-            //    params = params || {};
-            //    angular.extend(params,{
-            //        mixed: mixEntity.entity
-            //    });
-            //}
-
             if(entityObject.dataSource.hasOwnProperty("parentField")){
                 params = params || {};
 
@@ -320,7 +313,11 @@
 
             var params = {};
             var _method = 'PUT';
-            var _url = entityObject.backend.url + '/' + self.editedEntityId;
+            var _url  = entityObject.dataSource.url + '/' + self.editedEntityId;
+
+            if (entityObject.dataSource.url) {
+                _url = entityObject.dataSource.url.replace(':pk', self.editedEntityId);
+            }
 
             if (typeof request !== 'undefined') {
                 params = typeof request.params !== 'undefined' ? request.params : params;

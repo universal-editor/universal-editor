@@ -7,7 +7,6 @@
         }],
         bindings : {
             setting: '='
-            //itemValue : "=",
         },
         controller : 'UeButtonDownloadController',
         controllerAs : 'vm'

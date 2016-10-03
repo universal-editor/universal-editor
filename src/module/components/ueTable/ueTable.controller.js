@@ -151,30 +151,10 @@
             });
         };
 
-        vm.closeButton = function () {
-
-            vm.entityLoaded = false;
-            vm.listLoaded = false;
-
-            var params = {};
-            var isReload = false;
-            if($state.params.back){
-                params.type = $state.params.back;
-            }
-            if($state.params.parent){
-                params.parent = $state.params.parent;
-                isReload = false;
-            }
-            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
-            $state.go('editor.type.list', params, {reload: isReload});
-        };
-
         vm.applyFilter = function () {
             RestApiService.setFilterParams(FilterFieldsStorage.getFilterValue());
             RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
         };
-
-        $rootScope.$broadcast('editor:set_entity_type', vm.setting.component.settings);
 
         vm.clearFilter = function () {
             FilterFieldsStorage.setInitialValues();

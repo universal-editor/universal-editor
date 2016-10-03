@@ -6,9 +6,10 @@
             return $templateCache.get('module/components/ueButtonUpdate/ueButtonUpdate.html');
         }],
         bindings : {
-            entityId : "@",
-            buttonLabel : "@",
-            buttonParams : "@"
+            setting: '='
+            //entityId : "@",
+            //buttonLabel : "@",
+            //buttonParams : "@"
         },
         controller : 'UeButtonUpdateController',
         controllerAs : 'vm'

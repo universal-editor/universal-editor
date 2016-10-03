@@ -9,7 +9,8 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '<div>\n' +
     '    <div class="editor-header">\n' +
-    '        <button data-ng-click="vm.toggleFilterVisibility()" data-ng-class="{ disabled : vm.entityLoaded }" class="btn btn-lg btn-default filter-button">{{ \'BUTTON.FILTER\' | translate}} {{ vm.visibleFilter ? "+" : "-" }}</button>\n' +
+    '        <!--button.btn.btn-lg.btn-default.filter-button(data-ng-click="vm.toggleFilterVisibility()", data-ng-class="{ disabled : vm.entityLoaded }")| {{ \'BUTTON.FILTER\' | translate}} {{ vm.visibleFilter ? "+" : "-" }}\n' +
+    '        -->\n' +
     '        <button-wrapper ng-repeat="button in vm.listHeaderBar track by $index" data-setting="button" data-button-class="header" class="header-action-button">\n' +
     '            <!--ue-button-create(data-ng-if="button.type == \'create\'", data-button-label="{{button.label}}")-->\n' +
     '            <!--div.btn.btn-lg.btn-success(data-ng-if="button.type == \'request\'", data-ng-click="vm.contextAction(button)") {{button.label}}-->\n' +
