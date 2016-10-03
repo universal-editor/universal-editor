@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonEditController',UeButtonEditController);
 
-    UeButtonEditController.$inject = ['$scope','$element','RestApiService','$state', '$location'];
+    UeButtonEditController.$inject = ['$scope','$element','RestApiService','$state', '$location', '$uibModal', 'configData'];
 
-    function UeButtonEditController($scope,$element,RestApiService,$state, $location){
+    function UeButtonEditController($scope,$element,RestApiService,$state, $location, $uibModal, configData){
         var vm = this;
         var params;
         var request;
@@ -38,6 +38,8 @@
             pk : vm.setting.entityId
         };
 
+        var qwe = configData.entities[0].states[1];
+
         $element.bind("click", function () {
             if(vm.processing){
                 return;
@@ -55,7 +57,25 @@
             //if ($location.search().parent) {
             //    stateParams.parent = $location.search().parent;
             //}
-            $state.go(vm.setting.component.settings.state,stateParams, stateOptions);
+            //$state.go(vm.setting.component.settings.state,stateParams, stateOptions);
+
+            var modalInstance = $uibModal.open({
+                component: 'ueModal',
+                resolve: {
+                    setting: function () {
+                        return qwe;
+                    },
+                    pk: function() {
+                        return stateParams.pk;
+                    }
+                }
+            });
+            modalInstance.result.then(function (selectedItem) {
+                console.log(selectedItem);
+            }, function () {
+                console.info('modal-component dismissed at: ' + new Date());
+                $state.reload();
+            });
         });
 
         vm.$postLink = function() {

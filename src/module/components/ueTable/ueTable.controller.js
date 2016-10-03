@@ -91,7 +91,6 @@
                 });
             }
         });
-
         //angular.forEach(vm.setting.component.settings.editFooterBar, function (editFooterBar) {
         //    switch (editFooterBar.type){
         //        case 'add':
@@ -214,7 +213,7 @@
             }
         };
 
-        $scope.$on('editor:items_list', function (event, data) {
+        $scope.$on('editor:items_list_' + $scope.$id, function (event, data) {
             if ($state.is('editor.type.new')) {
                 return;
             }
@@ -467,7 +466,7 @@
 
         vm.$onInit = function() {
             RestApiService.setFilterParams({});
-            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
+            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url, id: $scope.$id});
         };
     }
 })();

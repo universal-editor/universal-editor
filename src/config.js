@@ -93,7 +93,7 @@ var staffDataSource = {
 
 var messagesDataSource = {
     type: 'REST',
-    url: '//universal-backend.dev/rest/v1/staff',
+    url: '//universal-backend.dev/rest/v1/news',
     sortBy: '-id',
     primaryKey: 'id',
     fields: [
@@ -275,7 +275,46 @@ var ue = new UniversalEditor('universal-editor', {
                                                         settings: {
                                                             label: 'Messages',
                                                             dataSource: messagesDataSource,
-                                                            columns: ['id', 'title']
+                                                            columns: ['id', 'title'],
+                                                            contextMenu:[
+                                                                {
+                                                                    component: {
+                                                                        name: 'ue-button-edit',
+                                                                        settings: {
+                                                                            label: 'Редактировать',
+                                                                            state: 'edit'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    component: {
+                                                                        name: 'ue-button-delete',
+                                                                        settings: {
+                                                                            label: 'Удалить',
+                                                                            state: 'index'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    component: {
+                                                                        name: 'ue-button-open',
+                                                                        settings: {
+                                                                            label: 'Раскрыть'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                {
+                                                                    component: {
+                                                                        name: 'ue-button-request',
+                                                                        settings: {
+                                                                            label: 'This is button!!!',
+                                                                            request: {
+                                                                                url: '//ya.ru'
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ]
                                                         }
                                                     }
                                                 },

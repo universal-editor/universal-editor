@@ -123,7 +123,7 @@
         };
 
         vm.closeButton = function () {
-
+            console.log("zdfvgdfv");
             vm.entityLoaded = false;
             vm.listLoaded = false;
 
@@ -156,7 +156,11 @@
             vm.errors.push(data);
         });
 
-        RestApiService.getItemById($state.params.pk, vm.setting.component.settings.dataSource);
+        if ($state.params.pk) {
+            RestApiService.getItemById($state.params.pk, vm.setting.component.settings.dataSource);
+        } else {
+            RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource);
+        }
 
         $scope.$on('editor:presave_entity_created', function (event,data) {
             $translate('CHANGE_RECORDS.CREATE').then(function (translation) {
