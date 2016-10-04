@@ -1,4 +1,4 @@
-div(data-ng-show="vm.entityLoaded", class="editor-body")
+.editor-body
     .close-editor(data-ng-click="vm.closeButton()", ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}")
     .nav.nav-tabs
         li(data-ng-repeat="tab in vm.tabs", data-ng-class="vm.currentTab == tab.label ? 'active' : ''", data-ng-click="vm.currentTab = tab.label")
@@ -6,11 +6,21 @@ div(data-ng-show="vm.entityLoaded", class="editor-body")
     .tab-content-wrapper
         .tab-item-content(data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label")
             .field-content-wrapper
-                field-wrapper(
+                //field-wrapper(
                     data-ng-repeat="field in tab.fields",
                     data-setting="field",
                     data-ng-if="(vm.editorEntityType == 'new' && field.showOnly == 'create') || (vm.editorEntityType == 'exist' && field.showOnly == 'edit') || !field.showOnly"
                     )
+                div(data-ng-repeat="field in tab.fields")
+                    field-wrapper(
+                        data-setting="field",
+                        data-ng-if="field.component.name !== 'ue-button-request'"
+                        )
+                    button-wrapper(
+                        data-setting="field",
+                        data-ng-if="field.component.name === 'ue-button-request'",
+                        data-button-class="footer"
+                        )
     .field-error-bottom-wrapper
         .error-item.alert.alert-danger(data-ng-repeat="err in vm.errors") {{err}}
     .field-notify-bottom-wrapper

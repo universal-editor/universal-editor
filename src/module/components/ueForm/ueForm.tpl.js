@@ -7,7 +7,7 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueForm/ueForm.html',
     '\n' +
-    '<div data-ng-show="vm.entityLoaded" class="editor-body">\n' +
+    '<div class="editor-body">\n' +
     '    <div data-ng-click="vm.closeButton()" ng-style="{\'background-image\':\'url(\'+ vm.assetsPath +\'/images/close.jpg)\'}" class="close-editor"></div>\n' +
     '    <div class="nav nav-tabs">\n' +
     '        <li data-ng-repeat="tab in vm.tabs" data-ng-class="vm.currentTab == tab.label ? \'active\' : \'\'" data-ng-click="vm.currentTab = tab.label"><a href="">{{tab.label}}</a></li>\n' +
@@ -15,7 +15,16 @@ module.run(['$templateCache', function($templateCache) {
     '    <div class="tab-content-wrapper">\n' +
     '        <div data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label" class="tab-item-content">\n' +
     '            <div class="field-content-wrapper">\n' +
-    '                <field-wrapper data-ng-repeat="field in tab.fields" data-setting="field" data-ng-if="(vm.editorEntityType == \'new\' &amp;&amp; field.showOnly == \'create\') || (vm.editorEntityType == \'exist\' &amp;&amp; field.showOnly == \'edit\') || !field.showOnly"></field-wrapper>\n' +
+    '                <!--field-wrapper(\n' +
+    '                data-ng-repeat="field in tab.fields",\n' +
+    '                data-setting="field",\n' +
+    '                data-ng-if="(vm.editorEntityType == \'new\' && field.showOnly == \'create\') || (vm.editorEntityType == \'exist\' && field.showOnly == \'edit\') || !field.showOnly"\n' +
+    '                )\n' +
+    '                -->\n' +
+    '                <div data-ng-repeat="field in tab.fields">\n' +
+    '                    <field-wrapper data-setting="field" data-ng-if="field.component.name !== \'ue-button-request\'"></field-wrapper>\n' +
+    '                    <button-wrapper data-setting="field" data-ng-if="field.component.name === \'ue-button-request\'" data-button-class="footer"></button-wrapper>\n' +
+    '                </div>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +

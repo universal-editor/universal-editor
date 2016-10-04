@@ -1,5 +1,5 @@
 
-<div data-ng-show="vm.entityLoaded" class="editor-body">
+<div class="editor-body">
     <div data-ng-click="vm.closeButton()" ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}" class="close-editor"></div>
     <div class="nav nav-tabs">
         <li data-ng-repeat="tab in vm.tabs" data-ng-class="vm.currentTab == tab.label ? 'active' : ''" data-ng-click="vm.currentTab = tab.label"><a href="">{{tab.label}}</a></li>
@@ -7,7 +7,16 @@
     <div class="tab-content-wrapper">
         <div data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label" class="tab-item-content">
             <div class="field-content-wrapper">
-                <field-wrapper data-ng-repeat="field in tab.fields" data-setting="field" data-ng-if="(vm.editorEntityType == 'new' &amp;&amp; field.showOnly == 'create') || (vm.editorEntityType == 'exist' &amp;&amp; field.showOnly == 'edit') || !field.showOnly"></field-wrapper>
+                <!--field-wrapper(
+                data-ng-repeat="field in tab.fields",
+                data-setting="field",
+                data-ng-if="(vm.editorEntityType == 'new' && field.showOnly == 'create') || (vm.editorEntityType == 'exist' && field.showOnly == 'edit') || !field.showOnly"
+                )
+                -->
+                <div data-ng-repeat="field in tab.fields">
+                    <field-wrapper data-setting="field" data-ng-if="field.component.name !== 'ue-button-request'"></field-wrapper>
+                    <button-wrapper data-setting="field" data-ng-if="field.component.name === 'ue-button-request'" data-button-class="footer"></button-wrapper>
+                </div>
             </div>
         </div>
     </div>

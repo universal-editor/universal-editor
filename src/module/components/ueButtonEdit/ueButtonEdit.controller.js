@@ -57,25 +57,25 @@
             //if ($location.search().parent) {
             //    stateParams.parent = $location.search().parent;
             //}
-            //$state.go(vm.setting.component.settings.state,stateParams, stateOptions);
+            $state.go(vm.setting.component.settings.state,stateParams, stateOptions);
 
-            var modalInstance = $uibModal.open({
-                component: 'ueModal',
-                resolve: {
-                    setting: function () {
-                        return qwe;
-                    },
-                    pk: function() {
-                        return stateParams.pk;
-                    }
-                }
-            });
-            modalInstance.result.then(function (selectedItem) {
-                console.log(selectedItem);
-            }, function () {
-                console.info('modal-component dismissed at: ' + new Date());
-                $state.reload();
-            });
+            //var modalInstance = $uibModal.open({
+            //    component: 'ueModal',
+            //    resolve: {
+            //        setting: function () {
+            //            return qwe;
+            //        },
+            //        pk: function() {
+            //            return stateParams.pk;
+            //        }
+            //    }
+            //});
+            //modalInstance.result.then(function (selectedItem) {
+            //    console.log(selectedItem);
+            //}, function () {
+            //    console.info('modal-component dismissed at: ' + new Date());
+            //    $state.reload();
+            //});
         });
 
         vm.$postLink = function() {

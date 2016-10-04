@@ -12,6 +12,8 @@
 
         vm.label = vm.setting.component.settings.label;
 
+        var state = vm.setting.component.settings.state;
+
         $element.bind("click", function () {
             if($location.search().hasOwnProperty("id")){
                 $location.search("id",null);
@@ -21,7 +23,7 @@
 
             var newPageType = vm.setting.component.settings.type || $state.params.type;
 
-            $state.go('editor.type.new',{
+            $state.go(state,{
                 parent: parentId,
                 type: newPageType
             });

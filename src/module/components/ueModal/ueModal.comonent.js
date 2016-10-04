@@ -10,7 +10,7 @@
             close: '&',
             dismiss: '&'
         },
-        controller: function () {
+        controller: ['$scope', function ($scope) {
             var $ctrl = this;
             console.log($ctrl);
             $ctrl.$onInit = function () {
@@ -18,12 +18,15 @@
             };
 
             $ctrl.ok = function () {
-                $ctrl.close({$value: "ghbdsf"});
+                $ctrl.close({$value: "ок modal"});
             };
 
             $ctrl.cancel = function () {
-                $ctrl.dismiss({$value: 'cancel'});
+                $ctrl.dismiss({$value: 'cancel modal'});
             };
-        }
+            $scope.$on('exit_modal', function() {
+                $ctrl.dismiss({$value: 'cancel modal emit'});
+            });
+        }]
     });
 })();

@@ -123,7 +123,6 @@
         };
 
         vm.closeButton = function () {
-            console.log("zdfvgdfv");
             vm.entityLoaded = false;
             vm.listLoaded = false;
 
@@ -136,8 +135,10 @@
                 params.parent = $state.params.parent;
                 isReload = false;
             }
-            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
+            //RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
+            //нужно указывать куда редиректить при закрытие
             $state.go('index', params, {reload: isReload});
+            //$rootScope.$broadcast('exit_modal');
         };
 
         vm.toggleFilterVisibility = function () {
@@ -158,7 +159,7 @@
 
         if ($state.params.pk) {
             RestApiService.getItemById($state.params.pk, vm.setting.component.settings.dataSource);
-        } else {
+        } else if(vm.setting.pk) {
             RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource);
         }
 
@@ -219,5 +220,7 @@
                 vm.applyFilter();
             }
         }
+
+        console.log(vm.tabs);
     }
 })();
