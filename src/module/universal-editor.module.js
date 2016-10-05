@@ -142,6 +142,19 @@
 
         $urlRouterProvider.otherwise(configData.entities[0].states[0].url ? configData.entities[0].states[0].url : ('/' + configData.entities[0].name));
 
+
+
+        $urlRouterProvider.rule(function($injector, $location) {
+
+            var path = $location.path();
+            var hasTrailingSlash = path[path.length-1] === '/';
+
+            if(hasTrailingSlash) {
+                return path.substr(0, path.length - 1);
+            }
+
+        });
+
         angular.forEach(configData.entities, function(entity) {
             var name = entity.name;
             angular.forEach(entity.states, function(state) {
