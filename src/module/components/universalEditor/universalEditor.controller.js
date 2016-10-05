@@ -5,13 +5,18 @@
         .module('universal.editor')
         .controller('UniversalEditorController',UniversalEditorController);
 
-    UniversalEditorController.$inject = ['component','$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','toastr', '$translate', 'ConfigDataProvider', '$element', '$compile'];
+    UniversalEditorController.$inject = ['$scope','$rootScope','configData','RestApiService', '$element', '$compile', 'component', 'menu', 'type'];
 
-    function UniversalEditorController(component, $scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,toastr, $translate, ConfigDataProvider, $element, $compile){
+    function UniversalEditorController($scope,$rootScope,configData,RestApiService, $element, $compile, component, menu, type){
         var vm = this;
         vm.entity = RestApiService.getEntityType();
         vm.configData = configData;
+        vm.menu = menu;
+        vm.type = type;
+
         $rootScope.$broadcast('editor:set_entity_type', component.settings);
+        RestApiService.setEntityType(type);
+
         var element = $element.find('.universal-editor');
         var scope = $scope.$new();
         scope.settings = {};
