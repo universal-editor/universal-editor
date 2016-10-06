@@ -5,8 +5,10 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/components/ueButtonCreate/ueButtonCreate.html',
+  $templateCache.put('module/components/ueModal/ueModal.html',
     '\n' +
-    '<button class="btn btn-lg btn-create btn-success">{{vm.label}}</button>');
+    '<div>\n' +
+    '    <ue-form data-setting="$ctrl.resolve.settings" data-func-close-modal="$ctrl.close()"></ue-form>\n' +
+    '</div>');
 }]);
 })();

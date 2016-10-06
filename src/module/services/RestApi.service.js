@@ -150,6 +150,9 @@
             if (expandFields.length > 0){
                 params.expand = expandFields.join(',');
             }
+
+            var id = request.id;
+
             $http({
                 method : _method,
                 url : _url,
@@ -160,10 +163,10 @@
                 //console.log(response);
                 if(response.data[itemsKey].length === 0){
                     $rootScope.$broadcast("editor:parent_empty");
-                    $rootScope.$broadcast('editor:items_list',response.data);
+                    $rootScope.$broadcast('editor:items_list_' + id,response.data);
                     deferred.resolve();
                 } else {
-                    $rootScope.$broadcast('editor:items_list', response.data);
+                    $rootScope.$broadcast('editor:items_list_' + id, response.data);
                     deferred.resolve();
                 }
             }, function (reject) {

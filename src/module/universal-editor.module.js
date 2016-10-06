@@ -159,6 +159,7 @@
             var name = entity.name;
             angular.forEach(entity.states, function(state) {
                 var nameState = name + '_' + state.name;
+                state.name = name + '_' + state.name;
                 var urlState = state.url;
                 if (defaultState[state.name]) {
                     urlState = (!!state.url) ? state.url : defaultState[state.name].url.replace('type', name);

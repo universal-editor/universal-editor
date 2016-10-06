@@ -19,6 +19,10 @@ module.run(['$templateCache', function($templateCache) {
     '                    <field-wrapper data-setting="field" data-ng-if="field.component.name !== \'ue-button-request\'"></field-wrapper>\n' +
     '                    <button-wrapper data-setting="field" data-ng-if="field.component.name === \'ue-button-request\'" data-button-class="footer"></button-wrapper>\n' +
     '                </div>\n' +
+    '                <div data-ng-repeat="field in tab.fields">\n' +
+    '                    <field-wrapper data-setting="field" data-ng-if="field.component.name !== \'ue-button-request\'"></field-wrapper>\n' +
+    '                    <button-wrapper data-setting="field" data-ng-if="field.component.name === \'ue-button-request\'" data-button-class="footer"></button-wrapper>\n' +
+    '                </div>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +
