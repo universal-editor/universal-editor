@@ -1,5 +1,2 @@
 div
-    ue-form(data-setting="$ctrl.resolve.setting")
-    //.modal-footer
-        button.btn.btn-primary(ng-click="$ctrl.ok()") OK
-        button.btn.btn-warning(ng-click="$ctrl.cancel()") Cancel
+    ue-form(data-setting="$ctrl.resolve.settings", data-func-close-modal="$ctrl.close()")

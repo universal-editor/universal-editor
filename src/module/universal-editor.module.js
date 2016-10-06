@@ -106,86 +106,83 @@
 
         $httpProvider.interceptors.push('EditorHttpInterceptor');
 
-        /* ROUTES */
+        var defaultState = {
+            'index': {
+                'url': '/type?parent&back'
+            },
+            'edit': {
+                'url': '/type/:pk?parent&back'
+            }
+        };
 
-        var defaultRoute = ConfigDataProviderProvider.getDefaultEntity();
+        /* GENERATION MENU*/
 
-        //$urlRouterProvider.otherwise("/editor/" + defaultRoute +"/list");
-
-        $urlRouterProvider.otherwise(configData.entities[0].states[0].url);
+        var menu = [];
 
         angular.forEach(configData.entities, function(entity) {
+            var item = {};
+            item.name = entity.name;
+            item.label = entity.label;
+            var changIndex = false;
             angular.forEach(entity.states, function(state) {
-                $stateProvider.state(state.name, {
-                    url: (state.url + "?parent&back"),
+                if (state.name === 'index') {
+                    changIndex = true;
+                }
+            });
+            if (changIndex) {
+                item.sref = item.name + '_index';
+            } else {
+                item.sref = item.name + '_' + entity.states[0].name;
+            }
+            menu.push(item);
+        });
+
+        /* END GENERATION MENU*/
+
+
+        $urlRouterProvider.otherwise(configData.entities[0].states[0].url ? configData.entities[0].states[0].url : ('/' + configData.entities[0].name));
+
+
+
+        $urlRouterProvider.rule(function($injector, $location) {
+
+            var path = $location.path();
+            var hasTrailingSlash = path[path.length-1] === '/';
+
+            if(hasTrailingSlash) {
+                return path.substr(0, path.length - 1);
+            }
+
+        });
+
+        angular.forEach(configData.entities, function(entity) {
+            var name = entity.name;
+            angular.forEach(entity.states, function(state) {
+                var nameState = name + '_' + state.name;
+                state.name = name + '_' + state.name;
+                var urlState = state.url;
+                if (defaultState[state.name]) {
+                    urlState = (!!state.url) ? state.url : defaultState[state.name].url.replace('type', name);
+                }
+                $stateProvider.state(nameState, {
+                    url: urlState,
                     templateUrl : "module/components/universalEditor/universalEditor.html",
                     controller : "UniversalEditorController",
                     controllerAs : "vm",
                     resolve : {
                         component: function() {
                             return state.component;
+                        },
+                        menu: function() {
+                            return menu;
+                        },
+                        type: function() {
+                            return name;
                         }
                     }
                 });
             });
         });
-
-        //$stateProvider
-        //    .state('editor',{
-        //        url : "/editor",
-        //        template : "<div data-ui-view></div>",
-        //    })
-        //    .state('editor.type',{
-        //        url : "/:type",
-        //        template : "<div data-ui-view></div>",
-        //        onEnter : ["RestApiService", "$stateParams", function (RestApiService,$stateParams) {
-        //            RestApiService.setEntityType($stateParams.type);
-        //            RestApiService.setQueryParams({});
-        //        }]
-        //    })
-        //    .state('editor.type.list',{
-        //        url : "/list?parent",
-        //        resolve : {
-        //            configObject : configResolver,
-        //            typeState: function() {
-        //                return 'ue-table';
-        //            }
-        //        },
-        //        controller : "UniversalEditorController",
-        //        controllerAs : "vm",
-        //        templateUrl : "module/directives/universalEditor/universalEditor.html"
-        //    })
-        //    .state('editor.type.new',{
-        //        url : '/new?parent&type',
-        //        resolve : {
-        //            configObject : configResolver,
-        //            typeState: function() {
-        //                return 'ue-form';
-        //            }
-        //        },
-        //        controller : "UniversalEditorController",
-        //        controllerAs : "vm",
-        //        templateUrl : "module/directives/universalEditor/universalEditor.html",
-        //        onEnter : ["EditEntityStorage", function (EditEntityStorage) {
-        //            EditEntityStorage.createNewEntity();
-        //        }]
-        //    })
-        //    .state('editor.type.entity',{
-        //        url : '/:uid?back&parent',
-        //        resolve : {
-        //            configObject : configResolver,
-        //            typeState: function() {
-        //                return 'ue-form';
-        //            }
-        //        },
-        //        controller : "UniversalEditorController",
-        //        controllerAs : "vm",
-        //        templateUrl : "module/directives/universalEditor/universalEditor.html",
-        //        onEnter : ["RestApiService", "$rootScope", "$stateParams", function (RestApiService,$rootScope,$stateParams) {
-        //            RestApiService.getItemById($stateParams.uid);
-        //        }]
-        //    });
-        /* DATE INPUT DECORATOR*/
 
         $provide.decorator('mFormatFilter', function () {
             return function newFilter(m, format, tz)

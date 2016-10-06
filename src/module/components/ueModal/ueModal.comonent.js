@@ -6,15 +6,18 @@
             return $templateCache.get('module/components/ueModal/ueModal.html');
         }],
         bindings: {
-            resolve: '=',
+            resolve: '<',
             close: '&',
             dismiss: '&'
         },
-        controller: ['$scope', function ($scope) {
+        controller: function ($uibModal, $scope) {
             var $ctrl = this;
-            console.log($ctrl);
+            console.log($ctrl); 
+            
+
             $ctrl.$onInit = function () {
-                $ctrl.resolve.setting.pk = $ctrl.resolve.pk;
+              $ctrl.resolve.settings.pk = $ctrl.resolve.pk;
+              $ctrl.resolve.settings.isModal = true;
             };
 
             $ctrl.ok = function () {
@@ -22,11 +25,10 @@
             };
 
             $ctrl.cancel = function () {
-                $ctrl.dismiss({$value: 'cancel modal'});
+                $ctrl.close();   
             };
             $scope.$on('exit_modal', function() {
                 $ctrl.dismiss({$value: 'cancel modal emit'});
             });
-        }]
-    });
+    }});
 })();

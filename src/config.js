@@ -1,12 +1,3 @@
-//(function($){
-//    $.ajax({
-//        url: '/assets/json/config.json',
-//        type: 'GET'
-//    }).done(function(data) {
-//        var editor = new UniversalEditor('universal-editor', data);
-//    });
-//})(jQuery);
-
 var staffDataSource = {
     type: 'REST',
     url: '//universal-backend.dev/rest/v1/staff',
@@ -141,8 +132,7 @@ var ue = new UniversalEditor('universal-editor', {
                                     component: {
                                         name: 'ue-button-create',
                                         settings: {
-                                            label: 'создать',
-                                            state: 'new'
+                                            label: 'создать'
                                         }
                                     }
                                 },
@@ -235,8 +225,8 @@ var ue = new UniversalEditor('universal-editor', {
                     }
                 },
                 {
-                    name: 'new',
-                    url: '/staff/new',
+                    name: 'edit',
+                    url: '/staff/:pk',
                     component: {
                         name: 'ue-form',
                         settings: {
@@ -249,17 +239,17 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'Tab 1',
                                             fields: [
                                                 'id',
-                                                'name', 'email'
-                                                //{
-                                                //    name: "fio",
-                                                //    component: {
-                                                //        name: 'ue-form-group',
-                                                //        settings: {
-                                                //            label: 'Group 1',
-                                                //            fields: ['name', 'email']
-                                                //        }
-                                                //    }
-                                                //}
+                                                //'name', 'email'
+                                                {
+                                                    name: "fio",
+                                                    component: {
+                                                        name: 'ue-form-group',
+                                                        settings: {
+                                                            label: 'Group 1',
+                                                            fields: ['name', 'email']
+                                                        }
+                                                    }
+                                                }
                                             ]
                                         }
                                     }
@@ -276,46 +266,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         settings: {
                                                             label: 'Messages',
                                                             dataSource: messagesDataSource,
-                                                            columns: ['id', 'title'],
-                                                            contextMenu:[
-                                                                {
-                                                                    component: {
-                                                                        name: 'ue-button-edit',
-                                                                        settings: {
-                                                                            label: 'Редактировать',
-                                                                            state: 'edit'
-                                                                        }
-                                                                    }
-                                                                },
-                                                                {
-                                                                    component: {
-                                                                        name: 'ue-button-delete',
-                                                                        settings: {
-                                                                            label: 'Удалить',
-                                                                            state: 'index'
-                                                                        }
-                                                                    }
-                                                                },
-                                                                {
-                                                                    component: {
-                                                                        name: 'ue-button-open',
-                                                                        settings: {
-                                                                            label: 'Раскрыть'
-                                                                        }
-                                                                    }
-                                                                },
-                                                                {
-                                                                    component: {
-                                                                        name: 'ue-button-request',
-                                                                        settings: {
-                                                                            label: 'This is button!!!',
-                                                                            request: {
-                                                                                url: '//ya.ru'
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            ]
+                                                            columns: ['id', 'title']
                                                         }
                                                     }
                                                 },
@@ -341,33 +292,33 @@ var ue = new UniversalEditor('universal-editor', {
                                 //component: {
                                 //    name: 'my-super-component'
                                 //}
-                                //{
-                                //    component: {
-                                //        name: 'ue-button-update',
-                                //        settings: {
-                                //            label: 'Обновить',
-                                //            state: 'index'
-                                //        }
-                                //    }
-                                //},
                                 {
                                     component: {
-                                        name: 'ue-button-save',
+                                        name: 'ue-button-update',
                                         settings: {
-                                            label: 'Добавить',
+                                            label: 'Обновить',
                                             state: 'index'
                                         }
                                     }
                                 },
                                 //{
                                 //    component: {
-                                //        name: 'ue-button-delete',
+                                //        name: 'ue-button-save',
                                 //        settings: {
-                                //            label: 'Удалить',
+                                //            label: 'Добавить',
                                 //            state: 'index'
                                 //        }
                                 //    }
                                 //},
+                                {
+                                    component: {
+                                        name: 'ue-button-delete',
+                                        settings: {
+                                            label: 'Удалить',
+                                            state: 'index'
+                                        }
+                                    }
+                                },
                                 {
                                     component: {
                                         name: 'ue-button-presave',
@@ -412,10 +363,118 @@ var ue = new UniversalEditor('universal-editor', {
                             ]
                         }
                     }
+                }
+            ]
+        },
+        {
+            name: 'staff12',
+            label: 'Сотрудники12',
+            states: [
+                {
+                    name: 'index',
+                    component: {
+                        name: 'ue-table',
+                        settings: {
+                            dataSource: messagesDataSource,
+                            header:[
+                                {
+                                    component: {
+                                        name: 'ue-button-create',
+                                        settings: {
+                                            label: 'создать'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-request',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: '//ya.ru'
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-request',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: '//ya.ru'
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-target-blank',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-download',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            columns: ['name', 'email'],
+                            contextMenu:[
+                                {
+                                    component: {
+                                        name: 'ue-button-edit',
+                                        settings: {
+                                            label: 'Редактировать',
+                                            state: 'edit'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-delete',
+                                        settings: {
+                                            label: 'Удалить',
+                                            state: 'index'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-open',
+                                        settings: {
+                                            label: 'Раскрыть'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-request',
+                                        settings: {
+                                            label: 'This is button!!!',
+                                            request: {
+                                                url: '//ya.ru'
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 {
                     name: 'edit',
-                    url: '/staff/:pk',
                     component: {
                         name: 'ue-form',
                         settings: {
@@ -455,46 +514,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         settings: {
                                                             label: 'Messages',
                                                             dataSource: messagesDataSource,
-                                                            columns: ['id', 'title'],
-                                                            contextMenu:[
-                                                                {
-                                                                    component: {
-                                                                        name: 'ue-button-edit',
-                                                                        settings: {
-                                                                            label: 'Редактировать',
-                                                                            state: 'edit'
-                                                                        }
-                                                                    }
-                                                                },
-                                                                {
-                                                                    component: {
-                                                                        name: 'ue-button-delete',
-                                                                        settings: {
-                                                                            label: 'Удалить',
-                                                                            state: 'index'
-                                                                        }
-                                                                    }
-                                                                },
-                                                                {
-                                                                    component: {
-                                                                        name: 'ue-button-open',
-                                                                        settings: {
-                                                                            label: 'Раскрыть'
-                                                                        }
-                                                                    }
-                                                                },
-                                                                {
-                                                                    component: {
-                                                                        name: 'ue-button-request',
-                                                                        settings: {
-                                                                            label: 'This is button!!!',
-                                                                            request: {
-                                                                                url: '//ya.ru'
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            ]
+                                                            columns: ['id', 'title']
                                                         }
                                                     }
                                                 },

@@ -214,6 +214,14 @@
         };
 
         $scope.$on('editor:items_list_' + $scope.$id, function (event, data) {
+
+            //** behavour for modal entity
+            $timeout(function() {
+                if (vm.setting.pk === 'new') {
+                    $element.find('.btn-create').trigger('click');
+                }
+            }, 0);
+
             if ($state.is('editor.type.new')) {
                 return;
             }
@@ -376,6 +384,13 @@
             }
 
             //END PAGINATION
+
+            //** behavour for modal entity
+            $timeout(function() {
+                if (vm.setting.pk) {
+                    $('#edit_btn_' + vm.setting.pk).trigger('click');
+                }
+            }, 0);
         });
 
         $scope.$on('editor:server_error', function (event,data) {

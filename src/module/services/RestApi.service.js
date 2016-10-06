@@ -22,7 +22,6 @@
 
         $rootScope.$on('editor:set_entity_type', function (event,type) {
             //filterParams = undefined;
-            //entityType = type;
             entityObject = type;
             //itemsKey = "items";
             //entityObject = configData.entities.filter(function (item) {
@@ -644,10 +643,10 @@
 
         this.setEntityType = function (type) {
             entityType = type;
-            entityObject = configData.entities.filter(function (item) {
-                return item.name === entityType;
-            })[0];
-            mixEntity = self.getMixModeByEntity();
+            //entityObject = configData.entities.filter(function (item) {
+            //    return item.name === entityType;
+            //})[0];
+            //mixEntity = self.getMixModeByEntity();
         };
 
         this.getEntityType = function () {

@@ -34,7 +34,6 @@
         vm.currentTab = vm.setting.component.settings.body[0].component.settings.label;
         vm.entityId = "";
         vm.editorEntityType = "new";
-        //vm.listHeaderBar = entityObject.listHeaderBar;
         vm.editFooterBar = vm.setting.component.settings.footer;
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
@@ -135,10 +134,13 @@
                 params.parent = $state.params.parent;
                 isReload = false;
             }
-            //RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
-            //нужно указывать куда редиректить при закрытие
-            $state.go('index', params, {reload: isReload});
-            //$rootScope.$broadcast('exit_modal');
+            if (vm.setting.isModal) {
+                vm.funcCloseModal();
+                $state.go(vm.setting.oldState, params, { reload: false, notify: false });
+            } else {
+                RestApiService.getItemsList({ url: vm.setting.component.settings.dataSource.url });
+                $state.go('index', params, { reload: isReload });
+            }
         };
 
         vm.toggleFilterVisibility = function () {
@@ -157,10 +159,12 @@
             vm.errors.push(data);
         });
 
-        if ($state.params.pk) {
-            RestApiService.getItemById($state.params.pk, vm.setting.component.settings.dataSource);
-        } else if(vm.setting.pk) {
-            RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource);
+        if ($state.params.pk !== 'new') {
+            if ($state.params.pk) {
+                RestApiService.getItemById($state.params.pk, vm.setting.component.settings.dataSource);
+            } else if(vm.setting.pk) {
+                RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource);
+            }
         }
 
         $scope.$on('editor:presave_entity_created', function (event,data) {

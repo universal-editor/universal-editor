@@ -1,4 +1,4 @@
-ul.nav.nav-tabs(data-ng-if="vm.configData.entities.length > 1")
-    li.item(data-ng-repeat="entityItem in vm.configData.entities track by $index", data-ng-class="(entityItem.name === vm.entity) ? 'active' : ''")
-        a(data-ui-sref='editor.type.list({type: entityItem.name})', ui-sref-opts="{reload: true, inherit: false}") {{entityItem.label}}
+ul.nav.nav-tabs(data-ng-if="vm.menu.length > 1")
+    li.item(data-ng-repeat="item in vm.menu track by $index", data-ng-class="(item.name === vm.type) ? 'active' : ''")
+        a(data-ui-sref='{{item.sref}}', ui-sref-opts="{reload: true, inherit: false}") {{item.label}}
 .universal-editor

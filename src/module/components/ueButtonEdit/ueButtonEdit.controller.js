@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonEditController',UeButtonEditController);
 
-    UeButtonEditController.$inject = ['$scope','$element','RestApiService','$state', '$location', '$uibModal', 'configData'];
+    UeButtonEditController.$inject = ['$scope','$element','RestApiService','$state', '$location', '$uibModal', 'configData', 'EditEntityStorage'];
 
-    function UeButtonEditController($scope,$element,RestApiService,$state, $location, $uibModal, configData){
+    function UeButtonEditController($scope,$element,RestApiService,$state, $location, $uibModal, configData, EditEntityStorage){
         var vm = this;
         var params;
         var request;
@@ -33,20 +33,23 @@
         };
 
         vm.label = vm.setting.component.settings.label;
-
-        var stateParams = {
-            pk : vm.setting.entityId
-        };
-
-        var qwe = configData.entities[0].states[1];
-
-        $element.bind("click", function () {
-            if(vm.processing){
+        $element.prop('id', 'edit_btn_' + vm.setting.entityId);
+        $element.bind("click", function(e) {
+            var indexState = EditEntityStorage.getIndexState(); 
+            if (vm.processing) {
                 return;
-            }
+            }         
+            var qwe = EditEntityStorage.getEditState();
+
+            var stateParams = {
+                pk: vm.setting.entityId,
+                qwe: qwe
+            };  
 
             var stateOptions = {};
-            
+
+           // qwe.name = entityName + '_' + qwe.name;       
+
             //if($scope.entitySubtype){
             //    stateParams.type = $scope.entitySubtype;
             //    stateParams.back = $state.params.type;
@@ -57,32 +60,41 @@
             //if ($location.search().parent) {
             //    stateParams.parent = $location.search().parent;
             //}
-            $state.go(vm.setting.component.settings.state,stateParams, stateOptions);
+            //$state.go(vm.setting.component.settings.state,stateParams, stateOptions);
 
-            //var modalInstance = $uibModal.open({
-            //    component: 'ueModal',
-            //    resolve: {
-            //        setting: function () {
-            //            return qwe;
-            //        },
-            //        pk: function() {
-            //            return stateParams.pk;
-            //        }
-            //    }
-            //});
-            //modalInstance.result.then(function (selectedItem) {
-            //    console.log(selectedItem);
-            //}, function () {
-            //    console.info('modal-component dismissed at: ' + new Date());
-            //    $state.reload();
-            //});
+            if (qwe.component.name === "ue-modal") {
+                var modalInstance = $uibModal.open({
+                    component: 'ueModal',
+                    resolve: {
+                        settings: function() {
+                            stateParams.qwe.oldState = indexState.name;
+                            return stateParams.qwe;
+                        },
+                        pk: function() {
+                            return stateParams.pk;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function(selectedItem) {
+                    console.log(selectedItem);
+                }, function() {
+                    console.info('modal-component dismissed at: ' + new Date());
+                    if (indexState) {
+                        $state.go(indexState.name, {}, { reload: false, notify: false });
+                    }
+                });
+                $state.go(qwe.name, stateParams, { reload: false, notify: false });
+            } else {
+             $state.go(vm.setting.component.settings.state,stateParams, stateOptions);
+           }                  
         });
 
         vm.$postLink = function() {
             $element.on('$destroy', function () {
                 $scope.$destroy();
             });
-        }
+        };
 
     }
 })();
