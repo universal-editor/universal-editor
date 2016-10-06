@@ -5,7 +5,7 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/components/ueButtonDelete/ueButtonDelete.html',
+  $templateCache.put('module/components/ueButtonService/ueButtonService.html',
     '\n' +
     '<div>\n' +
     '    <button data-ng-class="{ processing : vm.processing}" data-ng-if="vm.setting.buttonClass == \'footer\'" class="btn btn-md btn-success">{{vm.label}}\n' +

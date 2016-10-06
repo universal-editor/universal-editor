@@ -290,10 +290,10 @@
             var endIndex;
             var qParams = RestApiService.getQueryParams();
             // PAGINATION
-            if(vm.items.length === 0){
+            if (vm.items.length === 0) {
                 vm.metaKey = false;
             }
-            if(vm.pagination && vm.metaKey){
+            if (vm.pagination && vm.metaKey) {
 
                 vm.metaData = data[metaKey];
                 vm.metaData.fromItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage ) + 1;

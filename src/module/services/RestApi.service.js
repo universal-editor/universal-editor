@@ -245,7 +245,7 @@
                 return;
             }
             
-            var parentField = entityObject.backend.fields.parent;
+            var parentField = entityObject.dataSource.fields.parent;
             if (parentField && $location.search().parent) {
                 //-- проверяю редактируется ли поле parentField в форме. Если да, то его не нужно извлекать из адреса.
                 var isNotEditableParentField = !$document[0].querySelector(".field-wrapper [name='" + parentField + "']");
@@ -257,11 +257,11 @@
             self.isProcessing = true;
             var params = {};
             var _method = 'POST';
-            var _url = entityObject.backend.url;
+            var _url = entityObject.dataSource.url;
             var idField = 'id';
 
-            if(entityObject.backend.hasOwnProperty('fields')){
-                idField = entityObject.backend.fields.primaryKey || idField;
+            if(entityObject.dataSource.hasOwnProperty('fields')){
+                idField = entityObject.dataSource.fields.primaryKey || idField;
             }
 
             if(typeof request !== 'undefined'){
@@ -283,7 +283,7 @@
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
-                $state.go('editor.type.list', params,{reload: true});
+                $state.go(entityType + '_index', params,{reload: true});
             }, function (reject) {
                 if (reject.data.error && reject.data.hasOwnProperty("data") && reject.data.data.length > 0){
                     angular.forEach(reject.data.data, function (err) {
@@ -312,14 +312,9 @@
             }
 
             self.isProcessing = true;
-
             var params = {};
             var _method = 'PUT';
             var _url  = entityObject.dataSource.url + '/' + self.editedEntityId;
-
-            if (entityObject.dataSource.url) {
-                _url = entityObject.dataSource.url.replace(':pk', self.editedEntityId);
-            }
 
             if (typeof request !== 'undefined') {
                 params = typeof request.params !== 'undefined' ? request.params : params;
@@ -343,7 +338,7 @@
                 if ($state.params.back) {
                     params.type = $state.params.back;
                 }
-                $state.go('editor.type.list', params, {reload: true});
+                $state.go(entityType + '_index', params, {reload: true});
             }, function (reject) {
                 if (reject.data.error && reject.data.hasOwnProperty('data') && reject.data.data.length > 0) {
                     angular.forEach(reject.data.data, function (err) {
@@ -497,7 +492,6 @@
                 _method = typeof request.method !== 'undefined' ? request.method : _method;
                 _url = typeof request.url !== 'undefined' ? request.url : _url;
             }
-            var state = setting.component.settings.state;
             return $http({
                 method : _method,
                 url : _url,
@@ -514,7 +508,7 @@
                 if($state.params.back){
                     params.type = $state.params.back;
                 }
-                $state.go(state, params, { reload: true });
+                $state.go(entityType + '_index', params, { reload: true });
             }, function (reject) {
                 self.isProcessing = false;
             });

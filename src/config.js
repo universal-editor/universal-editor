@@ -130,9 +130,10 @@ var ue = new UniversalEditor('universal-editor', {
                             header:[
                                 {
                                     component: {
-                                        name: 'ue-button-create',
+                                        name: 'ue-button-goto',
                                         settings: {
-                                            label: 'создать'
+                                            label: 'создать',
+                                            state: 'edit'
                                         }
                                     }
                                 },
@@ -185,19 +186,19 @@ var ue = new UniversalEditor('universal-editor', {
                             contextMenu:[
                                 {
                                     component: {
-                                        name: 'ue-button-edit',
+                                        name: 'ue-button-goto',
                                         settings: {
-                                            label: 'Редактировать',
+                                            label: 'редактировать',
                                             state: 'edit'
                                         }
                                     }
                                 },
                                 {
                                     component: {
-                                        name: 'ue-button-delete',
+                                        name: 'ue-button-service',
                                         settings: {
                                             label: 'Удалить',
-                                            state: 'index'
+                                            action: 'delete'
                                         }
                                     }
                                 },
@@ -239,17 +240,17 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'Tab 1',
                                             fields: [
                                                 'id',
-                                                //'name', 'email'
-                                                {
-                                                    name: "fio",
-                                                    component: {
-                                                        name: 'ue-form-group',
-                                                        settings: {
-                                                            label: 'Group 1',
-                                                            fields: ['name', 'email']
-                                                        }
-                                                    }
-                                                }
+                                                'name', 'email'
+                                                //{
+                                                //    name: "fio",
+                                                //    component: {
+                                                //        name: 'ue-form-group',
+                                                //        settings: {
+                                                //            label: 'Group 1',
+                                                //            fields: ['name', 'email']
+                                                //        }
+                                                //    }
+                                                //}
                                             ]
                                         }
                                     }
@@ -294,28 +295,19 @@ var ue = new UniversalEditor('universal-editor', {
                                 //}
                                 {
                                     component: {
-                                        name: 'ue-button-update',
+                                        name: 'ue-button-service',
                                         settings: {
-                                            label: 'Обновить',
-                                            state: 'index'
+                                            label: 'Сохранить',
+                                            action: 'save'
                                         }
                                     }
                                 },
-                                //{
-                                //    component: {
-                                //        name: 'ue-button-save',
-                                //        settings: {
-                                //            label: 'Добавить',
-                                //            state: 'index'
-                                //        }
-                                //    }
-                                //},
                                 {
                                     component: {
-                                        name: 'ue-button-delete',
+                                        name: 'ue-button-service',
                                         settings: {
                                             label: 'Удалить',
-                                            state: 'index'
+                                            action: 'delete'
                                         }
                                     }
                                 },
