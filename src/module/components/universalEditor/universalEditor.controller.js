@@ -30,7 +30,7 @@
             }
         }
 
-        $rootScope.$broadcast('editor:set_entity_type', component.settings);      
+        $rootScope.$broadcast('editor:set_entity_type', component.settings); 
 
         var element = $element.find('.universal-editor');
         var scope = $scope.$new();

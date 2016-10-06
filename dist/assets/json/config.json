@@ -805,4 +805,227 @@
       ]
     }
   ]
+}{
+  "tinyMCEBaseUrl": "/api/advisor/static/editor/build/assets/mce-files",
+  "assetsPath": "/api/advisor/static/editor/build/assets",
+  "uploaderServiceId": "advisor",
+  "uploaderServiceUrl": "/api/uploader/v1/json",
+  "entitys": {
+    "categories": {
+      "api": "/api/advisor/v5/backend/json/ru/category",
+      "parentField": "parent_id",
+      "mixWith": {
+        "entity": "lifehack",
+        "entityTypeName": "type"
+      },
+      "idField": "id",
+      "defaultSortField": "sort",
+      "modelClassName": "Category",
+      "tableFields": [],
+      "tabs": [
+        {
+          "label": "Категория",
+          "fields": [
+            {
+              "name": "title",
+              "display_name": "Название",
+              "type": "string",
+              "list": true,
+              "required": true,
+              "hint": "Обязательное поле"
+            },
+            {
+              "name": "local_id",
+              "display_name": "Символьный код",
+              "type": "string",
+              "list": true,
+              "required": true,
+              "hint": "Обязательное поле"
+            },
+            {
+              "name": "image",
+              "type": "image",
+              "display_name": "Изображение",
+              "service_group": "category",
+              "service_id": "advisor"
+            },
+            {
+              "name": "sort",
+              "display_name": "Сортировка",
+              "type": "string",
+              "list": true
+            },
+            {
+              "name": "description",
+              "display_name": "Краткое описание",
+              "type": "string",
+              "list": false
+            },
+            {
+              "name": "info",
+              "display_name": "Подсказка категории",
+              "type": "textarea",
+              "list": false
+            },
+            {
+              "name": "available",
+              "display_name": "Показывать категорию на сайте",
+              "type": "radiolist",
+              "values": {
+                "1": "Да",
+                "0": "Нет"
+              },
+              "list": false
+            }
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "type": "create",
+          "label": "Создать"
+        },
+        {
+          "type": "add",
+          "label": "Добавить"
+        },
+        {
+          "type": "edit",
+          "label": "Редактировать"
+        },
+        {
+          "type": "update",
+          "label": "Обновить"
+        }
+      ],
+      "contextMenu": [
+        {
+          "label": "Редактировать",
+          "mode": "system",
+          "type": "edit"
+        },
+        {
+          "label": "Удалить",
+          "mode": "system",
+          "type": "delete"
+        },
+        {
+          "type": "open",
+          "label": "Раскрыть",
+          "mode": "system"
+        }
+      ]
+    },
+    "lifehack": {
+      "api": "/api/advisor/v5/backend/json/ru/lifehack_in_category",
+      "idField": "id",
+      "defaultSortField": "sort",
+      "modelClassName": "Lifehack",
+      "tableFields": [],
+      "tabs": [
+        {
+          "label": "Жизненная ситуация",
+          "fields": [
+            {
+              "name": "title",
+              "type": "string",
+              "list": true,
+              "display_name": "Название",
+              "required": true,
+              "readonly": true
+            },
+            {
+              "name": "local_id",
+              "type": "string",
+              "display_name": "Символьный код",
+              "required": true,
+              "readonly": true
+            },
+            {
+              "name": "lifehack_has_categories",
+              "display_name": "Привязка к категориям советника",
+              "type": "array",
+              "fields": [
+                {
+                  "name": "category",
+                  "display_name": "Категория",
+                  "type": "select",
+                  "values_remote": {
+                    "field_id": "id",
+                    "field_search": "title",
+                    "api": "/api/advisor/v5/backend/json/ru/category"
+                  },
+                  "multiple": false,
+                  "required": true,
+                  "search": true,
+                  "tree": {
+                    "parentField": "parent_id",
+                    "childCountField": "has_items",
+                    "selectBranches": false
+                  }
+                },
+                {
+                  "name": "sort",
+                  "display_name": "Сортировка ЖС в категории",
+                  "type": "string",
+                  "required": true
+                }
+              ],
+              "multiple": true,
+              "list": false
+            },
+            {
+              "name": "lifehack_has_catalog",
+              "display_name": "Привязка к категориям ЕК",
+              "type": "array",
+              "fields": [
+                {
+                  "name": "catalog_id",
+                  "display_name": "Каталог",
+                  "type": "select",
+                  "values_remote": {
+                    "field_id": "id",
+                    "field_search": "title",
+                    "api": "/api/catalog/v1/backend/json/categories"
+                  },
+                  "multiple": false,
+                  "required": true,
+                  "search": true,
+                  "tree": {
+                    "parentField": "id_parent",
+                    "childCountField": "count_children",
+                    "selectBranches": false
+                  }
+                }
+              ],
+              "multiple": true,
+              "list": false
+            }
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "type": "edit",
+          "label": "Редактировать"
+        },
+        {
+          "type": "update",
+          "label": "Обновить"
+        }
+      ],
+      "contextMenu": [
+        {
+          "label": "Редактировать",
+          "mode": "system",
+          "type": "edit"
+        },
+        {
+          "label": "Удалить",
+          "mode": "system",
+          "type": "delete"
+        }
+      ]
+    }
+  }
 }
