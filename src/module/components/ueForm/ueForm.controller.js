@@ -34,7 +34,6 @@
         vm.currentTab = vm.setting.component.settings.body[0].component.settings.label;
         vm.entityId = "";
         vm.editorEntityType = "new";
-        //vm.listHeaderBar = entityObject.listHeaderBar;
         vm.editFooterBar = vm.setting.component.settings.footer;
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
@@ -123,7 +122,6 @@
         };
 
         vm.closeButton = function () {
-
             vm.entityLoaded = false;
             vm.listLoaded = false;
 
@@ -136,8 +134,13 @@
                 params.parent = $state.params.parent;
                 isReload = false;
             }
-            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
-            $state.go('index', params, {reload: isReload});
+            if (vm.setting.isModal) {
+                vm.funcCloseModal();
+                $state.go(vm.setting.oldState, params, { reload: false, notify: false });
+            } else {
+                RestApiService.getItemsList({ url: vm.setting.component.settings.dataSource.url });
+                $state.go('index', params, { reload: isReload });
+            }
         };
 
         vm.toggleFilterVisibility = function () {
@@ -221,5 +224,7 @@
                 vm.applyFilter();
             }
         }
+
+        console.log(vm.tabs);
     }
 })();

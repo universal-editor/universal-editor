@@ -5,13 +5,14 @@
         .module('universal.editor')
         .service('EditEntityStorage',EditEntityStorage);
 
-    EditEntityStorage.$inject = ['$rootScope','$timeout','configData','$location', "$state"];
+    EditEntityStorage.$inject = ['$rootScope','$timeout','configData','$location', '$state'];
 
     function EditEntityStorage($rootScope,$timeout,configData,$location, $state){
         var sourceEntity,
             configuredFields = {},
             fieldControllers = [],
             entityType,
+            entityObject,
             self = this;
 
         /* PUBLIC METHODS */
@@ -57,6 +58,10 @@
 
         this.getEntityType = function () {
             return entityType;
+        };
+
+        this.setEntityType = function (type) {
+            entityType = type;
         };
 
         this.addFieldController = function (ctrl) {
@@ -116,6 +121,33 @@
             })[0];
         };
 
+        this.getIndexState = function() {
+            var result = null;
+             angular.forEach(configData.entities, function(entity) {
+                if (entity.name === entityType) {
+                    angular.forEach(entity.states, function(state) {
+                        if (state.name && state.name.indexOf('_index') === (state.name.length - 6)) {
+                            result = state;
+                        }
+                    });
+                }
+            });
+            return result;
+        };
+        this.getEditState = function() {
+            var result = null;
+             angular.forEach(configData.entities, function(entity) {
+                if (entity.name === entityType) {
+                    angular.forEach(entity.states, function(state) {
+                        if (state.name && state.name.indexOf('_edit') === (state.name.length - 5)) {
+                            result = state;
+                        }
+                    });
+                }
+            });
+            return result;
+        };
+
         /* !PUBLIC METHODS */
 
         /* EVENTS LISTENING */
@@ -125,7 +157,7 @@
         });
 
         $rootScope.$on('editor:set_entity_type',function (event,type) {
-            entityType = type;
+            entityObject = type;
             fieldControllers = [];
         });
 

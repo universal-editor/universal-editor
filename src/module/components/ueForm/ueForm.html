@@ -11,6 +11,10 @@
                     <field-wrapper data-setting="field" data-ng-if="field.component.name !== 'ue-button-request'"></field-wrapper>
                     <button-wrapper data-setting="field" data-ng-if="field.component.name === 'ue-button-request'" data-button-class="footer"></button-wrapper>
                 </div>
+                <div data-ng-repeat="field in tab.fields">
+                    <field-wrapper data-setting="field" data-ng-if="field.component.name !== 'ue-button-request'"></field-wrapper>
+                    <button-wrapper data-setting="field" data-ng-if="field.component.name === 'ue-button-request'" data-button-class="footer"></button-wrapper>
+                </div>
             </div>
         </div>
     </div>
