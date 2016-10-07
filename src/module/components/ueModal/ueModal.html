@@ -1,4 +1,16 @@
 
 <div>
-    <ue-form data-setting="$ctrl.resolve.settings" data-func-close-modal="$ctrl.close()"></ue-form>
+    <div data-ng-click="vm.closeButton()" ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}" class="close-editor"></div>
+    <div ng-show="vm.header" class="ue-modal-header">
+        <label ng-bind="vm.header.label"></label>
+    </div>
+    <div ng-show="vm.body" class="ue-modal-body">
+        <div ng-bind="vm.body.text" ng-show="vm.body.text" class="text"></div>
+        <div class="field-content-wrapper">
+            <field-wrapper data-setting="vm.body" data-ng-if="vm.body"></field-wrapper>
+        </div>
+    </div>
+    <div data-ng-show="vm.footer" class="ue-modal-footer">
+        <field-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" class="editor-action-button"></field-wrapper>
+    </div>
 </div>

@@ -203,11 +203,11 @@
         .module('universal.editor')
         .run(universalEditorRun);
 
-    universalEditorRun.$inject = ['$rootScope','$location','$state'];
+    universalEditorRun.$inject = ['$rootScope','$location','$state', 'EditEntityStorage', 'ModalService'];
 
-    function universalEditorRun($rootScope,$location,$state){
+    function universalEditorRun($rootScope, $location, $state, EditEntityStorage, ModalService){
         var itemsSelector = document.querySelectorAll(".nav.nav-tabs .item");
-        $rootScope.$on('$stateChangeSuccess', function (event,toState,toParams) {
+        $rootScope.$on('$stateChangeSuccess', function (event,toState,toParams,fromState,fromParams) {
             var stateParamEntityId = toParams.type;
             angular.forEach(itemsSelector, function (item) {
                 $(item).removeClass("active");
@@ -215,12 +215,19 @@
                     $(item).addClass("active");
                 }
             });
+            var toStateConfig = EditEntityStorage.getStateConfig(toState.name);
+            if (toStateConfig && toStateConfig.component.name === 'ue-modal') {
+                toStateConfig.component.settings._pk = toParams._pk;
+                toStateConfig.component.settings.fromState = fromState;
+                toStateConfig.component.settings.fromParams = fromParams;
+                ModalService.open(toStateConfig.component);
+            }
         });
-
         if(itemsSelector.length == 1){
             angular.element(itemsSelector).css("display","none");
         }
-    }
+    }  
+    
 
     configResolver.$inject = ['ConfigDataProvider'];
 

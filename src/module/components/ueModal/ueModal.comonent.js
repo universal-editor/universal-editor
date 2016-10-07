@@ -10,25 +10,35 @@
             close: '&',
             dismiss: '&'
         },
+        controllerAs: 'vm',
         controller: function ($uibModal, $scope) {
-            var $ctrl = this;
-            console.log($ctrl); 
+            var vm = this;
+            vm.entityId = vm.resolve.settings._pk;
             
+            vm.header = vm.resolve.settings.header;
+            vm.body = vm.resolve.settings.body;
+            vm.footer = [];
 
-            $ctrl.$onInit = function () {
-              $ctrl.resolve.settings.pk = $ctrl.resolve.pk;
-              $ctrl.resolve.settings.isModal = true;
+            if(vm.resolve.settings.footer && vm.resolve.settings.footer.controls) {
+                angular.forEach(vm.resolve.settings.footer.controls, function(control) {
+                  vm.footer.push(control);
+                });
+            }                        
+
+            vm.$onInit = function () {
+              vm.resolve.settings.isModal = true;
             };
 
-            $ctrl.ok = function () {
-                $ctrl.close({$value: "ок modal"});
+            vm.ok = function () {
+                vm.close({$value: "ок modal"});
             };
 
-            $ctrl.cancel = function () {
-                $ctrl.close();   
+            vm.cancel = function () {
+                vm.close();   
             };
+            
             $scope.$on('exit_modal', function() {
-                $ctrl.dismiss({$value: 'cancel modal emit'});
+                vm.dismiss({$value: 'cancel modal emit'});
             });
     }});
 })();
