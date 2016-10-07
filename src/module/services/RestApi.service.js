@@ -570,7 +570,9 @@
             return defer.promise;
         };
 
-        this.contextMenuAction = function(request){
+        this.actionRequest = function(request){
+            var deferred = $q.defer();
+
             var reqParams = request.params || {};
             var url = request.url;
             if(request.id) {
@@ -578,16 +580,20 @@
             }
             self.isProcessing = true;
 
-            $http({
+             $http({
                 method : request.method,
                 url : url,
-                params : reqParams
+                params : reqParams,
+                beforeSend: request.beforeSend
             }).then(function (response) {
-                self.isProcessing = false;
-                $rootScope.$broadcast('editor:entity_success_deleted',response);
-            }, function (reject) {
-                self.isProcessing = false;
-            });
+                 self.isProcessing = false;
+                 deferred.resolve(response);
+             }, function (reject) {
+                 self.isProcessing = false;
+                 deferred.reject(reject);
+             });
+
+            return deferred.promise;
         };
 
         this.loadChilds = function(entityId,request, url){

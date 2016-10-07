@@ -7,11 +7,6 @@
         }],
         bindings : {
             setting: '='
-            //itemValue : "=",
-            //buttonLabel : "@",
-            //buttonRequest : "@",
-            //index: "@",
-            //buttonClass: "@"
         },
         controller : 'UeButtonTargetBlankController',
         controllerAs : 'vm'
