@@ -48,6 +48,10 @@
                         RestApiService.deleteItemById(vm.entityId, request, $scope.entityType, vm.setting);
                     }
                     break;
+                case 'presave':
+                    RestApiService.editedEntityId = vm.entityId;
+                    EditEntityStorage.editEntityPresave(request);
+                    break
             }
         });
 

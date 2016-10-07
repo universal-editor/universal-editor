@@ -7,9 +7,6 @@
         }],
         bindings : {
             setting: '='
-            //entityId : "@",
-            //buttonLabel : "@",
-            //buttonRequest : "@"
         },
         controller : 'UeButtonPresaveController',
         controllerAs : 'vm'

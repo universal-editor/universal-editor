@@ -359,7 +359,10 @@
         this.presaveItem = function (arrItem) {
             var item = arrItem[0];
             var request = arrItem[1];
-            var tmpUrl;
+            var _url;
+            var params = {};
+            var _method = 'POST';
+            var idField = 'id';
 
             if (self.isProcessing) {
                 return;
@@ -368,20 +371,14 @@
             self.isProcessing = true;
 
             if (self.editedEntityId !== '') {
-                tmpUrl = entityObject.backend.url + '/' + self.editedEntityId;
-            } else {
-                tmpUrl = entityObject.backend.url;
-            }
-            var params = {};
-            var _method = 'POST';
-            var _url = tmpUrl;
-            var idField = 'id';
-
-            if ($state.is('editor.type.entity')) {
+                _url = entityObject.dataSource.url + '/' + self.editedEntityId;
                 _method = 'PUT';
+            } else {
+                _url = entityObject.dataSource.url;
             }
-            if (entityObject.backend.hasOwnProperty('fields')) {
-                idField = entityObject.backend.fields.primaryKey || idField;
+
+            if (entityObject.dataSource.hasOwnProperty('fields')) {
+                idField = entityObject.dataSource.fields.primaryKey || idField;
             }
             if (typeof request !== 'undefined') {
                 params = typeof request.params !== 'undefined' ? request.params : params;
@@ -401,13 +398,12 @@
                         $rootScope.$broadcast('editor:presave_entity_updated', '');
                         break;
                     case 'Created':
-                        $state.go('editor.type.entity', {
-                            uid: response.data[idField]
+                        $state.go($state.current.name, {
+                            pk: response.data[idField]
                         }, {
                             notify: false
                         });
                         $rootScope.$broadcast('editor:presave_entity_created', response.data[idField]);
-
                         break;
                 }
             }, function (reject) {
