@@ -86,7 +86,15 @@
         //angular.forEach(vm.setting.dataSource.fields, function(field) {
          //   angular.forEach()
         //    console.log(field);
-        //});
+        //}); else
+
+        angular.forEach(vm.editFooterBar, function(button) {
+            if ($state.params.pk === 'new') {
+                button.type = 'create';
+            } else {
+                button.type = 'update';
+            }
+        });
 
         angular.forEach(vm.setting.component.settings.body, function(tab) {
             var newTab = {};
@@ -223,8 +231,10 @@
             if(event.keyCode === 13){
                 vm.applyFilter();
             }
-        }
+        };
 
-        console.log(vm.tabs);
+        if ($state.params.pk === 'new') {
+            vm.entityLoaded = true;
+        }
     }
 })();

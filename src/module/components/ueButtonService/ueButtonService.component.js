@@ -1,18 +1,18 @@
 (function () {
     'use strict';
 
-    var ueButtonPresave = {
+    var ueButtonService = {
         template : ['$templateCache', function ($templateCache) {
-            return $templateCache.get('module/components/ueButtonPresave/ueButtonPresave.html');
+            return $templateCache.get('module/components/ueButtonService/ueButtonService.html');
         }],
         bindings : {
             setting: '='
         },
-        controller : 'UeButtonPresaveController',
+        controller : 'UeButtonServiceController',
         controllerAs : 'vm'
     };
 
     angular
         .module('universal.editor')
-        .component('ueButtonPresave',ueButtonPresave);
+        .component('ueButtonService',ueButtonService);
 })();
