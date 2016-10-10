@@ -44,7 +44,7 @@
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
         vm.isButtonClose = ModalService.isModalOpen();
-        if(vm.setting.component._pk || vm.setting.component._pk !== 'new') {
+        if(vm.setting.component._pk && vm.setting.component._pk !== 'new') {
             RestApiService.isProcessing = false;
             RestApiService.getItemById(vm.setting.component._pk);
         }
