@@ -1,18 +1,18 @@
 (function () {
     'use strict';
 
-    var ueButtonDelete = {
+    var ueButtonGoto = {
         template : ['$templateCache', function ($templateCache) {
-            return $templateCache.get('module/components/ueButtonDelete/ueButtonDelete.html');
+            return $templateCache.get('module/components/ueButtonGoto/ueButtonGoto.html');
         }],
         bindings : {
             setting: '='
         },
-        controller : 'UeButtonDeleteController',
+        controller : 'UeButtonGotoController',
         controllerAs : 'vm'
     };
 
     angular
         .module('universal.editor')
-        .component('ueButtonDelete',ueButtonDelete);
+        .component('ueButtonGoto',ueButtonGoto);
 })();

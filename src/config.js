@@ -1,3 +1,18 @@
+window.RequstCallback = {
+    beforeSend: function(re) {
+        console.log('Привет мир!!! я beforeSend', re);
+    },
+    error: function(re) {
+        console.log('Привет мир!!! я error', re);
+    },
+    success: function(re) {
+        console.log('Привет мир!!! я success', re);
+    },
+    complete: function() {
+        console.log('Привет мир!!! я complete');
+    }
+};
+
 var staffDataSource = {
     type: 'REST',
     url: '//universal-backend.dev/rest/v1/staff',
@@ -130,9 +145,10 @@ var ue = new UniversalEditor('universal-editor', {
                             header:[
                                 {
                                     component: {
-                                        name: 'ue-button-create',
+                                        name: 'ue-button-goto',
                                         settings: {
-                                            label: 'создать'
+                                            label: 'создать',
+                                            state: 'edit'
                                         }
                                     }
                                 },
@@ -140,10 +156,13 @@ var ue = new UniversalEditor('universal-editor', {
                                     component: {
                                         name: 'ue-button-request',
                                         settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: '//ya.ru'
-                                            }
+                                            label: 'This is request!!!',
+                                            url: '//universal-backend.dev/rest/v1/staff',
+                                            method: 'GET',
+                                            beforeSend: 'RequstCallback.beforeSend',
+                                            success: 'RequstCallback.success',
+                                            error: 'RequstCallback.error',
+                                            complete: 'RequstCallback.complete'
                                         }
                                     }
                                 },
@@ -151,21 +170,9 @@ var ue = new UniversalEditor('universal-editor', {
                                     component: {
                                         name: 'ue-button-request',
                                         settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: '//ya.ru'
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    component: {
-                                        name: 'ue-button-target-blank',
-                                        settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
-                                            }
+                                            label: 'This _blank!!!',
+                                            url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
+                                            target: '_blank'
                                         }
                                     }
                                 },
@@ -185,19 +192,19 @@ var ue = new UniversalEditor('universal-editor', {
                             contextMenu:[
                                 {
                                     component: {
-                                        name: 'ue-button-edit',
+                                        name: 'ue-button-goto',
                                         settings: {
-                                            label: 'Редактировать',
+                                            label: 'редактировать',
                                             state: 'edit'
                                         }
                                     }
                                 },
                                 {
                                     component: {
-                                        name: 'ue-button-delete',
+                                        name: 'ue-button-service',
                                         settings: {
                                             label: 'Удалить',
-                                            state: 'index'
+                                            action: 'delete'
                                         }
                                     }
                                 },
@@ -213,10 +220,23 @@ var ue = new UniversalEditor('universal-editor', {
                                     component: {
                                         name: 'ue-button-request',
                                         settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: '//ya.ru'
-                                            }
+                                            label: 'This is request!!!',
+                                            url: '//universal-backend.dev/rest/v1/staff',
+                                            method: 'GET',
+                                            beforeSend: 'RequstCallback.beforeSend',
+                                            success: 'RequstCallback.success',
+                                            error: 'RequstCallback.error',
+                                            complete: 'RequstCallback.complete'
+                                        }
+                                    }
+                                },
+                                {
+                                    component: {
+                                        name: 'ue-button-request',
+                                        settings: {
+                                            label: 'This _blank!!!',
+                                            url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
+                                            target: '_blank'
                                         }
                                     }
                                 }
@@ -239,17 +259,17 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'Tab 1',
                                             fields: [
                                                 'id',
-                                                //'name', 'email'
-                                                {
-                                                    name: "fio",
-                                                    component: {
-                                                        name: 'ue-form-group',
-                                                        settings: {
-                                                            label: 'Group 1',
-                                                            fields: ['name', 'email']
-                                                        }
-                                                    }
-                                                }
+                                                'name', 'email'
+                                                //{
+                                                //    name: "fio",
+                                                //    component: {
+                                                //        name: 'ue-form-group',
+                                                //        settings: {
+                                                //            label: 'Group 1',
+                                                //            fields: ['name', 'email']
+                                                //        }
+                                                //    }
+                                                //}
                                             ]
                                         }
                                     }
@@ -274,14 +294,16 @@ var ue = new UniversalEditor('universal-editor', {
                                                     component: {
                                                         name: 'ue-button-request',
                                                         settings: {
-                                                            label: 'This is button!!!',
-                                                            request: {
-                                                                url: '//ya.ru',
-                                                                method: 'GET'
-                                                            }
+                                                            label: 'This is request!!!',
+                                                            url: '//universal-backend.dev/rest/v1/staff',
+                                                            method: 'GET',
+                                                            beforeSend: 'RequstCallback.beforeSend',
+                                                            success: 'RequstCallback.success',
+                                                            error: 'RequstCallback.error',
+                                                            complete: 'RequstCallback.complete'
                                                         }
                                                     }
-                                                }
+                                                },
                                             ]
                                         }
                                     }
@@ -294,36 +316,28 @@ var ue = new UniversalEditor('universal-editor', {
                                 //}
                                 {
                                     component: {
-                                        name: 'ue-button-update',
+                                        name: 'ue-button-service',
                                         settings: {
-                                            label: 'Обновить',
-                                            state: 'index'
+                                            label: 'Сохранить',
+                                            action: 'save'
                                         }
                                     }
                                 },
-                                //{
-                                //    component: {
-                                //        name: 'ue-button-save',
-                                //        settings: {
-                                //            label: 'Добавить',
-                                //            state: 'index'
-                                //        }
-                                //    }
-                                //},
                                 {
                                     component: {
-                                        name: 'ue-button-delete',
+                                        name: 'ue-button-service',
                                         settings: {
                                             label: 'Удалить',
-                                            state: 'index'
+                                            action: 'delete'
                                         }
                                     }
                                 },
                                 {
                                     component: {
-                                        name: 'ue-button-presave',
+                                        name: 'ue-button-service',
                                         settings: {
-                                            label: 'Сохранить'
+                                            label: 'Сохранить',
+                                            action: 'presave'
                                         }
                                     }
                                 },
@@ -331,21 +345,23 @@ var ue = new UniversalEditor('universal-editor', {
                                     component: {
                                         name: 'ue-button-request',
                                         settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: '//ya.ru'
-                                            }
+                                            label: 'This is request!!!',
+                                            url: '//universal-backend.dev/rest/v1/staff',
+                                            method: 'GET',
+                                            beforeSend: 'RequstCallback.beforeSend',
+                                            success: 'RequstCallback.success',
+                                            error: 'RequstCallback.error',
+                                            complete: 'RequstCallback.complete'
                                         }
                                     }
                                 },
                                 {
                                     component: {
-                                        name: 'ue-button-target-blank',
+                                        name: 'ue-button-request',
                                         settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
-                                            }
+                                            label: 'This _blank!!!',
+                                            url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
+                                            target: '_blank'
                                         }
                                     }
                                 },
@@ -389,10 +405,13 @@ var ue = new UniversalEditor('universal-editor', {
                                     component: {
                                         name: 'ue-button-request',
                                         settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: '//ya.ru'
-                                            }
+                                            label: 'This is request!!!',
+                                            url: '//universal-backend.dev/rest/v1/staff',
+                                            method: 'GET',
+                                            beforeSend: 'RequstCallback.beforeSend',
+                                            success: 'RequstCallback.success',
+                                            error: 'RequstCallback.error',
+                                            complete: 'RequstCallback.complete'
                                         }
                                     }
                                 },
@@ -400,21 +419,9 @@ var ue = new UniversalEditor('universal-editor', {
                                     component: {
                                         name: 'ue-button-request',
                                         settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: '//ya.ru'
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    component: {
-                                        name: 'ue-button-target-blank',
-                                        settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
-                                            }
+                                            label: 'This _blank!!!',
+                                            url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
+                                            target: '_blank'
                                         }
                                     }
                                 },
@@ -462,13 +469,16 @@ var ue = new UniversalEditor('universal-editor', {
                                     component: {
                                         name: 'ue-button-request',
                                         settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: '//ya.ru'
-                                            }
+                                            label: 'This is request!!!',
+                                            url: '//universal-backend.dev/rest/v1/staff',
+                                            method: 'GET',
+                                            beforeSend: 'RequstCallback.beforeSend',
+                                            success: 'RequstCallback.success',
+                                            error: 'RequstCallback.error',
+                                            complete: 'RequstCallback.complete'
                                         }
                                     }
-                                }
+                                },
                             ]
                         }
                     }
@@ -520,7 +530,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 },
                                                 {
                                                     component: {
-                                                        name: 'ue-button-request',
+                                                        name: 'ue-button-request1',
                                                         settings: {
                                                             label: 'This is button!!!',
                                                             request: {
@@ -536,10 +546,6 @@ var ue = new UniversalEditor('universal-editor', {
                                 }
                             ],
                             footer: [
-                                //"default-data-controls": true,
-                                //component: {
-                                //    name: 'my-super-component'
-                                //}
                                 {
                                     component: {
                                         name: 'ue-button-update',
@@ -549,15 +555,6 @@ var ue = new UniversalEditor('universal-editor', {
                                         }
                                     }
                                 },
-                                //{
-                                //    component: {
-                                //        name: 'ue-button-save',
-                                //        settings: {
-                                //            label: 'Добавить',
-                                //            state: 'index'
-                                //        }
-                                //    }
-                                //},
                                 {
                                     component: {
                                         name: 'ue-button-delete',
@@ -569,9 +566,10 @@ var ue = new UniversalEditor('universal-editor', {
                                 },
                                 {
                                     component: {
-                                        name: 'ue-button-presave',
+                                        name: 'ue-button-service',
                                         settings: {
-                                            label: 'Сохранить'
+                                            label: 'Сохранить',
+                                            action: 'presave'
                                         }
                                     }
                                 },
@@ -579,21 +577,23 @@ var ue = new UniversalEditor('universal-editor', {
                                     component: {
                                         name: 'ue-button-request',
                                         settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: '//ya.ru'
-                                            }
+                                            label: 'This is request!!!',
+                                            url: '//universal-backend.dev/rest/v1/staff',
+                                            method: 'GET',
+                                            beforeSend: 'RequstCallback.beforeSend',
+                                            success: 'RequstCallback.success',
+                                            error: 'RequstCallback.error',
+                                            complete: 'RequstCallback.complete'
                                         }
                                     }
                                 },
                                 {
                                     component: {
-                                        name: 'ue-button-target-blank',
+                                        name: 'ue-button-request',
                                         settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
-                                            }
+                                            label: 'This _blank!!!',
+                                            url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
+                                            target: '_blank'
                                         }
                                     }
                                 },

@@ -46,48 +46,8 @@
                 qwe: qwe
             };  
 
-            var stateOptions = {};
-
-           // qwe.name = entityName + '_' + qwe.name;       
-
-            //if($scope.entitySubtype){
-            //    stateParams.type = $scope.entitySubtype;
-            //    stateParams.back = $state.params.type;
-            //    stateOptions.reload = true;
-            //} else {
-            //    stateParams.type = $state.params.type;
-            //}
-            //if ($location.search().parent) {
-            //    stateParams.parent = $location.search().parent;
-            //}
-            //$state.go(vm.setting.component.settings.state,stateParams, stateOptions);
-
-            if (qwe.component.name === "ue-modal") {
-                var modalInstance = $uibModal.open({
-                    component: 'ueModal',
-                    resolve: {
-                        settings: function() {
-                            stateParams.qwe.oldState = indexState.name;
-                            return stateParams.qwe;
-                        },
-                        pk: function() {
-                            return stateParams.pk;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function(selectedItem) {
-                    console.log(selectedItem);
-                }, function() {
-                    console.info('modal-component dismissed at: ' + new Date());
-                    if (indexState) {
-                        $state.go(indexState.name, {}, { reload: false, notify: false });
-                    }
-                });
-                $state.go(qwe.name, stateParams, { reload: false, notify: false });
-            } else {
-             $state.go(vm.setting.component.settings.state,stateParams, stateOptions);
-           }                  
+            var stateOptions = {reload:false};
+             $state.go(EditEntityStorage.getStateConfig('modal_edit').name,stateParams, stateOptions);                      
         });
 
         vm.$postLink = function() {

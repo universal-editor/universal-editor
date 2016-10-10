@@ -115,10 +115,35 @@
             $rootScope.$emit('editor:presave_entity',[entityObject, request]);
         };
 
-        this.getEntity = function(){
+        this.getEntity = function(stateName, entityName) {
             return configData.entities.filter(function (item) {
                 return item.name === entityType;
             })[0];
+        };
+
+        this.getStateConfig = function(stateName, entityName) {
+            var entityName = entityName || entityType;
+            var result = null;
+
+            if (stateName.indexOf(entityName + '_') !== 0) {
+                stateName = entityName + '_' + stateName;
+            }
+
+            angular.forEach(configData.entities, function(entity) {
+                if (entity.name === entityName) {
+                    angular.forEach(entity.states, function(state) {
+                        if (state.name) {
+                            if (state.name.indexOf(entityName + '_') !== 0) {
+                                state.name = entityName + '_' + state.name;
+                            }
+                            if (state.name === stateName) {
+                                result = state;
+                            }
+                        }
+                    });
+                }
+            });
+            return result;
         };
 
         this.getIndexState = function() {
