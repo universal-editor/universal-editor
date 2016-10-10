@@ -158,19 +158,19 @@
         vm.clearFilter = function () {
             FilterFieldsStorage.setInitialValues();
             //RestApiService.setFilterParams({});
-            //RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
+            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url});
         };
 
 
-        if (!RestApiService.isProcessing) {
-            vm.clearFilter();
-        }
+        //if (!RestApiService.isProcessing) {
+        //    vm.clearFilter();
+        //}
 
         vm.changePage = function (event, linkHref) {
             event.preventDefault();
             vm.listLoaded = false;
             var params = linkHref.split("?")[1];
-            RestApiService.getItemsListWithParams(params);
+            RestApiService.getItemsListWithParams(params, $scope.$id);
         };
 
         vm.changeSortField = function (field) {
