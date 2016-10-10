@@ -1,3 +1,4 @@
+
 window.RequstCallback = {
     beforeSend: function(re) {
         console.log('Привет мир!!! я beforeSend', re);

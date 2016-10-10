@@ -1,3 +1,9 @@
-.modal.fade .modal-dialog {
-  width: 70% !important;
+
+.modal-dialog .ue-modal-body .editor-body .close-editor {
+    display: none;
 }
+ .editor-entity-actions {
+    background: #ebf1f3;
+    padding: 10px;
+    border-top: 1px solid #E1E9EB;
+  }

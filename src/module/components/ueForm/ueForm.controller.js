@@ -5,9 +5,13 @@
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','toastr', '$translate', 'ConfigDataProvider', 'ModalService'];
+    UeFormController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location',
+                                '$document','$timeout','$httpParamSerializer','$state','toastr', '$translate', 'ConfigDataProvider', 
+                                'ModalService', 'EditEntityStorage'];
 
-    function UeFormController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,toastr, $translate, ConfigDataProvider, ModalService) {
+    function UeFormController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,
+                              $document,$timeout,$httpParamSerializer,$state,toastr, $translate, ConfigDataProvider, 
+                              ModalService, EditEntityStorage) {
         $scope.entity = RestApiService.getEntityType();
         var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
@@ -43,10 +47,9 @@
         vm.visibleFilter = true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
-        vm.isButtonClose = ModalService.isModalOpen();
-        if(vm.setting.component._pk && vm.setting.component._pk !== 'new') {
+        if(vm.setting.component.settings.modal && $state.params.pk && $state.params.pk !== 'new') {
             RestApiService.isProcessing = false;
-            RestApiService.getItemById(vm.setting.component._pk);
+            RestApiService.getItemById($state.params.pk);
         }
 
         if (!!vm.configData.ui && !!vm.configData.ui.assetsPath) {
@@ -93,7 +96,7 @@
         //    console.log(field);
         //}); else
 
-        angular.forEach(vm.editFooterBar, function(button) {
+        angular.forEach(vm.editFooterBar, function(button, index) {
             if ($state.params.pk === 'new') {
                 button.type = 'create';
             } else {
@@ -140,6 +143,7 @@
 
             var params = {};
             var isReload = false;
+            var stateIndex = EditEntityStorage.getStateConfig('index');
             if($state.params.back){
                 params.type = $state.params.back;
             }
@@ -148,7 +152,7 @@
                 isReload = false;
             }
             RestApiService.getItemsList({ url: vm.setting.component.settings.dataSource.url });
-            $state.go('index', params, { reload: isReload });
+            $state.go(stateIndex.name, params, { reload: isReload });
         };
 
         vm.toggleFilterVisibility = function () {
