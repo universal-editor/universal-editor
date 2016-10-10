@@ -5,9 +5,6 @@
     var ueArray = {
         bindings : {
             field: "=",
-            setError: "=",
-            setEmpty: "=",
-            errorIndexOf: "=",
             parentField: "=",
             parentFieldIndex: "="
         },

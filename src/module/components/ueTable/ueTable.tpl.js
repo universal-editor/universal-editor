@@ -11,12 +11,12 @@ module.run(['$templateCache', function($templateCache) {
     '    <div class="editor-header">\n' +
     '        <!--button.btn.btn-lg.btn-default.filter-button(data-ng-click="vm.toggleFilterVisibility()", data-ng-class="{ disabled : vm.entityLoaded }")| {{ \'BUTTON.FILTER\' | translate}} {{ vm.visibleFilter ? "+" : "-" }}\n' +
     '        -->\n' +
-    '        <button-wrapper ng-repeat="button in vm.listHeaderBar track by $index" data-setting="button" data-button-class="header" class="header-action-button">\n' +
+    '        <component-wrapper ng-repeat="button in vm.listHeaderBar track by $index" data-setting="button" data-button-class="header" class="header-action-button">\n' +
     '            <!--ue-button-create(data-ng-if="button.type == \'create\'", data-button-label="{{button.label}}")-->\n' +
     '            <!--div.btn.btn-lg.btn-success(data-ng-if="button.type == \'request\'", data-ng-click="vm.contextAction(button)") {{button.label}}-->\n' +
     '            <!--div(data-ng-if="button.type == \'targetBlank\'", data-editor-button-target-blank="", data-item-value="item", data-button-label="{{button.label}}", data-button-request="{{button.request}}", data-index="{{$index}}", data-button-class="header")-->\n' +
     '            <!--div(data-ng-if="button.type == \'download\'", data-editor-button-download="", data-item-value="item", data-button-label="{{button.label}}", data-button-request="{{button.request}}", data-index="{{$index}}", data-button-class="header")-->\n' +
-    '        </button-wrapper>\n' +
+    '        </component-wrapper>\n' +
     '        <!--.header-action-button(ng-repeat="button in vm.mixedListHeaderBar track by $index")\n' +
     '        ue-button-create(data-ng-if="button.type == \'create\'", data-button-label="{{button.label}}", data-type="vm.mixEntityType")\n' +
     '        div.btn.btn-lg.btn-success(data-ng-if="button.type == \'request\'", data-ng-click="vm.contextAction(button)") {{button.label}}\n' +
@@ -49,7 +49,7 @@ module.run(['$templateCache', function($templateCache) {
     '                <td class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="vm.contextLinks.length" class="context-toggle">Toggle buttons</span>\n' +
     '                    <div data-ng-show="vm.contextId == item[vm.idField]" class="context-menu-wrapper">\n' +
     '                        <div data-ng-repeat="link in vm.contextLinks track by $index" data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)" class="context-menu-item">\n' +
-    '                            <button-wrapper data-setting="link" data-entity-id="{{item[vm.idField]}}" data-button-class="context"></button-wrapper>\n' +
+    '                            <component-wrapper data-setting="link" data-entity-id="{{item[vm.idField]}}" data-button-class="context"></component-wrapper>\n' +
     '                            <!--div(data-ng-if="link.type == \'request\'", data-ng-click="vm.contextAction(link,item[vm.idField])") {{link.label}}-->\n' +
     '                            <!--ue-button-edit(data-ng-if="link.type == \'edit\'", data-entity-subtype="{{item[vm.subType]}}",data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}")-->\n' +
     '                            <!--ue-button-delete(data-ng-if="link.type == \'delete\'",data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-button-class="context")-->\n' +

@@ -1,7 +1,10 @@
-div
-    .col-lg-6.col-md-6.col-sm-6.col-xs-6
-        .checkbox(data-ng-repeat="item in vm.selectedValues", data-ng-class="vm.readonly ? 'disabled' : ''")
-            label
-                input(type="checkbox", data-ng-disabled="vm.readonly", data-checklist-model="vm.fieldValue", data-checklist-value="item[vm.field_id]")
-                |{{item[vm.field_search]}}
-
+.field-wrapper.row
+    .form-group
+        include ../../template/labelField/labelField
+        .field-element
+            .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                .checkbox(data-ng-repeat="item in vm.selectedValues", data-ng-class="vm.readonly ? 'disabled' : ''")
+                    label
+                        input(type="checkbox", data-ng-disabled="vm.readonly", data-checklist-model="vm.fieldValue", data-checklist-value="item[vm.field_id]")
+                        |{{item[vm.field_search]}}
+    include ../../template/errorField/errorField

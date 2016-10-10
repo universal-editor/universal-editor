@@ -4,9 +4,6 @@
     var ueDate = {
         bindings : {
             field: "=",
-            setError: "=",
-            setErrorEmpty: "=",
-            errorIndexOf: "=",
             parentField: "=",
             parentFieldIndex: "="
         },

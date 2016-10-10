@@ -3,21 +3,21 @@
 
     angular
         .module('universal.editor')
-        .factory('ButtonBuilder',ButtonBuilder);
+        .factory('ComponentBuilder',ComponentBuilder);
 
-    ButtonBuilder.$inject = ['$compile'];
+    ComponentBuilder.$inject = ['$compile'];
 
-    function ButtonBuilder($compile){
-        var Button = function (scope) {
+    function ComponentBuilder($compile){
+        var Component = function (scope) {
             this.scope = scope.$new();
             this.scope.setting = scope.setting;
         };
 
-        Button.prototype.build = function () {
+        Component.prototype.build = function () {
             var element = '<' + this.scope.setting.component.name +' data-setting="setting"></' + this.scope.setting.component.name + '>';
             return $compile(element)(this.scope);
         };
 
-        return Button;
+        return Component;
     }
 })();

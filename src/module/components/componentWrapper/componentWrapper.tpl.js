@@ -5,8 +5,8 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/components/buttonWrapper/buttonWrapper.html',
+  $templateCache.put('module/components/componentWrapper/componentWrapper.html',
     '\n' +
-    '<div class="button-wrapper"></div>');
+    '<div class="component-wrapper"></div>');
 }]);
 })();

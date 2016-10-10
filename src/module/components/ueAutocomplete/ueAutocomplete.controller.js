@@ -42,7 +42,6 @@
 
         vm.fieldName = vm.setting.name;
         vm.readonly = vm.setting.readonly || false;
-        vm.setting.setErrorEmpty();
         vm.selectedValues = [];
         vm.inputValue = "";
         vm.possibleValues = [];
@@ -55,6 +54,10 @@
         vm.classInput = {'width': '1px'};
         vm.showPossible = false;
         vm.placeholder = '';
+        vm.fieldDisplayName = vm.setting.component.settings.label;
+        vm.hint = vm.setting.hint || false;
+        vm.required = vm.setting.required || false;
+        vm.error = [];
 
         if (vm.setting.hasOwnProperty("multiple") && vm.setting.multiple === true){
             vm.multiple = true;
@@ -320,13 +323,13 @@
         var destroyErrorField = $scope.$on("editor:api_error_field_"+ fieldErrorName, function (event,data) {
             if(angular.isArray(data)){
                 angular.forEach(data, function (error) {
-                    if(vm.setting.errorIndexOf(error) < 0){
-                        vm.setting.setError(error);
+                    if(vm.error.indexOf(error) < 0){
+                        vm.error.push(error);
                     }
                 });
             } else {
-                if(vm.setting.errorIndexOf(data) < 0){
-                    vm.setting.setError(data);
+                if(vm.error.indexOf(data) < 0){
+                    vm.error.push(data);
                 }
             }
         });
@@ -356,7 +359,7 @@
         var destroyWatchFieldValue = $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
-            vm.setting.setErrorEmpty();
+            vm.error = [];
         });
 
         /* PUBLIC METHODS */
@@ -391,7 +394,7 @@
 
         function autocompleteSearch(searchString){
 
-            vm.setting.setErrorEmpty();
+            vm.error = [];
 
             if(searchString === "" || searchString.length <= vm.minCount){
                 return;

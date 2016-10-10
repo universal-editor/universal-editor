@@ -6,19 +6,14 @@
     .tab-content-wrapper
         .tab-item-content(data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label")
             .field-content-wrapper
-                div(data-ng-repeat="field in tab.fields")
-                    field-wrapper(
-                    data-setting="field",
-                    data-ng-if="field.component.name !== 'ue-button-request'"
-                    )
-                    button-wrapper(
-                    data-setting="field",
-                    data-ng-if="field.component.name === 'ue-button-request'",
-                    data-button-class="footer"
-                    )
+                component-wrapper(
+                data-ng-repeat="field in tab.fields",
+                data-setting="field",
+                data-button-class="footer"
+                )
     .field-error-bottom-wrapper
         .error-item.alert.alert-danger(data-ng-repeat="err in vm.errors") {{err}}
     .field-notify-bottom-wrapper
         .notify-item(data-ng-repeat="notify in vm.notifys") {{notify}}
     .editor-entity-actions(data-ng-if="vm.entityLoaded")
-        button-wrapper.editor-action-button(data-ng-repeat="button in vm.editFooterBar track by $index", data-entity-id="{{vm.entityId}}", data-setting="button", data-button-class="footer")
+        component-wrapper.editor-action-button(data-ng-repeat="button in vm.editFooterBar track by $index", data-entity-id="{{vm.entityId}}", data-setting="button", data-button-class="footer")

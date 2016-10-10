@@ -4,10 +4,6 @@
     var ueAutocomplete = {
         bindings : {
             setting: '='
-            //field: "=",
-            //setError: "=",
-            //setErrorEmpty: "=",
-            //errorIndexOf: "=",
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueAutocomplete/ueAutocomplete.html');

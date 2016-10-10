@@ -25,10 +25,14 @@
         vm.classTextarea = '';//'col-lg-2 col-md-2 col-sm-3 col-xs-3';
         vm.fieldValue = undefined;
         vm.readonly = vm.setting.readonly || false;
-        vm.setting.setErrorEmpty();
         vm.max = vm.setting.max;
         vm.min = vm.setting.min;
         vm.defaultValue = !isNaN(parseFloat(vm.setting.defaultValue)) ? vm.setting.defaultValue : null;
+        vm.fieldDisplayName = vm.setting.component.settings.label;
+        vm.hint = vm.setting.hint || false;
+        vm.required = vm.setting.required || false;
+        vm.error = [];
+
         vm.inputLeave = function (val) {
             if (!val) {
                 return;
@@ -36,15 +40,15 @@
 
             if(vm.setting.hasOwnProperty("max") && val > vm.setting.max){
                 var maxError = "Для поля превышено максимальное допустимое значение " + vm.setting.max + ". Сейчас введено " + val + ".";
-                if (vm.setting.errorIndexOf(maxError) < 0) {
-                    vm.setting.setError(maxError);
+                if (vm.error.indexOf(maxError) < 0) {
+                    vm.error.push(maxError);
                 }
             }
 
             if(vm.setting.hasOwnProperty("min") && val < vm.setting.min){
                 var minError = "Минимальное значение поля не может быть меньше " + vm.setting.min + ". Сейчас введено " + val + ".";
-                if(vm.setting.errorIndexOf(minError) < 0){
-                    vm.setting.setError(minError);
+                if(vm.error.indexOf(minError) < 0){
+                    vm.error.push(minError);
                 }
             }
         };
@@ -242,13 +246,13 @@
         var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
                 angular.forEach(data, function (error) {
-                    if (vm.setting.errorIndexOf(error) < 0) {
-                        vm.setting.setError(error);
+                    if (vm.error.indexOf(error) < 0) {
+                        vm.error.push(error);
                     }
                 });
             } else {
-                if (vm.setting.errorIndexOf(data) < 0) {
-                    vm.setting.setError(data);
+                if (vm.error.indexOf(data) < 0) {
+                    vm.error.push(data);
                 }
             }
         });
@@ -256,7 +260,7 @@
         var destroyWatchFieldValue = $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
-            vm.setting.setErrorEmpty();
+            vm.error = [];
         }, true);
 
         this.$onDestroy = function() {

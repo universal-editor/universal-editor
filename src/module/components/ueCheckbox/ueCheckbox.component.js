@@ -4,9 +4,6 @@
     var ueCheckbox = {
         bindings : {
             field: "=",
-            setError: "=",
-            setErrorEmpty: "=",
-            errorIndexOf: "=",
             parentField: "=",
             parentFieldIndex: "="
         },

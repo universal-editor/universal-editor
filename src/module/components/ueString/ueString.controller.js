@@ -26,9 +26,12 @@
         vm.fieldName = vm.setting.name;
         vm.fieldValue = undefined;
         vm.readonly = vm.setting.readonly || false;
-        vm.setting.setErrorEmpty();
         vm.setting.parentFieldIndex = vm.setting.parentFieldIndex || false;
         vm.mask = vm.setting.mask || false;
+        vm.fieldDisplayName = vm.setting.component.settings.label;
+        vm.hint = vm.setting.hint || false;
+        vm.required = vm.setting.required || false;
+        vm.error = [];
 
         if (!!vm.cols) {
             if (vm.cols > 6) {
@@ -166,15 +169,15 @@
 
             if(vm.setting.hasOwnProperty("maxLength") && val.length > vm.setting.maxLength){
                 var maxError = "Для поля превышено максимальное допустимое значение в " + vm.setting.maxLength + " символов. Сейчас введено " + val.length + " символов.";
-                if (vm.setting.errorIndexOf(maxError) < 0) {
-                    vm.setting.setError(maxError);
+                if (vm.error.indexOf(maxError) < 0) {
+                    vm.error.push(maxError);
                 }
             }
 
             if(vm.setting.hasOwnProperty("minLength") && val.length < vm.setting.minLength){
                 var minError = "Минимальное значение поля не может быть меньше " + vm.setting.minLength + " символов. Сейчас введено " + val.length + " символов.";
-                if(vm.setting.errorIndexOf(minError) < 0){
-                    vm.setting.setError(minError);
+                if(vm.error.indexOf(minError) < 0){
+                    vm.error.push(minError);
                 }
             }
         };
@@ -273,13 +276,13 @@
         var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
                 angular.forEach(data, function (error) {
-                    if (vm.setting.errorIndexOf(error) < 0) {
-                        vm.setting.setError(error);
+                    if (vm.error.indexOf(error) < 0) {
+                        vm.error.push(error);
                     }
                 });
             } else {
-                if (vm.setting.errorIndexOf(data) < 0) {
-                    vm.setting.setError(data);
+                if (vm.error.indexOf(data) < 0) {
+                    vm.error.push(data);
                 }
             }
         });
@@ -289,7 +292,7 @@
         var destroyWatchFieldValue = $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
-            vm.setting.setErrorEmpty();
+            vm.error = [];
         }, true);
 
         /* Удаление контроллера поля из сервиса управления данными полей. Происходит при исчезании поля */

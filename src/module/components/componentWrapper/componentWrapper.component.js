@@ -1,20 +1,20 @@
 (function () {
     'use strict';
 
-    var buttonWrapper = {
+    var componentWrapper = {
         bindings : {
             setting : '=',
             entityId: '@',
             buttonClass: '@'
         },
         template : ['$templateCache', function($templateCache) {
-            return $templateCache.get('module/components/buttonWrapper/buttonWrapper.html');
+            return $templateCache.get('module/components/componentWrapper/componentWrapper.html');
         }],
-        controller: 'ButtonWrapperController',
+        controller: 'ComponentWrapperController',
         controllerAs : 'vm'
     };
 
     angular
         .module('universal.editor')
-        .component('buttonWrapper',buttonWrapper);
+        .component('componentWrapper',componentWrapper);
 })();
