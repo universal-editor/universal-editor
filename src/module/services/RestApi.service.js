@@ -392,7 +392,8 @@
                 data: item,
                 params: params
             }).then(function (response) {
-                self.isProcessing = false;              
+                self.isProcessing = false;       
+                       
                 $state.go($state.current.name, { pk: response.data[idField] });           
                 $rootScope.$broadcast('editor:presave_entity_created', response.data[idField]);  
             }, function (reject) {

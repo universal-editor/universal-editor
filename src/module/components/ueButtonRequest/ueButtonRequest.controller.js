@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonRequestController',UeButtonRequestController);
 
-    UeButtonRequestController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$window'];
+    UeButtonRequestController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', 'ButtonsService'];
 
-    function UeButtonRequestController($rootScope,$scope,$element,RestApiService,configData, $window){
+    function UeButtonRequestController($rootScope,$scope,$element,RestApiService,configData, ButtonsService){
         var vm = this;
         //console.log(vm);
         vm.label = vm.setting.component.settings.label;
@@ -19,20 +19,20 @@
                 var request = {
                     url: vm.setting.component.settings.url,
                     method: vm.setting.component.settings.method,
-                    beforeSend: getCallback(vm.setting.component.settings.beforeSend)
+                    beforeSend: ButtonsService.getCallback(vm.setting.component.settings.beforeSend)
                 };
                 RestApiService.actionRequest(request).then(function(response){
-                    var success = getCallback(vm.setting.component.settings.success);
+                    var success = ButtonsService.getCallback(vm.setting.component.settings.success);
                     if (!!success) {
                         success(response);
                     }
                 }, function(reject) {
-                    var error = getCallback(vm.setting.component.settings.error);
+                    var error = ButtonsService.getCallback(vm.setting.component.settings.error);
                     if (!!error) {
                         error(reject);
                     }
                 }).finally(function() {
-                    var complete = getCallback(vm.setting.component.settings.complete);
+                    var complete = ButtonsService.getCallback(vm.setting.component.settings.complete);
                     if (!!complete) {
                         complete();
                     }
@@ -47,12 +47,4 @@
                 $scope.$destroy();
             });
         };
-
-        function getCallback(name) {
-            if (!name) {
-                return name;
-            }
-            var callback = name.split('.');
-            return $window[callback[0]][callback[1]];
-        }
 }})();
