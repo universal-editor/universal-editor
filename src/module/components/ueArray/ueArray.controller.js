@@ -67,13 +67,13 @@
         var destroyErrorField = $scope.$on("editor:api_error_field_"+ fieldErrorName, function (event,data) {
             if(angular.isArray(data)){
                 angular.forEach(data, function (error) {
-                    if(vm.errorIndexOf(error) < 0){
-                        vm.setError(error);
+                    if(vm.error.indexOf(error) < 0){
+                        vm.error.push(error);
                     }
                 });
             } else {
-                if(vm.errorIndexOf(data) < 0){
-                    vm.setError(data);
+                if(vm.error.indexOf(data) < 0){
+                    vm.error.push(data);
                 }
             }
         });

@@ -3,11 +3,11 @@
 
     angular
         .module('universal.editor')
-        .controller('ButtonWrapperController',ButtonWrapperController);
+        .controller('ComponentWrapperController',ComponentWrapperController);
 
-    ButtonWrapperController.$inject = ['$element', '$scope', 'ButtonBuilder'];
+    ComponentWrapperController.$inject = ['$element', '$scope', 'ComponentBuilder'];
 
-    function ButtonWrapperController($element, $scope, ButtonBuilder){
+    function ComponentWrapperController($element, $scope, ComponentBuilder){
         var vm = this;
         $scope.setting = vm.setting;
         $scope.setting.entityId = vm.entityId;
@@ -17,7 +17,7 @@
                 $scope.$destroy();
             });
 
-            $element.append(new ButtonBuilder($scope).build());
+            $element.append(new ComponentBuilder($scope).build());
         }
     }
 })();

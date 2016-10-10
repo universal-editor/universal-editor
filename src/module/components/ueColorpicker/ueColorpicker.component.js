@@ -4,9 +4,6 @@
     var ueColorpicker = {
         bindings : {
             field: "=",
-            setError: "=",
-            setErrorEmpty: "=",
-            errorIndexOf: "=",
             parentField: "=",
             parentFieldIndex: "="
         },

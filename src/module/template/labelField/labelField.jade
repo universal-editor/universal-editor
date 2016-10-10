@@ -1,0 +1,4 @@
+label.field-name-label
+    .field-hint(data-ng-if="vm.hint")
+        .hint-text {{vm.hint}}
+    span(data-ng-class="vm.required ? 'editor-required' : '' ") {{vm.fieldDisplayName}}:

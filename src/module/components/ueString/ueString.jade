@@ -1,9 +1,13 @@
-div
-    div(data-ng-if="vm.multiple", data-ng-class="vm.classTextarea")
-        .item-string-wrapper.input-group(data-ng-repeat="field_item in vm.fieldValue track by $index")
-            input.form-control.input-sm(type="text", data-ui-mask="{{vm.mask}}", data-ng-disabled="vm.readonly", name="{{vm.fieldName}}", data-ng-model="vm.fieldValue[$index]", data-ng-blur="vm.inputLeave(vm.fieldValue[$index])")
-            span.input-group-btn
-                button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
-        .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-if="!vm.readonly") {{'BUTTON.ADD' | translate}}
-    div(data-ng-if="!vm.multiple", data-ng-class="vm.classTextarea")
-        input.form-control.input-sm(type="text", data-ui-mask="{{vm.mask}}" data-ng-disabled="vm.readonly", name="{{vm.fieldName}}", data-ng-model="vm.fieldValue", data-ng-blur="vm.inputLeave(vm.fieldValue)", size="{{vm.size}}")
+.field-wrapper.row
+    .form-group
+        include ../../template/labelField/labelField
+        .field-element
+            div(data-ng-if="vm.multiple", data-ng-class="vm.classTextarea")
+                .item-string-wrapper.input-group(data-ng-repeat="field_item in vm.fieldValue track by $index")
+                    input.form-control.input-sm(type="text", data-ui-mask="{{vm.mask}}", data-ng-disabled="vm.readonly", name="{{vm.fieldName}}", data-ng-model="vm.fieldValue[$index]", data-ng-blur="vm.inputLeave(vm.fieldValue[$index])")
+                    span.input-group-btn
+                        button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
+                .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-if="!vm.readonly") {{'BUTTON.ADD' | translate}}
+            div(data-ng-if="!vm.multiple", data-ng-class="vm.classTextarea")
+                input.form-control.input-sm(type="text", data-ui-mask="{{vm.mask}}" data-ng-disabled="vm.readonly", name="{{vm.fieldName}}", data-ng-model="vm.fieldValue", data-ng-blur="vm.inputLeave(vm.fieldValue)", size="{{vm.size}}")
+    include ../../template/errorField/errorField

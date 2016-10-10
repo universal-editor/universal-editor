@@ -1,9 +1,0 @@
-.field-wrapper(data-ng-class="!vm.isArray ? 'row' : '' ")
-    .form-group
-        label.field-name-label(data-ng-if="!vm.isArray")
-            .field-hint(data-ng-if="vm.hint")
-                .hint-text {{vm.hint}}
-            span(data-ng-class="vm.required ? 'editor-required' : '' ") {{vm.fieldDisplayName}}:
-        .field-element
-    .field-error-wrapper(data-ng-if="!vm.isArray")
-        .error-item.alert.alert-danger(data-ng-repeat="err in vm.error track by $index") {{err}}

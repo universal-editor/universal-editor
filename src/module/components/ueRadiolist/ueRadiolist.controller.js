@@ -38,7 +38,10 @@
         vm.selectedValues = [];
         vm.inputValue = "";
         vm.readonly = vm.setting.readonly || false;
-        vm.setting.setErrorEmpty();
+        vm.fieldDisplayName = vm.setting.component.settings.label;
+        vm.hint = vm.setting.hint || false;
+        vm.required = vm.setting.required || false;
+        vm.error = [];
 
         if (vm.setting.multiname || angular.isString(vm.setting.multiname)) {
             vm.multiname = ('' + vm.setting.multiname) || "value";
@@ -192,13 +195,13 @@
         var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
                 angular.forEach(data, function (error) {
-                    if (vm.setting.errorIndexOf(error) < 0) {
-                        vm.setting.setError(error);
+                    if (vm.error.indexOf(error) < 0) {
+                        vm.error.push(error);
                     }
                 });
             } else {
-                if (vm.setting.errorIndexOf(data) < 0) {
-                    vm.setting.setError(data);
+                if (vm.error.indexOf(data) < 0) {
+                    vm.error.push(data);
                 }
             }
         });
@@ -206,7 +209,7 @@
         var destroyWatchFieldValue = $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
-            vm.setting.setErrorEmpty();
+            vm.error = [];
         }, true);
 
         this.$onDestroy = function() {

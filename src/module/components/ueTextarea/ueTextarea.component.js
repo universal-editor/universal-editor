@@ -4,9 +4,6 @@
     var ueTextarea = {
         bindings : {
             field: "=",
-            setError: "=",
-            setErrorEmpty: "=",
-            errorIndexOf: "=",
             parentField: "=",
             parentFieldIndex: "="
         },

@@ -1,17 +1,29 @@
 
-<div>
-    <div data-ng-if="vm.multiple" data-ng-class="vm.classTextarea">
-        <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-textarea-wrapper">
-            <div>
-                <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" class="form-control editor-textarea"></textarea>
-                <div data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</div>
+<div class="field-wrapper row">
+    <div class="form-group">
+        <label class="field-name-label">
+            <div data-ng-if="vm.hint" class="field-hint">
+                <div class="hint-text">{{vm.hint}}</div>
+            </div><span data-ng-class="vm.required ? 'editor-required' : '' ">{{vm.fieldDisplayName}}:</span>
+        </label>
+        <div class="field-element">
+            <div data-ng-if="vm.multiple" data-ng-class="vm.classTextarea">
+                <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-textarea-wrapper">
+                    <div>
+                        <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" class="form-control editor-textarea"></textarea>
+                        <div data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</div>
+                    </div>
+                </div>
+                <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{'BUTTON.ADD' | translate}}</div>
+            </div>
+            <div data-ng-if="!vm.multiple" data-ng-class="vm.classTextarea">
+                <div>
+                    <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-ng-blur="vm.inputLeave(vm.fieldValue)" class="form-control editor-textarea"></textarea>
+                </div>
             </div>
         </div>
-        <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{'BUTTON.ADD' | translate}}</div>
     </div>
-    <div data-ng-if="!vm.multiple" data-ng-class="vm.classTextarea">
-        <div>
-            <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-ng-blur="vm.inputLeave(vm.fieldValue)" class="form-control editor-textarea"></textarea>
-        </div>
+    <div class="field-error-wrapper">
+        <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>
     </div>
 </div>

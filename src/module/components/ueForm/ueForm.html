@@ -7,10 +7,7 @@
     <div class="tab-content-wrapper">
         <div data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label" class="tab-item-content">
             <div class="field-content-wrapper">
-                <div data-ng-repeat="field in tab.fields">
-                    <field-wrapper data-setting="field" data-ng-if="field.component.name !== 'ue-button-request'"></field-wrapper>
-                    <button-wrapper data-setting="field" data-ng-if="field.component.name === 'ue-button-request'" data-button-class="footer"></button-wrapper>
-                </div>
+                <component-wrapper data-ng-repeat="field in tab.fields" data-setting="field" data-button-class="footer"></component-wrapper>
             </div>
         </div>
     </div>
@@ -21,6 +18,6 @@
         <div data-ng-repeat="notify in vm.notifys" class="notify-item">{{notify}}</div>
     </div>
     <div data-ng-if="vm.entityLoaded" class="editor-entity-actions">
-        <button-wrapper data-ng-repeat="button in vm.editFooterBar track by $index" data-entity-id="{{vm.entityId}}" data-setting="button" data-button-class="footer" class="editor-action-button"></button-wrapper>
+        <component-wrapper data-ng-repeat="button in vm.editFooterBar track by $index" data-entity-id="{{vm.entityId}}" data-setting="button" data-button-class="footer" class="editor-action-button"></component-wrapper>
     </div>
 </div>

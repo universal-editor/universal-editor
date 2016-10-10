@@ -4,9 +4,6 @@
     var ueTime = {
         bindings : {
             field: "=",
-            setError: "=",
-            setErrorEmpty: "=",
-            errorIndexOf: "=",
             parentField: "=",
             parentFieldIndex: "="
         },

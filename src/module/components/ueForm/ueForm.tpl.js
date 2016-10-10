@@ -15,10 +15,7 @@ module.run(['$templateCache', function($templateCache) {
     '    <div class="tab-content-wrapper">\n' +
     '        <div data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label" class="tab-item-content">\n' +
     '            <div class="field-content-wrapper">\n' +
-    '                <div data-ng-repeat="field in tab.fields">\n' +
-    '                    <field-wrapper data-setting="field" data-ng-if="field.component.name !== \'ue-button-request\'"></field-wrapper>\n' +
-    '                    <button-wrapper data-setting="field" data-ng-if="field.component.name === \'ue-button-request\'" data-button-class="footer"></button-wrapper>\n' +
-    '                </div>\n' +
+    '                <component-wrapper data-ng-repeat="field in tab.fields" data-setting="field" data-button-class="footer"></component-wrapper>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +
@@ -29,7 +26,7 @@ module.run(['$templateCache', function($templateCache) {
     '        <div data-ng-repeat="notify in vm.notifys" class="notify-item">{{notify}}</div>\n' +
     '    </div>\n' +
     '    <div data-ng-if="vm.entityLoaded" class="editor-entity-actions">\n' +
-    '        <button-wrapper data-ng-repeat="button in vm.editFooterBar track by $index" data-entity-id="{{vm.entityId}}" data-setting="button" data-button-class="footer" class="editor-action-button"></button-wrapper>\n' +
+    '        <component-wrapper data-ng-repeat="button in vm.editFooterBar track by $index" data-entity-id="{{vm.entityId}}" data-setting="button" data-button-class="footer" class="editor-action-button"></component-wrapper>\n' +
     '    </div>\n' +
     '</div>');
 }]);

@@ -27,8 +27,11 @@
         vm.fieldName = vm.field.name;
         vm.fieldValue = "";
         vm.readonly = vm.field.readonly || false;
-        vm.setErrorEmpty();
         vm.parentFieldIndex = vm.parentFieldIndex || false;
+        vm.fieldDisplayName = vm.setting.component.settings.label;
+        vm.hint = vm.setting.hint || false;
+        vm.required = vm.setting.required || false;
+        vm.error = [];
 
         if (!!vm.cols) {
             if (vm.cols > 6) {
@@ -148,15 +151,15 @@
 
             if(vm.field.hasOwnProperty("maxLength") && val.length > vm.field.maxLength){
                 var maxError = "Для поля превышено максимальное допустимое значение в " + vm.field.maxLength + " символов. Сейчас введено " + val.length + " символов.";
-                if (vm.errorIndexOf(maxError) < 0) {
-                    vm.setError(maxError);
+                if (vm.error.indexOf(maxError) < 0) {
+                    vm.error.push(maxError);
                 }
             }
 
             if(vm.field.hasOwnProperty("minLength") && val.length < vm.field.minLength){
                 var minError = "Минимальное значение поля не может быть меньше " + vm.field.minLength + " символов. Сейчас введено " + val.length + " символов.";
-                if(vm.errorIndexOf(minError) < 0){
-                    vm.setError(minError);
+                if(vm.error.indexOf(minError) < 0){
+                    vm.error.push(minError);
                 }
             }
         };
@@ -240,13 +243,13 @@
         var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
             if (angular.isArray(data)) {
                 angular.forEach(data, function (error) {
-                    if (vm.errorIndexOf(error) < 0) {
-                        vm.setError(error);
+                    if (vm.error.indexOf(error) < 0) {
+                        vm.error.push(error);
                     }
                 });
             } else {
-                if (vm.errorIndexOf(data) < 0) {
-                    vm.setError(data);
+                if (vm.error.indexOf(data) < 0) {
+                    vm.error.push(data);
                 }
             }
         });
@@ -254,7 +257,7 @@
         var destroyWatchFieldValue = $scope.$watch(function () {
             return vm.fieldValue;
         }, function () {
-            vm.setErrorEmpty();
+            vm.error = [];
         }, true);
 
         this.$onDestroy = function() {
