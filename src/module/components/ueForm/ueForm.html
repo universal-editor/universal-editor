@@ -1,6 +1,6 @@
 
 <div class="editor-body">
-    <div data-ng-click="vm.closeButton()" ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}" data-ng-if="!vm.isButtonClose" class="close-editor"></div>
+    <div data-ng-click="vm.closeButton()" ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}" class="close-editor"></div>
     <div class="nav nav-tabs">
         <li data-ng-repeat="tab in vm.tabs" data-ng-class="vm.currentTab == tab.label ? 'active' : ''" data-ng-click="vm.currentTab = tab.label"><a href="">{{tab.label}}</a></li>
     </div>

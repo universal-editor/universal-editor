@@ -20,6 +20,7 @@
      
      function openWindow(component) { /** send fromState и _pk */
          settings = component.settings;
+         component.settings.modal = true;
 
          modalInstance = $uibModal.open({
              component: 'ueModal',
@@ -42,14 +43,17 @@
      }
 
      function closeWindow() {
-         isOpen = false;
-         modalInstance.close();
-         modalInstance = null;
-         
-         if (settings.fromState) {
-             $state.go(settings.fromState.name, settings.fromState.params, { reload: false });
+         if (isOpen) {
+             isOpen = false;
+             if (modalInstance) {
+                 modalInstance.close();
+             }
+             modalInstance = null;
+             if (settings.fromState) {
+                 $state.go(settings.fromState.name, settings.fromState.params, { reload: false });
+             }
+             settings = null;
          }
-         settings = null;
      }
     }
 })();

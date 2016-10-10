@@ -187,7 +187,8 @@
 
             RestApiService.getItemsList({
                 sort : vm.sortingDirection ? field : "-" + field,
-                url: vm.setting.component.settings.dataSource.url
+                url: vm.setting.component.settings.dataSource.url,
+                id: $scope.$id
             });
         };
 

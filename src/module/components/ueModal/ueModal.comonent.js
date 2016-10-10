@@ -11,35 +11,37 @@
             dismiss: '&'
         },
         controllerAs: 'vm',
-        controller: function ($uibModal, $scope, configData, $element) {
+        controller: function ($uibModal, $scope, configData, $element, $state) {
             var vm = this;
-            vm.entityId = vm.resolve.settings._pk;
+            vm.entityId = $state.params.pk;
             vm.assetsPath = '/assets/universal-editor';
 
             if (!!configData.ui && !!configData.ui.assetsPath) {
                 vm.assetsPath = configData.ui.assetsPath;
             }
+            var modalDialog = $element.closest(".modal-dialog");
 
             vm.size = vm.resolve.settings.size;
             if (vm.size) {
                 if (vm.size.width) {
-                    $element.closest(".modal-dialog").width(vm.size.width);
+                    modalDialog.width(vm.size.width);
                 }
                 if (vm.size.height) {
-                    $element.closest(".modal-dialog").height(vm.size.height);
+                    modalDialog.height(vm.size.height);
                 }
             }
             
             vm.header = vm.resolve.settings.header;
 
             vm.body = vm.resolve.settings.body;
-            vm.body.component._pk = vm.entityId;
+            if(vm.body) {
+                vm.body.component.settings.modal = true;
+            }
 
             vm.footer = [];
 
             if(vm.resolve.settings.footer && vm.resolve.settings.footer.controls) {
                 angular.forEach(vm.resolve.settings.footer.controls, function(control) {
-                control.component._pk = vm.entityId;
                   vm.footer.push(control);
                 });
             }                        

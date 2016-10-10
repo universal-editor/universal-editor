@@ -392,20 +392,10 @@
                 data: item,
                 params: params
             }).then(function (response) {
-                self.isProcessing = false;
-                switch (response.statusText) {
-                    case 'OK':
-                        $rootScope.$broadcast('editor:presave_entity_updated', '');
-                        break;
-                    case 'Created':
-                        $state.go($state.current.name, {
-                            pk: response.data[idField]
-                        }, {
-                            notify: false
-                        });
-                        $rootScope.$broadcast('editor:presave_entity_created', response.data[idField]);
-                        break;
-                }
+                self.isProcessing = false;       
+                       
+                $state.go($state.current.name, { pk: response.data[idField] });           
+                $rootScope.$broadcast('editor:presave_entity_created', response.data[idField]);  
             }, function (reject) {
                 if ((reject.status === 422 || reject.status === 400) && reject.data) {
                     var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
