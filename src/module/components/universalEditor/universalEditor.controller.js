@@ -18,18 +18,7 @@
 
         RestApiService.setEntityType(type);
         EditEntityStorage.setEntityType(type);
-
-        if (component.name === 'ue-modal' && currentState.name.indexOf('_edit') === (currentState.name.length - 5)) {
-            if ($state.params && $state.params.pk) {
-                pk = $state.params.pk;
-            }
-            var indexState = EditEntityStorage.getIndexState();
-            if (indexState) {
-                currentState = indexState; 
-                component = currentState.component;
-            }
-        }
-
+        
         $rootScope.$broadcast('editor:set_entity_type', component.settings); 
 
         var element = $element.find('.universal-editor');

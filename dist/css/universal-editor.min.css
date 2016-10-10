@@ -29,7 +29,7 @@
 .minicolors input{height:30px}.minicolors input.wrong{border:1px solid red;height:32px}
 .minicolors{position:relative}.minicolors-swatch{z-index:50}.field-array-wrapper .add-more{margin-top:10px}
 .modal-dialog .ue-modal-body .editor-body .close-editor{display:none}.editor-entity-actions{background:#ebf1f3;padding:10px;border-top:1px solid #e1e9eb}
-.timepicker.wrong{border:1px solid red}.editor-textarea{width:100%;resize:vertical}
+.editor-textarea{width:100%;resize:vertical}.timepicker.wrong{border:1px solid red}
 body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;background-color:#e1e9eb}
 .universal-editor .editor-header{padding:20px 0 5px 0}.universal-editor .editor-header .filter-button{min-width:110px;margin-right:10px}
 .universal-editor .editor-header .header-action-button{border:0;display:inline-block;margin-right:10px;outline:0}

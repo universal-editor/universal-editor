@@ -27,14 +27,21 @@
         };
 
         $element.bind("click", function () {
-            var pk = vm.entityId || 'new';
+            var stateOptions = { 
+                reload: true
+            },
+            pk = vm.entityId || 'new';
 
             if (vm.processing) {
                 return;
             }
+
             var toStateConfig = EditEntityStorage.getStateConfig(state);
+            if (toStateConfig && toStateConfig.component.name === 'ue-modal') {
+                stateOptions.reload = false;
+            }
             $state.params.pk = pk;
-            $state.go(toStateConfig.name, {pk: (vm.entityId || 'new')});
+            $state.go(toStateConfig.name, {pk: (vm.entityId || 'new')}, stateOptions);
         });
 
         vm.$postLink = function() {
