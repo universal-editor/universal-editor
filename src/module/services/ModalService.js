@@ -11,10 +11,15 @@
      var 
      self = this,
      modalInstance,
-     isOpen = false;
+     isOpen = false,
+     settings;
 
-     self.open = function(component) { /** send fromState и _pk */
-         var settings = component.settings;
+     self.close = closeWindow;
+     self.open = openWindow;
+     self.isModalOpen = isModalOpen;
+     
+     function openWindow(component) { /** send fromState и _pk */
+         settings = component.settings;
 
          modalInstance = $uibModal.open({
              component: 'ueModal',
@@ -26,22 +31,25 @@
          });
 
          modalInstance.rendered.then(function() {
-             isOpen = true;
+            isOpen = true;
          });
 
-         modalInstance.result.then(function() {
-         }, function() {
-             isOpen = false;
-             modalInstance = null;
-             if (settings.fromState) {
-                 $state.go(settings.fromState.name, settings.fromState.params, { reload: false });
-             }
-         });
-     };     
+         modalInstance.result.then(closeWindow, closeWindow);
+     } 
 
-     self.close = function(settings) {
-         modalInstance = null;
+     function isModalOpen() {
+         return isOpen;
+     }
+
+     function closeWindow() {
          isOpen = false;
-     };
+         modalInstance.close();
+         modalInstance = null;
+         
+         if (settings.fromState) {
+             $state.go(settings.fromState.name, settings.fromState.params, { reload: false });
+         }
+         settings = null;
+     }
     }
 })();

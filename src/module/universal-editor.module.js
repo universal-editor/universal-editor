@@ -221,7 +221,7 @@
             });
             var toStateConfig = EditEntityStorage.getStateConfig(toState.name);
             if (toStateConfig && toStateConfig.component.name === 'ue-modal') {
-                toStateConfig.component.settings._pk = toParams._pk;
+                toStateConfig.component.settings._pk = fromParams.pk;
                 toStateConfig.component.settings.fromState = fromState;
                 toStateConfig.component.settings.fromParams = fromParams;
                 ModalService.open(toStateConfig.component);

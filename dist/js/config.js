@@ -334,9 +334,10 @@ var ue = new UniversalEditor('universal-editor', {
                                 },
                                 {
                                     component: {
-                                        name: 'ue-button-presave',
+                                        name: 'ue-button-service',
                                         settings: {
-                                            label: 'Сохранить'
+                                            label: 'Сохранить',
+                                            action: 'presave'
                                         }
                                     }
                                 },
@@ -565,9 +566,10 @@ var ue = new UniversalEditor('universal-editor', {
                                 },
                                 {
                                     component: {
-                                        name: 'ue-button-presave',
+                                        name: 'ue-button-service',
                                         settings: {
-                                            label: 'Сохранить'
+                                            label: 'Сохранить',
+                                            action: 'presave'
                                         }
                                     }
                                 },

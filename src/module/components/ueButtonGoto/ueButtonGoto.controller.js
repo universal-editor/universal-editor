@@ -27,13 +27,21 @@
         };
 
         $element.bind("click", function () {
+            var stateOptions = { 
+                reload: true
+            },
+            pk = vm.entityId || 'new';
+
             if (vm.processing) {
                 return;
             }
 
-            //var parentId = $location.search().parent !== '' ? $location.search().parent : undefined;
-
-            $state.go(type + '_' + state,{pk: (vm.entityId || 'new')});
+            var toStateConfig = EditEntityStorage.getStateConfig(state);
+            if (toStateConfig && toStateConfig.component.name === 'ue-modal') {
+                stateOptions.reload = false;
+            }
+            $state.params.pk = pk;
+            $state.go(toStateConfig.name, {pk: (vm.entityId || 'new')}, stateOptions);
         });
 
         vm.$postLink = function() {

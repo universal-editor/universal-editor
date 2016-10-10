@@ -1,7 +1,7 @@
 
-<div>
-    <div data-ng-click="vm.closeButton()" ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}" class="close-editor"></div>
-    <div ng-show="vm.header" class="ue-modal-header">
+<div style="background: #ebf1f3;">
+    <div data-ng-click="vm.cancel()" style="display: block; position: absolute; top: 22px; right: 22px; width: 13px; height: 13px; cursor: pointer;" ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}" class="close-editor"></div>
+    <div ng-show="vm.header" style="padding: 10px;" class="ue-modal-header">
         <label ng-bind="vm.header.label"></label>
     </div>
     <div ng-show="vm.body" class="ue-modal-body">
@@ -11,6 +11,6 @@
         </div>
     </div>
     <div data-ng-show="vm.footer" class="ue-modal-footer">
-        <field-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" class="editor-action-button"></field-wrapper>
+        <button-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" class="editor-action-button"></button-wrapper>
     </div>
 </div>

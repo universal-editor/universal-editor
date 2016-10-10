@@ -8,7 +8,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueForm/ueForm.html',
     '\n' +
     '<div class="editor-body">\n' +
-    '    <div data-ng-click="vm.closeButton()" ng-style="{\'background-image\':\'url(\'+ vm.assetsPath +\'/images/close.jpg)\'}" class="close-editor"></div>\n' +
+    '    <div data-ng-click="vm.closeButton()" ng-style="{\'background-image\':\'url(\'+ vm.assetsPath +\'/images/close.jpg)\'}" data-ng-if="vm.isButtonClose" class="close-editor"></div>\n' +
     '    <div class="nav nav-tabs">\n' +
     '        <li data-ng-repeat="tab in vm.tabs" data-ng-class="vm.currentTab == tab.label ? \'active\' : \'\'" data-ng-click="vm.currentTab = tab.label"><a href="">{{tab.label}}</a></li>\n' +
     '    </div>\n' +

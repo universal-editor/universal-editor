@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','toastr', '$translate', 'ConfigDataProvider'];
+    UeFormController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','toastr', '$translate', 'ConfigDataProvider', 'ModalService'];
 
-    function UeFormController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,toastr, $translate, ConfigDataProvider) {
+    function UeFormController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,toastr, $translate, ConfigDataProvider, ModalService) {
         $scope.entity = RestApiService.getEntityType();
         var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
@@ -43,6 +43,11 @@
         vm.visibleFilter = true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
+        vm.isButtonClose = ModalService.isModalOpen();
+        if(vm.setting.component._pk || vm.setting.component._pk !== 'new') {
+            RestApiService.isProcessing = false;
+            RestApiService.getItemById(vm.setting.component._pk);
+        }
 
         if (!!vm.configData.ui && !!vm.configData.ui.assetsPath) {
             vm.assetsPath = vm.configData.ui.assetsPath;
@@ -142,13 +147,8 @@
                 params.parent = $state.params.parent;
                 isReload = false;
             }
-            if (vm.setting.isModal) {
-                vm.funcCloseModal();
-                $state.go(vm.setting.oldState, params, { reload: false, notify: false });
-            } else {
-                RestApiService.getItemsList({ url: vm.setting.component.settings.dataSource.url });
-                $state.go('index', params, { reload: isReload });
-            }
+            RestApiService.getItemsList({ url: vm.setting.component.settings.dataSource.url });
+            $state.go('index', params, { reload: isReload });
         };
 
         vm.toggleFilterVisibility = function () {
