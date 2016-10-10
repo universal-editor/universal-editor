@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonServiceController',UeButtonServiceController);
 
-    UeButtonServiceController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService'];
+    UeButtonServiceController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService', 'ModalService', '$state'];
 
-    function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService){
+    function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService, ModalService, $state){
         var vm = this;
         var action = vm.setting.component.settings.action;
         var type = vm.setting.type;
@@ -19,6 +19,9 @@
         vm.label = vm.setting.component.settings.label;
         vm.processing = RestApiService.isProcessing;
         vm.entityId = vm.setting.entityId;
+        if(action === 'delete') {
+            vm.disabled = $state.params.pk === 'new' || !$state.params.pk;
+        }
 
         var watchRest = $scope.$watch(function () {
             return RestApiService.isProcessing;
@@ -31,27 +34,30 @@
         };
 
         $element.bind("click", function () {
-            if (vm.processing) {
+            if (vm.processing || vm.disabled) {
                 return;
             }
             switch (action) {
                 case 'save':
                     if (type == 'create') {
                         EditEntityStorage.editEntityUpdate("create");
+                        ModalService.close();
                     } else if (type == 'update') {
                         RestApiService.editedEntityId = vm.entityId;
                         EditEntityStorage.editEntityUpdate("update");
+                        ModalService.close();
                     }
                     break;
                 case 'delete':
                     if(confirm("Удалить запись «" + vm.entityId + "»?")){
                         RestApiService.deleteItemById(vm.entityId, request, $scope.entityType, vm.setting);
+                        ModalService.close();
                     }
                     break;
                 case 'presave':
                     RestApiService.editedEntityId = vm.entityId;
                     EditEntityStorage.editEntityPresave(request);
-                    break
+                    break;
             }
         });
 
