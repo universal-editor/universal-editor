@@ -149,7 +149,7 @@ var ue = new UniversalEditor('universal-editor', {
                                         name: 'ue-button-goto',
                                         settings: {
                                             label: 'создать',
-                                            state: 'edit'
+                                            state: 'index.modal_edit'
                                         }
                                     }
                                 },
@@ -196,7 +196,7 @@ var ue = new UniversalEditor('universal-editor', {
                                         name: 'ue-button-goto',
                                         settings: {
                                             label: 'редактировать',
-                                            state: 'edit'
+                                            state: 'index.modal_edit'
                                         }
                                     }
                                 },
@@ -378,6 +378,132 @@ var ue = new UniversalEditor('universal-editor', {
                                     }
                                 }
                             ]
+                        }
+                    }
+                },
+                {
+                    name: 'index.modal_edit',
+                    url: false,
+                    component:
+                    {
+                        name: 'ue-modal',
+                        settings: {
+                            size: {
+                                width: '70%',
+                                height: 'auto'
+                            },
+                            header: {
+                                label: 'Модальное окно'
+                            },
+                            body: {
+                                component: {
+                                    name: 'ue-form',
+                                    settings: {
+                                        dataSource: staffDataSource,
+                                        body: [
+                                            {
+                                                component: {
+                                                    name: 'ue-form-tab',
+                                                    settings: {
+                                                        label: 'Tab 1',
+                                                        fields: [
+                                                            'id',
+                                                            'name', 'email'
+                                                            //{
+                                                            //    name: "fio",
+                                                            //    component: {
+                                                            //        name: 'ue-form-group',
+                                                            //        settings: {
+                                                            //            label: 'Group 1',
+                                                            //            fields: ['name', 'email']
+                                                            //        }
+                                                            //    }
+                                                            //}
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                component: {
+                                                    name: 'ue-form-tab',
+                                                    settings: {
+                                                        label: 'Tab 2',
+                                                        fields: [
+                                                            {
+                                                                component: {
+                                                                    name: 'ue-table',
+                                                                    settings: {
+                                                                        label: 'Messages',
+                                                                        dataSource: messagesDataSource,
+                                                                        columns: ['id', 'title']
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                component: {
+                                                                    name: 'ue-button-request',
+                                                                    settings: {
+                                                                        label: 'This is request!!!',
+                                                                        url: '//universal-backend.dev/rest/v1/staff',
+                                                                        method: 'GET',
+                                                                        beforeSend: 'RequstCallback.beforeSend',
+                                                                        success: 'RequstCallback.success',
+                                                                        error: 'RequstCallback.error',
+                                                                        complete: 'RequstCallback.complete'
+                                                                    }
+                                                                }
+                                                            },
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        footer: [
+                                            {
+                                                component: {
+                                                    name: 'ue-button-service',
+                                                    settings: {
+                                                        label: 'Сохранить',
+                                                        action: 'presave'
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                component: {
+                                                    name: 'ue-button-service',
+                                                    settings: {
+                                                        label: 'Сохранить',
+                                                        action: 'save'
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                component: {
+                                                    name: 'ue-button-service',
+                                                    settings: {
+                                                        label: 'Удалить',
+                                                        action: 'delete'
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            footer: {
+                                controls: [
+                                    {
+                                        component: {
+                                            name: 'ue-button-modal',
+                                            settings: {
+                                                label: 'Закрыть',
+                                                action: 'close',
+                                                beforeAction: 'RequstCallback.sendAction'
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     }
                 }

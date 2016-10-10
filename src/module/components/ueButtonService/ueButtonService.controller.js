@@ -34,7 +34,7 @@
         };
 
         $element.bind("click", function () {
-            if (vm.processing || vm.disabled) {
+            if (vm.processing || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;
             }
             switch (action) {
