@@ -1,5 +1,5 @@
 .editor-body
-    .close-editor(data-ng-click="vm.closeButton()", ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}", data-ng-if="vm.isButtonClose")
+    .close-editor(data-ng-click="vm.closeButton()", ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}", data-ng-if="!vm.isButtonClose")
     .nav.nav-tabs
         li(data-ng-repeat="tab in vm.tabs", data-ng-class="vm.currentTab == tab.label ? 'active' : ''", data-ng-click="vm.currentTab = tab.label")
             a(href="") {{tab.label}}
