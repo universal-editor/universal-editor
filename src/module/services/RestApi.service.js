@@ -177,7 +177,7 @@
             return deferred.promise;
         };
 
-        this.getItemsListWithParams = function (params) {
+        this.getItemsListWithParams = function (params, id) {
 
             if(self.isProcessing){
                 return;
@@ -220,7 +220,7 @@
                 url : entityObject.dataSource.url + '?' + params
             }).then(function (response) {
                 self.isProcessing = false;
-                $rootScope.$broadcast('editor:items_list',response.data);
+                $rootScope.$broadcast('editor:items_list_' + id,response.data);
                 //if($location.search().hasOwnProperty("id")){
                 //    self.getItemById($location.search().id);
                 //}
