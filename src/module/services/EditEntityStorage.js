@@ -146,33 +146,6 @@
             return result;
         };
 
-        this.getIndexState = function() {
-            var result = null;
-             angular.forEach(configData.entities, function(entity) {
-                if (entity.name === entityType) {
-                    angular.forEach(entity.states, function(state) {
-                        if (state.name && state.name.indexOf('_index') === (state.name.length - 6)) {
-                            result = state;
-                        }
-                    });
-                }
-            });
-            return result;
-        };
-        this.getEditState = function() {
-            var result = null;
-             angular.forEach(configData.entities, function(entity) {
-                if (entity.name === entityType) {
-                    angular.forEach(entity.states, function(state) {
-                        if (state.name && state.name.indexOf('_edit') === (state.name.length - 5)) {
-                            result = state;
-                        }
-                    });
-                }
-            });
-            return result;
-        };
-
         /* !PUBLIC METHODS */
 
         /* EVENTS LISTENING */
