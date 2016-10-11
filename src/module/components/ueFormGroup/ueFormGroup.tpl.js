@@ -14,7 +14,7 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>{{vm.fieldDisplayName}}\n' +
     '    </div>\n' +
     '    <div class="field-array-wrapper">\n' +
-    '        <data-field-wrapper data-ng-repeat="field in vm.innerFields" data-field-name="{{field}}" data-parent-field="{{vm.fieldName}}" data-setting="field"></data-field-wrapper>\n' +
+    '        <data-component-wrapper data-ng-repeat="field in vm.innerFields" data-field-name="{{field}}" data-parent-field="{{vm.fieldName}}" data-setting="field"></data-component-wrapper>\n' +
     '    </div>\n' +
     '</div>');
 }]);

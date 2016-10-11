@@ -4,7 +4,7 @@
             .hint-text {{vm.hint}}
         | {{vm.fieldDisplayName}}
     .field-array-wrapper
-        data-field-wrapper(
+        data-component-wrapper(
             data-ng-repeat="field in vm.innerFields",
             data-field-name="{{field}}",
             data-parent-field="{{vm.fieldName}}",
