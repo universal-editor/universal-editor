@@ -18,7 +18,6 @@
         } catch(e){
 
         }
-
         vm.label = vm.setting.component.settings.label;
 
         vm.processing = RestApiService.isProcessing;
@@ -32,6 +31,7 @@
         });
 
         var id = vm.setting.entityId;
+        var scopeIdParent = vm.setting.scopeIdParent;
 
         vm.$onDestroy = function(){
             watchRest();
@@ -42,7 +42,7 @@
                 return;
             }
             var url = RestApiService.getEntityObject().dataSource.url;
-            RestApiService.loadChilds(id,request, url);
+            RestApiService.loadChilds(id,request, url, scopeIdParent);
         });
 
         vm.$postLink = function() {

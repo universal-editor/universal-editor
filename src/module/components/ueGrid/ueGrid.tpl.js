@@ -49,7 +49,7 @@ module.run(['$templateCache', function($templateCache) {
     '                <td class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="vm.contextLinks.length" class="context-toggle">Toggle buttons</span>\n' +
     '                    <div data-ng-show="vm.contextId == item[vm.idField]" class="context-menu-wrapper">\n' +
     '                        <div data-ng-repeat="link in vm.contextLinks track by $index" data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)" class="context-menu-item">\n' +
-    '                            <component-wrapper data-setting="link" data-entity-id="{{item[vm.idField]}}" data-button-class="context"></component-wrapper>\n' +
+    '                            <component-wrapper data-setting="link" data-entity-id="{{item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}"></component-wrapper>\n' +
     '                            <!--div(data-ng-if="link.type == \'request\'", data-ng-click="vm.contextAction(link,item[vm.idField])") {{link.label}}-->\n' +
     '                            <!--ue-button-edit(data-ng-if="link.type == \'edit\'", data-entity-subtype="{{item[vm.subType]}}",data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}")-->\n' +
     '                            <!--ue-button-delete(data-ng-if="link.type == \'delete\'",data-entity-id="{{item[vm.idField]}}", data-button-label="{{link.label}}", data-button-request="{{link.request}}", data-button-class="context")-->\n' +

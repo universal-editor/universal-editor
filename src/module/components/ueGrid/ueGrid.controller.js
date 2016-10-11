@@ -9,7 +9,7 @@
 
     function UeGridController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,toastr, $translate, ConfigDataProvider, $element, $compile) {
         $scope.entity = RestApiService.getEntityType();
-        console.log('asd');
+
             //RestApiService.getEntityObject();
         /* jshint validthis: true */
         var vm = this,
@@ -36,6 +36,7 @@
         vm.pageItemsArray = [];
         vm.contextLinks = vm.setting.component.settings.contextMenu;
         vm.listHeaderBar = vm.setting.component.settings.header;
+        vm.scopeIdParent = $scope.$id;
         //vm.contextLinks = [
         //    {
         //        "label": "Раскрыть",
@@ -170,7 +171,7 @@
             event.preventDefault();
             vm.listLoaded = false;
             var params = linkHref.split("?")[1];
-            RestApiService.getItemsListWithParams(params, $scope.$id);
+            RestApiService.getItemsListWithParams(params, vm.scopeIdParent);
         };
 
         vm.changeSortField = function (field) {
@@ -188,7 +189,7 @@
             RestApiService.getItemsList({
                 sort : vm.sortingDirection ? field : "-" + field,
                 url: vm.setting.component.settings.dataSource.url,
-                id: $scope.$id
+                id: vm.scopeIdParent
             });
         };
 
@@ -214,8 +215,8 @@
             }
         };
 
-        $scope.$on('editor:items_list_' + $scope.$id, function (event, data) {
-
+        $scope.$on('editor:items_list_' + vm.scopeIdParent, function (event, data) {
+            console.log('asd');
             //** behavour for modal entity
             $timeout(function() {
                 if (vm.setting.pk === 'new') {
@@ -482,7 +483,7 @@
 
         vm.$onInit = function() {
             RestApiService.setFilterParams({});
-            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url, id: $scope.$id});
+            RestApiService.getItemsList({url: vm.setting.component.settings.dataSource.url, id: vm.scopeIdParent});
         };
     }
 })();

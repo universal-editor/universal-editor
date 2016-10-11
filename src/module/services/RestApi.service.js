@@ -582,11 +582,11 @@
             return deferred.promise;
         };
 
-        this.loadChilds = function(entityId,request, url){
+        this.loadChilds = function(entityId,request, url, scopeIdParent){
             $location.search("parent",entityId);
             var newRequest = angular.merge({}, request);
             newRequest.url = url;
-
+            newRequest.id = scopeIdParent;
             self.getItemsList(newRequest).then(function(response){
                 $timeout(function () {
                     $location.search("parent",entityId);
@@ -597,24 +597,25 @@
 
         this.loadParent = function(entityId){
             entityId = typeof entityId !== 'undefined' ? entityId : undefined;
-
+            var newRequest = {};
+            newRequest.url = entityObject.dataSource.url;
             if(entityId){
                 self.isProcessing = true;
 
                 $http({
                     method : 'GET',
-                    url : entityObject.backend.url + "/" + entityId
+                    url : entityObject.dataSource.url + "/" + entityId
                 }).then(function(response){
                     var parentId;
-                    if(response.data[entityObject.backend.fields.parent] !== null){
+                    if(response.data[entityObject.dataSource.parentField] !== null){
                       self.isProcessing = false;
-                      parentId = response.data[entityObject.backend.fields.parent];
+                      parentId = response.data[entityObject.dataSource.parentField];
                       $location.search("parent",parentId);
-                      self.getItemsList();
+                      self.getItemsList(newRequest);
                     } else {
                       self.isProcessing = false;
                       $location.search("parent",null);
-                      self.getItemsList();
+                      self.getItemsList(newRequest);
                     }
                 },function(reject){
                   self.isProcessing = false;
@@ -623,7 +624,7 @@
                 self.isProcessing = true;
 
                 $location.search("parent",null);
-                self.getItemsList();
+                self.getItemsList(newRequest);
             }
         };
 
