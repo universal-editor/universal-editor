@@ -95,9 +95,16 @@
                 //return;
             }
 
-            if($location.search().hasOwnProperty("parent")){
+            //if($location.search().hasOwnProperty("parent")){
+            //    var filterObject = {};
+            //    filterObject[entityObject.dataSource.parentField] = $location.search().parent;
+            //    angular.extend(params,{filter : JSON.stringify(filterObject)});
+            //}
+
+            if(!!request.parentField){
                 var filterObject = {};
-                filterObject[entityObject.dataSource.parentField] = $location.search().parent;
+                filterObject[request.parentField] = $location.search().parent;
+                console.log($location.search().parent);
                 angular.extend(params,{filter : JSON.stringify(filterObject)});
             }
 
@@ -582,40 +589,44 @@
             return deferred.promise;
         };
 
-        this.loadChilds = function(entityId,request, url, scopeIdParent){
-            $location.search("parent",entityId);
-            var newRequest = angular.merge({}, request);
-            newRequest.url = url;
-            newRequest.id = scopeIdParent;
+        this.loadChilds = function(request){
+            $location.search("parent",request.id);
+            var newRequest = {};
+            newRequest.url = request.url;
+            newRequest.id = request.scopeIdParent;
+            newRequest.parentField = request.parentField;
             self.getItemsList(newRequest).then(function(response){
                 $timeout(function () {
-                    $location.search("parent",entityId);
+                    $location.search("parent",request.id);
                 }, 0);
             });
 
         };
 
-        this.loadParent = function(entityId){
-            entityId = typeof entityId !== 'undefined' ? entityId : undefined;
+        this.loadParent = function(request){
+            var entityId = typeof request.entityId !== 'undefined' ? request.entityId : undefined;
             var newRequest = {};
-            newRequest.url = entityObject.dataSource.url;
+            newRequest.url = request.urlParent;
+            newRequest.id = request.scopeIdParent;
+            newRequest.parentField = request.parentField;
             if(entityId){
                 self.isProcessing = true;
 
                 $http({
                     method : 'GET',
-                    url : entityObject.dataSource.url + "/" + entityId
+                    url : request.urlParent + "/" + entityId
                 }).then(function(response){
                     var parentId;
-                    if(response.data[entityObject.dataSource.parentField] !== null){
-                      self.isProcessing = false;
-                      parentId = response.data[entityObject.dataSource.parentField];
-                      $location.search("parent",parentId);
-                      self.getItemsList(newRequest);
+                    if(response.data[request.parentField] !== null){
+                        self.isProcessing = false;
+                        parentId = response.data[request.parentField];
+                        $location.search("parent",parentId);
+                        self.getItemsList(newRequest);
                     } else {
-                      self.isProcessing = false;
-                      $location.search("parent",null);
-                      self.getItemsList(newRequest);
+                        self.isProcessing = false;
+                        newRequest.parentField = null;
+                        $location.search("parent",null);
+                        self.getItemsList(newRequest);
                     }
                 },function(reject){
                   self.isProcessing = false;

@@ -58,6 +58,14 @@
                     RestApiService.editedEntityId = vm.entityId;
                     EditEntityStorage.editEntityPresave(request);
                     break;
+                case 'open':
+                    var newRequest = {};
+                    newRequest.id = vm.setting.entityId;
+                    newRequest.scopeIdParent = vm.setting.scopeIdParent;
+                    newRequest.url = vm.setting.url;
+                    newRequest.parentField = vm.setting.parentField;
+                    RestApiService.loadChilds(newRequest);
+                    break;
             }
         });
 
