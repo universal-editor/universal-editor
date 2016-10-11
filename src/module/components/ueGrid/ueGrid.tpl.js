@@ -5,7 +5,7 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/components/ueTable/ueTable.html',
+  $templateCache.put('module/components/ueGrid/ueGrid.html',
     '\n' +
     '<div>\n' +
     '    <div class="editor-header">\n' +

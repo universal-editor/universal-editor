@@ -3,13 +3,13 @@
 
     angular
         .module('universal.editor')
-        .controller('UeTableController', UeTableController);
+        .controller('UeGridController', UeGridController);
 
-    UeTableController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','toastr', '$translate', 'ConfigDataProvider', '$element', '$compile'];
+    UeGridController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','toastr', '$translate', 'ConfigDataProvider', '$element', '$compile'];
 
-    function UeTableController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,toastr, $translate, ConfigDataProvider, $element, $compile) {
+    function UeGridController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,toastr, $translate, ConfigDataProvider, $element, $compile) {
         $scope.entity = RestApiService.getEntityType();
-
+        console.log('asd');
             //RestApiService.getEntityObject();
         /* jshint validthis: true */
         var vm = this,
