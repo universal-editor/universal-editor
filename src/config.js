@@ -140,7 +140,7 @@ var ue = new UniversalEditor('universal-editor', {
                     name: 'index',
                     url: '/staff',
                     component: {
-                        name: 'ue-table',
+                        name: 'ue-grid',
                         settings: {
                             dataSource: staffDataSource,
                             header:[
@@ -283,7 +283,7 @@ var ue = new UniversalEditor('universal-editor', {
                                             fields: [
                                                 {
                                                     component: {
-                                                        name: 'ue-table',
+                                                        name: 'ue-grid',
                                                         settings: {
                                                             label: 'Messages',
                                                             dataSource: messagesDataSource,
@@ -431,7 +431,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         fields: [
                                                             {
                                                                 component: {
-                                                                    name: 'ue-table',
+                                                                    name: 'ue-grid',
                                                                     settings: {
                                                                         label: 'Messages',
                                                                         dataSource: messagesDataSource,
@@ -516,7 +516,7 @@ var ue = new UniversalEditor('universal-editor', {
                 {
                     name: 'index',
                     component: {
-                        name: 'ue-table',
+                        name: 'ue-grid',
                         settings: {
                             dataSource: messagesDataSource,
                             header:[
@@ -647,7 +647,7 @@ var ue = new UniversalEditor('universal-editor', {
                                             fields: [
                                                 {
                                                     component: {
-                                                        name: 'ue-table',
+                                                        name: 'ue-grid',
                                                         settings: {
                                                             label: 'Messages',
                                                             dataSource: messagesDataSource,

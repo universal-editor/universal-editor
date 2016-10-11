@@ -1,22 +1,22 @@
 (function () {
     'use strict';
 
-    var ueTable = {
+    var ueGrid = {
         bindings : {
             setting: "="
         },
         template : ['$templateCache', function ($templateCache) {
-            return $templateCache.get('module/components/ueTable/ueTable.html');
+            return $templateCache.get('module/components/ueGrid/ueGrid.html');
         }],
-        controller: 'UeTableController',
+        controller: 'UeGridController',
         controllerAs : 'vm'
     };
 
     /**
      * @desc String-type field.
-     * @example <ue-table></ue-table>
+     * @example <ue-grid></ue-grid>
      */
     angular
         .module('universal.editor')
-        .component('ueTable',ueTable);
+        .component('ueGrid',ueGrid);
 })();
