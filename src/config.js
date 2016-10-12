@@ -149,7 +149,7 @@ var ue = new UniversalEditor('universal-editor', {
                                         name: 'ue-button-goto',
                                         settings: {
                                             label: 'создать',
-                                            state: 'index.modal_edit'
+                                            state: 'edit'
                                         }
                                     }
                                 },
@@ -196,7 +196,7 @@ var ue = new UniversalEditor('universal-editor', {
                                         name: 'ue-button-goto',
                                         settings: {
                                             label: 'редактировать',
-                                            state: 'index.modal_edit'
+                                            state: 'edit'
                                         }
                                     }
                                 },

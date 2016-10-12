@@ -33,6 +33,13 @@
             watchRest();
         };
 
+        var newRequest = {};
+        newRequest.id = vm.setting.entityId;
+        newRequest.scopeIdParent = vm.setting.scopeIdParent;
+        newRequest.url = vm.setting.url;
+        newRequest.parentField = vm.setting.parentField;
+        newRequest.headComponent = vm.setting.headComponent;
+
         $element.bind("click", function () {
             if (vm.processing || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;
@@ -57,6 +64,9 @@
                 case 'presave':
                     RestApiService.editedEntityId = vm.entityId;
                     EditEntityStorage.editEntityPresave(request);
+                    break;
+                case 'open':
+                    RestApiService.loadChilds(newRequest);
                     break;
             }
         });

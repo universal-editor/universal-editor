@@ -12,6 +12,8 @@
         $scope.setting = vm.setting;
         $scope.setting.entityId = vm.entityId;
         $scope.setting.buttonClass = vm.buttonClass;
+        $scope.setting.scopeIdParent = vm.scopeIdParent;
+
         this.$postLink = function() {
             $element.on('$destroy', function () {
                 $scope.$destroy();
