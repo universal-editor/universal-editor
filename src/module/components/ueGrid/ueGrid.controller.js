@@ -49,6 +49,11 @@
         vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty("pagination") ? vm.setting.component.settings.dataSource.pagination : true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
+        vm.parent = null;
+
+        if(vm.setting.headComponent) {
+            vm.parent = !!$location.search().parent ? $location.search().parent : null;
+        }
 
         if(vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')){
             vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
@@ -84,6 +89,7 @@
         angular.forEach(vm.contextLinks, function(value) {
             value.url = url;
             value.parentField = parentField;
+            value.headComponent = vm.setting.headComponent;
         });
 
         //angular.forEach(vm.setting.component.settings.editFooterBar, function (editFooterBar) {
@@ -147,13 +153,23 @@
 
         vm.applyFilter = function () {
             RestApiService.setFilterParams(FilterFieldsStorage.getFilterValue());
-            RestApiService.getItemsList({url: url});
+            var request = {};
+            request.childId = vm.parent;
+            request.scopeIdParent = vm.scopeIdParent;
+            request.parentField = parentField;
+            request.url = url;
+            RestApiService.getItemsList(request);
         };
 
         vm.clearFilter = function () {
             FilterFieldsStorage.setInitialValues();
             //RestApiService.setFilterParams({});
-            RestApiService.getItemsList({url: url});
+            var request = {};
+            request.childId = vm.parent;
+            request.scopeIdParent = vm.scopeIdParent;
+            request.parentField = parentField;
+            request.url = url;
+            RestApiService.getItemsList(request);
         };
 
 
@@ -183,7 +199,9 @@
             RestApiService.getItemsList({
                 sort : vm.sortingDirection ? field : "-" + field,
                 url: url,
-                id: vm.scopeIdParent
+                scopeIdParent: vm.scopeIdParent,
+                parentField: parentField,
+                childId: vm.parent
             });
         };
 
@@ -201,12 +219,17 @@
 
         vm.getParent = function () {
             var request = {};
-            request.entityId = $location.search().parent;
+            request.childId = vm.parent;
             request.scopeIdParent = vm.scopeIdParent;
             request.parentField = parentField;
-            request.urlParent = url;
+            request.url = url;
+            request.headComponent = vm.setting.headComponent;
             RestApiService.loadParent(request);
         };
+
+        $scope.$on('editor:parent_id_' + vm.scopeIdParent, function(event, data) {
+            vm.parent = data;
+        });
 
         vm.toggleFilterVisibility = function () {
             if(!vm.entityLoaded){
@@ -283,8 +306,8 @@
             });
 
             vm.entityLoaded = false;
-            vm.parentButton = !!$location.search().hasOwnProperty("parent");
-
+            //vm.parentButton = !!$location.search().hasOwnProperty("parent");
+            vm.parentButton = !!vm.parent;
             vm.pageItemsArray = [];
 
             var startIndex;
@@ -482,7 +505,12 @@
 
         vm.$onInit = function() {
             RestApiService.setFilterParams({});
-            RestApiService.getItemsList({url: url, id: vm.scopeIdParent});
+            var request = {};
+            request.childId = vm.parent;
+            request.scopeIdParent = vm.scopeIdParent;
+            request.parentField = parentField;
+            request.url = url;
+            RestApiService.getItemsList(request);
         };
     }
 })();

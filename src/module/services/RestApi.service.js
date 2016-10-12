@@ -101,10 +101,9 @@
             //    angular.extend(params,{filter : JSON.stringify(filterObject)});
             //}
 
-            if(!!request.parentField){
+            if(!!request.childId){
                 var filterObject = {};
-                filterObject[request.parentField] = $location.search().parent;
-                console.log($location.search().parent);
+                filterObject[request.parentField] = request.childId;
                 angular.extend(params,{filter : JSON.stringify(filterObject)});
             }
 
@@ -158,7 +157,7 @@
                 params.expand = expandFields.join(',');
             }
 
-            var id = request.id;
+            var id = request.scopeIdParent;
 
             $http({
                 method : _method,
@@ -590,42 +589,56 @@
         };
 
         this.loadChilds = function(request){
-            $location.search("parent",request.id);
+            if (request.headComponent) {
+                $location.search("parent",request.id);
+            }
+            $rootScope.$broadcast('editor:parent_id_' + request.scopeIdParent, request.id);
             var newRequest = {};
             newRequest.url = request.url;
-            newRequest.id = request.scopeIdParent;
+            newRequest.scopeIdParent = request.scopeIdParent;
             newRequest.parentField = request.parentField;
+            newRequest.childId = request.id;
             self.getItemsList(newRequest).then(function(response){
                 $timeout(function () {
-                    $location.search("parent",request.id);
+                    if (request.headComponent) {
+                        $location.search("parent",request.id);
+                    }
                 }, 0);
             });
 
         };
 
         this.loadParent = function(request){
-            var entityId = typeof request.entityId !== 'undefined' ? request.entityId : undefined;
+            var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
             var newRequest = {};
-            newRequest.url = request.urlParent;
-            newRequest.id = request.scopeIdParent;
+            newRequest.url = request.url;
+            newRequest.scopeIdParent = request.scopeIdParent;
             newRequest.parentField = request.parentField;
             if(entityId){
                 self.isProcessing = true;
 
                 $http({
                     method : 'GET',
-                    url : request.urlParent + "/" + entityId
+                    url : request.url + "/" + entityId
                 }).then(function(response){
                     var parentId;
                     if(response.data[request.parentField] !== null){
                         self.isProcessing = false;
                         parentId = response.data[request.parentField];
-                        $location.search("parent",parentId);
+                        if (request.headComponent) {
+                            $location.search("parent", parentId);
+                        }
+                        $rootScope.$broadcast('editor:parent_id_' + request.scopeIdParent, parentId);
+                        newRequest.childId = parentId;
                         self.getItemsList(newRequest);
                     } else {
                         self.isProcessing = false;
                         newRequest.parentField = null;
-                        $location.search("parent",null);
+                        $rootScope.$broadcast('editor:parent_id_' + request.scopeIdParent, null);
+                        if (request.headComponent) {
+                            $location.search("parent", null);
+                        }
+                        newRequest.childId = null;
                         self.getItemsList(newRequest);
                     }
                 },function(reject){
@@ -633,8 +646,11 @@
                 });
             } else {
                 self.isProcessing = true;
-
-                $location.search("parent",null);
+                $rootScope.$broadcast('editor:parent_id_' + request.scopeIdParent, null);
+                if (request.headComponent) {
+                    $location.search("parent", null);
+                }
+                newRequest.childId = null;
                 self.getItemsList(newRequest);
             }
         };
