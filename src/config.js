@@ -211,9 +211,10 @@ var ue = new UniversalEditor('universal-editor', {
                                 },
                                 {
                                     component: {
-                                        name: 'ue-button-open',
+                                        name: 'ue-button-service',
                                         settings: {
-                                            label: 'Раскрыть'
+                                            label: 'Раскрыть',
+                                            action: 'open'
                                         }
                                     }
                                 },
