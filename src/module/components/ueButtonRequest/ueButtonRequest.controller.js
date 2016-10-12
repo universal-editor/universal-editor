@@ -11,6 +11,10 @@
         var vm = this;
         //console.log(vm);
         vm.label = vm.setting.component.settings.label;
+        var beforeSend = vm.setting.component.settings.beforeSend;
+        var success = vm.setting.component.settings.success;
+        var error = vm.setting.component.settings.error;
+        var complete = vm.setting.component.settings.complete;
 
         $element.bind("click", function () {
             if (!!vm.setting.component.settings.target) {
@@ -19,20 +23,17 @@
                 var request = {
                     url: vm.setting.component.settings.url,
                     method: vm.setting.component.settings.method,
-                    beforeSend: ButtonsService.getCallback(vm.setting.component.settings.beforeSend)
+                    beforeSend: beforeSend
                 };
                 RestApiService.actionRequest(request).then(function(response){
-                    var success = ButtonsService.getCallback(vm.setting.component.settings.success);
                     if (!!success) {
                         success(response);
                     }
                 }, function(reject) {
-                    var error = ButtonsService.getCallback(vm.setting.component.settings.error);
                     if (!!error) {
                         error(reject);
                     }
                 }).finally(function() {
-                    var complete = ButtonsService.getCallback(vm.setting.component.settings.complete);
                     if (!!complete) {
                         complete();
                     }

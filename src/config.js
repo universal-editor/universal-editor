@@ -160,10 +160,9 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'This is request!!!',
                                             url: '//universal-backend.dev/rest/v1/staff',
                                             method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                            success: function(params) {
+                                                console.log('Привет мир!!! я success', params);
+                                            }
                                         }
                                     }
                                 },
@@ -225,10 +224,10 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'This is request!!!',
                                             url: '//universal-backend.dev/rest/v1/staff',
                                             method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                            beforeSend: window.RequstCallback.beforeSend,
+                                            success: window.RequstCallback.success,
+                                            error: window.RequstCallback.error,
+                                            complete: window.RequstCallback.complete
                                         }
                                     }
                                 },
@@ -299,10 +298,10 @@ var ue = new UniversalEditor('universal-editor', {
                                                             label: 'This is request!!!',
                                                             url: '//universal-backend.dev/rest/v1/staff',
                                                             method: 'GET',
-                                                            beforeSend: 'RequstCallback.beforeSend',
-                                                            success: 'RequstCallback.success',
-                                                            error: 'RequstCallback.error',
-                                                            complete: 'RequstCallback.complete'
+                                                            beforeSend: window.RequstCallback.beforeSend,
+                                                            success: window.RequstCallback.success,
+                                                            error: window.RequstCallback.error,
+                                                            complete: window.RequstCallback.complete
                                                         }
                                                     }
                                                 },
@@ -350,10 +349,10 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'This is request!!!',
                                             url: '//universal-backend.dev/rest/v1/staff',
                                             method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                            beforeSend: window.RequstCallback.beforeSend,
+                                            success: window.RequstCallback.success,
+                                            error: window.RequstCallback.error,
+                                            complete: window.RequstCallback.complete
                                         }
                                     }
                                 },
@@ -447,10 +446,10 @@ var ue = new UniversalEditor('universal-editor', {
                                                                         label: 'This is request!!!',
                                                                         url: '//universal-backend.dev/rest/v1/staff',
                                                                         method: 'GET',
-                                                                        beforeSend: 'RequstCallback.beforeSend',
-                                                                        success: 'RequstCallback.success',
-                                                                        error: 'RequstCallback.error',
-                                                                        complete: 'RequstCallback.complete'
+                                                                        beforeSend: window.RequstCallback.beforeSend,
+                                                                        success: window.RequstCallback.success,
+                                                                        error: window.RequstCallback.error,
+                                                                        complete: window.RequstCallback.complete
                                                                     }
                                                                 }
                                                             },
@@ -536,10 +535,10 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'This is request!!!',
                                             url: '//universal-backend.dev/rest/v1/staff',
                                             method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                            beforeSend: window.RequstCallback.beforeSend,
+                                            success: window.RequstCallback.success,
+                                            error: window.RequstCallback.error,
+                                            complete: window.RequstCallback.complete
                                         }
                                     }
                                 },
@@ -600,10 +599,10 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'This is request!!!',
                                             url: '//universal-backend.dev/rest/v1/staff',
                                             method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                            beforeSend: window.RequstCallback.beforeSend,
+                                            success: window.RequstCallback.success,
+                                            error: window.RequstCallback.error,
+                                            complete: window.RequstCallback.complete
                                         }
                                     }
                                 },
@@ -706,12 +705,12 @@ var ue = new UniversalEditor('universal-editor', {
                                         name: 'ue-button-request',
                                         settings: {
                                             label: 'This is request!!!',
-                                            url: '//universal-backend.dev/rest/v1/staff',
+                                            url: '//ya.ru',
                                             method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                            beforeSend: window.RequstCallback.beforeSend,
+                                            success: window.RequstCallback.success,
+                                            error: window.RequstCallback.error,
+                                            complete: window.RequstCallback.complete
                                         }
                                     }
                                 },
