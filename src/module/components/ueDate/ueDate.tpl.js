@@ -7,7 +7,7 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueDate/ueDate.html',
     '\n' +
-    '<div class="field-wrapper row">\n' +
+    '<div ng-if="!vm.filter" class="field-wrapper row">\n' +
     '    <div class="form-group">\n' +
     '        <label class="field-name-label">\n' +
     '            <div data-ng-if="vm.hint" class="field-hint">\n' +
@@ -29,6 +29,27 @@ module.run(['$templateCache', function($templateCache) {
     '    </div>\n' +
     '    <div class="field-error-wrapper">\n' +
     '        <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>\n' +
+    '    </div>\n' +
+    '</div>\n' +
+    '<div ng-if="vm.filter" class="filter-date-wrapper">\n' +
+    '    <div class="filter-name-label"><span ng-bind="vm.fieldDisplayName"></span></div>\n' +
+    '    <div class="filter-inner-wrapper">\n' +
+    '        <div class="filter-start">\n' +
+    '            <div class="editor-date">\n' +
+    '                <input data-date-time="" data-ng-model="vm.filterValueStartDate" data-format="YYYY-MM-DD" data-max-view="year" data-min-view="date" data-view="date" class="form-control input-sm"/>\n' +
+    '            </div>\n' +
+    '            <div class="editor-time">\n' +
+    '                <input data-ng-disabled="!vm.filterValueStartDate" data-date-time="" data-ng-model="vm.filterValueStartTime" data-format="HH:mm:ss" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm"/>\n' +
+    '            </div>\n' +
+    '        </div><span class="divider">-</span>\n' +
+    '        <div class="filter-end">\n' +
+    '            <div class="editor-date">\n' +
+    '                <input data-date-time="" data-ng-model="vm.filterValueEndDate" data-format="YYYY-MM-DD" data-max-view="year" data-min-view="date" data-view="date" class="form-control input-sm"/>\n' +
+    '            </div>\n' +
+    '            <div class="editor-time">\n' +
+    '                <input data-ng-disabled="!vm.filterValueEndDate" data-date-time="" data-ng-model="vm.filterValueEndTime" data-format="HH:mm:ss" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm"/>\n' +
+    '            </div>\n' +
+    '        </div>\n' +
     '    </div>\n' +
     '</div>');
 }]);

@@ -3,7 +3,8 @@
 
     var ueString = {
         bindings : {
-            setting: '='
+            setting: '=',
+            filter: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueString/ueString.html');

@@ -5,7 +5,8 @@
         bindings : {
             setting : '=',
             entityId: '@',
-            buttonClass: '@'
+            buttonClass: '@',
+            filter: '='
         },
         template : ['$templateCache', function($templateCache) {
             return $templateCache.get('module/components/componentWrapper/componentWrapper.html');

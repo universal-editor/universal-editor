@@ -2,10 +2,9 @@
     'use strict';
 
     var ueTime = {
-        bindings : {
-            field: "=",
-            parentField: "=",
-            parentFieldIndex: "="
+         bindings : {
+            setting: '=',
+            filter: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueTime/ueTime.html');

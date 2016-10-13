@@ -40,8 +40,7 @@
             if (toStateConfig && toStateConfig.component.name === 'ue-modal') {
                 stateOptions.reload = false;
             }
-            $state.params.pk = pk;
-            $state.go(toStateConfig.name, {pk: (vm.entityId || 'new')}, stateOptions);
+            $state.go(toStateConfig.name, {pk: pk}, stateOptions); 
         });
 
         vm.$postLink = function() {

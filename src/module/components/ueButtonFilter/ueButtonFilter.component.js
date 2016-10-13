@@ -1,18 +1,18 @@
 (function () {
     'use strict';
 
-    var ueButtonModal = {
+    var ueButtonFilter = {
         template : ['$templateCache', function ($templateCache) {
-            return $templateCache.get('module/components/ueButtonModal/ueButtonModal.html');
+            return $templateCache.get('module/components/ueButtonFilter/ueButtonFilter.html');
         }],
         bindings : {
             setting: '='
         },
-        controller : 'UeButtonModalController',
+        controller : 'UeButtonFilterController',
         controllerAs : 'vm'
     };
 
     angular
         .module('universal.editor')
-        .component('ueButtonModal',ueButtonModal);
+        .component('ueButtonFilter',ueButtonFilter);
 })();

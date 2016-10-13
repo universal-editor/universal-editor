@@ -11,7 +11,7 @@
             dismiss: '&'
         },
         controllerAs: 'vm',
-        controller: function ($uibModal, $scope, configData, $element, $state) {
+        controller: function ($uibModal, $scope, configData, $element, $state) {           
             var vm = this;
             vm.entityId = $state.params.pk;
             vm.assetsPath = '/assets/universal-editor';

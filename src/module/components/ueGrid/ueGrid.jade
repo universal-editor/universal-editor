@@ -2,6 +2,7 @@ div
     .editor-header
         //button.btn.btn-lg.btn-default.filter-button(data-ng-click="vm.toggleFilterVisibility()", data-ng-class="{ disabled : vm.entityLoaded }")
             | {{ 'BUTTON.FILTER' | translate}} {{ vm.visibleFilter ? "+" : "-" }}
+        component-wrapper(data-setting="vm.filterComponent")
         component-wrapper.header-action-button(ng-repeat="button in vm.listHeaderBar track by $index", data-setting="button", data-button-class="header")
             //ue-button-create(data-ng-if="button.type == 'create'", data-button-label="{{button.label}}")
             //div.btn.btn-lg.btn-success(data-ng-if="button.type == 'request'", data-ng-click="vm.contextAction(button)") {{button.label}}
@@ -18,6 +19,7 @@ div
             .buttons-wrapper
                 button.btn.btn-sm.btn-success(data-ng-click="vm.applyFilter()") {{'BUTTON.APPLY' | translate}}
                 button.btn.btn-sm.btn-default(data-ng-click="vm.clearFilter()") {{'BUTTON.CLEAN' | translate}}
+        
     .groups-action
         button.btn.btn-sm.btn-default(data-ng-if="vm.parentButton && !vm.entityLoaded && !vm.loadingData", data-ng-click="vm.getParent()") {{'BUTTON.HIGHER_LEVEL' | translate}}
     .processing-status-wrapper(data-ng-show="vm.loadingData")

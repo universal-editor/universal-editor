@@ -1,5 +1,5 @@
 
-<div class="field-wrapper row">
+<div ng-if="!vm.filter" class="field-wrapper row">
     <div class="form-group">
         <label class="field-name-label">
             <div data-ng-if="vm.hint" class="field-hint">
@@ -21,5 +21,20 @@
     </div>
     <div class="field-error-wrapper">
         <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>
+    </div>
+</div>
+<div ng-if="vm.filter" class="filter-time-wrapper">
+    <div class="filter-name-label"><span ng-bind="vm.fieldDisplayName"></span></div>
+    <div class="filter-inner-wrapper">
+        <div class="filter-start">
+            <div class="editor-time">
+                <input data-date-time="" data-ng-model="vm.filterValueStartTime" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm"/>
+            </div>
+        </div><span class="divider">-</span>
+        <div class="filter-end">
+            <div class="editor-time">
+                <input data-date-time="" data-ng-model="vm.filterValueEndTime" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm"/>
+            </div>
+        </div>
     </div>
 </div>

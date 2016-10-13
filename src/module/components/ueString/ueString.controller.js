@@ -5,12 +5,13 @@
         .module('universal.editor')
         .controller('UeStringController', UeStringController);
 
-    UeStringController.$inject = ['$scope', '$element', 'EditEntityStorage', 'ArrayFieldStorage'];
+    UeStringController.$inject = ['$scope', '$element', 'EditEntityStorage', 'ArrayFieldStorage', 'FilterFieldsStorage'];
 
-    function UeStringController($scope, $element ,EditEntityStorage, ArrayFieldStorage) {
+    function UeStringController($scope, $element ,EditEntityStorage, ArrayFieldStorage, FilterFieldsStorage) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
+        var componentSettings = vm.setting.component.settings;
         if (vm.setting.parentField) {
             if (vm.setting.parentFieldIndex) {
                 fieldErrorName = vm.setting.parentField + "_" + vm.setting.parentFieldIndex + "_" + vm.setting.name;
@@ -21,17 +22,18 @@
             fieldErrorName = vm.setting.name;
         }
 
-        vm.cols = vm.setting.width;
+        vm.cols = componentSettings.width;
         vm.classTextarea = '';//'col-lg-2 col-md-2 col-sm-3 col-xs-3';
         vm.fieldName = vm.setting.name;
         vm.fieldValue = undefined;
-        vm.readonly = vm.setting.readonly || false;
+        vm.readonly = componentSettings.readonly || false;
         vm.setting.parentFieldIndex = vm.setting.parentFieldIndex || false;
-        vm.mask = vm.setting.mask || false;
-        vm.fieldDisplayName = vm.setting.component.settings.label;
-        vm.hint = vm.setting.hint || false;
-        vm.required = vm.setting.required || false;
+        vm.mask = componentSettings.mask || false;
+        vm.fieldDisplayName = componentSettings.label;
+        vm.hint = componentSettings.hint || false;
+        vm.required = componentSettings.required || false;
         vm.error = [];
+        
 
         if (!!vm.cols) {
             if (vm.cols > 6) {
@@ -40,18 +42,17 @@
             if (vm.cols < 1) {
                 vm.cols = 1;
             }
-            //vm.classTextarea = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
         }
 
-        if (vm.setting.hasOwnProperty("multiple") && vm.setting.multiple === true) {
+        if (componentSettings.multiple === true) {
             vm.multiple = true;
             vm.fieldValue = [];
-            if (vm.setting.multiname || angular.isString(vm.setting.multiname)) {
-                vm.multiname = ('' + vm.setting.multiname) || "value";
+            if (componentSettings.multiname || angular.isString(componentSettings.multiname)) {
+                vm.multiname = ('' + componentSettings.multiname) || 'value';
             }
         } else {
             vm.multiple = false;
-            vm.fieldValue = vm.setting.defaultValue || "" ;
+            vm.fieldValue = componentSettings.defaultValue || '' ;
         }
 
         /*
@@ -74,79 +75,6 @@
             }
         }
 
-        /*
-         * Field system method: Возвращает текущее значение поля с учетом
-         * наличия у поля родителя ( поля типа "массив" )
-         */
-
-        this.getFieldValue = function () {
-
-            var field = {},
-                wrappedFieldValue;
-
-            if (vm.multiname) {
-                wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
-                    var tempItem = {};
-                    tempItem[vm.multiname] = valueItem;
-                    wrappedFieldValue.push(tempItem);
-                });
-            } else if (vm.multiple) {
-                wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
-                    wrappedFieldValue.push(valueItem);
-                });
-            } else {
-                wrappedFieldValue = vm.fieldValue;
-            }
-
-            if (vm.setting.parentField) {
-                if (vm.setting.parentFieldIndex) {
-                    field[vm.setting.parentField] = [];
-                    field[vm.setting.parentField][vm.setting.parentFieldIndex] = {};
-                    field[vm.setting.parentField][vm.setting.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
-                } else {
-                    field[vm.setting.parentField] = {};
-                    field[vm.setting.parentField][vm.fieldName] = wrappedFieldValue;
-                }
-            } else {
-                field[vm.fieldName] = wrappedFieldValue;
-            }
-
-            return field;
-        };
-
-        /*
-         * Field system method: Возврашает значение поля которое используется при создании
-         * новой сущности, т.е. дефолтное значение поля
-         */
-
-        this.getInitialValue = function () {
-
-            var field = {};
-
-            if (vm.setting.parentField) {
-                if (vm.multiple) {
-                    field[vm.setting.parentField] = {};
-                    field[vm.setting.parentField][vm.fieldName] = [""];
-                } else {
-                    field[vm.setting.parentField] = {};
-                    field[vm.setting.parentField][vm.fieldName] = "";
-                }
-            } else {
-                if (vm.multiple) {
-                    field[vm.fieldName] = [""];
-                } else {
-                    field[vm.fieldName] = "";
-                }
-            }
-
-            return field;
-        };
-        /*
-         * Публичные методы для представления
-         * Добавление нового итема и удаление. Необходимы для multiple-полей
-         */
 
         vm.addItem = function () {
             vm.fieldValue.push("");
@@ -159,6 +87,7 @@
                 }
             });
         };
+        
 
         /* Слушатель события на покидание инпута. Необходим для превалидации поля на минимальное и максимальное значение */
 
@@ -167,7 +96,7 @@
                 return;
             }
 
-            if(vm.setting.hasOwnProperty("maxLength") && val.length > vm.setting.maxLength){
+         /*   if(vm.setting.hasOwnProperty("maxLength") && val.length > vm.setting.maxLength){
                 var maxError = "Для поля превышено максимальное допустимое значение в " + vm.setting.maxLength + " символов. Сейчас введено " + val.length + " символов.";
                 if (vm.error.indexOf(maxError) < 0) {
                     vm.error.push(maxError);
@@ -179,12 +108,8 @@
                 if(vm.error.indexOf(minError) < 0){
                     vm.error.push(minError);
                 }
-            }
-        };
-
-        function clear() {
-            vm.fieldValue = vm.setting.hasOwnProperty("multiple") && vm.setting.multiple === true ? [] : (vm.setting.defaultValue || "");
-        }
+            }*/
+        };       
 
         /* Слушатели событий бродкаста. */
 
@@ -196,9 +121,9 @@
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function (event, data) {
 
             //-- functional for required fields
-            if (vm.setting.requiredField) {
+            if (componentSettings.requiredField) {
                 destroyWatchEntityLoaded = $scope.$watch(function () {
-                    var f_value = EditEntityStorage.getValueField(vm.setting.requiredField);
+                    var f_value = EditEntityStorage.getValueField(componentSettings.requiredField);
                     var result = false;
                     var endRecursion = false;
                     (function check(value) {
@@ -220,14 +145,14 @@
                         clear();
                         vm.readonly = true;
                     } else {
-                        vm.readonly = vm.setting.readonly || false;
+                        vm.readonly = componentSettings.readonly || false;
                     }
                 }, true);
             }
 
             if (data.editorEntityType === "new") {
-                if (vm.setting.defaultValue) {
-                    vm.fieldValue = vm.multiple ? [vm.setting.defaultValue] : vm.setting.defaultValue;
+                if (componentSettings.defaultValue) {
+                    vm.fieldValue = vm.multiple ? [componentSettings.defaultValue] : componentSettings.defaultValue;
                 } else {
                     vm.fieldValue = vm.multiple ? [] : '';
                 }
@@ -314,9 +239,73 @@
             $element.on('$destroy', function () {
                 $scope.$destroy();
             });
-        };
+        };  
 
-        /* Initial method : Регистрация экземпляра поля в EditEntityStorage */
-        EditEntityStorage.addFieldController(this);
+        /** Filter logic */
+
+        vm.getFilterValue = getFilterValue;
+        vm.getFieldValue = getFieldValue;
+        vm.clear = clear;
+
+        if (vm.filter) {
+           FilterFieldsStorage.addFilterController(this);            
+        } else {
+           EditEntityStorage.addFieldController(this);
+        }
+
+        function clear() {
+            if (componentSettings.multiple === true) {
+                vm.fieldValue = [];
+            } else {
+                vm.fieldValue = componentSettings.defaultValue || '';
+            }
+        }
+
+        function getFilterValue() {
+            var field = {};
+
+            if (vm.fieldValue.trim() !== "") {
+                field[vm.filterName] = vm.filterValue;
+                return field;
+            } else {
+                return false;
+            }
+        }
+
+        function getFieldValue() {
+            var field = {},
+                wrappedFieldValue;
+
+            if (vm.multiname) {
+                wrappedFieldValue = [];
+                angular.forEach(vm.fieldValue, function (valueItem) {
+                    var tempItem = {};
+                    tempItem[vm.multiname] = valueItem;
+                    wrappedFieldValue.push(tempItem);
+                });
+            } else if (vm.multiple) {
+                wrappedFieldValue = [];
+                angular.forEach(vm.fieldValue, function (valueItem) {
+                    wrappedFieldValue.push(valueItem);
+                });
+            } else {
+                wrappedFieldValue = vm.fieldValue;
+            }
+
+            if (vm.setting.parentField) {
+                if (vm.setting.parentFieldIndex) {
+                    field[vm.setting.parentField] = [];
+                    field[vm.setting.parentField][vm.setting.parentFieldIndex] = {};
+                    field[vm.setting.parentField][vm.setting.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
+                } else {
+                    field[vm.setting.parentField] = {};
+                    field[vm.setting.parentField][vm.fieldName] = wrappedFieldValue;
+                }
+            } else {
+                field[vm.fieldName] = wrappedFieldValue;
+            }
+
+            return field;
+        }
     }
 })();

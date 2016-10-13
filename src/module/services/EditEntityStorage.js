@@ -28,32 +28,13 @@
             }
         };
 
-        this.createNewEntity = function () {
-
-            var entityObject = {};
-            entityObject.editorEntityType = "new";
-            var configObjectEntity = self.getEntity();
-            angular.forEach(fieldControllers,function(fCtrl){
-                angular.merge(entityObject,fCtrl.getInitialValue());
-            });
-
-            var search =  $location.search();       
-            var type = search.type || $state.params.type;     
-            if (search.hasOwnProperty("parent")) {
-                var entity_conf = configData.entities.filter(function (item) {
-                    return item.name === type;
-                })[0];
-                entityObject[entity_conf.backend.fields.parent] = search.parent;
-            }
-
-            $timeout(function () {
-                $rootScope.$broadcast("editor:entity_loaded",entityObject);
-            },0);
+        this.newSourceEntity = function () {
+            $rootScope.$broadcast("editor:entity_loaded", { editorEntityType: "new"});
         };
 
         this.setSourceEntity = function (data) {
             data.editorEntityType = "exist";
-            $rootScope.$broadcast("editor:entity_loaded",data);
+            $rootScope.$broadcast("editor:entity_loaded", data);
         };
 
         this.getEntityType = function () {

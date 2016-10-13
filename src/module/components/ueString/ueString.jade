@@ -1,4 +1,4 @@
-.field-wrapper.row
+.field-wrapper.row(ng-if="!vm.filter")
     .form-group
         include ../../template/labelField/labelField
         .field-element
@@ -11,3 +11,8 @@
             div(data-ng-if="!vm.multiple", data-ng-class="vm.classTextarea")
                 input.form-control.input-sm(type="text", data-ui-mask="{{vm.mask}}" data-ng-disabled="vm.readonly", name="{{vm.fieldName}}", data-ng-model="vm.fieldValue", data-ng-blur="vm.inputLeave(vm.fieldValue)", size="{{vm.size}}")
     include ../../template/errorField/errorField
+.filter-wrapper-field(ng-if="vm.filter")
+    .filter-name-label
+        span {{vm.fieldDisplayName}}
+    .filter-inner-wrapper
+        input.form-control.input-sm(type="text", name="{{vm.fieldName}}", data-ng-model="vm.fieldValue")

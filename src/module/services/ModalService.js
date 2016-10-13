@@ -33,6 +33,9 @@
 
          modalInstance.rendered.then(function() {
             isOpen = true;
+            if($state.params.pk === 'new') {
+                EditEntityStorage.newSourceEntity();
+            }
          });
 
          modalInstance.result.then(closeWindow, closeWindow);

@@ -1,0 +1,11 @@
+div(style="margin: 10px 5px;")
+    button.btn.btn-lg.btn-default.filter-button(data-ng-click="vm.toggleFilterVisibility()") Фильтр {{vm.visiable ? '-' : '+'}}
+    .editor-filter(data-ng-hide="vm.visiable")
+        .editor-filter-wrapper(ng-keyup="vm.clickEnter($event)")
+            .editor-filter-head
+                label(ng-bind="vm.header.label")
+            .editor-filter-body(style="padding: 5px 15px;")
+                .field-content-wrapper(ng-repeat="component in vm.body")
+                    component-wrapper(data-setting="component" data-filter="true")
+            .editor-filter-footer
+                component-wrapper(data-ng-repeat="button in vm.footer track by $index", data-setting="button", data-button-class="footer")

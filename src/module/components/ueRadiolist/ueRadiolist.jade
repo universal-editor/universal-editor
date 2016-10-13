@@ -1,4 +1,4 @@
-.field-wrapper.row
+.field-wrapper.row(ng-if="!vm.filter")
     .form-group
         include ../../template/labelField/labelField
         .field-element
@@ -6,5 +6,12 @@
                 .radio(data-ng-repeat="item in vm.selectedValues", data-ng-class="vm.readonly ? 'disabled' : ''")
                     label
                         input(type="radio", data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue", value="{{item[vm.field_id]}}")
-                        |{{item[vm.field_search]}}
+                        span(ng-bind = "item[vm.field_search]")
     include ../../template/errorField/errorField
+div(ng-if="vm.filter")
+    .filter-name-label
+        span(ng-bind = "vm.fieldDisplayName")
+    .filter-inner-wrapper
+        label.radio-inline(data-ng-repeat="item in vm.selectedValues")
+            input(type="radio", data-ng-model="vm.fieldValue", value="{{item[vm.field_id]}}")
+            span(ng-bind = "item[vm.field_search]")

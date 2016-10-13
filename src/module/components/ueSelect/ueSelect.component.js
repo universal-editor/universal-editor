@@ -2,10 +2,9 @@
     'use strict';
 
     var ueSelect = {
-        bindings : {
-            field: "=",
-            parentField: "=",
-            parentFieldIndex: "="
+         bindings : {
+            setting: '=',
+            filter: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueSelect/ueSelect.html');

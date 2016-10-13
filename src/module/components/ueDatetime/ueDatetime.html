@@ -1,5 +1,5 @@
 
-<div class="field-wrapper row">
+<div ng-if="!vm.filter" class="field-wrapper row">
     <div class="form-group">
         <label class="field-name-label">
             <div data-ng-if="vm.hint" class="field-hint">
@@ -9,17 +9,32 @@
         <div class="field-element">
             <div data-ng-if="vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
                 <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-datepicker-wrapper input-group">
-                    <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue[$index]" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/><span class="input-group-btn">
+                    <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue[$index]" view="date" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/><span class="input-group-btn">
                         <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>
                 </div>
                 <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{'BUTTON.ADD' | translate}}</div>
             </div>
             <div data-ng-if="!vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
-                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>
+                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue" view="date" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>
             </div>
         </div>
     </div>
     <div class="field-error-wrapper">
         <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>
+    </div>
+</div>
+<div ng-if="vm.filter" class="filter-datetime-wrapper">
+    <div class="filter-name-label"><span ng-bind="vm.fieldDisplayName"></span></div>
+    <div class="filter-inner-wrapper">
+        <div class="filter-start">
+            <div class="editor-datetime">
+                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueStartDateTime" view="date" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>
+            </div>
+        </div><span class="divider">-</span>
+        <div class="filter-end">
+            <div class="editor-datetime">
+                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueEndDateTime" view="date" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>
+            </div>
+        </div>
     </div>
 </div>

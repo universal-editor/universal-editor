@@ -11,6 +11,7 @@ module.run(['$templateCache', function($templateCache) {
     '    <div class="editor-header">\n' +
     '        <!--button.btn.btn-lg.btn-default.filter-button(data-ng-click="vm.toggleFilterVisibility()", data-ng-class="{ disabled : vm.entityLoaded }")| {{ \'BUTTON.FILTER\' | translate}} {{ vm.visibleFilter ? "+" : "-" }}\n' +
     '        -->\n' +
+    '        <component-wrapper data-setting="vm.filterComponent"></component-wrapper>\n' +
     '        <component-wrapper ng-repeat="button in vm.listHeaderBar track by $index" data-setting="button" data-button-class="header" class="header-action-button">\n' +
     '            <!--ue-button-create(data-ng-if="button.type == \'create\'", data-button-label="{{button.label}}")-->\n' +
     '            <!--div.btn.btn-lg.btn-success(data-ng-if="button.type == \'request\'", data-ng-click="vm.contextAction(button)") {{button.label}}-->\n' +
@@ -30,6 +31,7 @@ module.run(['$templateCache', function($templateCache) {
     '        .buttons-wrapper\n' +
     '            button.btn.btn-sm.btn-success(data-ng-click="vm.applyFilter()") {{\'BUTTON.APPLY\' | translate}}\n' +
     '            button.btn.btn-sm.btn-default(data-ng-click="vm.clearFilter()") {{\'BUTTON.CLEAN\' | translate}}\n' +
+    '    \n' +
     '    -->\n' +
     '    <div class="groups-action">\n' +
     '        <button data-ng-if="vm.parentButton &amp;&amp; !vm.entityLoaded &amp;&amp; !vm.loadingData" data-ng-click="vm.getParent()" class="btn btn-sm btn-default">{{\'BUTTON.HIGHER_LEVEL\' | translate}}</button>\n' +

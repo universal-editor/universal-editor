@@ -1,145 +1,70 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('universal.editor')
         .controller('UeDatetimeController', UeDatetimeController);
 
-   UeDatetimeController.$inject = ['$scope', '$element', 'EditEntityStorage', 'moment', 'ArrayFieldStorage'];
+    UeDatetimeController.$inject = ['$scope', '$element', 'EditEntityStorage', 'moment', 'ArrayFieldStorage', 'FilterFieldsStorage'];
 
-    function UeDatetimeController($scope, $element, EditEntityStorage, moment, ArrayFieldStorage) {
+    function UeDatetimeController($scope, $element, EditEntityStorage, moment, ArrayFieldStorage, FilterFieldsStorage) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
+        var componentSettings = vm.setting.component.settings;
+        vm.fieldName = vm.setting.name;
 
-        if (vm.parentField) {
-            if (vm.parentFieldIndex) {
-                fieldErrorName = vm.parentField + "_" + vm.parentFieldIndex + "_" + vm.fieldName;
+        if (vm.setting.parentField) {
+            if (vm.setting.parentFieldIndex) {
+                fieldErrorName = vm.setting.parentField + "_" + vm.setting.parentFieldIndex + "_" + vm.fieldName;
             } else {
-                fieldErrorName = vm.parentField + "_" + vm.fieldName;
+                fieldErrorName = vm.setting.parentField + "_" + vm.fieldName;
             }
         } else {
-            fieldErrorName = vm.field.name;
+            fieldErrorName = vm.fieldName;
         }
 
-        vm.fieldName = vm.field.name;
         vm.fieldValue = "";
-        vm.readonly = vm.field.readonly || false;
-        vm.parentFieldIndex = vm.parentFieldIndex || false;
-        vm.multiname = vm.field.multiname || "value";
+        vm.readonly = componentSettings.readonly || false;
+        vm.parentFieldIndex = vm.setting.parentFieldIndex || false;
+        vm.multiname = componentSettings.multiname || "value";
         vm.fieldDisplayName = vm.setting.component.settings.label;
         vm.hint = vm.setting.hint || false;
         vm.required = vm.setting.required || false;
         vm.error = [];
+        vm.multiple = componentSettings.multiple === true ? true : false;
+        vm.fieldValue = getInitValue();
 
-        if (vm.field.hasOwnProperty("multiple") && vm.field.multiple === true) {
-            vm.multiple = true;
-            vm.fieldValue = [];
-        } else {
-            vm.multiple = false;
-            vm.fieldValue = moment.utc();
-        }
-
-        if (vm.parentFieldIndex) {
+        if (vm.setting.parentFieldIndex) {
             if (vm.multiple) {
                 vm.fieldValue = [];
-                angular.forEach(ArrayFieldStorage.getFieldValue(vm.parentField, vm.parentFieldIndex, vm.field.name), function (item) {
+                angular.forEach(ArrayFieldStorage.getFieldValue(vm.setting.parentField, vm.setting.parentFieldIndex, vm.fieldName), function(item) {
                     vm.fieldValue.push(item[vm.multiname]);
                 });
             } else {
-                vm.fieldValue = ArrayFieldStorage.getFieldValue(vm.parentField, vm.parentFieldIndex, vm.field.name) || vm.fieldValue;
+                vm.fieldValue = ArrayFieldStorage.getFieldValue(vm.setting.parentField, vm.setting.parentFieldIndex, vm.fieldName) || vm.fieldValue;
             }
         }
 
-        EditEntityStorage.addFieldController(this);
-
-        this.getFieldValue = function () {
-
-            var field = {};
-
-            var wrappedFieldValue;
-
-            if (vm.multiple && vm.multiname) {
-                wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
-                    if (!valueItem || valueItem === "" || !moment.isMoment(valueItem)) {
-                        return;
-                    }
-                    var tempItem = {};
-                    tempItem[vm.multiname] = moment.utc(valueItem).format('YYYY-MM-DD HH:mm:ss');
-                    wrappedFieldValue.push(tempItem);
-                });
-            } else {
-                if (vm.fieldValue === undefined || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
-                    wrappedFieldValue = "";
-                } else {
-                    wrappedFieldValue = moment.utc(vm.fieldValue).format('YYYY-MM-DD HH:mm:ss');
-                }
-            }
-
-            if (vm.parentField) {
-                if (vm.parentFieldIndex) {
-                    field[vm.parentField] = [];
-                    field[vm.parentField][vm.parentFieldIndex] = {};
-                    field[vm.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
-                } else {
-                    field[vm.parentField] = {};
-                    field[vm.parentField][vm.fieldName] = wrappedFieldValue;
-                }
-
-            } else {
-                field[vm.fieldName] = wrappedFieldValue;
-            }
-
-            return field;
+        vm.addItem = function() {
+            vm.fieldValue.push(moment());
         };
 
-        this.getInitialValue = function () {
-
-            var field = {};
-
-            if (vm.parentField) {
-                if (vm.multiple) {
-                    field[vm.parentField] = {};
-                    field[vm.parentField][vm.fieldName] = [];
-                } else {
-                    field[vm.parentField] = {};
-                    field[vm.parentField][vm.fieldName] = moment.utc();
-                }
-            } else {
-                if (vm.multiple) {
-                    field[vm.fieldName] = [];
-                } else {
-                    field[vm.fieldName] = moment.utc();
-                }
-            }
-
-            return field;
-        };
-
-        vm.addItem = function () {
-            vm.fieldValue.push(moment.utc());
-        };
-
-        vm.removeItem = function (index) {
-            angular.forEach(vm.fieldValue, function (value, key) {
+        vm.removeItem = function(index) {
+            angular.forEach(vm.fieldValue, function(value, key) {
                 if (key == index) {
                     vm.fieldValue.splice(index, 1);
                 }
             });
         };
 
-        function clear() {
-            vm.fieldValue = vm.field.hasOwnProperty("multiple") && vm.field.multiple === true ? [] : "";
-        }
-
         var destroyWatchEntityLoaded;
 
-        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function (event, data) {
+        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             //-- functional for required fields
-            if (vm.field.requiredField) {
-                destroyWatchEntityLoaded = $scope.$watch(function () {
-                    var f_value = EditEntityStorage.getValueField(vm.field.requiredField);
+            if (componentSettings.requiredField) {
+                destroyWatchEntityLoaded = $scope.$watch(function() {
+                    var f_value = EditEntityStorage.getValueField(componentSettings.requiredField);
                     var result = false;
                     var endRecursion = false;
                     (function check(value) {
@@ -156,48 +81,43 @@
                         }
                     })(f_value);
                     return result;
-                }, function (value) {
+                }, function(value) {
                     if (!value) {
                         clear();
                         vm.readonly = true;
                     } else {
-                        vm.readonly = vm.field.readonly || false;
+                        vm.readonly = componentSettings.readonly || false;
                     }
                 }, true);
             }
             if (data.editorEntityType === "new") {
-                var defaultValue = moment().utc();
-                if(!!vm.field.defaultValue && moment(vm.field.defaultValue).isValid()){
-                    defaultValue = moment(vm.field.defaultValue, 'YYYY-MM-DD HH:mm').utc();
-                }
-                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
                 return;
             }
 
-            if (!vm.parentField) {
+            if (!vm.setting.parentField) {
                 if (!vm.multiple) {
-                    vm.fieldValue = data[vm.field.name] !== null ? moment.utc(data[vm.field.name]) : "";
+                    vm.fieldValue = data[vm.fieldName] !== null ? moment.utc(data[vm.fieldName]) : "";
                 } else {
                     vm.fieldValue = [];
-                    angular.forEach(data[vm.field.name], function (timeItem) {
+                    angular.forEach(data[vm.fieldName], function(timeItem) {
                         vm.fieldValue.push(moment.utc(timeItem[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
                     });
                 }
             } else {
                 if (!vm.multiple) {
-                    vm.fieldValue = data[vm.parentField][vm.field.name] !== null ? moment.utc(data[vm.parentField][vm.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
+                    vm.fieldValue = data[vm.setting.parentField][vm.fieldName] !== null ? moment.utc(data[vm.setting.parentField][vm.fieldName], 'YYYY-MM-DD HH:mm:ss') : "";
                 } else {
                     vm.fieldValue = [];
-                    angular.forEach(data[vm.parentField][vm.field.name], function (timeItem) {
+                    angular.forEach(data[vm.setting.parentField][vm.fieldName], function(timeItem) {
                         vm.fieldValue.push(moment.utc(timeItem[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
                     });
                 }
             }
         });
 
-        var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
+        var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function(event, data) {
             if (angular.isArray(data)) {
-                angular.forEach(data, function (error) {
+                angular.forEach(data, function(error) {
                     if (vm.error.indexOf(error) < 0) {
                         vm.error.push(error);
                     }
@@ -209,9 +129,9 @@
             }
         });
 
-        var destroyWatchFieldValue = $scope.$watch(function () {
+        var destroyWatchFieldValue = $scope.$watch(function() {
             return vm.fieldValue;
-        }, function () {
+        }, function() {
             vm.error = [];
         }, true);
 
@@ -223,15 +143,100 @@
             destroyErrorField();
             destroyWatchFieldValue();
             EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy(vm.parentField, vm.parentFieldIndex, vm.field.name, vm.fieldValue);
+            if (vm.setting.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy(vm.setting.parentField, vm.setting.parentFieldIndex, vm.fieldName, vm.fieldValue);
             }
         };
 
         this.$postLink = function() {
-            $element.on('$destroy', function () {
+            $element.on('$destroy', function() {
                 $scope.$destroy();
             });
         };
+
+        vm.filterValueStartDateTime = "";
+        vm.filterValueEndDateTime = "";
+
+        vm.getFilterValue = getFilterValue;
+        vm.clear = clear;
+        vm.getFieldValue = getFieldValue;
+
+        if (vm.filter) {
+            FilterFieldsStorage.addFilterController(this);
+        } else {
+            EditEntityStorage.addFieldController(this);
+        }
+
+        function getInitValue() {
+            var defaultValue = moment();
+            if (componentSettings.defaultValue && moment(componentSettings.defaultValue).isValid()) {
+                defaultValue = moment(componentSettings.defaultValue, 'YYYY-MM-DD HH:mm');
+            }
+            return componentSettings.multiple === true ? [] : defaultValue;
+        }
+
+        function clear() {
+            vm.fieldValue = componentSettings.multiple === true ? [] : "";
+        }
+
+        function getFieldValue() {
+
+            var field = {};
+
+            var wrappedFieldValue;
+
+            if (vm.multiple && vm.multiname) {
+                wrappedFieldValue = [];
+                angular.forEach(vm.fieldValue, function(valueItem) {
+                    if (!valueItem || valueItem === "" || !moment.isMoment(valueItem)) {
+                        return;
+                    }
+                    var tempItem = {};
+                    tempItem[vm.multiname] = moment.utc(valueItem).format('YYYY-MM-DD HH:mm:ss');
+                    wrappedFieldValue.push(tempItem);
+                });
+            } else {
+                if (vm.fieldValue === undefined || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
+                    wrappedFieldValue = "";
+                } else {
+                    wrappedFieldValue = moment.utc(vm.fieldValue).format('YYYY-MM-DD HH:mm:ss');
+                }
+            }
+
+            if (vm.setting.parentField) {
+                if (vm.setting.parentFieldIndex) {
+                    field[vm.setting.parentField] = [];
+                    field[vm.setting.parentField][vm.setting.parentFieldIndex] = {};
+                    field[vm.setting.parentField][vm.setting.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
+                } else {
+                    field[vm.setting.parentField] = {};
+                    field[vm.setting.parentField][vm.fieldName] = wrappedFieldValue;
+                }
+
+            } else {
+                field[vm.fieldName] = wrappedFieldValue;
+            }
+
+            return field;
+        }
+
+        function getFilterValue() {
+
+            var field = {};
+
+            if (vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime === "") {
+                return false;
+            } else {
+                if (vm.filterValueStartDateTime !== "" && vm.filterValueEndDateTime === "") {
+                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
+                } else if (vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime !== "") {
+                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
+                } else {
+                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
+                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
+                }
+                return field;
+            }
+        }
     }
 })();

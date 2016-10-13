@@ -173,6 +173,9 @@
                     templateUrl : "module/components/universalEditor/universalEditor.html",
                     controller : "UniversalEditorController",
                     controllerAs : "vm",
+                    params: {
+                        pk: null
+                    },
                     resolve : {
                         component: function() {
                             return state.component;
@@ -218,12 +221,9 @@
                 if($(item).find("a")[0].hash.split("/")[2] == stateParamEntityId){
                     $(item).addClass("active");
                 }
-            });
+            });           
             var toStateConfig = EditEntityStorage.getStateConfig(toState.name);
             if (toStateConfig && toStateConfig.component.name === 'ue-modal') {
-                if (fromParams.pk) {
-                    $state.params.pk = fromParams.pk;
-                }
                 angular.extend(toStateConfig.component.settings, {
                     fromState: fromState,
                     fromParams: fromParams
@@ -234,12 +234,17 @@
         if(itemsSelector.length == 1){
             angular.element(itemsSelector).css("display","none");
         }
-    }  
-    
+
+        angular.element(document).ready(function() {
+            if ($state.params.pk === 'new') {
+                EditEntityStorage.newSourceEntity();
+            }
+        });
+    }      
 
     configResolver.$inject = ['ConfigDataProvider'];
 
     function configResolver(ConfigDataProvider){
         return ConfigDataProvider;
-    }
+    }   
 })();

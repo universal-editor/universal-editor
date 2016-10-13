@@ -1,5 +1,5 @@
 
-<div class="field-wrapper row">
+<div ng-if="!vm.filter" class="field-wrapper row">
     <div class="form-group">
         <label class="field-name-label">
             <div data-ng-if="vm.hint" class="field-hint">
@@ -10,7 +10,7 @@
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                 <div data-ng-repeat="item in vm.selectedValues" data-ng-class="vm.readonly ? 'disabled' : ''" class="radio">
                     <label>
-                        <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{item[vm.field_id]}}"/>{{item[vm.field_search]}}
+                        <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{item[vm.field_id]}}"/><span ng-bind="item[vm.field_search]"></span>
                     </label>
                 </div>
             </div>
@@ -18,5 +18,13 @@
     </div>
     <div class="field-error-wrapper">
         <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>
+    </div>
+</div>
+<div ng-if="vm.filter">
+    <div class="filter-name-label"><span ng-bind="vm.fieldDisplayName"></span></div>
+    <div class="filter-inner-wrapper">
+        <label data-ng-repeat="item in vm.selectedValues" class="radio-inline">
+            <input type="radio" data-ng-model="vm.fieldValue" value="{{item[vm.field_id]}}"/><span ng-bind="item[vm.field_search]"></span>
+        </label>
     </div>
 </div>

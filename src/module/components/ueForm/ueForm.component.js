@@ -3,8 +3,7 @@
 
     var ueForm = {
         bindings : {
-            setting: "=",
-            funcCloseModal: '&'
+            setting: "="
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueForm/ueForm.html');

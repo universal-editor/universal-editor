@@ -240,5 +240,6 @@
         if ($state.params.pk === 'new') {
             vm.entityLoaded = true;
         }
+
     }
 })();

@@ -1,4 +1,4 @@
-.field-wrapper.row
+.field-wrapper.row(ng-if="!vm.filter")
     .form-group
         include ../../template/labelField/labelField
         .field-element
@@ -12,3 +12,8 @@
                 input.form-control.input-sm(type="text", data-ng-disabled="vm.readonly" data-minicolors="", data-ng-model="vm.fieldValue")
 
     include ../../template/errorField/errorField
+.filter-wrapper-field(ng-if="vm.filter")
+    .filter-name-label
+        span {{vm.fieldDisplayName}}
+    .filter-inner-wrapper
+        input.form-control.input-sm(type="text", data-minicolors="", data-ng-model="vm.fieldValue")

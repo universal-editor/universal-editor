@@ -9,8 +9,9 @@ body {
     padding: 20px 0px 5px 0px;
     //временный класс
     .filter-button{
+      display: block;
+      margin-bottom: 5px;
       min-width: 110px;
-      margin-right: 10px;
     }
     .header-action-button{
       border: none;
@@ -359,12 +360,13 @@ body {
 }
 
 .filter-name-label {
-  display: table-cell;
+  float: left;
   width: 200px;
+  vertical-align: top;
 }
 
 .filter-inner-wrapper {
-  display: table-cell;
+  margin-left: 205px;
 
   .autocomplete-input-wrapper {
     width: 170px;

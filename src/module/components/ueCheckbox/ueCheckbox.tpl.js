@@ -7,7 +7,7 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueCheckbox/ueCheckbox.html',
     '\n' +
-    '<div class="field-wrapper row">\n' +
+    '<div ng-if="!vm.filter" class="field-wrapper row">\n' +
     '    <div class="form-group">\n' +
     '        <label class="field-name-label">\n' +
     '            <div data-ng-if="vm.hint" class="field-hint">\n' +
@@ -26,6 +26,14 @@ module.run(['$templateCache', function($templateCache) {
     '    </div>\n' +
     '    <div class="field-error-wrapper">\n' +
     '        <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>\n' +
+    '    </div>\n' +
+    '</div>\n' +
+    '<div ng-if="vm.filter">\n' +
+    '    <div class="filter-name-label"><span ng-bind="vm.fieldDisplayName"></span></div>\n' +
+    '    <div class="filter-inner-wrapper">\n' +
+    '        <label data-ng-repeat="item in vm.selectedValues" class="checkbox-inline">\n' +
+    '            <input type="checkbox" data-checklist-model="vm.fieldValue" data-checklist-value="item[vm.field_id]"/><span ng-bind="item[vm.field_search]"></span>\n' +
+    '        </label>\n' +
     '    </div>\n' +
     '</div>');
 }]);

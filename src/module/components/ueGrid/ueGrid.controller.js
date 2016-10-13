@@ -35,7 +35,10 @@
         vm.sortingDirection = true;
         vm.pageItemsArray = [];
         vm.contextLinks = vm.setting.component.settings.contextMenu;
-        vm.listHeaderBar = vm.setting.component.settings.header;
+        vm.listHeaderBar = vm.setting.component.settings.header.controls;
+
+        vm.filterComponent = vm.setting.component.settings.header.filter;
+        
         //vm.contextLinks = [
         //    {
         //        "label": "Раскрыть",

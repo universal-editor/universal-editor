@@ -1,4 +1,4 @@
-.field-wrapper.row
+.field-wrapper.row(ng-if="!vm.filter")
     .form-group
         include ../../template/labelField/labelField
         .field-element
@@ -11,3 +11,18 @@
             .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple")
                 input.form-control.input-sm(data-date-time="", name="{{vm.fieldName}}", data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue", data-format="DD.MM.YYYY", data-max-view="year" data-min-view="date" data-view="date")
     include ../../template/errorField/errorField
+.filter-date-wrapper(ng-if="vm.filter")
+    .filter-name-label
+        span(ng-bind="vm.fieldDisplayName")
+    .filter-inner-wrapper
+        .filter-start
+            .editor-date
+                input.form-control.input-sm(data-date-time="", data-ng-model="vm.filterValueStartDate", data-format="YYYY-MM-DD", data-max-view="year" data-min-view="date" data-view="date")
+            .editor-time
+                input.form-control.input-sm(data-ng-disabled="!vm.filterValueStartDate", data-date-time="", data-ng-model="vm.filterValueStartTime", data-format="HH:mm:ss", data-max-view="hours" data-min-view="minutes" data-view="hours")
+        span.divider -
+        .filter-end
+            .editor-date
+                input.form-control.input-sm(data-date-time="", data-ng-model="vm.filterValueEndDate", data-format="YYYY-MM-DD", data-max-view="year" data-min-view="date" data-view="date")
+            .editor-time
+                input.form-control.input-sm(data-ng-disabled="!vm.filterValueEndDate", data-date-time="", data-ng-model="vm.filterValueEndTime", data-format="HH:mm:ss", data-max-view="hours" data-min-view="minutes" data-view="hours")

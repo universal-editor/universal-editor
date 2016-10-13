@@ -1,4 +1,4 @@
-.field-wrapper.row
+.field-wrapper.row(ng-if="!vm.filter")
     .form-group
         include ../../template/labelField/labelField
         .field-element
@@ -11,3 +11,14 @@
             .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple")
                 input.form-control.input-sm(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly", data-ng-model="vm.fieldValue", class="timepicker", data-date-time="", data-format="HH:mm", data-max-view="hours", data-min-view="minutes", data-view="hours")
     include ../../template/errorField/errorField
+.filter-time-wrapper(ng-if="vm.filter")
+   .filter-name-label
+      span(ng-bind="vm.fieldDisplayName")
+   .filter-inner-wrapper
+      .filter-start
+         .editor-time
+            input.form-control.input-sm(data-date-time="", data-ng-model="vm.filterValueStartTime", data-format="HH:mm", data-max-view="hours", data-min-view="minutes", data-view="hours")
+      span.divider -
+      .filter-end
+         .editor-time
+            input.form-control.input-sm(data-date-time="", data-ng-model="vm.filterValueEndTime", data-format="HH:mm", data-max-view="hours", data-min-view="minutes", data-view="hours")

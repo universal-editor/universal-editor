@@ -1,4 +1,4 @@
-.field-wrapper.row
+.field-wrapper.row(ng-if="!vm.filter")
     .form-group
         include ../../template/labelField/labelField
         .field-element
@@ -9,7 +9,6 @@
                     data-ng-disabled="vm.readonly"
                     ng-model="vm.fieldValue[$index]"
                     view="date"
-                    timezone="UTC"
                     format="YYYY-MM-DD HH:mm:ss")
                     span.input-group-btn
                         button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
@@ -20,6 +19,26 @@
                 data-ng-disabled="vm.readonly"
                 ng-model="vm.fieldValue"
                 view="date"
-                timezone="UTC"
                 format="YYYY-MM-DD HH:mm:ss")
     include ../../template/errorField/errorField
+.filter-datetime-wrapper(ng-if="vm.filter")
+    .filter-name-label
+        span(ng-bind="vm.fieldDisplayName")
+    .filter-inner-wrapper
+        .filter-start
+            .editor-datetime
+                input.form-control.input-sm(date-time=""
+                    name="{{vm.fieldName}}" 
+                    data-ng-disabled="vm.readonly" 
+                    ng-model="vm.filterValueStartDateTime" 
+                    view="date" 
+                    format="YYYY-MM-DD HH:mm:ss")            
+        span.divider -
+        .filter-end
+            .editor-datetime
+                input.form-control.input-sm(date-time=""
+                    name="{{vm.fieldName}}" 
+                    data-ng-disabled="vm.readonly" 
+                    ng-model="vm.filterValueEndDateTime" 
+                    view="date" 
+                    format="YYYY-MM-DD HH:mm:ss")

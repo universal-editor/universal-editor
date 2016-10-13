@@ -1,4 +1,4 @@
-.field-wrapper.row
+.field-wrapper.row(ng-if="!vm.filter")
     .form-group
         include ../../template/labelField/labelField
         .field-element
@@ -8,3 +8,10 @@
                         input(type="checkbox", data-ng-disabled="vm.readonly", data-checklist-model="vm.fieldValue", data-checklist-value="item[vm.field_id]")
                         |{{item[vm.field_search]}}
     include ../../template/errorField/errorField
+div(ng-if="vm.filter")
+    .filter-name-label
+        span(ng-bind="vm.fieldDisplayName")
+    .filter-inner-wrapper
+        label.checkbox-inline(data-ng-repeat="item in vm.selectedValues")
+            input(type="checkbox", data-checklist-model="vm.fieldValue", data-checklist-value="item[vm.field_id]")
+            span(ng-bind="item[vm.field_search]")
