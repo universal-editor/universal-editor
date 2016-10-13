@@ -13,7 +13,6 @@
             //RestApiService.getEntityObject();
         /* jshint validthis: true */
         var vm = this,
-            pageItems = 3,
             metaKey,
             itemsKey,
             mixEntityObject,
@@ -50,6 +49,7 @@
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
         vm.parent = null;
+        vm.paginationData = [];
 
         if(vm.setting.headComponent) {
             vm.parent = !!$location.search().parent ? $location.search().parent : null;
@@ -310,102 +310,12 @@
             vm.parentButton = !!vm.parent;
             vm.pageItemsArray = [];
 
-            var startIndex;
-            var endIndex;
-            var qParams = RestApiService.getQueryParams();
             // PAGINATION
+
             if (vm.items.length === 0) {
                 vm.metaKey = false;
             }
-            if (vm.pagination && vm.metaKey) {
-
-                vm.metaData = data[metaKey];
-                vm.metaData.fromItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage ) + 1;
-                vm.metaData.toItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage ) + data[itemsKey].length;
-
-                if(data[metaKey].currentPage > 1){
-                    qParams.page = 1;
-                    vm.pageItemsArray.push({
-                        label : "<<",
-                        href : url + "?" + $httpParamSerializer(qParams)
-                    });
-
-                    qParams.page = data[metaKey].currentPage - 1;
-                    vm.pageItemsArray.push({
-                        label : "<",
-                        href : url + "?" + $httpParamSerializer(qParams)
-                    });
-                }
-
-                if(data[metaKey].currentPage > pageItems + 1){
-                    qParams.page = data[metaKey].currentPage - pageItems - 1;
-                    vm.pageItemsArray.push({
-                        label : "...",
-                        href : url + "?" + $httpParamSerializer(qParams)
-                    });
-                }
-
-                if( data[metaKey].currentPage - pageItems > 0){
-                    startIndex = data[metaKey].currentPage - pageItems;
-                } else {
-                    startIndex = 1;
-                }
-
-                while(startIndex < data[metaKey].currentPage){
-                    qParams.page = startIndex;
-                    vm.pageItemsArray.push({
-                        label : startIndex,
-                        href : url + "?" + $httpParamSerializer(qParams)
-                    });
-
-                    startIndex++;
-                }
-
-                vm.pageItemsArray.push({
-                    label : data[metaKey].currentPage,
-                    self : true
-                });
-
-                if( data[metaKey].currentPage + pageItems < data[metaKey].pageCount){
-                    endIndex = data[metaKey].currentPage + pageItems;
-                } else {
-                    endIndex = data[metaKey].pageCount;
-                }
-
-                var tempCurrentPage = data[metaKey].currentPage + 1;
-
-                while(tempCurrentPage <= endIndex){
-                    qParams.page = tempCurrentPage;
-                    vm.pageItemsArray.push({
-                        label : tempCurrentPage,
-                        href : url + "?" + $httpParamSerializer(qParams)
-                    });
-
-                    tempCurrentPage++;
-                }
-
-                if(data[metaKey].currentPage + pageItems < data[metaKey].pageCount){
-                    qParams.page = data[metaKey].currentPage + pageItems + 1;
-                    vm.pageItemsArray.push({
-                        label : "...",
-                        href : url + "?" + $httpParamSerializer(qParams)
-                    });
-                }
-
-                if(data[metaKey].currentPage < data[metaKey].pageCount){
-                    qParams.page = data[metaKey].currentPage + 1;
-                    vm.pageItemsArray.push({
-                        label : ">",
-                        href : url + "?" + $httpParamSerializer(qParams)
-                    });
-
-                    qParams.page = data[metaKey].pageCount;
-                    vm.pageItemsArray.push({
-                        label : ">>",
-                        href : url + "?" + $httpParamSerializer(qParams)
-                    });
-                }
-            }
+            vm.paginationData = data;
 
             //END PAGINATION
 

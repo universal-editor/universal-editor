@@ -1,0 +1,6 @@
+div
+    ul.pagination.col-lg-6.col-md-6.col-sm-6.col-xs-6
+        li(data-ng-repeat="pageItem in vm.pageItemsArray", data-ng-class="pageItem.self ? 'active' : ''")
+            a(data-ng-if="!pageItem.self", href="{{pageItem.href}}", data-ng-click="vm.changePage($event,pageItem.href)") {{pageItem.label}}
+            span(data-ng-if="pageItem.self") {{pageItem.label}}
+    .meta-info.col-lg-6.col-md-6.col-sm-6.col-xs-6 {{'ELEMENTS' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{'FROM' | translate}} {{vm.metaData.totalCount}}

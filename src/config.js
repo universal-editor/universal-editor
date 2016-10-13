@@ -20,6 +20,10 @@ var staffDataSource = {
     sortBy: '-id',
     primaryKey: 'id',
     parentField: 'parent_id',
+    keys:{
+        items: 'items',
+        meta: '_meta'
+    },
     fields: [
         {
             name: 'id',
@@ -241,7 +245,24 @@ var ue = new UniversalEditor('universal-editor', {
                                         }
                                     }
                                 }
-                            ]
+                            ],
+                            footer: {
+                                controls: [
+                                    {
+                                        component: {
+                                            name: 'ue-pagination',
+                                            settings: {
+                                                dataSource: staffDataSource,
+                                                mixSize: '5',
+                                                lastText: 'last',
+                                                nextText: 'next',
+                                                firstText: 'first',
+                                                previousText: 'next'
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     }
                 },
