@@ -35,7 +35,7 @@
         vm.sortingDirection = true;
         vm.pageItemsArray = [];
         vm.contextLinks = [];
-        vm.listHeaderBar = vm.setting.component.settings.header;
+        vm.listHeaderBar = [];
         vm.scopeIdParent = $scope.$id;
         //vm.editFooterBarNew = [];
         //vm.editFooterBarExist = [];
@@ -91,6 +91,17 @@
             newValue.headComponent = vm.setting.headComponent;
             vm.contextLinks.push(newValue);
         });
+
+        if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.controls) {
+            angular.forEach(vm.setting.component.settings.header.controls, function(control){
+                var newControl = angular.merge({}, control);
+                if (angular.isUndefined(newControl.component.settings.dataSource)) {
+                    newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
+                }
+                newControl.paginationData = {};
+                vm.listHeaderBar.push(newControl);
+            })
+        }
 
         if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
             angular.forEach(vm.setting.component.settings.footer.controls, function(control) {

@@ -38,7 +38,7 @@
         vm.currentTab = vm.setting.component.settings.body[0].component.settings.label;
         vm.entityId = "";
         vm.editorEntityType = "new";
-        vm.editFooterBar = vm.setting.component.settings.footer;
+        vm.editFooterBar = [];
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
         vm.parentButton = false;
@@ -91,10 +91,16 @@
         //    }
         //});
 
-        //angular.forEach(vm.setting.dataSource.fields, function(field) {
-         //   angular.forEach()
-        //    console.log(field);
-        //}); else
+        if(!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
+            angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
+                var newControl = angular.merge({}, control);
+                if (angular.isUndefined(newControl.component.settings.dataSource)) {
+                    newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
+                }
+                newControl.paginationData = {};
+                vm.editFooterBar.push(newControl);
+            });
+        }
 
         angular.forEach(vm.editFooterBar, function(button, index) {
             if ($state.params.pk === 'new') {
