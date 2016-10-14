@@ -157,6 +157,7 @@
             if (expandFields.length > 0){
                 params.expand = expandFields.join(',');
             }
+
             $http({
                 method : _method,
                 url : _url,
@@ -221,7 +222,7 @@
 
             $http({
                 method : 'GET',
-                url : entityObject.backend.url + '?' + params,
+                url : entityObject.backend.url + '?' + params
             }).then(function (response) {
                 self.isProcessing = false;
                 $rootScope.$broadcast('editor:items_list',response.data);
@@ -286,6 +287,9 @@
                 var params = {};
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
+                }
+                if ($state.params.back) {
+                    params.type = $state.params.back;
                 }
                 $state.go('editor.type.list', params,{reload: true});
             }, function (reject) {

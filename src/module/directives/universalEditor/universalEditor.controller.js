@@ -8,6 +8,7 @@
     UniversalEditorController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location','$document','$timeout','$httpParamSerializer','$state','configObject','toastr', '$translate', 'ConfigDataProvider'];
 
     function UniversalEditorController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,$document,$timeout,$httpParamSerializer,$state,configObject,toastr, $translate, ConfigDataProvider){
+
         $scope.entity = RestApiService.getEntityType();
         var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
@@ -249,10 +250,6 @@
             }
         };
 
-        RestApiService.setQueryParams({
-            sort : vm.sortingDirection ? vm.sortField : "-" + vm.sortField
-        });
-
         $rootScope.$broadcast('editor:set_entity_type',$scope.entity);
 
 
@@ -260,6 +257,7 @@
             if ($state.is('editor.type.new')) {
                 return;
             }
+
             vm.metaKey = true;
             vm.listLoaded = true;
             vm.items = data[itemsKey];
@@ -324,6 +322,7 @@
             var startIndex;
             var endIndex;
             var qParams = RestApiService.getQueryParams();
+
             // PAGINATION
             if(vm.items.length === 0){
                 vm.metaKey = false;
@@ -417,7 +416,6 @@
                     });
                 }
             }
-
             //END PAGINATION
         });
 
