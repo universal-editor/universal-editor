@@ -59,12 +59,7 @@ div
                 td(colspan="{{vm.tableFields.length + 1}}")
                     | {{'ELEMENT_NO' | translate}}
         tfoot
-            tr(data-ng-if="vm.metaKey")
-                td(colspan="{{vm.tableFields.length + 1}}")
-                    .meta-info {{'ELEMENTS' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{'FROM' | translate}} {{vm.metaData.totalCount}}
             tr
-                td(colspan="{{vm.tableFields.length + 1}}", data-ng-if="vm.pagination && vm.metaKey")
-                    ul.pagination
-                        li(data-ng-repeat="pageItem in vm.pageItemsArray", data-ng-class="pageItem.self ? 'active' : ''")
-                            a(data-ng-if="!pageItem.self", href="{{pageItem.href}}", data-ng-click="vm.changePage($event,pageItem.href)") {{pageItem.label}}
-                            span(data-ng-if="pageItem.self") {{pageItem.label}}
+                td(colspan="{{vm.tableFields.length + 1}}")
+                    component-wrapper(data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component", data-scope-id-parent="{{vm.scopeIdParent}}")
+                    //ue-pagination(data-data="vm.paginationData")

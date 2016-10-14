@@ -65,16 +65,10 @@
             </tr>
         </tbody>
         <tfoot>
-            <tr data-ng-if="vm.metaKey">
-                <td colspan="{{vm.tableFields.length + 1}}">
-                    <div class="meta-info">{{'ELEMENTS' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{'FROM' | translate}} {{vm.metaData.totalCount}}</div>
-                </td>
-            </tr>
             <tr>
-                <td colspan="{{vm.tableFields.length + 1}}" data-ng-if="vm.pagination &amp;&amp; vm.metaKey">
-                    <ul class="pagination">
-                        <li data-ng-repeat="pageItem in vm.pageItemsArray" data-ng-class="pageItem.self ? 'active' : ''"><a data-ng-if="!pageItem.self" href="{{pageItem.href}}" data-ng-click="vm.changePage($event,pageItem.href)">{{pageItem.label}}</a><span data-ng-if="pageItem.self">{{pageItem.label}}</span></li>
-                    </ul>
+                <td colspan="{{vm.tableFields.length + 1}}">
+                    <component-wrapper data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component" data-scope-id-parent="{{vm.scopeIdParent}}"></component-wrapper>
+                    <!--ue-pagination(data-data="vm.paginationData")-->
                 </td>
             </tr>
         </tfoot>
