@@ -252,12 +252,10 @@ var ue = new UniversalEditor('universal-editor', {
                                         component: {
                                             name: 'ue-pagination',
                                             settings: {
-                                                dataSource: staffDataSource,
-                                                mixSize: '5',
-                                                lastText: 'last',
-                                                nextText: 'next',
-                                                firstText: 'first',
-                                                previousText: 'next'
+                                                label: {
+                                                    last: '>>',
+                                                    next: '>'
+                                                }
                                             }
                                         }
                                     }
@@ -325,7 +323,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                             complete: window.RequstCallback.complete
                                                         }
                                                     }
-                                                },
+                                                }
                                             ]
                                         }
                                     }

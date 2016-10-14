@@ -158,7 +158,7 @@
             }
 
             var id = request.scopeIdParent;
-
+            params['per-page'] = 5;
             $http({
                 method : _method,
                 url : _url,

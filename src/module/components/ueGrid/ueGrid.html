@@ -67,7 +67,8 @@
         <tfoot>
             <tr>
                 <td colspan="{{vm.tableFields.length + 1}}">
-                    <ue-pagination data-data="vm.paginationData"></ue-pagination>
+                    <component-wrapper data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component" data-scope-id-parent="{{vm.scopeIdParent}}"></component-wrapper>
+                    <!--ue-pagination(data-data="vm.paginationData")-->
                 </td>
             </tr>
         </tfoot>
