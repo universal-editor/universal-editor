@@ -32,8 +32,14 @@
         vm.hint = vm.setting.hint || false;
         vm.required = vm.setting.required || false;
         vm.error = [];
-        vm.multiple = componentSettings.multiple === true ? true : false;
+        vm.multiple = componentSettings.multiple === true;
         vm.fieldValue = getInitValue();
+
+        if(vm.filter) {
+            vm.multiple = false;
+            vm.readonly = false;
+            vm.required = false;
+        }
 
         if (vm.setting.parentFieldIndex) {
             if (vm.multiple) {
@@ -154,17 +160,14 @@
             });
         };
 
-        vm.filterValueStartDateTime = "";
-        vm.filterValueEndDateTime = "";
 
-        vm.getFilterValue = getFilterValue;
         vm.clear = clear;
         vm.getFieldValue = getFieldValue;
 
         if (vm.filter) {
-            FilterFieldsStorage.addFilterController(this);
+            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
         } else {
-            EditEntityStorage.addFieldController(this);
+            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
         }
 
         function getInitValue() {

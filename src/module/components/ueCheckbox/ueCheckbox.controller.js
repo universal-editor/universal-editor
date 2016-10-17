@@ -237,9 +237,9 @@
         vm.getFieldValue = getFieldValue;
 
         if (vm.filter) {
-            FilterFieldsStorage.addFilterController(this);
+            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
         } else {
-            EditEntityStorage.addFieldController(this);
+            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
         }
 
         function clear() {

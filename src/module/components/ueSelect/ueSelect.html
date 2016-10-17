@@ -1,11 +1,11 @@
 
-<div ng-if="!vm.filter" class="form-group">
-    <label class="field-name-label">
+<div ng-class="{'field-wrapper row':!vm.filter, 'filter-wrapper-field': vm.filter}">
+    <label ng-if="!vm.filter" class="field-name-label">
         <div data-ng-if="vm.hint" class="field-hint">
-            <div class="hint-text">{{vm.hint}}</div>
-        </div><span data-ng-class="vm.required ? 'editor-required' : '' ">{{vm.fieldDisplayName}}:</span>
+            <div ng-bind="vm.hint" class="hint-text"></div>
+        </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="vm.fieldDisplayName"></span>
     </label>
-    <div class="field-element">
+    <div ng-class="{'filter-inner-wrapper': vm.filter, 'field-element': !vm.filter}" ng-style="{'overflow:auto': vm.multiple}">
         <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
             <div class="select-border">
                 <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" size="3" class="form-control">
@@ -16,7 +16,7 @@
                 <div class="processing-status">{{'PERFORMS_ACTIONS' | translate}}</div>
             </div>
         </div>
-        <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+        <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" ng-class="{'col-lg-2 col-md-2 col-sm-3 col-xs-3': !vm.filter}">
             <div data-ng-click="vm.clickSelect()" data-ng-class="!vm.search ? &quot;but-for-search&quot; : &quot;&quot;" class="select-input-wrapper">
                 <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="form-control select-input"/>
                 <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="focus-input"/>
@@ -53,23 +53,6 @@
         </div>
     </div>
 </div>
-<div class="field-error-wrapper">
+<div ng-if="!vm.filter" class="field-error-wrapper">
     <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>
-</div>
-<div ng-if="vm.filter">
-    <div class="filter-name-label"><span ng-bind="vm.fieldDisplayName"></span></div>
-    <div class="filter-inner-wrapper">
-        <div data-ng-click="vm.clickSelect()" data-ng-class="{&quot;but-for-search&quot;: !vm.search}" class="select-input-wrapper">
-            <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="{&quot;color-placeholder&quot;: vm.isSelection}" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" class="form-control"/>
-            <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" class="focus-input"/>
-            <div data-ng-if="!vm.search" class="form-control select-input">
-                <div data-ng-class="{&quot;color-placeholder-div&quot;: vm.colorPlaceholder}" ng-bind="vm.fieldValue[vm.field_search]" class="dropdown__selected-items"></div>
-            </div><span data-ng-if="vm.isSpanSelectDelete" data-ng-click="vm.deleteToSelected($event, false)" class="selecte-delete">×</span>
-            <div data-ng-if="!vm.readonly &amp;&amp; vm.showPossible" class="possible-values active possible-bottom">
-                <div class="possible-scroll">
-                    <div data-ng-repeat="option in vm.options" data-ng-mouseover="vm.activeElement = $index" data-ng-mousedown="vm.addToSelected(option)" data-ng-class="vm.activeElement == $index ? 'active' : ''" ng-bind="option[vm.field_search]" class="possible-value-item"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

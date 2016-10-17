@@ -5,14 +5,15 @@
         .module('universal.editor')
         .controller('UeButtonFilterController', UeButtonFilterController);
 
-    UeButtonFilterController.$inject = ['$rootScope', '$scope', '$element', 'RestApiService', 'configData', '$window', 'ModalService', 'ButtonsService'];
+    UeButtonFilterController.$inject = ['$rootScope', '$scope', '$element', 'RestApiService', 'configData', '$window', 'ModalService', 'ButtonsService', 'FilterFieldsStorage'];
 
-    function UeButtonFilterController($rootScope, $scope, $element, RestApiService, configData, $window, ModalService, ButtonsService) {
+    function UeButtonFilterController($rootScope, $scope, $element, RestApiService, configData, $window, ModalService, ButtonsService, FilterFieldsStorage) {
         var vm = this;
+        var settings = vm.setting.component.settings;
 
-        vm.label = vm.setting.component.settings.label;
-        vm.action = vm.setting.component.settings.action;
-        vm.beforeAction = vm.setting.component.settings.beforeAction;
+        vm.label = settings.label;
+        vm.action = settings.action;
+        vm.beforeAction = settings.beforeAction;
 
         $element.find('button').bind("click", function() {
             var callback = ButtonsService.getCallback(vm.beforeAction);
@@ -21,6 +22,8 @@
             }
 
             if (vm.action === 'send') {
+                debugger;
+                var values = FilterFieldsStorage.calculate(settings.$parentScopeId);
                 //* TODO */
             }
 

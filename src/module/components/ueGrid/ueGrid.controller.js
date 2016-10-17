@@ -38,6 +38,12 @@
         vm.listHeaderBar = vm.setting.component.settings.header.controls;
 
         vm.filterComponent = vm.setting.component.settings.header.filter;
+
+        if(angular.isUndefined(vm.filterComponent.component.settings.dataSource)) {
+            vm.filterComponent.component.settings.dataSource = vm.setting.component.settings.dataSource;
+        }
+
+        vm.filterComponent.component.settings.$parentScopeId = $scope.$id;
         
         //vm.contextLinks = [
         //    {

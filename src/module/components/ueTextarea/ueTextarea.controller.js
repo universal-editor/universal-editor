@@ -35,6 +35,18 @@
         vm.error = [];
         vm.clear = clear;
         vm.getFieldValue = getFieldValue;
+        vm.multiple = componentSettings.multiple === true ? true : false;
+
+        if (componentSettings.multiname || angular.isString(componentSettings.multiname)) {
+            vm.multiname = ('' + componentSettings.multiname) || "value";
+        }
+
+        if (vm.filter) {
+            vm.multiple = false;
+            vm.readonly = false;
+            vm.required = false;
+        }
+        vm.fieldValue = vm.multiple ? [] : '';
 
         if (!!vm.cols) {
             if (vm.cols > 6) {
@@ -46,16 +58,6 @@
             vm.classTextarea = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
         }
 
-        if (componentSettings.multiple === true) {
-            vm.multiple = true;
-            vm.fieldValue = [];
-            if (componentSettings.multiname || angular.isString(componentSettings.multiname)) {
-                vm.multiname = ('' + componentSettings.multiname) || "value";
-            }
-        } else {
-            vm.multiple = false;
-            vm.fieldValue = "";
-        }
 
         if (vm.parentFieldIndex) {
             if (vm.multiple) {
@@ -89,21 +91,21 @@
                 return;
             }
 
-         /*   if (componentSettings.hasOwnProperty("maxLength") && val.length > componentSettings.maxLength) {
-                var maxError = "Для поля превышено максимальное допустимое значение в " + componentSettings.maxLength + " символов. Сейчас введено " + val.length + " символов.";
-                if (vm.error.indexOf(maxError) < 0) {
-                    vm.error.push(maxError);
-                }
-            }
-
-            if (componentSettings.hasOwnProperty("minLength") && val.length < componentSettings.minLength) {
-                var minError = "Минимальное значение поля не может быть меньше " + componentSettings.minLength + " символов. Сейчас введено " + val.length + " символов.";
-                if (vm.error.indexOf(minError) < 0) {
-                    vm.error.push(minError);
-                }
-            }*/
+            /*   if (componentSettings.hasOwnProperty("maxLength") && val.length > componentSettings.maxLength) {
+                   var maxError = "Для поля превышено максимальное допустимое значение в " + componentSettings.maxLength + " символов. Сейчас введено " + val.length + " символов.";
+                   if (vm.error.indexOf(maxError) < 0) {
+                       vm.error.push(maxError);
+                   }
+               }
+   
+               if (componentSettings.hasOwnProperty("minLength") && val.length < componentSettings.minLength) {
+                   var minError = "Минимальное значение поля не может быть меньше " + componentSettings.minLength + " символов. Сейчас введено " + val.length + " символов.";
+                   if (vm.error.indexOf(minError) < 0) {
+                       vm.error.push(minError);
+                   }
+               }*/
         };
-        
+
         var destroyWatchEntityLoaded;
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
 

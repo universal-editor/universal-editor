@@ -30,12 +30,16 @@
         vm.hint = vm.setting.hint || false;
         vm.required = vm.setting.required || false;
         vm.error = [];
-        vm.multiple = componentSettings.multiple === true ? true : false;
+        vm.multiple = componentSettings.multiple === true;
         vm.fieldValue = getInitValue();
 
-        if (angular.isString(componentSettings.multiname)) {
-            vm.multiname = ('' + componentSettings.multiname) || "value";
+        if(vm.filter) {
+            vm.multiple = false;
+            vm.readonly = false;
+            vm.required = false;
         }
+
+        vm.multiname = componentSettings.multiname;
 
         if (vm.setting.parentFieldIndex) {
             if (vm.multiple) {
@@ -173,44 +177,13 @@
                 $scope.$destroy();
             });
         };
-
-        vm.filterValueStartDate = "";
-        vm.filterValueStartTime = "";
-        vm.filterValueEndDate = "";
-        vm.filterValueEndTime = "";
-
-        vm.getFilterValue = getFilterValue;
         vm.clear = clear;
         vm.getFieldValue = getFieldValue;
 
         if (vm.filter) {
-            FilterFieldsStorage.addFilterController(this);
+            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
         } else {
-            EditEntityStorage.addFieldController(this);
-        }
-
-        function getFilterValue() {
-
-            var field = {};
-
-            if (vm.filterValueStartDate === "" && vm.filterValueEndDate === "" &&
-                vm.filterValueStartTime === "" && vm.filterValueEndTime === "") {
-                return false;
-            } else {
-
-                var st = moment.isMoment(vm.filterValueStartTime) ? " " + moment(vm.filterValueStartTime).format("HH:mm:ss") : "";
-                var et = moment.isMoment(vm.filterValueEndTime) ? " " + moment(vm.filterValueEndTime).format("HH:mm:ss") : "";
-
-                if (vm.filterValueStartDate !== "" && vm.filterValueEndDate === "") {
-                    field[">=" + vm.filterName] = moment(vm.filterValueStartDate).format("YYYY-MM-DD") + st;
-                } else if (vm.filterValueStartDate === "" && vm.filterValueEndDate !== "") {
-                    field["<=" + vm.filterName] = moment(vm.filterValueEndDate).format("YYYY-MM-DD") + et;
-                } else {
-                    field[">=" + vm.filterName] = moment(vm.filterValueStartDate).format("YYYY-MM-DD") + st;
-                    field["<=" + vm.filterName] = moment(vm.filterValueEndDate).format("YYYY-MM-DD") + et;
-                }
-                return field;
-            }
+            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
         }
 
         function getInitValue() {
@@ -218,7 +191,7 @@
             if (!!componentSettings.defaultValue && moment(componentSettings.defaultValue).isValid()) {
                 defaultValue = moment(componentSettings.defaultValue);
             }
-            return componentSettings.multiple === true ? [] : defaultValue;
+            return vm.multiple ? [] : defaultValue;
         }
 
         function clear() {
@@ -226,7 +199,6 @@
         }
 
         function getFieldValue() {
-
             var field = {};
             var wrappedFieldValue;
 

@@ -26,14 +26,20 @@
         } else {
             fieldErrorName = vm.setting.name;
         }
-
         vm.readonly = componentSettings.readonly || false;
         vm.parentFieldIndex = vm.setting.parentFieldIndex || false;
         vm.fieldDisplayName = componentSettings.label;
         vm.hint = componentSettings.hint || false;
         vm.required = componentSettings.required || false;
         vm.error = [];
-        vm.multiple = componentSettings.multiple === true ? true : false;
+        vm.multiple = componentSettings.multiple === true;
+
+        if(vm.filter) {
+            vm.multiple = false;
+            vm.readonly = false;
+            vm.required = false;
+        }
+
         vm.fieldValue = vm.multiple && !vm.filter ? [] : defaultColor;
 
         if (componentSettings.multiname) {
@@ -144,9 +150,9 @@
         vm.getFieldValue = getFieldValue;
 
         if (vm.filter) {
-            FilterFieldsStorage.addFilterController(this);
+            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
         } else {
-            EditEntityStorage.addFieldController(this);
+            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
         }
 
         function clear() {
@@ -156,7 +162,7 @@
         function getFilterValue() {
             var field = {};
             if (vm.fieldValue.trim() !== "") {
-                field[vm.filterName] = vm.filterValue;
+                field[vm.fieldName] = vm.fieldValue;
                 return field;
             }
             return false;            

@@ -27,12 +27,23 @@
         vm.fieldName = vm.setting.name;
         vm.fieldValue = undefined;
         vm.readonly = componentSettings.readonly || false;
-        vm.setting.parentFieldIndex = vm.setting.parentFieldIndex || false;
+        vm.parentFieldIndex = vm.setting.parentFieldIndex || false;
         vm.mask = componentSettings.mask || false;
         vm.fieldDisplayName = componentSettings.label;
         vm.hint = componentSettings.hint || false;
         vm.required = componentSettings.required || false;
         vm.error = [];
+        vm.multiple = componentSettings.multiple === true;
+
+        if(vm.filter) {
+            vm.multiple = false;
+            vm.readonly = false;
+            vm.required = false;
+        }
+
+        vm.fieldValue = vm.multiple ? [] : (componentSettings.defaultValue || null);
+
+        vm.multiname = componentSettings.multiname;
         
 
         if (!!vm.cols) {
@@ -42,17 +53,6 @@
             if (vm.cols < 1) {
                 vm.cols = 1;
             }
-        }
-
-        if (componentSettings.multiple === true) {
-            vm.multiple = true;
-            vm.fieldValue = [];
-            if (componentSettings.multiname || angular.isString(componentSettings.multiname)) {
-                vm.multiname = ('' + componentSettings.multiname) || 'value';
-            }
-        } else {
-            vm.multiple = false;
-            vm.fieldValue = componentSettings.defaultValue || '' ;
         }
 
         /*
@@ -248,9 +248,9 @@
         vm.clear = clear;
 
         if (vm.filter) {
-           FilterFieldsStorage.addFilterController(this);            
+            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
         } else {
-           EditEntityStorage.addFieldController(this);
+            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
         }
 
         function clear() {

@@ -236,6 +236,7 @@
         }
 
         angular.element(document).ready(function() {
+            
             if ($state.params.pk === 'new') {
                 EditEntityStorage.newSourceEntity();
             }

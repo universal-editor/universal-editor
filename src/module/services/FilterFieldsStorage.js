@@ -9,11 +9,15 @@
 
     function FilterFieldsStorage($rootScope,$timeout,configData){
         var filterControllers = [],
-            entityType;
+            entityType,
+            storage = {};
+        
 
-        this.addFilterController = function (ctrl) {
+        this.addFilterController = function (ctrl, id) {
             filterControllers.push(ctrl);
-            ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
+            storage[id] = storage[id] || [];
+            storage[id].push(ctrl);
+            ctrl.setting.component.settings.$fieldHash = Math.random().toString(36).substr(2, 15);
         };
 
         this.deleteFilterController = function (ctrl) {
@@ -22,6 +26,24 @@
                     filterControllers.splice(ind,1);
                 }
             });
+        };
+
+        this.calculate = function(id) {
+            var ctrls = storage[id];
+            var filters = {};
+            //-- get list of filter fields
+            angular.forEach(ctrls, function(ctrl) {
+                //--get settings of the field
+                var settings = ctrl.setting.component.settings;
+                //--get operator from settings of the field
+                var operator = settings.$filterOperator;
+                //--get value of the field
+                var fieldValue = ctrl.getFieldValue();        
+
+                //-- genarate filter objects with prepared filters
+                angular.extend(settings.$toFilter(operator, ctrl.getFieldValue()), filters);
+            });
+            return filters;
         };
 
         this.getFilterValue = function(){

@@ -1,44 +1,14 @@
-.field-wrapper.row(ng-if="!vm.filter")
-    .form-group
-        include ../../template/labelField/labelField
-        .field-element
-            .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="vm.multiple")
-                .item-datepicker-wrapper.input-group(data-ng-repeat="field_item in vm.fieldValue track by $index")
-                    input.form-control.input-sm(date-time=""
-                    name="{{vm.fieldName}}"
-                    data-ng-disabled="vm.readonly"
-                    ng-model="vm.fieldValue[$index]"
-                    view="date"
-                    format="YYYY-MM-DD HH:mm:ss")
-                    span.input-group-btn
-                        button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
-                .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-if="!vm.readonly") {{'BUTTON.ADD' | translate}}
-            .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple")
-                input.form-control.input-sm(date-time=""
-                name="{{vm.fieldName}}"
-                data-ng-disabled="vm.readonly"
-                ng-model="vm.fieldValue"
-                view="date"
-                format="YYYY-MM-DD HH:mm:ss")
+div(ng-class="{'field-wrapper row':!vm.filter}")
+    include ../../template/labelField/labelField
+    div(ng-class="{'filter-inner-wrapper': vm.filter, 'field-element': !vm.filter}"  ng-style="{'overflow:auto':vm.multiple}")  
+        .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="vm.multiple")
+            .item-datepicker-wrapper.input-group(data-ng-repeat="field_item in vm.fieldValue track by $index")
+                input.form-control.input-sm(date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly"
+                                            ng-model="vm.fieldValue[$index]" view="date" format="YYYY-MM-DD HH:mm:ss")
+                span.input-group-btn
+                    button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
+            .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-if="!vm.readonly") {{'BUTTON.ADD' | translate}}
+        div(data-ng-if="!vm.multiple" ng-class="{'col-lg-2 col-md-2 col-sm-3 col-xs-3': !vm.filter}")
+            input.form-control.input-sm(date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly"
+                                        ng-model="vm.fieldValue" view="date" format="YYYY-MM-DD HH:mm:ss")
     include ../../template/errorField/errorField
-.filter-datetime-wrapper(ng-if="vm.filter")
-    .filter-name-label
-        span(ng-bind="vm.fieldDisplayName")
-    .filter-inner-wrapper
-        .filter-start
-            .editor-datetime
-                input.form-control.input-sm(date-time=""
-                    name="{{vm.fieldName}}" 
-                    data-ng-disabled="vm.readonly" 
-                    ng-model="vm.filterValueStartDateTime" 
-                    view="date" 
-                    format="YYYY-MM-DD HH:mm:ss")            
-        span.divider -
-        .filter-end
-            .editor-datetime
-                input.form-control.input-sm(date-time=""
-                    name="{{vm.fieldName}}" 
-                    data-ng-disabled="vm.readonly" 
-                    ng-model="vm.filterValueEndDateTime" 
-                    view="date" 
-                    format="YYYY-MM-DD HH:mm:ss")

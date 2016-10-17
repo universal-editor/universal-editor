@@ -7,8 +7,9 @@
                 <label ng-bind="vm.header.label"></label>
             </div>
             <div style="padding: 5px 15px;" class="editor-filter-body">
-                <div ng-repeat="component in vm.body" class="field-content-wrapper">
-                    <component-wrapper data-setting="component" data-filter="true"></component-wrapper>
+                <div ng-repeat="group in vm.body track by $index" class="filter-content-wrapper">
+                    <label class="filter-name-label"> <span ng-bind="group.label"></span></label>
+                    <component-wrapper ng-repeat="filter in group.filters" data-setting="filter.field" data-filter="true" style="{{filter.ngStyle}}"></component-wrapper>
                 </div>
             </div>
             <div class="editor-filter-footer">

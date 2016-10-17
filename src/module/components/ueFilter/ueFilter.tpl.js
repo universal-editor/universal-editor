@@ -15,8 +15,9 @@ module.run(['$templateCache', function($templateCache) {
     '                <label ng-bind="vm.header.label"></label>\n' +
     '            </div>\n' +
     '            <div style="padding: 5px 15px;" class="editor-filter-body">\n' +
-    '                <div ng-repeat="component in vm.body" class="field-content-wrapper">\n' +
-    '                    <component-wrapper data-setting="component" data-filter="true"></component-wrapper>\n' +
+    '                <div ng-repeat="group in vm.body track by $index" class="filter-content-wrapper">\n' +
+    '                    <label class="filter-name-label"> <span ng-bind="group.label"></span></label>\n' +
+    '                    <component-wrapper ng-repeat="filter in group.filters" data-setting="filter.field" data-filter="true" style="{{filter.ngStyle}}"></component-wrapper>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '            <div class="editor-filter-footer">\n' +

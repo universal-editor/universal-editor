@@ -13,3 +13,13 @@
   .editor-filter-footer {
     margin-top: 15px;
   }
+  .filter-content-wrapper {
+   margin: 10px 0;
+  }
+  .editor-filter-body component-wrapper {
+  display: block;
+  margin-left: 205px;
+    >.component-wrapper{
+      display: none;
+    }
+}

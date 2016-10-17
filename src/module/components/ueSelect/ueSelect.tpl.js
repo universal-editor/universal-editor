@@ -7,13 +7,13 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueSelect/ueSelect.html',
     '\n' +
-    '<div ng-if="!vm.filter" class="form-group">\n' +
-    '    <label class="field-name-label">\n' +
+    '<div ng-class="{\'field-wrapper row\':!vm.filter, \'filter-wrapper-field\': vm.filter}">\n' +
+    '    <label ng-if="!vm.filter" class="field-name-label">\n' +
     '        <div data-ng-if="vm.hint" class="field-hint">\n' +
-    '            <div class="hint-text">{{vm.hint}}</div>\n' +
-    '        </div><span data-ng-class="vm.required ? \'editor-required\' : \'\' ">{{vm.fieldDisplayName}}:</span>\n' +
+    '            <div ng-bind="vm.hint" class="hint-text"></div>\n' +
+    '        </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="vm.fieldDisplayName"></span>\n' +
     '    </label>\n' +
-    '    <div class="field-element">\n' +
+    '    <div ng-class="{\'filter-inner-wrapper\': vm.filter, \'field-element\': !vm.filter}" ng-style="{\'overflow:auto\': vm.multiple}">\n' +
     '        <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
     '            <div class="select-border">\n' +
     '                <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" size="3" class="form-control">\n' +
@@ -24,7 +24,7 @@ module.run(['$templateCache', function($templateCache) {
     '                <div class="processing-status">{{\'PERFORMS_ACTIONS\' | translate}}</div>\n' +
     '            </div>\n' +
     '        </div>\n' +
-    '        <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '        <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" ng-class="{\'col-lg-2 col-md-2 col-sm-3 col-xs-3\': !vm.filter}">\n' +
     '            <div data-ng-click="vm.clickSelect()" data-ng-class="!vm.search ? &quot;but-for-search&quot; : &quot;&quot;" class="select-input-wrapper">\n' +
     '                <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="form-control select-input"/>\n' +
     '                <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
@@ -61,25 +61,8 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '    </div>\n' +
     '</div>\n' +
-    '<div class="field-error-wrapper">\n' +
+    '<div ng-if="!vm.filter" class="field-error-wrapper">\n' +
     '    <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>\n' +
-    '</div>\n' +
-    '<div ng-if="vm.filter">\n' +
-    '    <div class="filter-name-label"><span ng-bind="vm.fieldDisplayName"></span></div>\n' +
-    '    <div class="filter-inner-wrapper">\n' +
-    '        <div data-ng-click="vm.clickSelect()" data-ng-class="{&quot;but-for-search&quot;: !vm.search}" class="select-input-wrapper">\n' +
-    '            <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="{&quot;color-placeholder&quot;: vm.isSelection}" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" class="form-control"/>\n' +
-    '            <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" class="focus-input"/>\n' +
-    '            <div data-ng-if="!vm.search" class="form-control select-input">\n' +
-    '                <div data-ng-class="{&quot;color-placeholder-div&quot;: vm.colorPlaceholder}" ng-bind="vm.fieldValue[vm.field_search]" class="dropdown__selected-items"></div>\n' +
-    '            </div><span data-ng-if="vm.isSpanSelectDelete" data-ng-click="vm.deleteToSelected($event, false)" class="selecte-delete">×</span>\n' +
-    '            <div data-ng-if="!vm.readonly &amp;&amp; vm.showPossible" class="possible-values active possible-bottom">\n' +
-    '                <div class="possible-scroll">\n' +
-    '                    <div data-ng-repeat="option in vm.options" data-ng-mouseover="vm.activeElement = $index" data-ng-mousedown="vm.addToSelected(option)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" ng-bind="option[vm.field_search]" class="possible-value-item"></div>\n' +
-    '                </div>\n' +
-    '            </div>\n' +
-    '        </div>\n' +
-    '    </div>\n' +
     '</div>');
 }]);
 })();

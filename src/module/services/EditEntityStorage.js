@@ -13,7 +13,8 @@
             fieldControllers = [],
             entityType,
             entityObject,
-            self = this;
+            self = this,
+            storage = {};
 
         /* PUBLIC METHODS */
 
@@ -45,8 +46,10 @@
             entityType = type;
         };
 
-        this.addFieldController = function (ctrl) {
+        this.addFieldController = function (ctrl, id) {
             fieldControllers.push(ctrl);
+            storage[id] = storage[id] || [];
+            storage[id].push(ctrl);
             ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
         };
 

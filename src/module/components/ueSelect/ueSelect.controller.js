@@ -64,8 +64,9 @@
         vm.hint = componentSettings.hint || false;
         vm.required = componentSettings.required || false;
         vm.error = [];
-        vm.multiple = componentSettings.multiple === true ? true : false;
-        vm.fieldValue = vm.multiple ? [] : {};
+        vm.multiple = componentSettings.multiple === true && !vm.filter ? true : false;
+        
+        
 
         if (componentSettings.hasOwnProperty('valuesRemote') &&
             componentSettings.valuesRemote.fields.parent && componentSettings.valuesRemote.fields.childCount) {
@@ -88,6 +89,15 @@
         if (!componentSettings.multiple) {
             vm.styleInput = { 'width': '99%' };
         }
+
+        if(vm.filter) {
+            vm.multiple = false;
+            vm.readonly = false;
+            vm.required = false;
+            vm.isTree = false;
+        }
+
+        vm.fieldValue = vm.multiple ? [] : {};
 
         if (vm.setting.parentFieldIndex) {
             if (vm.multiple) {
@@ -219,25 +229,7 @@
             }
 
             if (data.editorEntityType === "new") {
-                vm.fieldValue = vm.multiple ? [] : {};
-                if (data.hasOwnProperty(vm.fieldName)) {
-                    var obj = {};
-                    obj[vm.field_id] = data[vm.fieldName];
-                    if (!isNaN(+obj[vm.field_id])) {
-                        obj[vm.field_id] = +obj[vm.field_id];
-                    }
-                    vm.fieldValue = obj;
-                }
-
-                if (vm.isTree) {
-                    vm.fieldValue = [];
-                }
-
-                if (!!componentSettings.defaultValue && !vm.isTree) {
-                    var obj = {};
-                    obj[vm.field_id] = componentSettings.defaultValue;
-                    vm.fieldValue = obj;
-                }
+                setInitialValue();
                 return;
             }
 
@@ -483,7 +475,7 @@
                 if (!vm.multiple && !vm.isTree) {
                     if (vm.options && vm.options.length && vm.fieldValue) {
                         var finded = vm.options.filter(function(record) { return record[vm.field_id] === vm.fieldValue[vm.field_id]; });
-                        if (finded) {
+                        if (finded.length) {
                             vm.fieldValue = finded[0];
                         }
                     }
@@ -850,9 +842,32 @@
         vm.clear = clear;
 
         if (vm.filter) {
-            FilterFieldsStorage.addFilterController(this);
+            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
         } else {
-            EditEntityStorage.addFieldController(this);
+            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
+        }
+
+        function setInitialValue() {
+            var obj = {};
+            vm.fieldValue = vm.multiple ? [] : {};
+            if (data.hasOwnProperty(vm.fieldName)) {
+                obj = {};
+                obj[vm.field_id] = data[vm.fieldName];
+                if (!isNaN(+obj[vm.field_id])) {
+                    obj[vm.field_id] = +obj[vm.field_id];
+                }
+                vm.fieldValue = obj;
+            }
+
+            if (vm.isTree) {
+                vm.fieldValue = [];
+            }
+
+            if (!!componentSettings.defaultValue && !vm.isTree) {
+                obj = {};
+                obj[vm.field_id] = componentSettings.defaultValue;
+                vm.fieldValue = obj;
+            }
         }
 
         function getFieldValue() {

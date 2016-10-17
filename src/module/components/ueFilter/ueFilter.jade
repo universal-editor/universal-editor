@@ -5,7 +5,9 @@ div(style="margin: 10px 5px;")
             .editor-filter-head
                 label(ng-bind="vm.header.label")
             .editor-filter-body(style="padding: 5px 15px;")
-                .field-content-wrapper(ng-repeat="component in vm.body")
-                    component-wrapper(data-setting="component" data-filter="true")
+                .filter-content-wrapper(ng-repeat="group in vm.body track by $index")
+                    label.filter-name-label 
+                        span(ng-bind="group.label")
+                    component-wrapper(ng-repeat="filter in group.filters" data-setting="filter.field" data-filter="true" style="{{filter.ngStyle}}")
             .editor-filter-footer
                 component-wrapper(data-ng-repeat="button in vm.footer track by $index", data-setting="button", data-button-class="footer")

@@ -1,40 +1,23 @@
 
-<div ng-if="!vm.filter" class="field-wrapper row">
-    <div class="form-group">
-        <label class="field-name-label">
-            <div data-ng-if="vm.hint" class="field-hint">
-                <div class="hint-text">{{vm.hint}}</div>
-            </div><span data-ng-class="vm.required ? 'editor-required' : '' ">{{vm.fieldDisplayName}}:</span>
-        </label>
-        <div class="field-element">
-            <div data-ng-if="vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
-                <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-timepicker-wrapper input-group">
-                    <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-date-time="" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm timepicker"/><span class="input-group-btn">
-                        <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>
-                </div>
-                <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{'BUTTON.ADD' | translate}}</div>
+<div ng-class="{'field-wrapper row':!vm.filter}">
+    <label ng-if="!vm.filter" class="field-name-label">
+        <div data-ng-if="vm.hint" class="field-hint">
+            <div ng-bind="vm.hint" class="hint-text"></div>
+        </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="vm.fieldDisplayName"></span>
+    </label>
+    <div ng-class="{'filter-inner-wrapper': vm.filter, 'field-element': !vm.filter}" ng-style="{'overflow:auto':vm.multiple}"> 
+        <div data-ng-if="vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
+            <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-timepicker-wrapper input-group">
+                <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-date-time="" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm timepicker"/><span class="input-group-btn">
+                    <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>
             </div>
-            <div data-ng-if="!vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
-                <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-date-time="" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm timepicker"/>
-            </div>
+            <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{'BUTTON.ADD' | translate}}</div>
+        </div>
+        <div data-ng-if="!vm.multiple" ng-class="{'col-lg-2 col-md-2 col-sm-3 col-xs-3': !vm.filter}">
+            <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-date-time="" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm timepicker"/>
         </div>
     </div>
-    <div class="field-error-wrapper">
+    <div ng-if="!vm.filter" class="field-error-wrapper">
         <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>
-    </div>
-</div>
-<div ng-if="vm.filter" class="filter-time-wrapper">
-    <div class="filter-name-label"><span ng-bind="vm.fieldDisplayName"></span></div>
-    <div class="filter-inner-wrapper">
-        <div class="filter-start">
-            <div class="editor-time">
-                <input data-date-time="" data-ng-model="vm.filterValueStartTime" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm"/>
-            </div>
-        </div><span class="divider">-</span>
-        <div class="filter-end">
-            <div class="editor-time">
-                <input data-date-time="" data-ng-model="vm.filterValueEndTime" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm"/>
-            </div>
-        </div>
     </div>
 </div>

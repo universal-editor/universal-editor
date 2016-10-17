@@ -32,8 +32,14 @@
         vm.hint = componentSettings.hint || false;
         vm.required = componentSettings.required || false;
         vm.error = [];
-        vm.multiple = componentSettings.multiple === true ? true : false;
+        vm.multiple = componentSettings.multiple === true;
         vm.fieldValue = getInitValue();
+
+        if (vm.filter) {
+            vm.multiple = false;
+            vm.readonly = false;
+            vm.required = false;
+        }
 
         if (angular.isString(componentSettings.multiname)) {
             vm.multiname = ('' + componentSettings.multiname) || "value";
@@ -179,17 +185,13 @@
             });
         };
 
-        vm.getFilterValue = getFilterValue;
         vm.clear = clear;
         vm.getFieldValue = getFieldValue;
 
-        vm.filterValueStartTime = "";
-        vm.filterValueEndTime = "";
-
         if (vm.filter) {
-            FilterFieldsStorage.addFilterController(this);
+            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
         } else {
-            EditEntityStorage.addFieldController(this);
+            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
         }
 
         function getFieldValue() {
@@ -245,25 +247,6 @@
 
         function clear() {
             vm.fieldValue = componentSettings.multiple === true ? [] : "";
-        }
-
-        function getFilterValue() {
-
-            var field = {};
-
-            if (vm.filterValueStartTime === "" && vm.filterValueEndTime === "") {
-                return false;
-            } else {
-                if (vm.filterValueStartTime !== "" && vm.filterValueEndTime === "") {
-                    field[">=" + vm.filterName] = moment(vm.filterValueStartTime).format("HH:mm:ss");
-                } else if (vm.filterValueStartTime === "" && vm.filterValueEndTime !== "") {
-                    field["<=" + vm.filterName] = moment(vm.filterValueEndTime).format("HH:mm:ss");
-                } else {
-                    field[">=" + vm.filterName] = moment(vm.filterValueStartTime).format("HH:mm:ss");
-                    field["<=" + vm.filterName] = moment(vm.filterValueEndTime).format("HH:mm:ss");
-                }
-                return field;
-            }
         }
     }
 })();

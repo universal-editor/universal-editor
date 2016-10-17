@@ -1,13 +1,13 @@
-.form-group(ng-if="!vm.filter")
+div(ng-class="{'field-wrapper row':!vm.filter, 'filter-wrapper-field': vm.filter}")
         include ../../template/labelField/labelField
-        .field-element
+        div(ng-class="{'filter-inner-wrapper': vm.filter, 'field-element': !vm.filter}" ng-style="{'overflow:auto': vm.multiple}")
             .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="vm.multiple && !vm.isTree")
                 div.select-border
                     select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple, size="3")
                         option(data-ng-repeat="option in vm.options", value="{{option[vm.field_id]}}") {{option[vm.field_search]}}
                 .processing-status-wrapper(data-ng-show="!!vm.loadingData")
                     .processing-status {{'PERFORMS_ACTIONS' | translate}}
-            .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple && !vm.isTree")
+            div(data-ng-if="!vm.multiple && !vm.isTree" ng-class="{'col-lg-2 col-md-2 col-sm-3 col-xs-3': !vm.filter}")
                 div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='!vm.search ? "but-for-search" : ""')
                     input.form-control.select-input(
                         data-ng-if="vm.search",
@@ -90,29 +90,6 @@
                             data-set-active-element="vm.setActiveElement",
                             data-lvl-dropdown='1'
                             )
-
                 .processing-status-wrapper(data-ng-show="!!vm.loadingData")
                     .processing-status {{'PERFORMS_ACTIONS' | translate}}
     include ../../template/errorField/errorField
-div(ng-if="vm.filter")
-    .filter-name-label
-        span(ng-bind="vm.fieldDisplayName")
-    .filter-inner-wrapper
-        div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='{"but-for-search": !vm.search}')
-            input.form-control(data-ng-if="vm.search",
-                               placeholder="{{vm.placeholder}}",
-                               data-ng-class='{"color-placeholder": vm.isSelection}',
-                               data-ng-model="vm.filterText",
-                               data-ng-change="vm.change()",
-                               data-ng-focus="vm.isShowPossible()")
-            input.focus-input(data-ng-if="!vm.search", data-ng-focus="vm.isShowPossible()")
-            .form-control.select-input(data-ng-if="!vm.search")
-                .dropdown__selected-items(data-ng-class='{"color-placeholder-div": vm.colorPlaceholder}' ng-bind="vm.fieldValue[vm.field_search]")
-            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelected($event, false)") ×
-            .possible-values.active.possible-bottom(data-ng-if="!vm.readonly && vm.showPossible")
-                .possible-scroll
-                    .possible-value-item(data-ng-repeat="option in vm.options", 
-                    data-ng-mouseover="vm.activeElement = $index", 
-                    data-ng-mousedown="vm.addToSelected(option)", 
-                    data-ng-class="vm.activeElement == $index ? 'active' : ''",
-                    ng-bind="option[vm.field_search]")
