@@ -20,6 +20,10 @@ var staffDataSource = {
     sortBy: '-id',
     primaryKey: 'id',
     parentField: 'parent_id',
+    keys:{
+        items: 'items',
+        meta: '_meta'
+    },
     fields: [
         {
             name: 'id',
@@ -143,52 +147,53 @@ var ue = new UniversalEditor('universal-editor', {
                         name: 'ue-grid',
                         settings: {
                             dataSource: staffDataSource,
-                            header:[
-                                {
-                                    component: {
-                                        name: 'ue-button-goto',
-                                        settings: {
-                                            label: 'создать',
-                                            state: 'index.modal_edit'
+                            header:{
+                                controls: [
+                                    {
+                                        component: {
+                                            name: 'ue-button-goto',
+                                            settings: {
+                                                label: 'создать',
+                                                state: 'edit'
+                                            }
                                         }
-                                    }
-                                },
-                                {
-                                    component: {
-                                        name: 'ue-button-request',
-                                        settings: {
-                                            label: 'This is request!!!',
-                                            url: '//universal-backend.dev/rest/v1/staff',
-                                            method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                    },
+                                    {
+                                        component: {
+                                            name: 'ue-button-request',
+                                            settings: {
+                                                label: 'This is request!!!',
+                                                url: '//universal-backend.dev/rest/v1/staff',
+                                                method: 'GET',
+                                                success: function(params) {
+                                                    console.log('Привет мир!!! я success', params);
+                                                }
+                                            }
                                         }
-                                    }
-                                },
-                                {
-                                    component: {
-                                        name: 'ue-button-request',
-                                        settings: {
-                                            label: 'This _blank!!!',
-                                            url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
-                                            target: '_blank'
+                                    },
+                                    {
+                                        component: {
+                                            name: 'ue-button-request',
+                                            settings: {
+                                                label: 'This _blank!!!',
+                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
+                                                target: '_blank'
+                                            }
                                         }
-                                    }
-                                },
-                                {
-                                    component: {
-                                        name: 'ue-button-download',
-                                        settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                    },
+                                    {
+                                        component: {
+                                            name: 'ue-button-download',
+                                            settings: {
+                                                label: 'This is button!!!',
+                                                request: {
+                                                    url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            ],
+                                ]
+                            },
                             columns: ['name', 'email'],
                             contextMenu:[
                                 {
@@ -196,7 +201,7 @@ var ue = new UniversalEditor('universal-editor', {
                                         name: 'ue-button-goto',
                                         settings: {
                                             label: 'редактировать',
-                                            state: 'index.modal_edit'
+                                            state: 'edit'
                                         }
                                     }
                                 },
@@ -211,9 +216,10 @@ var ue = new UniversalEditor('universal-editor', {
                                 },
                                 {
                                     component: {
-                                        name: 'ue-button-open',
+                                        name: 'ue-button-service',
                                         settings: {
-                                            label: 'Раскрыть'
+                                            label: 'Раскрыть',
+                                            action: 'open'
                                         }
                                     }
                                 },
@@ -224,10 +230,10 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'This is request!!!',
                                             url: '//universal-backend.dev/rest/v1/staff',
                                             method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                            beforeSend: window.RequstCallback.beforeSend,
+                                            success: window.RequstCallback.success,
+                                            error: window.RequstCallback.error,
+                                            complete: window.RequstCallback.complete
                                         }
                                     }
                                 },
@@ -241,7 +247,22 @@ var ue = new UniversalEditor('universal-editor', {
                                         }
                                     }
                                 }
-                            ]
+                            ],
+                            footer: {
+                                controls: [
+                                    {
+                                        component: {
+                                            name: 'ue-pagination',
+                                            settings: {
+                                                label: {
+                                                    last: '>>',
+                                                    next: '>'
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     }
                 },
@@ -298,86 +319,84 @@ var ue = new UniversalEditor('universal-editor', {
                                                             label: 'This is request!!!',
                                                             url: '//universal-backend.dev/rest/v1/staff',
                                                             method: 'GET',
-                                                            beforeSend: 'RequstCallback.beforeSend',
-                                                            success: 'RequstCallback.success',
-                                                            error: 'RequstCallback.error',
-                                                            complete: 'RequstCallback.complete'
+                                                            beforeSend: window.RequstCallback.beforeSend,
+                                                            success: window.RequstCallback.success,
+                                                            error: window.RequstCallback.error,
+                                                            complete: window.RequstCallback.complete
                                                         }
                                                     }
-                                                },
+                                                }
                                             ]
                                         }
                                     }
                                 }
                             ],
-                            footer: [
-                                //"default-data-controls": true,
-                                //component: {
-                                //    name: 'my-super-component'
-                                //}
-                                {
-                                    component: {
-                                        name: 'ue-button-service',
-                                        settings: {
-                                            label: 'Сохранить',
-                                            action: 'save'
+                            footer: {
+                                controls: [
+                                    {
+                                        component: {
+                                            name: 'ue-button-service',
+                                            settings: {
+                                                label: 'Сохранить',
+                                                action: 'save'
+                                            }
                                         }
-                                    }
-                                },
-                                {
-                                    component: {
-                                        name: 'ue-button-service',
-                                        settings: {
-                                            label: 'Удалить',
-                                            action: 'delete'
+                                    },
+                                    {
+                                        component: {
+                                            name: 'ue-button-service',
+                                            settings: {
+                                                label: 'Удалить',
+                                                action: 'delete'
+                                            }
                                         }
-                                    }
-                                },
-                                {
-                                    component: {
-                                        name: 'ue-button-service',
-                                        settings: {
-                                            label: 'Сохранить',
-                                            action: 'presave'
+                                    },
+                                    {
+                                        component: {
+                                            name: 'ue-button-service',
+                                            settings: {
+                                                label: 'Сохранить',
+                                                action: 'presave'
+                                            }
                                         }
-                                    }
-                                },
-                                {
-                                    component: {
-                                        name: 'ue-button-request',
-                                        settings: {
-                                            label: 'This is request!!!',
-                                            url: '//universal-backend.dev/rest/v1/staff',
-                                            method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                    },
+                                    {
+                                        component: {
+                                            name: 'ue-button-request',
+                                            settings: {
+                                                label: 'This is request!!!',
+                                                url: '//universal-backend.dev/rest/v1/staff',
+                                                method: 'GET',
+                                                beforeSend: window.RequstCallback.beforeSend,
+                                                success: window.RequstCallback.success,
+                                                error: window.RequstCallback.error,
+                                                complete: window.RequstCallback.complete
+                                            }
                                         }
-                                    }
-                                },
-                                {
-                                    component: {
-                                        name: 'ue-button-request',
-                                        settings: {
-                                            label: 'This _blank!!!',
-                                            url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
-                                            target: '_blank'
+                                    },
+                                    {
+                                        component: {
+                                            name: 'ue-button-request',
+                                            settings: {
+                                                label: 'This _blank!!!',
+                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
+                                                target: '_blank'
+                                            }
                                         }
-                                    }
-                                },
-                                {
-                                    component: {
-                                        name: 'ue-button-download',
-                                        settings: {
-                                            label: 'This is button!!!',
-                                            request: {
-                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                    },
+                                    {
+                                        component: {
+                                            name: 'ue-button-download',
+                                            settings: {
+                                                label: 'This is button!!!',
+                                                request: {
+                                                    url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            ]
+                                ]
+                            }
                         }
                     }
                 },
@@ -446,47 +465,84 @@ var ue = new UniversalEditor('universal-editor', {
                                                                         label: 'This is request!!!',
                                                                         url: '//universal-backend.dev/rest/v1/staff',
                                                                         method: 'GET',
-                                                                        beforeSend: 'RequstCallback.beforeSend',
-                                                                        success: 'RequstCallback.success',
-                                                                        error: 'RequstCallback.error',
-                                                                        complete: 'RequstCallback.complete'
+                                                                        beforeSend: window.RequstCallback.beforeSend,
+                                                                        success: window.RequstCallback.success,
+                                                                        error: window.RequstCallback.error,
+                                                                        complete: window.RequstCallback.complete
                                                                     }
                                                                 }
-                                                            },
+                                                            }
                                                         ]
                                                     }
                                                 }
                                             }
                                         ],
-                                        footer: [
-                                            {
-                                                component: {
-                                                    name: 'ue-button-service',
-                                                    settings: {
-                                                        label: 'Сохранить',
-                                                        action: 'presave'
+                                        footer: {
+                                            controls: [
+                                                {
+                                                    component: {
+                                                        name: 'ue-button-service',
+                                                        settings: {
+                                                            label: 'Сохранить',
+                                                            action: 'save'
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    component: {
+                                                        name: 'ue-button-service',
+                                                        settings: {
+                                                            label: 'Удалить',
+                                                            action: 'delete'
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    component: {
+                                                        name: 'ue-button-service',
+                                                        settings: {
+                                                            label: 'Сохранить',
+                                                            action: 'presave'
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    component: {
+                                                        name: 'ue-button-request',
+                                                        settings: {
+                                                            label: 'This is request!!!',
+                                                            url: '//universal-backend.dev/rest/v1/staff',
+                                                            method: 'GET',
+                                                            beforeSend: window.RequstCallback.beforeSend,
+                                                            success: window.RequstCallback.success,
+                                                            error: window.RequstCallback.error,
+                                                            complete: window.RequstCallback.complete
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    component: {
+                                                        name: 'ue-button-request',
+                                                        settings: {
+                                                            label: 'This _blank!!!',
+                                                            url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
+                                                            target: '_blank'
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    component: {
+                                                        name: 'ue-button-download',
+                                                        settings: {
+                                                            label: 'This is button!!!',
+                                                            request: {
+                                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
+                                                            }
+                                                        }
                                                     }
                                                 }
-                                            },
-                                            {
-                                                component: {
-                                                    name: 'ue-button-service',
-                                                    settings: {
-                                                        label: 'Сохранить',
-                                                        action: 'save'
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                component: {
-                                                    name: 'ue-button-service',
-                                                    settings: {
-                                                        label: 'Удалить',
-                                                        action: 'delete'
-                                                    }
-                                                }
-                                            }
-                                        ]
+                                            ]
+                                        }
                                     }
                                 }
                             },
@@ -535,10 +591,10 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'This is request!!!',
                                             url: '//universal-backend.dev/rest/v1/staff',
                                             method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                            beforeSend: window.RequstCallback.beforeSend,
+                                            success: window.RequstCallback.success,
+                                            error: window.RequstCallback.error,
+                                            complete: window.RequstCallback.complete
                                         }
                                     }
                                 },
@@ -599,10 +655,10 @@ var ue = new UniversalEditor('universal-editor', {
                                             label: 'This is request!!!',
                                             url: '//universal-backend.dev/rest/v1/staff',
                                             method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                            beforeSend: window.RequstCallback.beforeSend,
+                                            success: window.RequstCallback.success,
+                                            error: window.RequstCallback.error,
+                                            complete: window.RequstCallback.complete
                                         }
                                     }
                                 },
@@ -705,12 +761,12 @@ var ue = new UniversalEditor('universal-editor', {
                                         name: 'ue-button-request',
                                         settings: {
                                             label: 'This is request!!!',
-                                            url: '//universal-backend.dev/rest/v1/staff',
+                                            url: '//ya.ru',
                                             method: 'GET',
-                                            beforeSend: 'RequstCallback.beforeSend',
-                                            success: 'RequstCallback.success',
-                                            error: 'RequstCallback.error',
-                                            complete: 'RequstCallback.complete'
+                                            beforeSend: window.RequstCallback.beforeSend,
+                                            success: window.RequstCallback.success,
+                                            error: window.RequstCallback.error,
+                                            complete: window.RequstCallback.complete
                                         }
                                     }
                                 },

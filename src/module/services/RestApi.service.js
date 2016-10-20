@@ -147,8 +147,7 @@
             if (expandFields.length > 0) {
                 params.expand = expandFields.join(',');
             }
-            
-            console.log("Read item list.");
+
             $http({
                 method: _method,
                 url: _url,

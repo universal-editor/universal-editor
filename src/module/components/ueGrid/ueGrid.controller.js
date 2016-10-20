@@ -9,8 +9,6 @@
 
     function UeGridController($scope, $rootScope, configData, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, ConfigDataProvider, $element, $compile, EditEntityStorage) {
         $scope.entity = RestApiService.getEntityType();
-
-        //RestApiService.getEntityObject();
         /* jshint validthis: true */
         var vm = this,
             itemsKey,
@@ -88,7 +86,6 @@
         if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
             vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
         }
-
         itemsKey = "items";
 
         angular.forEach(vm.setting.component.settings.dataSource.fields, function(field) {
@@ -145,29 +142,6 @@
                 vm.entityLoaded = false;
             });
         };
-
-        /*   vm.applyFilter = function() {
-               RestApiService.setFilterParams(FilterFieldsStorage.getFilterValue());
-               var request = {};
-               request.childId = vm.parent;
-               request.scopeIdParent = vm.scopeIdParent;
-               request.parentField = parentField;
-               request.url = url;
-               RestApiService.getItemsList(request);
-           };
-   
-           vm.clearFilter = function() {
-               FilterFieldsStorage.setInitialValues();
-               var request = {};
-               request.childId = vm.parent;
-               request.scopeIdParent = vm.scopeIdParent;
-               request.parentField = parentField;
-               request.url = url;
-               RestApiService.getItemsList(request);
-           };*/
-
-
-
         vm.changeSortField = function(field) {
             vm.listLoaded = false;
             if (vm.sortField == field) {
