@@ -16,9 +16,8 @@
         vm.beforeAction = settings.beforeAction;
 
         $element.find('button').bind("click", function() {
-            var callback = ButtonsService.getCallback(vm.beforeAction);
-            if (callback) {
-                callback();
+            if (vm.beforeAction) {
+                vm.beforeAction();
             }
             var filterJSON = null, filters;
 
