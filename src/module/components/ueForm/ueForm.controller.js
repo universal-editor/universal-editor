@@ -38,7 +38,7 @@
         vm.currentTab = vm.setting.component.settings.body[0].component.settings.label;
         vm.entityId = "";
         vm.editorEntityType = "new";
-        vm.editFooterBar = vm.setting.component.settings.footer;
+        vm.editFooterBar = [];
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
         vm.parentButton = false;
@@ -47,9 +47,14 @@
         vm.visibleFilter = true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
-        if(vm.setting.component.settings.modal && $state.params.pk && $state.params.pk !== 'new') {
+
+
+        var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+        var pk = $state.params[pkKey];
+
+        if(vm.setting.component.settings.modal && pk && pk !== 'new') {
             RestApiService.isProcessing = false;
-            RestApiService.getItemById($state.params.pk);
+            RestApiService.getItemById(pk);
         }
 
         if (!!vm.configData.ui && !!vm.configData.ui.assetsPath) {
@@ -91,13 +96,19 @@
         //    }
         //});
 
-        //angular.forEach(vm.setting.dataSource.fields, function(field) {
-         //   angular.forEach()
-        //    console.log(field);
-        //}); else
+        if(!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
+            angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
+                var newControl = angular.merge({}, control);
+                if (angular.isUndefined(newControl.component.settings.dataSource)) {
+                    newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
+                }
+                newControl.paginationData = {};
+                vm.editFooterBar.push(newControl);
+            });
+        }
 
         angular.forEach(vm.editFooterBar, function(button, index) {
-            if ($state.params.pk === 'new') {
+            if (pk === 'new') {
                 button.type = 'create';
             } else {
                 button.type = 'update';
@@ -142,7 +153,7 @@
             vm.listLoaded = false;
 
             var params = {};
-            var isReload = false;
+            var isReload = true;
             var stateIndex = EditEntityStorage.getStateConfig('index');
             if($state.params.back){
                 params.type = $state.params.back;
@@ -171,9 +182,9 @@
             vm.errors.push(data);
         });
 
-        if ($state.params.pk !== 'new') {
-            if ($state.params.pk) {
-                RestApiService.getItemById($state.params.pk, vm.setting.component.settings.dataSource);
+        if (pk !== 'new') {
+            if (pk) {
+                RestApiService.getItemById(pk, vm.setting.component.settings.dataSource);
             } else if(vm.setting.pk) {
                 RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource);
             }
@@ -237,7 +248,7 @@
             }
         };
 
-        if ($state.params.pk === 'new') {
+        if (pk === 'new') {
             vm.entityLoaded = true;
         }
 

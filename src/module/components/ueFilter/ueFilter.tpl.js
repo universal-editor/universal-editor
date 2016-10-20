@@ -9,7 +9,7 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '<div style="margin: 10px 5px;">\n' +
     '    <button data-ng-click="vm.toggleFilterVisibility()" class="btn btn-lg btn-default filter-button">Фильтр {{vm.visiable ? \'-\' : \'+\'}}</button>\n' +
-    '    <div data-ng-hide="vm.visiable" class="editor-filter">\n' +
+    '    <div data-ng-hide="!vm.visiable" class="editor-filter">\n' +
     '        <div ng-keyup="vm.clickEnter($event)" class="editor-filter-wrapper">\n' +
     '            <div class="editor-filter-head">\n' +
     '                <label ng-bind="vm.header.label"></label>\n' +

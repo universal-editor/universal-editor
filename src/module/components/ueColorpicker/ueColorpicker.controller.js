@@ -5,13 +5,16 @@
         .module('universal.editor')
         .controller('UeColorpickerController', UeColorpickerController);
 
-    UeColorpickerController.$inject = ['$scope', '$element', 'EditEntityStorage', 'ArrayFieldStorage', 'FilterFieldsStorage', '$state'];
+    UeColorpickerController.$inject = ['$scope', '$element', 'EditEntityStorage', 'ArrayFieldStorage', 'FilterFieldsStorage', '$state', '$controller'];
 
-    function UeColorpickerController($scope, $element, EditEntityStorage, ArrayFieldStorage, FilterFieldsStorage, $state) {
+    function UeColorpickerController($scope, $element, EditEntityStorage, ArrayFieldStorage, FilterFieldsStorage, $state, $controller) {
         /* jshint validthis: true */
         var vm = this;
+        var baseController = $controller('FieldsController', { $scope: $scope });
+        angular.extend(vm, baseController);
         var regExpPattern = /^#[0-9a-f]{3,6}$/i;
-        var componentSettings = vm.setting.component.settings;
+        var componentSettings = vm.setting.component.settings;                
+        vm.parentEntityScopeId = componentSettings.$parentScopeId;
         var defaultColor = (componentSettings.defaultValue || defaultColor);
         var fieldErrorName;
        
@@ -38,6 +41,7 @@
             vm.multiple = false;
             vm.readonly = false;
             vm.required = false;
+            defaultColor = null;
         }
 
         vm.fieldValue = vm.multiple && !vm.filter ? [] : defaultColor;
@@ -74,37 +78,39 @@
         };
 
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
-            if (data.editorEntityType === "new") {
-                return;
-            }
-
-            if (!vm.setting.parentField) {
-                if (!vm.multiple) {
-                    vm.fieldValue = data[vm.setting.name];
-                } else if (vm.multiname) {
-                    vm.fieldValue = [];
-                    angular.forEach(data[vm.setting.name], function(item) {
-                        vm.fieldValue.push(item[vm.multiname]);
-                    });
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[vm.setting.name], function(item) {
-                        vm.fieldValue.push(item);
-                    });
+            if (!vm.filter) {
+                if (data.editorEntityType === "new") {
+                    return;
                 }
-            } else {
-                if (!vm.multiple) {
-                    vm.fieldValue = data[vm.setting.parentField][vm.setting.name];
-                } else if (vm.multiname) {
-                    vm.fieldValue = [];
-                    angular.forEach(data[vm.setting.parentField][vm.setting.name], function(item) {
-                        vm.fieldValue.push(item[vm.multiname]);
-                    });
+
+                if (!vm.setting.parentField) {
+                    if (!vm.multiple) {
+                        vm.fieldValue = data[vm.setting.name];
+                    } else if (vm.multiname) {
+                        vm.fieldValue = [];
+                        angular.forEach(data[vm.setting.name], function(item) {
+                            vm.fieldValue.push(item[vm.multiname]);
+                        });
+                    } else {
+                        vm.fieldValue = [];
+                        angular.forEach(data[vm.setting.name], function(item) {
+                            vm.fieldValue.push(item);
+                        });
+                    }
                 } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[vm.setting.parentField][vm.setting.name], function(item) {
-                        vm.fieldValue.push(item);
-                    });
+                    if (!vm.multiple) {
+                        vm.fieldValue = data[vm.setting.parentField][vm.setting.name];
+                    } else if (vm.multiname) {
+                        vm.fieldValue = [];
+                        angular.forEach(data[vm.setting.parentField][vm.setting.name], function(item) {
+                            vm.fieldValue.push(item[vm.multiname]);
+                        });
+                    } else {
+                        vm.fieldValue = [];
+                        angular.forEach(data[vm.setting.parentField][vm.setting.name], function(item) {
+                            vm.fieldValue.push(item);
+                        });
+                    }
                 }
             }
         });
@@ -133,7 +139,8 @@
             destroyEntityLoaded();
             destroyErrorField();
             destroyWatchFieldValue();
-            EditEntityStorage.deleteFieldController(vm);
+            EditEntityStorage.deleteFieldController(vm, vm.setting.component.settings.$parentScopeId);
+            FilterFieldsStorage.deleteFilterController(vm, vm.setting.component.settings.$parentScopeId);
             if (vm.setting.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy(vm.setting.parentField, vm.setting.parentFieldIndex, vm.setting.name, vm.fieldValue);
             }
@@ -145,7 +152,6 @@
             });
         };
 
-        vm.getFilterValue = getFilterValue;
         vm.clear = clear;
         vm.getFieldValue = getFieldValue;
 
@@ -156,16 +162,7 @@
         }
 
         function clear() {
-            vm.fieldValue = vm.multiple === true ? [] : (componentSettings.defaultValue || null);
-        }
-
-        function getFilterValue() {
-            var field = {};
-            if (vm.fieldValue.trim() !== "") {
-                field[vm.fieldName] = vm.fieldValue;
-                return field;
-            }
-            return false;            
+            vm.fieldValue = vm.multiple === true ? [] : null;
         }
 
         function getFieldValue() {

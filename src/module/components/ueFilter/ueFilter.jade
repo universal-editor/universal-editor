@@ -1,6 +1,6 @@
 div(style="margin: 10px 5px;")
     button.btn.btn-lg.btn-default.filter-button(data-ng-click="vm.toggleFilterVisibility()") Фильтр {{vm.visiable ? '-' : '+'}}
-    .editor-filter(data-ng-hide="vm.visiable")
+    .editor-filter(data-ng-hide="!vm.visiable")
         .editor-filter-wrapper(ng-keyup="vm.clickEnter($event)")
             .editor-filter-head
                 label(ng-bind="vm.header.label")

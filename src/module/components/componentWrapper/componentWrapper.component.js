@@ -6,7 +6,8 @@
             setting : '=',
             entityId: '@',
             buttonClass: '@',
-            filter: '='
+            filter: '=',
+            scopeIdParent: '@'
         },
         template : ['$templateCache', function($templateCache) {
             return $templateCache.get('module/components/componentWrapper/componentWrapper.html');

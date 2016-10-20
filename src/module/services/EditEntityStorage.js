@@ -20,6 +20,10 @@
 
         this.actionType = "create";
 
+        this.getLevelChild = function(stateName) {
+            return stateName.split('.').length;
+        };
+
         this.getValueField = function(fieldName) {
             for (var i = fieldControllers.length; i--;) {
                 var controller = fieldControllers[i];

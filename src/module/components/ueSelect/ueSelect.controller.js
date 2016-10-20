@@ -5,12 +5,14 @@
         .module('universal.editor')
         .controller('UeSelectController', UeSelectController);
 
-    UeSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', '$timeout', 'configData', '$document', '$element', '$window', 'FilterFieldsStorage'];
+    UeSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', '$timeout', 'configData', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller'];
 
-    function UeSelectController($rootScope, $scope, EditEntityStorage, RestApiService, ArrayFieldStorage, $timeout, configData, $document, $element, $window, FilterFieldsStorage) {
+    function UeSelectController($rootScope, $scope, EditEntityStorage, RestApiService, ArrayFieldStorage, $timeout, configData, $document, $element, $window, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;
+        var baseController = $controller('FieldsController', { $scope: $scope });
+        angular.extend(vm, baseController);
 
         var componentSettings = vm.setting.component.settings;
         vm.fieldName = vm.setting.name;
@@ -65,8 +67,8 @@
         vm.required = componentSettings.required || false;
         vm.error = [];
         vm.multiple = componentSettings.multiple === true && !vm.filter ? true : false;
-        
-        
+
+
 
         if (componentSettings.hasOwnProperty('valuesRemote') &&
             componentSettings.valuesRemote.fields.parent && componentSettings.valuesRemote.fields.childCount) {
@@ -90,7 +92,7 @@
             vm.styleInput = { 'width': '99%' };
         }
 
-        if(vm.filter) {
+        if (vm.filter) {
             vm.multiple = false;
             vm.readonly = false;
             vm.required = false;
@@ -196,87 +198,90 @@
 
         var destroyWatchEntityLoaded;
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
+            if (!vm.filter) {
 
-            vm.fieldValue = {};
-            //-- functional for required fields
-            if (componentSettings.requiredField) {
-                destroyWatchEntityLoaded = $scope.$watch(function() {
-                    var f_value = EditEntityStorage.getValueField(componentSettings.requiredField);
-                    var result = false;
-                    var endRecursion = false;
-                    (function check(value) {
-                        var keys = Object.keys(value);
-                        for (var i = keys.length; i--;) {
-                            var propValue = value[keys[i]];
-                            if (propValue !== null && propValue !== undefined && propValue !== "") {
-                                if (angular.isObject(propValue) && !endRecursion) {
-                                    check(propValue);
+                vm.fieldValue = {};
+                //-- functional for required fields
+                if (componentSettings.requiredField) {
+                    destroyWatchEntityLoaded = $scope.$watch(function() {
+                        var f_value = EditEntityStorage.getValueField(componentSettings.requiredField);
+                        var result = false;
+                        var endRecursion = false;
+                        (function check(value) {
+                            var keys = Object.keys(value);
+                            for (var i = keys.length; i--;) {
+                                var propValue = value[keys[i]];
+                                if (propValue !== null && propValue !== undefined && propValue !== "") {
+                                    if (angular.isObject(propValue) && !endRecursion) {
+                                        check(propValue);
+                                    }
+                                    result = true;
+                                    endRecursion = true;
                                 }
-                                result = true;
-                                endRecursion = true;
                             }
+                        })(f_value);
+                        return result;
+                    }, function(value) {
+                        if (!value) {
+                            clear();
+                            vm.readonly = true;
+                        } else {
+                            vm.readonly = componentSettings.readonly || false;
                         }
-                    })(f_value);
-                    return result;
-                }, function(value) {
-                    if (!value) {
-                        clear();
-                        vm.readonly = true;
-                    } else {
-                        vm.readonly = componentSettings.readonly || false;
-                    }
-                }, true);
-            }
-
-            if (data.editorEntityType === "new") {
-                setInitialValue();
-                return;
-            }
-
-            vm.parentValue = !vm.dependField;
-
-            if (!vm.setting.parentField) {
-                if (!vm.multiple) {
-                    if (vm.isTree && data[vm.fieldName]) {
-                        _selectedIds.push(data[vm.fieldName]);
-                    } else {
-                        var obj = {};
-                        obj[vm.field_id] = data[vm.fieldName];
-                        vm.fieldValue = obj;
-                    }
-                } else if (vm.multiname) {
-                    vm.fieldValue = [];
-                    angular.forEach(data[vm.fieldName], function(item) {
-                        _selectedIds.push(item[vm.multiname]);
-                    });
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[vm.fieldName], function(item) {
-                        _selectedIds.push(item);
-                    });
+                    }, true);
                 }
-            } else {
-                if (!vm.multiple) {
-                    if (vm.isTree && data[vm.setting.parentField][vm.fieldName]) {
-                        _selectedIds.push(data[vm.setting.parentField][vm.fieldName]);
-                    } else {
-                        var obj = {};
-                        obj[vm.field_id] = data[vm.setting.parentField][vm.fieldName];
-                        vm.fieldValue = obj;
-                    }
-                } else if (vm.multiname) {
-                    vm.fieldValue = [];
-                    angular.forEach(data[vm.setting.parentField][vm.fieldName], function(item) {
-                        _selectedIds.push(item[vm.multiname]);
-                    });
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[vm.setting.parentField][vm.fieldName], function(item) {
-                        _selectedIds.push(item);
-                    });
+                vm.data = data;
+
+                if (data.editorEntityType === "new") {
+                    setInitialValue();
+                    return;
                 }
+
+                vm.parentValue = !vm.dependField;
+
+                if (!vm.setting.parentField) {
+                    if (!vm.multiple) {
+                        if (vm.isTree && data[vm.fieldName]) {
+                            _selectedIds.push(data[vm.fieldName]);
+                        } else {
+                            var obj = {};
+                            obj[vm.field_id] = data[vm.fieldName];
+                            vm.fieldValue = obj;
+                        }
+                    } else if (vm.multiname) {
+                        vm.fieldValue = [];
+                        angular.forEach(data[vm.fieldName], function(item) {
+                            _selectedIds.push(item[vm.multiname]);
+                        });
+                    } else {
+                        vm.fieldValue = [];
+                        angular.forEach(data[vm.fieldName], function(item) {
+                            _selectedIds.push(item);
+                        });
+                    }
+                } else {
+                    if (!vm.multiple) {
+                        if (vm.isTree && data[vm.setting.parentField][vm.fieldName]) {
+                            _selectedIds.push(data[vm.setting.parentField][vm.fieldName]);
+                        } else {
+                            var obj = {};
+                            obj[vm.field_id] = data[vm.setting.parentField][vm.fieldName];
+                            vm.fieldValue = obj;
+                        }
+                    } else if (vm.multiname) {
+                        vm.fieldValue = [];
+                        angular.forEach(data[vm.setting.parentField][vm.fieldName], function(item) {
+                            _selectedIds.push(item[vm.multiname]);
+                        });
+                    } else {
+                        vm.fieldValue = [];
+                        angular.forEach(data[vm.setting.parentField][vm.fieldName], function(item) {
+                            _selectedIds.push(item);
+                        });
+                    }
+                }
+                //setSelectedValues();
             }
-            //setSelectedValues();
         });
 
         var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function(event, data) {
@@ -590,11 +595,18 @@
             }
         }
 
-        vm.addToSelected = function(val) {
+        vm.addToSelected = function(event, val) {
             if (vm.multiple && !vm.filter) {
                 vm.fieldValue.push(val);
             } else {
                 vm.fieldValue = val;
+                if (!vm.fieldValue[vm.field_search]) {
+                    angular.forEach(vm.options, function(v) {
+                        if (v[vm.field_id] == vm.fieldValue[vm.field_id]) {
+                            vm.fieldValue[vm.field_search] = v[vm.field_search];
+                        }
+                    });
+                }
             }
             vm.filterText = '';
             $timeout(function() {
@@ -642,7 +654,7 @@
                         }
                         $timeout(function() {
                             if ((!vm.multiple && !vm.isTree)) {
-                                vm.addToSelected(vm.options[vm.activeElement]);
+                                vm.addToSelected(null, vm.options[vm.activeElement]);
                             } else if (vm.isTree) {
                                 vm.toggle(undefined, vm.options[vm.activeElement], true);
                             }
@@ -792,7 +804,8 @@
             if (angular.isFunction(destroySelectField)) {
                 destroySelectField();
             }
-            EditEntityStorage.deleteFieldController(vm);
+            EditEntityStorage.deleteFieldController(vm, vm.setting.component.settings.$parentScopeId);
+            FilterFieldsStorage.deleteFilterController(vm, vm.setting.component.settings.$parentScopeId);
             if (vm.setting.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy(vm.setting.parentField, vm.setting.parentFieldIndex, vm.fieldName, vm.fieldValue);
             }
@@ -837,7 +850,6 @@
             };
         };
 
-        vm.getFilterValue = getFilterValue;
         vm.getFieldValue = getFieldValue;
         vm.clear = clear;
 
@@ -850,9 +862,9 @@
         function setInitialValue() {
             var obj = {};
             vm.fieldValue = vm.multiple ? [] : {};
-            if (data.hasOwnProperty(vm.fieldName)) {
+            if (vm.data.hasOwnProperty(vm.fieldName)) {
                 obj = {};
-                obj[vm.field_id] = data[vm.fieldName];
+                obj[vm.field_id] = vm.data[vm.fieldName];
                 if (!isNaN(+obj[vm.field_id])) {
                     obj[vm.field_id] = +obj[vm.field_id];
                 }
@@ -911,18 +923,6 @@
             }
 
             return field;
-        }
-
-        function getFilterValue() {
-
-            var field = {};
-
-            if (vm.filterValue !== null) {
-                field[vm.filterName] = vm.filterValue;
-                return field;
-            } else {
-                return false;
-            }
         }
 
         function clear() {

@@ -1,7 +1,0 @@
-div
-    .filter-name-label
-        span {{vm.filterDisplayName}}
-    .filter-inner-wrapper
-        label.radio-inline(data-ng-repeat="item in vm.selectedValues")
-            input(type="radio", data-ng-model="vm.filterValue", value="{{item[vm.field_id]}}")
-            |{{item[vm.field_search]}}

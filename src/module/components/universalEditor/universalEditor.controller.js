@@ -15,9 +15,7 @@
         vm.type = type;
         var currentState = $state.current;
         var pk;
-
-        RestApiService.setEntityType(type);
-        EditEntityStorage.setEntityType(type);
+        console.log("reload!");
         
         $rootScope.$broadcast('editor:set_entity_type', component.settings); 
 
@@ -26,6 +24,7 @@
         scope.settings = {};
         scope.settings.component = component;
         scope.settings.pk = pk || null;
-        element.append($compile('<' + component.name + ' data-setting="settings" data></' + component.name + '>')(scope));
+        scope.settings.headComponent = true;
+        element.append($compile('<' + component.name + ' data-setting="settings"></' + component.name + '>')(scope));
     }
 })();

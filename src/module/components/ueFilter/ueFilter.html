@@ -1,7 +1,7 @@
 
 <div style="margin: 10px 5px;">
     <button data-ng-click="vm.toggleFilterVisibility()" class="btn btn-lg btn-default filter-button">Фильтр {{vm.visiable ? '-' : '+'}}</button>
-    <div data-ng-hide="vm.visiable" class="editor-filter">
+    <div data-ng-hide="!vm.visiable" class="editor-filter">
         <div ng-keyup="vm.clickEnter($event)" class="editor-filter-wrapper">
             <div class="editor-filter-head">
                 <label ng-bind="vm.header.label"></label>
