@@ -4,7 +4,8 @@
     var ueTextarea = {
         bindings : {
             setting: '=',
-            filter: '='
+            filter: '=',
+            filterParameters: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueTextarea/ueTextarea.html');
