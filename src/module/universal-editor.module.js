@@ -172,6 +172,9 @@
                 if (defaultState[state.name]) {
                     urlState = (!!state.url) ? state.url : defaultState[state.name].url.replace('type', name);
                 }
+
+                urlState = urlState.replace(':pk', ':pk' + state.name.split('.').length);
+
                 (function check(value) {
                     var keys = Object.keys(value);
                     for (var i = keys.length; i--;) {
