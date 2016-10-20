@@ -8,6 +8,6 @@ div(style="margin: 10px 5px;")
                 .filter-content-wrapper(ng-repeat="group in vm.body track by $index")
                     label.filter-name-label 
                         span(ng-bind="group.label")
-                    component-wrapper(ng-repeat="filter in group.filters" data-setting="filter.field" data-filter="true" style="{{filter.ngStyle}}")
+                    component-wrapper(ng-repeat="filter in group.filters" data-setting="filter.field" data-filter="true" data-filter-parameters='filter.parameters' style="{{filter.ngStyle}}")
             .editor-filter-footer
                 component-wrapper(data-ng-repeat="button in vm.footer track by $index", data-setting="button", data-button-class="footer")

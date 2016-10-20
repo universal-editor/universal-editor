@@ -4,7 +4,8 @@
     var ueSelect = {
          bindings : {
             setting: '=',
-            filter: '='
+            filter: '=',
+            filterParameters: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueSelect/ueSelect.html');

@@ -7,6 +7,7 @@
             entityId: '@',
             buttonClass: '@',
             filter: '=',
+            filterParameters: '=',
             scopeIdParent: '@'
         },
         template : ['$templateCache', function($templateCache) {

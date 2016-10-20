@@ -14,7 +14,7 @@
         };
 
         Component.prototype.build = function () {
-            var element = '<' + this.scope.setting.component.name +' data-setting="setting" data-filter="' + this.scope.filter + '"></' + this.scope.setting.component.name + '>';
+            var element = '<' + this.scope.setting.component.name +' data-setting="setting" data-filter="' + this.scope.filter + '" data-filter-parameters="filterParameters"></' + this.scope.setting.component.name + '>';
             return $compile(element)(this.scope);
         };
 

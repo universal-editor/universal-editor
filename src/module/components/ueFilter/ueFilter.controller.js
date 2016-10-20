@@ -27,14 +27,19 @@
 
                 var group = {
                     label: fieldSettings.label,
+                    operators: [],
                     filters: [{
                         field: field,
-                        operators: []       ///-- TODO list of operators                
+                        parameters: {
+                            operator: '%:text%',
+                            index: 0
+                            ///-- TODO list of operators  
+                        }
                     }]
                 };
 
                 /** convert to filter object from fields*/
-                fieldSettings.$toFilter = function(operator, fieldValue) {
+                fieldSettings.$toFilter = fieldSettings.$toFilter || function(operator, fieldValue) {
                     angular.forEach(fieldValue, function(value, key) {
                         if (operator && operator.indexOf(":text") !== -1) {
                             if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
@@ -72,7 +77,7 @@
                             output[key] = output[key] || [];
                             output[key].push(moment.utc(value));
                         } else {
-                            if(field.component.settings.$fieldType === 'array') {
+                            if (field.component.settings.$fieldType === 'array') {
                                 output[key] = value.split(',');
                             } else {
                                 output[key] = value;
@@ -94,7 +99,7 @@
                         }
                     } else {
                         if (angular.isArray(value)) {
-                            vm.fieldValue = value[componentSettings.$filterIndex];
+                            vm.fieldValue = value[vm.filterParameters.index];
                         } else {
                             vm.fieldValue = value;
                         }
@@ -110,22 +115,21 @@
                 };
 
                 /* custom logic for operators */
-                fieldSettings.$filterOperator = "%:text%";
 
                 if (~['ue-select', 'ue-autocomplete', 'ue-checkbox', 'ue-radiolist', 'ue-colorpicker'].indexOf(field.component.name)) {
-                    fieldSettings.$filterOperator = ":text";
+                    group.filters[0].parameters.operator = ":text";
                 }
 
                 if (~['ue-date', 'ue-time', 'ue-datetime'].indexOf(field.component.name)) {
                     group.filters[0].ngStyle = "display: inline-block; width: 25%; margin-left: 5px;";
-                    group.filters[0].field.component.settings.$filterOperator = ">=";
-                    group.filters[0].field.component.settings.$filterIndex = 0;
+                    group.filters[0].parameters.operator = ">=";
                     var cloneField = angular.copy(field);
-                    cloneField.component.settings.$filterOperator = "<=";
-                    cloneField.component.settings.$filterIndex = 1;
                     group.filters.push({
                         field: cloneField,
-                        operator: [],
+                        parameters: {
+                            operator: '<=',
+                            index: 1
+                        },
                         ngStyle: 'display: inline-block; width: 25%; margin-left: 20px;'
                     });
                 }
