@@ -14,7 +14,7 @@
         var type = vm.setting.component.settings.type ? vm.setting.component.settings.type : stateType;
         vm.label = vm.setting.component.settings.label;
         vm.processing = RestApiService.isProcessing;
-        vm.entityId = vm.setting.entityId;
+        vm.entityId = vm.setting.entityId || 'new';
 
         var watchRest = $scope.$watch(function () {
             return RestApiService.isProcessing;
@@ -29,19 +29,26 @@
         $element.bind("click", function () {
             var stateOptions = { 
                 reload: true
-            },
-            pk = vm.entityId || 'new';
+            };
 
             if (vm.processing) {
                 return;
             }
 
+                        
             var toStateConfig = EditEntityStorage.getStateConfig(state);
-            if (toStateConfig && toStateConfig.component.name === 'ue-modal') {
-                stateOptions.reload = false;
+            //var isChildState = toStateConfig.name !== $state.current.name && ~(toStateConfig.name.indexOf($state.current.name)); 
+            var pkKey = 'pk' + EditEntityStorage.getLevelChild(toStateConfig.name);
+            var params = {};
+            params[pkKey] =  vm.entityId;
+
+            if (toStateConfig){
+                if(toStateConfig.component.name === 'ue-modal') {
+                  stateOptions.reload = false;
+                }          
             }
-            $state.params.pk = pk;
-            $state.go(toStateConfig.name, {pk: (vm.entityId || 'new')}, stateOptions);
+            
+            $state.go(toStateConfig.name, params, stateOptions); 
         });
 
         vm.$postLink = function() {

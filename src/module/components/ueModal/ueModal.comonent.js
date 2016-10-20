@@ -11,9 +11,10 @@
             dismiss: '&'
         },
         controllerAs: 'vm',
-        controller: function ($uibModal, $scope, configData, $element, $state) {
+        controller: function ($uibModal, $scope, configData, $element, $state, EditEntityStorage) {           
             var vm = this;
-            vm.entityId = $state.params.pk;
+            var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+            vm.entityId = $state.params[pkKey];
             vm.assetsPath = '/assets/universal-editor';
 
             if (!!configData.ui && !!configData.ui.assetsPath) {

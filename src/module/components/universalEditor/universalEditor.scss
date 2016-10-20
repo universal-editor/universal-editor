@@ -9,8 +9,9 @@ body {
     padding: 20px 0px 5px 0px;
     //временный класс
     .filter-button{
+      display: block;
+      margin-bottom: 5px;
       min-width: 110px;
-      margin-right: 10px;
     }
     .header-action-button{
       border: none;
@@ -214,6 +215,10 @@ body {
   }
 }
 
+label{
+   font-weight: normal;
+}
+
 .field-name-label .editor-required {
   font-weight: bold;
 }
@@ -326,7 +331,7 @@ body {
     }
     display: block;
     position: relative;
-    min-width: 100px;
+    min-width: 120px;
   }
 
   .editor-action-button {
@@ -339,7 +344,6 @@ body {
     background: transparent;
     border: none;
     border-radius: 0px;
-    height: 15px;
     line-height: 15px;
     text-align: left;
   }
@@ -359,18 +363,14 @@ body {
 }
 
 .filter-name-label {
-  display: table-cell;
+  float: left;
   width: 200px;
+  vertical-align: top;
 }
 
 .filter-inner-wrapper {
-  display: table-cell;
 
-  .autocomplete-input-wrapper {
-    width: 170px;
-  }
   .select-input-wrapper {
-    width: 170px;
 
     .dropdown__selected-items {
       color: #999;

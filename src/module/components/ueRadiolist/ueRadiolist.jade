@@ -1,10 +1,7 @@
-.field-wrapper.row
-    .form-group
-        include ../../template/labelField/labelField
-        .field-element
-            .col-lg-6.col-md-6.col-sm-6.col-xs-6
-                .radio(data-ng-repeat="item in vm.selectedValues", data-ng-class="vm.readonly ? 'disabled' : ''")
-                    label
-                        input(type="radio", data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue", value="{{item[vm.field_id]}}")
-                        |{{item[vm.field_search]}}
+div(ng-class="{'field-wrapper row':!vm.filter}")
+    include ../../template/labelField/labelField
+    div(ng-class="{'filter-inner-wrapper': vm.filter, 'field-element': !vm.filter}")
+        label.radio-inline(data-ng-repeat="item in vm.selectedValues", data-ng-class="{'radiodisabled': vm.readonly}")
+            input(type="radio", data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue", value="{{item[vm.field_id]}}")
+            span(ng-bind = "item[vm.field_search]")
     include ../../template/errorField/errorField

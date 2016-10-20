@@ -6,6 +6,7 @@
             setting : '=',
             entityId: '@',
             buttonClass: '@',
+            filter: '=',
             scopeIdParent: '@'
         },
         template : ['$templateCache', function($templateCache) {

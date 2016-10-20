@@ -3,9 +3,8 @@
 
     var ueCheckbox = {
         bindings : {
-            field: "=",
-            parentField: "=",
-            parentFieldIndex: "="
+            setting: '=',
+            filter: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueCheckbox/ueCheckbox.html');

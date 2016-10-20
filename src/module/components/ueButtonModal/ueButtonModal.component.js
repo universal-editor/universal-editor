@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var ueButtonRequest = {
+    var ueButtonModal = {
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueButtonModal/ueButtonModal.html');
         }],
@@ -14,5 +14,5 @@
 
     angular
         .module('universal.editor')
-        .component('ueButtonModal',ueButtonRequest);
+        .component('ueButtonModal',ueButtonModal);
 })();

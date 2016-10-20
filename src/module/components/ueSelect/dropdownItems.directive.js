@@ -58,22 +58,5 @@
                 }
             }
         }
-
-        function link(scope, elem, attrs, ctrl){
-            // elem.on('$destroy', function () {
-            //     scope.$destroy();
-            // });
-            //
-            // scope.isOpen = false;
-            //
-            // $document.on('click', function() {
-            //     scope.isOpen = false;
-            // });
-            //
-            // scope.toggleDropdown = function(e) {
-            //     scope.isOpen = !scope.isOpen;
-            //     e.stopPropagation();
-            // };
-        }
     }
 })();

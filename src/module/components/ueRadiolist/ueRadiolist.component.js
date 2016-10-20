@@ -2,8 +2,9 @@
     'use strict';
 
     var ueRadiolist = {
-        bindings : {
-            setting: '='
+         bindings : {
+            setting: '=',
+            filter: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueRadiolist/ueRadiolist.html');

@@ -7,7 +7,7 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/template/errorField/errorField.html',
     '\n' +
-    '<div class="field-error-wrapper">\n' +
+    '<div ng-if="!vm.filter" class="field-error-wrapper">\n' +
     '    <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>\n' +
     '</div>');
 }]);

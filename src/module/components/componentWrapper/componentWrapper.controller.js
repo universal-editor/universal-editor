@@ -12,14 +12,14 @@
         $scope.setting = vm.setting;
         $scope.setting.entityId = vm.entityId;
         $scope.setting.buttonClass = vm.buttonClass;
+        $scope.filter = vm.filter || false;
         $scope.setting.scopeIdParent = vm.scopeIdParent;
-
         this.$postLink = function() {
             $element.on('$destroy', function () {
                 $scope.$destroy();
             });
 
             $element.append(new ComponentBuilder($scope).build());
-        }
+        };
     }
 })();

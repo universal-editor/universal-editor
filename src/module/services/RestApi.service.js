@@ -1,26 +1,28 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('universal.editor')
-        .service('RestApiService',RestApiService);
+        .service('RestApiService', RestApiService);
 
-    RestApiService.$inject = ['$q','$rootScope','$http','configData','EditEntityStorage','$location','$timeout','$state','$httpParamSerializer', '$document'];
+    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage'];
 
-    function RestApiService($q,$rootScope,$http,configData,EditEntityStorage,$location,$timeout,$state,$httpParamSerializer, $document){
+    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage) {
         var entityType,
             self = this,
             queryTempParams,
             filterParams,
             itemsKey,
             entityObject,
-            mixEntity;
+            mixEntity,
+            cancelerPromises = [];
+        
 
         self.isProcessing = false;
         self.methodType = "";
         self.editedEntityId = null;
 
-        $rootScope.$on('editor:set_entity_type', function (event,type) {
+        $rootScope.$on('editor:set_entity_type', function(event, type) {
             //filterParams = undefined;
             entityObject = type;
             //itemsKey = "items";
@@ -30,162 +32,147 @@
             //mixEntity = self.getMixModeByEntity();
             itemsKey = "items";
             //if (angular.isDefined(entityObject.backend.keys)) {
-             //   itemsKey = entityObject.backend.keys.items || itemsKey;
+            //   itemsKey = entityObject.backend.keys.items || itemsKey;
             //}
         });
 
-        $rootScope.$on('editor:create_entity', function (event,entity) {
+        $rootScope.$on('editor:create_entity', function(event, entity) {
             self.addNewItem(entity);
         });
 
-        $rootScope.$on('editor:update_entity', function (event,entity) {
+        $rootScope.$on('editor:update_entity', function(event, entity) {
             self.updateItem(entity);
         });
 
-        $rootScope.$on('editor:presave_entity', function (event,entity) {
+        $rootScope.$on('editor:presave_entity', function(event, entity) {
             self.presaveItem(entity);
         });
 
-        this.getQueryParams = function () {
-            try{
+        this.getQueryParams = function() {
+            try {
                 return JSON.parse(JSON.stringify(queryTempParams));
             } catch (e) {
                 return {};
             }
         };
 
-        this.setQueryParams = function (params) {
-            if(Object.keys(params).length > 0){
+        this.setQueryParams = function(params) {
+            if (Object.keys(params).length > 0) {
                 queryTempParams = params;
             } else {
                 queryTempParams = undefined;
             }
         };
 
-        this.setFilterParams = function(params){
-            if(Object.keys(params).length > 0){
+        this.setFilterParams = function(params) {
+            if (Object.keys(params).length > 0) {
                 filterParams = params;
             } else {
                 filterParams = undefined;
             }
         };
+        
 
-        this.getItemsList = function (request) {
+        function setTimeOutPromise(id, mode) {
+            var def = $q.defer();
+                cancelerPromises[id] = cancelerPromises[id] || {};
+                if(cancelerPromises[id][mode]) {
+                    cancelerPromises[id][mode].resolve();
+                }
+                console.log("timeout request resolve");
+                cancelerPromises[id][mode] = def;
+                return def;            
+        }
+
+        this.getItemsList = function(request) {
+
+            //** cancel previouse request if request start again 
+            var canceler = setTimeOutPromise(request.scopeIdParent, 'read');
+            request.isProcessing = true;
 
             var deferred = $q.defer();
-
-            if(queryTempParams && queryTempParams.hasOwnProperty("filter")){
-                delete queryTempParams.filter;
-            }
 
             var params = this.getQueryParams();
             var _method = 'GET';
             var _url = request.url;
 
-            if(typeof request !== 'undefined'){
+            if (typeof request !== 'undefined') {
                 params = typeof request.params !== 'undefined' ? request.params : params;
                 _method = typeof request.method !== 'undefined' ? request.method : _method;
-                if(request.sort !== undefined){
+                if (request.sort !== undefined) {
                     params.sort = request.sort;
                 }
             }
             queryTempParams = params;
 
-            if(self.isProcessing){
-                //return;
+            var id = request.scopeIdParent;
+            var filters = FilterFieldsStorage.getFilterQueryObject(id);
+            if (!!request.childId) {
+                params[request.parentField] = request.childId;
+            }
+            if (filters) {
+                angular.extend(params, {filter: JSON.stringify(filters)});
+            } else {
+                delete params.filter;
             }
 
-            //if($location.search().hasOwnProperty("parent")){
-            //    var filterObject = {};
-            //    filterObject[entityObject.dataSource.parentField] = $location.search().parent;
-            //    angular.extend(params,{filter : JSON.stringify(filterObject)});
-            //}
-
-            if(!!request.childId){
-                var filterObject = {};
-                filterObject[request.parentField] = request.childId;
-                angular.extend(params,{filter : JSON.stringify(filterObject)});
-            }
-
-            if(filterParams){
-                if(params.hasOwnProperty("filter")){
-                    var tempFilter = JSON.parse(params.filter);
-                    angular.extend(tempFilter,filterParams);
-                    params.filter = JSON.stringify(tempFilter);
-                } else {
-                    params.filter = JSON.stringify(filterParams);
-                }
-            }
-
-            if(entityObject.dataSource.hasOwnProperty("parentField")){
+            if (entityObject.dataSource.hasOwnProperty("parentField")) {
                 params = params || {};
 
-                if(!params.hasOwnProperty("filter")){
+                if (!params.hasOwnProperty("filter")) {
                     params.root = true;
                 }
             }
 
-            if (entityObject.dataSource.hasOwnProperty("sortBy")
-                && !params.hasOwnProperty(entityObject.dataSource.sortBy) && !params.sort) {
+            if (entityObject.dataSource.hasOwnProperty("sortBy") && !params.hasOwnProperty(entityObject.dataSource.sortBy) && !params.sort) {
                 params = params || {};
                 angular.extend(params, {
                     sort: entityObject.dataSource.sortBy
                 });
             }
 
-            if(params.hasOwnProperty("filter")){
+            if (params.hasOwnProperty("filter")) {
                 delete params.root;
             }
 
-            //if(Object.keys(params).length === 0){
-            //   params = undefined;
-            // }
-
-            self.isProcessing = true;
 
             var expandFields = [];
 
-            //angular.forEach(entityObject.tabs, function (tab) {
-                angular.forEach(entityObject.dataSource.fields, function (field) {
-                    if(field.hasOwnProperty("expandable") && field.expandable === true){
-                        expandFields.push(field.name);
-                    }
-                });
-            //});
+            angular.forEach(entityObject.dataSource.fields, function(field) {
+                if (field.hasOwnProperty("expandable") && field.expandable === true) {
+                    expandFields.push(field.name);
+                }
+            });
 
-            if (expandFields.length > 0){
+            if (expandFields.length > 0) {
                 params.expand = expandFields.join(',');
             }
 
-            var id = request.scopeIdParent;
-
             $http({
-                method : _method,
-                url : _url,
-                params : params
-            }).then(function (response) {
-                self.isProcessing = false;
-                //console.log("response list record:");
-                //console.log(response);
-                if(response.data[itemsKey].length === 0){
+                method: _method,
+                url: _url,
+                params: params,
+                timeout: canceler.promise
+            }).then(function(response) {
+                if (response.data[itemsKey].length === 0) {
                     $rootScope.$broadcast("editor:parent_empty");
-                    $rootScope.$broadcast('editor:items_list_' + id,response.data);
-                    deferred.resolve();
-                } else {
-                    $rootScope.$broadcast('editor:items_list_' + id, response.data);
-                    deferred.resolve();
                 }
-            }, function (reject) {
-                self.isProcessing = false;
+                $rootScope.$broadcast('editor:items_list_' + id, response.data);
+                request.isProcessing = false;
+                deferred.resolve();
+            }, function(reject) {
+                if(reject.status !== -1) {
+                    request.isProcessing = false;
+                }
                 deferred.reject();
             });
 
             return deferred.promise;
         };
 
-        this.getItemsListWithParams = function (params, id) {
+        this.getItemsListWithParams = function(params, id) {
 
-            if(self.isProcessing){
+            if (self.isProcessing) {
                 return;
             }
 
@@ -200,12 +187,12 @@
             //    }
             //}
 
-            if(entityObject.dataSource.fields.parent){
+            if (entityObject.dataSource.fields.parent) {
                 params = params || {};
 
-                if(!params.hasOwnProperty("filter")){
-                    if(typeof params == 'object'){
-                        angular.extend(params,{
+                if (!params.hasOwnProperty("filter")) {
+                    if (typeof params == 'object') {
+                        angular.extend(params, {
                             root: true
                         });
                     } else {
@@ -215,42 +202,39 @@
                 }
             }
 
-            if (typeof params == 'object'){
+            if (typeof params == 'object') {
                 params = $httpParamSerializer(params);
             }
 
             self.isProcessing = true;
 
             $http({
-                method : 'GET',
-                url : entityObject.dataSource.url + '?' + params
-            }).then(function (response) {
+                method: 'GET',
+                url: entityObject.dataSource.url + '?' + params
+            }).then(function(response) {
                 self.isProcessing = false;
-                $rootScope.$broadcast('editor:items_list_' + id,response.data);
-                //if($location.search().hasOwnProperty("id")){
-                //    self.getItemById($location.search().id);
-                //}
-            }, function (reject) {
+                $rootScope.$broadcast('editor:items_list_' + id, response.data);
+            }, function(reject) {
                 self.isProcessing = false;
             });
         };
 
         this.getData = function(api, params) {
             return $http({
-                method : 'GET',
-                url : api,
+                method: 'GET',
+                url: api,
                 params: params
             });
         };
 
-        this.addNewItem = function (arrItem) {
+        this.addNewItem = function(arrItem) {
             var item = arrItem[0];
             var request = arrItem[1];
 
-            if(self.isProcessing){
+            if (self.isProcessing) {
                 return;
             }
-            
+
             var parentField = entityObject.dataSource.fields.parent;
             if (parentField && $location.search().parent) {
                 //-- проверяю редактируется ли поле parentField в форме. Если да, то его не нужно извлекать из адреса.
@@ -266,22 +250,22 @@
             var _url = entityObject.dataSource.url;
             var idField = 'id';
 
-            if(entityObject.dataSource.hasOwnProperty('fields')){
+            if (entityObject.dataSource.hasOwnProperty('fields')) {
                 idField = entityObject.dataSource.fields.primaryKey || idField;
             }
 
-            if(typeof request !== 'undefined'){
+            if (typeof request !== 'undefined') {
                 params = typeof request.params !== 'undefined' ? request.params : params;
                 _method = typeof request.method !== 'undefined' ? request.method : _method;
                 _url = typeof request.url !== 'undefined' ? request.url : _url;
             }
             $http({
-                method : _method,
-                url : _url,
-                data : item,
+                method: _method,
+                url: _url,
+                data: item,
                 params: params
-            }).then(function (response) {
-                $rootScope.$broadcast("editor:presave_entity_created",response.data[idField]);
+            }).then(function(response) {
+                $rootScope.$broadcast("editor:presave_entity_created", response.data[idField]);
                 self.isProcessing = false;
                 $rootScope.$broadcast("uploader:remove_session");
                 $rootScope.$broadcast("editor:entity_success");
@@ -289,15 +273,15 @@
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
-                $state.go(entityType + '_index', params,{reload: true});
-            }, function (reject) {
-                if (reject.data.error && reject.data.hasOwnProperty("data") && reject.data.data.length > 0){
-                    angular.forEach(reject.data.data, function (err) {
-                        if(err.hasOwnProperty("field")){
-                            $rootScope.$broadcast("editor:api_error_field_"+ err.field,err.message);
-                            if(err.hasOwnProperty("fields")){
-                                angular.forEach(err.fields, function (innerError,key) {
-                                    $rootScope.$broadcast("editor:api_error_field_"+ err.field + "_" + key + "_" + innerError.field,innerError.message);
+                $state.go(entityType + '_index', params, { reload: true });
+            }, function(reject) {
+                if (reject.data.error && reject.data.hasOwnProperty("data") && reject.data.data.length > 0) {
+                    angular.forEach(reject.data.data, function(err) {
+                        if (err.hasOwnProperty("field")) {
+                            $rootScope.$broadcast("editor:api_error_field_" + err.field, err.message);
+                            if (err.hasOwnProperty("fields")) {
+                                angular.forEach(err.fields, function(innerError, key) {
+                                    $rootScope.$broadcast("editor:api_error_field_" + err.field + "_" + key + "_" + innerError.field, innerError.message);
                                 });
                             }
                         }
@@ -307,7 +291,7 @@
             });
         };
 
-        this.updateItem = function (arrItem) {
+        this.updateItem = function(arrItem) {
             var item = arrItem[0];
             var request = arrItem[1];
             var tmpUrl;
@@ -320,7 +304,7 @@
             self.isProcessing = true;
             var params = {};
             var _method = 'PUT';
-            var _url  = entityObject.dataSource.url + '/' + self.editedEntityId;
+            var _url = entityObject.dataSource.url + '/' + self.editedEntityId;
 
             if (typeof request !== 'undefined') {
                 params = typeof request.params !== 'undefined' ? request.params : params;
@@ -333,7 +317,7 @@
                 url: _url,
                 data: item,
                 params: params
-            }).then(function (response) {
+            }).then(function(response) {
                 self.isProcessing = false;
                 $rootScope.$broadcast('uploader:remove_session');
                 $rootScope.$broadcast('editor:entity_success');
@@ -344,14 +328,14 @@
                 if ($state.params.back) {
                     params.type = $state.params.back;
                 }
-                $state.go(entityType + '_index', params, {reload: true});
-            }, function (reject) {
+                $state.go(entityType + '_index', params, { reload: true });
+            }, function(reject) {
                 if (reject.data.error && reject.data.hasOwnProperty('data') && reject.data.data.length > 0) {
-                    angular.forEach(reject.data.data, function (err) {
+                    angular.forEach(reject.data.data, function(err) {
                         if (err.hasOwnProperty('field')) {
                             $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
                             if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function (innerError, key) {
+                                angular.forEach(err.fields, function(innerError, key) {
                                     $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
                                 });
                             }
@@ -362,7 +346,7 @@
             });
         };
 
-        this.presaveItem = function (arrItem) {
+        this.presaveItem = function(arrItem) {
             var item = arrItem[0];
             var request = arrItem[1];
             var _url;
@@ -397,20 +381,20 @@
                 url: _url,
                 data: item,
                 params: params
-            }).then(function (response) {
-                self.isProcessing = false;       
-                       
-                $state.go($state.current.name, { pk: response.data[idField] });           
-                $rootScope.$broadcast('editor:presave_entity_created', response.data[idField]);  
-            }, function (reject) {
+            }).then(function(response) {
+                self.isProcessing = false;
+
+                $state.go($state.current.name, { pk: response.data[idField] });
+                $rootScope.$broadcast('editor:presave_entity_created', response.data[idField]);
+            }, function(reject) {
                 if ((reject.status === 422 || reject.status === 400) && reject.data) {
                     var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
-                    
-                    angular.forEach(wrongFields, function (err) {
+
+                    angular.forEach(wrongFields, function(err) {
                         if (err.hasOwnProperty('field')) {
                             $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
                             if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function (innerError, key) {
+                                angular.forEach(err.fields, function(innerError, key) {
                                     $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
                                 });
                             }
@@ -421,10 +405,10 @@
             });
         };
 
-        this.getItemById = function (id,par) {
+        this.getItemById = function(id, par) {
 
             var qParams = {};
-            if(self.isProcessing){
+            if (self.isProcessing) {
                 return;
             }
 
@@ -433,47 +417,47 @@
             var expandFields = [];
             var expandParam = "";
 
-            angular.forEach(entityObject.dataSource.fields, function (field) {
-                if(field.hasOwnProperty("expandable") && field.expandable === true){
+            angular.forEach(entityObject.dataSource.fields, function(field) {
+                if (field.hasOwnProperty("expandable") && field.expandable === true) {
                     expandFields.push(field.name);
                 }
             });
 
-            if (expandFields.length > 0){
+            if (expandFields.length > 0) {
                 qParams.expand = expandFields.join(',');
             }
 
             $http({
-                method : 'GET',
-                url : entityObject.dataSource.url + '/' + id,
-                params : qParams
-            }).then(function (response) {
+                method: 'GET',
+                url: entityObject.dataSource.url + '/' + id,
+                params: qParams
+            }).then(function(response) {
                 self.isProcessing = false;
                 EditEntityStorage.setSourceEntity(response.data);
-            }, function (reject) {
+            }, function(reject) {
                 self.isProcessing = false;
             });
         };
 
-        this.deleteItemById = function (id,request, type, setting) {
+        this.deleteItemById = function(id, request, type, setting) {
 
-            var par =  {};
+            var par = {};
 
-            if(self.isProcessing){
+            if (self.isProcessing) {
                 return;
             }
 
             self.isProcessing = true;
             var _method = 'DELETE';
 
-            var _url  = entityObject.dataSource.url + '/' + id;
+            var _url = entityObject.dataSource.url + '/' + id;
 
             if (setting.buttonClass === 'edit') {
                 _url = entityObject.dataSource.url.replace(':pk', id);
             }
 
-            if (type === 'mix'){
-                var config = configData.entities.filter(function (item) {
+            if (type === 'mix') {
+                var config = configData.entities.filter(function(item) {
                     return item.name === mixEntity.entity;
                 })[0];
                 _url = config.dataSource.url + '/' + id;
@@ -485,10 +469,10 @@
                 _url = typeof request.url !== 'undefined' ? request.url : _url;
             }
             return $http({
-                method : _method,
-                url : _url,
-                params : par
-            }).then(function (response) {
+                method: _method,
+                url: _url,
+                params: par
+            }).then(function(response) {
                 self.isProcessing = false;
                 self.setQueryParams({});
                 self.setFilterParams({});
@@ -497,24 +481,24 @@
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
-                if($state.params.back){
+                if ($state.params.back) {
                     params.type = $state.params.back;
                 }
                 $state.go(entityType + '_index', params, { reload: true });
-            }, function (reject) {
+            }, function(reject) {
                 self.isProcessing = false;
             });
         };
 
         //-- read all pages
-        this.getUrlResource = function getUrlResource(url, res, def , fromP, toP) {
+        this.getUrlResource = function getUrlResource(url, res, def, fromP, toP) {
             var defer = def || $q.defer();
             var result = res || [];
             var promiseStack = [];
             fromP = fromP || 1;
             toP = toP || 0;
 
-            if(fromP === 12) {
+            if (fromP === 12) {
                 fromP = 11;
             }
             if (!toP) {
@@ -537,7 +521,7 @@
                 });
             }
 
-            $q.all(promiseStack).then(function (allResp) {
+            $q.all(promiseStack).then(function(allResp) {
                 var resp;
                 var countP;
                 for (var i = allResp.length; i--;) {
@@ -549,48 +533,48 @@
                 }
 
                 if (!countP || countP === toP || countP === 1) {
-                    defer.resolve({data: { items: result}});
+                    defer.resolve({ data: { items: result } });
                 } else {
                     fromP = (fromP === 1 ? 2 : (fromP + 10));
                     toP += 10;
-                    if(toP > countP) {
+                    if (toP > countP) {
                         toP = countP;
                     }
                     return getUrlResource(url, result, defer, fromP, toP);
                 }
-            }, function (reject) { });
+            }, function(reject) { });
             return defer.promise;
         };
 
-        this.actionRequest = function(request){
+        this.actionRequest = function(request) {
             var deferred = $q.defer();
 
             var reqParams = request.params || {};
             var url = request.url;
-            if(request.id) {
+            if (request.id) {
                 url = request.url.replace(":id", id);
             }
             self.isProcessing = true;
 
-             $http({
-                method : request.method,
-                url : url,
-                params : reqParams,
+            $http({
+                method: request.method,
+                url: url,
+                params: reqParams,
                 beforeSend: request.beforeSend
-            }).then(function (response) {
-                 self.isProcessing = false;
-                 deferred.resolve(response);
-             }, function (reject) {
-                 self.isProcessing = false;
-                 deferred.reject(reject);
-             });
+            }).then(function(response) {
+                self.isProcessing = false;
+                deferred.resolve(response);
+            }, function(reject) {
+                self.isProcessing = false;
+                deferred.reject(reject);
+            });
 
             return deferred.promise;
         };
 
-        this.loadChilds = function(request){
+        this.loadChilds = function(request) {
             if (request.headComponent) {
-                $location.search("parent",request.id);
+                $location.search("parent", request.id);
             }
             $rootScope.$broadcast('editor:parent_id_' + request.scopeIdParent, request.id);
             var newRequest = {};
@@ -598,31 +582,31 @@
             newRequest.scopeIdParent = request.scopeIdParent;
             newRequest.parentField = request.parentField;
             newRequest.childId = request.id;
-            self.getItemsList(newRequest).then(function(response){
-                $timeout(function () {
+            self.getItemsList(newRequest).then(function(response) {
+                $timeout(function() {
                     if (request.headComponent) {
-                        $location.search("parent",request.id);
+                        $location.search("parent", request.id);
                     }
                 }, 0);
             });
 
         };
 
-        this.loadParent = function(request){
+        this.loadParent = function(request) {
             var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
             var newRequest = {};
             newRequest.url = request.url;
             newRequest.scopeIdParent = request.scopeIdParent;
             newRequest.parentField = request.parentField;
-            if(entityId){
+            if (entityId) {
                 self.isProcessing = true;
 
                 $http({
-                    method : 'GET',
-                    url : request.url + "/" + entityId
-                }).then(function(response){
+                    method: 'GET',
+                    url: request.url + "/" + entityId
+                }).then(function(response) {
                     var parentId;
-                    if(response.data[request.parentField] !== null){
+                    if (response.data[request.parentField] !== null) {
                         self.isProcessing = false;
                         parentId = response.data[request.parentField];
                         if (request.headComponent) {
@@ -641,8 +625,8 @@
                         newRequest.childId = null;
                         self.getItemsList(newRequest);
                     }
-                },function(reject){
-                  self.isProcessing = false;
+                }, function(reject) {
+                    self.isProcessing = false;
                 });
             } else {
                 self.isProcessing = true;
@@ -655,7 +639,7 @@
             }
         };
 
-        this.setEntityType = function (type) {
+        this.setEntityType = function(type) {
             entityType = type;
             //entityObject = configData.entities.filter(function (item) {
             //    return item.name === entityType;
@@ -663,20 +647,20 @@
             //mixEntity = self.getMixModeByEntity();
         };
 
-        this.getEntityType = function () {
+        this.getEntityType = function() {
             return entityType;
         };
-        
-        this.getEntityObject = function () {
+
+        this.getEntityObject = function() {
             return entityObject;
         };
 
         this.getMixModeByEntity = function() {
             var mixMode = {};
             mixMode.existence = false;
-            if(configData.hasOwnProperty("mixedMode")){
-                angular.forEach(configData.mixedMode, function(item){
-                    if(item.entities[0] == entityType) {
+            if (configData.hasOwnProperty("mixedMode")) {
+                angular.forEach(configData.mixedMode, function(item) {
+                    if (item.entities[0] == entityType) {
                         mixMode.existence = true;
                         mixMode.entity = item.entities[1];
                         mixMode.entityTypeName = item.fields.type;

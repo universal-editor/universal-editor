@@ -1,0 +1,20 @@
+
+<div style="margin: 10px 5px;">
+    <button data-ng-click="vm.toggleFilterVisibility()" class="btn btn-lg btn-default filter-button">Фильтр {{vm.visiable ? '-' : '+'}}</button>
+    <div data-ng-hide="!vm.visiable" class="editor-filter">
+        <div ng-keyup="vm.clickEnter($event)" class="editor-filter-wrapper">
+            <div class="editor-filter-head">
+                <label ng-bind="vm.header.label"></label>
+            </div>
+            <div style="padding: 5px 15px;" class="editor-filter-body">
+                <div ng-repeat="group in vm.body track by $index" class="filter-content-wrapper">
+                    <label class="filter-name-label"> <span ng-bind="group.label"></span></label>
+                    <component-wrapper ng-repeat="filter in group.filters" data-setting="filter.field" data-filter="true" style="{{filter.ngStyle}}"></component-wrapper>
+                </div>
+            </div>
+            <div class="editor-filter-footer">
+                <component-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" data-button-class="footer"></component-wrapper>
+            </div>
+        </div>
+    </div>
+</div>

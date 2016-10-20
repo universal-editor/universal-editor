@@ -1,13 +1,12 @@
-.field-wrapper.row
-    .form-group
+div(ng-class="{'field-wrapper row':!vm.filter}")
         include ../../template/labelField/labelField
-        .field-element
+        div(ng-class="{'filter-inner-wrapper': vm.filter, 'field-element': !vm.filter}"  ng-style="{'overflow:auto':vm.multiple}")  
             .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="vm.multiple")
                 .item-datepicker-wrapper.input-group(data-ng-repeat="field_item in vm.fieldValue track by $index")
                     input.form-control.input-sm(data-date-time="", name="{{vm.fieldName}}", data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]", data-format="DD.MM.YYYY", data-max-view="year" data-min-view="date" data-view="date")
                     span.input-group-btn
                         button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
                 .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-if="!vm.readonly || !vm.emptyRequiredField") {{'BUTTON.ADD' | translate}}
-            .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple")
+            div(data-ng-if="!vm.multiple" ng-class="{'col-lg-2 col-md-2 col-sm-3 col-xs-3': !vm.filter}")
                 input.form-control.input-sm(data-date-time="", name="{{vm.fieldName}}", data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue", data-format="DD.MM.YYYY", data-max-view="year" data-min-view="date" data-view="date")
     include ../../template/errorField/errorField

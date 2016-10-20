@@ -15,9 +15,7 @@
         vm.type = type;
         var currentState = $state.current;
         var pk;
-
-        RestApiService.setEntityType(type);
-        EditEntityStorage.setEntityType(type);
+        console.log("reload!");
         
         $rootScope.$broadcast('editor:set_entity_type', component.settings); 
 

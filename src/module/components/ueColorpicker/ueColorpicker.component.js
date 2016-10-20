@@ -3,9 +3,8 @@
 
     var ueColorpicker = {
         bindings : {
-            field: "=",
-            parentField: "=",
-            parentFieldIndex: "="
+            setting: '=',
+            filter: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueColorpicker/ueColorpicker.html');
