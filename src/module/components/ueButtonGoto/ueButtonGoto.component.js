@@ -6,7 +6,8 @@
             return $templateCache.get('module/components/ueButtonGoto/ueButtonGoto.html');
         }],
         bindings : {
-            setting: '='
+            setting: '=',
+            options: '='
         },
         controller : 'UeButtonGotoController',
         controllerAs : 'vm'

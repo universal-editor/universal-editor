@@ -5,9 +5,9 @@
         .module('universal.editor')
         .service('RestApiService', RestApiService);
 
-    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage'];
+    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService'];
 
-    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage) {
+    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService) {
         var entityType,
             self = this,
             queryTempParams,
@@ -230,6 +230,7 @@
         this.addNewItem = function(arrItem) {
             var item = arrItem[0];
             var request = arrItem[1];
+            var postfixId = arrItem[3];
 
             if (self.isProcessing) {
                 return;
@@ -265,7 +266,7 @@
                 data: item,
                 params: params
             }).then(function(response) {
-                $rootScope.$broadcast("editor:presave_entity_created", response.data[idField]);
+                $rootScope.$broadcast("editor:presave_entity_created" + postfixId, response.data[idField]);
                 self.isProcessing = false;
                 $rootScope.$broadcast("uploader:remove_session");
                 $rootScope.$broadcast("editor:entity_success");
@@ -273,7 +274,9 @@
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
-                $state.go(entityType + '_index', params, { reload: true });
+                if(!ModalService.isModalOpen()){
+                  $state.go(entityType + '_index', params, { reload: true });
+                }
             }, function(reject) {
                 if (reject.data.error && reject.data.hasOwnProperty("data") && reject.data.data.length > 0) {
                     angular.forEach(reject.data.data, function(err) {
@@ -294,6 +297,8 @@
         this.updateItem = function(arrItem) {
             var item = arrItem[0];
             var request = arrItem[1];
+            var postfixId = arrItem[3];
+            
             var tmpUrl;
 
 
@@ -320,7 +325,7 @@
             }).then(function(response) {
                 self.isProcessing = false;
                 $rootScope.$broadcast('uploader:remove_session');
-                $rootScope.$broadcast('editor:entity_success');
+                $rootScope.$broadcast('editor:entity_success' + postfixId);
                 var params = {};
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
@@ -328,7 +333,9 @@
                 if ($state.params.back) {
                     params.type = $state.params.back;
                 }
-                $state.go(entityType + '_index', params, { reload: true });
+                if(!ModalService.isModalOpen()){
+                  $state.go(entityType + '_index', params, { reload: true });
+                }
             }, function(reject) {
                 if (reject.data.error && reject.data.hasOwnProperty('data') && reject.data.data.length > 0) {
                     angular.forEach(reject.data.data, function(err) {
@@ -353,6 +360,8 @@
             var params = {};
             var _method = 'POST';
             var idField = 'id';
+            
+            var postfixId = arrItem[3];
 
             if (self.isProcessing) {
                 return;
@@ -383,9 +392,8 @@
                 params: params
             }).then(function(response) {
                 self.isProcessing = false;
-
-                $state.go($state.current.name, { pk: response.data[idField] });
-                $rootScope.$broadcast('editor:presave_entity_created', response.data[idField]);
+                $state.go($state.current.name, { pk: response.data[idField] }, {reload: !ModalService.isModalOpen(), notify: !ModalService.isModalOpen()});
+                $rootScope.$broadcast('editor:presave_entity_created' + postfixId, response.data[idField]);
             }, function(reject) {
                 if ((reject.status === 422 || reject.status === 400) && reject.data) {
                     var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
@@ -405,14 +413,10 @@
             });
         };
 
-        this.getItemById = function(id, par) {
+        this.getItemById = function(id, par, options) {
 
             var qParams = {};
-            if (self.isProcessing) {
-                return;
-            }
-
-            self.isProcessing = true;
+            options.isLoading = true;
 
             var expandFields = [];
             var expandParam = "";
@@ -432,14 +436,14 @@
                 url: entityObject.dataSource.url + '/' + id,
                 params: qParams
             }).then(function(response) {
-                self.isProcessing = false;
-                EditEntityStorage.setSourceEntity(response.data);
+                options.isLoading = false;
+                EditEntityStorage.setSourceEntity(response.data, options.$parentScopeId);
             }, function(reject) {
-                self.isProcessing = false;
+                options.isLoading = false;
             });
         };
 
-        this.deleteItemById = function(id, request, type, setting) {
+        this.deleteItemById = function(id, request, type, setting, prefixId) {
 
             var par = {};
 

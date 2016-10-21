@@ -1,6 +1,6 @@
-div(ng-class="{'field-wrapper row':!vm.filter}")
+div(ng-class="{'field-wrapper row':!vm.options.filter}")
     include ../../template/labelField/labelField
-    div(ng-class="{'filter-inner-wrapper': vm.filter, 'field-element': !vm.filter}")       
+    div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}")       
             label.checkbox-inline(data-ng-repeat="item in vm.selectedValues", data-ng-class="{'disabled': vm.readonly}")
                 input(type="checkbox", data-ng-disabled="vm.readonly", data-checklist-model="vm.fieldValue", data-checklist-value="item[vm.field_id]")
                 span(ng-bind="item[vm.field_search]")

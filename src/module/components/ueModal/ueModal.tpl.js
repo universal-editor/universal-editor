@@ -15,11 +15,11 @@ module.run(['$templateCache', function($templateCache) {
     '    <div ng-show="vm.body" class="ue-modal-body">\n' +
     '        <div ng-bind="vm.body.text" ng-show="vm.body.text" class="text"></div>\n' +
     '        <div class="field-content-wrapper">\n' +
-    '            <component-wrapper data-setting="vm.body" data-ng-if="vm.body"></component-wrapper>\n' +
+    '            <component-wrapper data-setting="vm.body" data-ng-if="vm.body" data-options="vm.options"></component-wrapper>\n' +
     '        </div>\n' +
     '    </div>\n' +
     '    <div data-ng-show="vm.footer" class="ue-modal-footer">\n' +
-    '        <component-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" class="editor-action-button"></component-wrapper>\n' +
+    '        <component-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" data-options="vm.options" class="editor-action-button"></component-wrapper>\n' +
     '    </div>\n' +
     '</div>');
 }]);

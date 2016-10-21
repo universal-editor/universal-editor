@@ -17,11 +17,11 @@ module.run(['$templateCache', function($templateCache) {
     '            <div style="padding: 5px 15px;" class="editor-filter-body">\n' +
     '                <div ng-repeat="group in vm.body track by $index" class="filter-content-wrapper">\n' +
     '                    <label class="filter-name-label"> <span ng-bind="group.label"></span></label>\n' +
-    '                    <component-wrapper ng-repeat="filter in group.filters" data-setting="filter.field" data-filter="true" data-filter-parameters="filter.parameters" style="{{filter.ngStyle}}"></component-wrapper>\n' +
+    '                    <component-wrapper ng-repeat="filter in group.filters" data-setting="filter.field" data-options="filter.options" style="{{filter.ngStyle}}"></component-wrapper>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '            <div class="editor-filter-footer">\n' +
-    '                <component-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" data-button-class="footer"></component-wrapper>\n' +
+    '                <component-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" data-options="vm.options" data-button-class="footer"></component-wrapper>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +

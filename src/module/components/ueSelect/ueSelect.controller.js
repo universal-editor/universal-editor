@@ -13,6 +13,7 @@
         var fieldErrorName;
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
+        vm.parentEntityScopeId = vm.options.$parentScopeId || '';
 
         var componentSettings = vm.setting.component.settings;
         vm.fieldName = vm.setting.name;
@@ -66,7 +67,7 @@
         vm.hint = componentSettings.hint || false;
         vm.required = componentSettings.required || false;
         vm.error = [];
-        vm.multiple = componentSettings.multiple === true && !vm.filter ? true : false;
+        vm.multiple = componentSettings.multiple === true && !vm.options.filter ? true : false;
 
 
 
@@ -92,7 +93,7 @@
             vm.styleInput = { 'width': '99%' };
         }
 
-        if (vm.filter) {
+        if (vm.options.filter) {
             vm.multiple = false;
             vm.readonly = false;
             vm.required = false;
@@ -197,8 +198,8 @@
         /* ---- */
 
         var destroyWatchEntityLoaded;
-        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
-            if (!vm.filter) {
+        var destroyEntityLoaded = $scope.$on('editor:entity_loaded' + vm.parentEntityScopeId, function(event, data) {
+            if (!vm.options.filter) {
 
                 vm.fieldValue = {};
                 //-- functional for required fields
@@ -596,7 +597,7 @@
         }
 
         vm.addToSelected = function(event, val) {
-            if (vm.multiple && !vm.filter) {
+            if (vm.multiple && !vm.options.filter) {
                 vm.fieldValue.push(val);
             } else {
                 vm.fieldValue = val;
@@ -804,8 +805,8 @@
             if (angular.isFunction(destroySelectField)) {
                 destroySelectField();
             }
-            EditEntityStorage.deleteFieldController(vm, vm.setting.component.settings.$parentScopeId);
-            FilterFieldsStorage.deleteFilterController(vm, vm.setting.component.settings.$parentScopeId);
+            EditEntityStorage.deleteFieldController(vm, vm.parentEntityScopeId);
+            FilterFieldsStorage.deleteFilterController(vm, vm.parentEntityScopeId);
             if (vm.setting.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy(vm.setting.parentField, vm.setting.parentFieldIndex, vm.fieldName, vm.fieldValue);
             }
@@ -853,10 +854,10 @@
         vm.getFieldValue = getFieldValue;
         vm.clear = clear;
 
-        if (vm.filter) {
-            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
+        if (vm.options.filter) {
+            FilterFieldsStorage.addFilterController(this, vm.parentEntityScopeId);
         } else {
-            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
+            EditEntityStorage.addFieldController(this, vm.parentEntityScopeId);
         }
 
         function setInitialValue() {

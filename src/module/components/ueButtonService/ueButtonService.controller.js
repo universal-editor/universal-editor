@@ -50,23 +50,23 @@
             switch (action) {
                 case 'save':
                     if (type == 'create') {
-                        EditEntityStorage.editEntityUpdate("create");
+                        EditEntityStorage.editEntityUpdate("create", {}, vm.options.$parentScopeId);
                         ModalService.close();
                     } else if (type == 'update') {
                         RestApiService.editedEntityId = vm.entityId;
-                        EditEntityStorage.editEntityUpdate("update");
+                        EditEntityStorage.editEntityUpdate("update", {}, vm.options.$parentScopeId);
                         ModalService.close();
                     }
                     break;
                 case 'delete':
                     if(confirm("Удалить запись «" + vm.entityId + "»?")){
-                        RestApiService.deleteItemById(vm.entityId, request, $scope.entityType, vm.setting);
+                        RestApiService.deleteItemById(vm.entityId, request, $scope.entityType, vm.setting, vm.options.$parentScopeId);
                         ModalService.close();
                     }
                     break;
                 case 'presave':
                     RestApiService.editedEntityId = vm.entityId;
-                    EditEntityStorage.editEntityPresave(request);
+                    EditEntityStorage.editEntityPresave(request, vm.options.$parentScopeId);
                     break;
                 case 'open':
                     RestApiService.loadChilds(newRequest);

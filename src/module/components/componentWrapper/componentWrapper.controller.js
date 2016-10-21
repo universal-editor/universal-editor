@@ -12,9 +12,10 @@
         $scope.setting = vm.setting;
         $scope.setting.entityId = vm.entityId;
         $scope.setting.buttonClass = vm.buttonClass;
-        $scope.filter = vm.filter || false;
-        $scope.filterParameters = vm.filterParameters;
-        $scope.setting.scopeIdParent = vm.scopeIdParent;
+        $scope.options = vm.options || {};
+        //$scope.filter = vm.filter || false;
+       // $scope.filterParameters = vm.filterParameters;
+        //$scope.setting.scopeIdParent = vm.scopeIdParent;
         this.$postLink = function() {
             $element.on('$destroy', function () {
                 $scope.$destroy();

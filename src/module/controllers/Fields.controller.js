@@ -13,9 +13,9 @@
         var baseController = $controller('BaseController', { $scope: $scope });
         angular.extend(vm, baseController);
         var componentSettings = $scope.vm.setting.component.settings;                
-        $scope.vm.parentEntityScopeId = componentSettings.$parentScopeId;
+        $scope.vm.parentEntityScopeId = $scope.vm.options.$parentScopeId;
 
-        if ($scope.vm.filter) {
+        if ($scope.vm.options.filter) {
             $scope.$watch(function() {
                 return $location.search();
             }, function(newVal) {

@@ -37,6 +37,7 @@
         vm.scopeIdParent = vm.setting.component.$id;
 
         vm.filterComponent = vm.setting.component.settings.header.filter;
+        vm.optionsFields = { $parentScopeId: vm.scopeIdParent};
 
         if (vm.filterComponent !== false) {
             if (angular.isUndefined(vm.filterComponent)) {
@@ -55,7 +56,6 @@
             if (angular.isUndefined(vm.filterComponent.component.settings.dataSource)) {
                 vm.filterComponent.component.settings.dataSource = vm.setting.component.settings.dataSource;
             }
-            vm.filterComponent.component.settings.$parentScopeId = vm.scopeIdParent;
         }
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];

@@ -4,7 +4,8 @@
 
     var ueFormGroup = {
         bindings : {
-            setting: '='
+            setting: '=',
+            options: '='
         },
         transclude : true,
         template : ['$templateCache', function ($templateCache) {

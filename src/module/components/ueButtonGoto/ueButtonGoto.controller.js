@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonGotoController',UeButtonGotoController);
 
-    UeButtonGotoController.$inject = ['$scope','$element','RestApiService','$state', '$location', '$uibModal', 'configData', 'EditEntityStorage'];
+    UeButtonGotoController.$inject = ['$scope','$element','RestApiService','$state', '$location', 'configData', 'EditEntityStorage', 'ModalService'];
 
-    function UeButtonGotoController($scope,$element,RestApiService,$state, $location, $uibModal, configData, EditEntityStorage){
+    function UeButtonGotoController($scope,$element,RestApiService,$state, $location, configData, EditEntityStorage, ModalService){
         var vm = this;
         var state = vm.setting.component.settings.state;
         var stateType = RestApiService.getEntityType();
@@ -37,13 +37,13 @@
 
                         
             var toStateConfig = EditEntityStorage.getStateConfig(state);
-            //var isChildState = toStateConfig.name !== $state.current.name && ~(toStateConfig.name.indexOf($state.current.name)); 
             var pkKey = 'pk' + EditEntityStorage.getLevelChild(toStateConfig.name);
             var params = {};
             params[pkKey] =  vm.entityId;
 
             if (toStateConfig){
                 if(toStateConfig.component.name === 'ue-modal') {
+                  ModalService.options = vm.options;
                   stateOptions.reload = false;
                 }          
             }

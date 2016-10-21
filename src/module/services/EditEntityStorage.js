@@ -33,13 +33,15 @@
             }
         };
 
-        this.newSourceEntity = function () {
-            $rootScope.$broadcast("editor:entity_loaded", { editorEntityType: "new"});
+        this.newSourceEntity = function (id) {
+            id = id || '';
+            $rootScope.$broadcast("editor:entity_loaded" + id, { editorEntityType: "new"});
         };
 
-        this.setSourceEntity = function (data) {
+        this.setSourceEntity = function (data, id) {
+            id = id || '';
             data.editorEntityType = "exist";
-            $rootScope.$broadcast("editor:entity_loaded", data);
+            $rootScope.$broadcast("editor:entity_loaded" + id, data);
         };
 
         this.getEntityType = function () {
@@ -70,7 +72,8 @@
         };
 
 
-        this.editEntityUpdate = function (type, request) {
+        this.editEntityUpdate = function (type, request, prefixId) {
+            prefixId = prefixId || '';
 
             this.setActionType(type);
 
@@ -84,23 +87,24 @@
 
             switch (type) {
                 case "create":
-                    $rootScope.$emit('editor:create_entity',[entityObject, request]);
+                    $rootScope.$emit('editor:create_entity',[entityObject, request, prefixId]);
                     break;
                 case "update":
-                    $rootScope.$emit('editor:update_entity',[entityObject, request]);
+                    $rootScope.$emit('editor:update_entity',[entityObject, request, prefixId]);
                     break;
             }
         };
 
-        this.editEntityPresave = function (request) {
+        this.editEntityPresave = function (request, prefixId) {
             var entityObject = {};
+            prefixId = prefixId || '';
 
             angular.forEach(fieldControllers,function(fCtrl){
                 if(!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false){
                     angular.merge(entityObject,fCtrl.getFieldValue());
                 }
             });
-            $rootScope.$emit('editor:presave_entity',[entityObject, request]);
+            $rootScope.$emit('editor:presave_entity',[entityObject, request, prefixId]);
         };
 
         this.getEntity = function(stateName, entityName) {

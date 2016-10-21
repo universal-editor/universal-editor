@@ -4,8 +4,7 @@
     var ueDatetime = {
          bindings : {
             setting: '=',
-            filter: '=',
-            filterParameters: '='
+            options: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueDatetime/ueDatetime.html');

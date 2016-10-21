@@ -1,16 +1,7 @@
 
 <div class="editor-body">
     <div data-ng-click="vm.closeButton()" ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}" class="close-editor"></div>
-    <div class="nav nav-tabs">
-        <li data-ng-repeat="tab in vm.tabs" data-ng-class="vm.currentTab == tab.label ? 'active' : ''" data-ng-click="vm.currentTab = tab.label"><a href="">{{tab.label}}</a></li>
-    </div>
-    <div class="tab-content-wrapper">
-        <div data-ng-repeat="tab in vm.tabs" data-ng-show="vm.currentTab == tab.label" class="tab-item-content">
-            <div class="field-content-wrapper">
-                <component-wrapper data-ng-repeat="field in tab.fields" data-setting="field" data-button-class="footer"></component-wrapper>
-            </div>
-        </div>
-    </div>
+    <component-wrapper ng-repeat="component in vm.components" data-setting="component" data-options="vm.options">           </component-wrapper>
     <div class="field-error-bottom-wrapper">
         <div data-ng-repeat="err in vm.errors" class="error-item alert alert-danger">{{err}}</div>
     </div>
@@ -18,6 +9,6 @@
         <div data-ng-repeat="notify in vm.notifys" class="notify-item">{{notify}}</div>
     </div>
     <div data-ng-if="vm.entityLoaded" class="editor-entity-actions">
-        <component-wrapper data-ng-repeat="button in vm.editFooterBar track by $index" data-entity-id="{{vm.entityId}}" data-setting="button" data-button-class="footer" class="editor-action-button"></component-wrapper>
+        <component-wrapper data-ng-repeat="button in vm.editFooterBar track by $index" data-entity-id="{{vm.entityId}}" data-setting="button" data-options="vm.options" data-button-class="footer" class="editor-action-button"></component-wrapper>
     </div>
 </div>

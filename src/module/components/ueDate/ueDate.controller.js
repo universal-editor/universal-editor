@@ -36,7 +36,7 @@
         vm.multiple = componentSettings.multiple === true;
         vm.fieldValue = getInitValue();
 
-        if (vm.filter) {
+        if (vm.options.filter) {
             vm.multiple = false;
             vm.readonly = false;
             vm.required = false;
@@ -74,8 +74,8 @@
 
         var destroyWatchEntityLoaded;
 
-        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
-            if (!vm.filter) {
+        var destroyEntityLoaded = $scope.$on('editor:entity_loaded' + vm.parentEntityScopeId, function(event, data) {
+            if (!vm.options.filter) {
                 //-- functional for required fields
                 if (componentSettings.requiredField) {
                     destroyWatchEntityLoaded = $scope.$watch(function() {
@@ -171,8 +171,8 @@
             destroyEntityLoaded();
             destroyErrorField();
             destroyWatchFieldValue();
-            EditEntityStorage.deleteFieldController(vm, vm.setting.component.settings.$parentScopeId);
-            FilterFieldsStorage.deleteFilterController(vm, vm.setting.component.settings.$parentScopeId);
+            EditEntityStorage.deleteFieldController(vm, vm.parentEntityScopeId);
+            FilterFieldsStorage.deleteFilterController(vm, vm.parentEntityScopeId);
             if (vm.setting.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy(vm.setting.parentField, vm.setting.parentFieldIndex, vm.fieldName, vm.fieldValue);
             }
@@ -186,10 +186,10 @@
         vm.clear = clear;
         vm.getFieldValue = getFieldValue;
 
-        if (vm.filter) {
-            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
+        if (vm.options.filter) {
+            FilterFieldsStorage.addFilterController(this, vm.parentEntityScopeId);
         } else {
-            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
+            EditEntityStorage.addFieldController(this, vm.parentEntityScopeId);
         }
 
         function getInitValue() {

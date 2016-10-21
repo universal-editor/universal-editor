@@ -3,7 +3,8 @@
 
     var uePagination = {
         bindings : {
-            setting: "="
+            setting: "=",
+            options: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/uePagination/uePagination.html');

@@ -1,6 +1,6 @@
-div(ng-class="{'field-wrapper row':!vm.filter}")
+div(ng-class="{'field-wrapper row':!vm.options.filter}")
     include ../../template/labelField/labelField
-    div(ng-class="{'filter-inner-wrapper': vm.filter, 'field-element': !vm.filter}"  ng-style="{'overflow:auto':vm.multiple}")  
+    div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}"  ng-style="{'overflow:auto':vm.multiple}")  
         .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="vm.multiple")
             .item-colorpicker-wrapper.input-group(data-ng-repeat="field_item in vm.fieldValue track by $index")
                 input.form-control.input-sm(type="text", data-ng-disabled="vm.readonly", data-minicolors="", data-ng-model="vm.fieldValue[$index]")
