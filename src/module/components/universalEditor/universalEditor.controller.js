@@ -25,6 +25,7 @@
         scope.settings.component = component;
         scope.settings.pk = pk || null;
         scope.settings.headComponent = true;
-        element.append($compile('<' + component.name + ' data-setting="settings" data-options="{}" ></' + component.name + '>')(scope));
+        scope.options = {};
+        element.append($compile('<' + component.name + ' data-setting="settings" data-options="options" ></' + component.name + '>')(scope));
     }
 })();

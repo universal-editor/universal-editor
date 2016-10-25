@@ -12,7 +12,7 @@
         var vm = this;
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
-        vm.parentEntityScopeId = vm.options.$parentScopeId || '';
+        vm.parentComponentId = vm.options.$parentComponentId || '';
         var fieldErrorName;
         var componentSettings = vm.setting.component.settings;
         if (vm.setting.parentField) {
@@ -121,7 +121,8 @@
          * Поле забирает данные из объекта сущности с учетом наличия родительского поля.
          */
         var destroyWatchEntityLoaded;
-        var destroyEntityLoaded = $scope.$on('editor:entity_loaded' + vm.parentEntityScopeId, function(event, data) {
+        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
+            if(!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
             if (!vm.options.filter) {
 
                 //-- functional for required fields
@@ -196,6 +197,7 @@
                     }
                 }
             }
+            }
         });
 
         /*
@@ -234,8 +236,8 @@
             destroyEntityLoaded();
             destroyErrorField();
             destroyWatchFieldValue();
-            EditEntityStorage.deleteFieldController(vm, vm.parentEntityScopeId);
-            FilterFieldsStorage.deleteFilterController(vm, vm.parentEntityScopeId);
+            EditEntityStorage.deleteFieldController(vm, vm.parentComponentId);
+            FilterFieldsStorage.deleteFilterController(vm, vm.parentComponentId);
             if (vm.setting.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy(vm.setting.parentField, vm.setting.parentFieldIndex, vm.setting.name, vm.fieldValue);
             }
@@ -252,9 +254,9 @@
         vm.clear = clear;
 
         if (vm.options.filter) {
-            FilterFieldsStorage.addFilterController(this, vm.parentEntityScopeId);
+            FilterFieldsStorage.addFilterController(this, vm.parentComponentId);
         } else {
-            EditEntityStorage.addFieldController(this, vm.parentEntityScopeId);
+            EditEntityStorage.addFieldController(this, vm.parentComponentId);
         }
 
         function clear() {

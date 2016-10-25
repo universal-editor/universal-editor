@@ -34,7 +34,7 @@
                                 index: 0                                
                             },
                             filter: true,
-                            $parentScopeId: vm.options.$parentScopeId
+                            $parentComponentId: vm.options.$parentComponentId
                         }
                     }]
                 };
@@ -62,7 +62,7 @@
                 /** parse filter objects with operators*/
                 fieldSettings.$parseFilter = function(vm, filterValue) {
                     var componentSettings = vm.setting.component.settings;
-                    var parentScopeId = vm.parentEntityScopeId;
+                    var parentComponentId = vm.parentComponentId;
                     var output = {};
                     angular.forEach(filterValue, function(value, key) {
                         //** delete operators from keys and value property
@@ -106,10 +106,10 @@
                         }
                     }
                     $timeout(function() {
-                        if (!FilterFieldsStorage.getFilterQueryObject(parentScopeId)) {
+                        if (!FilterFieldsStorage.getFilterQueryObject(parentComponentId)) {
                             console.log("Filter calculate.");
-                            FilterFieldsStorage.calculate(parentScopeId);
-                            $rootScope.$broadcast('editor:read_entity_' + parentScopeId);
+                            FilterFieldsStorage.calculate(parentComponentId);
+                            $rootScope.$broadcast('editor:read_entity_' + parentComponentId);
                         }
                     }, 0);
                     return output;
@@ -133,7 +133,7 @@
                                 index: 1
                             },
                             filter: true,
-                            $parentScopeId: vm.options.$parentScopeId
+                            $parentComponentId: vm.options.$parentComponentId
                         },
                         ngStyle: 'display: inline-block; width: 25%; margin-left: 20px;'
                     });

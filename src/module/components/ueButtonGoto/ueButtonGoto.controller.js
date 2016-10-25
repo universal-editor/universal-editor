@@ -13,29 +13,17 @@
         var stateType = RestApiService.getEntityType();
         var type = vm.setting.component.settings.type ? vm.setting.component.settings.type : stateType;
         vm.label = vm.setting.component.settings.label;
-        vm.processing = RestApiService.isProcessing;
         vm.entityId = vm.setting.entityId || 'new';
-
-        var watchRest = $scope.$watch(function () {
-            return RestApiService.isProcessing;
-        }, function (val) {
-            vm.processing = val;
-        });
-
-        vm.$onDestroy = function () {
-            watchRest();
-        };
 
         $element.bind("click", function () {
             var stateOptions = { 
                 reload: true
             };
 
-            if (vm.processing) {
+            if (vm.options.isLoading) {
                 return;
             }
 
-                        
             var toStateConfig = EditEntityStorage.getStateConfig(state);
             var pkKey = 'pk' + EditEntityStorage.getLevelChild(toStateConfig.name);
             var params = {};
@@ -47,7 +35,7 @@
                   stateOptions.reload = false;
                 }          
             }
-            
+
             $state.go(toStateConfig.name, params, stateOptions); 
         });
 

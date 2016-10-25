@@ -34,10 +34,10 @@
         vm.pageItemsArray = [];
         vm.contextLinks = [];
         vm.listHeaderBar = [];
-        vm.scopeIdParent = vm.setting.component.$id;
+        vm.$parentComponentId = vm.setting.component.$id;
 
         vm.filterComponent = vm.setting.component.settings.header.filter;
-        vm.optionsFields = { $parentScopeId: vm.scopeIdParent};
+        vm.options = { $parentComponentId: vm.$parentComponentId};
 
         if (vm.filterComponent !== false) {
             if (angular.isUndefined(vm.filterComponent)) {
@@ -72,9 +72,8 @@
         vm.paginationData = [];
 
         vm.request = {
-            isProcessing: false,
             childId: vm.parent,
-            scopeIdParent: vm.scopeIdParent,
+            options: vm.options,
             parentField: parentField,
             url: url
         };
@@ -157,7 +156,7 @@
             RestApiService.getItemsList({
                 sort: vm.sortingDirection ? field : "-" + field,
                 url: url,
-                scopeIdParent: vm.scopeIdParent,
+                options: vm.options,
                 parentField: parentField,
                 childId: vm.parent
             });
@@ -179,7 +178,7 @@
             RestApiService.loadParent(vm.request);
         };
 
-        $scope.$on('editor:parent_id_' + vm.scopeIdParent, function(event, data) {
+        $scope.$on('editor:parent_id', function(event, data) {
             vm.parent = data;
         });
 
@@ -189,11 +188,12 @@
             }
         };
 
-        $scope.$on('editor:read_entity_' + vm.scopeIdParent, function(event) {
+        $scope.$on('editor:read_entity', function(event) {
             RestApiService.getItemsList(vm.request);
         });
 
-        $scope.$on('editor:items_list_' + vm.scopeIdParent, function(event, data) {
+        $scope.$on('editor:items_list', function(event, data) {
+            if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
 
             //** behavour for modal entity
             $timeout(function() {
@@ -269,6 +269,7 @@
                     $('#edit_btn_' + vm.setting.pk).trigger('click');
                 }
             }, 0);
+            }
         });
 
         $scope.$on('editor:server_error', function(event, data) {
@@ -355,7 +356,7 @@
         vm.$onInit = function() {
             RestApiService.setFilterParams({});
             vm.request.childId = vm.parent;
-            vm.request.scopeIdParent = vm.scopeIdParent;
+            vm.request.options = vm.options;
             vm.request.parentField = parentField;
             vm.request.url = url;
             RestApiService.getItemsList(vm.request);

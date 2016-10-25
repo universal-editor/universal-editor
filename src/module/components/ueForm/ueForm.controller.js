@@ -44,7 +44,7 @@
         vm.entityType = $scope.entity;
         vm.componentState = {
             isLoading: false,
-            $parentScopeId: vm.options.$parentScopeId || ''
+            $parentComponentId: vm.options.$parentComponentId || ''
         };
 
 
@@ -117,14 +117,20 @@
                 params.parent = $state.params.parent;
                 isReload = false;
             }
-            RestApiService.getItemsList({ url: vm.setting.component.settings.dataSource.url });
+            var request = { 
+                url: vm.setting.component.settings.dataSource.url,
+                options: vm.componentState
+            };
+            RestApiService.getItemsList(request);
             $state.go(stateIndex.name, params, { reload: isReload });
         };
 
-        $scope.$on('editor:entity_loaded' + vm.componentState.$parentScopeId, function(event, data) {
-            vm.editorEntityType = data.editorEntityType;
-            vm.entityId = data[vm.idField];
-            vm.entityLoaded = true;
+        $scope.$on('editor:entity_loaded', function(event, data) {
+            if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+                vm.editorEntityType = data.editorEntityType;
+                vm.entityId = data[vm.idField];
+                vm.entityLoaded = true;
+            }
         });
 
         $scope.$on('editor:server_error', function(event, data) {
