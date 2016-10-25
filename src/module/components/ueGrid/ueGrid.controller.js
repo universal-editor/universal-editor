@@ -179,7 +179,9 @@
         };
 
         $scope.$on('editor:parent_id', function(event, data) {
-            vm.parent = data;
+            if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+              vm.parent = data.parentId;
+            }
         });
 
         vm.toggleFilterVisibility = function() {
