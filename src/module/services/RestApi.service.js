@@ -240,7 +240,7 @@
                 //-- проверяю редактируется ли поле parentField в форме. Если да, то его не нужно извлекать из адреса.
                 var isNotEditableParentField = !$document[0].querySelector(".field-wrapper [name='" + parentField + "']");
                 if (isNotEditableParentField) {
-                    item[parentField] = $location.search().parent;
+                    request.data[parentField] = $location.search().parent;
                 }
             }
 
@@ -557,24 +557,18 @@
             return deferred.promise;
         };
 
-        this.loadChilds = function(request) {
-            if (request.headComponent) {
-                $location.search("parent", request.id);
-            }
+        this.loadChilds = function(request) {            
             var data = {
                 parentId: request.id,
                 $parentComponentId: request.options.$parentComponentId
             };            
             $rootScope.$broadcast('editor:parent_id', data);
             request.childId = request.id;
-            self.getItemsList(request).then(function(response) {
-                $timeout(function() {
-                    if (request.headComponent) {
-                        $location.search("parent", request.id);
-                    }
-                }, 0);
+            self.getItemsList(request).then(function() {
+               // if (request.headComponent) {
+                    $location.search("parent" + request.options.$parentComponentId, request.childId);
+              //  }
             });
-
         };
 
         this.loadParent = function(request) {
@@ -584,7 +578,6 @@
             var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
             if (entityId) {
                 request.options.isLoading = true;
-
                 $http({
                     method: 'GET',
                     url: request.url + "/" + entityId
@@ -593,9 +586,9 @@
                     if (response.data[request.parentField] !== null) {
                         request.options.isLoading = false;
                         parentId = response.data[request.parentField];
-                        if (request.headComponent) {
-                            $location.search("parent", parentId);
-                        }
+                        //if (request.headComponent) {
+                            $location.search("parent" + request.options.$parentComponentId, parentId);
+                      //  }
                         data.parentId = parentId;  
                         $rootScope.$broadcast('editor:parent_id', data);
                         request.childId = parentId;
@@ -614,7 +607,7 @@
                 request.parentField = null;
                 $rootScope.$broadcast('editor:parent_id', data);
                 if (request.headComponent) {
-                    $location.search("parent", null);
+                    $location.search("parent" + request.options.$parentComponentId, null);
                 }
                 request.childId = null;
                 self.getItemsList(request);

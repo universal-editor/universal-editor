@@ -54,7 +54,7 @@
                     break;
                 case 'open':
                     var newRequest = {};
-                    newRequest.id = vm.setting.entityId;
+                    newRequest.id = vm.entityId;
                     newRequest.options = vm.options;
                     newRequest.url = vm.setting.url;
                     newRequest.parentField = vm.setting.parentField;

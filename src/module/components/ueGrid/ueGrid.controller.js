@@ -78,9 +78,9 @@
             url: url
         };
 
-        if (vm.setting.headComponent) {
-            vm.parent = !!$location.search().parent ? $location.search().parent : null;
-        }
+       // if (vm.setting.headComponent) {
+            vm.parent = $location.search()["parent" + vm.$parentComponentId] || null;
+     //   }
 
         if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
             vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
