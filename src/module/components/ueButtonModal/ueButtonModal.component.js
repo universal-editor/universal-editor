@@ -6,7 +6,8 @@
             return $templateCache.get('module/components/ueButtonModal/ueButtonModal.html');
         }],
         bindings : {
-            setting: '='
+            setting: '=',
+            options: '='
         },
         controller : 'UeButtonModalController',
         controllerAs : 'vm'

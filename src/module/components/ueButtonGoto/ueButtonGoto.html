@@ -1,7 +1,7 @@
 
 <div>
-    <button data-ng-class="{ processing : vm.processing}" data-ng-if="vm.setting.buttonClass == 'header'" class="btn btn-lg btn-create btn-success">{{vm.label}}
-        <div data-ng-show="vm.processing" class="loader-search-wrapper">
+    <button data-ng-class="{ processing : vm.options.isLoading}" data-ng-if="vm.setting.buttonClass == 'header'" class="btn btn-lg btn-create btn-success">{{vm.label}}
+        <div data-ng-show="vm.options.isLoading" class="loader-search-wrapper">
             <div class="loader-search">{{'LOADING' | translate}}</div>
         </div>
     </button>

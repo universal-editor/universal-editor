@@ -4,8 +4,7 @@
     var ueString = {
         bindings : {
             setting: '=',
-            filter: '=',
-            filterParameters: '='
+            options: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueString/ueString.html');

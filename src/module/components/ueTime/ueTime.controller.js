@@ -15,6 +15,7 @@
         var componentSettings = vm.setting.component.settings;
         vm.fieldName = vm.setting.name;
         componentSettings.$fieldType = 'date';
+        vm.parentComponentId = vm.options.$parentComponentId || '';
 
         if (vm.setting.parentField) {
             if (vm.setting.parentFieldIndex) {
@@ -36,7 +37,7 @@
         vm.multiple = componentSettings.multiple === true;
         vm.fieldValue = getInitValue();
 
-        if (vm.filter) {
+        if (vm.options.filter) {
             vm.multiple = false;
             vm.readonly = false;
             vm.required = false;
@@ -77,7 +78,8 @@
 
         var destroyWatchEntityLoaded;
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
-            if (!vm.filter) {
+            if(!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
+            if (!vm.options.filter) {
 
                 //-- functional for required fields
                 if (componentSettings.requiredField) {
@@ -147,6 +149,7 @@
                     }
                 }
             }
+            }
         });
 
         var destroyWatchFieldValue = $scope.$watch(function() {
@@ -176,8 +179,8 @@
             destroyEntityLoaded();
             destroyWatchFieldValue();
             destroyErrorField();
-            EditEntityStorage.deleteFieldController(vm, vm.setting.component.settings.$parentScopeId);
-            FilterFieldsStorage.deleteFilterController(vm, vm.setting.component.settings.$parentScopeId);
+            EditEntityStorage.deleteFieldController(vm, vm.parentComponentId);
+            FilterFieldsStorage.deleteFilterController(vm, vm.parentComponentId);
             if (vm.setting.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy(vm.setting.parentField, vm.setting.parentFieldIndex, vm.fieldName, vm.fieldValue);
             }
@@ -192,10 +195,10 @@
         vm.clear = clear;
         vm.getFieldValue = getFieldValue;
 
-        if (vm.filter) {
-            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
+        if (vm.options.filter) {
+            FilterFieldsStorage.addFilterController(this, vm.parentComponentId);
         } else {
-            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
+            EditEntityStorage.addFieldController(this, vm.parentComponentId);
         }
 
         function getFieldValue() {

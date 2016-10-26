@@ -4,8 +4,7 @@
     var ueRadiolist = {
          bindings : {
             setting: '=',
-            filter: '=',
-            filterParameters: '='
+            options: '='
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueRadiolist/ueRadiolist.html');

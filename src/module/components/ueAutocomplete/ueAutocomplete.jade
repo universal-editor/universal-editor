@@ -1,6 +1,6 @@
-div(ng-class="{'field-wrapper row':!vm.filter, 'filter-inner-wrapper': vm.filter}")
+div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-inner-wrapper': vm.options.filter}")
         include ../../template/labelField/labelField
-        div(ng-class="{'filter-inner-wrapper': vm.filter, 'field-element': !vm.filter}"  ng-style="{'overflow:auto':vm.multiple}") 
+        div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}"  ng-style="{'overflow:auto':vm.multiple}") 
                 .autocomplete-input-wrapper.form-control(
                     data-ng-show="vm.preloadedData && vm.selectedValues.length < vm.maxItemsCount",
                     data-ng-class='{"active" : vm.isActivePossible}',

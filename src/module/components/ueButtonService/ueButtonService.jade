@@ -1,6 +1,6 @@
 div
-    button.btn.btn-md.btn-success(data-ng-class="{ processing : vm.processing}", ng-disabled="vm.disabled", data-ng-if="vm.setting.buttonClass == 'footer'")
+    button.btn.btn-md.btn-success(data-ng-class="{ processing : vm.options.isLoading}", ng-disabled="vm.disabled", data-ng-if="vm.setting.buttonClass == 'footer'")
         | {{vm.label}}
-        .loader-search-wrapper(data-ng-show="vm.processing")
+        .loader-search-wrapper(data-ng-show="vm.options.isLoading")
             .loader-search {{'LOADING' | translate}}
     button.editor-action-button(data-ng-if="vm.setting.buttonClass == 'context'") {{vm.label}}

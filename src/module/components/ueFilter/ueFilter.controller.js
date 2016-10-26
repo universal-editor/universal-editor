@@ -21,19 +21,20 @@
         angular.forEach(settings.dataSource.fields, function(field) {
             if (field.component.hasOwnProperty("settings") && (!settings.fields || ~settings.fields.indexOf(field.name))) {
                 var fieldSettings = field.component.settings;
-                if (field.component.settings) {
-                    fieldSettings.$parentScopeId = settings.$parentScopeId;
-                }
+                
 
                 var group = {
                     label: fieldSettings.label,
                     operators: [],
                     filters: [{
                         field: field,
-                        parameters: {
-                            operator: '%:text%',
-                            index: 0
-                            ///-- TODO list of operators  
+                        options: {
+                            filterParameters: {
+                                operator: '%:text%',
+                                index: 0                                
+                            },
+                            filter: true,
+                            $parentComponentId: vm.options.$parentComponentId
                         }
                     }]
                 };
@@ -61,7 +62,7 @@
                 /** parse filter objects with operators*/
                 fieldSettings.$parseFilter = function(vm, filterValue) {
                     var componentSettings = vm.setting.component.settings;
-                    var parentScopeId = vm.parentEntityScopeId;
+                    var parentComponentId = vm.parentComponentId;
                     var output = {};
                     angular.forEach(filterValue, function(value, key) {
                         //** delete operators from keys and value property
@@ -99,16 +100,16 @@
                         }
                     } else {
                         if (angular.isArray(value)) {
-                            vm.fieldValue = value[vm.filterParameters.index];
+                            vm.fieldValue = value[vm.options.filterParameters.index];
                         } else {
                             vm.fieldValue = value;
                         }
                     }
                     $timeout(function() {
-                        if (!FilterFieldsStorage.getFilterQueryObject(parentScopeId)) {
+                        if (!FilterFieldsStorage.getFilterQueryObject(parentComponentId)) {
                             console.log("Filter calculate.");
-                            FilterFieldsStorage.calculate(parentScopeId);
-                            $rootScope.$broadcast('editor:read_entity_' + parentScopeId);
+                            FilterFieldsStorage.calculate(parentComponentId);
+                            $rootScope.$broadcast('editor:read_entity_' + parentComponentId);
                         }
                     }, 0);
                     return output;
@@ -117,18 +118,22 @@
                 /* custom logic for operators */
 
                 if (~['ue-select', 'ue-autocomplete', 'ue-checkbox', 'ue-radiolist', 'ue-colorpicker'].indexOf(field.component.name)) {
-                    group.filters[0].parameters.operator = ":text";
+                    group.filters[0].options.filterParameters.operator = ":text";
                 }
 
                 if (~['ue-date', 'ue-time', 'ue-datetime'].indexOf(field.component.name)) {
                     group.filters[0].ngStyle = "display: inline-block; width: 25%; margin-left: 5px;";
-                    group.filters[0].parameters.operator = ">=";
+                    group.filters[0].options.filterParameters.operator = ">=";
                     var cloneField = angular.copy(field);
                     group.filters.push({
                         field: cloneField,
-                        parameters: {
-                            operator: '<=',
-                            index: 1
+                        options: {
+                            filterParameters: {
+                                operator: '<=',
+                                index: 1
+                            },
+                            filter: true,
+                            $parentComponentId: vm.options.$parentComponentId
                         },
                         ngStyle: 'display: inline-block; width: 25%; margin-left: 20px;'
                     });
@@ -146,7 +151,6 @@
                         component: {
                             name: 'ue-button-filter',
                             settings: {
-                                $parentScopeId: settings.$parentScopeId,
                                 $groups: vm.body,
                                 label: 'Применить',
                                 action: 'send'
@@ -157,7 +161,6 @@
                         component: {
                             name: 'ue-button-filter',
                             settings: {
-                                $parentScopeId: settings.$parentScopeId,
                                 label: 'Очистить',
                                 action: 'clear'
                             }
@@ -168,11 +171,6 @@
         }
         if (settings.footer && settings.footer.controls) {
             angular.forEach(settings.footer.controls, function(control) {
-                var controlSetting = control.component.settings;
-                if (controlSetting) {
-                    controlSetting.$parentScopeId = settings.$parentScopeId;
-                    controlSetting.$groups = vm.body;
-                }
                 vm.footer.push(control);
             });
         }

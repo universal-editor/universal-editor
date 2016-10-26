@@ -8,8 +8,7 @@
     ModalService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', '$uibModal'];
 
     function ModalService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, $uibModal) {
-        var
-            self = this,
+        var self = this,
             modalInstance,
             isOpen = false,
             settings;
@@ -17,27 +16,35 @@
         self.close = closeWindow;
         self.open = openWindow;
         self.isModalOpen = isModalOpen;
+        self.options = {};
+        self.fromState = null;
 
         function openWindow(component) { /** send fromState и _pk */
             settings = component.settings;
             component.settings.modal = true;
 
+            if(self.options.$parentComponentId) {
+                $location.search('relativeEntityId', self.options.$parentComponentId);
+            }
             modalInstance = $uibModal.open({
                 component: 'ueModal',
                 resolve: {
                     settings: function() {
                         return settings;
+                    },
+                    $parentComponentId: function() {
+                        return self.options.$parentComponentId || $location.search().relativeEntityId;
                     }
                 }
             });
 
             modalInstance.rendered.then(function() {
                 isOpen = true;
-
                 var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
                 if (pk === 'new') {
-                    EditEntityStorage.newSourceEntity();
+                   EditEntityStorage.newSourceEntity();
                 }
+                self.fromState = settings.fromState || null;                
             });
 
             modalInstance.result.then(closeWindow, closeWindow);
@@ -54,10 +61,12 @@
                     modalInstance.close();
                 }
                 modalInstance = null;
+                $location.search('relativeEntityId', null);
+                self.options = null;
                 if (settings.fromState) {
                     $state.go(settings.fromState.name, settings.fromParams, { reload: false });
                 }
-                settings = null;
+                settings = null;                
             }
         }
     }

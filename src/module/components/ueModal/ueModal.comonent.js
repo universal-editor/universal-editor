@@ -11,11 +11,12 @@
             dismiss: '&'
         },
         controllerAs: 'vm',
-        controller: function ($uibModal, $scope, configData, $element, $state, EditEntityStorage) {           
+        controller: function ($uibModal, $scope, configData, $element, $state, EditEntityStorage, ModalService) {           
             var vm = this;
             var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
             vm.entityId = $state.params[pkKey];
             vm.assetsPath = '/assets/universal-editor';
+            vm.options = ModalService.options;
 
             if (!!configData.ui && !!configData.ui.assetsPath) {
                 vm.assetsPath = configData.ui.assetsPath;

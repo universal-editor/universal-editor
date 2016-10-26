@@ -33,8 +33,9 @@
             }
         };
 
-        this.newSourceEntity = function () {
-            $rootScope.$broadcast("editor:entity_loaded", { editorEntityType: "new"});
+        this.newSourceEntity = function (id) {
+            id = id || '';
+            $rootScope.$broadcast("editor:entity_loaded" + id, { editorEntityType: "new"});
         };
 
         this.setSourceEntity = function (data) {
@@ -71,36 +72,34 @@
 
 
         this.editEntityUpdate = function (type, request) {
-
-            this.setActionType(type);
-
+            this.setActionType(request.entityType);
             var entityObject = {};
-
             angular.forEach(fieldControllers,function(fCtrl){
                 if(!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false){
                     angular.merge(entityObject,fCtrl.getFieldValue());
                 }
             });
-
+            request.data = entityObject;
             switch (type) {
                 case "create":
-                    $rootScope.$emit('editor:create_entity',[entityObject, request]);
+                    $rootScope.$emit('editor:create_entity', request);
                     break;
                 case "update":
-                    $rootScope.$emit('editor:update_entity',[entityObject, request]);
+                    $rootScope.$emit('editor:update_entity', request);
                     break;
             }
         };
 
         this.editEntityPresave = function (request) {
             var entityObject = {};
-
             angular.forEach(fieldControllers,function(fCtrl){
                 if(!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false){
                     angular.merge(entityObject,fCtrl.getFieldValue());
                 }
             });
-            $rootScope.$emit('editor:presave_entity',[entityObject, request]);
+            request.data = entityObject;
+
+            $rootScope.$emit('editor:presave_entity', request);
         };
 
         this.getEntity = function(stateName, entityName) {

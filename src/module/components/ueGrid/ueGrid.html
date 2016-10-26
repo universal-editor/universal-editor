@@ -1,16 +1,16 @@
 
 <div>
     <div class="editor-header">
-        <component-wrapper ng-if="vm.filterComponent" data-setting="vm.filterComponent"></component-wrapper>
-        <component-wrapper ng-repeat="button in vm.listHeaderBar track by $index" data-setting="button" data-button-class="header" class="header-action-button">       </component-wrapper>
+        <component-wrapper ng-if="vm.filterComponent" data-setting="vm.filterComponent" data-options="vm.options"></component-wrapper>
+        <component-wrapper ng-repeat="button in vm.listHeaderBar track by $index" data-setting="button" data-button-class="header" data-options="vm.options" class="header-action-button">       </component-wrapper>
     </div>
     <div class="groups-action">
-        <button data-ng-if="vm.parentButton &amp;&amp; !vm.entityLoaded &amp;&amp; !vm.request.isProcessing" data-ng-click="vm.getParent()" class="btn btn-sm btn-default">{{'BUTTON.HIGHER_LEVEL' | translate}}</button>
+        <button data-ng-if="vm.parentButton &amp;&amp; !vm.entityLoaded &amp;&amp; !vm.options.isLoading" data-ng-click="vm.getParent()" class="btn btn-sm btn-default">{{'BUTTON.HIGHER_LEVEL' | translate}}</button>
     </div>
     <div data-ng-show="vm.request.isProcessing" class="processing-status-wrapper">
         <div class="processing-status">{{'PERFORMS_ACTIONS' | translate}}</div>
     </div>
-    <table data-ng-hide="vm.entityLoaded || vm.request.isProcessing" class="table table-bordered items-list">
+    <table data-ng-hide="vm.entityLoaded || vm.options.isLoading" class="table table-bordered items-list">
         <thead>
             <tr>
                 <td class="actions-header context-column"></td>
@@ -22,7 +22,7 @@
                 <td class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="vm.contextLinks.length" class="context-toggle">Toggle buttons</span>
                     <div data-ng-show="vm.contextId == item[vm.idField]" class="context-menu-wrapper">
                         <div data-ng-repeat="link in vm.contextLinks track by $index" data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)" class="context-menu-item">
-                            <component-wrapper data-setting="link" data-entity-id="{{item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}"></component-wrapper>
+                            <component-wrapper data-setting="link" data-entity-id="{{item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}" data-options="vm.options"></component-wrapper>
                         </div>
                     </div>
                 </td>
@@ -35,7 +35,7 @@
         <tfoot>
             <tr>
                 <td colspan="{{vm.tableFields.length + 1}}">
-                    <component-wrapper data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component" data-scope-id-parent="{{vm.scopeIdParent}}"></component-wrapper>
+                    <component-wrapper data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component" data-options="vm.options" data-scope-id-parent="{{vm.scopeIdParent}}"></component-wrapper>
                     <!--ue-pagination(data-data="vm.paginationData")-->
                 </td>
             </tr>

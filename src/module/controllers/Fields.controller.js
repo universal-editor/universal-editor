@@ -13,14 +13,14 @@
         var baseController = $controller('BaseController', { $scope: $scope });
         angular.extend(vm, baseController);
         var componentSettings = $scope.vm.setting.component.settings;                
-        $scope.vm.parentEntityScopeId = componentSettings.$parentScopeId;
+        $scope.vm.parentComponentId = $scope.vm.options.$parentComponentId;
 
-        if ($scope.vm.filter) {
+        if ($scope.vm.options.filter) {
             $scope.$watch(function() {
                 return $location.search();
             }, function(newVal) {
                 
-                var propFilter = 'filter' + $scope.vm.parentEntityScopeId;
+                var propFilter = 'filter' + $scope.vm.parentComponentId;
                 if (newVal && newVal[propFilter]) {
                     console.log("Filter generate.");
                         var filter = JSON.parse(newVal[propFilter]);

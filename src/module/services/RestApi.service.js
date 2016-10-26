@@ -5,9 +5,9 @@
         .module('universal.editor')
         .service('RestApiService', RestApiService);
 
-    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage'];
+    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService'];
 
-    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage) {
+    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService) {
         var entityType,
             self = this,
             queryTempParams,
@@ -36,16 +36,16 @@
             //}
         });
 
-        $rootScope.$on('editor:create_entity', function(event, entity) {
-            self.addNewItem(entity);
+        $rootScope.$on('editor:create_entity', function(event, request) {
+            self.addNewItem(request);
         });
 
-        $rootScope.$on('editor:update_entity', function(event, entity) {
-            self.updateItem(entity);
+        $rootScope.$on('editor:update_entity', function(event, request) {
+            self.updateItem(request);
         });
 
-        $rootScope.$on('editor:presave_entity', function(event, entity) {
-            self.presaveItem(entity);
+        $rootScope.$on('editor:presave_entity', function(event, request) {
+            self.presaveItem(request);
         });
 
         this.getQueryParams = function() {
@@ -87,8 +87,8 @@
         this.getItemsList = function(request) {
 
             //** cancel previouse request if request start again 
-            var canceler = setTimeOutPromise(request.scopeIdParent, 'read');
-            request.isProcessing = true;
+            var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
+            request.options.isLoading = true;
 
             var deferred = $q.defer();
 
@@ -105,10 +105,11 @@
             }
             queryTempParams = params;
 
-            var id = request.scopeIdParent;
+            var id = request.options.$parentComponentId;
             var filters = FilterFieldsStorage.getFilterQueryObject(id);
             if (!!request.childId) {
-                params[request.parentField] = request.childId;
+                filters= {};
+                filters[request.parentField] = request.childId;
             }
             if (filters) {
                 angular.extend(params, {filter: JSON.stringify(filters)});
@@ -157,12 +158,13 @@
                 if (response.data[itemsKey].length === 0) {
                     $rootScope.$broadcast("editor:parent_empty");
                 }
-                $rootScope.$broadcast('editor:items_list_' + id, response.data);
-                request.isProcessing = false;
+                response.data.$parentComponentId = request.options.$parentComponentId;
+                $rootScope.$broadcast('editor:items_list', response.data);
+                request.options.isLoading = false;
                 deferred.resolve();
             }, function(reject) {
                 if(reject.status !== -1) {
-                    request.isProcessing = false;
+                    request.options.isLoading = false;
                 }
                 deferred.reject();
             });
@@ -227,11 +229,9 @@
             });
         };
 
-        this.addNewItem = function(arrItem) {
-            var item = arrItem[0];
-            var request = arrItem[1];
+        this.addNewItem = function(request) {
 
-            if (self.isProcessing) {
+            if (request.options.isLoading) {
                 return;
             }
 
@@ -240,11 +240,11 @@
                 //-- проверяю редактируется ли поле parentField в форме. Если да, то его не нужно извлекать из адреса.
                 var isNotEditableParentField = !$document[0].querySelector(".field-wrapper [name='" + parentField + "']");
                 if (isNotEditableParentField) {
-                    item[parentField] = $location.search().parent;
+                    request.data[parentField] = $location.search().parent;
                 }
             }
 
-            self.isProcessing = true;
+            request.options.isLoading = true;
             var params = {};
             var _method = 'POST';
             var _url = entityObject.dataSource.url;
@@ -253,27 +253,28 @@
             if (entityObject.dataSource.hasOwnProperty('fields')) {
                 idField = entityObject.dataSource.fields.primaryKey || idField;
             }
-
-            if (typeof request !== 'undefined') {
-                params = typeof request.params !== 'undefined' ? request.params : params;
-                _method = typeof request.method !== 'undefined' ? request.method : _method;
-                _url = typeof request.url !== 'undefined' ? request.url : _url;
-            }
             $http({
-                method: _method,
-                url: _url,
-                data: item,
-                params: params
+                method: request.method || _method,
+                url: request.method || _url,
+                data: request.data
             }).then(function(response) {
-                $rootScope.$broadcast("editor:presave_entity_created", response.data[idField]);
-                self.isProcessing = false;
+                var data = {
+                    id: response.data[idField],
+                    $parentComponentId: request.options.$parentComponentId
+                };
+                $rootScope.$broadcast("editor:presave_entity_created", data);
+                request.options.isLoading = false;
                 $rootScope.$broadcast("uploader:remove_session");
                 $rootScope.$broadcast("editor:entity_success");
                 var params = {};
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
-                $state.go(entityType + '_index', params, { reload: true });
+                if(!ModalService.isModalOpen()){
+                  $state.go(entityType + '_index', params, { reload: true });
+                } else {
+                    ModalService.close();
+                }
             }, function(reject) {
                 if (reject.data.error && reject.data.hasOwnProperty("data") && reject.data.data.length > 0) {
                     angular.forEach(reject.data.data, function(err) {
@@ -287,38 +288,26 @@
                         }
                     });
                 }
-                self.isProcessing = false;
+                request.options.isLoading = false;
             });
         };
 
-        this.updateItem = function(arrItem) {
-            var item = arrItem[0];
-            var request = arrItem[1];
-            var tmpUrl;
-
-
-            if (self.isProcessing) {
+        this.updateItem = function(request) {
+            if (request.options.isLoading) {
                 return;
             }
 
-            self.isProcessing = true;
+            request.options.isLoading = true;
             var params = {};
             var _method = 'PUT';
             var _url = entityObject.dataSource.url + '/' + self.editedEntityId;
 
-            if (typeof request !== 'undefined') {
-                params = typeof request.params !== 'undefined' ? request.params : params;
-                _method = typeof request.method !== 'undefined' ? request.method : _method;
-                _url = typeof request.url !== 'undefined' ? request.url : _url;
-            }
-
             $http({
-                method: _method,
-                url: _url,
-                data: item,
-                params: params
+                method: request.method || _method,
+                url: request.url || _url,
+                data: request.data || {}
             }).then(function(response) {
-                self.isProcessing = false;
+                request.options.isLoading = false;
                 $rootScope.$broadcast('uploader:remove_session');
                 $rootScope.$broadcast('editor:entity_success');
                 var params = {};
@@ -328,7 +317,11 @@
                 if ($state.params.back) {
                     params.type = $state.params.back;
                 }
-                $state.go(entityType + '_index', params, { reload: true });
+                if(!ModalService.isModalOpen()){
+                  $state.go(entityType + '_index', params);
+                } else {
+                    ModalService.close();
+                }
             }, function(reject) {
                 if (reject.data.error && reject.data.hasOwnProperty('data') && reject.data.data.length > 0) {
                     angular.forEach(reject.data.data, function(err) {
@@ -342,23 +335,20 @@
                         }
                     });
                 }
-                self.isProcessing = false;
+                request.options.isLoading = false;
             });
         };
 
-        this.presaveItem = function(arrItem) {
-            var item = arrItem[0];
-            var request = arrItem[1];
+        this.presaveItem = function(request) {
             var _url;
-            var params = {};
             var _method = 'POST';
             var idField = 'id';
 
-            if (self.isProcessing) {
+            if (request.options.isLoading) {
                 return;
             }
 
-            self.isProcessing = true;
+            request.options.isLoading = true;
 
             if (self.editedEntityId !== '') {
                 _url = entityObject.dataSource.url + '/' + self.editedEntityId;
@@ -370,22 +360,25 @@
             if (entityObject.dataSource.hasOwnProperty('fields')) {
                 idField = entityObject.dataSource.fields.primaryKey || idField;
             }
-            if (typeof request !== 'undefined') {
-                params = typeof request.params !== 'undefined' ? request.params : params;
-                _method = typeof request.method !== 'undefined' ? request.method : _method;
-                _url = typeof request.url !== 'undefined' ? request.url : _url;
-            }
 
             $http({
-                method: _method,
-                url: _url,
-                data: item,
-                params: params
+                method: request.method || _method,
+                url: request.url || _url,
+                data: request.data || {}
             }).then(function(response) {
-                self.isProcessing = false;
-
-                $state.go($state.current.name, { pk: response.data[idField] });
-                $rootScope.$broadcast('editor:presave_entity_created', response.data[idField]);
+                request.options.isLoading = false;
+                var newId = response.data[idField];
+                var par = {};
+                par['pk' + EditEntityStorage.getLevelChild($state.current.name)] = newId;
+                var searchString = $location.search();               
+                $state.go($state.current.name, par, {reload: false, notify: false}).then(function() {
+                    $location.search(searchString);
+                });
+                var data = {
+                    id: newId,
+                    $parentComponentId: request.options.$parentComponentId
+                };
+                $rootScope.$broadcast('editor:presave_entity_created', data);
             }, function(reject) {
                 if ((reject.status === 422 || reject.status === 400) && reject.data) {
                     var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
@@ -401,18 +394,14 @@
                         }
                     });
                 }
-                self.isProcessing = false;
+                request.options.isLoading = false;
             });
         };
 
-        this.getItemById = function(id, par) {
+        this.getItemById = function(id, par, options) {
 
             var qParams = {};
-            if (self.isProcessing) {
-                return;
-            }
-
-            self.isProcessing = true;
+            options.isLoading = true;
 
             var expandFields = [];
             var expandParam = "";
@@ -432,48 +421,40 @@
                 url: entityObject.dataSource.url + '/' + id,
                 params: qParams
             }).then(function(response) {
-                self.isProcessing = false;
+                options.isLoading = false;
+                response.data.$parentComponentId = options.$parentComponentId;
                 EditEntityStorage.setSourceEntity(response.data);
             }, function(reject) {
-                self.isProcessing = false;
+                options.isLoading = false;
             });
         };
 
-        this.deleteItemById = function(id, request, type, setting) {
-
-            var par = {};
-
-            if (self.isProcessing) {
+        this.deleteItemById = function(request) {
+            if (request.options.isLoading) {
                 return;
             }
 
-            self.isProcessing = true;
-            var _method = 'DELETE';
+            request.options.isLoading = true;
 
-            var _url = entityObject.dataSource.url + '/' + id;
+            var _url = entityObject.dataSource.url + '/' + request.entityId;
 
-            if (setting.buttonClass === 'edit') {
-                _url = entityObject.dataSource.url.replace(':pk', id);
+            if (request.setting.buttonClass === 'edit') {
+                _url = entityObject.dataSource.url.replace(':pk', request.entityId);
             }
 
-            if (type === 'mix') {
+            if (request.type === 'mix') {
                 var config = configData.entities.filter(function(item) {
                     return item.name === mixEntity.entity;
                 })[0];
-                _url = config.dataSource.url + '/' + id;
+                _url = config.dataSource.url + '/' + request.entityId;
             }
-
-            if (typeof request !== 'undefined') {
-                par = typeof request.params !== 'undefined' ? request.params : par;
-                _method = typeof request.method !== 'undefined' ? request.method : _method;
-                _url = typeof request.url !== 'undefined' ? request.url : _url;
-            }
+            
             return $http({
-                method: _method,
-                url: _url,
-                params: par
+                method: request.method || 'DELETE',
+                url: request.url || _url,
+                params: request.params || {}
             }).then(function(response) {
-                self.isProcessing = false;
+                request.options.isLoading = false;
                 self.setQueryParams({});
                 self.setFilterParams({});
                 $rootScope.$broadcast("editor:entity_success_deleted");
@@ -484,9 +465,13 @@
                 if ($state.params.back) {
                     params.type = $state.params.back;
                 }
-                $state.go(entityType + '_index', params, { reload: true });
+                 if(!ModalService.isModalOpen()){
+                  $state.go(entityType + '_index', params);
+                } else {
+                    ModalService.close();
+                }
             }, function(reject) {
-                self.isProcessing = false;
+                request.options.isLoading = false;
             });
         };
 
@@ -572,70 +557,60 @@
             return deferred.promise;
         };
 
-        this.loadChilds = function(request) {
-            if (request.headComponent) {
-                $location.search("parent", request.id);
-            }
-            $rootScope.$broadcast('editor:parent_id_' + request.scopeIdParent, request.id);
-            var newRequest = {};
-            newRequest.url = request.url;
-            newRequest.scopeIdParent = request.scopeIdParent;
-            newRequest.parentField = request.parentField;
-            newRequest.childId = request.id;
-            self.getItemsList(newRequest).then(function(response) {
-                $timeout(function() {
-                    if (request.headComponent) {
-                        $location.search("parent", request.id);
-                    }
-                }, 0);
+        this.loadChilds = function(request) {            
+            var data = {
+                parentId: request.id,
+                $parentComponentId: request.options.$parentComponentId
+            };            
+            $rootScope.$broadcast('editor:parent_id', data);
+            request.childId = request.id;
+            self.getItemsList(request).then(function() {
+               // if (request.headComponent) {
+                    $location.search("parent" + request.options.$parentComponentId, request.childId);
+              //  }
             });
-
         };
 
         this.loadParent = function(request) {
+            var data = {
+              $parentComponentId: request.options.$parentComponentId
+            };  
             var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
-            var newRequest = {};
-            newRequest.url = request.url;
-            newRequest.scopeIdParent = request.scopeIdParent;
-            newRequest.parentField = request.parentField;
             if (entityId) {
-                self.isProcessing = true;
-
+                request.options.isLoading = true;
                 $http({
                     method: 'GET',
                     url: request.url + "/" + entityId
                 }).then(function(response) {
                     var parentId;
                     if (response.data[request.parentField] !== null) {
-                        self.isProcessing = false;
+                        request.options.isLoading = false;
                         parentId = response.data[request.parentField];
-                        if (request.headComponent) {
-                            $location.search("parent", parentId);
-                        }
-                        $rootScope.$broadcast('editor:parent_id_' + request.scopeIdParent, parentId);
-                        newRequest.childId = parentId;
-                        self.getItemsList(newRequest);
+                        //if (request.headComponent) {
+                            $location.search("parent" + request.options.$parentComponentId, parentId);
+                      //  }
+                        data.parentId = parentId;  
+                        $rootScope.$broadcast('editor:parent_id', data);
+                        request.childId = parentId;
+                        self.getItemsList(request);
                     } else {
-                        self.isProcessing = false;
-                        newRequest.parentField = null;
-                        $rootScope.$broadcast('editor:parent_id_' + request.scopeIdParent, null);
-                        if (request.headComponent) {
-                            $location.search("parent", null);
-                        }
-                        newRequest.childId = null;
-                        self.getItemsList(newRequest);
+                       reset();
                     }
                 }, function(reject) {
-                    self.isProcessing = false;
+                    request.options.isLoading = false;
                 });
             } else {
-                self.isProcessing = true;
-                $rootScope.$broadcast('editor:parent_id_' + request.scopeIdParent, null);
+                reset();
+            }
+            function reset() {
+                request.options.isLoading = false;
+                request.parentField = null;
+                $rootScope.$broadcast('editor:parent_id', data);
                 if (request.headComponent) {
-                    $location.search("parent", null);
+                    $location.search("parent" + request.options.$parentComponentId, null);
                 }
-                newRequest.childId = null;
-                self.getItemsList(newRequest);
+                request.childId = null;
+                self.getItemsList(request);
             }
         };
 

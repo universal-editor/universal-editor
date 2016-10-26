@@ -14,7 +14,7 @@
         angular.extend(vm, baseController);
         var fieldErrorName;
         var componentSettings = vm.setting.component.settings;        
-        vm.parentEntityScopeId = componentSettings.$parentScopeId;
+        vm.parentComponentId = vm.options.$parentComponentId || '';
         componentSettings.$fieldType = 'array';
 
         if (vm.setting.parentField) {
@@ -53,7 +53,7 @@
             vm.multiname = ('' + componentSettings.multiname) || "value";
         }
 
-        if (vm.filter) {
+        if (vm.options.filter) {
             FilterFieldsStorage.addFilterController(this);
         } else {
             EditEntityStorage.addFieldController(this);
@@ -114,7 +114,8 @@
 
         var destroyWatchEntityLoaded;
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
-            if (!vm.filter) {
+            if(!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
+            if (!vm.options.filter) {
 
                 //-- functional for required fields
                 if (componentSettings.requiredField) {
@@ -196,6 +197,7 @@
                     }
                 }
             }
+            }
         });
 
         var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function(event, data) {
@@ -225,8 +227,8 @@
             destroyEntityLoaded();
             destroyErrorField();
             destroyWatchFieldValue();
-            EditEntityStorage.deleteFieldController(vm, vm.setting.component.settings.$parentScopeId);
-            FilterFieldsStorage.deleteFilterController(vm, vm.setting.component.settings.$parentScopeId);
+            EditEntityStorage.deleteFieldController(vm, vm.parentComponentId);
+            FilterFieldsStorage.deleteFilterController(vm, vm.parentComponentId);
             if (vm.setting.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy(vm.setting.parentField, vm.setting.parentFieldIndex, vm.setting.name, vm.fieldValue);
             }
@@ -241,10 +243,10 @@
         vm.clear = clear;
         vm.getFieldValue = getFieldValue;
 
-        if (vm.filter) {
-            FilterFieldsStorage.addFilterController(this, vm.setting.component.settings.$parentScopeId);
+        if (vm.options.filter) {
+            FilterFieldsStorage.addFilterController(this, vm.parentComponentId);
         } else {
-            EditEntityStorage.addFieldController(this, vm.setting.component.settings.$parentScopeId);
+            EditEntityStorage.addFieldController(this, vm.parentComponentId);
         }
 
         function clear() {

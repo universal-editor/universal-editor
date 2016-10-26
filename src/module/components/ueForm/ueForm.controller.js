@@ -1,17 +1,17 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope','$rootScope','configData','RestApiService','FilterFieldsStorage','$location',
-                                '$document','$timeout','$httpParamSerializer','$state','toastr', '$translate', 'ConfigDataProvider', 
-                                'ModalService', 'EditEntityStorage'];
+    UeFormController.$inject = ['$scope', '$rootScope', 'configData', 'RestApiService', 'FilterFieldsStorage', '$location',
+        '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', 'ConfigDataProvider',
+        'ModalService', 'EditEntityStorage'];
 
-    function UeFormController($scope,$rootScope,configData,RestApiService,FilterFieldsStorage,$location,
-                              $document,$timeout,$httpParamSerializer,$state,toastr, $translate, ConfigDataProvider, 
-                              ModalService, EditEntityStorage) {
+    function UeFormController($scope, $rootScope, configData, RestApiService, FilterFieldsStorage, $location,
+        $document, $timeout, $httpParamSerializer, $state, toastr, $translate, ConfigDataProvider,
+        ModalService, EditEntityStorage) {
         $scope.entity = RestApiService.getEntityType();
         var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
@@ -27,15 +27,10 @@
         vm.entityLoaded = false;
         vm.listLoaded = false;
         vm.loadingData = true;
-        vm.tabs = [];
-        //vm.tabs = vm.setting.body;
-        //console.log(vm.tabs);
-        vm.tableFields = [];
         vm.links = [];
         vm.errors = [];
         vm.notifys = [];
-        vm.tabsVisibility = [];
-        vm.currentTab = vm.setting.component.settings.body[0].component.settings.label;
+       // vm.currentTab = vm.setting.component.settings.body[0].component.settings.label;
         vm.entityId = "";
         vm.editorEntityType = "new";
         vm.editFooterBar = [];
@@ -47,56 +42,25 @@
         vm.visibleFilter = true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
+        vm.componentState = {
+            isLoading: false,
+            $parentComponentId: vm.options.$parentComponentId || ''
+        };
 
 
         var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
         var pk = $state.params[pkKey];
 
-        if(vm.setting.component.settings.modal && pk && pk !== 'new') {
-            RestApiService.isProcessing = false;
-            RestApiService.getItemById(pk);
-        }
-
         if (!!vm.configData.ui && !!vm.configData.ui.assetsPath) {
             vm.assetsPath = vm.configData.ui.assetsPath;
         }
 
-        if(vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')){
+        if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
             vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
         }
         itemsKey = "items";
 
-        //angular.forEach(entityObject.editFooterBar, function (editFooterBar) {
-        //    switch (editFooterBar.type){
-        //        case 'add':
-        //            vm.editFooterBarNew.push(editFooterBar);
-        //            break;
-        //        case 'presave':
-        //            vm.editFooterBarNew.push(editFooterBar);
-        //            vm.editFooterBarExist.push(editFooterBar);
-        //            break;
-        //        case 'update':
-        //            vm.editFooterBarExist.push(editFooterBar);
-        //            break;
-        //        case 'delete':
-        //            vm.editFooterBarExist.push(editFooterBar);
-        //            break;
-        //        case 'request':
-        //            vm.editFooterBarNew.push(editFooterBar);
-        //            vm.editFooterBarExist.push(editFooterBar);
-        //            break;
-        //        case 'targetBlank':
-        //            vm.editFooterBarNew.push(editFooterBar);
-        //            vm.editFooterBarExist.push(editFooterBar);
-        //            break;
-        //        case 'download':
-        //            vm.editFooterBarNew.push(editFooterBar);
-        //            vm.editFooterBarExist.push(editFooterBar);
-        //            break;
-        //    }
-        //});
-
-        if(!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
+        if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
             angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {
@@ -114,139 +78,113 @@
                 button.type = 'update';
             }
         });
+        vm.components = [];
 
-        angular.forEach(vm.setting.component.settings.body, function(tab) {
-            var newTab = {};
-            newTab.label = tab.component.settings.label;
-            newTab.fields = [];
-            angular.forEach(tab.component.settings.fields, function(field) {
-                if(angular.isString(field)) {
-                    var newField = vm.setting.component.settings.dataSource.fields.filter(function(k) {
-                        return k.name == field;
-                    });
-                    if(newField.length > 0) {
-                        newTab.fields.push(newField[0]);
-                    }
-                } else {
-                    newTab.fields.push(field);
+        angular.forEach(vm.setting.component.settings.body, function(componentObject) {
+            if (angular.isObject(componentObject) && componentObject.component) {
+                vm.components.push(componentObject);
+                if(!componentObject.component.settings.dataSource) {
+                    componentObject.component.settings.dataSource = vm.setting.component.settings.dataSource;
                 }
-            });
-            vm.tabs.push(newTab);
+            }
+            if (angular.isString(componentObject)) {
+                var dataSourceComponent = vm.setting.component.settings.dataSource.fields.filter(function(k) {
+                    return k.name == componentObject;
+                });
+                if (dataSourceComponent.length > 0) {
+                    vm.components.push(dataSourceComponent[0]);
+                }
+            }
         });
 
-        vm.getScope = function(){
-            return $scope;
-        };
-
-        vm.setTabVisible = function (index,value) {
-            vm.tabsVisibility[index] = value;
-        };
-
-        vm.closeEditor = function () {
-            $scope.$apply(function () {
+        vm.closeEditor = function() {
+            $scope.$apply(function() {
                 vm.entityLoaded = false;
             });
         };
 
-        vm.closeButton = function () {
+        vm.closeButton = function() {
             vm.entityLoaded = false;
             vm.listLoaded = false;
 
             var params = {};
             var isReload = true;
             var stateIndex = EditEntityStorage.getStateConfig('index');
-            if($state.params.back){
+            if ($state.params.back) {
                 params.type = $state.params.back;
             }
-            if($state.params.parent){
+            if ($state.params.parent) {
                 params.parent = $state.params.parent;
                 isReload = false;
             }
-            RestApiService.getItemsList({ url: vm.setting.component.settings.dataSource.url });
+            var request = { 
+                url: vm.setting.component.settings.dataSource.url,
+                options: vm.componentState
+            };
+            RestApiService.getItemsList(request);
             $state.go(stateIndex.name, params, { reload: isReload });
         };
 
-        vm.toggleFilterVisibility = function () {
-            if(!vm.entityLoaded){
-                vm.visibleFilter = !vm.visibleFilter;
+        $scope.$on('editor:entity_loaded', function(event, data) {
+            if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+                vm.editorEntityType = data.editorEntityType;
+                vm.entityId = data[vm.idField];
+                vm.entityLoaded = true;
             }
-        };
-
-        $scope.$on('editor:entity_loaded', function (event,data) {
-            vm.editorEntityType = data.editorEntityType;
-            vm.entityId = data[vm.idField];
-            vm.entityLoaded = true;
         });
 
-        $scope.$on('editor:server_error', function (event,data) {
+        $scope.$on('editor:server_error', function(event, data) {
             vm.errors.push(data);
         });
 
         if (pk !== 'new') {
             if (pk) {
-                RestApiService.getItemById(pk, vm.setting.component.settings.dataSource);
-            } else if(vm.setting.pk) {
-                RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource);
+                if (vm.setting.component.settings.modal) {
+                    RestApiService.isProcessing = false;
+                }
+                RestApiService.getItemById(pk, vm.setting.component.settings.dataSource, vm.componentState);
+            } else if (vm.setting.pk) {
+                RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource, vm.componentState);
             }
         }
 
-        $scope.$on('editor:presave_entity_created', function (event,data) {
-            $translate('CHANGE_RECORDS.CREATE').then(function (translation) {
+        $scope.$on('editor:presave_entity_created', function(event, data) {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
                 toastr.success(translation);
             });
             vm.entityId = data;
             vm.editorEntityType = "exist";
         });
 
-        $scope.$on('editor:presave_entity_updated', function (event,data) {
-            $translate('CHANGE_RECORDS.UPDATE').then(function (translation) {
+        $scope.$on('editor:presave_entity_updated', function(event, data) {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
                 toastr.success(translation);
             });
         });
 
-        $scope.$on('editor:entity_success_deleted', function (event,data) {
-            $translate('CHANGE_RECORDS.DELETE').then(function (translation) {
+        $scope.$on('editor:entity_success_deleted', function(event, data) {
+            $translate('CHANGE_RECORDS.DELETE').then(function(translation) {
                 toastr.success(translation);
             });
         });
 
-        $scope.$on('editor:field_error', function (event,data) {
+        $scope.$on('editor:field_error', function(event, data) {
             vm.errors.push(data);
         });
 
-        $scope.$on('editor:request_start', function (event,data) {
+        $scope.$on('editor:request_start', function(event, data) {
             vm.errors = [];
             vm.notifys = [];
         });
 
-        $scope.$watch(function () {
-            return RestApiService.isProcessing;
-        }, function (processingStatus) {
-            vm.loadingData = processingStatus;
-        });
-
-        function isInTableFields(name) {
-            var index = vm.tableFields.findIndex(function(field) {
-                return field.field === name;
-            });
-
-            return (index !== -1) ? true : false;
-        }
-
         //локализация
-        if(configData.hasOwnProperty("ui") &&  configData.ui.hasOwnProperty("language")) {
-            if(configData.ui.language.search(".json") !== (-1)){
+        if (configData.hasOwnProperty("ui") && configData.ui.hasOwnProperty("language")) {
+            if (configData.ui.language.search(".json") !== (-1)) {
                 $translate.use(configData.ui.language);
-            } else if(configData.ui.language !== 'ru') {
+            } else if (configData.ui.language !== 'ru') {
                 $translate.use('assets/json/language/' + configData.ui.language + '.json');
             }
         }
-
-        vm.clickEnter = function(event){
-            if(event.keyCode === 13){
-                vm.applyFilter();
-            }
-        };
 
         if (pk === 'new') {
             vm.entityLoaded = true;

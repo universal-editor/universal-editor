@@ -57,7 +57,7 @@
                 //--get settings of the field
                 var settings = ctrl.setting.component.settings;
                 //--get operator from settings of the field
-                var operator = ctrl.filterParameters.operator;
+                var operator = ctrl.options.filterParameters.operator;
                 //--get value of the field
                 var fieldValue = ctrl.getFieldValue();
 

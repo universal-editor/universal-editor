@@ -22,15 +22,15 @@
             var filterJSON = null, filters;
 
             if (vm.action === 'send') {
-                filters = FilterFieldsStorage.calculate(settings.$parentScopeId);                
+                filters = FilterFieldsStorage.calculate(vm.options.$parentComponentId);                
                 filterJSON = filters ? JSON.stringify(filters) : null;
             }
 
             if (vm.action === 'clear') {
-                FilterFieldsStorage.clearFiltersValue(settings.$parentScopeId);
+                FilterFieldsStorage.clearFiltersValue(vm.options.$parentComponentId);
             }
-            $location.search('filter' + settings.$parentScopeId, filterJSON);                
-            $rootScope.$broadcast('editor:read_entity_' + settings.$parentScopeId);
+            $location.search('filter' + vm.options.$parentComponentId, filterJSON);                
+            $rootScope.$broadcast('editor:read_entity_' + vm.options.$parentComponentId);
         });
 
         $element.on('$destroy', function() {
