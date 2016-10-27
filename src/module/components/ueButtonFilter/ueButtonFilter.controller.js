@@ -21,16 +21,18 @@
             }
             var filterJSON = null, filters;
 
+            var parentComponentId = vm.options.$parentComponentId;
+
             if (vm.action === 'send') {
-                filters = FilterFieldsStorage.calculate(vm.options.$parentComponentId);                
+                filters = FilterFieldsStorage.calculate(parentComponentId);                
                 filterJSON = filters ? JSON.stringify(filters) : null;
             }
 
             if (vm.action === 'clear') {
-                FilterFieldsStorage.clearFiltersValue(vm.options.$parentComponentId);
+                FilterFieldsStorage.clearFiltersValue(parentComponentId);
             }
-            $location.search('filter' + vm.options.$parentComponentId, filterJSON);                
-            $rootScope.$broadcast('editor:read_entity_' + vm.options.$parentComponentId);
+            $location.search('filter' + parentComponentId, filterJSON);                
+            $rootScope.$broadcast('editor:read_entity', parentComponentId);
         });
 
         $element.on('$destroy', function() {

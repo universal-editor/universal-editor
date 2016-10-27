@@ -58,6 +58,9 @@
                         newTab.fields.push(newField[0]);
                     }
                 } else {
+                    if(field.component.settings.dataSource === undefined) {
+                        field.component.settings.dataSource = vm.setting.component.settings.dataSource;
+                    }
                     newTab.fields.push(field);
                 }
             });

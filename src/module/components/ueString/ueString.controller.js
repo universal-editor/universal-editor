@@ -12,7 +12,6 @@
         var vm = this;
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
-        vm.parentComponentId = vm.options.$parentComponentId || '';
         var fieldErrorName;
         var componentSettings = vm.setting.component.settings;
         if (vm.setting.parentField) {
@@ -30,7 +29,6 @@
         vm.fieldName = vm.setting.name;
         vm.fieldValue = undefined;
         vm.readonly = componentSettings.readonly || false;
-        vm.parentFieldIndex = vm.setting.parentFieldIndex || false;
         vm.mask = componentSettings.mask || false;
         vm.fieldDisplayName = componentSettings.label;
         vm.hint = componentSettings.hint || false;
@@ -55,26 +53,6 @@
             }
             if (vm.cols < 1) {
                 vm.cols = 1;
-            }
-        }
-
-        /*
-         * Если поле является частью двумерного массива - оно не сможет получить значение при загрузке сущности
-         * поэтому оно всегда берёт значение поля из хранилища для полей-массивов.
-         */
-
-        if (vm.setting.parentFieldIndex) {
-            if (vm.multiple) {
-                vm.fieldValue = [];
-                angular.forEach(ArrayFieldStorage.getFieldValue(vm.setting.parentField, vm.setting.parentFieldIndex, vm.setting.name), function(item) {
-                    if (vm.multiname) {
-                        vm.fieldValue.push(item[vm.multiname]);
-                    } else {
-                        vm.fieldValue.push(item);
-                    }
-                });
-            } else {
-                vm.fieldValue = ArrayFieldStorage.getFieldValue(vm.setting.parentField, vm.setting.parentFieldIndex, vm.setting.name) || "";
             }
         }
 
@@ -120,85 +98,7 @@
          * Событие загрузки сущности ( созданной или пустой, т.е. создаваемой ).
          * Поле забирает данные из объекта сущности с учетом наличия родительского поля.
          */
-        var destroyWatchEntityLoaded;
-        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
-            if(!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
-            if (!vm.options.filter) {
-
-                //-- functional for required fields
-                if (componentSettings.requiredField) {
-                    destroyWatchEntityLoaded = $scope.$watch(function() {
-                        var f_value = EditEntityStorage.getValueField(componentSettings.requiredField);
-                        var result = false;
-                        var endRecursion = false;
-                        (function check(value) {
-                            var keys = Object.keys(value);
-                            for (var i = keys.length; i--;) {
-                                var propValue = value[keys[i]];
-                                if (propValue !== null && propValue !== undefined && propValue !== "") {
-                                    if (angular.isObject(propValue) && !endRecursion) {
-                                        check(propValue);
-                                    }
-                                    result = true;
-                                    endRecursion = true;
-                                }
-                            }
-                        })(f_value);
-                        return result;
-                    }, function(value) {
-                        if (!value) {
-                            clear();
-                            vm.readonly = true;
-                        } else {
-                            vm.readonly = componentSettings.readonly || false;
-                        }
-                    }, true);
-                }
-
-                if (data.editorEntityType === "new") {
-                    if (componentSettings.defaultValue) {
-                        vm.fieldValue = vm.multiple ? [componentSettings.defaultValue] : componentSettings.defaultValue;
-                    } else {
-                        vm.fieldValue = vm.multiple ? [] : '';
-                    }
-                    if (data.hasOwnProperty(vm.setting.name)) {
-                        vm.fieldValue = data[vm.setting.name];
-                    }
-                    return;
-                }
-
-                if (!vm.setting.parentField) {
-                    if (!vm.multiple) {
-                        vm.fieldValue = data[vm.setting.name];
-                    } else if (vm.multiname) {
-                        vm.fieldValue = [];
-                        angular.forEach(data[vm.setting.name], function(item) {
-                            vm.fieldValue.push(item[vm.multiname]);
-                        });
-                    } else {
-                        vm.fieldValue = [];
-                        angular.forEach(data[vm.setting.name], function(item) {
-                            vm.fieldValue.push(item);
-                        });
-                    }
-                } else {
-                    if (!vm.multiple) {
-                        vm.fieldValue = data[vm.setting.parentField][vm.setting.name];
-                    } else if (vm.multiname) {
-                        vm.fieldValue = [];
-                        angular.forEach(data[vm.setting.parentField][vm.setting.name], function(item) {
-                            vm.fieldValue.push(item[vm.multiname]);
-                        });
-                    } else {
-                        vm.fieldValue = [];
-                        angular.forEach(data[vm.setting.parentField][vm.setting.name], function(item) {
-                            vm.fieldValue.push(item);
-                        });
-                    }
-                }
-            }
-            }
-        });
+        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', $scope.onLoadDataHandler);
 
         /*
          * При удалении директивы она должна отправлять запрос в EditEntityStorage
@@ -229,10 +129,7 @@
 
         /* Удаление контроллера поля из сервиса управления данными полей. Происходит при исчезании поля */
 
-        this.$onDestroy = function() {
-            if (angular.isFunction(destroyWatchEntityLoaded)) {
-                destroyWatchEntityLoaded();
-            }
+        this.$onDestroy = function() {           
             destroyEntityLoaded();
             destroyErrorField();
             destroyWatchFieldValue();
@@ -288,14 +185,8 @@
             }
 
             if (vm.setting.parentField) {
-                if (vm.setting.parentFieldIndex) {
-                    field[vm.setting.parentField] = [];
-                    field[vm.setting.parentField][vm.setting.parentFieldIndex] = {};
-                    field[vm.setting.parentField][vm.setting.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
-                } else {
-                    field[vm.setting.parentField] = {};
-                    field[vm.setting.parentField][vm.fieldName] = wrappedFieldValue;
-                }
+                field[vm.setting.parentField] = {};
+                field[vm.setting.parentField][vm.fieldName] = wrappedFieldValue;
             } else {
                 field[vm.fieldName] = wrappedFieldValue;
             }

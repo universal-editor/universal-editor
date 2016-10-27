@@ -109,7 +109,7 @@
                         if (!FilterFieldsStorage.getFilterQueryObject(parentComponentId)) {
                             console.log("Filter calculate.");
                             FilterFieldsStorage.calculate(parentComponentId);
-                            $rootScope.$broadcast('editor:read_entity_' + parentComponentId);
+                            $rootScope.$broadcast('editor:read_entity', vm.parentComponentId);
                         }
                     }, 0);
                     return output;

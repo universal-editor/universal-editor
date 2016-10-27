@@ -24,13 +24,15 @@
             return stateName.split('.').length;
         };
 
-        this.getValueField = function(fieldName) {
-            for (var i = fieldControllers.length; i--;) {
-                var controller = fieldControllers[i];
+        this.getValueField = function(componentId, fieldName) {
+            var controllers = storage[componentId] || [];
+            for (var i = controllers.length; i--;) {
+                var controller = controllers[i];
                 if (controller.fieldName === fieldName) {
                     return controller.getFieldValue();
                 }
             }
+            return false;            
         };
 
         this.newSourceEntity = function (id) {
@@ -40,6 +42,7 @@
 
         this.setSourceEntity = function (data) {
             data.editorEntityType = "exist";
+            //$rootScope.$broadcast("editor:component_init", data);
             $rootScope.$broadcast("editor:entity_loaded", data);
         };
 
@@ -74,9 +77,19 @@
         this.editEntityUpdate = function (type, request) {
             this.setActionType(request.entityType);
             var entityObject = {};
-            angular.forEach(fieldControllers,function(fCtrl){
+            var controllers = storage[request.options.$parentComponentId] || [];
+            angular.forEach(controllers,function(fCtrl){
+                var value = fCtrl.getFieldValue();
+               
                 if(!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false){
-                    angular.merge(entityObject,fCtrl.getFieldValue());
+                     if(fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
+                        entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
+                        entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
+                        angular.merge(entityObject[fCtrl.parentField][fCtrl.parentFieldIndex], value[fCtrl.parentField]);
+                     } else
+                     {
+                         angular.merge(entityObject, value);
+                     }
                 }
             });
             request.data = entityObject;

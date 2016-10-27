@@ -37,7 +37,7 @@
         vm.$parentComponentId = vm.setting.component.$id;
 
         vm.filterComponent = vm.setting.component.settings.header.filter;
-        vm.options = { $parentComponentId: vm.$parentComponentId};
+        vm.options = { $parentComponentId: vm.$parentComponentId };
 
         if (vm.filterComponent !== false) {
             if (angular.isUndefined(vm.filterComponent)) {
@@ -78,9 +78,9 @@
             url: url
         };
 
-       // if (vm.setting.headComponent) {
-            vm.parent = $location.search()["parent" + vm.$parentComponentId] || null;
-     //   }
+        // if (vm.setting.headComponent) {
+        vm.parent = $location.search()["parent" + vm.$parentComponentId] || null;
+        //   }
 
         if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
             vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
@@ -92,7 +92,10 @@
                 vm.tableFields.push({
                     field: field.name,
                     displayName: field.component.settings.label || field.name
-                });
+                });  
+                if(field.component.settings.values || field.component.settings.valuesRemote) {
+                    vm.autoCompleteFields.push(field);
+                }              
             }
         });
 
@@ -179,8 +182,8 @@
         };
 
         $scope.$on('editor:parent_id', function(event, data) {
-            if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-              vm.parent = data.parentId;
+            if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+                vm.parent = data.parentId;
             }
         });
 
@@ -190,87 +193,71 @@
             }
         };
 
-        $scope.$on('editor:read_entity', function(event) {
-            RestApiService.getItemsList(vm.request);
+        $scope.$on('editor:read_entity', function(event, parentComponentId) {
+            if (parentComponentId === vm.options.$parentComponentId) {
+                RestApiService.getItemsList(vm.request);
+            }
         });
 
         $scope.$on('editor:items_list', function(event, data) {
-            if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+            if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
 
-            //** behavour for modal entity
-            $timeout(function() {
-                if (vm.setting.pk === 'new') {
-                    $element.find('.btn-create').trigger('click');
-                }
-            }, 0);
+                vm.listLoaded = true;
+                vm.items = data[itemsKey];
+                vm.autoCompleteFields.forEach(function(field) {
 
-            if ($state.is('editor.type.new')) {
-                return;
-            }
-            vm.listLoaded = true;
-            vm.items = data[itemsKey];
-
-            vm.autoCompleteFields.forEach(function(field) {
-
-                if (vm.autoCompleteFields.length === 0) {
-                    return;
-                }
-
-                var fieldForEdit = field.name, // ключ для замены
-                    ids = [], // массив айдишников
-                    paramStr = ""; // стpока json c params,
-                if (fieldForEdit && field.valuesRemote && field.valuesRemote.fieldSearch) {
-                    vm.items.forEach(function(item) {
-                        var val = item[fieldForEdit];
-                        item[fieldForEdit + "_copy"] = val;
-                        item[fieldForEdit] = "";
-                        if (val && ids.indexOf(val) === -1) { ids.push(val); }
-                    });
-
-                    if (ids.length) {
-                        paramStr = '?filter={"' + field.valuesRemote.fieldId + '":[' + ids.join(',') + ']}';
+                    if (vm.autoCompleteFields.length === 0) {
+                        return;
                     }
-                    RestApiService.getData(field.valuesRemote.url + paramStr).then(function(res) {
-                        if (res.data.items && res.data.items.length) {
-                            vm.linkedNames = res.data.items;
-                            for (var i = vm.linkedNames.length; i--;) {
-                                var linkItem = vm.linkedNames[i];
-                                if (linkItem) {
-                                    vm.items.forEach(function(item) {
-                                        if (item[fieldForEdit + "_copy"] == linkItem.id) {
-                                            item[fieldForEdit] = linkItem[field.valuesRemote.fieldSearch];
-                                        }
-                                    });
+
+                    var fieldForEdit = field.name, // ключ для замены
+                        ids = [], // массив айдишников
+                        paramStr = ""; // стpока json c params,
+                    if (fieldForEdit && field.component.settings.valuesRemote && field.component.settings.valuesRemote.fieldSearch) {
+                        vm.items.forEach(function(item) {
+                            var val = item[fieldForEdit];
+                            item[fieldForEdit + "_copy"] = val;
+                            item[fieldForEdit] = "";
+                            if (val && ids.indexOf(val) === -1) { ids.push(val); }
+                        });
+
+                        if (ids.length) {
+                            paramStr = '?filter={"' + field.component.settings.valuesRemote.fieldId + '":[' + ids.join(',') + ']}';
+                        }
+                        RestApiService.getData(field.component.settings.valuesRemote.url + paramStr).then(function(res) {
+                            if (res.data.items && res.data.items.length) {
+                                vm.linkedNames = res.data.items;
+                                for (var i = vm.linkedNames.length; i--;) {
+                                    var linkItem = vm.linkedNames[i];
+                                    if (linkItem) {
+                                        vm.items.forEach(function(item) {
+                                            if (item[fieldForEdit + "_copy"] == linkItem.id) {
+                                                item[fieldForEdit] = linkItem[field.component.settings.valuesRemote.fieldSearch];
+                                            }
+                                        });
+                                    }
                                 }
                             }
-                        }
-                    }, function(error) {
-                        console.log(error);
-                    });
-                }
-                if (field.values) {
-                    for (var i = vm.items.length; i--;) {
-                        var temp = vm.items[i][fieldForEdit];
-                        vm.items[i][fieldForEdit] = field.values[temp] || temp;
+                        }, function(error) {
+                            console.log(error);
+                        });
                     }
-                }
-            });
+                    if (field.component.settings.values) {
+                        for (var i = vm.items.length; i--;) {
+                            var temp = vm.items[i][fieldForEdit];
+                            vm.items[i][fieldForEdit] = field.component.settings.values[temp] || temp;
+                        }
+                    }
+                });
 
-            vm.entityLoaded = false;
-            //vm.parentButton = !!$location.search().hasOwnProperty("parent");
-            vm.parentButton = !!vm.parent;
-            vm.pageItemsArray = [];
+                vm.entityLoaded = false;
+                //vm.parentButton = !!$location.search().hasOwnProperty("parent");
+                vm.parentButton = !!vm.parent;
+                vm.pageItemsArray = [];
 
-            angular.forEach(vm.listFooterBar, function(control) {
-                control.paginationData = data;
-            });
-
-            //** behavour for modal entity
-            $timeout(function() {
-                if (vm.setting.pk) {
-                    $('#edit_btn_' + vm.setting.pk).trigger('click');
-                }
-            }, 0);
+                angular.forEach(vm.listFooterBar, function(control) {
+                    control.paginationData = data;
+                });
             }
         });
 
