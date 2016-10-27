@@ -16,7 +16,7 @@
             entityObject,
             mixEntity,
             cancelerPromises = [];
-        
+
 
         self.isProcessing = false;
         self.methodType = "";
@@ -71,17 +71,17 @@
                 filterParams = undefined;
             }
         };
-        
+
 
         function setTimeOutPromise(id, mode) {
             var def = $q.defer();
-                cancelerPromises[id] = cancelerPromises[id] || {};
-                if(cancelerPromises[id][mode]) {
-                    cancelerPromises[id][mode].resolve();
-                }
-                console.log("timeout request resolve");
-                cancelerPromises[id][mode] = def;
-                return def;            
+            cancelerPromises[id] = cancelerPromises[id] || {};
+            if (cancelerPromises[id][mode]) {
+                cancelerPromises[id][mode].resolve();
+            }
+            console.log("timeout request resolve");
+            cancelerPromises[id][mode] = def;
+            return def;
         }
 
         this.getItemsList = function(request) {
@@ -108,11 +108,11 @@
             var id = request.options.$parentComponentId;
             var filters = FilterFieldsStorage.getFilterQueryObject(id);
             if (!!request.childId) {
-                filters= {};
+                filters = {};
                 filters[request.parentField] = request.childId;
             }
             if (filters) {
-                angular.extend(params, {filter: JSON.stringify(filters)});
+                angular.extend(params, { filter: JSON.stringify(filters) });
             } else {
                 delete params.filter;
             }
@@ -163,7 +163,7 @@
                 request.options.isLoading = false;
                 deferred.resolve();
             }, function(reject) {
-                if(reject.status !== -1) {
+                if (reject.status !== -1) {
                     request.options.isLoading = false;
                 }
                 deferred.reject();
@@ -270,8 +270,8 @@
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
-                if(!ModalService.isModalOpen()){
-                  $state.go(entityType + '_index', params, { reload: true });
+                if (!ModalService.isModalOpen()) {
+                    $state.go(entityType + '_index', params, { reload: true });
                 } else {
                     ModalService.close();
                 }
@@ -317,8 +317,8 @@
                 if ($state.params.back) {
                     params.type = $state.params.back;
                 }
-                if(!ModalService.isModalOpen()){
-                  $state.go(entityType + '_index', params);
+                if (!ModalService.isModalOpen()) {
+                    $state.go(entityType + '_index', params);
                 } else {
                     ModalService.close();
                 }
@@ -370,8 +370,8 @@
                 var newId = response.data[idField];
                 var par = {};
                 par['pk' + EditEntityStorage.getLevelChild($state.current.name)] = newId;
-                var searchString = $location.search();               
-                $state.go($state.current.name, par, {reload: false, notify: false}).then(function() {
+                var searchString = $location.search();
+                $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                     $location.search(searchString);
                 });
                 var data = {
@@ -402,7 +402,7 @@
 
             var qParams = {};
             options.isLoading = true;
-
+            
             var expandFields = [];
             var expandParam = "";
 
@@ -411,6 +411,7 @@
                     expandFields.push(field.name);
                 }
             });
+            
 
             if (expandFields.length > 0) {
                 qParams.expand = expandFields.join(',');
@@ -423,6 +424,9 @@
             }).then(function(response) {
                 options.isLoading = false;
                 response.data.$parentComponentId = options.$parentComponentId;
+                angular.merge(response.data, {"fullName":[{"title":"sdf","local_id":"sfsdfq","sort":"12"},{"title":"yhrgtdf","local_id":"dfgdfg","sort":"15"},{"title":"sadgfg","local_id":"dgdf","sort":"gdf"}]});
+                
+               // response.data.fullName = {title: "asdasd",local_id: "sadads",sort: 123};
                 EditEntityStorage.setSourceEntity(response.data);
             }, function(reject) {
                 options.isLoading = false;
@@ -448,7 +452,7 @@
                 })[0];
                 _url = config.dataSource.url + '/' + request.entityId;
             }
-            
+
             return $http({
                 method: request.method || 'DELETE',
                 url: request.url || _url,
@@ -465,8 +469,8 @@
                 if ($state.params.back) {
                     params.type = $state.params.back;
                 }
-                 if(!ModalService.isModalOpen()){
-                  $state.go(entityType + '_index', params);
+                if (!ModalService.isModalOpen()) {
+                    $state.go(entityType + '_index', params);
                 } else {
                     ModalService.close();
                 }
@@ -557,24 +561,24 @@
             return deferred.promise;
         };
 
-        this.loadChilds = function(request) {            
+        this.loadChilds = function(request) {
             var data = {
                 parentId: request.id,
                 $parentComponentId: request.options.$parentComponentId
-            };            
+            };
             $rootScope.$broadcast('editor:parent_id', data);
             request.childId = request.id;
             self.getItemsList(request).then(function() {
-               // if (request.headComponent) {
-                    $location.search("parent" + request.options.$parentComponentId, request.childId);
-              //  }
+                // if (request.headComponent) {
+                $location.search("parent" + request.options.$parentComponentId, request.childId);
+                //  }
             });
         };
 
         this.loadParent = function(request) {
             var data = {
-              $parentComponentId: request.options.$parentComponentId
-            };  
+                $parentComponentId: request.options.$parentComponentId
+            };
             var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
             if (entityId) {
                 request.options.isLoading = true;
@@ -587,14 +591,14 @@
                         request.options.isLoading = false;
                         parentId = response.data[request.parentField];
                         //if (request.headComponent) {
-                            $location.search("parent" + request.options.$parentComponentId, parentId);
-                      //  }
-                        data.parentId = parentId;  
+                        $location.search("parent" + request.options.$parentComponentId, parentId);
+                        //  }
+                        data.parentId = parentId;
                         $rootScope.$broadcast('editor:parent_id', data);
                         request.childId = parentId;
                         self.getItemsList(request);
                     } else {
-                       reset();
+                        reset();
                     }
                 }, function(reject) {
                     request.options.isLoading = false;

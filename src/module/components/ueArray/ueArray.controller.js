@@ -42,15 +42,6 @@
 
         };
 
-        this.getInitialValue = function () {
-
-            var field = {};
-
-            field[vm.fieldName] = [];
-
-            return field;
-        };
-
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function (event, data) {
 
             if(vm.multiple){

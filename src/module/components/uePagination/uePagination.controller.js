@@ -154,6 +154,6 @@
 
         vm.$onDestroy = function () {
             watchData();
-        }
+        };
     }
 })();

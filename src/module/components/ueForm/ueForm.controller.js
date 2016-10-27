@@ -42,9 +42,14 @@
         vm.visibleFilter = true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
+        if(!vm.options.$parentComponentId) {
+            vm.options = {
+                $parentComponentId: vm.setting.component.$id
+            };
+        }
         vm.componentState = {
             isLoading: false,
-            $parentComponentId: vm.options.$parentComponentId || ''
+            $parentComponentId: vm.options.$parentComponentId || vm.setting.component.$id
         };
 
 
@@ -83,7 +88,7 @@
         angular.forEach(vm.setting.component.settings.body, function(componentObject) {
             if (angular.isObject(componentObject) && componentObject.component) {
                 vm.components.push(componentObject);
-                if(!componentObject.component.settings.dataSource) {
+                if(componentObject.component.settings.dataSource === undefined) {
                     componentObject.component.settings.dataSource = vm.setting.component.settings.dataSource;
                 }
             }

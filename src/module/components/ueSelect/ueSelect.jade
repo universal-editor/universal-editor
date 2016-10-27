@@ -1,13 +1,13 @@
 div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter}")
         include ../../template/labelField/labelField
         div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}" ng-style="{'overflow:auto': vm.multiple}")
-            .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="vm.multiple && !vm.isTree")
+            div(data-ng-if="vm.multiple && !vm.isTree")
                 div.select-border
                     select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple, size="3")
-                        option(data-ng-repeat="option in vm.options", value="{{option[vm.field_id]}}") {{option[vm.field_search]}}
+                        option(data-ng-repeat="option in vm.optionValues", value="{{option[vm.field_id]}}") {{option[vm.field_search]}}
                 .processing-status-wrapper(data-ng-show="!!vm.loadingData")
                     .processing-status {{'PERFORMS_ACTIONS' | translate}}
-            div(data-ng-if="!vm.multiple && !vm.isTree" ng-class="{'col-lg-2 col-md-2 col-sm-3 col-xs-3': !vm.options.filter}")
+            div(data-ng-if="!vm.multiple && !vm.isTree" )
                 div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='!vm.search ? "but-for-search" : ""')
                     input.form-control.select-input(
                         data-ng-if="vm.search",
@@ -30,16 +30,16 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
                             ) {{vm.placeholder}}
                     span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelected($event, false)") ×
                     .possible-values.active(
-                        data-ng-if="!vm.readonly && (vm.options.length > 0) && vm.showPossible",
+                        data-ng-if="!vm.readonly && (vm.optionValues.length > 0) && vm.showPossible",
                         data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'
                         )
                         .possible-scroll
-                            .possible-value-item(data-ng-repeat="option in vm.options", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}
+                            .possible-value-item(data-ng-repeat="option in vm.optionValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}
 
                 .processing-status-wrapper(data-ng-show="!!vm.loadingData")
                     .processing-status {{'PERFORMS_ACTIONS' | translate}}
 
-            .dropdown.col-lg-3.col-md-3.col-sm-3.col-xs-3(data-ng-if="vm.isTree")
+            .dropdown(data-ng-if="vm.isTree")
                 .dropdown__host
                     .dropdown__title.form-control.select-input(
                         data-ng-class="{'dropdown__title_open': isOpen}",
@@ -77,8 +77,8 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
                             data-ng-if="::(vm.treeParentField && vm.treeChildCountField)",
                             data-ng-class="{'dropdown__items_with-selected': vm.fieldValue.length > 2 || (vm.search && vm.fieldValue.length)}",
                             data-dropdown-items="",
-                            data-options="vm.options",
-                            data-is-open="isOpen && vm.options.length",
+                            data-options="vm.optionValues",
+                            data-is-open="isOpen && vm.optionValues.length",
                             data-field-search="vm.field_search",
                             data-child-count-field="vm.treeChildCountField",
                             data-on-toggle="vm.toggle",

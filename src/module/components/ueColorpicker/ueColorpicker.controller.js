@@ -77,6 +77,9 @@
             });
         };
 
+         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', $scope.onLoadDataHandler);
+         /*
+
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             if(!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
                 if (!vm.options.filter) {
@@ -115,7 +118,7 @@
                     }
                 }
             }
-        });
+        });*/
 
         var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function(event, data) {
             if (angular.isArray(data)) {

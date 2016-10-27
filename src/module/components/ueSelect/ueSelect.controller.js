@@ -49,7 +49,7 @@
             vm.assetsPath = configData.ui.assetsPath;
         }
         var _selectedIds = [];
-        vm.options = [];
+        vm.optionValues = [];
         vm.selectedValues = [];
         vm.inputValue = "";
         vm.readonly = componentSettings.readonly || false;
@@ -136,15 +136,15 @@
                 var obj = {};
                 obj[vm.field_id] = key;
                 obj[vm.field_search] = v;
-                vm.options.push(obj);
+                vm.optionValues.push(obj);
             });
             $scope.$evalAsync(function() {
                 setSizeSelect();
             });
-            allOptions = angular.copy(vm.options);
+            allOptions = angular.copy(vm.optionValues);
         } else if (componentSettings.hasOwnProperty("valuesRemote")) {
             if (vm.isTree) {
-                if (_selectedIds.length && !vm.options.length) {
+                if (_selectedIds.length && !vm.optionValues.length) {
                     getRemoteSelectedValues();
                 }
                 else if (!_selectedIds.length) {
@@ -163,10 +163,10 @@
                 .getUrlResource(componentSettings.valuesRemote.url)
                 .then(function(response) {
                     angular.forEach(response.data.items, function(v) {
-                        vm.options.push(v);
+                        vm.optionValues.push(v);
                     });
                     setSizeSelect();
-                    allOptions = angular.copy(vm.options);
+                    allOptions = angular.copy(vm.optionValues);
                     if (isRemoteSelectedValues) {
                         setSelectedValuesFromRemote();
                     } else {
@@ -198,6 +198,7 @@
         /* ---- */
 
         var destroyWatchEntityLoaded;
+      //   var destroyEntityLoaded = $scope.$on('editor:entity_loaded', );
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             if(!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
             if (!vm.options.filter) {
@@ -240,7 +241,6 @@
                 }
 
                 vm.parentValue = !vm.dependField;
-
                 if (!vm.setting.parentField) {
                     if (!vm.multiple) {
                         if (vm.isTree && data[vm.fieldName]) {
@@ -329,17 +329,17 @@
             destroySelectField = $scope.$on('select_field:select_name_' + vm.dependField, function(event, data) {
                 if (data && data !== "") {
                     vm.parentValue = false;
-                    vm.options = [];
+                    vm.optionValues = [];
                     RestApiService
                         .getUrlResource(componentSettings.valuesRemote.url + '?filter={"' + vm.dependFilter + '":"' + data + '"}')
                         .then(function(response) {
                             angular.forEach(response.data.items, function(v) {
-                                vm.options.push(v);
+                                vm.optionValues.push(v);
                             });
                             $timeout(function() {
                                 setSizeSelect();
                             }, 0);
-                            allOptions = angular.copy(vm.options);
+                            allOptions = angular.copy(vm.optionValues);
                             vm.parentValue = true;
                         }, function(reject) {
                             console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + vm.fieldName + '\" с удаленного ресурса');
@@ -372,7 +372,7 @@
                                 item.childOpts.push(v);
                             });
                             if (!vm.filterText) {
-                                allOptions = angular.copy(vm.options);
+                                allOptions = angular.copy(vm.optionValues);
                             }
                             if (vm.fieldValue.length) {
                                 setSelectedValuesFromRemote(item);
@@ -397,7 +397,7 @@
                 } else {
                     if (idx === null) {
                         vm.fieldValue.splice(0);
-                        uncheckAll(vm.options);
+                        uncheckAll(vm.optionValues);
                         item.checked = true;
                         vm.isSpanSelectDelete = true;
                         vm.fieldValue.push(item);
@@ -438,7 +438,7 @@
 
         function remove(e, item) {
             if (vm.treeParentField && item[vm.treeParentField] && vm.multiple) {
-                uncheckByParentId(vm.options, item[vm.treeParentField], item[vm.field_id]);
+                uncheckByParentId(vm.optionValues, item[vm.treeParentField], item[vm.field_id]);
                 var idx = findById(item[vm.field_id], item[vm.treeParentField]);
                 if (idx !== null) {
                     vm.fieldValue.splice(idx, 1);
@@ -447,9 +447,9 @@
                 var idx = findById(item[vm.field_id]);
                 if (idx !== null) {
                     vm.fieldValue.splice(idx, 1);
-                    for (var i = 0, len = vm.options.length; i < len; i++) {
-                        if (vm.options[i][vm.field_id] === item[vm.field_id]) {
-                            vm.options[i].checked = false;
+                    for (var i = 0, len = vm.optionValues.length; i < len; i++) {
+                        if (vm.optionValues[i][vm.field_id] === item[vm.field_id]) {
+                            vm.optionValues[i].checked = false;
                         }
                     }
                 }
@@ -481,8 +481,8 @@
 
             if (!vm.filterText) {
                 if (!vm.multiple && !vm.isTree) {
-                    if (vm.options && vm.options.length && vm.fieldValue) {
-                        var finded = vm.options.filter(function(record) { return record[vm.field_id] === vm.fieldValue[vm.field_id]; });
+                    if (vm.optionValues && vm.optionValues.length && vm.fieldValue) {
+                        var finded = vm.optionValues.filter(function(record) { return record[vm.field_id] === vm.fieldValue[vm.field_id]; });
                         if (finded.length) {
                             vm.fieldValue = finded[0];
                         }
@@ -492,13 +492,13 @@
                     vm.placeholder = (!!vm.fieldValue.length && !!vm.fieldValue[0][vm.field_search]) ? vm.fieldValue[0][vm.field_search] : componentSettings.placeholder;
                 }
                 if (allOptions) {
-                    vm.options = allOptions;
+                    vm.optionValues = allOptions;
                 }
 
                 for (var j = 0; j < vm.fieldValue.length; j++) {
-                    for (var i = 0, len = vm.options.length; i < len; i++) {
-                        if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
-                            vm.options[i].checked = true;
+                    for (var i = 0, len = vm.optionValues.length; i < len; i++) {
+                        if (vm.optionValues[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                            vm.optionValues[i].checked = true;
                         }
                     }
                 }
@@ -506,13 +506,13 @@
             }
             vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             if (!allOptions) {
-                allOptions = angular.copy(vm.options);
+                allOptions = angular.copy(vm.optionValues);
             }
-            vm.options = filter(angular.copy(allOptions), vm.filterText);
+            vm.optionValues = filter(angular.copy(allOptions), vm.filterText);
             for (var j = 0; j < vm.fieldValue.length; j++) {
-                for (var i = 0, len = vm.options.length; i < len; i++) {
-                    if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
-                        vm.options[i].checked = true;
+                for (var i = 0, len = vm.optionValues.length; i < len; i++) {
+                    if (vm.optionValues[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                        vm.optionValues[i].checked = true;
                     }
                 }
             }
@@ -564,10 +564,10 @@
         }
 
         function setSelectedValues() {
-            if (!_selectedIds.length || !vm.options.length) {
+            if (!_selectedIds.length || !vm.optionValues.length) {
                 return;
             }
-            vm.fieldValue = vm.options.filter(function(opt) {
+            vm.fieldValue = vm.optionValues.filter(function(opt) {
                 for (var i = 0, len = _selectedIds.length; i < len; i++) {
                     if (opt[vm.field_id] === _selectedIds[i]) {
                         opt.checked = true;
@@ -588,10 +588,10 @@
                     }
                 }
             } else {
-                for (var i = 0, len = vm.options.length; i < len; i++) {
+                for (var i = 0, len = vm.optionValues.length; i < len; i++) {
                     for (var j = 0, lenj = vm.fieldValue.length; j < lenj; j++) {
-                        if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id] && !vm.fieldValue[j][vm.treeParentField]) {
-                            vm.options[i].checked = true;
+                        if (vm.optionValues[i][vm.field_id] === vm.fieldValue[j][vm.field_id] && !vm.fieldValue[j][vm.treeParentField]) {
+                            vm.optionValues[i].checked = true;
                         }
                     }
                 }
@@ -604,7 +604,7 @@
             } else {
                 vm.fieldValue = val;
                 if (!vm.fieldValue[vm.field_search]) {
-                    angular.forEach(vm.options, function(v) {
+                    angular.forEach(vm.optionValues, function(v) {
                         if (v[vm.field_id] == vm.fieldValue[vm.field_id]) {
                             vm.fieldValue[vm.field_search] = v[vm.field_search];
                         }
@@ -651,15 +651,15 @@
                     case 13:
                         event.preventDefault();
                         if ((!vm.multiple && !vm.isTree) || vm.isTree) {
-                            if (vm.options.length < 1) {
+                            if (vm.optionValues.length < 1) {
                                 break;
                             }
                         }
                         $timeout(function() {
                             if ((!vm.multiple && !vm.isTree)) {
-                                vm.addToSelected(null, vm.options[vm.activeElement]);
+                                vm.addToSelected(null, vm.optionValues[vm.activeElement]);
                             } else if (vm.isTree) {
-                                vm.toggle(undefined, vm.options[vm.activeElement], true);
+                                vm.toggle(undefined, vm.optionValues[vm.activeElement], true);
                             }
 
                         }, 0);
@@ -668,7 +668,7 @@
                     case 40:
                         event.preventDefault();
                         if ((!vm.multiple && !vm.isTree) || (vm.isTree)) {
-                            if (vm.options.length < 1) {
+                            if (vm.optionValues.length < 1) {
                                 break;
                             }
 
@@ -678,7 +678,7 @@
                                 possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
                             }
 
-                            if (vm.activeElement < vm.options.length - 1) {
+                            if (vm.activeElement < vm.optionValues.length - 1) {
                                 $timeout(function() {
                                     vm.activeElement++;
                                 }, 0);
@@ -699,7 +699,7 @@
                     case 38:
                         event.preventDefault();
                         if ((!vm.multiple && !vm.isTree) || (vm.isTree)) {
-                            if (vm.options.length < 1) {
+                            if (vm.optionValues.length < 1) {
                                 break;
                             }
 
@@ -779,7 +779,7 @@
         };
 
         function setSizeSelect() {
-            var size = vm.options.length;
+            var size = vm.optionValues.length;
             var select = $element.find('select');
             if (!!select.length) {
                 if (size <= 3) {
