@@ -13,7 +13,7 @@
             queryObject = [],
             srvc = this,
             filterSearchString;
-        
+
         /** set functions for service */
         angular.extend(srvc, {
             addFilterController: addFilterController,
@@ -21,22 +21,28 @@
             clearFiltersValue: clearFiltersValue,
             calculate: calculate,
             getFilterQueryObject: getFilterQueryObject
-        });      
+        });
 
-        function addFilterController(ctrl, id) {
-            storage[id] = storage[id] || [];
-            storage[id].push(ctrl);
-            ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
+        function addFilterController(ctrl) {
+            var id = ctrl.parentComponentId;
+            if (id) {
+                storage[id] = storage[id] || [];
+                storage[id].push(ctrl);
+                ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
+            }
         }
 
-        function deleteFilterController(ctrl, id) {
-            var filterControllers = storage[id];
-            if (filterControllers) {
-                angular.forEach(filterControllers, function(fc, ind) {
-                    if (fc.$fieldHash === ctrl.$fieldHash) {
-                        filterControllers.splice(ind, 1);
-                    }
-                });
+        function deleteFilterController(ctrl) {
+            var id = ctrl.parentComponentId;
+            if (id) {
+                var filterControllers = storage[id];
+                if (filterControllers) {
+                    angular.forEach(filterControllers, function(fc, ind) {
+                        if (fc.$fieldHash === ctrl.$fieldHash) {
+                            filterControllers.splice(ind, 1);
+                        }
+                    });
+                }
             }
         }
 

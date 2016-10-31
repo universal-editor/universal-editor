@@ -264,7 +264,7 @@
 
             if (FilterFieldsStorage.filterSearchString) {
                 $location.search(FilterFieldsStorage.filterSearchString);
-            }
+            }          
 
             var toStateConfig = EditEntityStorage.getStateConfig(toState.name);
             if (toStateConfig && toStateConfig.component.name === 'ue-modal') {

@@ -22,16 +22,30 @@
             var filterJSON = null, filters;
 
             var parentComponentId = vm.options.$parentComponentId;
+            filters = $location.search().filter;
+            if (filters) {
+                filters = JSON.parse(filters);
+            }
 
             if (vm.action === 'send') {
-                filters = FilterFieldsStorage.calculate(parentComponentId);                
+                var filterEntity = FilterFieldsStorage.calculate(parentComponentId);
+                if (filterEntity) {
+                    filters = filters || {};
+                    filters[parentComponentId] = filterEntity;
+                }
                 filterJSON = filters ? JSON.stringify(filters) : null;
             }
 
             if (vm.action === 'clear') {
                 FilterFieldsStorage.clearFiltersValue(parentComponentId);
+                if (filters) {
+                    delete filters[parentComponentId];
+                    if (!$.isEmptyObject(filters)) {
+                        filterJSON = JSON.stringify(filters);
+                    }
+                }
             }
-            $location.search('filter' + parentComponentId, filterJSON);                
+            $location.search('filter', filterJSON);
             $rootScope.$broadcast('editor:read_entity', parentComponentId);
         });
 

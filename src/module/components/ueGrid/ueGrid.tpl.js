@@ -43,7 +43,7 @@ module.run(['$templateCache', function($templateCache) {
     '        <tfoot>\n' +
     '            <tr>\n' +
     '                <td colspan="{{vm.tableFields.length + 1}}">\n' +
-    '                    <component-wrapper data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component" data-options="vm.options" data-scope-id-parent="{{vm.scopeIdParent}}"></component-wrapper>\n' +
+    '                    <component-wrapper data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component" data-options="vm.options"></component-wrapper>\n' +
     '                    <!--ue-pagination(data-data="vm.paginationData")-->\n' +
     '                </td>\n' +
     '            </tr>\n' +

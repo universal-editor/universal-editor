@@ -30,7 +30,7 @@
         vm.links = [];
         vm.errors = [];
         vm.notifys = [];
-       // vm.currentTab = vm.setting.component.settings.body[0].component.settings.label;
+        // vm.currentTab = vm.setting.component.settings.body[0].component.settings.label;
         vm.entityId = "";
         vm.editorEntityType = "new";
         vm.editFooterBar = [];
@@ -42,7 +42,7 @@
         vm.visibleFilter = true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
-        if(!vm.options.$parentComponentId) {
+        if (!vm.options.$parentComponentId) {
             vm.options = {
                 $parentComponentId: vm.setting.component.$id
             };
@@ -88,7 +88,7 @@
         angular.forEach(vm.setting.component.settings.body, function(componentObject) {
             if (angular.isObject(componentObject) && componentObject.component) {
                 vm.components.push(componentObject);
-                if(componentObject.component.settings.dataSource === undefined) {
+                if (componentObject.component.settings.dataSource === undefined) {
                     componentObject.component.settings.dataSource = vm.setting.component.settings.dataSource;
                 }
             }
@@ -122,16 +122,19 @@
                 params.parent = $state.params.parent;
                 isReload = false;
             }
-            var request = { 
+            var request = {
                 url: vm.setting.component.settings.dataSource.url,
                 options: vm.componentState
             };
             RestApiService.getItemsList(request);
-            $state.go(stateIndex.name, params, { reload: isReload });
+            var searchString = $location.search();
+            $state.go(stateIndex.name, params, { reload: isReload }).then(function() {
+                $location.search(searchString);
+            });
         };
 
         $scope.$on('editor:entity_loaded', function(event, data) {
-            if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+            if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
                 vm.editorEntityType = data.editorEntityType;
                 vm.entityId = data[vm.idField];
                 vm.entityLoaded = true;

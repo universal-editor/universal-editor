@@ -3,12 +3,23 @@
     <label ng-if="!vm.options.filter" class="field-name-label">
         <div data-ng-if="vm.hint" class="field-hint">
             <div ng-bind="vm.hint" class="hint-text"></div>
-        </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="vm.fieldDisplayName"></span>
+        </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="vm.label"></span>
     </label>
     <div ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}">
-        <label data-ng-repeat="item in vm.selectedValues" data-ng-class="{'radiodisabled': vm.readonly}" class="radio-inline">
-            <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{item[vm.field_id]}}"/><span ng-bind="item[vm.field_search]"></span>
-        </label>
+        <div data-ng-if="vm.multiple">
+            <div data-ng-repeat="field_item in vm.fieldValue track by $index" ng-init="i = $index" class="item-string-wrapper input-group">
+                <label data-ng-repeat="item in vm.optionValues" data-ng-class="{'radiodisabled': vm.readonly}" class="radio-inline">
+                    <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[i]" value="{{item[vm.field_id]}}"/><span ng-bind="item[vm.field_search]"></span>
+                </label><span class="input-group-btn">
+                    <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>
+            </div>
+            <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{'BUTTON.ADD' | translate}}</div>
+        </div>
+        <div data-ng-if="!vm.multiple">
+            <label data-ng-repeat="item in vm.optionValues" data-ng-class="{'radiodisabled': vm.readonly}" class="radio-inline">
+                <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{item[vm.field_id]}}"/><span ng-bind="item[vm.field_search]">       </span>
+            </label>
+        </div>
     </div>
     <div ng-if="!vm.options.filter" class="field-error-wrapper">
         <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>

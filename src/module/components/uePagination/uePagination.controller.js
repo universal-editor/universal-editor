@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -9,20 +9,28 @@
 
     function UePaginationController($scope, RestApiService, $httpParamSerializer, $sce) {
         var vm = this;
-        vm.metaKey  = true;
-        vm.scopeIdParent = vm.setting.scopeIdParent;
-        var watchData = $scope.$watch(function () {
+        vm.metaKey = true;
+        vm.parentComponentId = vm.options.$parentComponentId;
+        var watchData = $scope.$watch(function() {
             return vm.setting.paginationData;
-        }, function (data) {
+        }, function(data) {
 
             var metaKey = '_meta';
             var itemsKey = 'items';
             var pageItems = vm.setting.component.settings.maxSize || 7;
 
             var url = vm.setting.component.settings.dataSource.url;
+            var parentField = vm.setting.component.settings.dataSource.parentField;
             var startIndex;
             var endIndex;
-            var qParams = RestApiService.getQueryParams();
+            //var qParams = vm.options.queryTempParams;
+            vm.request = {
+                params: {},
+                options: vm.options,
+                parentField: parentField,
+                url: url
+            };
+            
             vm.pageItemsArray = [];
             vm.items = vm.setting.paginationData[itemsKey];
             var label = {
@@ -37,9 +45,9 @@
             };
 
             if (!!vm.setting.component.settings.label) {
-                angular.forEach(['last', 'next', 'first', 'previous'], function(val){
-                    if(angular.isDefined(vm.setting.component.settings.label[val])) {
-                        if(vm.setting.component.settings.label[val]) {
+                angular.forEach(['last', 'next', 'first', 'previous'], function(val) {
+                    if (angular.isDefined(vm.setting.component.settings.label[val])) {
+                        if (vm.setting.component.settings.label[val]) {
                             label[val] = vm.setting.component.settings.label[val];
                         } else {
                             label[val + 'Is'] = false;
@@ -60,55 +68,51 @@
 
             if (!!data[metaKey]) {
                 vm.metaData = data[metaKey];
-                vm.metaData.fromItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage ) + 1;
-                vm.metaData.toItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage ) + data[itemsKey].length;
+                vm.metaData.fromItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage) + 1;
+                vm.metaData.toItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage) + data[itemsKey].length;
 
                 if (data[metaKey].currentPage > 1) {
 
                     if (label.firstIs) {
-                        qParams.page = 1;
                         vm.pageItemsArray.push({
                             label: label.first,
-                            href: url + "?" + $httpParamSerializer(qParams)
+                            page: 1
                         });
                     }
 
                     if (label.previousIs) {
-                        qParams.page = data[metaKey].currentPage - 1;
                         vm.pageItemsArray.push({
                             label: label.previous,
-                            href: url + "?" + $httpParamSerializer(qParams)
+                            page: data[metaKey].currentPage - 1
                         });
                     }
                 }
 
-                if (data[metaKey].currentPage <= parseInt(pageItems/2)) {
+                if (data[metaKey].currentPage <= parseInt(pageItems / 2)) {
                     startIndex = 1;
-                } else if(data[metaKey].currentPage > (data[metaKey].pageCount - pageItems + 1)){
+                } else if (data[metaKey].currentPage > (data[metaKey].pageCount - pageItems + 1)) {
                     startIndex = data[metaKey].pageCount - pageItems + 1;
                 }
                 else {
-                    startIndex = data[metaKey].currentPage - parseInt(pageItems/2);
+                    startIndex = data[metaKey].currentPage - parseInt(pageItems / 2);
                 }
 
                 endIndex = Math.min(startIndex + pageItems - 1, data[metaKey].pageCount);
 
                 if (startIndex > 1) {
-                    qParams.page = startIndex - 1;
                     vm.pageItemsArray.push({
                         label: "...",
-                        href: url + "?" + $httpParamSerializer(qParams)
+                        page: startIndex - 1
                     });
                 }
 
-                for(var i = startIndex; i <= endIndex; i++) {
+                for (var i = startIndex; i <= endIndex; i++) {
                     if (i !== data[metaKey].currentPage) {
-                        qParams.page = i;
                         vm.pageItemsArray.push({
-                            label: i,
-                            href: url + "?" + $httpParamSerializer(qParams)
+                            label: i, 
+                            page: i
                         });
-                    }else {
+                    } else {
                         vm.pageItemsArray.push({
                             label: data[metaKey].currentPage,
                             self: true
@@ -117,42 +121,38 @@
                 }
 
                 if (endIndex < data[metaKey].pageCount) {
-                    qParams.page = endIndex + 1;
                     vm.pageItemsArray.push({
-                        label: "...",
-                        href: url + "?" + $httpParamSerializer(qParams)
+                        label: "...", 
+                        page: endIndex + 1
                     });
                 }
 
                 if (data[metaKey].currentPage < data[metaKey].pageCount) {
 
                     if (label.nextIs) {
-                        qParams.page = data[metaKey].currentPage + 1;
                         vm.pageItemsArray.push({
                             label: label.next,
-                            href: url + "?" + $httpParamSerializer(qParams)
+                            page: data[metaKey].currentPage + 1
                         });
                     }
 
                     if (label.lastIs) {
-                        qParams.page = data[metaKey].pageCount;
                         vm.pageItemsArray.push({
                             label: label.last,
-                            href: url + "?" + $httpParamSerializer(qParams)
+                            page: data[metaKey].pageCount
                         });
                     }
                 }
             }
         });
 
-        vm.changePage = function (event, linkHref) {
+        vm.changePage = function(event, pageItem) {
             event.preventDefault();
-            vm.listLoaded = false;
-            var params = linkHref.split("?")[1];
-            RestApiService.getItemsListWithParams(params, vm.scopeIdParent);
+            vm.request.params.page = pageItem.page;
+            RestApiService.getItemsList(vm.request);
         };
 
-        vm.$onDestroy = function () {
+        vm.$onDestroy = function() {
             watchData();
         };
     }

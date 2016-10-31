@@ -3,7 +3,7 @@
     <label ng-if="!vm.options.filter" class="field-name-label">
         <div data-ng-if="vm.hint" class="field-hint">
             <div ng-bind="vm.hint" class="hint-text"></div>
-        </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="vm.fieldDisplayName"></span>
+        </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="vm.label"></span>
     </label>
     <div ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}" ng-style="{'overflow:auto':vm.multiple}"> 
         <div data-ng-show="vm.preloadedData &amp;&amp; vm.selectedValues.length &lt; vm.maxItemsCount" data-ng-class="{&quot;active&quot; : vm.isActivePossible}" data-ng-click="inputFocus()" class="autocomplete-input-wrapper form-control">

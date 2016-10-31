@@ -7,11 +7,11 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueSelect/ueSelect.html',
     '\n' +
-    '<div ng-class="{\'field-wrapper row\':!vm.options.filter, \'filter-wrapper-field\': vm.options.filter}">\n' +
+    '<div ng-class="{\'field-wrapper row\':!vm.options.filter, \'filter-wrapper-field\': vm.options.filter}" class="field-wrapper-ue-select">\n' +
     '    <label ng-if="!vm.options.filter" class="field-name-label">\n' +
     '        <div data-ng-if="vm.hint" class="field-hint">\n' +
     '            <div ng-bind="vm.hint" class="hint-text"></div>\n' +
-    '        </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="vm.fieldDisplayName"></span>\n' +
+    '        </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="vm.label"></span>\n' +
     '    </label>\n' +
     '    <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" ng-style="{\'overflow:auto\': vm.multiple}">\n' +
     '        <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree">\n' +
@@ -44,8 +44,10 @@ module.run(['$templateCache', function($templateCache) {
     '        <div data-ng-if="vm.isTree" class="dropdown">\n' +
     '            <div class="dropdown__host">\n' +
     '                <div data-ng-class="{\'dropdown__title_open\': isOpen}" data-ng-click="vm.clickSelect()" data-ng-style="{&quot;cursor&quot; : vm.search ? &quot;text&quot; : &quot;pointer&quot;}" class="dropdown__title form-control select-input">\n' +
-    '                    <div data-ng-repeat="value in vm.fieldValue" data-ng-if="vm.fieldValue.length &amp;&amp; (vm.multiple || vm.treeParentField &amp;&amp; vm.treeChildCountField) &amp;&amp; vm.multiple" class="selected-items__item">\n' +
-    '                        <div class="selected-item">{{value[vm.field_search]}}<span data-ng-click="vm.remove($event, value)" class="selected-item__btn_delete">×</span></div>\n' +
+    '                    <div data-ng-repeat="value in vm.fieldValue" data-ng-if="vm.fieldValue.length &amp;&amp; vm.multiple &amp;&amp; value[vm.field_search]" class="selected-items__item">\n' +
+    '                        <div class="selected-item">\n' +
+    '                            <label ng-bind="value[vm.field_search]" style="overflow: hidden; text-overflow: ellipsis; margin-right: 15px; display: block;"></label><span data-ng-click="vm.remove($event, value)" style="float: right; width: 10px; margin-top: -24px;" class="selected-item__btn_delete">×</span>\n' +
+    '                        </div>\n' +
     '                    </div>\n' +
     '                    <input data-ng-if="vm.search" data-ng-model="vm.filterText" data-ng-change="vm.change()" placeholder="{{vm.placeholder}}" data-ng-style="vm.styleInput" size="{{vm.sizeInput}}" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" data-ng-keydown="vm.deleteToSelected($event, true)" data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder&quot; : &quot;&quot;" class="dropdown__search-field"/>\n' +
     '                    <input data-ng-if="!vm.search" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
