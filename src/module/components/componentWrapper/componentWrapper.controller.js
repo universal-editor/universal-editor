@@ -14,13 +14,13 @@
         $scope.setting.buttonClass = vm.buttonClass;
         $scope.options = vm.options || {};
         //$scope.filter = vm.filter || false;
-       // $scope.filterParameters = vm.filterParameters;
+        //$scope.filterParameters = vm.filterParameters;
         //$scope.setting.scopeIdParent = vm.scopeIdParent;
+
         this.$postLink = function() {
             $element.on('$destroy', function () {
                 $scope.$destroy();
             });
-
             $element.append(new ComponentBuilder($scope).build());
         };
     }

@@ -19,7 +19,7 @@ div
                 td.context-column
                     span.context-toggle(data-ng-click="vm.toggleContextView(item[vm.idField])", data-ng-show="vm.contextLinks.length") Toggle buttons
                     .context-menu-wrapper(data-ng-show="vm.contextId == item[vm.idField]")
-                        .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index", data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)")
+                        .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index", data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)", data-ng-class="{'component-separator': link.separator}")
                             component-wrapper(data-setting="link", data-entity-id="{{item[vm.idField]}}", 
                                               data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.options")
                 td(data-ng-repeat="fieldItem in vm.tableFields track by $index")

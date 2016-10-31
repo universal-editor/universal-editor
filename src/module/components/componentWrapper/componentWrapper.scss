@@ -1,0 +1,7 @@
+.component-separator::before{
+  content: '';
+  width: 100%;
+  height: 1px;
+  background: rgba(177, 160, 160, 0.48);
+  display: block;
+}
