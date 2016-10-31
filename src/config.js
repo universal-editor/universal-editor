@@ -365,63 +365,11 @@ var ue = new UniversalEditor('universal-editor', {
                                 controls: [
                                     {
                                         component: {
-                                            name: 'ue-button-service',
+                                            name: 'ue-button-modal',
                                             settings: {
-                                                label: 'Сохранить',
-                                                action: 'save'
-                                            }
-                                        }
-                                    },
-                                    {
-                                        component: {
-                                            name: 'ue-button-service',
-                                            settings: {
-                                                label: 'Удалить',
-                                                action: 'delete'
-                                            }
-                                        }
-                                    },
-                                    {
-                                        component: {
-                                            name: 'ue-button-service',
-                                            settings: {
-                                                label: 'Сохранить',
-                                                action: 'presave'
-                                            }
-                                        }
-                                    },
-                                    {
-                                        component: {
-                                            name: 'ue-button-request',
-                                            settings: {
-                                                label: 'This is request!!!',
-                                                url: '//universal-backend.dev/rest/v1/staff',
-                                                method: 'GET',
-                                                beforeSend: window.RequstCallback.beforeSend,
-                                                success: window.RequstCallback.success,
-                                                error: window.RequstCallback.error,
-                                                complete: window.RequstCallback.complete
-                                            }
-                                        }
-                                    },
-                                    {
-                                        component: {
-                                            name: 'ue-button-request',
-                                            settings: {
-                                                label: 'This _blank!!!',
-                                                url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
-                                                target: '_blank'
-                                            }
-                                        }
-                                    },
-                                    {
-                                        component: {
-                                            name: 'ue-button-download',
-                                            settings: {
-                                                label: 'This is button!!!',
-                                                request: {
-                                                    url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
-                                                }
+                                                label: 'Закрыть',
+                                                action: 'close',
+                                                beforeAction: 'funcName' // Функция выполняется перед выполнением экшена (в данном случае — закрытием окна).
                                             }
                                         }
                                     }
@@ -480,71 +428,8 @@ var ue = new UniversalEditor('universal-editor', {
                                                                 name: 'ue-grid',
                                                                 settings: {
                                                                     header:{
-                                                                        controls: [
-                                                                            {
-                                                                                component: {
-                                                                                    name: 'ue-button-goto',
-                                                                                    settings: {
-                                                                                        label: 'создать',
-                                                                                        state: 'edit'
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        ]
                                                                     },
                                                                     label: 'Messages',
-                                                                    contextMenu:[
-                                                                        {
-                                                                            component: {
-                                                                                name: 'ue-button-goto',
-                                                                                settings: {
-                                                                                    label: 'редактировать',
-                                                                                    state: 'edit'
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            component: {
-                                                                                name: 'ue-button-service',
-                                                                                settings: {
-                                                                                    label: 'Удалить',
-                                                                                    action: 'delete'
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            separator: true,
-                                                                            component: {
-                                                                                name: 'ue-button-service',
-                                                                                settings: {
-                                                                                    label: 'Раскрыть',
-                                                                                    action: 'open'
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            separator: true,
-                                                                            component: {
-                                                                                name: 'ue-button-request',
-                                                                                settings: {
-                                                                                    label: 'This is request!!!',
-                                                                                    url: '//universal-backend.dev/rest/v1/staff',
-                                                                                    method: 'GET',
-                                                                                    beforeSend: window.RequstCallback.beforeSend
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            component: {
-                                                                                name: 'ue-button-request',
-                                                                                settings: {
-                                                                                    label: 'This _blank!!!',
-                                                                                    url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
-                                                                                    target: '_blank'
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    ],
                                                                     dataSource: messagesDataSource,
                                                                     columns: ['id', 'title']
                                                                 }

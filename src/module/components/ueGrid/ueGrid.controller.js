@@ -35,6 +35,7 @@
         vm.contextLinks = [];
         vm.listHeaderBar = [];
         vm.$parentComponentId = vm.setting.component.$id;
+        vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0))
 
         vm.filterComponent = vm.setting.component.settings.header.filter;
         vm.options = { $parentComponentId: vm.$parentComponentId };
