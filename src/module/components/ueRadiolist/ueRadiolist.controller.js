@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeRadiolistController', UeRadiolistController);
 
-    UeRadiolistController.$inject = ['$scope', '$element', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', 'FilterFieldsStorage', '$controller'];
+    UeRadiolistController.$inject = ['$scope', '$element', 'EditEntityStorage', 'RestApiService', 'FilterFieldsStorage', '$controller'];
 
-    function UeRadiolistController($scope, $element, EditEntityStorage, RestApiService, ArrayFieldStorage, FilterFieldsStorage, $controller) {
+    function UeRadiolistController($scope, $element, EditEntityStorage, RestApiService, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
         var vm = this;
         vm.optionValues = [];

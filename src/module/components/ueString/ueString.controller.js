@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeStringController', UeStringController);
 
-    UeStringController.$inject = ['$scope', '$element', 'EditEntityStorage', 'ArrayFieldStorage', 'FilterFieldsStorage', '$location', '$controller'];
+    UeStringController.$inject = ['$scope', '$element', 'EditEntityStorage', 'FilterFieldsStorage', '$location', '$controller'];
 
-    function UeStringController($scope, $element, EditEntityStorage, ArrayFieldStorage, FilterFieldsStorage, $location, $controller) {
+    function UeStringController($scope, $element, EditEntityStorage, FilterFieldsStorage, $location, $controller) {
         /* jshint validthis: true */
         var vm = this;
         var baseController = $controller('FieldsController', { $scope: $scope });

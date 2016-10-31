@@ -26,7 +26,12 @@
 .autocomplete-input-wrapper {
   position: relative;
   height: 100%;
+  min-height: 34px;
   padding: 2px;
+  .loader-search {
+    margin-left: 5px;
+    margin-top: 2px;
+  }
   &:after{
     content: '';
     display: table;

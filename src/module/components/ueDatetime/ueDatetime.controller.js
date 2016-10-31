@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeDatetimeController', UeDatetimeController);
 
-    UeDatetimeController.$inject = ['$scope', '$element', 'EditEntityStorage', 'moment', 'ArrayFieldStorage', 'FilterFieldsStorage', '$controller'];
+    UeDatetimeController.$inject = ['$scope', '$element', 'EditEntityStorage', 'moment', 'FilterFieldsStorage', '$controller'];
 
-    function UeDatetimeController($scope, $element, EditEntityStorage, moment, ArrayFieldStorage, FilterFieldsStorage, $controller) {
+    function UeDatetimeController($scope, $element, EditEntityStorage, moment, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
         var vm = this;
         var componentSettings = vm.setting.component.settings;
@@ -19,7 +19,7 @@
         vm.removeItem = removeItem;    
 
         vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler)); 
-        
+
         //-- private functions
         function removeItem(index) {
             if (angular.isArray(vm.fieldValue)) {

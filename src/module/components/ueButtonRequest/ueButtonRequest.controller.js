@@ -5,16 +5,12 @@
         .module('universal.editor')
         .controller('UeButtonRequestController',UeButtonRequestController);
 
-    UeButtonRequestController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', 'ButtonsService'];
+    UeButtonRequestController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', 'ButtonsService', '$controller'];
 
-    function UeButtonRequestController($rootScope,$scope,$element,RestApiService,configData, ButtonsService){
+    function UeButtonRequestController($rootScope,$scope,$element,RestApiService,configData, ButtonsService, $controller){
         var vm = this;
-        //console.log(vm);
-        vm.label = vm.setting.component.settings.label;
-        var beforeSend = vm.setting.component.settings.beforeSend;
-        var success = vm.setting.component.settings.success;
-        var error = vm.setting.component.settings.error;
-        var complete = vm.setting.component.settings.complete;
+
+        angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
 
         $element.bind("click", function () {
             if (!!vm.setting.component.settings.target) {
@@ -23,27 +19,26 @@
                 var request = {
                     url: vm.setting.component.settings.url,
                     method: vm.setting.component.settings.method,
-                    beforeSend: beforeSend
+                    beforeSend: vm.beforeSend
                 };
                 RestApiService.actionRequest(request).then(function(response){
-                    if (!!success) {
-                        success(response);
+                    if (!!vm.success) {
+                        vm.success(response);
                     }
                 }, function(reject) {
-                    if (!!error) {
-                        error(reject);
+                    if (!!vm.error) {
+                        vm.error(reject);
                     }
                 }).finally(function() {
-                    if (!!complete) {
-                        complete();
+                    if (!!vm.complete) {
+                        vm.complete();
                     }
-                    RestApiService.isProcessing = false;
+                    vm.options.isLoading = false;
                 });
             }
         });
 
         vm.$postLink = function() {
-            $scope.editor = RestApiService.getEntityType();
             $element.on('$destroy', function () {
                 $scope.$destroy();
             });

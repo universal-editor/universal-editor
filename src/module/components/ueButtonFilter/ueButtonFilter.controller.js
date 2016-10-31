@@ -5,15 +5,11 @@
         .module('universal.editor')
         .controller('UeButtonFilterController', UeButtonFilterController);
 
-    UeButtonFilterController.$inject = ['$rootScope', '$scope', '$element', 'RestApiService', 'configData', '$window', 'ModalService', 'ButtonsService', 'FilterFieldsStorage', '$state', '$location'];
+    UeButtonFilterController.$inject = ['$rootScope', '$scope', '$element', 'RestApiService', 'configData', '$window', 'ModalService', 'ButtonsService', 'FilterFieldsStorage', '$state', '$location', '$controller'];
 
-    function UeButtonFilterController($rootScope, $scope, $element, RestApiService, configData, $window, ModalService, ButtonsService, FilterFieldsStorage, $state, $location) {
+    function UeButtonFilterController($rootScope, $scope, $element, RestApiService, configData, $window, ModalService, ButtonsService, FilterFieldsStorage, $state, $location, $controller) {
         var vm = this;
-        var settings = vm.setting.component.settings;
-
-        vm.label = settings.label;
-        vm.action = settings.action;
-        vm.beforeAction = settings.beforeAction;
+        angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
 
         $element.find('button').bind("click", function() {
             if (vm.beforeAction) {

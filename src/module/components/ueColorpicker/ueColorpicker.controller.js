@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeColorpickerController', UeColorpickerController);
 
-    UeColorpickerController.$inject = ['$scope', '$element', 'EditEntityStorage', 'ArrayFieldStorage', 'FilterFieldsStorage', '$state', '$controller'];
+    UeColorpickerController.$inject = ['$scope', '$element', 'EditEntityStorage', 'FilterFieldsStorage', '$state', '$controller'];
 
-    function UeColorpickerController($scope, $element, EditEntityStorage, ArrayFieldStorage, FilterFieldsStorage, $state, $controller) {
+    function UeColorpickerController($scope, $element, EditEntityStorage, FilterFieldsStorage, $state, $controller) {
         /* jshint validthis: true */
         var vm = this;
         var componentSettings = vm.setting.component.settings;  

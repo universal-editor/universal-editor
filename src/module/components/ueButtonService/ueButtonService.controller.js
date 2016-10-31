@@ -5,23 +5,19 @@
         .module('universal.editor')
         .controller('UeButtonServiceController',UeButtonServiceController);
 
-    UeButtonServiceController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService', 'ModalService', '$state'];
+    UeButtonServiceController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService', 'ModalService', '$state', '$controller'];
 
-    function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService, ModalService, $state){
+    function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService, ModalService, $state, $controller){
         var vm = this;
-        var action = vm.setting.component.settings.action;
-        var type = vm.setting.type;
+        angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
         var request = {};
         if(vm.setting.component.settings.request) {
             request = JSON.parse(vm.setting.component.settings.request);
-        }
-
-        vm.label = vm.setting.component.settings.label;
-        vm.entityId = vm.setting.entityId;
+        }       
         
         var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
         var pk = $state.params[pkKey];
-        if(action === 'delete') {
+        if(vm.action === 'delete') {
             vm.disabled = pk === 'new' || !pk;
         }
         request.options = vm.options;
@@ -30,12 +26,12 @@
             if (vm.options.isLoading || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;
             }
-            switch (action) {
+            switch (vm.action) {
                 case 'save':
-                    if (type == 'create') {
+                    if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate("create", request);
                         ModalService.close();
-                    } else if (type == 'update') {
+                    } else if (vm.type == 'update') {
                         RestApiService.editedEntityId = vm.entityId;
                         EditEntityStorage.editEntityUpdate("update", request);
                     }
@@ -66,17 +62,10 @@
 
        $scope.$on("editor:presave_entity_created", function(event, data) {
          if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-           if(action === 'delete') {
+           if(vm.action === 'delete') {
                vm.disabled = false;
            }
          }
        });
-
-        vm.$postLink = function() {
-            $scope.editor = RestApiService.getEntityType();
-            $element.on('$destroy', function () {
-                $scope.$destroy();
-            });
-        };
     }
 })();

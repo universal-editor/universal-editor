@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeTextareaController', UeTextareaController);
 
-    UeTextareaController.$inject = ['$scope', '$element', 'EditEntityStorage', 'ArrayFieldStorage', 'FilterFieldsStorage', '$controller'];
+    UeTextareaController.$inject = ['$scope', '$element', 'EditEntityStorage', 'FilterFieldsStorage', '$controller'];
 
-    function UeTextareaController($scope, $element, EditEntityStorage, ArrayFieldStorage, FilterFieldsStorage, $controller) {
+    function UeTextareaController($scope, $element, EditEntityStorage, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
         var vm = this;
         var baseController = $controller('FieldsController', { $scope: $scope });

@@ -13,7 +13,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <div class="hint-text">{{vm.hint}}</div>\n' +
     '        </div>{{vm.fieldDisplayName}}\n' +
     '    </div>\n' +
-    '    <div class="field-array-wrapper">\n' +
+    '    <div class="field-array-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-12">\n' +
     '        <div data-ng-if="vm.multiple">\n' +
     '            <div data-ng-repeat="fields in vm.fieldsArray track by $index" data-ng-init="outerIndex = $index" class="item-array-wrapper">\n' +
     '                <data-component-wrapper ng-class="vm.className" data-ng-repeat="field in fields" data-setting="field" data-options="vm.options"></data-component-wrapper>\n' +

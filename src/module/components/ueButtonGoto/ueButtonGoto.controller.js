@@ -5,15 +5,13 @@
         .module('universal.editor')
         .controller('UeButtonGotoController', UeButtonGotoController);
 
-    UeButtonGotoController.$inject = ['$scope', '$element', 'RestApiService', '$state', '$location', 'configData', 'EditEntityStorage', 'ModalService', '$timeout'];
+    UeButtonGotoController.$inject = ['$scope', '$element', 'RestApiService', '$state', '$location', 'configData', 'EditEntityStorage', 'ModalService', '$timeout', '$controller'];
 
-    function UeButtonGotoController($scope, $element, RestApiService, $state, $location, configData, EditEntityStorage, ModalService, $timeout) {
+    function UeButtonGotoController($scope, $element, RestApiService, $state, $location, configData, EditEntityStorage, ModalService, $timeout, $controller) {
         var vm = this;
+        angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
         var state = vm.setting.component.settings.state;
-        var stateType = RestApiService.getEntityType();
-        var type = vm.setting.component.settings.type ? vm.setting.component.settings.type : stateType;
-        vm.label = vm.setting.component.settings.label;
-        vm.entityId = vm.setting.entityId || 'new';
+        vm.entityId = vm.entityId || 'new';
 
         $element.bind("click", function() {
             var stateOptions = {

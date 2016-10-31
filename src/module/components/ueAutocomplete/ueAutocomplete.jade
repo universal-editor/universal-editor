@@ -2,13 +2,13 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-inner-wrapper': v
         include ../../template/labelField/labelField
         div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}"  ng-style="{'overflow:auto':vm.multiple}") 
                 .autocomplete-input-wrapper.form-control(
-                    data-ng-show="vm.preloadedData && vm.selectedValues.length < vm.maxItemsCount",
                     data-ng-class='{"active" : vm.isActivePossible}',
-                    data-ng-click="inputFocus()"
+                    data-ng-click="inputFocus()"                    
                     )
                     .autocomplete-item(data-ng-repeat="acItem in vm.selectedValues", data-ng-show="vm.preloadedData",data-ng-if="vm.multiple") {{acItem[vm.field_search]}}
                         span.remove-from-selected(data-ng-click="vm.removeFromSelected($event, acItem)", data-ng-if="!vm.readonly") ×
                     input.autocomplete-field-search(
+                        ng-if="vm.preloadedData"
                         type="text",
                         ng-disabled="vm.readonly",
                         data-ng-model="vm.inputValue",
@@ -24,7 +24,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-inner-wrapper': v
                         data-ng-if="!vm.multiple && !!vm.selectedValues.length",
                         data-ng-click="vm.removeFromSelected($event, vm.selectedValues[0])"
                         ) ×
-                    .loader-search-wrapper(data-ng-show="vm.searching")
+                    .loader-search-wrapper(data-ng-show="vm.searching || !vm.preloadedData")
                         .loader-search {{'LOADING' | translate}}
                     .possible-values.possible-autocomplete.active.possible-bottom(
                         data-ng-if="!vm.readonly && (vm.possibleValues.length > 0) && vm.showPossible",
