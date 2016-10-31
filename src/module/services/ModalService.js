@@ -42,7 +42,7 @@
                 isOpen = true;
                 var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
                 if (pk === 'new') {
-                   EditEntityStorage.newSourceEntity();
+                   EditEntityStorage.newSourceEntity(self.options.$parentComponentId);
                 }
                 self.fromState = settings.fromState || null;                
             });

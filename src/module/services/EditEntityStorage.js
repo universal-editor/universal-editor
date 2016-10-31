@@ -1,13 +1,13 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('universal.editor')
-        .service('EditEntityStorage',EditEntityStorage);
+        .service('EditEntityStorage', EditEntityStorage);
 
-    EditEntityStorage.$inject = ['$rootScope','$timeout','configData','$location', '$state'];
+    EditEntityStorage.$inject = ['$rootScope', '$timeout', 'configData', '$location', '$state'];
 
-    function EditEntityStorage($rootScope,$timeout,configData,$location, $state){
+    function EditEntityStorage($rootScope, $timeout, configData, $location, $state) {
         var sourceEntity,
             configuredFields = {},
             fieldControllers = [],
@@ -32,64 +32,67 @@
                     return controller.getFieldValue();
                 }
             }
-            return false;            
+            return false;
         };
 
-        this.newSourceEntity = function (id) {
-            id = id || '';
-            $rootScope.$broadcast("editor:entity_loaded" + id, { editorEntityType: "new"});
+        this.newSourceEntity = function(id) {
+            $rootScope.$broadcast("editor:entity_loaded", { editorEntityType: "new", $parentComponentId: id });
         };
 
-        this.setSourceEntity = function (data) {
+        this.setSourceEntity = function(data) {
             data.editorEntityType = "exist";
             //$rootScope.$broadcast("editor:component_init", data);
             $rootScope.$broadcast("editor:entity_loaded", data);
         };
 
-        this.getEntityType = function () {
+        this.getEntityType = function() {
             return entityType;
         };
 
-        this.setEntityType = function (type) {
+        this.setEntityType = function(type) {
             entityType = type;
         };
 
-        this.addFieldController = function (ctrl, id) {
-            fieldControllers.push(ctrl);
-            storage[id] = storage[id] || [];
-            storage[id].push(ctrl);
-            ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
+        this.addFieldController = function(ctrl) {
+            var id = ctrl.parentComponentId;
+            if (id) {
+                storage[id] = storage[id] || [];
+                storage[id].push(ctrl);
+                ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
+            }
         };
 
-        this.deleteFieldController = function (ctrl) {
-            angular.forEach(fieldControllers, function (fc, ind) {
-                if (fc.$fieldHash === ctrl.$fieldHash){
-                    fieldControllers.splice(ind,1);
-                }
-            });
+        this.deleteFieldController = function(ctrl) {
+            var controllers = storage[ctrl.parentComponentId];
+            if (controllers) {
+                angular.forEach(controllers, function(controller, ind) {
+                    if (controller.$fieldHash === ctrl.$fieldHash) {
+                        controllers.splice(ind, 1);
+                    }
+                });
+            }
         };
 
-        this.setActionType = function (type) {
+        this.setActionType = function(type) {
             this.actionType = type;
         };
 
 
-        this.editEntityUpdate = function (type, request) {
+        this.editEntityUpdate = function(type, request) {
             this.setActionType(request.entityType);
             var entityObject = {};
             var controllers = storage[request.options.$parentComponentId] || [];
-            angular.forEach(controllers,function(fCtrl){
+            angular.forEach(controllers, function(fCtrl) {
                 var value = fCtrl.getFieldValue();
-               
-                if(!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false){
-                     if(fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
+
+                if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
+                    if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
                         entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
                         entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
                         angular.merge(entityObject[fCtrl.parentField][fCtrl.parentFieldIndex], value[fCtrl.parentField]);
-                     } else
-                     {
-                         angular.merge(entityObject, value);
-                     }
+                    } else {
+                        angular.merge(entityObject, value);
+                    }
                 }
             });
             request.data = entityObject;
@@ -103,11 +106,11 @@
             }
         };
 
-        this.editEntityPresave = function (request) {
+        this.editEntityPresave = function(request) {
             var entityObject = {};
-            angular.forEach(fieldControllers,function(fCtrl){
-                if(!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false){
-                    angular.merge(entityObject,fCtrl.getFieldValue());
+            angular.forEach(fieldControllers, function(fCtrl) {
+                if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
+                    angular.merge(entityObject, fCtrl.getFieldValue());
                 }
             });
             request.data = entityObject;
@@ -116,7 +119,7 @@
         };
 
         this.getEntity = function(stateName, entityName) {
-            return configData.entities.filter(function (item) {
+            return configData.entities.filter(function(item) {
                 return item.name === entityType;
             })[0];
         };
@@ -150,11 +153,11 @@
 
         /* EVENTS LISTENING */
 
-        $rootScope.$on("editor:add_entity", function (event,data) {
+        $rootScope.$on("editor:add_entity", function(event, data) {
             self.actionType = data;
         });
 
-        $rootScope.$on('editor:set_entity_type',function (event,type) {
+        $rootScope.$on('editor:set_entity_type', function(event, type) {
             entityObject = type;
             fieldControllers = [];
         });
@@ -163,11 +166,11 @@
 
         /* PRIVATE METHODS */
 
-        function validateEntityFields(){
+        function validateEntityFields() {
 
             var valid = true;
 
-            if (sourceEntity === undefined || entityType === undefined){
+            if (sourceEntity === undefined || entityType === undefined) {
                 console.log("EditEntityStorage: Сущность не доступна для проверки так как она не указана или не указан её тип");
                 valid = false;
             }

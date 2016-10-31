@@ -92,18 +92,15 @@
 
             var deferred = $q.defer();
 
-            var params = this.getQueryParams();
             var _method = 'GET';
             var _url = request.url;
 
-            if (typeof request !== 'undefined') {
-                params = typeof request.params !== 'undefined' ? request.params : params;
-                _method = typeof request.method !== 'undefined' ? request.method : _method;
-                if (request.sort !== undefined) {
-                    params.sort = request.sort;
-                }
+            var params = request.params || {};
+            _method = request.method || _method;
+            if (request.sort !== undefined) {
+                params.sort = request.sort;
             }
-            queryTempParams = params;
+            //  request.options.queryTempParams = params;
 
             var id = request.options.$parentComponentId;
             var filters = FilterFieldsStorage.getFilterQueryObject(id);
@@ -135,7 +132,6 @@
             if (params.hasOwnProperty("filter")) {
                 delete params.root;
             }
-
 
             var expandFields = [];
 
@@ -170,55 +166,6 @@
             });
 
             return deferred.promise;
-        };
-
-        this.getItemsListWithParams = function(params, id) {
-
-            if (self.isProcessing) {
-                return;
-            }
-
-            //if(mixEntity.existence){
-            //    params = params || {};
-            //    if(typeof params == 'object'){
-            //        angular.extend(params,{
-            //            mixed: mixEntity.entity
-            //        });
-            //    } else {
-            //        params = params + '&mixed=' + mixEntity.entity;
-            //    }
-            //}
-
-            if (entityObject.dataSource.fields.parent) {
-                params = params || {};
-
-                if (!params.hasOwnProperty("filter")) {
-                    if (typeof params == 'object') {
-                        angular.extend(params, {
-                            root: true
-                        });
-                    } else {
-                        params = params + '&root=true';
-                    }
-
-                }
-            }
-
-            if (typeof params == 'object') {
-                params = $httpParamSerializer(params);
-            }
-
-            self.isProcessing = true;
-
-            $http({
-                method: 'GET',
-                url: entityObject.dataSource.url + '?' + params
-            }).then(function(response) {
-                self.isProcessing = false;
-                $rootScope.$broadcast('editor:items_list_' + id, response.data);
-            }, function(reject) {
-                self.isProcessing = false;
-            });
         };
 
         this.getData = function(api, params) {
@@ -402,7 +349,7 @@
 
             var qParams = {};
             options.isLoading = true;
-            
+
             var expandFields = [];
             var expandParam = "";
 
@@ -411,7 +358,7 @@
                     expandFields.push(field.name);
                 }
             });
-            
+
 
             if (expandFields.length > 0) {
                 qParams.expand = expandFields.join(',');
@@ -424,9 +371,6 @@
             }).then(function(response) {
                 options.isLoading = false;
                 response.data.$parentComponentId = options.$parentComponentId;
-                angular.merge(response.data, {"fullName":[{"title":"sdf","local_id":"sfsdfq","sort":"12"},{"title":"yhrgtdf","local_id":"dfgdfg","sort":"15"},{"title":"sadgfg","local_id":"dgdf","sort":"gdf"}]});
-                
-               // response.data.fullName = {title: "asdasd",local_id: "sadads",sort: 123};
                 EditEntityStorage.setSourceEntity(response.data);
             }, function(reject) {
                 options.isLoading = false;
@@ -570,7 +514,16 @@
             request.childId = request.id;
             self.getItemsList(request).then(function() {
                 // if (request.headComponent) {
-                $location.search("parent" + request.options.$parentComponentId, request.childId);
+                parent = $location.search().parent;
+                if (parent) {
+                    parent = JSON.parse(parent);
+                }
+                if (request.childId) {
+                    parent = parent || {};
+                    parent[request.options.$parentComponentId] = request.childId;
+                }
+                var parentJSON = parent ? JSON.stringify(parent) : null;
+                $location.search("parent", parentJSON);
                 //  }
             });
         };
@@ -586,20 +539,30 @@
                     method: 'GET',
                     url: request.url + "/" + entityId
                 }).then(function(response) {
-                    var parentId;
-                    if (response.data[request.parentField] !== null) {
-                        request.options.isLoading = false;
-                        parentId = response.data[request.parentField];
-                        //if (request.headComponent) {
-                        $location.search("parent" + request.options.$parentComponentId, parentId);
-                        //  }
-                        data.parentId = parentId;
-                        $rootScope.$broadcast('editor:parent_id', data);
-                        request.childId = parentId;
-                        self.getItemsList(request);
-                    } else {
-                        reset();
+                    var parentId = response.data[request.parentField];
+
+                    parent = $location.search().parent;
+                    if (parent) {
+                        parent = JSON.parse(parent);
                     }
+                    if (parentId) {
+                        parent = parent || {};
+                        parent[request.options.$parentComponentId] = parentId;
+                    } else {
+                        delete parent[request.options.$parentComponentId];
+                    }
+
+                    var parentJSON = null;
+                    if (!$.isEmptyObject(parent)) {
+                        parentJSON = JSON.stringify(parent);
+                    }
+                    $location.search("parent", parentJSON);
+                    request.options.isLoading = false;
+                    data.parentId = parentId;
+                    $rootScope.$broadcast('editor:parent_id', data);
+                    request.childId = parentId;
+                    self.getItemsList(request);
+
                 }, function(reject) {
                     request.options.isLoading = false;
                 });
@@ -610,9 +573,16 @@
                 request.options.isLoading = false;
                 request.parentField = null;
                 $rootScope.$broadcast('editor:parent_id', data);
-                if (request.headComponent) {
-                    $location.search("parent" + request.options.$parentComponentId, null);
+                var parentJSON = null;
+                parent = $location.search().parent;
+                if (parent) {
+                    parent = JSON.parse(parent);
+                    delete parent[request.options.$parentComponentId];
+                    if (!$.isEmptyObject(parent)) {
+                        parentJSON = JSON.stringify(parent);
+                    }
                 }
+                $location.search("parent", parentJSON);
                 request.childId = null;
                 self.getItemsList(request);
             }

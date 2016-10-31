@@ -1,4 +1,4 @@
-div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter}")
+.field-wrapper-ue-select(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter}")
         include ../../template/labelField/labelField
         div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}" ng-style="{'overflow:auto': vm.multiple}")
             div(data-ng-if="vm.multiple && !vm.isTree")
@@ -9,6 +9,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
                     .processing-status {{'PERFORMS_ACTIONS' | translate}}
             div(data-ng-if="!vm.multiple && !vm.isTree" )
                 div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='!vm.search ? "but-for-search" : ""')
+                    //--span {{vm.optionValues}}
                     input.form-control.select-input(
                         data-ng-if="vm.search",
                         placeholder="{{vm.placeholder}}",
@@ -48,11 +49,11 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
                         )
                         .selected-items__item(
                             data-ng-repeat="value in vm.fieldValue",
-                            data-ng-if="vm.fieldValue.length && (vm.multiple || vm.treeParentField && vm.treeChildCountField) && vm.multiple"
+                            data-ng-if="vm.fieldValue.length && vm.multiple && value[vm.field_search]"
                             )
                             .selected-item
-                                | {{value[vm.field_search]}}
-                                span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)") ×
+                                label(ng-bind="value[vm.field_search]" style="overflow: hidden; text-overflow: ellipsis; margin-right: 15px; display: block;")
+                                span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)" style="float: right; width: 10px; margin-top: -24px;") ×
 
                         input.dropdown__search-field(data-ng-if="vm.search"
                             data-ng-model="vm.filterText",

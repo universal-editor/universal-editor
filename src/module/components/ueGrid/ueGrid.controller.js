@@ -79,7 +79,11 @@
         };
 
         // if (vm.setting.headComponent) {
-        vm.parent = $location.search()["parent" + vm.$parentComponentId] || null;
+        var parentEntity = $location.search().parent;
+        if (parentEntity) {
+            parentEntity = JSON.parse(parentEntity);
+            vm.parent = parentEntity[vm.$parentComponentId] || null;
+        }
         //   }
 
         if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
@@ -92,10 +96,10 @@
                 vm.tableFields.push({
                     field: field.name,
                     displayName: field.component.settings.label || field.name
-                });  
-                if(field.component.settings.values || field.component.settings.valuesRemote) {
+                });
+                if (field.component.settings.values || field.component.settings.valuesRemote) {
                     vm.autoCompleteFields.push(field);
-                }              
+                }
             }
         });
 
@@ -213,39 +217,41 @@
                     var fieldForEdit = field.name, // ключ для замены
                         ids = [], // массив айдишников
                         paramStr = ""; // стpока json c params,
-                    if (fieldForEdit && field.component.settings.valuesRemote && field.component.settings.valuesRemote.fieldSearch) {
-                        vm.items.forEach(function(item) {
-                            var val = item[fieldForEdit];
-                            item[fieldForEdit + "_copy"] = val;
-                            item[fieldForEdit] = "";
-                            if (val && ids.indexOf(val) === -1) { ids.push(val); }
-                        });
+                    if (!field.component.settings.multiple) {
+                        if (fieldForEdit && field.component.settings.valuesRemote && field.component.settings.valuesRemote.fields.label) {
+                            vm.items.forEach(function(item) {
+                                var val = item[fieldForEdit];
+                                item[fieldForEdit + "_copy"] = val;
+                                item[fieldForEdit] = "";
+                                if (val && ids.indexOf(val) === -1) { ids.push(val); }
+                            });
 
-                        if (ids.length) {
-                            paramStr = '?filter={"' + field.component.settings.valuesRemote.fieldId + '":[' + ids.join(',') + ']}';
-                        }
-                        RestApiService.getData(field.component.settings.valuesRemote.url + paramStr).then(function(res) {
-                            if (res.data.items && res.data.items.length) {
-                                vm.linkedNames = res.data.items;
-                                for (var i = vm.linkedNames.length; i--;) {
-                                    var linkItem = vm.linkedNames[i];
-                                    if (linkItem) {
-                                        vm.items.forEach(function(item) {
-                                            if (item[fieldForEdit + "_copy"] == linkItem.id) {
-                                                item[fieldForEdit] = linkItem[field.component.settings.valuesRemote.fieldSearch];
-                                            }
-                                        });
+                            if (ids.length) {
+                                paramStr = '?filter={"' + field.component.settings.valuesRemote.fields.value + '":[' + ids.join(',') + ']}';
+                            }
+                            RestApiService.getData(field.component.settings.valuesRemote.url + paramStr).then(function(res) {
+                                if (res.data.items && res.data.items.length) {
+                                    vm.linkedNames = res.data.items;
+                                    for (var i = vm.linkedNames.length; i--;) {
+                                        var linkItem = vm.linkedNames[i];
+                                        if (linkItem) {
+                                            vm.items.forEach(function(item) {
+                                                if (item[fieldForEdit + "_copy"] == linkItem.id) {
+                                                    item[fieldForEdit] = linkItem[field.component.settings.valuesRemote.fields.label];
+                                                }
+                                            });
+                                        }
                                     }
                                 }
+                            }, function(error) {
+                                console.log(error);
+                            });
+                        }
+                        if (field.component.settings.values) {
+                            for (var i = vm.items.length; i--;) {
+                                var temp = vm.items[i][fieldForEdit];
+                                vm.items[i][fieldForEdit] = field.component.settings.values[temp] || temp;
                             }
-                        }, function(error) {
-                            console.log(error);
-                        });
-                    }
-                    if (field.component.settings.values) {
-                        for (var i = vm.items.length; i--;) {
-                            var temp = vm.items[i][fieldForEdit];
-                            vm.items[i][fieldForEdit] = field.component.settings.values[temp] || temp;
                         }
                     }
                 });

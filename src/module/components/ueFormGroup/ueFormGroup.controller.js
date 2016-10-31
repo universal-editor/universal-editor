@@ -101,7 +101,6 @@
         this.$onDestroy = function() {
             destroyEntityLoaded();
             destroyErrorField();
-            destroyComponentInit();
         };
 
         this.$postLink = function() {

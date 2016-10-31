@@ -3,17 +3,17 @@
     <label ng-if="!vm.options.filter" class="field-name-label">
         <div data-ng-if="vm.hint" class="field-hint">
             <div ng-bind="vm.hint" class="hint-text"></div>
-        </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="vm.fieldDisplayName"></span>
+        </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="vm.label"></span>
     </label>
     <div ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}">
-        <div data-ng-if="vm.multiple" data-ng-class="vm.classTextarea">
+        <div data-ng-if="vm.multiple" data-ng-class="vm.classComponent">
             <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-textarea-wrapper">
                 <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" class="form-control editor-textarea"></textarea>
                 <div data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</div>
             </div>
             <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{'BUTTON.ADD' | translate}}</div>
         </div>
-        <div data-ng-if="!vm.multiple" data-ng-class="vm.classTextarea">
+        <div data-ng-if="!vm.multiple" data-ng-class="vm.classComponent">
             <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-ng-blur="vm.inputLeave(vm.fieldValue)" class="form-control editor-textarea"></textarea>
         </div>
     </div>
