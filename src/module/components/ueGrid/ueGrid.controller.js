@@ -35,10 +35,16 @@
         vm.contextLinks = [];
         vm.listHeaderBar = [];
         vm.$parentComponentId = vm.setting.component.$id;
+        vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0))
 
-        vm.filterComponent = vm.setting.component.settings.header.filter;
+
         vm.options = { $parentComponentId: vm.$parentComponentId };
 
+        if (!!vm.setting.component.settings.header) {
+            vm.filterComponent = vm.setting.component.settings.header.filter;
+        } else {
+            vm.filterComponent = vm.setting.component.settings.header;
+        }
         if (vm.filterComponent !== false) {
             if (angular.isUndefined(vm.filterComponent)) {
                 vm.filterComponent = {

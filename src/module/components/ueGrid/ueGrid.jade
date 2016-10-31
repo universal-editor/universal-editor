@@ -10,16 +10,16 @@ div
     table.table.table-bordered(data-ng-hide="vm.entityLoaded || vm.options.isLoading", class="items-list")
         thead
             tr
-                td.actions-header.context-column
+                td.actions-header.context-column(ng-if="vm.isContextMenu")
                 td( data-ng-repeat="fieldItem in vm.tableFields",
                 data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'asc' : vm.sortingDirection, 'desc' : !vm.sortingDirection}",
                 data-ng-click="vm.changeSortField(fieldItem.field)") {{fieldItem.displayName}}
         tbody(data-ng-if="vm.listLoaded")
             tr(data-ng-repeat="item in vm.items", data-ng-class="{'zhs-item' : (vm.entityType !== item[vm.subType]) && item[vm.subType] !== undefined}")
-                td.context-column
+                td.context-column(ng-if="vm.isContextMenu")
                     span.context-toggle(data-ng-click="vm.toggleContextView(item[vm.idField])", data-ng-show="vm.contextLinks.length") Toggle buttons
                     .context-menu-wrapper(data-ng-show="vm.contextId == item[vm.idField]")
-                        .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index", data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)")
+                        .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index", data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)", data-ng-class="{'component-separator': link.separator}")
                             component-wrapper(data-setting="link", data-entity-id="{{item[vm.idField]}}", 
                                               data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.options")
                 td(data-ng-repeat="fieldItem in vm.tableFields track by $index")
@@ -29,10 +29,10 @@ div
                     )
                     span(style="padding-left: {{ item.parentPadding ? item.parentPadding * 10 : 0 }}px;") {{item[fieldItem.field]}}
             tr(data-ng-if="vm.items.length == 0")
-                td(colspan="{{vm.tableFields.length + 1}}")
+                td(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
                     | {{'ELEMENT_NO' | translate}}
         tfoot
             tr
-                td(colspan="{{vm.tableFields.length + 1}}")
+                td(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
                     component-wrapper(data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component", data-options="vm.options")
                     //ue-pagination(data-data="vm.paginationData")

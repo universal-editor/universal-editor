@@ -42,6 +42,35 @@
         vm.visibleFilter = true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
+        var defaultEditFooterBar = [
+            {
+                component: {
+                    name: 'ue-button-service',
+                    settings: {
+                        label: 'Сохранить',
+                        action: 'save'
+                    }
+                }
+            },
+            {
+                component: {
+                    name: 'ue-button-service',
+                    settings: {
+                        label: 'Удалить',
+                        action: 'delete'
+                    }
+                }
+            },
+            {
+                component: {
+                    name: 'ue-button-service',
+                    settings: {
+                        label: 'Сохранить',
+                        action: 'presave'
+                    }
+                }
+            }
+        ];
         if (!vm.options.$parentComponentId) {
             vm.options = {
                 $parentComponentId: vm.setting.component.$id
@@ -67,6 +96,17 @@
 
         if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
             angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
+                var newControl = angular.merge({}, control);
+                if (angular.isUndefined(newControl.component.settings.dataSource)) {
+                    newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
+                }
+                newControl.paginationData = {};
+                vm.editFooterBar.push(newControl);
+            });
+        }
+
+        if(vm.editFooterBar.length == 0) {
+            angular.forEach(defaultEditFooterBar, function(control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {
                     newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
