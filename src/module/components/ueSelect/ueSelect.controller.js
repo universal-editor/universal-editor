@@ -62,7 +62,7 @@
                 vm.optionValues = [];
                 angular.forEach(allOptions, function(v) {
                     var v_id = v[vm.field_id];
-                    if (v_id && vm.fieldValue) {
+                    if (v_id && vm.fieldValue && !vm.multiple) {
                         if (angular.isArray(vm.fieldValue)) {
                             for (var i = vm.fieldValue.length; i--;) {
                                 if (vm.fieldValue[i] == v_id) {
@@ -70,12 +70,15 @@
                                     break;
                                 }
                             }
-                        } else if(v_id === vm.fieldValue)
-                            {
-                                vm.fieldValue = v;
-                            }
+                        } else if (v_id === vm.fieldValue) {
+                            vm.fieldValue = v;
+                        }
                     }
-                    if(vm.isTree && !v[vm.treeParentField]) {
+                    if (vm.isTree) {
+                        if (!v[vm.treeParentField]) {
+                            vm.optionValues.push(angular.copy(v));
+                        }
+                    } else {
                         vm.optionValues.push(angular.copy(v));
                     }
                 });
@@ -364,16 +367,16 @@
         }
 
         vm.addToSelected = function(event, val) {
-            if (vm.multiple && !vm.options.filter) {
+            if (vm.multiple) {
                 vm.fieldValue.push(val);
             } else {
                 vm.fieldValue = val;
                 if (!vm.fieldValue[vm.field_search]) {
-                    angular.forEach(vm.optionValues, function(v) {
-                        if (v[vm.field_id] == vm.fieldValue[vm.field_id]) {
-                            vm.fieldValue[vm.field_search] = v[vm.field_search];
-                        }
-                    });
+                    if (vm.optionValues.length === 0 && componentSettings.$loadingPromise) {
+                        componentSettings.$loadingPromise.then(convertToObject);
+                    } else {
+                        convertToObject(vm.optionValues);
+                    }
                 }
             }
             vm.filterText = '';
@@ -383,6 +386,14 @@
                 vm.setColorPlaceholder();
             }, 0);
         };
+
+        function convertToObject(items) {
+            angular.forEach(items, function(v) {
+                if (v[vm.field_id] == vm.fieldValue[vm.field_id]) {
+                    vm.fieldValue[vm.field_search] = v[vm.field_search];
+                }
+            });
+        }
 
         vm.isShowPossible = function() {
             vm.activeElement = 0;
