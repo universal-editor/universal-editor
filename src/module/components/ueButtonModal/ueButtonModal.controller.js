@@ -5,26 +5,19 @@
         .module('universal.editor')
         .controller('UeButtonModalController',UeButtonModalController);
 
-    UeButtonModalController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$window','ModalService','ButtonsService'];
+    UeButtonModalController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$window','ModalService','ButtonsService', '$controller'];
 
-    function UeButtonModalController($rootScope,$scope,$element,RestApiService,configData, $window, ModalService, ButtonsService){
+    function UeButtonModalController($rootScope,$scope,$element,RestApiService,configData, $window, ModalService, ButtonsService, $controller){
         var vm = this;
 
-        vm.label = vm.setting.component.settings.label;
-        vm.action = vm.setting.component.settings.action;
-        vm.beforeAction = vm.setting.component.settings.beforeAction;
+        angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
 
         $element.find('button').bind("click", function () {
-            var callback = ButtonsService.getCallback(vm.beforeAction);
           if(vm.action === 'close') {
-            if(callback) {
-                callback();
+            if(vm.beforeAction) {
+                vm.beforeAction();
             }
             ModalService.close();
           }
-        });
-
-        $element.on('$destroy', function () {
-           $scope.$destroy();
-        });
+        });      
 }})();

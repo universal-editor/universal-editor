@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeSelectController', UeSelectController);
 
-    UeSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', '$timeout', 'configData', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller'];
+    UeSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', '$timeout', 'configData', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q'];
 
-    function UeSelectController($rootScope, $scope, EditEntityStorage, RestApiService, ArrayFieldStorage, $timeout, configData, $document, $element, $window, FilterFieldsStorage, $controller) {
+    function UeSelectController($rootScope, $scope, EditEntityStorage, RestApiService, $timeout, configData, $document, $element, $window, FilterFieldsStorage, $controller, $q) {
         /* jshint validthis: true */
         var vm = this;
         vm.optionValues = [];
@@ -21,7 +21,7 @@
         if (!!configData.ui && !!configData.ui.assetsPath) {
             vm.assetsPath = configData.ui.assetsPath;
         }
-       
+
         vm.parentValue = !vm.depend;
         vm.search = componentSettings.search;
         vm.showPossible = false;
@@ -51,88 +51,35 @@
             vm.isTree = false;
         }
 
-
-        /*
-         * Инициализация данных при загрузке поля. Необходимая часть для полей инициализирующие данные для которых
-         * хранятся удалённо.
-         */
         var allOptions = [];
-
-        /*    if (componentSettings.hasOwnProperty("values")) {
-                angular.forEach(componentSettings.values, function(v, key) {
-                    var obj = {};
-                    obj[vm.field_id] = key;
-                    obj[vm.field_search] = v;
-                    vm.optionValues.push(obj);
-                });
-                $scope.$evalAsync(function() {
-                    setSizeSelect();
-                });
-                allOptions = angular.copy(vm.optionValues);
-            } else if (componentSettings.hasOwnProperty("valuesRemote")) {
-                if (vm.isTree) {
-                    if (vm.fieldValue.length && !vm.optionValues.length) {
-                        getRemoteSelectedValues();
-                    }
-                    else if (!vm.fieldValue.length) {
-                        getRemoteValues();
-                    }
-                } else {
-                    getRemoteValues();
-                }
-            } else {
-                console.error('EditorFieldSelectController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
-            }*/
-
-        function getRemoteValues(isRemoteSelectedValues) {
-            vm.loadingData = true;
-            if (componentSettings.hasOwnProperty("values")) {
-                vm.optionValues = [];
-                angular.forEach(componentSettings.values, function(v, key) {
-                    var obj = {};
-                    obj[vm.field_id] = key;
-                    obj[vm.field_search] = v;
-                    vm.optionValues.push(obj);
-                });
-                $scope.$evalAsync(function() {
-                    setSizeSelect();
-                });
-                allOptions = angular.copy(vm.optionValues);
-                vm.loadingData = false;
-            } else if (componentSettings.hasOwnProperty("valuesRemote")) {
-                RestApiService
-                    .getUrlResource(componentSettings.valuesRemote.url)
-                    .then(function(response) {
-                        vm.optionValues = [];
-                        allOptions = angular.copy(response.data.items);
-                        angular.forEach(response.data.items, function(v) {
-                            if (!v[vm.treeParentField]) {
-                                vm.optionValues.push(v);
-                            }
-                            var v_id = v[vm.field_id];
-                            if(v_id && vm.fieldValue) {
-                                for(var i = vm.fieldValue.length; i--;) {
-                                    if(vm.fieldValue[i] == v_id) {
-                                        vm.fieldValue[i] = v;
-                                        break;
-                                    }
-                                }
-                            }
-                        });
-                        setSizeSelect();
-                    }, function(reject) {
-                        console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + vm.fieldName + '\" с удаленного ресурса');
-                    }).finally(function() { vm.loadingData = false; });
-            }
-        }
-
-        /* ---- */
 
         var destroyWatchEntityLoaded;
         //   var destroyEntityLoaded = $scope.$on('editor:entity_loaded', );
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             $scope.onLoadDataHandler(event, data);
-            getRemoteValues();
+            componentSettings.$loadingPromise.then(function(items) {
+                allOptions = allOptions.length ? allOptions : items;
+                vm.optionValues = [];
+                angular.forEach(allOptions, function(v) {
+                    var v_id = v[vm.field_id];
+                    if (v_id && vm.fieldValue) {
+                        if (angular.isArray(vm.fieldValue)) {
+                            for (var i = vm.fieldValue.length; i--;) {
+                                if (vm.fieldValue[i] == v_id) {
+                                    vm.fieldValue[i] = v;
+                                    break;
+                                }
+                            }
+                        } else if(v_id === vm.fieldValue)
+                            {
+                                vm.fieldValue = v;
+                            }
+                    }
+                    if(vm.isTree && !v[vm.treeParentField]) {
+                        vm.optionValues.push(angular.copy(v));
+                    }
+                });
+            }).finally(function() { vm.loadingData = false; });
         });
 
         var destroyWatchFieldValue = $scope.$watch(function() {
@@ -153,7 +100,6 @@
                 vm.placeholder = (!!newVal.length && !!newVal[0][vm.field_search]) ? newVal[0][vm.field_search] : componentSettings.placeholder;
             }
             vm.setColorPlaceholder();
-            vm.error = [];
             $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
         }, true);
 
@@ -396,13 +342,6 @@
             }
         }
 
-        function setSelectedValues() {
-            if (!vm.fieldValue.length || !vm.optionValues.length) {
-                return;
-            }
-
-
-        }
 
         function setSelectedValuesFromRemote(item) {
             if (item) {
@@ -608,12 +547,13 @@
             var size = vm.optionValues.length;
             var select = $element.find('select');
             if (!!select.length) {
+                var s = select[0];
                 if (size <= 3) {
-                    select[0].size = 3;
+                    s.size = 3;
                 } else if (size >= 7) {
-                    select[0].size = 7;
+                    s.size = 7;
                 } else {
-                    select[0].size = size;
+                    s.size = size;
                 }
             }
         }
@@ -631,11 +571,6 @@
             destroyWatchFieldValue();
             if (angular.isFunction(destroySelectField)) {
                 destroySelectField();
-            }
-            EditEntityStorage.deleteFieldController(vm, vm.parentComponentId);
-            FilterFieldsStorage.deleteFilterController(vm, vm.parentComponentId);
-            if (vm.setting.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy(vm.setting.parentField, vm.setting.parentFieldIndex, vm.fieldName, vm.fieldValue);
             }
         };
 
@@ -678,34 +613,6 @@
             };
         };
 
-        vm.clear = clear;
-
-        function setInitialValue() {
-            var obj = {};
-            vm.fieldValue = vm.multiple ? [] : {};
-            if (vm.data.hasOwnProperty(vm.fieldName)) {
-                obj = {};
-                obj[vm.field_id] = vm.data[vm.fieldName];
-                if (!isNaN(+obj[vm.field_id])) {
-                    obj[vm.field_id] = +obj[vm.field_id];
-                }
-                vm.fieldValue = obj;
-            }
-
-            if (vm.isTree) {
-                vm.fieldValue = [];
-            }
-
-            if (!!componentSettings.defaultValue && !vm.isTree) {
-                obj = {};
-                obj[vm.field_id] = componentSettings.defaultValue;
-                vm.fieldValue = obj;
-            }
-        }
-
-        function clear() {
-            vm.fieldValue = componentSettings.multiple === true ? [] : "";
-        }
     }
 
     angular

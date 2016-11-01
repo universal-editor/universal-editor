@@ -3,7 +3,7 @@
         .field-hint(data-ng-if="vm.hint")
             .hint-text {{vm.hint}}
         | {{vm.fieldDisplayName}}
-    .field-array-wrapper
+    .field-array-wrapper.col-md-12.col-xs-12.col-sm-12.col-lg-12
         div(data-ng-if="vm.multiple")
             .item-array-wrapper(data-ng-repeat="fields in vm.fieldsArray track by $index" data-ng-init="outerIndex = $index")
                 data-component-wrapper(ng-class="vm.className" data-ng-repeat="field in fields" data-setting="field" data-options="vm.options")

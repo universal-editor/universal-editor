@@ -20,7 +20,7 @@ module.run(['$templateCache', function($templateCache) {
     '                    <option data-ng-repeat="option in vm.optionValues" value="{{option[vm.field_id]}}">{{option[vm.field_search]}}</option>\n' +
     '                </select>\n' +
     '            </div>\n' +
-    '            <div data-ng-show="!!vm.loadingData" class="processing-status-wrapper">\n' +
+    '            <div data-ng-show="!!vm.loadingData" style="position: absolute; margin: -28px 0 0 20px;" class="processing-status-wrapper">\n' +
     '                <div class="processing-status">{{\'PERFORMS_ACTIONS\' | translate}}</div>\n' +
     '            </div>\n' +
     '        </div>\n' +
@@ -37,7 +37,7 @@ module.run(['$templateCache', function($templateCache) {
     '                    </div>\n' +
     '                </div>\n' +
     '            </div>\n' +
-    '            <div data-ng-show="!!vm.loadingData" class="processing-status-wrapper">\n' +
+    '            <div data-ng-show="vm.loadingData" style="position: absolute; margin: -28px 0 0 20px;" class="processing-status-wrapper">\n' +
     '                <div class="processing-status">{{\'PERFORMS_ACTIONS\' | translate}}</div>\n' +
     '            </div>\n' +
     '        </div>\n' +
@@ -57,7 +57,7 @@ module.run(['$templateCache', function($templateCache) {
     '                    <div data-ng-if="::(vm.treeParentField &amp;&amp; vm.treeChildCountField)" data-ng-class="{\'dropdown__items_with-selected\': vm.fieldValue.length &gt; 2 || (vm.search &amp;&amp; vm.fieldValue.length)}" data-dropdown-items="" data-options="vm.optionValues" data-is-open="isOpen &amp;&amp; vm.optionValues.length" data-field-search="vm.field_search" data-child-count-field="vm.treeChildCountField" data-on-toggle="vm.toggle" data-api="vm.field.values_remote.url" data-select-branches="vm.treeSelectBranches" data-assets-path="vm.assetsPath" data-multiple="vm.multiple" data-active-element="vm.activeElement" data-set-active-element="vm.setActiveElement" data-lvl-dropdown="1" class="dropdown__items dropdown__items_with-padding active dropdown-bottom"></div>\n' +
     '                </div>\n' +
     '            </div>\n' +
-    '            <div data-ng-show="!!vm.loadingData" class="processing-status-wrapper">\n' +
+    '            <div data-ng-show="vm.loadingData" style="position: absolute; margin: -28px 0 0 20px;" class="processing-status-wrapper">\n' +
     '                <div class="processing-status">{{\'PERFORMS_ACTIONS\' | translate}}</div>\n' +
     '            </div>\n' +
     '        </div>\n' +

@@ -86,7 +86,7 @@
                         }
                     });
                     var value = output[vm.fieldName];
-                    if (componentSettings.values || componentSettings.remoteValues) {
+                    if (componentSettings.values || componentSettings.valuesRemote) {
                         if (vm.field_id && value) {
                             if (angular.isArray(value)) {
                                 vm.fieldValue = value;

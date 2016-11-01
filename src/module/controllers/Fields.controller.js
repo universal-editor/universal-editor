@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('FieldsController', FieldsController);
 
-    FieldsController.$inject = ['$scope', '$rootScope', '$location', '$controller', '$timeout', 'FilterFieldsStorage', 'RestApiService', 'moment', 'EditEntityStorage'];
+    FieldsController.$inject = ['$scope', '$rootScope', '$location', '$controller', '$timeout', 'FilterFieldsStorage', 'RestApiService', 'moment', 'EditEntityStorage', '$q'];
 
-    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, RestApiService, moment, EditEntityStorage) {
+    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, RestApiService, moment, EditEntityStorage, $q) {
         /* jshint validthis: true */
         var vm = this;
         var baseController = $controller('BaseController', { $scope: $scope });
@@ -30,38 +30,39 @@
         self.defaultValue = transformToValue(componentSettings.defaultValue) || (self.multiple ? [] : null);
         self.placeholder = componentSettings.placeholder || null;
 
-
-
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
         if (values || remoteValues) {
             self.field_id = "id";
             self.field_search = "title";
-            if (values) {
-                if (self.optionValues) {
+            if (self.optionValues) {
+                if (values) {
                     angular.forEach(componentSettings.values, function(v, key) {
                         var obj = {};
                         obj[self.field_id] = key;
                         obj[self.field_search] = v;
                         self.optionValues.push(obj);
                     });
-                }
-            } else if (remoteValues) {
-                if (remoteValues.fields) {
-                    self.field_id = remoteValues.fields.value || self.field_id;
-                    self.field_search = remoteValues.fields.label || self.field_id;
-                }
-                RestApiService
-                    .getUrlResource(remoteValues.url)
-                    .then(function(response) {
-                        if (self.optionValues) {
-                            angular.forEach(response.data.items, function(v) {
-                                self.optionValues.push(v);
+                    componentSettings.$loadingPromise = $q.when(self.optionValues);
+                } else if (remoteValues) {
+                    if (remoteValues.fields) {
+                        self.field_id = remoteValues.fields.value || self.field_id;
+                        self.field_search = remoteValues.fields.label || self.field_id;
+                    }
+                    self.loadingData = true;
+                    if (!componentSettings.$loadingPromise) {
+                        componentSettings.$loadingPromise = RestApiService
+                            .getUrlResource(remoteValues.url)
+                            .then(function(response) {
+                                angular.forEach(response.data.items, function(v) {
+                                    self.optionValues.push(v);
+                                });
+                                return self.optionValues;
+                            }, function(reject) {
+                                console.error(self.constructor.name + ': Не удалось получить значения для поля \"' + self.fieldName + '\" с удаленного ресурса');
                             });
-                        }
-                    }, function(reject) {
-                        console.error(self.constructor.name + ': Не удалось получить значения для поля \"' + self.fieldName + '\" с удаленного ресурса');
-                    });
+                    }
+                }
             }
         }
 
@@ -134,7 +135,7 @@
         if (self.options.filter) {
             $scope.$watch(function() {
                 return $location.search();
-            }, function(newVal) {             
+            }, function(newVal) {
                 if (newVal && newVal.filter) {
                     console.log("Filter generate.");
                     var filter = JSON.parse(newVal.filter);
@@ -149,7 +150,6 @@
         function clear() {
             self.fieldValue = self.multiple ? [] : null;
         }
-
 
         function transformToValue(object) {
             if (componentSettings.$fieldType === 'date') {
@@ -207,7 +207,7 @@
             }
         }
 
-        function onLoadDataHandler(event, data) {
+        function onLoadDataHandler(event, data, callback) {
             if (!data.$parentComponentId || data.$parentComponentId === self.parentComponentId) {
                 if (!self.options.filter) {
                     //-- functional for required fields
@@ -223,8 +223,9 @@
                                         if (propValue !== null && propValue !== undefined && propValue !== "") {
                                             if (angular.isObject(propValue) && !result) {
                                                 check(propValue);
+                                            } else {
+                                                result = true;
                                             }
-                                            result = true;
                                         }
                                     }
                                 })(f_value);
@@ -254,6 +255,9 @@
                                 self.fieldValue = obj;
                             }
                         }
+                        if (angular.isFunction(callback)) {
+                            callback();
+                        }
                         return;
                     }
 
@@ -277,6 +281,9 @@
                                 self.fieldValue.push(transformToValue(self.multiname ? item[self.multiname] : item));
                             });
                         }
+                    }
+                    if (angular.isFunction(callback)) {
+                        callback();
                     }
                 }
             }

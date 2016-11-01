@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeCheckboxController', UeCheckboxController);
 
-    UeCheckboxController.$inject = ['$scope', '$element', 'EditEntityStorage', 'RestApiService', 'ArrayFieldStorage', 'FilterFieldsStorage', '$controller'];
+    UeCheckboxController.$inject = ['$scope', '$element', 'EditEntityStorage', 'RestApiService', 'FilterFieldsStorage', '$controller'];
 
-    function UeCheckboxController($scope, $element, EditEntityStorage, RestApiService, ArrayFieldStorage, FilterFieldsStorage, $controller) {
+    function UeCheckboxController($scope, $element, EditEntityStorage, RestApiService, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
         var vm = this;
         var componentSettings = vm.setting.component.settings;

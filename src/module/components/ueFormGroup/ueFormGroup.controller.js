@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeFormGroupController', UeFormGroupController);
 
-    UeFormGroupController.$inject = ['$scope', '$rootScope', '$element', 'configData', 'EditEntityStorage', '$timeout', 'ArrayFieldStorage', 'RestApiService'];
+    UeFormGroupController.$inject = ['$scope', '$rootScope', '$element', 'configData', 'EditEntityStorage', '$timeout',  'RestApiService'];
 
-    function UeFormGroupController($scope, $rootScope, $element, configData, EditEntityStorage, $timeout, ArrayFieldStorage, RestApiService) {
+    function UeFormGroupController($scope, $rootScope, $element, configData, EditEntityStorage, $timeout,  RestApiService) {
         /* jshint validthis: true */
         var vm = this;
         var fieldErrorName;

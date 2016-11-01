@@ -5,7 +5,7 @@
             <div class="hint-text">{{vm.hint}}</div>
         </div>{{vm.fieldDisplayName}}
     </div>
-    <div class="field-array-wrapper">
+    <div class="field-array-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-12">
         <div data-ng-if="vm.multiple">
             <div data-ng-repeat="fields in vm.fieldsArray track by $index" data-ng-init="outerIndex = $index" class="item-array-wrapper">
                 <data-component-wrapper ng-class="vm.className" data-ng-repeat="field in fields" data-setting="field" data-options="vm.options"></data-component-wrapper>

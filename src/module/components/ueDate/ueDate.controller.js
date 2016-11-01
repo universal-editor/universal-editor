@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeDateController', UeDateController);
 
-    UeDateController.$inject = ['$scope', '$element', 'EditEntityStorage', 'moment', 'ArrayFieldStorage', 'FilterFieldsStorage', '$controller'];
+    UeDateController.$inject = ['$scope', '$element', 'EditEntityStorage', 'moment', 'FilterFieldsStorage', '$controller'];
 
-    function UeDateController($scope, $element, EditEntityStorage, moment, ArrayFieldStorage, FilterFieldsStorage, $controller) {
+    function UeDateController($scope, $element, EditEntityStorage, moment, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
         var vm = this;
         var componentSettings = vm.setting.component.settings;
