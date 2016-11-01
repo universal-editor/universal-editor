@@ -125,6 +125,7 @@
         };
 
         this.getStateConfig = function(stateName, entityName) {
+
             var entityName = entityName || entityType;
             var result = null;
 

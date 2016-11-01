@@ -38,7 +38,10 @@
         vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0))
 
 
-        vm.options = { $parentComponentId: vm.$parentComponentId };
+        vm.options = {
+            $parentComponentId: vm.$parentComponentId,
+            mixedMode: vm.setting.component.settings.mixedMode
+        };
 
         if (!!vm.setting.component.settings.header) {
             vm.filterComponent = vm.setting.component.settings.header.filter;
@@ -76,7 +79,9 @@
         vm.entityType = $scope.entity;
         vm.parent = null;
         vm.paginationData = [];
-
+        vm.isMixMode = !!vm.setting.component.settings.mixedMode;
+        vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
+        vm.subType = vm.setting.component.settings.mixedMode.fieldsType;
         vm.request = {
             childId: vm.parent,
             options: vm.options,

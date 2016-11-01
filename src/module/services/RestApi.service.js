@@ -114,6 +114,15 @@
                 delete params.filter;
             }
 
+            console.log(request.options.mixedMode.entityType);
+
+            if(!!request.options.mixedMode){
+                params = params || {};
+                angular.extend(params,{
+                    mixed: request.options.mixedMode.entityType
+                });
+            }
+
             if (entityObject.dataSource.hasOwnProperty("parentField")) {
                 params = params || {};
 
