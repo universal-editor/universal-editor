@@ -19,7 +19,7 @@ module.run(['$templateCache', function($templateCache) {
     '                <input data-date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-format="DD.MM.YYYY" data-max-view="year" data-min-view="date" data-view="date" class="form-control input-sm"/><span class="input-group-btn">\n' +
     '                    <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
     '            </div>\n' +
-    '            <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly || !vm.emptyRequiredField" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
+    '            <div data-ng-click="vm.addItem()" data-ng-disabled="vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
     '        </div>\n' +
     '        <div data-ng-if="!vm.multiple" ng-class="{\'col-lg-2 col-md-2 col-sm-3 col-xs-3\': !vm.options.filter}">\n' +
     '            <input data-date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-format="DD.MM.YYYY" data-max-view="year" data-min-view="date" data-view="date" class="form-control input-sm"/>\n' +

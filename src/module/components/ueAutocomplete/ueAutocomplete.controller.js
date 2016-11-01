@@ -141,6 +141,8 @@
                     }
                 }
                 vm.fieldValue = obj[vm.field_id];
+            } else {
+                vm.fieldValue.push(obj[vm.field_id]);
             }
             if (obj[vm.field_search]) {
                 vm.selectedValues.push(obj);
@@ -216,14 +218,15 @@
             return false;
         }
 
-        if (!vm.options.filter) {
             vm.listeners.push($scope.$watchCollection("vm.fieldValue", function(newValue) {
                 if (newValue) {
+                    if(vm.fieldValue[vm.field_id]) {
+                        vm.fieldValue = vm.fieldValue[vm.field_id];
+                    }
                     loadValues();
                 }
             }
             ));
-        }
 
         function loadValues() {
             vm.preloadedData = false;
@@ -271,7 +274,7 @@
                         angular.forEach(response.data.items, function(v) {
                             if (Array.isArray(vm.fieldValue) &&
                                 (vm.fieldValue.indexOf(v[vm.field_id]) >= 0 || vm.fieldValue.indexOf(String(v[vm.field_id])) >= 0) &&
-                                vm.multiple
+                                vm.multiple && !alreadyIn(v, vm.selectedValues)
                             ) {
                                 vm.selectedValues.push(v);
                             } else if (vm.fieldValue == v[vm.field_id] && !vm.multiple) {

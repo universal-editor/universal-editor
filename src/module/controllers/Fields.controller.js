@@ -43,7 +43,7 @@
                         obj[self.field_search] = v;
                         self.optionValues.push(obj);
                     });
-                    componentSettings.$loadingPromise = $q.when(self.optionValues);             
+                    componentSettings.$loadingPromise = $q.when(self.optionValues);
                 } else if (remoteValues) {
                     if (remoteValues.fields) {
                         self.field_id = remoteValues.fields.value || self.field_id;
@@ -223,8 +223,9 @@
                                         if (propValue !== null && propValue !== undefined && propValue !== "") {
                                             if (angular.isObject(propValue) && !result) {
                                                 check(propValue);
+                                            } else {
+                                                result = true;
                                             }
-                                            result = true;
                                         }
                                     }
                                 })(f_value);

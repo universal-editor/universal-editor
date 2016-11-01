@@ -9,6 +9,10 @@
   display: inline-block;
   height: 24px;
   line-height: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
   &.opacity-item{
     opacity: 0.2;
   }
