@@ -27,10 +27,13 @@ module.run(['$templateCache', function($templateCache) {
     '        </thead>\n' +
     '        <tbody data-ng-if="vm.listLoaded">\n' +
     '            <tr data-ng-repeat="item in vm.items" data-ng-class="{\'zhs-item\' : (vm.entityType !== item[vm.subType]) &amp;&amp; item[vm.subType] !== undefined}">\n' +
-    '                <td ng-if="vm.isContextMenu" class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="vm.contextLinks.length" class="context-toggle">Toggle buttons</span>\n' +
+    '                <td ng-if="vm.isContextMenu" class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="(vm.contextLinks.length &amp;&amp; (item[vm.subType] == vm.entityType || item[vm.subType] == undefined)) || (vm.mixContextLinks.length &amp;&amp; (vm.mixEntityType &amp;&amp; item[vm.subType] === vm.mixEntityType))" class="context-toggle">Toggle buttons</span>\n' +
     '                    <div data-ng-show="vm.contextId == item[vm.idField]" class="context-menu-wrapper">\n' +
     '                        <div data-ng-repeat="link in vm.contextLinks track by $index" data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)" data-ng-class="{\'component-separator\': link.separator}" class="context-menu-item">\n' +
     '                            <component-wrapper data-setting="link" data-entity-id="{{item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}" data-options="vm.options"></component-wrapper>\n' +
+    '                        </div>\n' +
+    '                        <div data-ng-repeat="link in vm.mixContextLinks track by $index" data-ng-if="vm.mixEntityType &amp;&amp; item[vm.subType] === vm.mixEntityType" data-ng-class="{\'component-separator\': link.separator}" class="context-menu-item">\n' +
+    '                            <component-wrapper data-setting="link" data-entity-id="{{item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}" data-options="vm.mixOption"></component-wrapper>\n' +
     '                        </div>\n' +
     '                    </div>\n' +
     '                </td>\n' +

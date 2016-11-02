@@ -137,10 +137,8 @@
             });
             if (changIndex) {
                 item.sref = item.name + '_index';
-            } else {
-                item.sref = item.name + '_' + entity.states[0].name;
+                menu.push(item);
             }
-            menu.push(item);
         });
 
         /* END GENERATION MENU*/

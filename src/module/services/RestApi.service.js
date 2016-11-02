@@ -114,8 +114,6 @@
                 delete params.filter;
             }
 
-            console.log(request.options.mixedMode.entityType);
-
             if(!!request.options.mixedMode){
                 params = params || {};
                 angular.extend(params,{
@@ -390,13 +388,18 @@
             if (request.options.isLoading) {
                 return;
             }
+            var url = entityObject.dataSource.url;
+            var type = entityType;
 
+            if (request.options.isMix) {
+                url = request.options.mixedMode.dataSource.url;
+            }
             request.options.isLoading = true;
 
-            var _url = entityObject.dataSource.url + '/' + request.entityId;
+            var _url = url + '/' + request.entityId;
 
             if (request.setting.buttonClass === 'edit') {
-                _url = entityObject.dataSource.url.replace(':pk', request.entityId);
+                _url = url.replace(':pk', request.entityId);
             }
 
             if (request.type === 'mix') {
@@ -405,6 +408,7 @@
                 })[0];
                 _url = config.dataSource.url + '/' + request.entityId;
             }
+
 
             return $http({
                 method: request.method || 'DELETE',
@@ -423,7 +427,8 @@
                     params.type = $state.params.back;
                 }
                 if (!ModalService.isModalOpen()) {
-                    $state.go(entityType + '_index', params);
+                    console.log($location.search());
+                    $state.go(entityType + '_index', params,  { reload: true });
                 } else {
                     ModalService.close();
                 }

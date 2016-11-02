@@ -33,6 +33,7 @@
         vm.sortingDirection = true;
         vm.pageItemsArray = [];
         vm.contextLinks = [];
+        vm.mixContextLinks = [];
         vm.listHeaderBar = [];
         vm.$parentComponentId = vm.setting.component.$id;
         vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0))
@@ -42,7 +43,8 @@
             $parentComponentId: vm.$parentComponentId,
             mixedMode: vm.setting.component.settings.mixedMode
         };
-
+        vm.mixOption = angular.merge({}, vm.options);
+        vm.mixOption.isMix = true;
         if (!!vm.setting.component.settings.header) {
             vm.filterComponent = vm.setting.component.settings.header.filter;
         } else {
@@ -81,6 +83,7 @@
         vm.paginationData = [];
         vm.isMixMode = !!vm.setting.component.settings.mixedMode;
         vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
+        vm.mixEntityType = vm.setting.component.settings.mixedMode.entityType;
         vm.subType = vm.setting.component.settings.mixedMode.fieldsType;
         vm.request = {
             childId: vm.parent,
@@ -120,6 +123,14 @@
             newValue.parentField = parentField;
             newValue.headComponent = vm.setting.headComponent;
             vm.contextLinks.push(newValue);
+        });
+
+        angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
+            var newValue = angular.merge({}, value);
+            newValue.url = vm.setting.component.settings.mixedMode.dataSource.url;
+            newValue.parentField = parentField;
+            newValue.headComponent = vm.setting.headComponent;
+            vm.mixContextLinks.push(newValue);
         });
 
         if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.controls) {

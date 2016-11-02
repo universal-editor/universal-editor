@@ -13,6 +13,7 @@
         $scope.setting.entityId = vm.entityId;
         $scope.setting.buttonClass = vm.buttonClass;
         $scope.options = vm.options || {};
+
         //$scope.filter = vm.filter || false;
         //$scope.filterParameters = vm.filterParameters;
         //$scope.setting.scopeIdParent = vm.scopeIdParent;
