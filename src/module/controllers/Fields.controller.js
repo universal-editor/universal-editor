@@ -242,6 +242,7 @@
                     }
 
                     if (data.editorEntityType === "new") {
+                        var obj = {};
                         self.fieldValue = transformToValue(componentSettings.defaultValue) || (self.multiple ? [] : null);
 
                         if (self.field_id) {
