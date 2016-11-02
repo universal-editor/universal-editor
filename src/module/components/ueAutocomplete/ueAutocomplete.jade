@@ -8,7 +8,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-inner-wrapper': v
                     .autocomplete-item(data-ng-repeat="acItem in vm.selectedValues", data-ng-show="acItem[vm.field_search]",data-ng-if="vm.multiple") {{acItem[vm.field_search]}}
                         span.remove-from-selected(data-ng-click="vm.removeFromSelected($event, acItem)", data-ng-if="!vm.readonly") ×
                     input.autocomplete-field-search(
-                        ng-if="vm.preloadedData"
+                        ng-show="vm.preloadedData"
                         type="text",
                         ng-disabled="vm.readonly",
                         data-ng-model="vm.inputValue",
