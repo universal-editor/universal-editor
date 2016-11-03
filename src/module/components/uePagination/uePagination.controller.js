@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UePaginationController', UePaginationController);
 
-    UePaginationController.$inject = ['$scope', 'RestApiService', '$httpParamSerializer', '$sce'];
+    UePaginationController.$inject = ['$scope', 'RestApiService', '$httpParamSerializer', '$sce', '$location'];
 
-    function UePaginationController($scope, RestApiService, $httpParamSerializer, $sce) {
+    function UePaginationController($scope, RestApiService, $httpParamSerializer, $sce, $location) {
         var vm = this;
         vm.metaKey = true;
         vm.parentComponentId = vm.options.$parentComponentId;
@@ -67,6 +67,7 @@
             }
 
             if (!!data[metaKey]) {
+                console.log('ads');
                 vm.metaData = data[metaKey];
                 vm.metaData.fromItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage) + 1;
                 vm.metaData.toItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage) + data[itemsKey].length;
@@ -149,6 +150,14 @@
         vm.changePage = function(event, pageItem) {
             event.preventDefault();
             vm.request.params.page = pageItem.page;
+            var parentEntity = $location.search().parent;
+            if (parentEntity) {
+                parentEntity = JSON.parse(parentEntity);
+                vm.parent = parentEntity[vm.parentComponentId] || null;
+                vm.request.childId = vm.parent;
+            } else {
+                vm.request.childId = null;
+            }
             RestApiService.getItemsList(vm.request);
         };
 

@@ -97,15 +97,15 @@
 
             var params = request.params || {};
             _method = request.method || _method;
-            if (request.sort !== undefined) {
-                params.sort = request.sort;
+            if (!!request.options && request.options.sort !== undefined) {
+                params.sort = request.options.sort;
             }
             //  request.options.queryTempParams = params;
 
             var id = request.options.$parentComponentId;
             var filters = FilterFieldsStorage.getFilterQueryObject(id);
             if (!!request.childId) {
-                filters = {};
+                filters = filters || {};
                 filters[request.parentField] = request.childId;
             }
             if (filters) {
@@ -151,6 +151,8 @@
             if (expandFields.length > 0) {
                 params.expand = expandFields.join(',');
             }
+
+            params['per-page'] = 8;
 
             $http({
                 method: _method,
@@ -409,7 +411,6 @@
                 _url = config.dataSource.url + '/' + request.entityId;
             }
 
-
             return $http({
                 method: request.method || 'DELETE',
                 url: request.url || _url,
@@ -426,9 +427,12 @@
                 if ($state.params.back) {
                     params.type = $state.params.back;
                 }
+
                 if (!ModalService.isModalOpen()) {
-                    console.log($location.search());
-                    $state.go(entityType + '_index', params,  { reload: true });
+                    $state.go(entityType + '_index', params).then(function() {
+                        $location.search(params);
+                        $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                    });
                 } else {
                     ModalService.close();
                 }

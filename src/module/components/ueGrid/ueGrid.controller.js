@@ -41,7 +41,9 @@
 
         vm.options = {
             $parentComponentId: vm.$parentComponentId,
-            mixedMode: vm.setting.component.settings.mixedMode
+            mixedMode: vm.setting.component.settings.mixedMode,
+            sort: vm.setting.component.settings.dataSource.sortBy,
+            back: $scope.entity
         };
         vm.mixOption = angular.merge({}, vm.options);
         vm.mixOption.isMix = true;
@@ -178,12 +180,9 @@
                 vm.sortField = field;
             }
 
-            var sortingParam = {
-                sort: vm.sortingDirection ? field : "-" + field
-            };
+            vm.options.sort = vm.sortingDirection ? field : "-" + field;
 
             RestApiService.getItemsList({
-                sort: vm.sortingDirection ? field : "-" + field,
                 url: url,
                 options: vm.options,
                 parentField: parentField,
@@ -221,6 +220,12 @@
 
         $scope.$on('editor:read_entity', function(event, parentComponentId) {
             if (parentComponentId === vm.options.$parentComponentId) {
+                var parentEntity = $location.search().parent;
+                if (parentEntity) {
+                    parentEntity = JSON.parse(parentEntity);
+                    vm.parent = parentEntity[vm.$parentComponentId] || null;
+                }
+                vm.request.childId = vm.parent;
                 RestApiService.getItemsList(vm.request);
             }
         });

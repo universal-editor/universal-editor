@@ -154,21 +154,25 @@
 
             var params = {};
             var isReload = true;
-            var stateIndex = EditEntityStorage.getStateConfig('index');
-            if ($state.params.back) {
-                params.type = $state.params.back;
+
+            if ($location.search().back) {
+                params.type = $location.search().back;
             }
-            if ($state.params.parent) {
-                params.parent = $state.params.parent;
+            if ($location.search().parent) {
+                params.parent = $location.search().parent;
                 isReload = false;
             }
+            var stateIndex = EditEntityStorage.getStateConfig('index', params.type);
             var request = {
                 url: vm.setting.component.settings.dataSource.url,
                 options: vm.componentState
             };
-            RestApiService.getItemsList(request);
+            //RestApiService.getItemsList(request);
             var searchString = $location.search();
             $state.go(stateIndex.name, params, { reload: isReload }).then(function() {
+                if (searchString.back) {
+                    delete searchString.back;
+                }
                 $location.search(searchString);
             });
         };

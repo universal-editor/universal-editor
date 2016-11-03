@@ -28,13 +28,18 @@
             var params = {};
             params[pkKey] = vm.entityId;
 
+            var searchString = $location.search();
             if (toStateConfig) {
                 if (toStateConfig.component.name === 'ue-modal') {
                     ModalService.options = vm.options;
                     stateOptions.reload = false;
+                } else {
+                    if (!!vm.options && !!vm.options.back) {
+                        searchString.back = vm.options.back;
+                    }
                 }
             }
-            var searchString = $location.search();
+
             $state.go(toStateConfig.name, params, stateOptions).then(function() {
                 $location.search(searchString);
                 $timeout(function() {
