@@ -152,8 +152,6 @@
                 params.expand = expandFields.join(',');
             }
 
-            params['per-page'] = 8;
-
             $http({
                 method: _method,
                 url: _url,

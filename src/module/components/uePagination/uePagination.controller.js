@@ -67,7 +67,6 @@
             }
 
             if (!!data[metaKey]) {
-                console.log('ads');
                 vm.metaData = data[metaKey];
                 vm.metaData.fromItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage) + 1;
                 vm.metaData.toItem = ((data[metaKey].currentPage - 1) * data[metaKey].perPage) + data[itemsKey].length;
@@ -92,10 +91,10 @@
                 if (data[metaKey].currentPage <= parseInt(pageItems / 2)) {
                     startIndex = 1;
                 } else if (data[metaKey].currentPage > (data[metaKey].pageCount - pageItems + 1)) {
-                    startIndex = data[metaKey].pageCount - pageItems + 1;
+                    startIndex = Math.max(data[metaKey].pageCount - pageItems + 1,1);
                 }
                 else {
-                    startIndex = data[metaKey].currentPage - parseInt(pageItems / 2);
+                    startIndex = Math.max(data[metaKey].currentPage - parseInt(pageItems / 2), 1);
                 }
 
                 endIndex = Math.min(startIndex + pageItems - 1, data[metaKey].pageCount);
