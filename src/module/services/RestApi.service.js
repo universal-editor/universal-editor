@@ -152,6 +152,8 @@
                 params.expand = expandFields.join(',');
             }
 
+            params['per-page'] = 8;
+
             $http({
                 method: _method,
                 url: _url,
@@ -203,6 +205,7 @@
             var _method = 'POST';
             var _url = entityObject.dataSource.url;
             var idField = 'id';
+            var type = entityType;
 
             if (entityObject.dataSource.hasOwnProperty('fields')) {
                 idField = entityObject.dataSource.fields.primaryKey || idField;
@@ -220,12 +223,20 @@
                 request.options.isLoading = false;
                 $rootScope.$broadcast("uploader:remove_session");
                 $rootScope.$broadcast("editor:entity_success");
+
                 var params = {};
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
+                if ($location.search().back) {
+                    params.type = $location.search().back;
+                    type = $location.search().back;
+                }
                 if (!ModalService.isModalOpen()) {
-                    $state.go(entityType + '_index', params, { reload: true });
+                    $state.go(type + '_index', params).then(function() {
+                        $location.search(params);
+                        $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                    });
                 } else {
                     ModalService.close();
                 }
@@ -255,6 +266,7 @@
             var params = {};
             var _method = 'PUT';
             var _url = entityObject.dataSource.url + '/' + self.editedEntityId;
+            var type = entityType;
 
             $http({
                 method: request.method || _method,
@@ -268,11 +280,15 @@
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
-                if ($state.params.back) {
-                    params.type = $state.params.back;
+                if ($location.search().back) {
+                    params.type = $location.search().back;
+                    type = $location.search().back;
                 }
                 if (!ModalService.isModalOpen()) {
-                    $state.go(entityType + '_index', params);
+                    $state.go(type + '_index', params).then(function() {
+                        $location.search(params);
+                        $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                    });
                 } else {
                     ModalService.close();
                 }
@@ -422,12 +438,13 @@
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
                 }
-                if ($state.params.back) {
-                    params.type = $state.params.back;
+                if ($location.search().back) {
+                    params.type = $location.search().back;
+                    type = $location.search().back;
                 }
 
                 if (!ModalService.isModalOpen()) {
-                    $state.go(entityType + '_index', params).then(function() {
+                    $state.go(type + '_index', params).then(function() {
                         $location.search(params);
                         $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
                     });

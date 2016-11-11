@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonServiceController',UeButtonServiceController);
 
-    UeButtonServiceController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService', 'ModalService', '$state', '$controller'];
+    UeButtonServiceController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService', 'ModalService', '$state', '$controller', '$location'];
 
-    function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService, ModalService, $state, $controller){
+    function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService, ModalService, $state, $controller, $location){
         var vm = this;
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
         var request = {};
@@ -21,36 +21,43 @@
             vm.disabled = pk === 'new' || !pk;
         }
         request.options = vm.options;
-
         $element.bind("click", function () {
             if (vm.options.isLoading || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;
             }
+            var entityId = vm.entityId;
+            var type = vm.type;
+            $scope.$watch(function(){
+                return $state.params;
+            }, function(newVal){
+                entityId = vm.entityId;
+                type = vm.type;
+            });
             switch (vm.action) {
                 case 'save':
                     if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate("create", request);
                         ModalService.close();
                     } else if (vm.type == 'update') {
-                        RestApiService.editedEntityId = vm.entityId;
+                        RestApiService.editedEntityId = entityId;
                         EditEntityStorage.editEntityUpdate("update", request);
                     }
                     break;
                 case 'delete':
-                    if(confirm("Удалить запись «" + vm.entityId + "»?")){
-                        request.entityId = vm.entityId;
+                    if(confirm("Удалить запись «" + entityId + "»?")){
+                        request.entityId = entityId;
                         request.entityType = $scope.entityType;
                         request.setting = vm.setting;
                         RestApiService.deleteItemById(request);
                     }
                     break;
                 case 'presave':
-                    RestApiService.editedEntityId = vm.entityId;
+                    RestApiService.editedEntityId = entityId;
                     EditEntityStorage.editEntityPresave(request);
                     break;
                 case 'open':
                     var newRequest = {};
-                    newRequest.id = vm.entityId;
+                    newRequest.id = entityId;
                     newRequest.options = vm.options;
                     newRequest.url = vm.setting.url;
                     newRequest.parentField = vm.setting.parentField;

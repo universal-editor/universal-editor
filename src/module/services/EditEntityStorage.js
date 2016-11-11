@@ -108,7 +108,8 @@
 
         this.editEntityPresave = function(request) {
             var entityObject = {};
-            angular.forEach(fieldControllers, function(fCtrl) {
+            var controllers = storage[request.options.$parentComponentId] || [];
+            angular.forEach(controllers, function(fCtrl) {
                 if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
                     angular.merge(entityObject, fCtrl.getFieldValue());
                 }

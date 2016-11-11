@@ -105,8 +105,8 @@
             });
         }
 
-        if(vm.editFooterBar.length == 0) {
-            angular.forEach(defaultEditFooterBar, function(control) {
+        if (vm.editFooterBar.length == 0) {
+            angular.forEach(defaultEditFooterBar, function (control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {
                     newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
@@ -115,13 +115,24 @@
                 vm.editFooterBar.push(newControl);
             });
         }
+        updateButton();
 
-        angular.forEach(vm.editFooterBar, function(button, index) {
-            if (pk === 'new') {
-                button.type = 'create';
-            } else {
-                button.type = 'update';
-            }
+        function updateButton() {
+            pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+            pk = $state.params[pkKey];
+            angular.forEach(vm.editFooterBar, function (button, index) {
+                if (pk === 'new') {
+                    button.type = 'create';
+                } else {
+                    button.type = 'update';
+                }
+            });
+        }
+
+        $scope.$watch(function(){
+            return $state.params;
+        }, function(newVal){
+            updateButton();
         });
         vm.components = [];
 
