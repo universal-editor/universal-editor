@@ -21,7 +21,6 @@
             mixEntityObject;
 
         vm.assetsPath = '/assets/universal-editor';
-
         vm.configData = configData;
         vm.correctEntityType = true;
         vm.entityLoaded = false;
@@ -252,6 +251,5 @@
         if (pk === 'new') {
             vm.entityLoaded = true;
         }
-
     }
 })();

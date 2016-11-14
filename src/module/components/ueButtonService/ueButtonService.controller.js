@@ -20,44 +20,37 @@
         if(vm.action === 'delete') {
             vm.disabled = pk === 'new' || !pk;
         }
+
         request.options = vm.options;
         $element.bind("click", function () {
             if (vm.options.isLoading || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;
             }
-            var entityId = vm.entityId;
-            var type = vm.type;
-            $scope.$watch(function(){
-                return $state.params;
-            }, function(newVal){
-                entityId = vm.entityId;
-                type = vm.type;
-            });
             switch (vm.action) {
                 case 'save':
                     if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate("create", request);
                         ModalService.close();
                     } else if (vm.type == 'update') {
-                        RestApiService.editedEntityId = entityId;
+                        RestApiService.editedEntityId = vm.entityId;
                         EditEntityStorage.editEntityUpdate("update", request);
                     }
                     break;
                 case 'delete':
-                    if(confirm("Удалить запись «" + entityId + "»?")){
-                        request.entityId = entityId;
+                    if(confirm("Удалить запись «" + vm.entityId + "»?")){
+                        request.entityId = vm.entityId;
                         request.entityType = $scope.entityType;
                         request.setting = vm.setting;
                         RestApiService.deleteItemById(request);
                     }
                     break;
                 case 'presave':
-                    RestApiService.editedEntityId = entityId;
+                    RestApiService.editedEntityId = vm.entityId;
                     EditEntityStorage.editEntityPresave(request);
                     break;
                 case 'open':
                     var newRequest = {};
-                    newRequest.id = entityId;
+                    newRequest.id = vm.entityId;
                     newRequest.options = vm.options;
                     newRequest.url = vm.setting.url;
                     newRequest.parentField = vm.setting.parentField;
@@ -67,12 +60,14 @@
             }
         });
 
-       $scope.$on("editor:presave_entity_created", function(event, data) {
-         if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-           if(vm.action === 'delete') {
-               vm.disabled = false;
-           }
-         }
-       });
+        $scope.$on("editor:presave_entity_created", function(event, data) {
+            if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+                vm.entityId = data[vm.setting.component.settings.dataSource.primaryKey];
+                vm.type = 'update';
+                if(vm.action === 'delete') {
+                    vm.disabled = false;
+                }
+            }
+        });
     }
 })();
