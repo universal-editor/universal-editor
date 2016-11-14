@@ -37,6 +37,7 @@
         }
 
         $element.find("input").bind("keydown", function(event) {
+            var possibleValues;
             switch (event.which) {
                 case 13:
                     event.preventDefault();
@@ -218,15 +219,17 @@
             return false;
         }
 
-            vm.listeners.push($scope.$watchCollection("vm.fieldValue", function(newValue) {
-                if (newValue) {
-                    if(vm.fieldValue[vm.field_id]) {
-                        vm.fieldValue = vm.fieldValue[vm.field_id];
-                    }
+        vm.listeners.push($scope.$watchCollection("vm.fieldValue", function(newValue) {
+            if (newValue) {
+                if (vm.fieldValue[vm.field_id]) {
+                    vm.fieldValue = vm.fieldValue[vm.field_id];
+                }
+                if (!vm.fieldValue[vm.field_search] && !vm.placeholder) {
                     loadValues();
                 }
             }
-            ));
+        }
+        ));
 
         function loadValues() {
             vm.preloadedData = false;
@@ -256,7 +259,7 @@
             } else if (componentSettings.hasOwnProperty('valuesRemote')) {
 
                 if (!vm.fieldValue) {
-                     vm.preloadedData = true;
+                    vm.preloadedData = true;
                     return;
                 }
 
@@ -281,15 +284,15 @@
                                 vm.selectedValues.push(v);
                                 vm.placeholder = v[vm.field_search];
                             }
-                            
+
                         });
-                         vm.preloadedData = true;
+                        vm.preloadedData = true;
                     }, function(reject) {
-                         vm.preloadedData = true;
+                        vm.preloadedData = true;
                         console.error('EditorFieldAutocompleteController: Не удалось получить значения для поля \"' + vm.fieldName + '\" с удаленного ресурса');
                     });
             } else {
-                 vm.preloadedData = true;
+                vm.preloadedData = true;
                 console.error('EditorFieldAutocompleteController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
             }
         }
