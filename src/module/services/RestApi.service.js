@@ -267,12 +267,18 @@
             var _method = 'PUT';
             var _url = entityObject.dataSource.url + '/' + self.editedEntityId;
             var type = entityType;
+            var idField = 'id';
 
             $http({
                 method: request.method || _method,
                 url: request.url || _url,
                 data: request.data || {}
             }).then(function(response) {
+                var data = {
+                    id: response.data[idField],
+                    $parentComponentId: request.options.$parentComponentId
+                };
+                $rootScope.$broadcast("editor:presave_entity_updated", data);
                 request.options.isLoading = false;
                 $rootScope.$broadcast('uploader:remove_session');
                 $rootScope.$broadcast('editor:entity_success');
@@ -313,7 +319,7 @@
             var _url;
             var _method = 'POST';
             var idField = 'id';
-
+            var isCreate = true;
             if (request.options.isLoading) {
                 return;
             }
@@ -323,6 +329,7 @@
             if (self.editedEntityId !== '') {
                 _url = entityObject.dataSource.url + '/' + self.editedEntityId;
                 _method = 'PUT';
+                isCreate = false;
             } else {
                 _url = entityObject.dataSource.url;
             }
@@ -348,7 +355,11 @@
                     id: newId,
                     $parentComponentId: request.options.$parentComponentId
                 };
-                $rootScope.$broadcast('editor:presave_entity_created', data);
+                if (isCreate) {
+                    $rootScope.$broadcast('editor:presave_entity_created', data);
+                } else {
+                    $rootScope.$broadcast("editor:presave_entity_updated", data);
+                }
             }, function(reject) {
                 if ((reject.status === 422 || reject.status === 400) && reject.data) {
                     var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;

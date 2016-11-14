@@ -72,25 +72,6 @@
             vm.errors.push(data);
         });
 
-        $scope.$on('editor:presave_entity_created', function (event,data) {
-            $translate('CHANGE_RECORDS.CREATE').then(function (translation) {
-                toastr.success(translation);
-            });
-            vm.entityId = data;
-            vm.editorEntityType = "exist";
-        });
-
-        $scope.$on('editor:presave_entity_updated', function (event,data) {
-            $translate('CHANGE_RECORDS.UPDATE').then(function (translation) {
-                toastr.success(translation);
-            });
-        });
-
-        $scope.$on('editor:entity_success_deleted', function (event,data) {
-            $translate('CHANGE_RECORDS.DELETE').then(function (translation) {
-                toastr.success(translation);
-            });
-        });
 
         $scope.$on('editor:field_error', function (event,data) {
             vm.errors.push(data);
