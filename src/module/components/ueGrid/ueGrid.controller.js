@@ -84,9 +84,19 @@
         vm.parent = null;
         vm.paginationData = [];
         vm.isMixMode = !!vm.setting.component.settings.mixedMode;
-        vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
-        vm.mixEntityType = vm.setting.component.settings.mixedMode.entityType;
-        vm.subType = vm.setting.component.settings.mixedMode.fieldsType;
+        if (vm.isMixMode) {
+            vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
+            vm.mixEntityType = vm.setting.component.settings.mixedMode.entityType;
+            vm.subType = vm.setting.component.settings.mixedMode.fieldsType;
+
+            angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
+                var newValue = angular.merge({}, value);
+                newValue.url = vm.setting.component.settings.mixedMode.dataSource.url;
+                newValue.parentField = parentField;
+                newValue.headComponent = vm.setting.headComponent;
+                vm.mixContextLinks.push(newValue);
+            });
+        }
         vm.request = {
             childId: vm.parent,
             options: vm.options,
@@ -125,14 +135,6 @@
             newValue.parentField = parentField;
             newValue.headComponent = vm.setting.headComponent;
             vm.contextLinks.push(newValue);
-        });
-
-        angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
-            var newValue = angular.merge({}, value);
-            newValue.url = vm.setting.component.settings.mixedMode.dataSource.url;
-            newValue.parentField = parentField;
-            newValue.headComponent = vm.setting.headComponent;
-            vm.mixContextLinks.push(newValue);
         });
 
         if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.controls) {
