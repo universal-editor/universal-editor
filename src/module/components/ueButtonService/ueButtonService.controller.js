@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonServiceController',UeButtonServiceController);
 
-    UeButtonServiceController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService', 'ModalService', '$state', '$controller'];
+    UeButtonServiceController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService', 'ModalService', '$state', '$controller', '$location'];
 
-    function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService, ModalService, $state, $controller){
+    function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService, ModalService, $state, $controller, $location){
         var vm = this;
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
         var request = {};
@@ -20,8 +20,8 @@
         if(vm.action === 'delete') {
             vm.disabled = pk === 'new' || !pk;
         }
-        request.options = vm.options;
 
+        request.options = vm.options;
         $element.bind("click", function () {
             if (vm.options.isLoading || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;
@@ -60,12 +60,14 @@
             }
         });
 
-       $scope.$on("editor:presave_entity_created", function(event, data) {
-         if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-           if(vm.action === 'delete') {
-               vm.disabled = false;
-           }
-         }
-       });
+        $scope.$on("editor:presave_entity_created", function(event, data) {
+            if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+                vm.entityId = data[vm.setting.component.settings.dataSource.primaryKey];
+                vm.type = 'update';
+                if(vm.action === 'delete') {
+                    vm.disabled = false;
+                }
+            }
+        });
     }
 })();

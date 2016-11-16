@@ -21,7 +21,6 @@
             mixEntityObject;
 
         vm.assetsPath = '/assets/universal-editor';
-
         vm.configData = configData;
         vm.correctEntityType = true;
         vm.entityLoaded = false;
@@ -105,8 +104,8 @@
             });
         }
 
-        if(vm.editFooterBar.length == 0) {
-            angular.forEach(defaultEditFooterBar, function(control) {
+        if (vm.editFooterBar.length == 0) {
+            angular.forEach(defaultEditFooterBar, function (control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {
                     newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
@@ -115,13 +114,24 @@
                 vm.editFooterBar.push(newControl);
             });
         }
+        updateButton();
 
-        angular.forEach(vm.editFooterBar, function(button, index) {
-            if (pk === 'new') {
-                button.type = 'create';
-            } else {
-                button.type = 'update';
-            }
+        function updateButton() {
+            pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+            pk = $state.params[pkKey];
+            angular.forEach(vm.editFooterBar, function (button, index) {
+                if (pk === 'new') {
+                    button.type = 'create';
+                } else {
+                    button.type = 'update';
+                }
+            });
+        }
+
+        $scope.$watch(function(){
+            return $state.params;
+        }, function(newVal){
+            updateButton();
         });
         vm.components = [];
 
@@ -154,21 +164,25 @@
 
             var params = {};
             var isReload = true;
-            var stateIndex = EditEntityStorage.getStateConfig('index');
-            if ($state.params.back) {
-                params.type = $state.params.back;
+
+            if ($location.search().back) {
+                params.type = $location.search().back;
             }
-            if ($state.params.parent) {
-                params.parent = $state.params.parent;
+            if ($location.search().parent) {
+                params.parent = $location.search().parent;
                 isReload = false;
             }
+            var stateIndex = EditEntityStorage.getStateConfig('index', params.type);
             var request = {
                 url: vm.setting.component.settings.dataSource.url,
                 options: vm.componentState
             };
-            RestApiService.getItemsList(request);
+            //RestApiService.getItemsList(request);
             var searchString = $location.search();
             $state.go(stateIndex.name, params, { reload: isReload }).then(function() {
+                if (searchString.back) {
+                    delete searchString.back;
+                }
                 $location.search(searchString);
             });
         };
@@ -237,6 +251,5 @@
         if (pk === 'new') {
             vm.entityLoaded = true;
         }
-
     }
 })();

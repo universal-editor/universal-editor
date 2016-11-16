@@ -255,6 +255,9 @@
                                 obj[self.field_id] = componentSettings.defaultValue;
                                 self.fieldValue = obj;
                             }
+                            if(data.hasOwnProperty(self.fieldName)) {
+                                self.fieldValue = data[self.fieldName];
+                            }
                         }
                         if (angular.isFunction(callback)) {
                             callback();

@@ -33,13 +33,20 @@
         vm.sortingDirection = true;
         vm.pageItemsArray = [];
         vm.contextLinks = [];
+        vm.mixContextLinks = [];
         vm.listHeaderBar = [];
         vm.$parentComponentId = vm.setting.component.$id;
         vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0))
 
 
-        vm.options = { $parentComponentId: vm.$parentComponentId };
-
+        vm.options = {
+            $parentComponentId: vm.$parentComponentId,
+            mixedMode: vm.setting.component.settings.mixedMode,
+            sort: vm.setting.component.settings.dataSource.sortBy,
+            back: $scope.entity
+        };
+        vm.mixOption = angular.merge({}, vm.options);
+        vm.mixOption.isMix = true;
         if (!!vm.setting.component.settings.header) {
             vm.filterComponent = vm.setting.component.settings.header.filter;
         } else {
@@ -76,7 +83,20 @@
         vm.entityType = $scope.entity;
         vm.parent = null;
         vm.paginationData = [];
+        vm.isMixMode = !!vm.setting.component.settings.mixedMode;
+        if (vm.isMixMode) {
+            vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
+            vm.mixEntityType = vm.setting.component.settings.mixedMode.entityType;
+            vm.subType = vm.setting.component.settings.mixedMode.fieldsType;
 
+            angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
+                var newValue = angular.merge({}, value);
+                newValue.url = vm.setting.component.settings.mixedMode.dataSource.url;
+                newValue.parentField = parentField;
+                newValue.headComponent = vm.setting.headComponent;
+                vm.mixContextLinks.push(newValue);
+            });
+        }
         vm.request = {
             childId: vm.parent,
             options: vm.options,
@@ -162,12 +182,9 @@
                 vm.sortField = field;
             }
 
-            var sortingParam = {
-                sort: vm.sortingDirection ? field : "-" + field
-            };
+            vm.options.sort = vm.sortingDirection ? field : "-" + field;
 
             RestApiService.getItemsList({
-                sort: vm.sortingDirection ? field : "-" + field,
                 url: url,
                 options: vm.options,
                 parentField: parentField,
@@ -205,6 +222,12 @@
 
         $scope.$on('editor:read_entity', function(event, parentComponentId) {
             if (parentComponentId === vm.options.$parentComponentId) {
+                var parentEntity = $location.search().parent;
+                if (parentEntity) {
+                    parentEntity = JSON.parse(parentEntity);
+                    vm.parent = parentEntity[vm.$parentComponentId] || null;
+                }
+                vm.request.childId = vm.parent;
                 RestApiService.getItemsList(vm.request);
             }
         });

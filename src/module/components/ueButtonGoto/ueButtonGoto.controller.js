@@ -11,6 +11,7 @@
         var vm = this;
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
         var state = vm.setting.component.settings.state;
+        var type = vm.setting.component.settings.type;
         vm.entityId = vm.entityId || 'new';
 
         $element.bind("click", function() {
@@ -22,24 +23,30 @@
                 return;
             }
 
-            var toStateConfig = EditEntityStorage.getStateConfig(state);
+            var toStateConfig = EditEntityStorage.getStateConfig(state, type);
             var pkKey = 'pk' + EditEntityStorage.getLevelChild(toStateConfig.name);
             var params = {};
             params[pkKey] = vm.entityId;
 
+            var searchString = $location.search();
             if (toStateConfig) {
                 if (toStateConfig.component.name === 'ue-modal') {
                     ModalService.options = vm.options;
                     stateOptions.reload = false;
+                } else {
+                    if (!!vm.options && !!vm.options.back) {
+                        searchString.back = vm.options.back;
+                    }
                 }
             }
-            var searchString = $location.search();
+
             $state.go(toStateConfig.name, params, stateOptions).then(function() {
                 $location.search(searchString);
                 $timeout(function() {
                     var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
                     if (pk === 'new') {
-                        EditEntityStorage.newSourceEntity();
+                        EditEntityStorage.newSourceEntity(vm.options.$parentComponentId, vm.setting.component.settings.dataSource.parentField);
+                        //EditEntityStorage.newSourceEntity();
                     }
                 }, 0);
             });

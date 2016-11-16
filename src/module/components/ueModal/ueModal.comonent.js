@@ -32,7 +32,7 @@
                     modalDialog.height(vm.size.height);
                 }
             }
-            
+
             vm.header = vm.resolve.settings.header;
 
             vm.body = vm.resolve.settings.body;
@@ -46,7 +46,7 @@
                 angular.forEach(vm.resolve.settings.footer.controls, function(control) {
                   vm.footer.push(control);
                 });
-            }                        
+            }
 
             vm.$onInit = function () {
               vm.resolve.settings.isModal = true;

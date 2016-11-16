@@ -35,8 +35,18 @@
             return false;
         };
 
-        this.newSourceEntity = function(id) {
-            $rootScope.$broadcast("editor:entity_loaded", { editorEntityType: "new", $parentComponentId: id });
+        this.newSourceEntity = function(id, parentField) {
+            var parentEntity = $location.search().parent;
+            var parent;
+            if (parentEntity) {
+                parentEntity = JSON.parse(parentEntity);
+                parent = parentEntity[id] || null;
+            }
+            var data = { editorEntityType: "new", $parentComponentId: (!!parentField ? undefined : id) };
+            if (!!parent && !!parentField) {
+                data[parentField] = parent;
+            }
+            $rootScope.$broadcast("editor:entity_loaded", data);
         };
 
         this.setSourceEntity = function(data) {
@@ -108,7 +118,8 @@
 
         this.editEntityPresave = function(request) {
             var entityObject = {};
-            angular.forEach(fieldControllers, function(fCtrl) {
+            var controllers = storage[request.options.$parentComponentId] || [];
+            angular.forEach(controllers, function(fCtrl) {
                 if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
                     angular.merge(entityObject, fCtrl.getFieldValue());
                 }
@@ -125,6 +136,7 @@
         };
 
         this.getStateConfig = function(stateName, entityName) {
+
             var entityName = entityName || entityType;
             var result = null;
 

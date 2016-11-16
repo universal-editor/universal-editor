@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UePaginationController', UePaginationController);
 
-    UePaginationController.$inject = ['$scope', 'RestApiService', '$httpParamSerializer', '$sce'];
+    UePaginationController.$inject = ['$scope', 'RestApiService', '$httpParamSerializer', '$sce', '$location'];
 
-    function UePaginationController($scope, RestApiService, $httpParamSerializer, $sce) {
+    function UePaginationController($scope, RestApiService, $httpParamSerializer, $sce, $location) {
         var vm = this;
         vm.metaKey = true;
         vm.parentComponentId = vm.options.$parentComponentId;
@@ -91,10 +91,10 @@
                 if (data[metaKey].currentPage <= parseInt(pageItems / 2)) {
                     startIndex = 1;
                 } else if (data[metaKey].currentPage > (data[metaKey].pageCount - pageItems + 1)) {
-                    startIndex = data[metaKey].pageCount - pageItems + 1;
+                    startIndex = Math.max(data[metaKey].pageCount - pageItems + 1,1);
                 }
                 else {
-                    startIndex = data[metaKey].currentPage - parseInt(pageItems / 2);
+                    startIndex = Math.max(data[metaKey].currentPage - parseInt(pageItems / 2), 1);
                 }
 
                 endIndex = Math.min(startIndex + pageItems - 1, data[metaKey].pageCount);
@@ -149,6 +149,14 @@
         vm.changePage = function(event, pageItem) {
             event.preventDefault();
             vm.request.params.page = pageItem.page;
+            var parentEntity = $location.search().parent;
+            if (parentEntity) {
+                parentEntity = JSON.parse(parentEntity);
+                vm.parent = parentEntity[vm.parentComponentId] || null;
+                vm.request.childId = vm.parent;
+            } else {
+                vm.request.childId = null;
+            }
             RestApiService.getItemsList(vm.request);
         };
 
