@@ -45,7 +45,8 @@
                 $timeout(function() {
                     var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
                     if (pk === 'new') {
-                        EditEntityStorage.newSourceEntity();
+                        EditEntityStorage.newSourceEntity(vm.options.$parentComponentId, vm.setting.component.settings.dataSource.parentField);
+                        //EditEntityStorage.newSourceEntity();
                     }
                 }, 0);
             });

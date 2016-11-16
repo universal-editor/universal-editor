@@ -35,8 +35,18 @@
             return false;
         };
 
-        this.newSourceEntity = function(id) {
-            $rootScope.$broadcast("editor:entity_loaded", { editorEntityType: "new", $parentComponentId: id });
+        this.newSourceEntity = function(id, parentField) {
+            var parentEntity = $location.search().parent;
+            var parent;
+            if (parentEntity) {
+                parentEntity = JSON.parse(parentEntity);
+                parent = parentEntity[id] || null;
+            }
+            var data = { editorEntityType: "new", $parentComponentId: (!!parentField ? undefined : id) };
+            if (!!parent && !!parentField) {
+                data[parentField] = parent;
+            }
+            $rootScope.$broadcast("editor:entity_loaded", data);
         };
 
         this.setSourceEntity = function(data) {
