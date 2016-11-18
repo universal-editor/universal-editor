@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -10,7 +10,7 @@
     function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, RestApiService, moment, EditEntityStorage, $q) {
         /* jshint validthis: true */
         var vm = this;
-        var baseController = $controller('BaseController', { $scope: $scope });
+        var baseController = $controller('BaseController', {$scope: $scope});
         angular.extend(vm, baseController);
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
@@ -37,7 +37,7 @@
             self.field_search = "title";
             if (self.optionValues) {
                 if (values) {
-                    angular.forEach(componentSettings.values, function(v, key) {
+                    angular.forEach(componentSettings.values, function (v, key) {
                         var obj = {};
                         obj[self.field_id] = key;
                         obj[self.field_search] = v;
@@ -53,12 +53,12 @@
                     if (!componentSettings.$loadingPromise) {
                         componentSettings.$loadingPromise = RestApiService
                             .getUrlResource(remoteValues.url)
-                            .then(function(response) {
-                                angular.forEach(response.data.items, function(v) {
+                            .then(function (response) {
+                                angular.forEach(response.data.items, function (v) {
                                     self.optionValues.push(v);
                                 });
                                 return self.optionValues;
-                            }, function(reject) {
+                            }, function (reject) {
                                 console.error(self.constructor.name + ': Не удалось получить значения для поля \"' + self.fieldName + '\" с удаленного ресурса');
                             });
                     }
@@ -113,16 +113,21 @@
         //-- listener storage for handlers
         self.listeners = [];
         self.listeners.push($scope.$on("editor:api_error_field_" + fieldErrorName, onErrorApiHandler));
-        self.listeners.push($scope.$watch(function() { return self.fieldValue; },
-            function() {
-                self.error = [];
-                if (self.options.filter && vm.fieldValue && vm.fieldValue[vm.field_id]) {
-                    vm.fieldValue = vm.fieldValue[vm.field_id];
-                }
-            }, true));
+        self.listeners.push(
+            $scope.$watch(
+                function () {
+                    return self.fieldValue;
+                },
+                function () {
+                    if (self.options.filter && vm.fieldValue && vm.fieldValue[vm.field_id]) {
+                        vm.fieldValue = vm.fieldValue[vm.field_id];
+                    }
+                }, true
+            )
+        );
 
-        $scope.$on("$destroy", function() {
-            self.listeners.forEach(function(listener) {
+        $scope.$on("$destroy", function () {
+            self.listeners.forEach(function (listener) {
                 if (angular.isFunction(listener)) {
                     listener();
                 }
@@ -133,9 +138,9 @@
 
 
         if (self.options.filter) {
-            $scope.$watch(function() {
+            $scope.$watch(function () {
                 return $location.search();
-            }, function(newVal) {
+            }, function (newVal) {
                 if (newVal && newVal.filter) {
                     console.log("Filter generate.");
                     var filter = JSON.parse(newVal.filter);
@@ -167,7 +172,7 @@
                 wrappedFieldValue;
             if (self.multiple) {
                 wrappedFieldValue = [];
-                self.fieldValue.forEach(function(value) {
+                self.fieldValue.forEach(function (value) {
                     var temp;
                     var output = transformToValue(value);
 
@@ -195,7 +200,7 @@
 
         function onErrorApiHandler(event, data) {
             if (angular.isArray(data)) {
-                angular.forEach(data, function(error) {
+                angular.forEach(data, function (error) {
                     if (self.error.indexOf(error) < 0) {
                         self.error.push(error);
                     }
@@ -212,7 +217,7 @@
                 if (!self.options.filter) {
                     //-- functional for required fields
                     if (componentSettings.depend) {
-                        destroyWatchEntityLoaded = $scope.$watch(function() {
+                        $scope.$watch(function () {
                             var f_value = EditEntityStorage.getValueField(self.parentComponentId, componentSettings.depend);
                             var result = false;
                             if (f_value !== false) {
@@ -231,7 +236,7 @@
                                 })(f_value);
                             }
                             return result;
-                        }, function(value) {
+                        }, function (value) {
                             if (!value) {
                                 self.clear();
                                 self.readonly = true;
@@ -255,7 +260,7 @@
                                 obj[self.field_id] = componentSettings.defaultValue;
                                 self.fieldValue = obj;
                             }
-                            if(data.hasOwnProperty(self.fieldName)) {
+                            if (data.hasOwnProperty(self.fieldName)) {
                                 self.fieldValue = data[self.fieldName];
                             }
                         }
@@ -281,7 +286,7 @@
                     } else {
                         if (angular.isArray(apiValue)) {
                             self.fieldValue = [];
-                            apiValue.forEach(function(item) {
+                            apiValue.forEach(function (item) {
                                 self.fieldValue.push(transformToValue(self.multiname ? item[self.multiname] : item));
                             });
                         }
@@ -292,5 +297,35 @@
                 }
             }
         }
+
+        //validators
+        self.validators = self.setting.component.settings.validators;
+        angular.forEach(self.setting.component.settings.validators, function (validator) {
+            switch (validator.type) {
+                case 'string':
+                    self.minLength = validator.minLength;
+                    self.maxLength = validator.maxLength;
+                    self.pattern = validator.pattern;
+                    self.trim = validator.trim;
+                    self.contentType = validator.contentType;
+                    break;
+                case 'number':
+                    self.fieldIsNumber = true;
+                    self.minNumber = validator.min;
+                    self.maxNumber = validator.max;
+                    self.stepNumber = validator.step;
+                    break;
+                case 'date':
+                    self.minDate = validator.minDate;
+                    self.maxDate = validator.maxDate;
+                    self.format = validator.format;
+                    break;
+                case 'mask':
+                    self.isMask = true;
+                    self.maskDefinitions = validator.maskDefinitions;
+                    self.mask = validator.mask;
+                    break;
+            }
+        });
     }
 })();

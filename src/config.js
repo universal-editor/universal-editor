@@ -21,7 +21,14 @@ var staffDataSource = {
                 name: 'ue-string',
                 settings: {
                     label: '№',
-                    validators: []
+                    validators: [
+                        {
+                            type: 'number',
+                            min: 10,
+                            max: 50,
+                            step: 2
+                        }
+                    ]
                 }
             }
         },
@@ -54,7 +61,15 @@ var staffDataSource = {
                 name: 'ue-string',
                 settings: {
                     label: 'Эл. почта',
-                    validators: []
+                    validators: [
+                        {
+                            type: 'string',
+                            minLength: 0,
+                            maxLength: 50,
+                            trim: true,
+                            pattern: '^[0-9]$'
+                        }
+                    ]
                 }
             }
         },
@@ -64,7 +79,23 @@ var staffDataSource = {
                 name: 'ue-textarea',
                 settings: {
                     label: 'textarea',
-                    validators: [],
+                    validators: [
+                        {
+                            type: 'string',
+                            minLength: 10,
+                            maxLength: 50,
+                            trim: true
+                        },
+                        {
+                            type: 'mask',
+                            mask: 'AA',
+                            maskDefinitions: {
+                                'A': /[a-z]/,
+                                '*': /[a-zA-Z0-9]/,
+                                '+': /[0-9]/
+                            }
+                        }
+                    ],
                     multiple: false
                 }
             }
@@ -176,15 +207,6 @@ var ue = new UniversalEditor('universal-editor', {
                                                 state: 'edit'
                                             }
                                         }
-                                    },
-                                    {
-                                        component: {
-                                            name: 'ue-button-goto',
-                                            settings: {
-                                                label: 'создать',
-                                                state: 'index.modal_edit'
-                                            }
-                                        }
                                     }
                                 ]
                             },
@@ -289,16 +311,10 @@ var ue = new UniversalEditor('universal-editor', {
                                                                 label: 'Tab 1',
                                                                 fields: [
                                                                     'id',
-                                                                    {
-                                                                        component: {
-                                                                            name: 'ue-form-group',
-                                                                            settings: {
-                                                                                label: 'Group 1',
-                                                                                countInLine: 2,
-                                                                                fields: ['name', 'email']
-                                                                            }
-                                                                        }
-                                                                    }
+                                                                    'name',
+                                                                    'email',
+                                                                    'description',
+                                                                    'gender'
                                                                 ]
                                                             },
                                                             {
@@ -398,31 +414,15 @@ var ue = new UniversalEditor('universal-editor', {
                                                     label: 'Tab 1',
                                                     fields: [
                                                         'id',
-                                                        {
-                                                            component: {
-                                                                name: 'ue-form-group',
-                                                                settings: {
-                                                                    label: 'Group 1',
-                                                                    countInLine: 2,
-                                                                    fields: ['name', 'email']
-                                                                }
-                                                            }
-                                                        }
+                                                        'name',
+                                                        'email',
+                                                        'description',
+                                                        'gender'
                                                     ]
                                                 },
                                                 {
                                                     label: 'Tab 2',
                                                     fields: [
-                                                        {
-                                                            component: {
-                                                                name: 'ue-form-group',
-                                                                settings: {
-                                                                    label: 'Group 1',
-                                                                    countInLine: 2,
-                                                                    fields: ['name', 'email']
-                                                                }
-                                                            }
-                                                        },
                                                         {
                                                             component: {
                                                                 name: 'ue-grid',
@@ -462,7 +462,7 @@ var ue = new UniversalEditor('universal-editor', {
                                         component: {
                                             name: 'ue-button-service',
                                             settings: {
-                                                label: 'Сохранить',
+                                                label: 'Сохранить/обновить',
                                                 action: 'save'
                                             }
                                         }
