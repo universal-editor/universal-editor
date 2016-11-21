@@ -4,7 +4,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
             div(data-ng-if="vm.multiple", data-ng-class="vm.classComponent")
                 .item-string-wrapper.input-group(data-ng-repeat="field_item in vm.fieldValue track by $index")
                     input.form-control.input-sm(
-                        type="{{vm.fieldIsNumber ? 'number' : 'text'}}",
+                        type="{{vm.typeInput}}",
                         data-ui-mask="{{vm.mask}}",
                         data-ui-options="{maskDefinitions : vm.maskDefinitions}",
                         data-ng-disabled="vm.readonly",
@@ -19,7 +19,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
                 .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-disabled="vm.readonly") {{'BUTTON.ADD' | translate}}
             div(data-ng-if="!vm.multiple", data-ng-class="vm.classComponent")
                 input.form-control.input-sm(
-                        type="{{vm.fieldIsNumber ? 'number' : 'text'}}",
+                        type="{{vm.typeInput}}",
                         data-ui-mask="{{vm.mask}}",
                         data-ui-options="{maskDefinitions : vm.maskDefinitions}",
                         data-ng-disabled="vm.readonly",

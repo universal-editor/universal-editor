@@ -16,8 +16,8 @@
         angular.extend(vm, baseController);
 
         vm.addItem = addItem;
-        vm.removeItem = removeItem;    
-
+        vm.removeItem = removeItem;
+        vm.minDate = moment();
         vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler));
         
         //-- private functions

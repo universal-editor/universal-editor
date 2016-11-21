@@ -299,6 +299,7 @@
         }
 
         //validators
+        self.typeInput = 'text';
         self.validators = self.setting.component.settings.validators;
         angular.forEach(self.setting.component.settings.validators, function (validator) {
             switch (validator.type) {
@@ -310,7 +311,7 @@
                     self.contentType = validator.contentType;
                     break;
                 case 'number':
-                    self.fieldIsNumber = true;
+                    self.typeInput = 'number';
                     self.minNumber = validator.min;
                     self.maxNumber = validator.max;
                     self.stepNumber = validator.step;

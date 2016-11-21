@@ -14,6 +14,11 @@
         angular.extend(vm, baseController);
         vm.addItem = addItem;
         vm.removeItem = removeItem;
+        var regEmail = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
+
+        if (vm.contentType == 'password') {
+            vm.typeInput = 'password';
+        }
 
         /* Слушатель события на покидание инпута. Необходим для превалидации поля на минимальное и максимальное значение */
         vm.inputLeave = function (val) {
@@ -42,9 +47,9 @@
             }
 
             if (vm.hasOwnProperty('pattern') && !val.match(new RegExp(vm.pattern))) {
-                var minError = 'Введенное значение не соответствует паттерну ' + vm.pattern.toString();
-                if (vm.error.indexOf(minError) < 0) {
-                    vm.error.push(minError);
+                var patternError = 'Введенное значение не соответствует паттерну ' + vm.pattern.toString();
+                if (vm.error.indexOf(patternError) < 0) {
+                    vm.error.push(patternError);
                 }
             }
 
@@ -59,6 +64,13 @@
                 var minError = 'Минимальное значение поля не может быть меньше ' + vm.minNumber + '. Сейчас введено ' + val + '.';
                 if (vm.error.indexOf(minError) < 0) {
                     vm.error.push(minError);
+                }
+            }
+
+            if ((vm.contentType == 'email') && !val.match(regEmail)) {
+                var emailError = 'Введен некорректный email.';
+                if (vm.error.indexOf(emailError) < 0) {
+                    vm.error.push(emailError);
                 }
             }
         };

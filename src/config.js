@@ -64,10 +64,8 @@ var staffDataSource = {
                     validators: [
                         {
                             type: 'string',
-                            minLength: 0,
-                            maxLength: 50,
                             trim: true,
-                            pattern: '^[0-9]$'
+                            contentType: 'email'
                         }
                     ]
                 }
@@ -111,6 +109,56 @@ var staffDataSource = {
                         "female": "Женский"
                     },
                     "showOnly": "edit"
+                }
+            }
+        },
+        {
+            name: 'date',
+            component: {
+                name: 'ue-date',
+                settings: {
+                    label: 'date',
+                    validators: [
+                        {
+                            type: 'date',
+                            format: 'YYYY-MM-DD'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'date2',
+            component: {
+                name: 'ue-date',
+                settings: {
+                    label: 'date2',
+                    validators: [
+                    ]
+                }
+            }
+        },
+        {
+            name: 'datetime',
+            component: {
+                name: 'ue-datetime',
+                settings: {
+                    label: 'datetime',
+                    validators: [
+                        // @todo Примеры
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time',
+                    validators: [
+                        // @todo Примеры
+                    ]
                 }
             }
         }
@@ -314,7 +362,10 @@ var ue = new UniversalEditor('universal-editor', {
                                                                     'name',
                                                                     'email',
                                                                     'description',
-                                                                    'gender'
+                                                                    'gender',
+                                                                    'datetime',
+                                                                    'date',
+                                                                    'time'
                                                                 ]
                                                             },
                                                             {
@@ -417,7 +468,11 @@ var ue = new UniversalEditor('universal-editor', {
                                                         'name',
                                                         'email',
                                                         'description',
-                                                        'gender'
+                                                        'gender',
+                                                        'datetime',
+                                                        'date',
+                                                        'date2',
+                                                        'time'
                                                     ]
                                                 },
                                                 {
