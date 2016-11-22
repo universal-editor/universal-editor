@@ -100,15 +100,6 @@ var staffDataSource = {
                             minLength: 10,
                             maxLength: 50,
                             trim: true
-                        },
-                        {
-                            type: 'mask',
-                            mask: 'AA',
-                            maskDefinitions: {
-                                'A': /[a-z]/,
-                                '*': /[a-zA-Z0-9]/,
-                                '+': /[0-9]/
-                            }
                         }
                     ],
                     multiple: false
@@ -149,9 +140,7 @@ var staffDataSource = {
             component: {
                 name: 'ue-date',
                 settings: {
-                    label: 'date2',
-                    validators: [
-                    ]
+                    label: 'date2'
                 }
             }
         },

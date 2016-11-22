@@ -158,11 +158,7 @@
 
         function transformToValue(object) {
             if (componentSettings.$fieldType === 'date') {
-                if (moment.isMoment(object)) {
-                    return moment(object).format('YYYY-MM-DD HH:mm:ss');
-                } else {
-                    return moment(object, 'YYYY-MM-DD HH:mm:ss');
-                }
+                return moment(object, 'YYYY-MM-DD HH:mm:ss');
             }
             return angular.isObject(object) && !angular.isArray(object) && self.field_id ? object[self.field_id] : object;
         }
