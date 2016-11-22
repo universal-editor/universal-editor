@@ -72,6 +72,23 @@ var staffDataSource = {
             }
         },
         {
+            name: 'url',
+            expandable: true,
+            component: {
+                name: 'ue-string',
+                settings: {
+                    label: 'Url',
+                    validators: [
+                        {
+                            type: 'string',
+                            trim: true,
+                            contentType: 'url'
+                        }
+                    ]
+                }
+            }
+        },
+        {
             name: 'description',
             component: {
                 name: 'ue-textarea',
@@ -467,6 +484,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         'id',
                                                         'name',
                                                         'email',
+                                                        'url',
                                                         'description',
                                                         'gender',
                                                         'datetime',

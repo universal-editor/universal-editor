@@ -15,6 +15,8 @@
         vm.addItem = addItem;
         vm.removeItem = removeItem;
         var regEmail = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
+        var regUrl = new RegExp('^(?:(?:ht|f)tps?://)?(?:[\\-\\w]+:[\\-\\w]+@)?(?:[0-9a-z][\\-0-9a-z]*[0-9a-z]\\.)+[a-z]{2,6}(?::\\d{1,5})?(?:[?/\\\\#][?!^$.(){}:|=[\\]+\\-/\\\\*;&~#@,%\\wА-Яа-я]*)?$', 'i');
+
 
         if (vm.contentType == 'password') {
             vm.typeInput = 'password';
@@ -71,6 +73,13 @@
                 var emailError = 'Введен некорректный email.';
                 if (vm.error.indexOf(emailError) < 0) {
                     vm.error.push(emailError);
+                }
+            }
+
+            if ((vm.contentType == 'url') && !val.match(regUrl)) {
+                var urlError = 'Введен некорректный url.';
+                if (vm.error.indexOf(urlError) < 0) {
+                    vm.error.push(urlError);
                 }
             }
         };
