@@ -19,8 +19,7 @@
         vm.removeItem = removeItem;
         vm.minDate = moment();
         vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler));
-        
-        //-- private functions
+
         function removeItem(index) {
             if (angular.isArray(vm.fieldValue)) {
                 vm.fieldValue.forEach(function(value, key) {

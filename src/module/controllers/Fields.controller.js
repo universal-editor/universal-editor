@@ -14,6 +14,9 @@
         angular.extend(vm, baseController);
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
+        var regEmail = new RegExp('^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$', 'i');
+        var regUrl = new RegExp('^(?:(?:ht|f)tps?://)?(?:[\\-\\w]+:[\\-\\w]+@)?(?:[0-9a-z][\\-0-9a-z]*[0-9a-z]\\.)+[a-z]{2,6}(?::\\d{1,5})?(?:[?/\\\\#][?!^$.(){}:|=[\\]+\\-/\\\\*;&~#@,%\\wА-Яа-я]*)?$', 'i');
+
         self.parentComponentId = self.options.$parentComponentId || '';
         self.fieldName = self.setting.name;
         self.parentField = self.setting.parentField;
@@ -29,6 +32,8 @@
         self.width = !isNaN(+componentSettings.width) ? componentSettings.width : null;
         self.defaultValue = transformToValue(componentSettings.defaultValue) || (self.multiple ? [] : null);
         self.placeholder = componentSettings.placeholder || null;
+
+        self.inputLeave = inputLeave;
 
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
@@ -158,7 +163,7 @@
 
         function transformToValue(object) {
             if (componentSettings.$fieldType === 'date') {
-                return moment(object, 'YYYY-MM-DD HH:mm:ss');
+                return moment(object);
             }
             return angular.isObject(object) && !angular.isArray(object) && self.field_id ? object[self.field_id] : object;
         }
@@ -244,7 +249,7 @@
 
                     if (data.editorEntityType === "new") {
                         var obj = {};
-                        self.fieldValue = transformToValue(componentSettings.defaultValue) || (self.multiple ? [] : null);
+                        self.fieldValue = transformToValue(componentSettings.defaultValue) || (self.multiple ? [] : "");
 
                         if (self.field_id) {
                             if (self.isTree) {
@@ -324,5 +329,67 @@
                     break;
             }
         });
+
+        /* Слушатель события на покидание инпута. Необходим для валидации*/
+        function inputLeave(val) {
+            self.error = [];
+            if (!val) {
+                return;
+            }
+
+            if (self.trim) {
+                self.fieldValue = self.fieldValue.trim();
+                val = val.trim();
+            }
+
+            if (self.hasOwnProperty('maxLength') && val.length > self.maxLength) {
+                var maxError = 'Для поля превышено максимальное допустимое значение в ' + self.maxLength + ' символов. Сейчас введено ' + val.length + ' символов.';
+                if (self.error.indexOf(maxError) < 0) {
+                    self.error.push(maxError);
+                }
+            }
+
+            if (self.hasOwnProperty('minLength') && val.length < self.minLength) {
+                var minError = 'Минимальное значение поля не может быть меньше ' + self.minLength + ' символов. Сейчас введено ' + val.length +  ' символов.';
+                if (self.error.indexOf(minError) < 0) {
+                    self.error.push(minError);
+                }
+            }
+
+            if (self.hasOwnProperty('pattern') && !val.match(new RegExp(vm.pattern))) {
+                var patternError = 'Введенное значение не соответствует паттерну ' + self.pattern.toString();
+                if (self.error.indexOf(patternError) < 0) {
+                    self.error.push(patternError);
+                }
+            }
+
+            if (self.hasOwnProperty('maxNumber') && val > self.maxNumber) {
+                var maxNumberError = 'Для поля превышено максимальное допустимое значение ' + self.maxNumber + '. Сейчас введено ' + val + '.';
+                if (self.error.indexOf(maxNumberError) < 0) {
+                    self.error.push(maxNumberError);
+                }
+            }
+
+            if (self.hasOwnProperty('minNumber') && val < self.minNumber) {
+                var minNumberError = 'Минимальное значение поля не может быть меньше ' + self.minNumber + '. Сейчас введено ' + val + '.';
+                if (self.error.indexOf(minNumberError) < 0) {
+                    self.error.push(minNumberError);
+                }
+            }
+
+            if ((self.contentType == 'email') && !val.match(regEmail)) {
+                var emailError = 'Введен некорректный email.';
+                if (self.error.indexOf(emailError) < 0) {
+                    self.error.push(emailError);
+                }
+            }
+
+            if ((self.contentType == 'url') && !val.match(regUrl)) {
+                var urlError = 'Введен некорректный url.';
+                if (self.error.indexOf(urlError) < 0) {
+                    self.error.push(urlError);
+                }
+            }
+        }
     }
 })();

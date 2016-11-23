@@ -9,10 +9,9 @@
 
     function UeTimeController($scope, EditEntityStorage, $element, moment, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
-            var vm = this;
+        var vm = this;
         var componentSettings = vm.setting.component.settings;
         componentSettings.$fieldType = 'date';
-        componentSettings.defaultValue = moment(componentSettings.defaultValue, 'HH:mm');
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
 

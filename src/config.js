@@ -49,7 +49,12 @@ var staffDataSource = {
                 settings: {
                     label: 'Имя',
                     validators: [
-                        // @todo Примеры
+                        {
+                            type: 'string',
+                            trim: true,
+                            maxLength: 10,
+                            minLength: 3
+                        }
                     ]
                 }
             }
