@@ -333,6 +333,7 @@
         /* Слушатель события на покидание инпута. Необходим для валидации*/
         function inputLeave(val) {
             self.error = [];
+
             if (!val) {
                 return;
             }
