@@ -83,6 +83,7 @@ var staffDataSource = {
                 name: 'ue-string',
                 settings: {
                     label: 'Url',
+                    multiple: true,
                     validators: [
                         {
                             type: 'string',
@@ -131,10 +132,13 @@ var staffDataSource = {
                 name: 'ue-date',
                 settings: {
                     label: 'date',
+                    multiple: true,
                     validators: [
                         {
                             type: 'date',
-                            format: 'YYYY-MM-DD'
+                            format: 'YYYY-MM-DD',
+                            minDate: "2015-10-10",
+                            maxDate: "2015-12-10"
                         }
                     ]
                 }
@@ -145,7 +149,8 @@ var staffDataSource = {
             component: {
                 name: 'ue-date',
                 settings: {
-                    label: 'date2'
+                    label: 'date2',
+                    multiple: true
                 }
             }
         },
@@ -155,8 +160,14 @@ var staffDataSource = {
                 name: 'ue-datetime',
                 settings: {
                     label: 'datetime',
+                    multiple: true,
                     validators: [
-                        // @todo Примеры
+                        {
+                            type: 'date',
+                            format: 'DD.MM.YYYY HH:mm',
+                            minDate: "10.10.2015 15:50",
+                            maxDate: "10.12.2015 19:50"
+                        }
                     ]
                 }
             }
@@ -167,8 +178,13 @@ var staffDataSource = {
                 name: 'ue-time',
                 settings: {
                     label: 'time',
+                    multiple: true,
                     validators: [
-                        // @todo Примеры
+                        {
+                            type: 'date',
+                            minDate: "15:50",
+                            maxDate: "19:50"
+                        }
                     ]
                 }
             }

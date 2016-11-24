@@ -96,7 +96,20 @@
 
             angular.forEach(controllers, function(fCtrl) {
                 var value = fCtrl.getFieldValue();
-                fCtrl.inputLeave(fCtrl.fieldValue);
+                if (!fCtrl.multiple) {
+                    fCtrl.inputLeave(fCtrl.fieldValue);
+                } else {
+                    var flagError = true;
+                    angular.forEach(fCtrl.fieldValue, function(val, index) {
+                        if (flagError) {
+                            fCtrl.inputLeave(val, index);
+                            if (fCtrl.error.length !== 0) {
+                                flagError = false;
+                            }
+                        }
+                    });
+                }
+
                 isError = (fCtrl.error.length === 0) && isError;
                 if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
                     if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
@@ -127,7 +140,19 @@
             var controllers = storage[request.options.$parentComponentId] || [];
 
             angular.forEach(controllers, function(fCtrl) {
-                fCtrl.inputLeave(fCtrl.fieldValue);
+                if (!fCtrl.multiple) {
+                    fCtrl.inputLeave(fCtrl.fieldValue);
+                } else {
+                    var flagError = true;
+                    angular.forEach(fCtrl.fieldValue, function(val, index){
+                        if (flagError) {
+                            fCtrl.inputLeave(val, index);
+                            if (fCtrl.error.length !== 0) {
+                                flagError = false;
+                            }
+                        }
+                    });
+                }
                 isError = (fCtrl.error.length === 0) && isError;
                 if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
                     angular.merge(entityObject, fCtrl.getFieldValue());

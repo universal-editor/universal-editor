@@ -11,7 +11,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
                         name="{{vm.fieldName}}",
                         data-ng-model="vm.fieldValue[$index]",
                         step="{{vm.stepNumber}}",
-                        data-ng-blur="vm.inputLeave(vm.fieldValue[$index])",
+                        data-ng-blur="vm.inputLeave(vm.fieldValue[$index], $index)",
                         ng-trim="false"
                     )
                     span.input-group-btn

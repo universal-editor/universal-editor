@@ -17,7 +17,9 @@
 
         vm.addItem = addItem;
         vm.removeItem = removeItem;
-        vm.minDate = moment();
+        $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format || 'DD.MM.YYYY');
+        $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format || 'DD.MM.YYYY');
+
         vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler));
 
         function removeItem(index) {

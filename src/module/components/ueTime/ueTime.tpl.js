@@ -16,13 +16,13 @@ module.run(['$templateCache', function($templateCache) {
     '    <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" ng-style="{\'overflow:auto\':vm.multiple}">\n' +
     '        <div data-ng-if="vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
     '            <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-timepicker-wrapper input-group">\n' +
-    '                <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-date-time="" data-format="{{vm.format || \'HH:mm\'}}" data-max-view="hours" data-min-view="minutes" data-view="hours" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" class="form-control input-sm timepicker"/><span class="input-group-btn">\n' +
+    '                <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-date-time="" data-format="{{vm.format || \'HH:mm\'}}" data-max-view="hours" data-min-view="minutes" data-view="hours" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" data-min-date="minDate" data-max-date="maxDate" class="form-control input-sm timepicker"/><span class="input-group-btn">\n' +
     '                    <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
     '            </div>\n' +
     '            <div data-ng-click="vm.addItem()" data-ng-disabled="vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
     '        </div>\n' +
     '        <div data-ng-if="!vm.multiple" ng-class="{\'col-lg-2 col-md-2 col-sm-3 col-xs-3\': !vm.options.filter}">\n' +
-    '            <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-date-time="" data-format="{{vm.format || \'HH:mm\'}}" data-max-view="hours" data-min-view="minutes" data-view="hours" data-ng-blur="vm.inputLeave(vm.fieldValue)" class="form-control input-sm timepicker"/>\n' +
+    '            <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-date-time="" data-format="{{vm.format || \'HH:mm\'}}" data-max-view="hours" data-min-view="minutes" data-view="hours" data-ng-blur="vm.inputLeave(vm.fieldValue)" data-min-date="minDate" data-max-date="maxDate" class="form-control input-sm timepicker"/>\n' +
     '        </div>\n' +
     '    </div>\n' +
     '    <div ng-if="!vm.options.filter" class="field-error-wrapper">\n' +

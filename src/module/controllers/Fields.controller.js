@@ -162,10 +162,13 @@
         }
 
         function transformToValue(object) {
+            var value;
             if (componentSettings.$fieldType === 'date') {
-                return moment(object);
+                value = moment(object);
+                return self.multiple ? [value] : value;
             }
-            return angular.isObject(object) && !angular.isArray(object) && self.field_id ? object[self.field_id] : object;
+            value = angular.isObject(object) && !angular.isArray(object) && self.field_id ? object[self.field_id] : object;
+            return self.multiple ? [value] : value;
         }
 
         function getFieldValue() {
@@ -331,7 +334,7 @@
         });
 
         /* Слушатель события на покидание инпута. Необходим для валидации*/
-        function inputLeave(val) {
+        function inputLeave(val, index) {
             self.error = [];
 
             if (!val) {
@@ -339,7 +342,11 @@
             }
 
             if (self.trim) {
-                self.fieldValue = self.fieldValue.trim();
+                if (!self.multiple) {
+                    self.fieldValue = self.fieldValue.trim();
+                } else {
+                    self.fieldValue[index] = self.fieldValue[index].trim();
+                }
                 val = val.trim();
             }
 

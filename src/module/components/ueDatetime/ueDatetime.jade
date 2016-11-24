@@ -10,7 +10,9 @@ div(ng-class="{'field-wrapper row':!vm.options.filter}")
                     ng-model="vm.fieldValue[$index]",
                     view="date",
                     format="{{vm.format || 'YYYY-MM-DD HH:mm:ss'}}",
-                    data-ng-blur="vm.inputLeave(vm.fieldValue[$index])"
+                    data-ng-blur="vm.inputLeave(vm.fieldValue[$index])",
+                    data-min-date="minDate",
+                    data-max-date="maxDate"
                     )
                 span.input-group-btn
                     button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
@@ -23,6 +25,8 @@ div(ng-class="{'field-wrapper row':!vm.options.filter}")
                 ng-model="vm.fieldValue",
                 view="date",
                 format="{{vm.format || 'YYYY-MM-DD HH:mm:ss'}}",
-                data-ng-blur="vm.inputLeave(vm.fieldValue)"
+                data-ng-blur="vm.inputLeave(vm.fieldValue)",
+                data-min-date="minDate",
+                data-max-date="maxDate"
                 )
     include ../../template/errorField/errorField

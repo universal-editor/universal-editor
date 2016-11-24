@@ -16,7 +16,9 @@
         angular.extend(vm, baseController);
 
         vm.addItem = addItem;
-        vm.removeItem = removeItem;    
+        vm.removeItem = removeItem;
+        $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format || 'HH:mm');
+        $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format || 'HH:mm');
 
         vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler)); 
         
