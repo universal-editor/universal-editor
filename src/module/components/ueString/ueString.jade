@@ -3,10 +3,31 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
         div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}")
             div(data-ng-if="vm.multiple", data-ng-class="vm.classComponent")
                 .item-string-wrapper.input-group(data-ng-repeat="field_item in vm.fieldValue track by $index")
-                    input.form-control.input-sm(type="text", data-ui-mask="{{vm.mask}}", data-ng-disabled="vm.readonly", name="{{vm.fieldName}}", data-ng-model="vm.fieldValue[$index]", data-ng-blur="vm.inputLeave(vm.fieldValue[$index])")
+                    input.form-control.input-sm(
+                        type="{{vm.typeInput}}",
+                        data-ui-mask="{{vm.mask}}",
+                        data-ui-options="{maskDefinitions : vm.maskDefinitions}",
+                        data-ng-disabled="vm.readonly",
+                        name="{{vm.fieldName}}",
+                        data-ng-model="vm.fieldValue[$index]",
+                        step="{{vm.stepNumber}}",
+                        data-ng-blur="vm.inputLeave(vm.fieldValue[$index], $index)",
+                        ng-trim="false"
+                    )
                     span.input-group-btn
                         button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
                 .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-disabled="vm.readonly") {{'BUTTON.ADD' | translate}}
             div(data-ng-if="!vm.multiple", data-ng-class="vm.classComponent")
-                input.form-control.input-sm(type="text", data-ui-mask="{{vm.mask}}" data-ng-disabled="vm.readonly", name="{{vm.fieldName}}", data-ng-model="vm.fieldValue", data-ng-blur="vm.inputLeave(vm.fieldValue)", size="{{vm.size}}")
+                input.form-control.input-sm(
+                        type="{{vm.typeInput}}",
+                        data-ui-mask="{{vm.mask}}",
+                        data-ui-options="{maskDefinitions : vm.maskDefinitions}",
+                        data-ng-disabled="vm.readonly",
+                        name="{{vm.fieldName}}",
+                        data-ng-model="vm.fieldValue",
+                        step="{{vm.stepNumber}}",
+                        data-ng-blur="vm.inputLeave(vm.fieldValue)",
+                        size="{{vm.size}}",
+                        ng-trim="false"
+                    )
     include ../../template/errorField/errorField
