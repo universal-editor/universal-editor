@@ -8,7 +8,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueSelect/ueSelect.html',
     '\n' +
     '<div ng-class="{\'field-wrapper row\':!vm.options.filter, \'filter-wrapper-field\': vm.options.filter}" class="field-wrapper-ue-select">\n' +
-    '    <label ng-if="!vm.options.filter" ng-show="!!vm.label" class="field-name-label">\n' +
+    '    <label ng-if="!vm.options.filter &amp;&amp; !!vm.label" class="field-name-label">\n' +
     '        <div data-ng-if="!!vm.hint" class="field-hint">\n' +
     '            <div ng-bind="vm.hint" class="hint-text"></div>\n' +
     '        </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="vm.label"></span>\n' +
