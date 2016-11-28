@@ -1,14 +1,11 @@
 .editor-field-array
-    .field-name-label.label-array
-        .field-hint(data-ng-if="vm.hint")
-            .hint-text {{vm.hint}}
-        | {{vm.fieldDisplayName}}
-    .field-array-wrapper.col-md-12.col-xs-12.col-sm-12.col-lg-12
+    include ../../template/labelField/labelField
+    .field-array-wrapper.editor-form-group.col-md-12.col-xs-12.col-sm-12.col-lg-12
         div(data-ng-if="vm.multiple")
             .item-array-wrapper(data-ng-repeat="fields in vm.fieldsArray track by $index" data-ng-init="outerIndex = $index")
                 data-component-wrapper(ng-class="vm.className" data-ng-repeat="field in fields" data-setting="field" data-options="vm.options")
                 .col-md-12.col-xs-12.col-lg-12.col-sm-12
-                    .btn.btn-primary.btn-xs(data-ng-click="vm.removeItem(outerIndex)", data-ng-if="!vm.readonly", style="margin: 10px 15px 0 15px; float: right;") {{'BUTTON.DELETE' | translate}}
+                    .btn.btn-primary.btn-xs(data-ng-click="vm.removeItem(outerIndex)", data-ng-if="!vm.readonly") {{'BUTTON.DELETE' | translate}}
             .col-md-12.col-xs-12.col-lg-12.col-sm-12
                 .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-if="!vm.readonly") {{'BUTTON.ADD' | translate}}
         div(data-ng-if="!vm.multiple")
@@ -18,3 +15,4 @@
                 data-setting="field"
                 data-options="vm.options"
                 )
+    include ../../template/errorField/errorField

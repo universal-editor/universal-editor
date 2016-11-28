@@ -5,3 +5,11 @@
 .editor-field-array {
     overflow: visible;
 }
+
+.editor-form-group  {
+    & .item-array-wrapper .btn {
+        margin: 10px 15px 0 15px; 
+        float: right;
+    }
+
+}
