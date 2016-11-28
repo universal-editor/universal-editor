@@ -15,13 +15,7 @@
         var componentSettings = vm.setting.component.settings;
         vm.rows = componentSettings.height;  
         vm.addItem = addItem;
-        vm.removeItem = removeItem; 
-
-        vm.inputLeave = function(val) {
-            if (!val) {
-                return;
-            }
-        };
+        vm.removeItem = removeItem;
 
         vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler)); 
 

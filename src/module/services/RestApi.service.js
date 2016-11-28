@@ -241,13 +241,15 @@
                     ModalService.close();
                 }
             }, function(reject) {
-                if (reject.data.error && reject.data.hasOwnProperty("data") && reject.data.data.length > 0) {
-                    angular.forEach(reject.data.data, function(err) {
-                        if (err.hasOwnProperty("field")) {
-                            $rootScope.$broadcast("editor:api_error_field_" + err.field, err.message);
-                            if (err.hasOwnProperty("fields")) {
+                var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
+
+                if (wrongFields.length > 0) {
+                    angular.forEach(wrongFields, function(err) {
+                        if (err.hasOwnProperty('field')) {
+                            $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
+                            if (err.hasOwnProperty('fields')) {
                                 angular.forEach(err.fields, function(innerError, key) {
-                                    $rootScope.$broadcast("editor:api_error_field_" + err.field + "_" + key + "_" + innerError.field, innerError.message);
+                                    $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
                                 });
                             }
                         }
@@ -299,8 +301,10 @@
                     ModalService.close();
                 }
             }, function(reject) {
-                if (reject.data.error && reject.data.hasOwnProperty('data') && reject.data.data.length > 0) {
-                    angular.forEach(reject.data.data, function(err) {
+                var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
+
+                if (wrongFields.length > 0) {
+                    angular.forEach(wrongFields, function(err) {
                         if (err.hasOwnProperty('field')) {
                             $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
                             if (err.hasOwnProperty('fields')) {

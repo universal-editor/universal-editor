@@ -8,13 +8,13 @@
     <div ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}">
         <div data-ng-if="vm.multiple" data-ng-class="vm.classComponent">
             <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-string-wrapper input-group">
-                <input type="text" data-ui-mask="{{vm.mask}}" data-ng-disabled="vm.readonly" name="{{vm.fieldName}}" data-ng-model="vm.fieldValue[$index]" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" class="form-control input-sm"/><span class="input-group-btn">
+                <input type="{{vm.typeInput}}" data-ui-mask="{{vm.mask}}" data-ui-options="{maskDefinitions : vm.maskDefinitions}" data-ng-disabled="vm.readonly" name="{{vm.fieldName}}" data-ng-model="vm.fieldValue[$index]" step="{{vm.stepNumber}}" data-ng-blur="vm.inputLeave(vm.fieldValue[$index], $index)" ng-trim="false" class="form-control input-sm"/><span class="input-group-btn">
                     <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>
             </div>
             <div data-ng-click="vm.addItem()" data-ng-disabled="vm.readonly" class="btn btn-primary btn-sm">{{'BUTTON.ADD' | translate}}</div>
         </div>
         <div data-ng-if="!vm.multiple" data-ng-class="vm.classComponent">
-            <input type="text" data-ui-mask="{{vm.mask}}" data-ng-disabled="vm.readonly" name="{{vm.fieldName}}" data-ng-model="vm.fieldValue" data-ng-blur="vm.inputLeave(vm.fieldValue)" size="{{vm.size}}" class="form-control input-sm"/>
+            <input type="{{vm.typeInput}}" data-ui-mask="{{vm.mask}}" data-ui-options="{maskDefinitions : vm.maskDefinitions}" data-ng-disabled="vm.readonly" name="{{vm.fieldName}}" data-ng-model="vm.fieldValue" step="{{vm.stepNumber}}" data-ng-blur="vm.inputLeave(vm.fieldValue)" size="{{vm.size}}" ng-trim="false" class="form-control input-sm"/>
         </div>
     </div>
 </div>

@@ -92,9 +92,25 @@
             this.setActionType(request.entityType);
             var entityObject = {};
             var controllers = storage[request.options.$parentComponentId] || [];
+            var isError = true;
+
             angular.forEach(controllers, function(fCtrl) {
                 var value = fCtrl.getFieldValue();
+                if (!fCtrl.multiple) {
+                    fCtrl.inputLeave(fCtrl.fieldValue);
+                } else {
+                    var flagError = true;
+                    angular.forEach(fCtrl.fieldValue, function(val, index) {
+                        if (flagError) {
+                            fCtrl.inputLeave(val, index);
+                            if (fCtrl.error.length !== 0) {
+                                flagError = false;
+                            }
+                        }
+                    });
+                }
 
+                isError = (fCtrl.error.length === 0) && isError;
                 if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
                     if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
                         entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
@@ -105,28 +121,49 @@
                     }
                 }
             });
-            request.data = entityObject;
-            switch (type) {
-                case "create":
-                    $rootScope.$emit('editor:create_entity', request);
-                    break;
-                case "update":
-                    $rootScope.$emit('editor:update_entity', request);
-                    break;
+            if (isError) {
+                request.data = entityObject;
+                switch (type) {
+                    case "create":
+                        $rootScope.$emit('editor:create_entity', request);
+                        break;
+                    case "update":
+                        $rootScope.$emit('editor:update_entity', request);
+                        break;
+                }
             }
         };
 
         this.editEntityPresave = function(request) {
             var entityObject = {};
+            var isError = true;
             var controllers = storage[request.options.$parentComponentId] || [];
+
             angular.forEach(controllers, function(fCtrl) {
+                if (!fCtrl.multiple) {
+                    fCtrl.inputLeave(fCtrl.fieldValue);
+                } else {
+                    var flagError = true;
+                    angular.forEach(fCtrl.fieldValue, function(val, index){
+                        if (flagError) {
+                            fCtrl.inputLeave(val, index);
+                            if (fCtrl.error.length !== 0) {
+                                flagError = false;
+                            }
+                        }
+                    });
+                }
+                isError = (fCtrl.error.length === 0) && isError;
                 if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
                     angular.merge(entityObject, fCtrl.getFieldValue());
                 }
             });
-            request.data = entityObject;
 
-            $rootScope.$emit('editor:presave_entity', request);
+            if (isError) {
+                request.data = entityObject;
+
+                $rootScope.$emit('editor:presave_entity', request);
+            }
         };
 
         this.getEntity = function(stateName, entityName) {
