@@ -308,7 +308,7 @@
                 }
             }
 
-            if (self.hasOwnProperty('pattern') && !val.match(new RegExp(vm.pattern))) {
+            if (self.hasOwnProperty('pattern') && !val.match(new RegExp(self.pattern))) {
                 var patternError = 'Введенное значение не соответствует паттерну ' + self.pattern.toString();
                 if (self.error.indexOf(patternError) < 0) {
                     self.error.push(patternError);

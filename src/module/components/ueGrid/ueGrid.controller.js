@@ -359,7 +359,7 @@
                 return field.field === name;
             });
 
-            return (index !== -1) ? true : false;
+            return index !== -1;
         }
 
         //локализация
