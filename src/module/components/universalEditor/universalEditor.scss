@@ -676,10 +676,11 @@ label{
 .radio, .checkbox{
   margin-top: 0px;
 }
-.editor-field-array .field-name-label.label-array{
+.editor-field-array > .field-name-label{
   background-color: #d3dfe2;
   text-align: center;
   padding: 10px 0;
+  display: block;
 }
 .icon-mix-mode{
   padding-right: 10px;

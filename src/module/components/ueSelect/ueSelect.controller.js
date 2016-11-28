@@ -62,7 +62,7 @@
                 vm.optionValues = [];
                 angular.forEach(allOptions, function(v) {
                     var v_id = v[vm.field_id];
-                    if (v_id && vm.fieldValue && !vm.multiple) {
+                    if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
                         if (angular.isArray(vm.fieldValue)) {
                             for (var i = vm.fieldValue.length; i--;) {
                                 if (vm.fieldValue[i] == v_id) {
