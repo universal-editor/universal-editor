@@ -5,37 +5,29 @@
         .module('universal.editor')
         .controller('UeFormGroupController', UeFormGroupController);
 
-    UeFormGroupController.$inject = ['$scope', '$rootScope', '$element', 'configData', 'EditEntityStorage', '$timeout',  'RestApiService'];
+    UeFormGroupController.$inject = ['$scope', 'EditEntityStorage', '$timeout',  'RestApiService', '$controller'];
 
-    function UeFormGroupController($scope, $rootScope, $element, configData, EditEntityStorage, $timeout,  RestApiService) {
+    function UeFormGroupController($scope, EditEntityStorage, $timeout,  RestApiService, $controller) {
         /* jshint validthis: true */
-        var vm = this;
-        var fieldErrorName;
-        var componentSettings = vm.setting.component.settings;
+        var vm = this,
+            componentSettings = vm.setting.component.settings,
+            entityObject = RestApiService.getEntityObject(),
+            baseController,
+            widthBootstrap = 12;
+
         vm.fieldName = componentSettings.name;
-        vm.parentComponentId = vm.options.$parentComponentId || '';
-        if (vm.setting.parentField) {
-            if (vm.setting.parentFieldIndex) {
-                fieldErrorName = vm.setting.parentField + "_" + vm.setting.parentFieldIndex + "_" + vm.fieldName;
-            } else {
-                fieldErrorName = vm.setting.parentField + "_" + vm.fieldName;
-            }
-        } else {
-            fieldErrorName = vm.fieldName;
-        }
 
-        var entityObject = RestApiService.getEntityObject();
-
-        vm.fieldDisplayName = componentSettings.label;
-        vm.hint = componentSettings.hint || false;
+        baseController = $controller('BaseController', { $scope: $scope });
+        angular.extend(vm, baseController);
+        
         vm.innerFields = [];
         vm.fieldsArray = [];
-        vm.multiple = componentSettings.multiple === true;
-        vm.countInLine = componentSettings.countInLine || 1;
-        var widthBootstrap = Math.ceil(12 / vm.countInLine);
+        vm.countInLine = componentSettings.countInLine || 1;          
+        widthBootstrap = Math.ceil(12 / vm.countInLine);       
         vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
 
-        // EditEntityStorage.addFieldController(this);
+        vm.addItem = addItem;
+        vm.removeItem = removeItem;
 
         angular.forEach(componentSettings.fields, function(value, index) {
             var field;
@@ -55,7 +47,9 @@
         });
 
         vm.$isOnlyChildsBroadcast = false;
-        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
+        vm.listeners.push($scope.$on('editor:entity_loaded', onLoadedHandler));
+
+        function onLoadedHandler(event, data) {
             if (!vm.$isOnlyChildsBroadcast) {
                 var group = data[vm.fieldName];
                 if (group) {
@@ -69,44 +63,19 @@
                     }
                 }
             }
-        });
-
-        var destroyErrorField = $scope.$on("editor:api_error_field_" + fieldErrorName, function(event, data) {
-            if (angular.isArray(data)) {
-                angular.forEach(data, function(error) {
-                    if (vm.error.indexOf(error) < 0) {
-                        vm.error.push(error);
-                    }
-                });
-            } else {
-                if (vm.error.indexOf(data) < 0) {
-                    vm.error.push(data);
-                }
-            }
-        });
-
-        vm.removeItem = function(ind) {
+        }
+        
+        function removeItem(ind) {
             var tmpArray = vm.fieldsArray;
             vm.fieldsArray.splice(ind, 1);
-        };
+        }    
 
-        vm.addItem = function() {
+        function addItem() {
             var clone = vm.innerFields.map(function(field) { return angular.extend({}, field); });
             angular.forEach(clone, function(value, index) {
                 value.parentFieldIndex = vm.fieldsArray.length;
             });
             vm.fieldsArray.push(clone);
-        };
-
-        this.$onDestroy = function() {
-            destroyEntityLoaded();
-            destroyErrorField();
-        };
-
-        this.$postLink = function() {
-            $element.on('$destroy', function() {
-                $scope.$destroy();
-            });
-        };
+        }
     }
 })();

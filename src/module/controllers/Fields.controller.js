@@ -14,16 +14,8 @@
         angular.extend(vm, baseController);
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
-        self.parentComponentId = self.options.$parentComponentId || '';
-        self.fieldName = self.setting.name;
-        self.parentField = self.setting.parentField;
-        self.parentFieldIndex = angular.isNumber(self.setting.parentFieldIndex) ? self.setting.parentFieldIndex : false;
 
         self.readonly = componentSettings.readonly === true;
-        self.label = componentSettings.label || null;
-        self.hint = componentSettings.hint || null;
-        self.required = componentSettings.required === true;
-        self.multiple = componentSettings.multiple === true;
         self.multiname = componentSettings.multiname || null;
         self.depend = componentSettings.depend || null;
         self.width = !isNaN(+componentSettings.width) ? componentSettings.width : null;
@@ -64,9 +56,7 @@
                     }
                 }
             }
-        }
-
-        self.error = [];
+        }       
 
         self.fieldValue = transformToValue(self.defaultValue);
 
@@ -96,23 +86,9 @@
         } else {
             EditEntityStorage.addFieldController(self);
         }
+      
 
-        //-- Error handler
-
-        var fieldErrorName;
-        if (self.parentField) {
-            if (self.parentFieldIndex) {
-                fieldErrorName = self.parentField + "_" + self.parentFieldIndex + "_" + self.fieldName;
-            } else {
-                fieldErrorName = self.parentField + "_" + self.fieldName;
-            }
-        } else {
-            fieldErrorName = self.fieldName;
-        }
-
-        //-- listener storage for handlers
-        self.listeners = [];
-        self.listeners.push($scope.$on("editor:api_error_field_" + fieldErrorName, onErrorApiHandler));
+        //-- listener storage for handlers        
         self.listeners.push($scope.$watch(function() { return self.fieldValue; },
             function() {
                 self.error = [];
@@ -120,17 +96,6 @@
                     vm.fieldValue = vm.fieldValue[vm.field_id];
                 }
             }, true));
-
-        $scope.$on("$destroy", function() {
-            self.listeners.forEach(function(listener) {
-                if (angular.isFunction(listener)) {
-                    listener();
-                }
-            });
-            EditEntityStorage.deleteFieldController(self);
-            FilterFieldsStorage.deleteFilterController(self);
-        });
-
 
         if (self.options.filter) {
             $scope.$watch(function() {
@@ -191,21 +156,6 @@
         }
 
         $scope.onLoadDataHandler = onLoadDataHandler;
-        $scope.onErrorApiHandler = onErrorApiHandler;
-
-        function onErrorApiHandler(event, data) {
-            if (angular.isArray(data)) {
-                angular.forEach(data, function(error) {
-                    if (self.error.indexOf(error) < 0) {
-                        self.error.push(error);
-                    }
-                });
-            } else {
-                if (self.error.indexOf(data) < 0) {
-                    self.error.push(data);
-                }
-            }
-        }
 
         function onLoadDataHandler(event, data, callback) {
             if (!data.$parentComponentId || data.$parentComponentId === self.parentComponentId) {
@@ -255,7 +205,7 @@
                                 obj[self.field_id] = componentSettings.defaultValue;
                                 self.fieldValue = obj;
                             }
-                            if(data.hasOwnProperty(self.fieldName)) {
+                            if (data.hasOwnProperty(self.fieldName)) {
                                 self.fieldValue = data[self.fieldName];
                             }
                         }
