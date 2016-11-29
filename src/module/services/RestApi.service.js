@@ -5,9 +5,9 @@
         .module('universal.editor')
         .service('RestApiService', RestApiService);
 
-    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService'];
+    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate'];
 
-    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService) {
+    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate) {
         var entityType,
             self = this,
             queryTempParams,
@@ -230,6 +230,7 @@
                 request.options.isLoading = false;
                 $rootScope.$broadcast("uploader:remove_session");
                 $rootScope.$broadcast("editor:entity_success");
+                successCreateMessage();
 
                 var params = {};
                 if ($location.search().parent) {
@@ -291,6 +292,7 @@
                 request.options.isLoading = false;
                 $rootScope.$broadcast('uploader:remove_session');
                 $rootScope.$broadcast('editor:entity_success');
+                successUpdateMessage();
                 var params = {};
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
@@ -369,7 +371,9 @@
                 };
                 if (isCreate) {
                     $rootScope.$broadcast('editor:presave_entity_created', data);
+                    successPresaveCreateMessage();
                 } else {
+                    successUpdateMessage();
                     $rootScope.$broadcast("editor:presave_entity_updated", data);
                 }
             }, function(reject) {
@@ -457,6 +461,7 @@
                 self.setQueryParams({});
                 self.setFilterParams({});
                 $rootScope.$broadcast("editor:entity_success_deleted");
+                successDeleteMessage();
                 var params = {};
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
@@ -478,6 +483,36 @@
                 request.options.isLoading = false;
             });
         };
+
+        function successDeleteMessage() {
+            $translate('CHANGE_RECORDS.DELETE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successUpdateMessage() {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successPresaveUpdateMessage() {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successPresaveCreateMessage() {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successCreateMessage() {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
 
         //-- read all pages
         this.getUrlResource = function getUrlResource(url, res, def, fromP, toP) {
