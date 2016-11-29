@@ -54,14 +54,17 @@
                                 angular.forEach(response.data.items, function(v) {
                                     self.optionValues.push(v);
                                 });
+                                componentSettings.$optionValues = self.optionValues;
                                 return self.optionValues;
                             }, function(reject) {
                                 console.error(self.constructor.name + ': Не удалось получить значения для поля \"' + self.fieldName + '\" с удаленного ресурса');
-                            });
-                        if (self.options.filter) {
-                            componentSettings.$loadingPromise.finally(function() {
+                            }).finally(function() {
                                 self.loadingData = false;
                             });
+                    } else {
+                        if (componentSettings.$optionValues && componentSettings.$optionValues.length) {
+                            self.loadingData = false;
+                            self.optionValues = componentSettings.$optionValues;
                         }
                     }
                 }
@@ -135,7 +138,7 @@
             } else {
                 value = object;
             }
-            if(value == 0) {
+            if (value == 0) {
                 return value;
             }
             return value || (self.multiple ? [] : null);
