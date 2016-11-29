@@ -21,7 +21,7 @@
         angular.forEach(settings.dataSource.fields, function(field) {
             if (field.component.hasOwnProperty("settings") && (!settings.fields || ~settings.fields.indexOf(field.name))) {
                 var fieldSettings = field.component.settings;
-                
+
 
                 var group = {
                     label: fieldSettings.label,
@@ -31,7 +31,7 @@
                         options: {
                             filterParameters: {
                                 operator: '%:text%',
-                                index: 0                                
+                                index: 0
                             },
                             filter: true,
                             $parentComponentId: vm.options.$parentComponentId
@@ -76,33 +76,25 @@
                         /** for date is required convert into date-type (at this moment we have two fields of date) */
                         if (field.component.settings.$fieldType === 'date') {
                             output[key] = output[key] || [];
-                            output[key].push(moment.utc(value));
+                            output[key].push(moment.utc(value, vm.format));
                         } else {
-                            if (field.component.settings.$fieldType === 'array') {
-                                output[key] = value.split(',');
-                            } else {
-                                output[key] = value;
-                            }
+                            output[key] = value;
                         }
                     });
                     var value = output[vm.fieldName];
-                    if (componentSettings.values || componentSettings.valuesRemote) {
-                        if (vm.field_id && value) {
-                            if (angular.isArray(value)) {
-                                vm.fieldValue = value;
-                            } else {
-                                vm.fieldValue = {};
-                                vm.fieldValue[vm.field_id] = value;
-                                if (vm.addToSelected) {
-                                    vm.addToSelected(null, vm.fieldValue);
-                                }
-                            }
+                    if (angular.isArray(value)) {
+                        value = value[vm.options.filterParameters.index];
+                    }
+                    if (field.component.settings.$fieldType === 'array') {
+                        if (angular.isArray(value)) {
+                            vm.fieldValue = value.split(',');
                         }
                     } else {
-                        if (angular.isArray(value)) {
-                            vm.fieldValue = value[vm.options.filterParameters.index];
-                        } else {
-                            vm.fieldValue = value;
+                        vm.fieldValue = value;
+                        if (vm.addToSelected && value) {
+                            vm.fieldValue = {};
+                            vm.fieldValue[vm.field_id] = value;
+                            vm.addToSelected(null, vm.fieldValue);
                         }
                     }
                     $timeout(function() {
@@ -115,7 +107,7 @@
                     return output;
                 };
 
-                /* custom logic for operators */
+                /*temprory custom logic for operators */
 
                 if (~['ue-select', 'ue-autocomplete', 'ue-checkbox', 'ue-radiolist', 'ue-colorpicker'].indexOf(field.component.name)) {
                     group.filters[0].options.filterParameters.operator = ":text";

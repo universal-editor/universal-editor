@@ -5,31 +5,42 @@
         .module('universal.editor')
         .controller('UeButtonFilterController', UeButtonFilterController);
 
-    UeButtonFilterController.$inject = ['$rootScope', '$scope', '$element', 'RestApiService', 'configData', '$window', 'ModalService', 'ButtonsService', 'FilterFieldsStorage', '$state', '$location', '$controller'];
+    UeButtonFilterController.$inject = ['$rootScope', '$scope', '$element', 'FilterFieldsStorage', '$location', '$controller'];
 
-    function UeButtonFilterController($rootScope, $scope, $element, RestApiService, configData, $window, ModalService, ButtonsService, FilterFieldsStorage, $state, $location, $controller) {
+    function UeButtonFilterController($rootScope, $scope, $element, FilterFieldsStorage, $location, $controller) {
         var vm = this;
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
 
+        var parentComponentId = vm.options.$parentComponentId;
+
         $element.find('button').bind("click", function() {
-            if (vm.beforeAction) {
-                vm.beforeAction();
-            }
             var filterJSON = null, filters;
 
             var parentComponentId = vm.options.$parentComponentId;
+
+            if (vm.beforeSend) {
+                FilterFieldsStorage.callbackBeforeSend = vm.beforeSend;
+            }
+
             filters = $location.search().filter;
             if (filters) {
                 filters = JSON.parse(filters);
             }
 
+
             if (vm.action === 'send') {
                 var filterEntity = FilterFieldsStorage.calculate(parentComponentId);
+
                 if (filterEntity) {
                     filters = filters || {};
                     filters[parentComponentId] = filterEntity;
                 }
-                filterJSON = filters ? JSON.stringify(filters) : null;
+
+                if (filterEntity === false) {
+                    filters = filters || {};
+                    delete filters[parentComponentId];
+                }
+                filterJSON = filters && !$.isEmptyObject(filters) ? JSON.stringify(filters) : null;
             }
 
             if (vm.action === 'clear') {
