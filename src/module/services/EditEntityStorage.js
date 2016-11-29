@@ -140,6 +140,7 @@
             var controllers = storage[request.options.$parentComponentId] || [];
 
             angular.forEach(controllers, function(fCtrl) {
+                var value = fCtrl.getFieldValue();
                 if (!fCtrl.multiple) {
                     fCtrl.inputLeave(fCtrl.fieldValue);
                 } else {
@@ -155,13 +156,21 @@
                 }
                 isError = (fCtrl.error.length === 0) && isError;
                 if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
+                    if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
+                        entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
+                        entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
+                        angular.merge(entityObject[fCtrl.parentField][fCtrl.parentFieldIndex], value[fCtrl.parentField]);
+                    } else {
+                        angular.merge(entityObject, value);
+                    }
+                }
+                if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
                     angular.merge(entityObject, fCtrl.getFieldValue());
                 }
             });
 
             if (isError) {
                 request.data = entityObject;
-
                 $rootScope.$emit('editor:presave_entity', request);
             }
         };

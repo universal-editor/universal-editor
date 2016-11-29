@@ -17,10 +17,9 @@
 
         vm.addItem = addItem;
         vm.removeItem = removeItem;
-        $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format || 'DD.MM.YYYY');
-        $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format || 'DD.MM.YYYY');
-
         vm.format = vm.format || 'DD.MM.YYYY';
+        $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format);
+        $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);       
 
         vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler));
 
@@ -51,32 +50,25 @@
                         return;
                     }
                     var tempItem = {};
-                    tempItem[vm.multiname] = moment(valueItem).set({ 'second': 0, 'minute': 0, 'hour': 0 }).format(vm.format || 'DD.MM.YYYY');
+                    tempItem[vm.multiname] = moment(valueItem).set({ 'second': 0, 'minute': 0, 'hour': 0 }).format(vm.format);
                     wrappedFieldValue.push(tempItem);
                 });
             } else if (vm.multiple) {
                 wrappedFieldValue = [];
                 angular.forEach(vm.fieldValue, function (valueItem) {
-                    wrappedFieldValue.push(moment(valueItem).set({ 'second': 0, 'minute': 0, 'hour': 0 }).format(vm.format || 'DD.MM.YYYY'));
+                    wrappedFieldValue.push(moment(valueItem).set({ 'second': 0, 'minute': 0, 'hour': 0 }).format(vm.format));
                 });
             } else {
                 if (vm.fieldValue === undefined || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
                     wrappedFieldValue = "";
                 } else {
-                    wrappedFieldValue = moment(vm.fieldValue).set({ 'second': 0, 'minute': 0, 'hour': 0 }).format(vm.format || 'DD.MM.YYYY');
+                    wrappedFieldValue = moment(vm.fieldValue).set({ 'second': 0, 'minute': 0, 'hour': 0 }).format(vm.format);
                 }
             }
 
-            if ($scope.parentField) {
-                if (vm.parentFieldIndex) {
-                    field[$scope.parentField] = [];
-                    field[$scope.parentField][vm.parentFieldIndex] = {};
-                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
-                } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
-                }
-
+            if (vm.parentField) {
+                    field[vm.parentField] = {};
+                    field[vm.parentField][vm.fieldName] = wrappedFieldValue;
             } else {
                 field[vm.fieldName] = wrappedFieldValue;
             }

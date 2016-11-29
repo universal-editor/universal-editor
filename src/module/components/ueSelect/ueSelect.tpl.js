@@ -26,7 +26,7 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '        <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree">\n' +
     '            <div data-ng-click="vm.clickSelect()" data-ng-class="!vm.search ? &quot;but-for-search&quot; : &quot;&quot;" class="select-input-wrapper">\n' +
-    '                <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="form-control select-input"/>\n' +
+    '                <input data-ng-if="vm.search" ng-disabled="vm.loadingData" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="form-control select-input"/>\n' +
     '                <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
     '                <div data-ng-if="!vm.search" class="form-control select-input">\n' +
     '                    <div data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder-div&quot; : &quot;&quot;" class="dropdown__selected-items">{{vm.placeholder}}</div>\n' +
@@ -43,13 +43,13 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '        <div data-ng-if="vm.isTree" class="dropdown">\n' +
     '            <div class="dropdown__host">\n' +
-    '                <div data-ng-class="{\'dropdown__title_open\': isOpen}" data-ng-click="vm.clickSelect()" data-ng-style="{&quot;cursor&quot; : vm.search ? &quot;text&quot; : &quot;pointer&quot;}" class="dropdown__title form-control select-input">\n' +
+    '                <div data-ng-class="{\'dropdown__title_open\': isOpen}" data-ng-click="vm.clickSelect()" data-ng-style="{&quot;cursor&quot; : vm.search &amp;&amp; !vm.loadingData ? &quot;text&quot; : &quot;pointer&quot;}" class="dropdown__title form-control select-input">\n' +
     '                    <div data-ng-repeat="value in vm.fieldValue" data-ng-if="vm.fieldValue.length &amp;&amp; vm.multiple &amp;&amp; value[vm.field_search]" class="selected-items__item">\n' +
     '                        <div class="selected-item">\n' +
     '                            <label ng-bind="value[vm.field_search]" style="overflow: hidden; text-overflow: ellipsis; margin-right: 15px; display: block;"></label><span data-ng-click="vm.remove($event, value)" style="float: right; width: 10px; margin-top: -24px;" class="selected-item__btn_delete">×</span>\n' +
     '                        </div>\n' +
     '                    </div>\n' +
-    '                    <input data-ng-if="vm.search" data-ng-model="vm.filterText" data-ng-change="vm.change()" placeholder="{{vm.placeholder}}" data-ng-style="vm.styleInput" size="{{vm.sizeInput}}" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" data-ng-keydown="vm.deleteToSelected($event, true)" data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder&quot; : &quot;&quot;" class="dropdown__search-field"/>\n' +
+    '                    <input data-ng-if="vm.search" ng-disabled="vm.loadingData" data-ng-model="vm.filterText" data-ng-change="vm.change()" placeholder="{{vm.placeholder}}" data-ng-style="vm.styleInput" size="{{vm.sizeInput}}" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" data-ng-keydown="vm.deleteToSelected($event, true)" data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder&quot; : &quot;&quot;" class="dropdown__search-field"/>\n' +
     '                    <input data-ng-if="!vm.search" data-ng-focus="toggleDropdown()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
     '                    <div data-ng-if="!vm.search" class="dropdown__selected">\n' +
     '                        <div data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder-div&quot; : &quot;&quot;" data-ng-if="!vm.loadingData" class="dropdown__selected-items dropdown-tree">{{vm.placeholder}}</div>\n' +

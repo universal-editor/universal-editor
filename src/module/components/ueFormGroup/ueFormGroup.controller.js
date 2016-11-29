@@ -26,6 +26,10 @@
         widthBootstrap = Math.ceil(12 / vm.countInLine);       
         vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
 
+        if(vm.multiple === true && !vm.fieldName) {
+          console.log('UeFormGroup: в режиме multiple обязательно должен быть указан параметр name.');
+        }
+
         vm.addItem = addItem;
         vm.removeItem = removeItem;
 

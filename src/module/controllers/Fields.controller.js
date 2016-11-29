@@ -54,14 +54,17 @@
                                 angular.forEach(response.data.items, function(v) {
                                     self.optionValues.push(v);
                                 });
+                                componentSettings.$optionValues = self.optionValues;
                                 return self.optionValues;
                             }, function(reject) {
                                 console.error(self.constructor.name + ': Не удалось получить значения для поля \"' + self.fieldName + '\" с удаленного ресурса');
-                            });
-                        if (self.options.filter) {
-                            componentSettings.$loadingPromise.finally(function() {
+                            }).finally(function() {
                                 self.loadingData = false;
                             });
+                    } else {
+                        if (componentSettings.$optionValues && componentSettings.$optionValues.length) {
+                            self.loadingData = false;
+                            self.optionValues = componentSettings.$optionValues;
                         }
                     }
                 }
@@ -111,7 +114,6 @@
                 return $location.search();
             }, function(newVal) {
                 if (newVal && newVal.filter) {
-                    console.log("Filter generate.");
                     var filter = JSON.parse(newVal.filter);
                     componentSettings.$parseFilter($scope.vm, filter[self.parentComponentId]);
                 }
@@ -135,6 +137,9 @@
                 value = object[self.field_id];
             } else {
                 value = object;
+            }
+            if (value == 0) {
+                return value;
             }
             return value || (self.multiple ? [] : null);
         }

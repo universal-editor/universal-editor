@@ -58,6 +58,7 @@
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             $scope.onLoadDataHandler(event, data);
             componentSettings.$loadingPromise.then(function(items) {
+                debugger;
                 allOptions = allOptions.length ? allOptions : items;
                 vm.optionValues = [];
                 angular.forEach(allOptions, function(v) {
