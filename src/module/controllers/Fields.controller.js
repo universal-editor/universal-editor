@@ -111,7 +111,6 @@
                 return $location.search();
             }, function(newVal) {
                 if (newVal && newVal.filter) {
-                    console.log("Filter generate.");
                     var filter = JSON.parse(newVal.filter);
                     componentSettings.$parseFilter($scope.vm, filter[self.parentComponentId]);
                 }
@@ -135,6 +134,9 @@
                 value = object[self.field_id];
             } else {
                 value = object;
+            }
+            if(value == 0) {
+                return value;
             }
             return value || (self.multiple ? [] : null);
         }

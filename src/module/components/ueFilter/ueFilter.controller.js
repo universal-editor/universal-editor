@@ -99,7 +99,6 @@
                     }
                     $timeout(function() {
                         if (!FilterFieldsStorage.getFilterQueryObject(parentComponentId)) {
-                            console.log("Filter calculate.");
                             FilterFieldsStorage.calculate(parentComponentId);
                             $rootScope.$broadcast('editor:read_entity', vm.parentComponentId);
                         }

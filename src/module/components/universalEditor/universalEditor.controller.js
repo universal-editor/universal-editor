@@ -15,7 +15,6 @@
         vm.type = type;
         var currentState = $state.current;
         var pk;
-        console.log("reload!");
         
         $rootScope.$broadcast('editor:set_entity_type', component.settings); 
 

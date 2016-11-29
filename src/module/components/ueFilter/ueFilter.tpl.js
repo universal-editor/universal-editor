@@ -21,7 +21,7 @@ module.run(['$templateCache', function($templateCache) {
     '                </div>\n' +
     '            </div>\n' +
     '            <div class="editor-filter-footer">\n' +
-    '                <component-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" data-options="vm.options" data-button-class="footer"></component-wrapper>\n' +
+    '                <component-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" data-options="vm.options" data-button-class="header"></component-wrapper>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +

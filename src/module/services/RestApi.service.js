@@ -79,7 +79,6 @@
             if (cancelerPromises[id][mode]) {
                 cancelerPromises[id][mode].resolve();
             }
-            console.log("timeout request resolve");
             cancelerPromises[id][mode] = def;
             return def;
         }
@@ -178,9 +177,7 @@
                 request.options.isLoading = false;
                 deferred.resolve();
             }, function(reject) {
-                if (reject.status !== -1) {
-                    request.options.isLoading = false;
-                }
+                request.options.isLoading = false;
                 deferred.reject();
             });
 
@@ -364,6 +361,7 @@
                 var searchString = $location.search();
                 $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                     $location.search(searchString);
+                    $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
                 });
                 var data = {
                     id: newId,
