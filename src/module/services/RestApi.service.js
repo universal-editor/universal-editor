@@ -104,19 +104,27 @@
 
             var id = request.options.$parentComponentId;
             var filters = FilterFieldsStorage.getFilterQueryObject(id);
+            var beforeSend;
             if (!!request.childId) {
                 filters = filters || {};
                 filters[request.parentField] = request.childId;
             }
+
+            /** beforeSend handler */
+            if (angular.isFunction(FilterFieldsStorage.callbackBeforeSend)) {
+                beforeSend = FilterFieldsStorage.callbackBeforeSend;
+                delete FilterFieldsStorage.callbackBeforeSend;
+            }
+
             if (filters) {
                 angular.extend(params, { filter: JSON.stringify(filters) });
             } else {
                 delete params.filter;
             }
 
-            if(!!request.options.mixedMode){
+            if (!!request.options.mixedMode) {
                 params = params || {};
-                angular.extend(params,{
+                angular.extend(params, {
                     mixed: request.options.mixedMode.entityType
                 });
             }
@@ -154,11 +162,13 @@
 
             params['per-page'] = 8;
 
+
             $http({
                 method: _method,
                 url: _url,
                 params: params,
-                timeout: canceler.promise
+                timeout: canceler.promise,
+                beforeSend: beforeSend
             }).then(function(response) {
                 if (response.data[itemsKey].length === 0) {
                     $rootScope.$broadcast("editor:parent_empty");
