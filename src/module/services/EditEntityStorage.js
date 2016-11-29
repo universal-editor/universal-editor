@@ -174,7 +174,7 @@
 
         this.getStateConfig = function(stateName, entityName) {
 
-            var entityName = entityName || entityType;
+            entityName = entityName || entityType;
             var result = null;
 
             if (stateName.indexOf(entityName + '_') !== 0) {

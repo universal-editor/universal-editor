@@ -104,7 +104,7 @@
             });
         }
 
-        if (vm.editFooterBar.length == 0) {
+        if (vm.editFooterBar.length === 0) {
             angular.forEach(defaultEditFooterBar, function (control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {

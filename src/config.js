@@ -280,7 +280,8 @@ var elementDataSource = {
                     ]
                 }
             }
-        },{
+        },
+        {
             name: 'datetime',
             component: {
                 name: 'ue-datetime',
@@ -364,6 +365,224 @@ var elementDataSource = {
                             maxDate: '2016-10-11 15:55'
                         }
                     ]
+                }
+            }
+        },
+        {
+            name: 'time',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time'
+                }
+            }
+        },
+        {
+            name: 'time_max',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time max = 15:55',
+                    validators:[
+                        {
+                            type: 'date',
+                            maxDate: '15:55'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time_min',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time min 15:40:00',
+                    validators:[
+                        {
+                            type: 'date',
+                            minDate: '15:40'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time_minmax',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time min = 15:40, max = 15:55',
+                    validators:[
+                        {
+                            type: 'date',
+                            minDate: '15:40',
+                            maxDate: '15:55'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time_format',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time format = mm:HH',
+                    validators:[
+                        {
+                            type: 'date',
+                            format: 'mm:HH'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time_minmax_format',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time min = 15:40, max = 15:55 format = mm:HH',
+                    validators:[
+                        {
+                            type: 'date',
+                            format: 'mm:HH',
+                            minDate: '15:40',
+                            maxDate: '15:55'
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+};
+
+var staffDataSource = {
+    type: 'REST',
+    url: '//universal-backend.dev/rest/v1/staff',
+    sortBy: '-id',
+    primaryKey: 'id',
+    parentField: 'parent_id',
+    keys:{
+        items: 'items',
+        meta: '_meta'
+    },
+    fields:[
+        {
+            name: "name",
+            component: {
+                name: 'ue-string',
+                settings: {
+                    label: "Имя"
+                }
+            }
+        },
+        {
+            name: "email",
+            component: {
+                name: 'ue-string',
+                settings: {
+                    label: "Эл. почта",
+                    contentType: 'email'
+                }
+            }
+        },
+        {
+            name: "gender",
+            components: {
+                name: 'ue-radiolist',
+                settings:{
+                    label: "Пол",
+                    values: {
+                        "male": "Мужской",
+                        "female": "Женский"
+                    }
+                }
+            }
+        },
+        {
+            name: "country",
+            components: {
+                name: "ue-select",
+                settings: {
+                    label: 'Страна',
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "name"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/country"
+                    },
+                    multiple: false,
+                    placeholder: "Выберете эелемент"
+                }
+            }
+        },
+        {
+            name: "parent_id",
+            components: {
+                name: "ue-autocomplete",
+                settings:{
+                    label: "Руководитель",
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "name"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/staff"
+                    },
+                    multiple: false
+                }
+            }
+        },
+        {
+            name: "colors",
+            components: {
+                name: "ue-colorpicker",
+                settings: {
+                    label: "Любимые цвета",
+                    multiname: "color",
+                    expandable: true
+                }
+            }
+        },
+        {
+            name: "text",
+            components: {
+                name: 'ue-textarea',
+                settings: {
+                    label: "Дополнительные заметки"
+                }
+            }
+        },
+        {
+            name: "fired",
+            components: {
+                name: 'ue-checkbox',
+                settings: {
+                    label: "Уволен",
+                    values: {
+                        "1": ""
+                    }
+                }
+            }
+        },
+        {
+            name: "created_at",
+            components: {
+                name: 'ue-datetime',
+                settings: {
+                    label: "Дата создания"
+                }
+            }
+        },
+        {
+            name: "updated_at",
+            components: {
+                name: 'ue-datetime',
+                settings: {
+                    label: "Дата обновления"
                 }
             }
         }
@@ -527,6 +746,32 @@ var ue = new UniversalEditor('universal-editor', {
                                                         'datetime_minmax',
                                                         'datetime_format',
                                                         'datetime_minmax_format'
+                                                    ]
+                                                },
+                                                {
+                                                    label: 'TIME',
+                                                    fields: [
+                                                        'time',
+                                                        'time_min',
+                                                        'time_max',
+                                                        'time_minmax',
+                                                        'time_format',
+                                                        'time_minmax_format'
+                                                    ]
+                                                },
+                                                {
+                                                    label: 'Сотрудники',
+                                                    fields:[
+                                                        {
+                                                            component: {
+                                                                name: 'ue-table',
+                                                                settings: {
+                                                                    label: 'Messages',
+                                                                    dataSource: staffDataSource,
+                                                                    columns: ['name', 'email']
+                                                                }
+                                                            }
+                                                        }
                                                     ]
                                                 }
                                             ]
