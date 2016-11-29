@@ -25,11 +25,17 @@
 
             if (vm.action === 'send') {
                 var filterEntity = FilterFieldsStorage.calculate(parentComponentId);
-                if (filterEntity) {
-                    filters = filters || {};
+                
+                if (filterEntity) {            
+                    filters = filters || {};        
                     filters[parentComponentId] = filterEntity;
+                } 
+
+                if(filterEntity === false) {
+                    filters = filters || {};
+                    delete filters[parentComponentId];
                 }
-                filterJSON = filters ? JSON.stringify(filters) : null;
+                filterJSON = filters && !$.isEmptyObject(filters) ? JSON.stringify(filters) : null;
             }
 
             if (vm.action === 'clear') {
@@ -38,7 +44,7 @@
                     delete filters[parentComponentId];
                     if (!$.isEmptyObject(filters)) {
                         filterJSON = JSON.stringify(filters);
-                    }
+                    } 
                 }
             }
             $location.search('filter', filterJSON);
