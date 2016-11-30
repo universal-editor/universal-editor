@@ -104,8 +104,8 @@
             });
         }
 
-        if (vm.editFooterBar.length == 0) {
-            angular.forEach(defaultEditFooterBar, function(control) {
+        if (vm.editFooterBar.length === 0) {
+            angular.forEach(defaultEditFooterBar, function (control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {
                     newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;

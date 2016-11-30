@@ -36,7 +36,7 @@
         vm.mixContextLinks = [];
         vm.listHeaderBar = [];
         vm.$parentComponentId = vm.setting.component.$id;
-        vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0))
+        vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
 
 
         vm.options = {
@@ -145,7 +145,7 @@
                 }
                 newControl.paginationData = {};
                 vm.listHeaderBar.push(newControl);
-            })
+            });
         }
 
         if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
@@ -350,7 +350,7 @@
                 return field.field === name;
             });
 
-            return (index !== -1) ? true : false;
+            return index !== -1;
         }
 
         //локализация

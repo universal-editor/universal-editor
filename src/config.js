@@ -4,7 +4,7 @@ window.RequstCallback = {
     }
 };
 
-var staffDataSource = {
+var elementDataSource = {
     type: 'REST',
     url: '//universal-backend.dev/rest/v1/staff',
     sortBy: '-id',
@@ -16,78 +16,133 @@ var staffDataSource = {
     },
     fields: [
         {
-            name: 'id',
+            name: 'number',
             component: {
                 name: 'ue-string',
                 settings: {
-                    label: '№',
-                    validators: [
+                    label: 'просто number',
+                    validators:[
+                        {
+                            type: 'number'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'number_step',
+            component: {
+                name: 'ue-string',
+                settings: {
+                    label: 'number c шагом(step) 10',
+                    validators:[
                         {
                             type: 'number',
-                            min: 10,
-                            max: 50,
-                            step: 2
+                            step: 10
                         }
                     ]
                 }
             }
         },
         {
-            name: 'parent_id',
+            name: 'number_minmax',
             component: {
                 name: 'ue-string',
                 settings: {
-                    label: 'Начальник',
-                    validators: []
-                }
-            }
-        },
-        {
-            name: 'name',
-            component: {
-                name: 'ue-string',
-                settings: {
-                    label: 'Имя',
-                    validators: [
+                    label: 'number c ограничением min = 0 и max = 100',
+                    validators:[
                         {
-                            type: 'string',
-                            trim: true,
-                            maxLength: 10,
-                            minLength: 3
+                            type: 'number',
+                            min: 0,
+                            max: 100
                         }
                     ]
                 }
             }
         },
         {
-            name: 'email',
-            expandable: true,
+            name: 'number_minmax_step',
             component: {
                 name: 'ue-string',
                 settings: {
-                    label: 'Эл. почта',
-                    validators: [
+                    label: 'number c ограничением min = 0 и max = 100 и шагом 10',
+                    validators:[
                         {
-                            type: 'string',
-                            trim: true,
-                            contentType: 'email'
+                            type: 'number',
+                            min: 0,
+                            max: 100,
+                            step: 10
                         }
                     ]
                 }
             }
         },
         {
-            name: 'url',
-            expandable: true,
+            name: 'string',
             component: {
                 name: 'ue-string',
                 settings: {
-                    label: 'Url',
-                    multiple: true,
-                    validators: [
+                    label: 'Простое поле string'
+                }
+            }
+        },
+        {
+            name: 'string_trim',
+            component: {
+                name: 'ue-string',
+                settings: {
+                    label: 'string c trim->true',
+                    validators:[
                         {
                             type: 'string',
-                            trim: true,
+                            trim: true
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'string_minmax',
+            component: {
+                name: 'ue-string',
+                settings: {
+                    label: 'string c ограничеме по длинне minLength = 2, maxLength = 25',
+                    validators:[
+                        {
+                            type: 'string',
+                            minLength: 2,
+                            maxLength: 25
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'string_minmax_trim',
+            component: {
+                name: 'ue-string',
+                settings: {
+                    label: 'string c ограничеме по длинне minLength = 2, maxLength = 25, trim',
+                    validators:[
+                        {
+                            type: 'string',
+                            minLength: 2,
+                            maxLength: 25,
+                            trim: true
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'string_url',
+            component: {
+                name: 'ue-string',
+                settings: {
+                    label: 'string contentType = url',
+                    validators:[
+                        {
+                            type: 'string',
                             contentType: 'url'
                         }
                     ]
@@ -95,34 +150,47 @@ var staffDataSource = {
             }
         },
         {
-            name: 'description',
+            name: 'string_email',
             component: {
-                name: 'ue-textarea',
+                name: 'ue-string',
                 settings: {
-                    label: 'textarea',
-                    validators: [
+                    label: 'string contentType = email',
+                    validators:[
                         {
                             type: 'string',
-                            minLength: 10,
-                            maxLength: 50,
-                            trim: true
+                            contentType: 'email'
                         }
-                    ],
-                    multiple: false
+                    ]
                 }
             }
         },
         {
-            name: "gender",
+            name: 'string_password',
             component: {
-                name: "ue-radiolist",
-                settings:{
-                    "label": "Пол",
-                    "values": {
-                        "male": "Мужской",
-                        "female": "Женский"
-                    },
-                    "showOnly": "edit"
+                name: 'ue-string',
+                settings: {
+                    label: 'string contentType = password',
+                    validators:[
+                        {
+                            type: 'string',
+                            contentType: 'password'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'string_pattern',
+            component: {
+                name: 'ue-string',
+                settings: {
+                    label: 'string pattern = [0-9][a-z]',
+                    validators:[
+                        {
+                            type: 'string',
+                            pattern: '[0-9][a-z]'
+                        }
+                    ]
                 }
             }
         },
@@ -131,26 +199,85 @@ var staffDataSource = {
             component: {
                 name: 'ue-date',
                 settings: {
-                    label: 'date',
-                    multiple: true,
-                    validators: [
+                    label: 'date'
+                }
+            }
+        },
+        {
+            name: 'date_max',
+            component: {
+                name: 'ue-date',
+                settings: {
+                    label: 'date max = 10.12.2016',
+                    validators:[
                         {
                             type: 'date',
-                            format: 'YYYY-MM-DD',
-                            minDate: "2015-10-10",
-                            maxDate: "2015-12-10"
+                            maxDate: '10.12.2016'
                         }
                     ]
                 }
             }
         },
         {
-            name: 'date2',
+            name: 'date_min',
             component: {
                 name: 'ue-date',
                 settings: {
-                    label: 'date2',
-                    multiple: true
+                    label: 'date min = 10.11.2016',
+                    validators:[
+                        {
+                            type: 'date',
+                            minDate: '10.11.2016'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'date_minmax',
+            component: {
+                name: 'ue-date',
+                settings: {
+                    label: 'date min = 10.11.2016, max = 10.12.2016',
+                    validators:[
+                        {
+                            type: 'date',
+                            minDate: '10.11.2016',
+                            maxDate: '10.12.2016'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'date_format',
+            component: {
+                name: 'ue-date',
+                settings: {
+                    label: 'date min = 10.11.2016, max = 10.12.2016',
+                    validators:[
+                        {
+                            type: 'date',
+                            format: 'YYYY-DD-MM'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'date_minmax_format',
+            component: {
+                name: 'ue-date',
+                settings: {
+                    label: 'date min = 10.11.2016, max = 10.12.2016',
+                    validators:[
+                        {
+                            type: 'date',
+                            format: 'YYYY-DD-MM',
+                            minDate: '2016-10-12',
+                            maxDate: '2016-10-11'
+                        }
+                    ]
                 }
             }
         },
@@ -159,14 +286,83 @@ var staffDataSource = {
             component: {
                 name: 'ue-datetime',
                 settings: {
-                    label: 'datetime',
-                    multiple: true,
-                    validators: [
+                    label: 'datetime'
+                }
+            }
+        },
+        {
+            name: 'datetime_max',
+            component: {
+                name: 'ue-datetime',
+                settings: {
+                    label: 'datetime max = 10.12.2016 15:55:00',
+                    validators:[
                         {
                             type: 'date',
-                            format: 'DD.MM.YYYY HH:mm',
-                            minDate: "10.10.2015 15:50",
-                            maxDate: "10.12.2015 19:50"
+                            maxDate: '10.12.2016 15:55:00'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'datetime_min',
+            component: {
+                name: 'ue-datetime',
+                settings: {
+                    label: 'datetime min = 10.11.2016 15:40:00',
+                    validators:[
+                        {
+                            type: 'date',
+                            minDate: '10.11.2016 15:40:00'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'datetime_minmax',
+            component: {
+                name: 'ue-datetime',
+                settings: {
+                    label: 'datetime min = 10.11.2016 15:40:00, max = 10.12.2016 15:55:00',
+                    validators:[
+                        {
+                            type: 'date',
+                            minDate: '10.11.2016 15:40:00',
+                            maxDate: '10.12.2016 15:55:00'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'datetime_format',
+            component: {
+                name: 'ue-datetime',
+                settings: {
+                    label: 'datetime min = 10.11.2016, max = 10.12.2016',
+                    validators:[
+                        {
+                            type: 'date',
+                            format: 'YYYY-DD-MM HH:mm'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'datetime_minmax_format',
+            component: {
+                name: 'ue-datetime',
+                settings: {
+                    label: 'datetime min = 10.11.2016, max = 10.12.2016',
+                    validators:[
+                        {
+                            type: 'date',
+                            format: 'YYYY-DD-MM HH:mm',
+                            minDate: '2016-10-12 15:40',
+                            maxDate: '2016-10-11 15:55'
                         }
                     ]
                 }
@@ -177,13 +373,83 @@ var staffDataSource = {
             component: {
                 name: 'ue-time',
                 settings: {
-                    label: 'time',
-                    multiple: true,
-                    validators: [
+                    label: 'time'
+                }
+            }
+        },
+        {
+            name: 'time_max',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time max = 15:55',
+                    validators:[
                         {
                             type: 'date',
-                            minDate: "15:50",
-                            maxDate: "19:50"
+                            maxDate: '15:55'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time_min',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time min 15:40:00',
+                    validators:[
+                        {
+                            type: 'date',
+                            minDate: '15:40'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time_minmax',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time min = 15:40, max = 15:55',
+                    validators:[
+                        {
+                            type: 'date',
+                            minDate: '15:40',
+                            maxDate: '15:55'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time_format',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time format = mm:HH',
+                    validators:[
+                        {
+                            type: 'date',
+                            format: 'mm:HH'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time_minmax_format',
+            component: {
+                name: 'ue-time',
+                settings: {
+                    label: 'time min = 15:40, max = 15:55 format = mm:HH',
+                    validators:[
+                        {
+                            type: 'date',
+                            format: 'mm:HH',
+                            minDate: '15:40',
+                            maxDate: '15:55'
                         }
                     ]
                 }
@@ -192,63 +458,131 @@ var staffDataSource = {
     ]
 };
 
-var filterComponent = {
-    component: {
-        name: 'ue-filter',
-        settings: {
-            header: {
-                label: 'Фильтр'
-            },
-            fields: ['id', 'parent_id', 'email', 'description'],
-            footer: {
-                controls: [
-                    {
-                        component: {
-                            name: 'ue-button-filter',
-                            settings: {
-                                label: 'Применить',
-                                action: 'send'
-                            }
-                        }
-                    },
-                    {
-                        component: {
-                            name: 'ue-button-filter',
-                            settings: {
-                                label: 'Очистить',
-                                action: 'clear'
-                            }
-                        }
-                    }
-                ]
-            }
-        }
-    }
-};
-
-var messagesDataSource = {
+var staffDataSource = {
     type: 'REST',
-    url: '//universal-backend.dev/rest/v1/news',
+    url: '//universal-backend.dev/rest/v1/staff',
     sortBy: '-id',
     primaryKey: 'id',
-    fields: [
+    parentField: 'parent_id',
+    keys:{
+        items: 'items',
+        meta: '_meta'
+    },
+    fields:[
         {
-            name: 'id',
+            name: "name",
             component: {
                 name: 'ue-string',
                 settings: {
-                    label: '№',
-                    validators: []
+                    label: "Имя"
                 }
             }
         },
         {
-            name: 'email',
+            name: "email",
             component: {
                 name: 'ue-string',
                 settings: {
-                    label: 'Message',
-                    validators: []
+                    label: "Эл. почта",
+                    contentType: 'email'
+                }
+            }
+        },
+        {
+            name: "gender",
+            components: {
+                name: 'ue-radiolist',
+                settings:{
+                    label: "Пол",
+                    values: {
+                        "male": "Мужской",
+                        "female": "Женский"
+                    }
+                }
+            }
+        },
+        {
+            name: "country",
+            components: {
+                name: "ue-select",
+                settings: {
+                    label: 'Страна',
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "name"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/country"
+                    },
+                    multiple: false,
+                    placeholder: "Выберете эелемент"
+                }
+            }
+        },
+        {
+            name: "parent_id",
+            components: {
+                name: "ue-autocomplete",
+                settings:{
+                    label: "Руководитель",
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "name"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/staff"
+                    },
+                    multiple: false
+                }
+            }
+        },
+        {
+            name: "colors",
+            components: {
+                name: "ue-colorpicker",
+                settings: {
+                    label: "Любимые цвета",
+                    multiname: "color",
+                    expandable: true
+                }
+            }
+        },
+        {
+            name: "text",
+            components: {
+                name: 'ue-textarea',
+                settings: {
+                    label: "Дополнительные заметки"
+                }
+            }
+        },
+        {
+            name: "fired",
+            components: {
+                name: 'ue-checkbox',
+                settings: {
+                    label: "Уволен",
+                    values: {
+                        "1": ""
+                    }
+                }
+            }
+        },
+        {
+            name: "created_at",
+            components: {
+                name: 'ue-datetime',
+                settings: {
+                    label: "Дата создания"
+                }
+            }
+        },
+        {
+            name: "updated_at",
+            components: {
+                name: 'ue-datetime',
+                settings: {
+                    label: "Дата обновления"
                 }
             }
         }
@@ -261,18 +595,17 @@ var ue = new UniversalEditor('universal-editor', {
     },
     entities: [
         {
-            name: 'staff',
-            label: 'Сотрудники',
+            name: 'element',
+            label: 'Элементы',
             states: [
                 {
                     name: 'index',
-                    url: '/staff',
+                    url: '/element',
                     component: {
                         name: 'ue-grid',
                         settings: {
-                            dataSource: staffDataSource,
-                            header:{
-                                filter: filterComponent,
+                            dataSource: elementDataSource,
+                            header: {
                                 controls: [
                                     {
                                         component: {
@@ -285,7 +618,7 @@ var ue = new UniversalEditor('universal-editor', {
                                     }
                                 ]
                             },
-                            columns: ['name', 'email'],
+                            columns: ['number', 'number_step'],
                             contextMenu:[
                                 {
                                     component: {
@@ -358,130 +691,12 @@ var ue = new UniversalEditor('universal-editor', {
                     }
                 },
                 {
-                    name: 'index.modal_edit',
-                    url: '/staff/:pk',
-                    component: {
-                        name: 'ue-modal',
-                        settings: {
-                            size: {
-                                width: '70%',
-                                height: '90%'
-                            },
-                            header: {
-                                label: 'Модальное окно'
-                            },
-                            body: {
-                                text: 'Text in modal',
-                                component: {
-                                    name: 'ue-form',
-                                    settings: {
-                                        dataSource: staffDataSource,
-                                        body: [
-                                            {
-                                                component: {
-                                                    name: 'ue-form-tabs',
-                                                    settings: {
-                                                        tabs: [
-                                                            {
-                                                                label: 'Tab 1',
-                                                                fields: [
-                                                                    'id',
-                                                                    'name',
-                                                                    'email',
-                                                                    'description',
-                                                                    'gender',
-                                                                    'datetime',
-                                                                    'date',
-                                                                    'time'
-                                                                ]
-                                                            },
-                                                            {
-                                                                label: 'Tab 2',
-                                                                fields: [
-                                                                    {
-                                                                        component: {
-                                                                            name: 'ue-form-group',
-                                                                            settings: {
-                                                                                label: 'Group 1',
-                                                                                countInLine: 2,
-                                                                                fields: ['name', 'email']
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        component: {
-                                                                            name: 'ue-grid',
-                                                                            settings: {
-                                                                                header:{
-                                                                                    controls: [
-                                                                                        {
-                                                                                            component: {
-                                                                                                name: 'ue-button-goto',
-                                                                                                settings: {
-                                                                                                    label: 'создать',
-                                                                                                    state: 'edit'
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    ]
-                                                                                },
-                                                                                label: 'Messages',
-                                                                                dataSource: messagesDataSource,
-                                                                                columns: ['id', 'title']
-                                                                            }
-                                                                        }
-                                                                    },
-                                                                    {
-                                                                        component: {
-                                                                            name: 'ue-button-request',
-                                                                            settings: {
-                                                                                label: 'This is request!!!',
-                                                                                url: '//universal-backend.dev/rest/v1/staff',
-                                                                                method: 'GET',
-                                                                                beforeSend: window.RequstCallback.beforeSend,
-                                                                                success: window.RequstCallback.success,
-                                                                                error: window.RequstCallback.error,
-                                                                                complete: window.RequstCallback.complete
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            footer: {
-                                controls: [
-                                    {
-                                        component: {
-                                            name: 'ue-button-modal',
-                                            settings: {
-                                                label: 'Закрыть',
-                                                action: 'close',
-                                                beforeAction: 'funcName' // Функция выполняется перед выполнением экшена (в данном случае — закрытием окна).
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                {
                     name: 'edit',
-                    url: '/staff/:pk',
+                    url: '/element/:pk',
                     component: {
                         name: 'ue-form',
                         settings: {
-                            header: {
-                                label: 'Модальное окно'
-                            },
-                            dataSource: staffDataSource,
+                            dataSource: elementDataSource,
                             body: [
                                 {
                                     component: {
@@ -489,46 +704,71 @@ var ue = new UniversalEditor('universal-editor', {
                                         settings: {
                                             tabs: [
                                                 {
-                                                    label: 'Tab 1',
+                                                    label: 'NUMBER',
                                                     fields: [
-                                                        'id',
-                                                        'name',
-                                                        'email',
-                                                        'url',
-                                                        'description',
-                                                        'gender',
-                                                        'datetime',
-                                                        'date',
-                                                        'date2',
-                                                        'time'
+                                                        'number',
+                                                        'number_step',
+                                                        'number_minmax',
+                                                        'number_minmax_step'
+
                                                     ]
                                                 },
                                                 {
-                                                    label: 'Tab 2',
+                                                    label: 'STRING',
                                                     fields: [
+                                                        'string',
+                                                        'string_minmax',
+                                                        'string_trim',
+                                                        'string_minmax_trim',
+                                                        'string_url',
+                                                        'string_email',
+                                                        'string_password',
+                                                        'string_pattern'
+                                                    ]
+                                                },
+                                                {
+                                                    label: 'DATE',
+                                                    fields: [
+                                                        'date',
+                                                        'date_min',
+                                                        'date_max',
+                                                        'date_minmax',
+                                                        'date_format',
+                                                        'date_minmax_format'
+                                                    ]
+                                                },
+                                                {
+                                                    label: 'DATETIME',
+                                                    fields: [
+                                                        'datetime',
+                                                        'datetime_min',
+                                                        'datetime_max',
+                                                        'datetime_minmax',
+                                                        'datetime_format',
+                                                        'datetime_minmax_format'
+                                                    ]
+                                                },
+                                                {
+                                                    label: 'TIME',
+                                                    fields: [
+                                                        'time',
+                                                        'time_min',
+                                                        'time_max',
+                                                        'time_minmax',
+                                                        'time_format',
+                                                        'time_minmax_format'
+                                                    ]
+                                                },
+                                                {
+                                                    label: 'Сотрудники',
+                                                    fields:[
                                                         {
                                                             component: {
-                                                                name: 'ue-grid',
+                                                                name: 'ue-table',
                                                                 settings: {
-                                                                    header:{
-                                                                    },
                                                                     label: 'Messages',
-                                                                    dataSource: messagesDataSource,
-                                                                    columns: ['id', 'title']
-                                                                }
-                                                            }
-                                                        },
-                                                        {
-                                                            component: {
-                                                                name: 'ue-button-request',
-                                                                settings: {
-                                                                    label: 'This is request!!!',
-                                                                    url: '//universal-backend.dev/rest/v1/staff',
-                                                                    method: 'GET',
-                                                                    beforeSend: window.RequstCallback.beforeSend,
-                                                                    success: window.RequstCallback.success,
-                                                                    error: window.RequstCallback.error,
-                                                                    complete: window.RequstCallback.complete
+                                                                    dataSource: staffDataSource,
+                                                                    columns: ['name', 'email']
                                                                 }
                                                             }
                                                         }
