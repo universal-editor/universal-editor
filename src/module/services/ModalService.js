@@ -21,7 +21,6 @@
 
         function openWindow(component) { /** send fromState и _pk */
             settings = component.settings;
-            component.settings.modal = true;
 
             if(self.options.$parentComponentId) {
                 $location.search('relativeEntityId', self.options.$parentComponentId);
