@@ -61,7 +61,7 @@
         });
 
         $scope.$on("editor:presave_entity_created", function(event, data) {
-            if(!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+            if(!vm.options.isGrid && (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId)) {
                 vm.entityId = data[vm.setting.component.settings.dataSource.primaryKey];
                 vm.type = 'update';
                 if(vm.action === 'delete') {

@@ -43,7 +43,8 @@
             $parentComponentId: vm.$parentComponentId,
             mixedMode: vm.setting.component.settings.mixedMode,
             sort: vm.setting.component.settings.dataSource.sortBy,
-            back: $scope.entity
+            back: $scope.entity,
+            isGrid: true
         };
         vm.mixOption = angular.merge({}, vm.options);
         vm.mixOption.isMix = true;

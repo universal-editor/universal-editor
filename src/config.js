@@ -797,7 +797,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                                             component: {
                                                                                 name: 'ue-button-service',
                                                                                 settings: {
-                                                                                    label: 'Удалить',
+                                                                                    label: 'Удалить1',
                                                                                     action: 'delete'
                                                                                 }
                                                                             }
@@ -888,7 +888,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                                             component: {
                                                                                 name: 'ue-button-service',
                                                                                 settings: {
-                                                                                    label: 'Удалить',
+                                                                                    label: 'Удалить2',
                                                                                     action: 'delete'
                                                                                 }
                                                                             }
@@ -1028,7 +1028,7 @@ var ue = new UniversalEditor('universal-editor', {
                         settings: {
                             size: {
                                 width: '70%',
-                                height: '90%'
+                                height: '60%'
                             },
                             header: {
                                 label: 'Модальное окно'
