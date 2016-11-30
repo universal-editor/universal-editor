@@ -1,8 +1,8 @@
-(function () {
+(function() {
     'use strict';
 
     angular.module('universal.editor').component('ueModal', {
-        template : ['$templateCache', function ($templateCache) {
+        template: ['$templateCache', function($templateCache) {
             return $templateCache.get('module/components/ueModal/ueModal.html');
         }],
         bindings: {
@@ -11,7 +11,7 @@
             dismiss: '&'
         },
         controllerAs: 'vm',
-        controller: function ($uibModal, $scope, configData, $element, $state, EditEntityStorage, ModalService) {           
+        controller: function($uibModal, $scope, configData, $element, $state, EditEntityStorage, ModalService) {
             var vm = this;
             var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
             vm.entityId = $state.params[pkKey];
@@ -36,32 +36,35 @@
             vm.header = vm.resolve.settings.header;
 
             vm.body = vm.resolve.settings.body;
-            if(vm.body) {
-                vm.body.component.settings.modal = true;
+            if (vm.body) {
+                if (vm.body.component) {
+                    vm.body.component.settings.modal = true;
+                }
             }
 
             vm.footer = [];
 
-            if(vm.resolve.settings.footer && vm.resolve.settings.footer.controls) {
+            if (vm.resolve.settings.footer && vm.resolve.settings.footer.controls) {
                 angular.forEach(vm.resolve.settings.footer.controls, function(control) {
-                  vm.footer.push(control);
+                    vm.footer.push(control);
                 });
             }
 
-            vm.$onInit = function () {
-              vm.resolve.settings.isModal = true;
+            vm.$onInit = function() {
+                vm.resolve.settings.isModal = true;
             };
 
-            vm.ok = function () {
-                vm.close({$value: "ок modal"});
+            vm.ok = function() {
+                vm.close({ $value: "ок modal" });
             };
 
-            vm.cancel = function () {
-                vm.close();   
+            vm.cancel = function() {
+                vm.close();
             };
-            
+
             $scope.$on('exit_modal', function() {
-                vm.dismiss({$value: 'cancel modal emit'});
+                vm.dismiss({ $value: 'cancel modal emit' });
             });
-    }});
+        }
+    });
 })();

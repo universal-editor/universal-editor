@@ -7,3 +7,33 @@
     padding: 10px;
     border-top: 1px solid #E1E9EB;
   }
+
+  .ue-modal-header, .ue-modal-body {
+    padding: 10px;
+  }
+
+.ue-modal-footer {
+  & .editor-modal-button {
+    margin-right: 10px;
+    display: inline-block;
+    outline: none;
+    width: auto;
+  }
+}
+
+.modal-dialog {
+  & .modal-content {
+    height: 100%;
+  }
+
+  & ue-modal > div {
+    height: 100%;
+    position: relative;
+    padding-bottom: 85px;
+  }
+
+  & .ue-modal-footer {
+    position: absolute;
+    bottom: 0;
+  }
+}

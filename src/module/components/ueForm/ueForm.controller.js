@@ -5,41 +5,27 @@
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope', '$rootScope', 'configData', 'RestApiService', 'FilterFieldsStorage', '$location',
-        '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', 'ConfigDataProvider',
-        'ModalService', 'EditEntityStorage'];
+    UeFormController.$inject = ['$scope', 'configData', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage'];
 
-    function UeFormController($scope, $rootScope, configData, RestApiService, FilterFieldsStorage, $location,
-        $document, $timeout, $httpParamSerializer, $state, toastr, $translate, ConfigDataProvider,
-        ModalService, EditEntityStorage) {
+    function UeFormController($scope, configData, RestApiService, $location, $state, $translate, EditEntityStorage) {
         $scope.entity = RestApiService.getEntityType();
         var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
         var vm = this,
-            pageItems = 3,
-            itemsKey,
             mixEntityObject;
 
         vm.assetsPath = '/assets/universal-editor';
         vm.configData = configData;
-        vm.correctEntityType = true;
         vm.entityLoaded = false;
         vm.listLoaded = false;
-        vm.loadingData = true;
-        vm.links = [];
         vm.errors = [];
         vm.notifys = [];
-        // vm.currentTab = vm.setting.component.settings.body[0].component.settings.label;
         vm.entityId = "";
         vm.editorEntityType = "new";
         vm.editFooterBar = [];
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
-        vm.parentButton = false;
-        vm.filterFields = [];
         vm.idField = 'id';
-        vm.visibleFilter = true;
-        vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
         var defaultEditFooterBar = [
             {
@@ -80,7 +66,6 @@
             $parentComponentId: vm.options.$parentComponentId || vm.setting.component.$id
         };
 
-
         var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
         var pk = $state.params[pkKey];
 
@@ -91,7 +76,6 @@
         if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
             vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
         }
-        itemsKey = "items";
 
         if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
             angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
@@ -152,12 +136,6 @@
             }
         });
 
-        vm.closeEditor = function() {
-            $scope.$apply(function() {
-                vm.entityLoaded = false;
-            });
-        };
-
         vm.closeButton = function() {
             vm.entityLoaded = false;
             vm.listLoaded = false;
@@ -200,9 +178,6 @@
 
         if (pk !== 'new') {
             if (pk) {
-                if (vm.setting.component.settings.modal) {
-                    RestApiService.isProcessing = false;
-                }
                 RestApiService.getItemById(pk, vm.setting.component.settings.dataSource, vm.componentState);
             } else if (vm.setting.pk) {
                 RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource, vm.componentState);
@@ -212,14 +187,6 @@
         $scope.$on('editor:presave_entity_created', function(event, data) {            
             vm.entityId = data;
             vm.editorEntityType = "exist";
-        });
-
-        $scope.$on('editor:presave_entity_updated', function(event, data) {
-           
-        });
-
-        $scope.$on('editor:entity_success_deleted', function(event, data) {
-           
         });
 
         $scope.$on('editor:field_error', function(event, data) {
