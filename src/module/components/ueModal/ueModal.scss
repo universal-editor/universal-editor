@@ -30,6 +30,10 @@
     height: 100%;
     position: relative;
     padding-bottom: 85px;
+    & .ue-modal-body {
+      overflow: auto;
+      height: 95%
+    }
   }
 
   & .ue-modal-footer {
