@@ -82,7 +82,9 @@
                         vm.optionValues.push(angular.copy(v));
                     }
                 });
-            }).finally(function() { vm.loadingData = false; });
+            }).finally(function() {
+                vm.loadingData = false;
+            });
         });
 
         var destroyWatchFieldValue = $scope.$watch(function() {
@@ -553,6 +555,12 @@
                 event.stopPropagation();
             }
         };
+
+        vm.clear = clear;
+        function clear() {
+            vm.fieldValue = vm.multiple ? [] : null;
+            vm.isSpanSelectDelete = false;
+        }
 
         function setSizeSelect() {
             var size = vm.optionValues.length;

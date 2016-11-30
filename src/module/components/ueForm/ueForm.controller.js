@@ -119,7 +119,7 @@
         function updateButton() {
             pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
             pk = $state.params[pkKey];
-            angular.forEach(vm.editFooterBar, function (button, index) {
+            angular.forEach(vm.editFooterBar, function(button, index) {
                 if (pk === 'new') {
                     button.type = 'create';
                 } else {
@@ -128,9 +128,9 @@
             });
         }
 
-        $scope.$watch(function(){
+        $scope.$watch(function() {
             return $state.params;
-        }, function(newVal){
+        }, function(newVal) {
             updateButton();
         });
         vm.components = [];
@@ -177,7 +177,6 @@
                 url: vm.setting.component.settings.dataSource.url,
                 options: vm.componentState
             };
-            //RestApiService.getItemsList(request);
             var searchString = $location.search();
             $state.go(stateIndex.name, params, { reload: isReload }).then(function() {
                 if (searchString.back) {
@@ -210,24 +209,17 @@
             }
         }
 
-        $scope.$on('editor:presave_entity_created', function(event, data) {
-            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
-                toastr.success(translation);
-            });
+        $scope.$on('editor:presave_entity_created', function(event, data) {            
             vm.entityId = data;
             vm.editorEntityType = "exist";
         });
 
         $scope.$on('editor:presave_entity_updated', function(event, data) {
-            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
-                toastr.success(translation);
-            });
+           
         });
 
         $scope.$on('editor:entity_success_deleted', function(event, data) {
-            $translate('CHANGE_RECORDS.DELETE').then(function(translation) {
-                toastr.success(translation);
-            });
+           
         });
 
         $scope.$on('editor:field_error', function(event, data) {

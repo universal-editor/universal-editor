@@ -5,9 +5,9 @@
         .module('universal.editor')
         .service('RestApiService', RestApiService);
 
-    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService'];
+    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate'];
 
-    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService) {
+    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate) {
         var entityType,
             self = this,
             queryTempParams,
@@ -79,7 +79,6 @@
             if (cancelerPromises[id][mode]) {
                 cancelerPromises[id][mode].resolve();
             }
-            console.log("timeout request resolve");
             cancelerPromises[id][mode] = def;
             return def;
         }
@@ -104,19 +103,27 @@
 
             var id = request.options.$parentComponentId;
             var filters = FilterFieldsStorage.getFilterQueryObject(id);
+            var beforeSend;
             if (!!request.childId) {
                 filters = filters || {};
                 filters[request.parentField] = request.childId;
             }
+
+            /** beforeSend handler */
+            if (angular.isFunction(FilterFieldsStorage.callbackBeforeSend)) {
+                beforeSend = FilterFieldsStorage.callbackBeforeSend;
+                delete FilterFieldsStorage.callbackBeforeSend;
+            }
+
             if (filters) {
                 angular.extend(params, { filter: JSON.stringify(filters) });
             } else {
                 delete params.filter;
             }
 
-            if(!!request.options.mixedMode){
+            if (!!request.options.mixedMode) {
                 params = params || {};
-                angular.extend(params,{
+                angular.extend(params, {
                     mixed: request.options.mixedMode.entityType
                 });
             }
@@ -154,11 +161,13 @@
 
             params['per-page'] = 8;
 
+
             $http({
                 method: _method,
                 url: _url,
                 params: params,
-                timeout: canceler.promise
+                timeout: canceler.promise,
+                beforeSend: beforeSend
             }).then(function(response) {
                 if (response.data[itemsKey].length === 0) {
                     $rootScope.$broadcast("editor:parent_empty");
@@ -168,9 +177,7 @@
                 request.options.isLoading = false;
                 deferred.resolve();
             }, function(reject) {
-                if (reject.status !== -1) {
-                    request.options.isLoading = false;
-                }
+                request.options.isLoading = false;
                 deferred.reject();
             });
 
@@ -223,6 +230,7 @@
                 request.options.isLoading = false;
                 $rootScope.$broadcast("uploader:remove_session");
                 $rootScope.$broadcast("editor:entity_success");
+                successCreateMessage();
 
                 var params = {};
                 if ($location.search().parent) {
@@ -284,6 +292,7 @@
                 request.options.isLoading = false;
                 $rootScope.$broadcast('uploader:remove_session');
                 $rootScope.$broadcast('editor:entity_success');
+                successUpdateMessage();
                 var params = {};
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
@@ -354,6 +363,7 @@
                 var searchString = $location.search();
                 $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                     $location.search(searchString);
+                    $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
                 });
                 var data = {
                     id: newId,
@@ -361,7 +371,9 @@
                 };
                 if (isCreate) {
                     $rootScope.$broadcast('editor:presave_entity_created', data);
+                    successPresaveCreateMessage();
                 } else {
+                    successUpdateMessage();
                     $rootScope.$broadcast("editor:presave_entity_updated", data);
                 }
             }, function(reject) {
@@ -449,6 +461,7 @@
                 self.setQueryParams({});
                 self.setFilterParams({});
                 $rootScope.$broadcast("editor:entity_success_deleted");
+                successDeleteMessage();
                 var params = {};
                 if ($location.search().parent) {
                     params.parent = $location.search().parent;
@@ -470,6 +483,36 @@
                 request.options.isLoading = false;
             });
         };
+
+        function successDeleteMessage() {
+            $translate('CHANGE_RECORDS.DELETE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successUpdateMessage() {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successPresaveUpdateMessage() {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successPresaveCreateMessage() {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successCreateMessage() {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
 
         //-- read all pages
         this.getUrlResource = function getUrlResource(url, res, def, fromP, toP) {

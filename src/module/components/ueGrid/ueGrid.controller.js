@@ -300,12 +300,6 @@
             vm.errors.push(data);
         });
 
-        $scope.$on('editor:presave_entity_updated', function(event, data) {
-            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
-                toastr.success(translation);
-            });
-        });
-
         $scope.$on('editor:parent_childs', function(event, data) {
             angular.forEach(vm.items, function(item, ind) {
 
@@ -331,9 +325,6 @@
         });
 
         $scope.$on('editor:entity_success_deleted', function(event, data) {
-            $translate('CHANGE_RECORDS.DELETE').then(function(translation) {
-                toastr.success(translation);
-            });
         });
 
         $scope.$on('editor:field_error', function(event, data) {

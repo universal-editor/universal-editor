@@ -23,11 +23,11 @@ module.run(['$templateCache', function($templateCache) {
     '            </div>\n' +
     '            <div data-ng-click="vm.addItem()" data-ng-disabled="vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
     '        </div>\n' +
-    '    </div>\n' +
-    '    <div data-ng-if="!vm.multiple">\n' +
-    '        <label data-ng-repeat="item in vm.optionValues" data-ng-class="{\'disabled\': vm.readonly}" class="checkbox-inline">\n' +
-    '            <input type="checkbox" data-ng-disabled="vm.readonly" data-checklist-model="vm.fieldValue" data-checklist-value="item[vm.field_id]"/><span ng-bind="item[vm.field_search]">  </span>\n' +
-    '        </label>\n' +
+    '        <div data-ng-if="!vm.multiple">\n' +
+    '            <label data-ng-repeat="item in vm.optionValues" data-ng-class="{\'disabled\': vm.readonly}" class="checkbox-inline">\n' +
+    '                <input type="checkbox" data-ng-disabled="vm.readonly" data-checklist-model="vm.fieldValue" data-checklist-value="item[vm.field_id]"/><span ng-bind="item[vm.field_search]">  </span>\n' +
+    '            </label>\n' +
+    '        </div>\n' +
     '    </div>\n' +
     '    <div ng-if="!vm.options.filter" class="field-error-wrapper">\n' +
     '        <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>\n' +

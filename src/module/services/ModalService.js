@@ -56,6 +56,7 @@
 
         function closeWindow() {
             if (isOpen) {
+                var parentComponentId = self.options.$parentComponentId;
                 isOpen = false;
                 if (modalInstance) {
                     modalInstance.close();
@@ -64,7 +65,9 @@
                 $location.search('relativeEntityId', null);
                 self.options = null;
                 if (settings.fromState) {
-                    $state.go(settings.fromState.name, settings.fromParams, { reload: false });
+                    $state.go(settings.fromState.name, settings.fromParams, { reload: false }).then(function() {  
+                        $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                    });
                 }
                 settings = null;                
             }

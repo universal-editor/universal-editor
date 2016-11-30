@@ -20,6 +20,7 @@
 
         $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format || 'YYYY-MM-DD HH:mm:ss');
         $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format || 'YYYY-MM-DD HH:mm:ss');
+        vm.format = vm.format || 'YYYY-MM-DD HH:mm:ss';
 
         vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler)); 
 
@@ -51,32 +52,25 @@
                         return;
                     }
                     var tempItem = {};
-                    tempItem[vm.multiname] = moment(valueItem).format(vm.format || 'YYYY-MM-DD HH:mm:ss');
+                    tempItem[vm.multiname] = moment(valueItem).format(vm.format);
                     wrappedFieldValue.push(tempItem);
                 });
             } else if (vm.multiple) {
                 wrappedFieldValue = [];
                 angular.forEach(vm.fieldValue, function (valueItem) {
-                    wrappedFieldValue.push(moment(valueItem).format(vm.format || 'YYYY-MM-DD HH:mm:ss'));
+                    wrappedFieldValue.push(moment(valueItem).format(vm.format));
                 });
             } else {
                 if (vm.fieldValue === undefined || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
                     wrappedFieldValue = "";
                 } else {
-                    wrappedFieldValue = moment(vm.fieldValue).format(vm.format || 'YYYY-MM-DD HH:mm:ss');
+                    wrappedFieldValue = moment(vm.fieldValue).format(vm.format);
                 }
             }
 
-            if ($scope.parentField) {
-                if (vm.parentFieldIndex) {
-                    field[$scope.parentField] = [];
-                    field[$scope.parentField][vm.parentFieldIndex] = {};
-                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
-                } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
-                }
-
+            if (vm.parentField) {
+                    field[vm.parentField] = {};
+                    field[vm.parentField][vm.fieldName] = wrappedFieldValue;
             } else {
                 field[vm.fieldName] = wrappedFieldValue;
             }

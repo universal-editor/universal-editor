@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -10,7 +10,7 @@
     function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, RestApiService, moment, EditEntityStorage, $q) {
         /* jshint validthis: true */
         var vm = this;
-        var baseController = $controller('BaseController', {$scope: $scope});
+        var baseController = $controller('BaseController', { $scope: $scope });
         angular.extend(vm, baseController);
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
@@ -22,7 +22,7 @@
         self.multiname = componentSettings.multiname || null;
         self.depend = componentSettings.depend || null;
         self.width = !isNaN(+componentSettings.width) ? componentSettings.width : null;
-        self.defaultValue = transformToValue(componentSettings.defaultValue) || (self.multiple ? [] : null);
+        self.defaultValue = transformToValue(componentSettings.defaultValue);
         self.placeholder = componentSettings.placeholder || null;
 
         self.inputLeave = inputLeave;
@@ -34,7 +34,7 @@
             self.field_search = "title";
             if (self.optionValues) {
                 if (values) {
-                    angular.forEach(componentSettings.values, function (v, key) {
+                    angular.forEach(componentSettings.values, function(v, key) {
                         var obj = {};
                         obj[self.field_id] = key;
                         obj[self.field_search] = v;
@@ -50,18 +50,26 @@
                     if (!componentSettings.$loadingPromise) {
                         componentSettings.$loadingPromise = RestApiService
                             .getUrlResource(remoteValues.url)
-                            .then(function (response) {
-                                angular.forEach(response.data.items, function (v) {
+                            .then(function(response) {
+                                angular.forEach(response.data.items, function(v) {
                                     self.optionValues.push(v);
                                 });
+                                componentSettings.$optionValues = self.optionValues;
                                 return self.optionValues;
-                            }, function (reject) {
+                            }, function(reject) {
                                 console.error(self.constructor.name + ': Не удалось получить значения для поля \"' + self.fieldName + '\" с удаленного ресурса');
+                            }).finally(function() {
+                                self.loadingData = false;
                             });
+                    } else {
+                        if (componentSettings.$optionValues && componentSettings.$optionValues.length) {
+                            self.loadingData = false;
+                            self.optionValues = componentSettings.$optionValues;
+                        }
                     }
                 }
             }
-        }       
+        }
 
         self.fieldValue = transformToValue(self.defaultValue);
 
@@ -91,7 +99,7 @@
         } else {
             EditEntityStorage.addFieldController(self);
         }
-      
+
 
         //-- listener storage for handlers        
         self.listeners.push($scope.$watch(function() { return self.fieldValue; },
@@ -102,11 +110,10 @@
                 }
             }, true));
         if (self.options.filter) {
-            $scope.$watch(function () {
+            $scope.$watch(function() {
                 return $location.search();
-            }, function (newVal) {
+            }, function(newVal) {
                 if (newVal && newVal.filter) {
-                    console.log("Filter generate.");
                     var filter = JSON.parse(newVal.filter);
                     componentSettings.$parseFilter($scope.vm, filter[self.parentComponentId]);
                 }
@@ -126,8 +133,15 @@
                 value = moment(object);
                 return self.multiple ? [value] : value;
             }
-            value = angular.isObject(object) && !angular.isArray(object) && self.field_id ? object[self.field_id] : object;
-            return self.multiple ? [value] : value;
+            if (angular.isObject(object) && !angular.isArray(object) && self.field_id) {
+                value = object[self.field_id];
+            } else {
+                value = object;
+            }
+            if (value == 0) {
+                return value;
+            }
+            return value || (self.multiple ? [] : null);
         }
 
         function getFieldValue() {
@@ -135,7 +149,7 @@
                 wrappedFieldValue;
             if (self.multiple) {
                 wrappedFieldValue = [];
-                self.fieldValue.forEach(function (value) {
+                self.fieldValue.forEach(function(value) {
                     var temp;
                     var output = transformToValue(value);
 
@@ -165,7 +179,7 @@
                 if (!self.options.filter) {
                     //-- functional for required fields
                     if (componentSettings.depend) {
-                        $scope.$watch(function () {
+                        $scope.$watch(function() {
                             var f_value = EditEntityStorage.getValueField(self.parentComponentId, componentSettings.depend);
                             var result = false;
                             if (f_value !== false) {
@@ -184,7 +198,7 @@
                                 })(f_value);
                             }
                             return result;
-                        }, function (value) {
+                        }, function(value) {
                             if (!value) {
                                 self.clear();
                                 self.readonly = true;
@@ -196,7 +210,7 @@
 
                     if (data.editorEntityType === "new") {
                         var obj = {};
-                        self.fieldValue = transformToValue(componentSettings.defaultValue) || (self.multiple ? [] : "");
+                        self.fieldValue = transformToValue(componentSettings.defaultValue);
 
                         if (self.field_id) {
                             if (self.isTree) {
@@ -230,12 +244,12 @@
                     }
 
                     if (!self.multiple) {
-                        self.fieldValue = transformToValue(apiValue);
+                        self.fieldValue = apiValue;
                     } else {
                         if (angular.isArray(apiValue)) {
                             self.fieldValue = [];
-                            apiValue.forEach(function (item) {
-                                self.fieldValue.push(transformToValue(self.multiname ? item[self.multiname] : item));
+                            apiValue.forEach(function(item) {
+                                self.fieldValue.push(self.multiname ? item[self.multiname] : item);
                             });
                         }
                     }
@@ -249,7 +263,7 @@
         //validators
         self.typeInput = 'text';
         self.validators = self.setting.component.settings.validators;
-        angular.forEach(self.setting.component.settings.validators, function (validator) {
+        angular.forEach(self.setting.component.settings.validators, function(validator) {
             switch (validator.type) {
                 case 'string':
                     self.minLength = validator.minLength;
@@ -302,7 +316,7 @@
             }
 
             if (self.hasOwnProperty('minLength') && val.length < self.minLength) {
-                var minError = 'Минимальное значение поля не может быть меньше ' + self.minLength + ' символов. Сейчас введено ' + val.length +  ' символов.';
+                var minError = 'Минимальное значение поля не может быть меньше ' + self.minLength + ' символов. Сейчас введено ' + val.length + ' символов.';
                 if (self.error.indexOf(minError) < 0) {
                     self.error.push(minError);
                 }

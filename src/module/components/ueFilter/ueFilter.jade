@@ -10,4 +10,4 @@ div(style="margin: 10px 5px;")
                         span(ng-bind="group.label")
                     component-wrapper(ng-repeat="filter in group.filters" data-setting="filter.field" data-options="filter.options" style="{{filter.ngStyle}}")
             .editor-filter-footer
-                component-wrapper(data-ng-repeat="button in vm.footer track by $index", data-setting="button", data-options="vm.options", data-button-class="footer")
+                component-wrapper(data-ng-repeat="button in vm.footer track by $index", data-setting="button", data-options="vm.options", data-button-class="header")

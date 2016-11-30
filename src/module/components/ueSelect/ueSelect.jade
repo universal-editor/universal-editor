@@ -12,6 +12,7 @@
                     //--span {{vm.optionValues}}
                     input.form-control.select-input(
                         data-ng-if="vm.search",
+                        ng-disabled="vm.loadingData"
                         placeholder="{{vm.placeholder}}",
                         data-ng-class='vm.isSelection ? "color-placeholder" : ""',
                         data-ng-model="vm.filterText",
@@ -45,7 +46,7 @@
                     .dropdown__title.form-control.select-input(
                         data-ng-class="{'dropdown__title_open': isOpen}",
                         data-ng-click="vm.clickSelect()",
-                        data-ng-style='{"cursor" : vm.search ? "text" : "pointer"}'
+                        data-ng-style='{"cursor" : vm.search && !vm.loadingData ? "text" : "pointer"}'
                         )
                         .selected-items__item(
                             data-ng-repeat="value in vm.fieldValue",
@@ -56,6 +57,7 @@
                                 span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)" style="float: right; width: 10px; margin-top: -24px;") ×
 
                         input.dropdown__search-field(data-ng-if="vm.search"
+                            ng-disabled="vm.loadingData"
                             data-ng-model="vm.filterText",
                             data-ng-change="vm.change()",
                             placeholder="{{vm.placeholder}}",
