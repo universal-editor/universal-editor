@@ -30,7 +30,6 @@
                 case 'save':
                     if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate("create", request);
-                        ModalService.close();
                     } else if (vm.type == 'update') {
                         RestApiService.editedEntityId = vm.entityId;
                         EditEntityStorage.editEntityUpdate("update", request);
