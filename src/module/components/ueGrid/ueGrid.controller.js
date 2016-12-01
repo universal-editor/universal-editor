@@ -81,7 +81,7 @@
         vm.visibleFilter = true;
         vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty("pagination") ? vm.setting.component.settings.dataSource.pagination : true;
         vm.autoCompleteFields = [];
-        vm.entityType = $scope.entity;
+        vm.entityType = vm.setting.component.settings.entityType || $scope.entity;
         vm.parent = null;
         vm.paginationData = [];
         vm.isMixMode = !!vm.setting.component.settings.mixedMode;
