@@ -43,7 +43,8 @@
             $parentComponentId: vm.$parentComponentId,
             mixedMode: vm.setting.component.settings.mixedMode,
             sort: vm.setting.component.settings.dataSource.sortBy,
-            back: $scope.entity
+            back: $scope.entity,
+            isGrid: true
         };
         vm.mixOption = angular.merge({}, vm.options);
         vm.mixOption.isMix = true;
@@ -80,7 +81,7 @@
         vm.visibleFilter = true;
         vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty("pagination") ? vm.setting.component.settings.dataSource.pagination : true;
         vm.autoCompleteFields = [];
-        vm.entityType = $scope.entity;
+        vm.entityType = vm.setting.component.settings.entityType || $scope.entity;
         vm.parent = null;
         vm.paginationData = [];
         vm.isMixMode = !!vm.setting.component.settings.mixedMode;
