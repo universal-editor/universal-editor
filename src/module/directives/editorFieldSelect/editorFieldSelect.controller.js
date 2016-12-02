@@ -151,6 +151,9 @@
                 .then(function (response) {
                     angular.forEach(response.data.items, function (v) {
                         vm.options.push(v);
+                        if(!vm.multiple && !vm.isTree && v[vm.field_id] == vm.fieldValue[vm.field_id]) {
+                            vm.fieldValue[vm.field_search] = v[vm.field_search];
+                        }
                     });
                     setSizeSelect();
                     allOptions = angular.copy(vm.options);
@@ -566,7 +569,9 @@
                 } else if (!vm.multiple && vm.isTree) {
                     vm.placeholder = (!!vm.fieldValue.length && !!vm.fieldValue[0][vm.field_search]) ? vm.fieldValue[0][vm.field_search] : $scope.field.placeholder;
                 }
-                vm.sizeInput = vm.placeholder.length;
+                vm.sizeInput = (vm.placeholder || '').length;
+
+
                 if (allOptions) {
                     vm.options = allOptions;
                 }
