@@ -26,7 +26,7 @@ module.run(['$templateCache', function($templateCache) {
     '            </div>\n' +
     '        </div>\n' +
     '        <div data-ng-if="!vm.multiple">\n' +
-    '            <data-component-wrapper ng-class="vm.className" data-ng-repeat="field in vm.innerFields" data-setting="field" data-options="vm.options"></data-component-wrapper>\n' +
+    '            <data-component-wrapper ng-class="vm.className" data-ng-repeat="field in vm.innerFields" data-setting="field" data-options="vm.option"></data-component-wrapper>\n' +
     '        </div>\n' +
     '    </div>\n' +
     '    <div ng-if="!vm.options.filter" class="field-error-wrapper">\n' +

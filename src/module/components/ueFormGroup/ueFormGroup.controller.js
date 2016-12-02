@@ -52,7 +52,8 @@
 
         vm.$isOnlyChildsBroadcast = false;
         vm.listeners.push($scope.$on('editor:entity_loaded', onLoadedHandler));
-
+        vm.option = angular.merge({}, vm.options);
+        vm.option.isGroup = true;
         function onLoadedHandler(event, data) {
             if (!vm.$isOnlyChildsBroadcast) {
                 var group = data[vm.fieldName];
