@@ -8,7 +8,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueButtonRequest/ueButtonRequest.html',
     '\n' +
     '<div>\n' +
-    '    <button data-ng-if="vm.setting.buttonClass == \'footer\'" class="btn btn-md btn-success">{{vm.label}}</button>\n' +
+    '    <button data-ng-if="vm.setting.buttonClass == \'footer\'" class="btn btn-md btn-success button-footer">{{vm.label}}</button>\n' +
     '    <button data-ng-if="vm.setting.buttonClass == \'header\'" class="btn btn-lg btn-success">{{vm.label}}</button>\n' +
     '    <button data-ng-if="vm.setting.buttonClass == \'context\'" class="editor-action-button">{{vm.label}}</button>\n' +
     '</div>');
