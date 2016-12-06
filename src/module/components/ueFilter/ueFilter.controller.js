@@ -17,7 +17,6 @@
         vm.header = settings.header;
 
         vm.body = [];
-
         angular.forEach(settings.dataSource.fields, function(field) {
             if (field.component.hasOwnProperty("settings") && (!settings.fields || ~settings.fields.indexOf(field.name))) {
                 var fieldSettings = field.component.settings;
@@ -160,6 +159,7 @@
                 ]
             };
         }
+
         if (settings.footer && settings.footer.controls) {
             angular.forEach(settings.footer.controls, function(control) {
                 vm.footer.push(control);

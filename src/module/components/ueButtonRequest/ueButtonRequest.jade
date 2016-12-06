@@ -1,4 +1,2 @@
 div
-    button.btn.btn-md.btn-success.button-footer(data-ng-if="vm.setting.buttonClass == 'footer'") {{vm.label}}
-    button.btn.btn-lg.btn-success(data-ng-if="vm.setting.buttonClass == 'header'") {{vm.label}}
-    button.editor-action-button(data-ng-if="vm.setting.buttonClass == 'context'") {{vm.label}}
+    button(data-ng-class='vm.classButton', data-ng-click='vm.buttonClick()') {{vm.label}}

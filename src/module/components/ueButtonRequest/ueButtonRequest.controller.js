@@ -12,7 +12,18 @@
 
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
 
-        $element.bind("click", function () {
+        vm.classButton = 'btn btn-md btn-success button-footer';
+
+        switch (vm.setting.buttonClass){
+            case 'header':
+                vm.classButton = 'btn btn-lg btn-success';
+                break;
+            case 'context':
+                vm.classButton = 'editor-action-button';
+                break;
+        }
+
+        vm.buttonClick = function () {
             if (!!vm.setting.component.settings.target) {
                 window.open(vm.setting.component.settings.url, vm.setting.component.settings.target);
             } else {
@@ -36,7 +47,7 @@
                     vm.options.isLoading = false;
                 });
             }
-        });
+        };
 
         vm.$postLink = function() {
             $element.on('$destroy', function () {
