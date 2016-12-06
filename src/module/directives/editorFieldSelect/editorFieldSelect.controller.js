@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -28,7 +28,7 @@
         vm.field_id = "id";
         vm.field_search = "title";
         if (remote) {
-            if(remote.fields){
+            if (remote.fields) {
                 if (remote.fields.value) {
                     vm.field_id = remote.fields.value;
                 }
@@ -71,7 +71,7 @@
             vm.sizeInput = vm.placeholder.length;
         }
 
-        if(vm.depend){
+        if (vm.depend) {
             vm.dependField = vm.depend.fieldName;
             vm.dependFilter = vm.depend.filter;
         }
@@ -85,13 +85,13 @@
         } else {
             vm.multiple = false;
             vm.fieldValue = "";
-            vm.styleInput = {'width': '99%'}
+            vm.styleInput = { 'width': '99%' }
         }
 
         if (vm.parentFieldIndex) {
             if (vm.multiple) {
                 vm.fieldValue = [];
-                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
+                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function(item) {
                     if (vm.multiname) {
                         _selectedIds.push(item[vm.multiname]);
                     } else {
@@ -102,7 +102,7 @@
                 if (ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name)) {
                     if (vm.isTree) {
                         _selectedIds.push(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name));
-                   } else {
+                    } else {
                         vm.fieldValue = {};
                         vm.fieldValue[vm.field_id] = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
                     }
@@ -119,7 +119,7 @@
         var allOptions;
 
         if ($scope.field.hasOwnProperty("values")) {
-            angular.forEach($scope.field.values, function (v, key) {
+            angular.forEach($scope.field.values, function(v, key) {
                 var obj = {};
                 obj[vm.field_id] = key;
                 obj[vm.field_search] = v;
@@ -148,10 +148,10 @@
             vm.loadingData = true;
             RestApiService
                 .getUrlResource($scope.field.valuesRemote.url)
-                .then(function (response) {
-                    angular.forEach(response.data.items, function (v) {
+                .then(function(response) {
+                    angular.forEach(response.data.items, function(v) {
                         vm.options.push(v);
-                        if(!vm.multiple && !vm.isTree && v[vm.field_id] == vm.fieldValue[vm.field_id]) {
+                        if (!vm.multiple && !vm.isTree && v[vm.field_id] == vm.fieldValue[vm.field_id]) {
                             vm.fieldValue[vm.field_search] = v[vm.field_search];
                         }
                     });
@@ -162,32 +162,32 @@
                     } else {
                         setSelectedValues();
                     }
-                }, function (reject) {
+                }, function(reject) {
                     console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + $scope.field.fieldName + '\" с удаленного ресурса');
-                }).finally(function () { vm.loadingData = false; });
+                }).finally(function() { vm.loadingData = false; });
         }
 
         function getRemoteSelectedValues() {
             vm.loadingData = true;
             RestApiService
                 .getUrlResource($scope.field.valuesRemote.url + '?filter={"id":["' + _selectedIds.join('","') + '"]}')
-                .then(function (response) {
+                .then(function(response) {
                     if (vm.multiple) {
-                        angular.forEach(response.data.items, function (v) {
+                        angular.forEach(response.data.items, function(v) {
                             vm.fieldValue.push(v);
                         });
                     } else {
                         vm.fieldValue = [response.data.items[0]];
                     }
                     getRemoteValues(true);
-                }, function (reject) {
+                }, function(reject) {
                     console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + $scope.field.fieldName + '\" с удаленного ресурса');
-                }).finally(function () { vm.loadingData = false; });
+                }).finally(function() { vm.loadingData = false; });
         }
 
         /* ---- */
 
-        this.getFieldValue = function () {
+        this.getFieldValue = function() {
 
             var field = {};
             var wrappedFieldValue;
@@ -195,14 +195,14 @@
             if ((!vm.multiple && vm.fieldValue) || (vm.multiple && vm.fieldValue.length)) {
                 if (vm.multiname) {
                     wrappedFieldValue = [];
-                    angular.forEach(vm.fieldValue, function (valueItem) {
+                    angular.forEach(vm.fieldValue, function(valueItem) {
                         var tempItem = {};
                         tempItem[vm.multiname] = vm.isTree ? valueItem[vm.field_id] : valueItem;
                         wrappedFieldValue.push(tempItem);
                     });
                 } else if (vm.multiple) {
                     wrappedFieldValue = [];
-                    angular.forEach(vm.fieldValue, function (valueItem) {
+                    angular.forEach(vm.fieldValue, function(valueItem) {
                         wrappedFieldValue.push(vm.isTree ? valueItem[vm.field_id] : valueItem);
                     });
                 } else {
@@ -230,7 +230,7 @@
             return field;
         };
 
-        this.getInitialValue = function () {
+        this.getInitialValue = function() {
 
             var field = {};
 
@@ -259,16 +259,16 @@
             vm.inputValue = "";
         }
 
-        $scope.$on('editor:entity_loaded', function (event, data) {
+        $scope.$on('editor:entity_loaded', function(event, data) {
 
             vm.fieldValue = {};
             //-- functional for required fields
             if ($scope.field.requiredField) {
-                $scope.$watch(function () {
+                $scope.$watch(function() {
                     var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
                     var result = false;
                     var endRecursion = false;
-                    (function (value) {
+                    (function(value) {
                         var keys = Object.keys(value);
                         for (var i = keys.length; i--;) {
                             var propValue = value[keys[i]];
@@ -282,7 +282,7 @@
                         }
                     })(f_value);
                     return result;
-                }, function (value) {
+                }, function(value) {
                     if (!value) {
                         clear();
                         vm.readonly = true;
@@ -328,12 +328,12 @@
                     }
                 } else if (vm.multiname) {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (item) {
+                    angular.forEach(data[$scope.field.name], function(item) {
                         _selectedIds.push(item[vm.multiname]);
                     });
                 } else {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (item) {
+                    angular.forEach(data[$scope.field.name], function(item) {
                         _selectedIds.push(item);
                     });
                 }
@@ -348,12 +348,12 @@
                     }
                 } else if (vm.multiname) {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
+                    angular.forEach(data[$scope.parentField][$scope.field.name], function(item) {
                         _selectedIds.push(item[vm.multiname]);
                     });
                 } else {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
+                    angular.forEach(data[$scope.parentField][$scope.field.name], function(item) {
                         _selectedIds.push(item);
                     });
                 }
@@ -361,9 +361,9 @@
             //setSelectedValues();
         });
 
-        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
+        $scope.$on("editor:api_error_field_" + fieldErrorName, function(event, data) {
             if (angular.isArray(data)) {
-                angular.forEach(data, function (error) {
+                angular.forEach(data, function(error) {
                     if ($scope.$parent.vm.error.indexOf(error) < 0) {
                         $scope.$parent.vm.error.push(error);
                     }
@@ -375,16 +375,16 @@
             }
         });
 
-        $scope.$on('$destroy', function () {
+        $scope.$on('$destroy', function() {
             EditEntityStorage.deleteFieldController(vm);
             if (vm.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
             }
         });
 
-        $scope.$watch(function () {
+        $scope.$watch(function() {
             return vm.fieldValue;
-        }, function (newVal) {
+        }, function(newVal) {
             if (!vm.multiple && !vm.isTree) {
                 if (vm.search) {
                     vm.filterText = '';
@@ -402,25 +402,28 @@
             vm.setColorPlaceholder();
             $scope.$parent.vm.error = [];
             $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
+            if (newVal && !$.isEmptyObject(newVal)) {
+                vm.isSpanSelectDelete = true;
+            }
         }, true);
 
         if (vm.depend) {
-            $scope.$on('select_field:select_name_' + vm.dependField, function (event, data) {
+            $scope.$on('select_field:select_name_' + vm.dependField, function(event, data) {
                 if (data && data !== "") {
                     vm.parentValue = false;
                     vm.options = [];
                     RestApiService
-                        .getUrlResource($scope.field.valuesRemote.url + '?filter={"' + vm.dependFilter + '":"'+ data +'"}')
-                        .then(function (response) {
-                            angular.forEach(response.data.items, function (v) {
+                        .getUrlResource($scope.field.valuesRemote.url + '?filter={"' + vm.dependFilter + '":"' + data + '"}')
+                        .then(function(response) {
+                            angular.forEach(response.data.items, function(v) {
                                 vm.options.push(v);
                             });
                             $timeout(function() {
                                 setSizeSelect();
-                            },0);
+                            }, 0);
                             allOptions = angular.copy(vm.options);
                             vm.parentValue = true;
-                        }, function (reject) {
+                        }, function(reject) {
                             console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + $scope.field.fieldName + '\" с удаленного ресурса');
                         });
                 } else {
@@ -441,13 +444,13 @@
                 if (item[vm.treeChildCountField] && !item.childOpts) {
                     item.loadingData = true;
                     RestApiService
-                        .getUrlResource($scope.field.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"'+ item[vm.field_id] +'"}')
-                        .then(function (response) {
+                        .getUrlResource($scope.field.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.field_id] + '"}')
+                        .then(function(response) {
                             if (!item.childOpts) {
                                 item.childOpts = [];
                             }
                             item.loadingData = false;
-                            angular.forEach(response.data.items, function (v) {
+                            angular.forEach(response.data.items, function(v) {
                                 item.childOpts.push(v);
                             });
                             if (!vm.filterText) {
@@ -456,12 +459,12 @@
                             if (vm.fieldValue.length) {
                                 setSelectedValuesFromRemote(item);
                             }
-                        }, function (reject) {
+                        }, function(reject) {
                             console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + $scope.field.fieldName + '\" с удаленного ресурса');
                         });
                 }
             } else {
-                if(!angular.isArray(vm.fieldValue)){
+                if (!angular.isArray(vm.fieldValue)) {
                     vm.fieldValue = [];
                 }
                 var idx = findById(item[vm.field_id]);
@@ -490,7 +493,7 @@
                     $timeout(function() {
                         vm.isBlur();
                         $element.find('input')[0].blur();
-                    },0);
+                    }, 0);
                 }
             }
             if (vm.fieldValue.length === 0 && !vm.filterText) {
@@ -550,7 +553,7 @@
 
         function change() {
             vm.activeElement = 0;
-            if (vm.fieldValue.length === 0 && !vm.filterText) {
+            if (vm.fieldValue && vm.fieldValue.length === 0 && !vm.filterText) {
                 vm.placeholder = $scope.field.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;
             } else {
@@ -575,10 +578,12 @@
                 if (allOptions) {
                     vm.options = allOptions;
                 }
-                for (var j = 0 ; j < vm.fieldValue.length; j++) {
-                    for (var i = 0, len = vm.options.length; i < len; i++) {
-                        if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
-                            vm.options[i].checked = true;
+                if (angular.isArray(vm.fieldValue)) {
+                    for (var j = 0; j < vm.fieldValue.length; j++) {
+                        for (var i = 0, len = vm.options.length; i < len; i++) {
+                            if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                                vm.options[i].checked = true;
+                            }
                         }
                     }
                 }
@@ -589,10 +594,12 @@
                 allOptions = angular.copy(vm.options);
             }
             vm.options = filter(angular.copy(allOptions), vm.filterText);
-            for (var j = 0 ; j < vm.fieldValue.length; j++) {
-                for (var i = 0, len = vm.options.length; i < len; i++) {
-                    if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
-                        vm.options[i].checked = true;
+            if (angular.isArray(vm.fieldValue)) {
+                for (var j = 0; j < vm.fieldValue.length; j++) {
+                    for (var i = 0, len = vm.options.length; i < len; i++) {
+                        if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                            vm.options[i].checked = true;
+                        }
                     }
                 }
             }
@@ -600,7 +607,7 @@
 
         function filter(opts, filterText) {
             var result = [];
-            result = opts.filter(function (opt) {
+            result = opts.filter(function(opt) {
                 if (opt.childOpts && opt.childOpts.length) {
                     opt.childOpts = filter(opt.childOpts, filterText);
                 }
@@ -647,7 +654,7 @@
             if (!_selectedIds.length || !vm.options.length) {
                 return;
             }
-            vm.fieldValue = vm.options.filter(function (opt) {
+            vm.fieldValue = vm.options.filter(function(opt) {
                 for (var i = 0, len = _selectedIds.length; i < len; i++) {
                     if (opt[vm.field_id] === _selectedIds[i]) {
                         opt.checked = true;
@@ -688,7 +695,7 @@
                 vm.isSpanSelectDelete = true;
                 vm.showPossible = false;
                 vm.setColorPlaceholder();
-            },0);
+            }, 0);
         };
 
         vm.isShowPossible = function() {
@@ -710,15 +717,15 @@
         };
 
 
-        $document.bind("keydown", function (event) {
+        $document.bind("keydown", function(event) {
             if (vm.showPossible || $scope.isOpen) {
-                switch(event.which) {
+                switch (event.which) {
                     case 27:
                         event.preventDefault();
                         $timeout(function() {
                             vm.showPossible = false;
                             $scope.isOpen = false;
-                        },0);
+                        }, 0);
                         break;
                     case 13:
                         event.preventDefault();
@@ -727,20 +734,20 @@
                                 break;
                             }
                         }
-                        $timeout(function () {
+                        $timeout(function() {
                             if ((!vm.multiple && !vm.isTree)) {
                                 vm.addToSelected(vm.options[vm.activeElement]);
                             } else if (vm.isTree) {
                                 vm.toggle(undefined, vm.options[vm.activeElement], true);
                             }
 
-                        },0);
+                        }, 0);
 
                         break;
                     case 40:
                         event.preventDefault();
                         if ((!vm.multiple && !vm.isTree) || (vm.isTree)) {
-                            if(vm.options.length < 1){
+                            if (vm.options.length < 1) {
                                 break;
                             }
 
@@ -750,13 +757,13 @@
                                 possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
                             }
 
-                            if(vm.activeElement < vm.options.length -1){
-                                $timeout(function () {
+                            if (vm.activeElement < vm.options.length - 1) {
+                                $timeout(function() {
                                     vm.activeElement++;
-                                },0);
+                                }, 0);
 
-                                $timeout(function () {
-                                    var activeTop  = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
+                                $timeout(function() {
+                                    var activeTop = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
                                         activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
                                         wrapperScroll = possibleValues[0].scrollTop,
                                         wrapperHeight = possibleValues[0].clientHeight;
@@ -764,14 +771,14 @@
                                     if (activeTop >= (wrapperHeight + wrapperScroll - activeHeight)) {
                                         possibleValues[0].scrollTop += activeHeight + 1;
                                     }
-                                },1);
+                                }, 1);
                             }
                         }
                         break;
                     case 38:
                         event.preventDefault();
                         if ((!vm.multiple && !vm.isTree) || (vm.isTree)) {
-                            if(vm.options.length < 1){
+                            if (vm.options.length < 1) {
                                 break;
                             }
 
@@ -781,13 +788,13 @@
                                 possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
                             }
 
-                            if(vm.activeElement > 0){
-                                $timeout(function () {
+                            if (vm.activeElement > 0) {
+                                $timeout(function() {
                                     vm.activeElement--;
-                                },0);
+                                }, 0);
 
-                                $timeout(function () {
-                                    var activeTop  = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
+                                $timeout(function() {
+                                    var activeTop = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
                                         activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
                                         wrapperScroll = possibleValues[0].scrollTop,
                                         wrapperHeight = possibleValues[0].clientHeight;
@@ -795,7 +802,7 @@
                                     if (activeTop < wrapperScroll) {
                                         possibleValues[0].scrollTop -= activeHeight + 1;
                                     }
-                                },1);
+                                }, 1);
                             }
                         }
                         break;
@@ -805,12 +812,12 @@
 
         vm.setActiveElement = function(event, index) {
             event.stopPropagation();
-            $timeout(function () {
+            $timeout(function() {
                 vm.activeElement = index;
-            },0);
+            }, 0);
         };
 
-         vm.setColorPlaceholder = function() {
+        vm.setColorPlaceholder = function() {
             if (!vm.search && !vm.isTree) {
                 vm.colorPlaceholder = !(vm.placeholder === $scope.field.placeholder) && !vm.showPossible;
             } else {
@@ -839,11 +846,11 @@
                 vm.multiple
             ) {
                 remove(null, vm.fieldValue[vm.fieldValue.length - 1]);
-            } else if(!vm.isTree && !isKeydown) {
+            } else if (!vm.isTree && !isKeydown) {
                 vm.isSpanSelectDelete = false;
                 vm.fieldValue = {};
                 event.stopPropagation();
-            } else if(vm.isTree && !isKeydown){
+            } else if (vm.isTree && !isKeydown) {
                 vm.isSpanSelectDelete = false;
                 remove(null, vm.fieldValue[0]);
                 event.stopPropagation();
@@ -856,7 +863,7 @@
             if (!!select.length) {
                 if (size <= 3) {
                     select[0].size = 3;
-                } else if(size >= 7) {
+                } else if (size >= 7) {
                     select[0].size = 7;
                 } else {
                     select[0].size = size;
@@ -864,7 +871,7 @@
             }
         }
 
-        vm.getDistanceByClass = function (className) {
+        vm.getDistanceByClass = function(className) {
             var elem = angular.element($element.find(className)[0]);
             return $window.innerHeight - elem.offset().top;
         };
@@ -873,11 +880,11 @@
     angular
         .module('universal.editor')
         .filter('selectedValues', function() {
-          return function(arr, fieldSearch) {
-            var titles = arr.map(function(item) {
-              return item[fieldSearch];
-            });
-            return titles.join(', ');
-          };
+            return function(arr, fieldSearch) {
+                var titles = arr.map(function(item) {
+                    return item[fieldSearch];
+                });
+                return titles.join(', ');
+            };
         });
 })();

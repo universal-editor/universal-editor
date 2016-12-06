@@ -277,7 +277,7 @@
                 var fieldForEdit = field.name, // ключ для замены
                     ids = [], // массив айдишников
                     paramStr = ""; // стpока json c params,
-                if (fieldForEdit && field.valuesRemote && field.valuesRemote.fieldSearch) {
+                if (fieldForEdit && field.valuesRemote && field.valuesRemote.fields.label) {
                     vm.items.forEach(function (item) {
                         var val = item[fieldForEdit];
                         item[fieldForEdit + "_copy"] = val;
@@ -286,7 +286,7 @@
                     });
 
                     if (ids.length) {
-                        paramStr = '?filter={"' + field.valuesRemote.fieldId + '":[' + ids.join(',') + ']}';
+                        paramStr = '?filter={"' + field.valuesRemote.fields.key + '":[' + ids.join(',') + ']}';
                     }
                     RestApiService.getData(field.valuesRemote.url + paramStr).then(function (res) {
                         if (res.data.items && res.data.items.length) {
@@ -296,7 +296,7 @@
                                 if (linkItem) {
                                     vm.items.forEach(function (item) {
                                         if (item[fieldForEdit + "_copy"] == linkItem.id) {
-                                            item[fieldForEdit] = linkItem[field.valuesRemote.fieldSearch];
+                                            item[fieldForEdit] = linkItem[field.valuesRemote.fields.label];
                                         }
                                     });
                                 }

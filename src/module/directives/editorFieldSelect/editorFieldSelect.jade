@@ -6,15 +6,17 @@ div
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
     .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple && !vm.isTree")
-        div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='!vm.search ? "but-for-search" : ""')
+        div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='{"but-for-search": !vm.search, "disabled-input": vm.readonly}')
             input.form-control.select-input(
+                type="text"
                 data-ng-if="vm.search",
                 placeholder="{{vm.placeholder}}",
                 data-ng-class='vm.isSelection ? "color-placeholder" : ""',
                 data-ng-model="vm.filterText",
                 data-ng-change="vm.change()",
                 data-ng-focus="vm.isShowPossible()",
-                data-ng-blur="vm.isBlur()"
+                data-ng-blur="vm.isBlur()",
+                ng-disabled="vm.readonly"
                 )
 
             input.focus-input(
@@ -26,7 +28,7 @@ div
                 .dropdown__selected-items(
                     data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""'
                     ) {{vm.placeholder}}
-            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelected($event, false)") ×
+            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete && !vm.readonly", data-ng-click="vm.deleteToSelected($event, false)") ×
             .possible-values.active(
                 data-ng-if="!vm.readonly && (vm.options.length > 0) && vm.showPossible",
                 data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'
