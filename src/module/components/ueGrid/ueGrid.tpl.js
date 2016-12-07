@@ -7,7 +7,7 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueGrid/ueGrid.html',
     '\n' +
-    '<div>\n' +
+    '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">\n' +
     '    <div class="editor-header">\n' +
     '        <component-wrapper ng-if="vm.filterComponent" data-setting="vm.filterComponent" data-options="vm.options"></component-wrapper>\n' +
     '        <component-wrapper ng-repeat="button in vm.listHeaderBar track by $index" data-setting="button" data-button-class="header" data-options="vm.options" class="header-action-button">       </component-wrapper>\n' +

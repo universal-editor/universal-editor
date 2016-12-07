@@ -14,7 +14,6 @@
         componentSettings.$fieldType = 'date';
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
-
         vm.addItem = addItem;
         vm.removeItem = removeItem;
         vm.format = vm.format || 'DD.MM.YYYY';
