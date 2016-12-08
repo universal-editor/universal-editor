@@ -687,6 +687,14 @@ body {
 .select-input-wrapper{
   position: relative;
   cursor: pointer;
+  &.disabled-input, &.disabled-input input {
+    color: #c8cbcd;
+    background-color: #eceff1;
+    border: 1px solid #ccc;
+  }
+  &.disabled-input input{
+    border: none;
+  }
 
   &:before{
     content: '';

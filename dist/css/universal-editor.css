@@ -31,6 +31,12 @@
   position: relative;
   height: 100%;
   padding: 2px; }
+  .autocomplete-input-wrapper.disabled-input, .autocomplete-input-wrapper.disabled-input input {
+    color: #c8cbcd;
+    background-color: #eceff1;
+    border: 1px solid #ccc; }
+  .autocomplete-input-wrapper.disabled-input input {
+    border: none; }
   .autocomplete-input-wrapper:after {
     content: '';
     display: table;
@@ -762,6 +768,12 @@ body {
 .select-input-wrapper {
   position: relative;
   cursor: pointer; }
+  .select-input-wrapper.disabled-input, .select-input-wrapper.disabled-input input {
+    color: #c8cbcd;
+    background-color: #eceff1;
+    border: 1px solid #ccc; }
+  .select-input-wrapper.disabled-input input {
+    border: none; }
   .select-input-wrapper:before {
     content: '';
     position: absolute;

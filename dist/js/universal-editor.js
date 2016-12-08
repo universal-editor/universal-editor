@@ -1427,89 +1427,6 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
-        .controller('EditorButtonDownloadController',EditorButtonDownloadController);
-
-    EditorButtonDownloadController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$window'];
-
-    function EditorButtonDownloadController($rootScope,$scope,$element,RestApiService,configData, $window){
-        var vm = this;
-        var params;
-        var request;
-        try {
-            request = JSON.parse($scope.buttonRequest);
-        } catch(e){
-
-        }
-        vm.label = $scope.buttonLabel;
-        vm.class = $scope.buttonClass;
-        $element.bind("click", function () {
-            var url = request.url;
-            for (var key in $scope.itemValue) {
-                if ($scope.itemValue[key]) {
-                    url = url.replace(":" + key, $scope.itemValue[key]);
-                }
-            }            
-            location.assign(url);
-        });
-}})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('editorButtonDownload',editorButtonDownload);
-
-    editorButtonDownload.$inject = ['$templateCache','RestApiService','configData'];
-
-    function editorButtonDownload($templateCache,RestApiService,configData){
-        return {
-            restrict : "A",
-            replace : true,
-            template : $templateCache.get('module/directives/editorButtonDownload/editorButtonDownload.html'),
-            scope : {
-                itemValue : "=",
-                buttonLabel : "@",
-                buttonRequest : "@",
-                index: "@",
-                buttonClass: "@"
-            },
-            controller : 'EditorButtonDownloadController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            scope.editor = RestApiService.getEntityType();
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorButtonDownload/editorButtonDownload.html',
-    '\n' +
-    '<div>\n' +
-    '    <button data-ng-if="vm.class == \'editor\'" class="btn btn-md btn-success">{{vm.label}}</button>\n' +
-    '    <button data-ng-if="vm.class == \'header\'" class="btn btn-lg btn-success">{{vm.label}}</button>\n' +
-    '    <button data-ng-if="vm.class == \'context\'" class="editor-action-button">{{vm.label}}</button>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
         .controller('EditorButtonDeleteController',EditorButtonDeleteController);
 
     EditorButtonDeleteController.$inject = ['$scope','$element','RestApiService'];
@@ -1605,6 +1522,89 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '    </button>\n' +
     '    <button data-ng-if="vm.buttonClass == \'context\'" class="editor-action-button">{{vm.label}}</button>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .controller('EditorButtonDownloadController',EditorButtonDownloadController);
+
+    EditorButtonDownloadController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$window'];
+
+    function EditorButtonDownloadController($rootScope,$scope,$element,RestApiService,configData, $window){
+        var vm = this;
+        var params;
+        var request;
+        try {
+            request = JSON.parse($scope.buttonRequest);
+        } catch(e){
+
+        }
+        vm.label = $scope.buttonLabel;
+        vm.class = $scope.buttonClass;
+        $element.bind("click", function () {
+            var url = request.url;
+            for (var key in $scope.itemValue) {
+                if ($scope.itemValue[key]) {
+                    url = url.replace(":" + key, $scope.itemValue[key]);
+                }
+            }            
+            location.assign(url);
+        });
+}})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('editorButtonDownload',editorButtonDownload);
+
+    editorButtonDownload.$inject = ['$templateCache','RestApiService','configData'];
+
+    function editorButtonDownload($templateCache,RestApiService,configData){
+        return {
+            restrict : "A",
+            replace : true,
+            template : $templateCache.get('module/directives/editorButtonDownload/editorButtonDownload.html'),
+            scope : {
+                itemValue : "=",
+                buttonLabel : "@",
+                buttonRequest : "@",
+                index: "@",
+                buttonClass: "@"
+            },
+            controller : 'EditorButtonDownloadController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            scope.editor = RestApiService.getEntityType();
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorButtonDownload/editorButtonDownload.html',
+    '\n' +
+    '<div>\n' +
+    '    <button data-ng-if="vm.class == \'editor\'" class="btn btn-md btn-success">{{vm.label}}</button>\n' +
+    '    <button data-ng-if="vm.class == \'header\'" class="btn btn-lg btn-success">{{vm.label}}</button>\n' +
+    '    <button data-ng-if="vm.class == \'context\'" class="editor-action-button">{{vm.label}}</button>\n' +
     '</div>');
 }]);
 })();
@@ -1997,95 +1997,6 @@ module.run(['$templateCache', function($templateCache) {
     '    <button data-ng-if="vm.class == \'header\'" class="btn btn-lg btn-success">{{vm.label}}</button>\n' +
     '    <button data-ng-if="vm.class == \'context\'" class="editor-action-button">{{vm.label}}</button>\n' +
     '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('EditorButtonUpdateController',EditorButtonUpdateController);
-
-    EditorButtonUpdateController.$inject = ['$scope','$element','$rootScope','EditEntityStorage','RestApiService'];
-
-    function EditorButtonUpdateController($scope,$element,$rootScope,EditEntityStorage,RestApiService){
-        var vm = this;
-
-        vm.label = $scope.buttonLabel;
-        vm.entityId = $scope.entityId;
-        vm.processing = RestApiService.isProcessing;
-
-        var watchEntityId = $scope.$watch('entityId', function (entityId) {
-            vm.entityId = entityId;
-        });
-
-        var watchRest = $scope.$watch(function () {
-            return RestApiService.isProcessing;
-        }, function (val) {
-            vm.processing = val;
-        });
-
-        $scope.$on('$destroy', function () {
-            watchEntityId();
-            watchRest();
-        });
-
-        $element.bind("click", function () {
-            if(vm.processing){
-                return;
-            }
-            RestApiService.editedEntityId = vm.entityId;
-            EditEntityStorage.editEntityUpdate("update");
-        });
-    }
-})();
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('editorButtonUpdate',editorButtonUpdate);
-
-    editorButtonUpdate.$inject = ['$templateCache','RestApiService'];
-
-    function editorButtonUpdate($templateCache,RestApiService){
-        return {
-            restrict : "A",
-            replace : true,
-            template : $templateCache.get('module/directives/editorButtonUpdate/editorButtonUpdate.html'),
-            scope : {
-                entityId : "@",
-                buttonLabel : "@",
-                buttonParams : "@"
-            },
-            controller : 'EditorButtonUpdateController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            scope.editor = RestApiService.getEntityType();
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorButtonUpdate/editorButtonUpdate.html',
-    '\n' +
-    '<button data-ng-class="{ processing : vm.processing}" class="btn btn-md btn-success">{{vm.label}}\n' +
-    '    <div data-ng-show="vm.processing" class="loader-search-wrapper">\n' +
-    '        <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
-    '    </div>\n' +
-    '</button>');
 }]);
 })();
 
@@ -2884,9 +2795,9 @@ module.run(['$templateCache', function($templateCache) {
     '\n' +
     '<div>\n' +
     '    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <div data-ng-show="vm.preloadedData &amp;&amp; vm.selectedValues.length &lt; vm.maxItemsCount" data-ng-class="{&quot;active&quot; : vm.isActivePossible}" data-ng-click="inputFocus()" class="autocomplete-input-wrapper form-control">\n' +
+    '        <div data-ng-show="vm.preloadedData &amp;&amp; vm.selectedValues.length &lt; vm.maxItemsCount" data-ng-class="{&quot;active&quot; : vm.isActivePossible, &quot;disabled-input&quot;: vm.readonly}" data-ng-click="inputFocus()" class="autocomplete-input-wrapper form-control">\n' +
     '            <div data-ng-repeat="acItem in vm.selectedValues" data-ng-show="vm.preloadedData" data-ng-if="vm.multiple" class="autocomplete-item">{{acItem[vm.field_search]}}<span data-ng-click="vm.removeFromSelected($event, acItem)" data-ng-if="!vm.readonly" class="remove-from-selected">×</span></div>\n' +
-    '            <input type="text" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" data-ng-keydown="vm.deleteToAutocomplete($event)" placeholder="{{vm.placeholder}}" data-ng-class="!vm.isActivePossible ? &quot;color-placeholder&quot; : &quot;&quot;" class="autocomplete-field-search"/><span data-ng-if="!vm.multiple &amp;&amp; !!vm.selectedValues.length" data-ng-click="vm.removeFromSelected($event, vm.selectedValues[0])" class="selecte-delete selecte-delete-autocomplete">×</span>\n' +
+    '            <input type="text" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" data-ng-keydown="vm.deleteToAutocomplete($event)" placeholder="{{vm.placeholder}}" data-ng-class="!vm.isActivePossible ? &quot;color-placeholder&quot; : &quot;&quot;" class="autocomplete-field-search"/><span data-ng-if="!vm.multiple &amp;&amp; !!vm.selectedValues.length &amp;&amp; !vm.readonly" data-ng-click="vm.removeFromSelected($event, vm.selectedValues[0])" class="selecte-delete selecte-delete-autocomplete">×</span>\n' +
     '            <div data-ng-show="vm.searching" class="loader-search-wrapper">\n' +
     '                <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
     '            </div>\n' +
@@ -2898,6 +2809,95 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '    </div>\n' +
     '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .controller('EditorButtonUpdateController',EditorButtonUpdateController);
+
+    EditorButtonUpdateController.$inject = ['$scope','$element','$rootScope','EditEntityStorage','RestApiService'];
+
+    function EditorButtonUpdateController($scope,$element,$rootScope,EditEntityStorage,RestApiService){
+        var vm = this;
+
+        vm.label = $scope.buttonLabel;
+        vm.entityId = $scope.entityId;
+        vm.processing = RestApiService.isProcessing;
+
+        var watchEntityId = $scope.$watch('entityId', function (entityId) {
+            vm.entityId = entityId;
+        });
+
+        var watchRest = $scope.$watch(function () {
+            return RestApiService.isProcessing;
+        }, function (val) {
+            vm.processing = val;
+        });
+
+        $scope.$on('$destroy', function () {
+            watchEntityId();
+            watchRest();
+        });
+
+        $element.bind("click", function () {
+            if(vm.processing){
+                return;
+            }
+            RestApiService.editedEntityId = vm.entityId;
+            EditEntityStorage.editEntityUpdate("update");
+        });
+    }
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('editorButtonUpdate',editorButtonUpdate);
+
+    editorButtonUpdate.$inject = ['$templateCache','RestApiService'];
+
+    function editorButtonUpdate($templateCache,RestApiService){
+        return {
+            restrict : "A",
+            replace : true,
+            template : $templateCache.get('module/directives/editorButtonUpdate/editorButtonUpdate.html'),
+            scope : {
+                entityId : "@",
+                buttonLabel : "@",
+                buttonParams : "@"
+            },
+            controller : 'EditorButtonUpdateController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            scope.editor = RestApiService.getEntityType();
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorButtonUpdate/editorButtonUpdate.html',
+    '\n' +
+    '<button data-ng-class="{ processing : vm.processing}" class="btn btn-md btn-success">{{vm.label}}\n' +
+    '    <div data-ng-show="vm.processing" class="loader-search-wrapper">\n' +
+    '        <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
+    '    </div>\n' +
+    '</button>');
 }]);
 })();
 
@@ -3791,6 +3791,281 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
+        .controller('EditorFieldDatetimeController', EditorFieldDatetimeController);
+
+    EditorFieldDatetimeController.$inject = ['$scope', 'EditEntityStorage', 'moment', 'ArrayFieldStorage'];
+
+    function EditorFieldDatetimeController($scope, EditEntityStorage, moment, ArrayFieldStorage) {
+        /* jshint validthis: true */
+        var vm = this;
+        var fieldErrorName;
+
+        if ($scope.parentField) {
+            if ($scope.parentFieldIndex) {
+                fieldErrorName = $scope.parentField + "_" + $scope.parentFieldIndex + "_" + $scope.fieldName;
+            } else {
+                fieldErrorName = $scope.parentField + "_" + $scope.fieldName;
+            }
+        } else {
+            fieldErrorName = $scope.fieldName;
+        }
+
+        vm.fieldName = $scope.field.name;
+        vm.fieldValue = "";
+        vm.readonly = $scope.field.readonly || false;
+        $scope.$parent.vm.error = [];
+        vm.parentFieldIndex = $scope.parentFieldIndex || false;
+        vm.multiname = $scope.field.multiname || "value";
+
+        if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
+            vm.multiple = true;
+            vm.fieldValue = [];
+        } else {
+            vm.multiple = false;
+            vm.fieldValue = moment.utc();
+        }
+
+        if (vm.parentFieldIndex) {
+            if (vm.multiple) {
+                vm.fieldValue = [];
+                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
+                    vm.fieldValue.push(item[vm.multiname]);
+                });
+            } else {
+                vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name) || vm.fieldValue;
+            }
+        }
+
+        EditEntityStorage.addFieldController(this);
+
+        this.getFieldValue = function () {
+
+            var field = {};
+
+            var wrappedFieldValue;
+
+            if (vm.multiple && vm.multiname) {
+                wrappedFieldValue = [];
+                angular.forEach(vm.fieldValue, function (valueItem) {
+                    if (!valueItem || valueItem === "" || !moment.isMoment(valueItem)) {
+                        return;
+                    }
+                    var tempItem = {};
+                    tempItem[vm.multiname] = moment.utc(valueItem).format('YYYY-MM-DD HH:mm:ss');
+                    wrappedFieldValue.push(tempItem);
+                });
+            } else {
+                if (vm.fieldValue === undefined || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
+                    wrappedFieldValue = "";
+                } else {
+                    wrappedFieldValue = moment.utc(vm.fieldValue).format('YYYY-MM-DD HH:mm:ss');
+                }
+            }
+
+            if ($scope.parentField) {
+                if (vm.parentFieldIndex) {
+                    field[$scope.parentField] = [];
+                    field[$scope.parentField][vm.parentFieldIndex] = {};
+                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
+                } else {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
+                }
+
+            } else {
+                field[vm.fieldName] = wrappedFieldValue;
+            }
+
+            return field;
+        };
+
+        this.getInitialValue = function () {
+
+            var field = {};
+
+            if ($scope.parentField) {
+                if (vm.multiple) {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = [];
+                } else {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = moment.utc();
+                }
+            } else {
+                if (vm.multiple) {
+                    field[vm.fieldName] = [];
+                } else {
+                    field[vm.fieldName] = moment.utc();
+                }
+            }
+
+            return field;
+        };
+
+        vm.addItem = function () {
+            vm.fieldValue.push(moment.utc());
+        };
+
+        vm.removeItem = function (index) {
+            angular.forEach(vm.fieldValue, function (value, key) {
+                if (key == index) {
+                    vm.fieldValue.splice(index, 1);
+                }
+            });
+        };
+
+        function clear() {
+            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
+        }
+
+        $scope.$on('editor:entity_loaded', function (event, data) {
+            //-- functional for required fields
+            if ($scope.field.requiredField) {
+                $scope.$watch(function () {
+                    var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
+                    var result = false;
+                    var endRecursion = false;
+                    (function (value) {
+                        var keys = Object.keys(value);
+                        for (var i = keys.length; i--;) {
+                            var propValue = value[keys[i]];
+                            if (propValue !== null && propValue !== undefined && propValue !== "") {
+                                if (angular.isObject(propValue) && !endRecursion) {
+                                    arguments.callee(propValue);
+                                }
+                                result = true;
+                                endRecursion = true;
+                            }
+                        }
+                    })(f_value);
+                    return result;
+                }, function (value) {
+                    if (!value) {
+                        clear();
+                        vm.readonly = true;
+                    } else {
+                        vm.readonly = $scope.field.readonly || false;
+                    }
+                }, true);
+            }
+            if (data.editorEntityType === "new") {
+                var defaultValue = moment().utc();
+                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue).isValid()){
+                    defaultValue = moment($scope.field.defaultValue, 'YYYY-MM-DD HH:mm').utc();
+                }
+                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
+                return;
+            }
+
+            if (!$scope.parentField) {
+                if (!vm.multiple) {
+                    vm.fieldValue = data[$scope.field.name] !== null ? moment.utc(data[$scope.field.name]) : "";
+                } else {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.field.name], function (timeItem) {
+                        vm.fieldValue.push(moment.utc(timeItem[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
+                    });
+                }
+            } else {
+                if (!vm.multiple) {
+                    vm.fieldValue = data[$scope.parentField][$scope.field.name] !== null ? moment.utc(data[$scope.parentField][$scope.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
+                } else {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.parentField][$scope.field.name], function (timeItem) {
+                        vm.fieldValue.push(moment.utc(timeItem[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
+                    });
+                }
+            }
+        });
+
+        $scope.$on('$destroy', function () {
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
+            }
+        });
+
+        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
+            if (angular.isArray(data)) {
+                angular.forEach(data, function (error) {
+                    if ($scope.$parent.vm.error.indexOf(error) < 0) {
+                        $scope.$parent.vm.error.push(error);
+                    }
+                });
+            } else {
+                if ($scope.$parent.vm.error.indexOf(data) < 0) {
+                    $scope.$parent.vm.error.push(data);
+                }
+            }
+        });
+
+        $scope.$watch(function () {
+            return vm.fieldValue;
+        }, function () {
+            $scope.$parent.vm.error = [];
+        }, true);
+    }
+})();
+(function () {
+    'use strict';
+
+    /**
+     * @desc Datetime-type field.
+     * @example <div editor-field-datetime=""></div>
+     */
+    angular
+        .module('universal.editor')
+        .directive('editorFieldDatetime',editorFieldDatetime);
+
+    editorFieldDatetime.$inject = ['$templateCache'];
+
+    function editorFieldDatetime($templateCache){
+        return {
+            restrict : 'A',
+            replace : true,
+            scope : true,
+            template : $templateCache.get('module/directives/editorFieldDatetime/editorFieldDatetime.html'),
+            controller: 'EditorFieldDatetimeController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorFieldDatetime/editorFieldDatetime.html',
+    '\n' +
+    '<div>\n' +
+    '    <div data-ng-if="vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '        <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-datepicker-wrapper input-group">\n' +
+    '            <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue[$index]" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/><span class="input-group-btn">\n' +
+    '                <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
+    '        </div>\n' +
+    '        <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
+    '    </div>\n' +
+    '    <div data-ng-if="!vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '        <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
         .controller('EditorFieldNumberController', EditorFieldNumberController);
 
     EditorFieldNumberController.$inject = ['$scope', 'EditEntityStorage', 'ArrayFieldStorage'];
@@ -4115,281 +4390,6 @@ module.run(['$templateCache', function($templateCache) {
     '    </div>\n' +
     '    <div data-ng-if="!vm.multiple" data-ng-class="vm.classTextarea">\n' +
     '        <input type="number" data-ng-disabled="vm.readonly" name="{{vm.fieldName}}" data-ng-model="vm.fieldValue" data-ng-min="vm.min" data-ng-max="vm.max" data-ng-blur="vm.inputLeave(vm.fieldValue)" class="form-control input-sm"/>\n' +
-    '    </div>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('EditorFieldDatetimeController', EditorFieldDatetimeController);
-
-    EditorFieldDatetimeController.$inject = ['$scope', 'EditEntityStorage', 'moment', 'ArrayFieldStorage'];
-
-    function EditorFieldDatetimeController($scope, EditEntityStorage, moment, ArrayFieldStorage) {
-        /* jshint validthis: true */
-        var vm = this;
-        var fieldErrorName;
-
-        if ($scope.parentField) {
-            if ($scope.parentFieldIndex) {
-                fieldErrorName = $scope.parentField + "_" + $scope.parentFieldIndex + "_" + $scope.fieldName;
-            } else {
-                fieldErrorName = $scope.parentField + "_" + $scope.fieldName;
-            }
-        } else {
-            fieldErrorName = $scope.fieldName;
-        }
-
-        vm.fieldName = $scope.field.name;
-        vm.fieldValue = "";
-        vm.readonly = $scope.field.readonly || false;
-        $scope.$parent.vm.error = [];
-        vm.parentFieldIndex = $scope.parentFieldIndex || false;
-        vm.multiname = $scope.field.multiname || "value";
-
-        if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
-            vm.multiple = true;
-            vm.fieldValue = [];
-        } else {
-            vm.multiple = false;
-            vm.fieldValue = moment.utc();
-        }
-
-        if (vm.parentFieldIndex) {
-            if (vm.multiple) {
-                vm.fieldValue = [];
-                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
-                    vm.fieldValue.push(item[vm.multiname]);
-                });
-            } else {
-                vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name) || vm.fieldValue;
-            }
-        }
-
-        EditEntityStorage.addFieldController(this);
-
-        this.getFieldValue = function () {
-
-            var field = {};
-
-            var wrappedFieldValue;
-
-            if (vm.multiple && vm.multiname) {
-                wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
-                    if (!valueItem || valueItem === "" || !moment.isMoment(valueItem)) {
-                        return;
-                    }
-                    var tempItem = {};
-                    tempItem[vm.multiname] = moment.utc(valueItem).format('YYYY-MM-DD HH:mm:ss');
-                    wrappedFieldValue.push(tempItem);
-                });
-            } else {
-                if (vm.fieldValue === undefined || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
-                    wrappedFieldValue = "";
-                } else {
-                    wrappedFieldValue = moment.utc(vm.fieldValue).format('YYYY-MM-DD HH:mm:ss');
-                }
-            }
-
-            if ($scope.parentField) {
-                if (vm.parentFieldIndex) {
-                    field[$scope.parentField] = [];
-                    field[$scope.parentField][vm.parentFieldIndex] = {};
-                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
-                } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
-                }
-
-            } else {
-                field[vm.fieldName] = wrappedFieldValue;
-            }
-
-            return field;
-        };
-
-        this.getInitialValue = function () {
-
-            var field = {};
-
-            if ($scope.parentField) {
-                if (vm.multiple) {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = [];
-                } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = moment.utc();
-                }
-            } else {
-                if (vm.multiple) {
-                    field[vm.fieldName] = [];
-                } else {
-                    field[vm.fieldName] = moment.utc();
-                }
-            }
-
-            return field;
-        };
-
-        vm.addItem = function () {
-            vm.fieldValue.push(moment.utc());
-        };
-
-        vm.removeItem = function (index) {
-            angular.forEach(vm.fieldValue, function (value, key) {
-                if (key == index) {
-                    vm.fieldValue.splice(index, 1);
-                }
-            });
-        };
-
-        function clear() {
-            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
-        }
-
-        $scope.$on('editor:entity_loaded', function (event, data) {
-            //-- functional for required fields
-            if ($scope.field.requiredField) {
-                $scope.$watch(function () {
-                    var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
-                    var result = false;
-                    var endRecursion = false;
-                    (function (value) {
-                        var keys = Object.keys(value);
-                        for (var i = keys.length; i--;) {
-                            var propValue = value[keys[i]];
-                            if (propValue !== null && propValue !== undefined && propValue !== "") {
-                                if (angular.isObject(propValue) && !endRecursion) {
-                                    arguments.callee(propValue);
-                                }
-                                result = true;
-                                endRecursion = true;
-                            }
-                        }
-                    })(f_value);
-                    return result;
-                }, function (value) {
-                    if (!value) {
-                        clear();
-                        vm.readonly = true;
-                    } else {
-                        vm.readonly = $scope.field.readonly || false;
-                    }
-                }, true);
-            }
-            if (data.editorEntityType === "new") {
-                var defaultValue = moment().utc();
-                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue).isValid()){
-                    defaultValue = moment($scope.field.defaultValue, 'YYYY-MM-DD HH:mm').utc();
-                }
-                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
-                return;
-            }
-
-            if (!$scope.parentField) {
-                if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.field.name] !== null ? moment.utc(data[$scope.field.name]) : "";
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (timeItem) {
-                        vm.fieldValue.push(moment.utc(timeItem[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
-                    });
-                }
-            } else {
-                if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.parentField][$scope.field.name] !== null ? moment.utc(data[$scope.parentField][$scope.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (timeItem) {
-                        vm.fieldValue.push(moment.utc(timeItem[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
-                    });
-                }
-            }
-        });
-
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
-            }
-        });
-
-        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
-            if (angular.isArray(data)) {
-                angular.forEach(data, function (error) {
-                    if ($scope.$parent.vm.error.indexOf(error) < 0) {
-                        $scope.$parent.vm.error.push(error);
-                    }
-                });
-            } else {
-                if ($scope.$parent.vm.error.indexOf(data) < 0) {
-                    $scope.$parent.vm.error.push(data);
-                }
-            }
-        });
-
-        $scope.$watch(function () {
-            return vm.fieldValue;
-        }, function () {
-            $scope.$parent.vm.error = [];
-        }, true);
-    }
-})();
-(function () {
-    'use strict';
-
-    /**
-     * @desc Datetime-type field.
-     * @example <div editor-field-datetime=""></div>
-     */
-    angular
-        .module('universal.editor')
-        .directive('editorFieldDatetime',editorFieldDatetime);
-
-    editorFieldDatetime.$inject = ['$templateCache'];
-
-    function editorFieldDatetime($templateCache){
-        return {
-            restrict : 'A',
-            replace : true,
-            scope : true,
-            template : $templateCache.get('module/directives/editorFieldDatetime/editorFieldDatetime.html'),
-            controller: 'EditorFieldDatetimeController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorFieldDatetime/editorFieldDatetime.html',
-    '\n' +
-    '<div>\n' +
-    '    <div data-ng-if="vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-datepicker-wrapper input-group">\n' +
-    '            <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue[$index]" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/><span class="input-group-btn">\n' +
-    '                <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
-    '        </div>\n' +
-    '        <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
-    '    </div>\n' +
-    '    <div data-ng-if="!vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
     '    </div>\n' +
     '</div>');
 }]);
@@ -4788,7 +4788,7 @@ module.run(['$templateCache', function($templateCache) {
 }]);
 })();
 
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -4818,7 +4818,7 @@ module.run(['$templateCache', function($templateCache) {
         vm.field_id = "id";
         vm.field_search = "title";
         if (remote) {
-            if(remote.fields){
+            if (remote.fields) {
                 if (remote.fields.value) {
                     vm.field_id = remote.fields.value;
                 }
@@ -4861,7 +4861,7 @@ module.run(['$templateCache', function($templateCache) {
             vm.sizeInput = vm.placeholder.length;
         }
 
-        if(vm.depend){
+        if (vm.depend) {
             vm.dependField = vm.depend.fieldName;
             vm.dependFilter = vm.depend.filter;
         }
@@ -4875,13 +4875,13 @@ module.run(['$templateCache', function($templateCache) {
         } else {
             vm.multiple = false;
             vm.fieldValue = "";
-            vm.styleInput = {'width': '99%'}
+            vm.styleInput = { 'width': '99%' }
         }
 
         if (vm.parentFieldIndex) {
             if (vm.multiple) {
                 vm.fieldValue = [];
-                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
+                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function(item) {
                     if (vm.multiname) {
                         _selectedIds.push(item[vm.multiname]);
                     } else {
@@ -4892,7 +4892,7 @@ module.run(['$templateCache', function($templateCache) {
                 if (ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name)) {
                     if (vm.isTree) {
                         _selectedIds.push(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name));
-                   } else {
+                    } else {
                         vm.fieldValue = {};
                         vm.fieldValue[vm.field_id] = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
                     }
@@ -4909,7 +4909,7 @@ module.run(['$templateCache', function($templateCache) {
         var allOptions;
 
         if ($scope.field.hasOwnProperty("values")) {
-            angular.forEach($scope.field.values, function (v, key) {
+            angular.forEach($scope.field.values, function(v, key) {
                 var obj = {};
                 obj[vm.field_id] = key;
                 obj[vm.field_search] = v;
@@ -4938,10 +4938,10 @@ module.run(['$templateCache', function($templateCache) {
             vm.loadingData = true;
             RestApiService
                 .getUrlResource($scope.field.valuesRemote.url)
-                .then(function (response) {
-                    angular.forEach(response.data.items, function (v) {
+                .then(function(response) {
+                    angular.forEach(response.data.items, function(v) {
                         vm.options.push(v);
-                        if(!vm.multiple && !vm.isTree && v[vm.field_id] == vm.fieldValue[vm.field_id]) {
+                        if (!vm.multiple && !vm.isTree && v[vm.field_id] == vm.fieldValue[vm.field_id]) {
                             vm.fieldValue[vm.field_search] = v[vm.field_search];
                         }
                     });
@@ -4952,32 +4952,32 @@ module.run(['$templateCache', function($templateCache) {
                     } else {
                         setSelectedValues();
                     }
-                }, function (reject) {
+                }, function(reject) {
                     console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + $scope.field.fieldName + '\" с удаленного ресурса');
-                }).finally(function () { vm.loadingData = false; });
+                }).finally(function() { vm.loadingData = false; });
         }
 
         function getRemoteSelectedValues() {
             vm.loadingData = true;
             RestApiService
                 .getUrlResource($scope.field.valuesRemote.url + '?filter={"id":["' + _selectedIds.join('","') + '"]}')
-                .then(function (response) {
+                .then(function(response) {
                     if (vm.multiple) {
-                        angular.forEach(response.data.items, function (v) {
+                        angular.forEach(response.data.items, function(v) {
                             vm.fieldValue.push(v);
                         });
                     } else {
                         vm.fieldValue = [response.data.items[0]];
                     }
                     getRemoteValues(true);
-                }, function (reject) {
+                }, function(reject) {
                     console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + $scope.field.fieldName + '\" с удаленного ресурса');
-                }).finally(function () { vm.loadingData = false; });
+                }).finally(function() { vm.loadingData = false; });
         }
 
         /* ---- */
 
-        this.getFieldValue = function () {
+        this.getFieldValue = function() {
 
             var field = {};
             var wrappedFieldValue;
@@ -4985,14 +4985,14 @@ module.run(['$templateCache', function($templateCache) {
             if ((!vm.multiple && vm.fieldValue) || (vm.multiple && vm.fieldValue.length)) {
                 if (vm.multiname) {
                     wrappedFieldValue = [];
-                    angular.forEach(vm.fieldValue, function (valueItem) {
+                    angular.forEach(vm.fieldValue, function(valueItem) {
                         var tempItem = {};
                         tempItem[vm.multiname] = vm.isTree ? valueItem[vm.field_id] : valueItem;
                         wrappedFieldValue.push(tempItem);
                     });
                 } else if (vm.multiple) {
                     wrappedFieldValue = [];
-                    angular.forEach(vm.fieldValue, function (valueItem) {
+                    angular.forEach(vm.fieldValue, function(valueItem) {
                         wrappedFieldValue.push(vm.isTree ? valueItem[vm.field_id] : valueItem);
                     });
                 } else {
@@ -5020,7 +5020,7 @@ module.run(['$templateCache', function($templateCache) {
             return field;
         };
 
-        this.getInitialValue = function () {
+        this.getInitialValue = function() {
 
             var field = {};
 
@@ -5049,16 +5049,16 @@ module.run(['$templateCache', function($templateCache) {
             vm.inputValue = "";
         }
 
-        $scope.$on('editor:entity_loaded', function (event, data) {
+        $scope.$on('editor:entity_loaded', function(event, data) {
 
             vm.fieldValue = {};
             //-- functional for required fields
             if ($scope.field.requiredField) {
-                $scope.$watch(function () {
+                $scope.$watch(function() {
                     var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
                     var result = false;
                     var endRecursion = false;
-                    (function (value) {
+                    (function(value) {
                         var keys = Object.keys(value);
                         for (var i = keys.length; i--;) {
                             var propValue = value[keys[i]];
@@ -5072,7 +5072,7 @@ module.run(['$templateCache', function($templateCache) {
                         }
                     })(f_value);
                     return result;
-                }, function (value) {
+                }, function(value) {
                     if (!value) {
                         clear();
                         vm.readonly = true;
@@ -5118,12 +5118,12 @@ module.run(['$templateCache', function($templateCache) {
                     }
                 } else if (vm.multiname) {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (item) {
+                    angular.forEach(data[$scope.field.name], function(item) {
                         _selectedIds.push(item[vm.multiname]);
                     });
                 } else {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (item) {
+                    angular.forEach(data[$scope.field.name], function(item) {
                         _selectedIds.push(item);
                     });
                 }
@@ -5138,12 +5138,12 @@ module.run(['$templateCache', function($templateCache) {
                     }
                 } else if (vm.multiname) {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
+                    angular.forEach(data[$scope.parentField][$scope.field.name], function(item) {
                         _selectedIds.push(item[vm.multiname]);
                     });
                 } else {
                     vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
+                    angular.forEach(data[$scope.parentField][$scope.field.name], function(item) {
                         _selectedIds.push(item);
                     });
                 }
@@ -5151,9 +5151,9 @@ module.run(['$templateCache', function($templateCache) {
             //setSelectedValues();
         });
 
-        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
+        $scope.$on("editor:api_error_field_" + fieldErrorName, function(event, data) {
             if (angular.isArray(data)) {
-                angular.forEach(data, function (error) {
+                angular.forEach(data, function(error) {
                     if ($scope.$parent.vm.error.indexOf(error) < 0) {
                         $scope.$parent.vm.error.push(error);
                     }
@@ -5165,16 +5165,16 @@ module.run(['$templateCache', function($templateCache) {
             }
         });
 
-        $scope.$on('$destroy', function () {
+        $scope.$on('$destroy', function() {
             EditEntityStorage.deleteFieldController(vm);
             if (vm.parentFieldIndex) {
                 ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
             }
         });
 
-        $scope.$watch(function () {
+        $scope.$watch(function() {
             return vm.fieldValue;
-        }, function (newVal) {
+        }, function(newVal) {
             if (!vm.multiple && !vm.isTree) {
                 if (vm.search) {
                     vm.filterText = '';
@@ -5192,25 +5192,28 @@ module.run(['$templateCache', function($templateCache) {
             vm.setColorPlaceholder();
             $scope.$parent.vm.error = [];
             $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
+            if (newVal && !$.isEmptyObject(newVal)) {
+                vm.isSpanSelectDelete = true;
+            }
         }, true);
 
         if (vm.depend) {
-            $scope.$on('select_field:select_name_' + vm.dependField, function (event, data) {
+            $scope.$on('select_field:select_name_' + vm.dependField, function(event, data) {
                 if (data && data !== "") {
                     vm.parentValue = false;
                     vm.options = [];
                     RestApiService
-                        .getUrlResource($scope.field.valuesRemote.url + '?filter={"' + vm.dependFilter + '":"'+ data +'"}')
-                        .then(function (response) {
-                            angular.forEach(response.data.items, function (v) {
+                        .getUrlResource($scope.field.valuesRemote.url + '?filter={"' + vm.dependFilter + '":"' + data + '"}')
+                        .then(function(response) {
+                            angular.forEach(response.data.items, function(v) {
                                 vm.options.push(v);
                             });
                             $timeout(function() {
                                 setSizeSelect();
-                            },0);
+                            }, 0);
                             allOptions = angular.copy(vm.options);
                             vm.parentValue = true;
-                        }, function (reject) {
+                        }, function(reject) {
                             console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + $scope.field.fieldName + '\" с удаленного ресурса');
                         });
                 } else {
@@ -5231,13 +5234,13 @@ module.run(['$templateCache', function($templateCache) {
                 if (item[vm.treeChildCountField] && !item.childOpts) {
                     item.loadingData = true;
                     RestApiService
-                        .getUrlResource($scope.field.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"'+ item[vm.field_id] +'"}')
-                        .then(function (response) {
+                        .getUrlResource($scope.field.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.field_id] + '"}')
+                        .then(function(response) {
                             if (!item.childOpts) {
                                 item.childOpts = [];
                             }
                             item.loadingData = false;
-                            angular.forEach(response.data.items, function (v) {
+                            angular.forEach(response.data.items, function(v) {
                                 item.childOpts.push(v);
                             });
                             if (!vm.filterText) {
@@ -5246,12 +5249,12 @@ module.run(['$templateCache', function($templateCache) {
                             if (vm.fieldValue.length) {
                                 setSelectedValuesFromRemote(item);
                             }
-                        }, function (reject) {
+                        }, function(reject) {
                             console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + $scope.field.fieldName + '\" с удаленного ресурса');
                         });
                 }
             } else {
-                if(!angular.isArray(vm.fieldValue)){
+                if (!angular.isArray(vm.fieldValue)) {
                     vm.fieldValue = [];
                 }
                 var idx = findById(item[vm.field_id]);
@@ -5280,7 +5283,7 @@ module.run(['$templateCache', function($templateCache) {
                     $timeout(function() {
                         vm.isBlur();
                         $element.find('input')[0].blur();
-                    },0);
+                    }, 0);
                 }
             }
             if (vm.fieldValue.length === 0 && !vm.filterText) {
@@ -5340,7 +5343,7 @@ module.run(['$templateCache', function($templateCache) {
 
         function change() {
             vm.activeElement = 0;
-            if (vm.fieldValue.length === 0 && !vm.filterText) {
+            if (vm.fieldValue && vm.fieldValue.length === 0 && !vm.filterText) {
                 vm.placeholder = $scope.field.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;
             } else {
@@ -5365,10 +5368,12 @@ module.run(['$templateCache', function($templateCache) {
                 if (allOptions) {
                     vm.options = allOptions;
                 }
-                for (var j = 0 ; j < vm.fieldValue.length; j++) {
-                    for (var i = 0, len = vm.options.length; i < len; i++) {
-                        if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
-                            vm.options[i].checked = true;
+                if (angular.isArray(vm.fieldValue)) {
+                    for (var j = 0; j < vm.fieldValue.length; j++) {
+                        for (var i = 0, len = vm.options.length; i < len; i++) {
+                            if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                                vm.options[i].checked = true;
+                            }
                         }
                     }
                 }
@@ -5379,10 +5384,12 @@ module.run(['$templateCache', function($templateCache) {
                 allOptions = angular.copy(vm.options);
             }
             vm.options = filter(angular.copy(allOptions), vm.filterText);
-            for (var j = 0 ; j < vm.fieldValue.length; j++) {
-                for (var i = 0, len = vm.options.length; i < len; i++) {
-                    if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
-                        vm.options[i].checked = true;
+            if (angular.isArray(vm.fieldValue)) {
+                for (var j = 0; j < vm.fieldValue.length; j++) {
+                    for (var i = 0, len = vm.options.length; i < len; i++) {
+                        if (vm.options[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                            vm.options[i].checked = true;
+                        }
                     }
                 }
             }
@@ -5390,7 +5397,7 @@ module.run(['$templateCache', function($templateCache) {
 
         function filter(opts, filterText) {
             var result = [];
-            result = opts.filter(function (opt) {
+            result = opts.filter(function(opt) {
                 if (opt.childOpts && opt.childOpts.length) {
                     opt.childOpts = filter(opt.childOpts, filterText);
                 }
@@ -5437,7 +5444,7 @@ module.run(['$templateCache', function($templateCache) {
             if (!_selectedIds.length || !vm.options.length) {
                 return;
             }
-            vm.fieldValue = vm.options.filter(function (opt) {
+            vm.fieldValue = vm.options.filter(function(opt) {
                 for (var i = 0, len = _selectedIds.length; i < len; i++) {
                     if (opt[vm.field_id] === _selectedIds[i]) {
                         opt.checked = true;
@@ -5478,7 +5485,7 @@ module.run(['$templateCache', function($templateCache) {
                 vm.isSpanSelectDelete = true;
                 vm.showPossible = false;
                 vm.setColorPlaceholder();
-            },0);
+            }, 0);
         };
 
         vm.isShowPossible = function() {
@@ -5500,15 +5507,15 @@ module.run(['$templateCache', function($templateCache) {
         };
 
 
-        $document.bind("keydown", function (event) {
+        $document.bind("keydown", function(event) {
             if (vm.showPossible || $scope.isOpen) {
-                switch(event.which) {
+                switch (event.which) {
                     case 27:
                         event.preventDefault();
                         $timeout(function() {
                             vm.showPossible = false;
                             $scope.isOpen = false;
-                        },0);
+                        }, 0);
                         break;
                     case 13:
                         event.preventDefault();
@@ -5517,20 +5524,20 @@ module.run(['$templateCache', function($templateCache) {
                                 break;
                             }
                         }
-                        $timeout(function () {
+                        $timeout(function() {
                             if ((!vm.multiple && !vm.isTree)) {
                                 vm.addToSelected(vm.options[vm.activeElement]);
                             } else if (vm.isTree) {
                                 vm.toggle(undefined, vm.options[vm.activeElement], true);
                             }
 
-                        },0);
+                        }, 0);
 
                         break;
                     case 40:
                         event.preventDefault();
                         if ((!vm.multiple && !vm.isTree) || (vm.isTree)) {
-                            if(vm.options.length < 1){
+                            if (vm.options.length < 1) {
                                 break;
                             }
 
@@ -5540,13 +5547,13 @@ module.run(['$templateCache', function($templateCache) {
                                 possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
                             }
 
-                            if(vm.activeElement < vm.options.length -1){
-                                $timeout(function () {
+                            if (vm.activeElement < vm.options.length - 1) {
+                                $timeout(function() {
                                     vm.activeElement++;
-                                },0);
+                                }, 0);
 
-                                $timeout(function () {
-                                    var activeTop  = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
+                                $timeout(function() {
+                                    var activeTop = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
                                         activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
                                         wrapperScroll = possibleValues[0].scrollTop,
                                         wrapperHeight = possibleValues[0].clientHeight;
@@ -5554,14 +5561,14 @@ module.run(['$templateCache', function($templateCache) {
                                     if (activeTop >= (wrapperHeight + wrapperScroll - activeHeight)) {
                                         possibleValues[0].scrollTop += activeHeight + 1;
                                     }
-                                },1);
+                                }, 1);
                             }
                         }
                         break;
                     case 38:
                         event.preventDefault();
                         if ((!vm.multiple && !vm.isTree) || (vm.isTree)) {
-                            if(vm.options.length < 1){
+                            if (vm.options.length < 1) {
                                 break;
                             }
 
@@ -5571,13 +5578,13 @@ module.run(['$templateCache', function($templateCache) {
                                 possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
                             }
 
-                            if(vm.activeElement > 0){
-                                $timeout(function () {
+                            if (vm.activeElement > 0) {
+                                $timeout(function() {
                                     vm.activeElement--;
-                                },0);
+                                }, 0);
 
-                                $timeout(function () {
-                                    var activeTop  = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
+                                $timeout(function() {
+                                    var activeTop = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
                                         activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
                                         wrapperScroll = possibleValues[0].scrollTop,
                                         wrapperHeight = possibleValues[0].clientHeight;
@@ -5585,7 +5592,7 @@ module.run(['$templateCache', function($templateCache) {
                                     if (activeTop < wrapperScroll) {
                                         possibleValues[0].scrollTop -= activeHeight + 1;
                                     }
-                                },1);
+                                }, 1);
                             }
                         }
                         break;
@@ -5595,12 +5602,12 @@ module.run(['$templateCache', function($templateCache) {
 
         vm.setActiveElement = function(event, index) {
             event.stopPropagation();
-            $timeout(function () {
+            $timeout(function() {
                 vm.activeElement = index;
-            },0);
+            }, 0);
         };
 
-         vm.setColorPlaceholder = function() {
+        vm.setColorPlaceholder = function() {
             if (!vm.search && !vm.isTree) {
                 vm.colorPlaceholder = !(vm.placeholder === $scope.field.placeholder) && !vm.showPossible;
             } else {
@@ -5629,11 +5636,11 @@ module.run(['$templateCache', function($templateCache) {
                 vm.multiple
             ) {
                 remove(null, vm.fieldValue[vm.fieldValue.length - 1]);
-            } else if(!vm.isTree && !isKeydown) {
+            } else if (!vm.isTree && !isKeydown) {
                 vm.isSpanSelectDelete = false;
                 vm.fieldValue = {};
                 event.stopPropagation();
-            } else if(vm.isTree && !isKeydown){
+            } else if (vm.isTree && !isKeydown) {
                 vm.isSpanSelectDelete = false;
                 remove(null, vm.fieldValue[0]);
                 event.stopPropagation();
@@ -5646,7 +5653,7 @@ module.run(['$templateCache', function($templateCache) {
             if (!!select.length) {
                 if (size <= 3) {
                     select[0].size = 3;
-                } else if(size >= 7) {
+                } else if (size >= 7) {
                     select[0].size = 7;
                 } else {
                     select[0].size = size;
@@ -5654,7 +5661,7 @@ module.run(['$templateCache', function($templateCache) {
             }
         }
 
-        vm.getDistanceByClass = function (className) {
+        vm.getDistanceByClass = function(className) {
             var elem = angular.element($element.find(className)[0]);
             return $window.innerHeight - elem.offset().top;
         };
@@ -5663,12 +5670,12 @@ module.run(['$templateCache', function($templateCache) {
     angular
         .module('universal.editor')
         .filter('selectedValues', function() {
-          return function(arr, fieldSearch) {
-            var titles = arr.map(function(item) {
-              return item[fieldSearch];
-            });
-            return titles.join(', ');
-          };
+            return function(arr, fieldSearch) {
+                var titles = arr.map(function(item) {
+                    return item[fieldSearch];
+                });
+                return titles.join(', ');
+            };
         });
 })();
 (function () {
@@ -5756,12 +5763,12 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '    </div>\n' +
     '    <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <div data-ng-click="vm.clickSelect()" data-ng-class="!vm.search ? &quot;but-for-search&quot; : &quot;&quot;" class="select-input-wrapper">\n' +
-    '            <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="form-control select-input"/>\n' +
+    '        <div data-ng-click="vm.clickSelect()" data-ng-class="{&quot;but-for-search&quot;: !vm.search, &quot;disabled-input&quot;: vm.readonly}" class="select-input-wrapper">\n' +
+    '            <input type="text" data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" ng-disabled="vm.readonly" class="form-control select-input"/>\n' +
     '            <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
     '            <div data-ng-if="!vm.search" class="form-control select-input">\n' +
     '                <div data-ng-class="vm.colorPlaceholder ? &quot;color-placeholder-div&quot; : &quot;&quot;" class="dropdown__selected-items">{{vm.placeholder}}</div>\n' +
-    '            </div><span data-ng-if="vm.isSpanSelectDelete" data-ng-click="vm.deleteToSelected($event, false)" class="selecte-delete">×</span>\n' +
+    '            </div><span data-ng-if="vm.isSpanSelectDelete &amp;&amp; !vm.readonly" data-ng-click="vm.deleteToSelected($event, false)" class="selecte-delete">×</span>\n' +
     '            <div data-ng-if="!vm.readonly &amp;&amp; (vm.options.length &gt; 0) &amp;&amp; vm.showPossible" data-ng-class="vm.possibleLocation ? &quot;possible-bottom&quot; : &quot;possible-top&quot;" class="possible-values active">\n' +
     '                <div class="possible-scroll">\n' +
     '                    <div data-ng-repeat="option in vm.options" data-ng-mouseover="vm.activeElement = $index" data-ng-mousedown="vm.addToSelected(option)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{option[vm.field_search]}}</div>\n' +
@@ -6801,147 +6808,6 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
-        .controller('EditorFilterCheckboxController',EditorFilterCheckboxController);
-
-    EditorFilterCheckboxController.$inject = ['$scope','FilterFieldsStorage','RestApiService'];
-
-    function EditorFilterCheckboxController($scope,FilterFieldsStorage,RestApiService){
-        /* jshint validthis: true */
-        var vm = this;
-
-        vm.filterName = $scope.filter.name;
-        vm.filterDisplayName = $scope.filter.label;
-        vm.filterValue = [];
-        vm.selectedValues = [];
-        var remote = $scope.filter.valuesRemote;
-        vm.field_id = "id";
-        vm.field_search = "title";
-        if (remote) {
-            if(remote.fields){
-                if (remote.fields.value) {
-                    vm.field_id = remote.fields.value;
-                }
-                if (remote.fields.label) {
-                    vm.field_search = remote.fields.label;
-                }
-            }
-        }
-        FilterFieldsStorage.addFilterController(this);
-
-        if($scope.filter.hasOwnProperty("values")){
-            angular.forEach($scope.filter.values, function (v,key) {
-                var obj = {};
-                obj[vm.field_id] = key;
-                obj[vm.field_search] = v;
-                vm.selectedValues.push(obj);
-            });
-        } else if ($scope.filter.hasOwnProperty("valuesRemote")){
-            RestApiService
-                .getUrlResource($scope.filter.valuesRemote.url)
-                .then(function (response) {
-                    angular.forEach(response.data.items, function (v) {
-                        vm.selectedValues.push(v);
-                    });
-                }, function (reject) {
-                    console.error('EditorFilterCheckboxController: Не удалось получить значения для поля \"' + $scope.filter.fieldName + '\" с удаленного ресурса');
-                });
-        } else {
-            console.error('EditorFilterCheckboxController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
-        }
-
-        this.getFilterValue = function () {
-
-            var field = {};
-
-            if(vm.filterValue.length !== 0){
-                field[vm.filterName] = vm.filterValue;
-                return field;
-            } else {
-                return false;
-            }
-        };
-
-        this.getInitialValue = function () {
-
-            var filter = {};
-
-            filter[vm.filterValue] = [];
-
-            return filter;
-        };
-
-        this.setInitialValue = function () {
-            vm.filterValue = [];
-        };
-
-        /*
-         * При удалении директивы она должна отправлять запрос в FilterFieldsStorage
-         * чтобы последний удалил её из списка отслеживаемых фильтров.
-         */
-
-        $scope.$on('$destroy', function () {
-            FilterFieldsStorage.deleteFilterController(vm);
-        });
-    }
-})();
-
-(function () {
-    'use strict';
-
-    /**
-     * @desc Checkbox-type filter.
-     * @example <div editor-filter-checkbox=""></div>
-     */
-    angular
-        .module('universal.editor')
-        .directive('editorFilterCheckbox',editorFilterCheckbox);
-
-    editorFilterCheckbox.$inject = ['$templateCache'];
-
-    function editorFilterCheckbox($templateCache){
-        return {
-            restrict : 'A',
-            replace : true,
-            scope : true,
-            template : $templateCache.get('module/directives/editorFilterCheckbox/editorFilterCheckbox.html'),
-            controller: 'EditorFilterCheckboxController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorFilterCheckbox/editorFilterCheckbox.html',
-    '\n' +
-    '<div>\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
-    '    <div class="filter-inner-wrapper">\n' +
-    '        <label data-ng-repeat="item in vm.selectedValues" class="checkbox-inline">\n' +
-    '            <input type="checkbox" data-checklist-model="vm.filterValue" data-checklist-value="item[vm.field_id]"/>{{item[vm.field_search]}}\n' +
-    '        </label>\n' +
-    '    </div>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
         .controller('EditorFilterAutocompleteController', EditorFilterAutocompleteController);
 
     EditorFilterAutocompleteController.$inject = ['$scope', '$element', 'FilterFieldsStorage', '$location', 'RestApiService', '$timeout', 'ArrayFieldStorage'];
@@ -7358,6 +7224,262 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
+        .controller('EditorFilterCheckboxController',EditorFilterCheckboxController);
+
+    EditorFilterCheckboxController.$inject = ['$scope','FilterFieldsStorage','RestApiService'];
+
+    function EditorFilterCheckboxController($scope,FilterFieldsStorage,RestApiService){
+        /* jshint validthis: true */
+        var vm = this;
+
+        vm.filterName = $scope.filter.name;
+        vm.filterDisplayName = $scope.filter.label;
+        vm.filterValue = [];
+        vm.selectedValues = [];
+        var remote = $scope.filter.valuesRemote;
+        vm.field_id = "id";
+        vm.field_search = "title";
+        if (remote) {
+            if(remote.fields){
+                if (remote.fields.value) {
+                    vm.field_id = remote.fields.value;
+                }
+                if (remote.fields.label) {
+                    vm.field_search = remote.fields.label;
+                }
+            }
+        }
+        FilterFieldsStorage.addFilterController(this);
+
+        if($scope.filter.hasOwnProperty("values")){
+            angular.forEach($scope.filter.values, function (v,key) {
+                var obj = {};
+                obj[vm.field_id] = key;
+                obj[vm.field_search] = v;
+                vm.selectedValues.push(obj);
+            });
+        } else if ($scope.filter.hasOwnProperty("valuesRemote")){
+            RestApiService
+                .getUrlResource($scope.filter.valuesRemote.url)
+                .then(function (response) {
+                    angular.forEach(response.data.items, function (v) {
+                        vm.selectedValues.push(v);
+                    });
+                }, function (reject) {
+                    console.error('EditorFilterCheckboxController: Не удалось получить значения для поля \"' + $scope.filter.fieldName + '\" с удаленного ресурса');
+                });
+        } else {
+            console.error('EditorFilterCheckboxController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
+        }
+
+        this.getFilterValue = function () {
+
+            var field = {};
+
+            if(vm.filterValue.length !== 0){
+                field[vm.filterName] = vm.filterValue;
+                return field;
+            } else {
+                return false;
+            }
+        };
+
+        this.getInitialValue = function () {
+
+            var filter = {};
+
+            filter[vm.filterValue] = [];
+
+            return filter;
+        };
+
+        this.setInitialValue = function () {
+            vm.filterValue = [];
+        };
+
+        /*
+         * При удалении директивы она должна отправлять запрос в FilterFieldsStorage
+         * чтобы последний удалил её из списка отслеживаемых фильтров.
+         */
+
+        $scope.$on('$destroy', function () {
+            FilterFieldsStorage.deleteFilterController(vm);
+        });
+    }
+})();
+
+(function () {
+    'use strict';
+
+    /**
+     * @desc Checkbox-type filter.
+     * @example <div editor-filter-checkbox=""></div>
+     */
+    angular
+        .module('universal.editor')
+        .directive('editorFilterCheckbox',editorFilterCheckbox);
+
+    editorFilterCheckbox.$inject = ['$templateCache'];
+
+    function editorFilterCheckbox($templateCache){
+        return {
+            restrict : 'A',
+            replace : true,
+            scope : true,
+            template : $templateCache.get('module/directives/editorFilterCheckbox/editorFilterCheckbox.html'),
+            controller: 'EditorFilterCheckboxController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorFilterCheckbox/editorFilterCheckbox.html',
+    '\n' +
+    '<div>\n' +
+    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div class="filter-inner-wrapper">\n' +
+    '        <label data-ng-repeat="item in vm.selectedValues" class="checkbox-inline">\n' +
+    '            <input type="checkbox" data-checklist-model="vm.filterValue" data-checklist-value="item[vm.field_id]"/>{{item[vm.field_search]}}\n' +
+    '        </label>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .controller('EditorFilterDateTimeController',EditorFilterDateTimeController);
+
+    EditorFilterDateTimeController.$inject = ['$scope','FilterFieldsStorage','moment'];
+
+    function EditorFilterDateTimeController($scope,FilterFieldsStorage,moment){
+        /* jshint validthis: true */
+        var vm = this;
+
+        vm.filterName = $scope.filter.name;
+        vm.filterDisplayName = $scope.filter.label;
+        vm.filterValueStartDateTime = "";
+        vm.filterValueEndDateTime = "";
+
+        FilterFieldsStorage.addFilterController(this);
+
+        this.getFilterValue = function () {
+
+            var field = {};
+
+            if(vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime === ""){
+                return false;
+            } else {
+                if(vm.filterValueStartDateTime !== "" && vm.filterValueEndDateTime === ""){
+                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
+                } else if (vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime !== ""){
+                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
+                } else {
+                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
+                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
+                }
+                return field;
+            }
+        };
+
+        this.getInitialValue = function () {
+            var filter = {};
+            filter[vm.filterName] = "";
+            return filter;
+        };
+
+        this.setInitialValue = function () {
+            vm.filterValueStartDateTime = "";
+            vm.filterValueEndDateTime = "";
+        };
+
+        $scope.$on('$destroy', function () {
+            FilterFieldsStorage.deleteFilterController(vm);
+        });
+    }
+})();
+
+(function () {
+    'use strict';
+
+    /**
+     * @desc DateTime-type filter.
+     * @example <div editor-filter-datetime=""></div>
+     */
+    angular
+        .module('universal.editor')
+        .directive('editorFilterDatetime',editorFilterDatetime);
+
+    editorFilterDatetime.$inject = ['$templateCache'];
+
+    function editorFilterDatetime($templateCache){
+        return {
+            restrict : 'A',
+            replace : true,
+            scope : true,
+            template : $templateCache.get('module/directives/editorFilterDatetime/editorFilterDatetime.html'),
+            controller: 'EditorFilterDateTimeController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorFilterDatetime/editorFilterDatetime.html',
+    '\n' +
+    '<div class="filter-datetime-wrapper">\n' +
+    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div class="filter-inner-wrapper">\n' +
+    '        <div class="filter-start">\n' +
+    '            <div class="editor-datetime">\n' +
+    '                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueStartDateTime" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
+    '            </div>\n' +
+    '        </div><span class="divider">-</span>\n' +
+    '        <div class="filter-end">\n' +
+    '            <div class="editor-datetime">\n' +
+    '                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueEndDateTime" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
+    '            </div>\n' +
+    '        </div>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
         .controller('EditorFilterDateController',EditorFilterDateController);
 
     EditorFilterDateController.$inject = ['$scope','FilterFieldsStorage','moment'];
@@ -7483,121 +7605,6 @@ module.run(['$templateCache', function($templateCache) {
     '            </div>\n' +
     '            <div class="editor-time">\n' +
     '                <input data-ng-disabled="!vm.filterValueEndDate" data-date-time="" data-ng-model="vm.filterValueEndTime" data-format="HH:mm:ss" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm"/>\n' +
-    '            </div>\n' +
-    '        </div>\n' +
-    '    </div>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('EditorFilterDateTimeController',EditorFilterDateTimeController);
-
-    EditorFilterDateTimeController.$inject = ['$scope','FilterFieldsStorage','moment'];
-
-    function EditorFilterDateTimeController($scope,FilterFieldsStorage,moment){
-        /* jshint validthis: true */
-        var vm = this;
-
-        vm.filterName = $scope.filter.name;
-        vm.filterDisplayName = $scope.filter.label;
-        vm.filterValueStartDateTime = "";
-        vm.filterValueEndDateTime = "";
-
-        FilterFieldsStorage.addFilterController(this);
-
-        this.getFilterValue = function () {
-
-            var field = {};
-
-            if(vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime === ""){
-                return false;
-            } else {
-                if(vm.filterValueStartDateTime !== "" && vm.filterValueEndDateTime === ""){
-                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
-                } else if (vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime !== ""){
-                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
-                } else {
-                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
-                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
-                }
-                return field;
-            }
-        };
-
-        this.getInitialValue = function () {
-            var filter = {};
-            filter[vm.filterName] = "";
-            return filter;
-        };
-
-        this.setInitialValue = function () {
-            vm.filterValueStartDateTime = "";
-            vm.filterValueEndDateTime = "";
-        };
-
-        $scope.$on('$destroy', function () {
-            FilterFieldsStorage.deleteFilterController(vm);
-        });
-    }
-})();
-
-(function () {
-    'use strict';
-
-    /**
-     * @desc DateTime-type filter.
-     * @example <div editor-filter-datetime=""></div>
-     */
-    angular
-        .module('universal.editor')
-        .directive('editorFilterDatetime',editorFilterDatetime);
-
-    editorFilterDatetime.$inject = ['$templateCache'];
-
-    function editorFilterDatetime($templateCache){
-        return {
-            restrict : 'A',
-            replace : true,
-            scope : true,
-            template : $templateCache.get('module/directives/editorFilterDatetime/editorFilterDatetime.html'),
-            controller: 'EditorFilterDateTimeController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorFilterDatetime/editorFilterDatetime.html',
-    '\n' +
-    '<div class="filter-datetime-wrapper">\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
-    '    <div class="filter-inner-wrapper">\n' +
-    '        <div class="filter-start">\n' +
-    '            <div class="editor-datetime">\n' +
-    '                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueStartDateTime" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
-    '            </div>\n' +
-    '        </div><span class="divider">-</span>\n' +
-    '        <div class="filter-end">\n' +
-    '            <div class="editor-datetime">\n' +
-    '                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueEndDateTime" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +
@@ -8939,7 +8946,7 @@ module.run(['$templateCache', function($templateCache) {
                 var fieldForEdit = field.name, // ключ для замены
                     ids = [], // массив айдишников
                     paramStr = ""; // стpока json c params,
-                if (fieldForEdit && field.valuesRemote && field.valuesRemote.fieldSearch) {
+                if (fieldForEdit && field.valuesRemote && field.valuesRemote.fields.label) {
                     vm.items.forEach(function (item) {
                         var val = item[fieldForEdit];
                         item[fieldForEdit + "_copy"] = val;
@@ -8948,7 +8955,7 @@ module.run(['$templateCache', function($templateCache) {
                     });
 
                     if (ids.length) {
-                        paramStr = '?filter={"' + field.valuesRemote.fieldId + '":[' + ids.join(',') + ']}';
+                        paramStr = '?filter={"' + field.valuesRemote.fields.key + '":[' + ids.join(',') + ']}';
                     }
                     RestApiService.getData(field.valuesRemote.url + paramStr).then(function (res) {
                         if (res.data.items && res.data.items.length) {
@@ -8958,7 +8965,7 @@ module.run(['$templateCache', function($templateCache) {
                                 if (linkItem) {
                                     vm.items.forEach(function (item) {
                                         if (item[fieldForEdit + "_copy"] == linkItem.id) {
-                                            item[fieldForEdit] = linkItem[field.valuesRemote.fieldSearch];
+                                            item[fieldForEdit] = linkItem[field.valuesRemote.fields.label];
                                         }
                                     });
                                 }
