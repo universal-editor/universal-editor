@@ -787,28 +787,38 @@ body {
   box-shadow: none !important;
 }
 
-.universal-editor > div .editor-filter-wrapper .filter-wrapper {
-  margin-bottom: 10px;
-  & .filter-name-label {
-      display: inline-block;
-      width: 200px;
-      float: left;
-  }
+.universal-editor > div .editor-filter-wrapper   .filter-wrapper {
+    margin-bottom: 10px;
 
-  & .filter-inner-wrapper {    
-    & .autocomplete-input-wrapper, & .select-input-wrapper {
-      width: auto;
+    & div {
+        & .filter-name-label {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+    }
+
+    & .filter-name-label {
+        display: inline-block;
+        width: 200px;
+        float: left;
+        padding-right: 10px;
+    }
+
+    & .filter-inner-wrapper {    
+      & .autocomplete-input-wrapper, & .select-input-wrapper {
+        width: 100%;
+      }
+    }
+
+    & .filter-inner-wrapper {
+        margin-left: 200px;
+        display: block;
+      & .editor-datetime input {
+            width: 180px;
+        }
     }
   }
-
-  & .filter-inner-wrapper {
-      margin-left: 200px;
-      display: block;
-    & .editor-datetime input {
-          width: 180px;
-      }
-  }
-}
 
 .universal-editor div input.form-control[type="text"] {
     height: 34px;

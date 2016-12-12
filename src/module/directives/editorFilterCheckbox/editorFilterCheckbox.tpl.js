@@ -8,7 +8,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFilterCheckbox/editorFilterCheckbox.html',
     '\n' +
     '<div>\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <label data-ng-repeat="item in vm.selectedValues" class="checkbox-inline">\n' +
     '            <input type="checkbox" data-checklist-model="vm.filterValue" data-checklist-value="item[vm.field_id]"/>{{item[vm.field_search]}}\n' +

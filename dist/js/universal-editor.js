@@ -2005,6 +2005,95 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
+        .controller('EditorButtonUpdateController',EditorButtonUpdateController);
+
+    EditorButtonUpdateController.$inject = ['$scope','$element','$rootScope','EditEntityStorage','RestApiService'];
+
+    function EditorButtonUpdateController($scope,$element,$rootScope,EditEntityStorage,RestApiService){
+        var vm = this;
+
+        vm.label = $scope.buttonLabel;
+        vm.entityId = $scope.entityId;
+        vm.processing = RestApiService.isProcessing;
+
+        var watchEntityId = $scope.$watch('entityId', function (entityId) {
+            vm.entityId = entityId;
+        });
+
+        var watchRest = $scope.$watch(function () {
+            return RestApiService.isProcessing;
+        }, function (val) {
+            vm.processing = val;
+        });
+
+        $scope.$on('$destroy', function () {
+            watchEntityId();
+            watchRest();
+        });
+
+        $element.bind("click", function () {
+            if(vm.processing){
+                return;
+            }
+            RestApiService.editedEntityId = vm.entityId;
+            EditEntityStorage.editEntityUpdate("update");
+        });
+    }
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('editorButtonUpdate',editorButtonUpdate);
+
+    editorButtonUpdate.$inject = ['$templateCache','RestApiService'];
+
+    function editorButtonUpdate($templateCache,RestApiService){
+        return {
+            restrict : "A",
+            replace : true,
+            template : $templateCache.get('module/directives/editorButtonUpdate/editorButtonUpdate.html'),
+            scope : {
+                entityId : "@",
+                buttonLabel : "@",
+                buttonParams : "@"
+            },
+            controller : 'EditorButtonUpdateController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            scope.editor = RestApiService.getEntityType();
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorButtonUpdate/editorButtonUpdate.html',
+    '\n' +
+    '<button data-ng-class="{ processing : vm.processing}" class="btn btn-md btn-success">{{vm.label}}\n' +
+    '    <div data-ng-show="vm.processing" class="loader-search-wrapper">\n' +
+    '        <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
+    '    </div>\n' +
+    '</button>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
         .controller('EditorFieldArrayController',EditorFieldArrayController);
 
     EditorFieldArrayController.$inject = ['$scope','$rootScope','configData','EditEntityStorage','$timeout','ArrayFieldStorage'];
@@ -2207,6 +2296,18 @@ module.run(['$templateCache', function($templateCache) {
                     vm.field_search = vm.field_id;
                 }
             }
+        }
+
+        vm.cols = $scope.field.width;
+        vm.classWidth = 'col-lg-2 col-md-2 col-sm-3 col-xs-3';
+        if (!!vm.cols) {
+            if (vm.cols > 6) {
+                vm.cols = 6;
+            }
+            if (vm.cols < 1) {
+                vm.cols = 1;
+            }
+            vm.classWidth = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
         }
 
         vm.fieldName = $scope.field.name;
@@ -2794,7 +2895,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFieldAutocomplete/editorFieldAutocomplete.html',
     '\n' +
     '<div>\n' +
-    '    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '    <div data-ng-class="vm.classWidth">\n' +
     '        <div data-ng-show="vm.preloadedData &amp;&amp; vm.selectedValues.length &lt; vm.maxItemsCount" data-ng-class="{&quot;active&quot; : vm.isActivePossible, &quot;disabled-input&quot;: vm.readonly}" data-ng-click="inputFocus()" class="autocomplete-input-wrapper form-control">\n' +
     '            <div data-ng-repeat="acItem in vm.selectedValues" data-ng-show="vm.preloadedData" data-ng-if="vm.multiple" class="autocomplete-item">{{acItem[vm.field_search]}}<span data-ng-click="vm.removeFromSelected($event, acItem)" data-ng-if="!vm.readonly" class="remove-from-selected">×</span></div>\n' +
     '            <input type="text" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" data-ng-keydown="vm.deleteToAutocomplete($event)" placeholder="{{vm.placeholder}}" data-ng-class="!vm.isActivePossible ? &quot;color-placeholder&quot; : &quot;&quot;" class="autocomplete-field-search"/><span data-ng-if="!vm.multiple &amp;&amp; !!vm.selectedValues.length &amp;&amp; !vm.readonly" data-ng-click="vm.removeFromSelected($event, vm.selectedValues[0])" class="selecte-delete selecte-delete-autocomplete">×</span>\n' +
@@ -2809,95 +2910,6 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '    </div>\n' +
     '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('EditorButtonUpdateController',EditorButtonUpdateController);
-
-    EditorButtonUpdateController.$inject = ['$scope','$element','$rootScope','EditEntityStorage','RestApiService'];
-
-    function EditorButtonUpdateController($scope,$element,$rootScope,EditEntityStorage,RestApiService){
-        var vm = this;
-
-        vm.label = $scope.buttonLabel;
-        vm.entityId = $scope.entityId;
-        vm.processing = RestApiService.isProcessing;
-
-        var watchEntityId = $scope.$watch('entityId', function (entityId) {
-            vm.entityId = entityId;
-        });
-
-        var watchRest = $scope.$watch(function () {
-            return RestApiService.isProcessing;
-        }, function (val) {
-            vm.processing = val;
-        });
-
-        $scope.$on('$destroy', function () {
-            watchEntityId();
-            watchRest();
-        });
-
-        $element.bind("click", function () {
-            if(vm.processing){
-                return;
-            }
-            RestApiService.editedEntityId = vm.entityId;
-            EditEntityStorage.editEntityUpdate("update");
-        });
-    }
-})();
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('editorButtonUpdate',editorButtonUpdate);
-
-    editorButtonUpdate.$inject = ['$templateCache','RestApiService'];
-
-    function editorButtonUpdate($templateCache,RestApiService){
-        return {
-            restrict : "A",
-            replace : true,
-            template : $templateCache.get('module/directives/editorButtonUpdate/editorButtonUpdate.html'),
-            scope : {
-                entityId : "@",
-                buttonLabel : "@",
-                buttonParams : "@"
-            },
-            controller : 'EditorButtonUpdateController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            scope.editor = RestApiService.getEntityType();
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorButtonUpdate/editorButtonUpdate.html',
-    '\n' +
-    '<button data-ng-class="{ processing : vm.processing}" class="btn btn-md btn-success">{{vm.label}}\n' +
-    '    <div data-ng-show="vm.processing" class="loader-search-wrapper">\n' +
-    '        <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
-    '    </div>\n' +
-    '</button>');
 }]);
 })();
 
@@ -4852,6 +4864,18 @@ module.run(['$templateCache', function($templateCache) {
         vm.possibleLocation = true;
         vm.isSpanSelectDelete = false;
 
+        vm.cols = $scope.field.width;
+        vm.classWidth = 'col-lg-2 col-md-2 col-sm-3 col-xs-3';
+        if (!!vm.cols) {
+            if (vm.cols > 6) {
+                vm.cols = 6;
+            }
+            if (vm.cols < 1) {
+                vm.cols = 1;
+            }
+            vm.classWidth = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
+        }
+
         if ($scope.field.hasOwnProperty('valuesRemote') &&
             $scope.field.valuesRemote.fields.parent && $scope.field.valuesRemote.fields.childCount) {
             vm.treeParentField = $scope.field.valuesRemote.fields.parent;
@@ -5752,7 +5776,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFieldSelect/editorFieldSelect.html',
     '\n' +
     '<div>\n' +
-    '    <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '    <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" data-ng-class="vm.classWidth">\n' +
     '        <div class="select-border">\n' +
     '            <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" size="3" class="form-control">\n' +
     '                <option data-ng-repeat="option in vm.options" value="{{option[vm.field_id]}}">{{option[vm.field_search]}}</option>\n' +
@@ -5762,7 +5786,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <div class="processing-status">{{\'PERFORMS_ACTIONS\' | translate}}</div>\n' +
     '        </div>\n' +
     '    </div>\n' +
-    '    <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '    <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" data-ng-class="vm.classWidth">\n' +
     '        <div data-ng-click="vm.clickSelect()" data-ng-class="{&quot;but-for-search&quot;: !vm.search, &quot;disabled-input&quot;: vm.readonly}" class="select-input-wrapper">\n' +
     '            <input type="text" data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" ng-disabled="vm.readonly" class="form-control select-input"/>\n' +
     '            <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
@@ -5779,7 +5803,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <div class="processing-status">{{\'PERFORMS_ACTIONS\' | translate}}</div>\n' +
     '        </div>\n' +
     '    </div>\n' +
-    '    <div data-ng-if="vm.isTree" class="dropdown col-lg-3 col-md-3 col-sm-3 col-xs-3">\n' +
+    '    <div data-ng-if="vm.isTree" data-ng-class="vm.classWidth" class="dropdown">\n' +
     '        <div class="dropdown__host">\n' +
     '            <div data-ng-class="{\'dropdown__title_open\': isOpen}" data-ng-click="vm.clickSelect()" data-ng-style="{&quot;cursor&quot; : vm.search ? &quot;text&quot; : &quot;pointer&quot;}" class="dropdown__title form-control select-input">\n' +
     '                <div data-ng-repeat="value in vm.fieldValue" data-ng-if="vm.fieldValue.length &amp;&amp; (vm.multiple || vm.treeParentField &amp;&amp; vm.treeChildCountField) &amp;&amp; vm.multiple" class="selected-items__item">\n' +
@@ -7201,7 +7225,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFilterAutocomplete/editorFilterAutocomplete.html',
     '\n' +
     '<div class="editor-autocomplete-wrapper">\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <div data-ng-show="vm.preloadedData" data-ng-class="{&quot;active&quot; : vm.isActivePossible}" data-ng-click="inputFocus()" class="autocomplete-input-wrapper form-control">\n' +
     '            <input type="text" name="{{vm.filterName}}" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" data-ng-style="vm.classInput" placeholder="{{vm.placeholder}}" data-ng-class="!vm.isActivePossible ? &quot;color-placeholder&quot; : &quot;&quot;" class="autocomplete-field-search"/><span data-ng-if="!vm.multiple &amp;&amp; !!vm.selectedValues.length" data-ng-click="vm.removeFromSelected($event)" class="selecte-delete selecte-delete-autocomplete">×</span>\n' +
@@ -7350,126 +7374,11 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFilterCheckbox/editorFilterCheckbox.html',
     '\n' +
     '<div>\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <label data-ng-repeat="item in vm.selectedValues" class="checkbox-inline">\n' +
     '            <input type="checkbox" data-checklist-model="vm.filterValue" data-checklist-value="item[vm.field_id]"/>{{item[vm.field_search]}}\n' +
     '        </label>\n' +
-    '    </div>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('EditorFilterDateTimeController',EditorFilterDateTimeController);
-
-    EditorFilterDateTimeController.$inject = ['$scope','FilterFieldsStorage','moment'];
-
-    function EditorFilterDateTimeController($scope,FilterFieldsStorage,moment){
-        /* jshint validthis: true */
-        var vm = this;
-
-        vm.filterName = $scope.filter.name;
-        vm.filterDisplayName = $scope.filter.label;
-        vm.filterValueStartDateTime = "";
-        vm.filterValueEndDateTime = "";
-
-        FilterFieldsStorage.addFilterController(this);
-
-        this.getFilterValue = function () {
-
-            var field = {};
-
-            if(vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime === ""){
-                return false;
-            } else {
-                if(vm.filterValueStartDateTime !== "" && vm.filterValueEndDateTime === ""){
-                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
-                } else if (vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime !== ""){
-                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
-                } else {
-                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
-                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
-                }
-                return field;
-            }
-        };
-
-        this.getInitialValue = function () {
-            var filter = {};
-            filter[vm.filterName] = "";
-            return filter;
-        };
-
-        this.setInitialValue = function () {
-            vm.filterValueStartDateTime = "";
-            vm.filterValueEndDateTime = "";
-        };
-
-        $scope.$on('$destroy', function () {
-            FilterFieldsStorage.deleteFilterController(vm);
-        });
-    }
-})();
-
-(function () {
-    'use strict';
-
-    /**
-     * @desc DateTime-type filter.
-     * @example <div editor-filter-datetime=""></div>
-     */
-    angular
-        .module('universal.editor')
-        .directive('editorFilterDatetime',editorFilterDatetime);
-
-    editorFilterDatetime.$inject = ['$templateCache'];
-
-    function editorFilterDatetime($templateCache){
-        return {
-            restrict : 'A',
-            replace : true,
-            scope : true,
-            template : $templateCache.get('module/directives/editorFilterDatetime/editorFilterDatetime.html'),
-            controller: 'EditorFilterDateTimeController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorFilterDatetime/editorFilterDatetime.html',
-    '\n' +
-    '<div class="filter-datetime-wrapper">\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
-    '    <div class="filter-inner-wrapper">\n' +
-    '        <div class="filter-start">\n' +
-    '            <div class="editor-datetime">\n' +
-    '                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueStartDateTime" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
-    '            </div>\n' +
-    '        </div><span class="divider">-</span>\n' +
-    '        <div class="filter-end">\n' +
-    '            <div class="editor-datetime">\n' +
-    '                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueEndDateTime" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
-    '            </div>\n' +
-    '        </div>\n' +
     '    </div>\n' +
     '</div>');
 }]);
@@ -7589,7 +7498,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFilterDate/editorFilterDate.html',
     '\n' +
     '<div class="filter-date-wrapper">\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <div class="filter-start">\n' +
     '            <div class="editor-date">\n' +
@@ -7605,6 +7514,121 @@ module.run(['$templateCache', function($templateCache) {
     '            </div>\n' +
     '            <div class="editor-time">\n' +
     '                <input data-ng-disabled="!vm.filterValueEndDate" data-date-time="" data-ng-model="vm.filterValueEndTime" data-format="HH:mm:ss" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm"/>\n' +
+    '            </div>\n' +
+    '        </div>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .controller('EditorFilterDateTimeController',EditorFilterDateTimeController);
+
+    EditorFilterDateTimeController.$inject = ['$scope','FilterFieldsStorage','moment'];
+
+    function EditorFilterDateTimeController($scope,FilterFieldsStorage,moment){
+        /* jshint validthis: true */
+        var vm = this;
+
+        vm.filterName = $scope.filter.name;
+        vm.filterDisplayName = $scope.filter.label;
+        vm.filterValueStartDateTime = "";
+        vm.filterValueEndDateTime = "";
+
+        FilterFieldsStorage.addFilterController(this);
+
+        this.getFilterValue = function () {
+
+            var field = {};
+
+            if(vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime === ""){
+                return false;
+            } else {
+                if(vm.filterValueStartDateTime !== "" && vm.filterValueEndDateTime === ""){
+                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
+                } else if (vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime !== ""){
+                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
+                } else {
+                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
+                    field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
+                }
+                return field;
+            }
+        };
+
+        this.getInitialValue = function () {
+            var filter = {};
+            filter[vm.filterName] = "";
+            return filter;
+        };
+
+        this.setInitialValue = function () {
+            vm.filterValueStartDateTime = "";
+            vm.filterValueEndDateTime = "";
+        };
+
+        $scope.$on('$destroy', function () {
+            FilterFieldsStorage.deleteFilterController(vm);
+        });
+    }
+})();
+
+(function () {
+    'use strict';
+
+    /**
+     * @desc DateTime-type filter.
+     * @example <div editor-filter-datetime=""></div>
+     */
+    angular
+        .module('universal.editor')
+        .directive('editorFilterDatetime',editorFilterDatetime);
+
+    editorFilterDatetime.$inject = ['$templateCache'];
+
+    function editorFilterDatetime($templateCache){
+        return {
+            restrict : 'A',
+            replace : true,
+            scope : true,
+            template : $templateCache.get('module/directives/editorFilterDatetime/editorFilterDatetime.html'),
+            controller: 'EditorFilterDateTimeController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorFilterDatetime/editorFilterDatetime.html',
+    '\n' +
+    '<div class="filter-datetime-wrapper">\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div class="filter-inner-wrapper">\n' +
+    '        <div class="filter-start">\n' +
+    '            <div class="editor-datetime">\n' +
+    '                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueStartDateTime" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
+    '            </div>\n' +
+    '        </div><span class="divider">-</span>\n' +
+    '        <div class="filter-end">\n' +
+    '            <div class="editor-datetime">\n' +
+    '                <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.filterValueEndDateTime" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +
@@ -7708,7 +7732,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFilterNumber/editorFilterNumber.html',
     '\n' +
     '<div>\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <input type="number" name="{{vm.filterName}}" data-ng-model="vm.filterValue" class="form-control input-sm"/>\n' +
     '    </div>\n' +
@@ -7848,7 +7872,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFilterRadiolist/editorFilterRadiolist.html',
     '\n' +
     '<div>\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <label data-ng-repeat="item in vm.selectedValues" class="radio-inline">\n' +
     '            <input type="radio" data-ng-model="vm.filterValue" value="{{item[vm.field_id]}}"/>{{item[vm.field_search]}}\n' +
@@ -8207,7 +8231,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFilterSelect/editorFilterSelect.html',
     '\n' +
     '<div>\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <div data-ng-click="vm.clickSelect()" data-ng-class="!vm.search ? &quot;but-for-search&quot; : &quot;&quot;" class="select-input-wrapper">\n' +
     '            <input data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" class="form-control"/>\n' +
@@ -8351,7 +8375,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFilterString/editorFilterString.html',
     '\n' +
     '<div>\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <input type="text" name="{{vm.filterName}}" data-ng-model="vm.filterValue" class="form-control input-sm"/>\n' +
     '    </div>\n' +
@@ -8463,7 +8487,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFilterTime/editorFilterTime.html',
     '\n' +
     '<div class="filter-time-wrapper">\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <div class="filter-start">\n' +
     '            <div class="editor-time">\n' +
