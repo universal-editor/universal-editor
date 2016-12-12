@@ -120,8 +120,8 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .selecte-delete{position:absolute;top:9px;right:25px;font:700 16px Arial,sans-serif;color:#585858;cursor:pointer}
 .selecte-delete-autocomplete{right:10px}.select-input.active{border-color:#66afe9;outline:0;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6)}
 .focus-input{position:absolute;height:0;width:0;border:0}.select-border{border:1px solid #ccc;border-radius:4px}
-.select-border .form-control{border:0}.autocomplete-input-wrapper.form-control input{border:none !important;box-shadow:none !important}
-.universal-editor>div .editor-filter-wrapper .filter-wrapper{margin-bottom:10px}.universal-editor>div .editor-filter-wrapper .filter-wrapper div .filter-name-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.select-border .form-control{border:0}.universal-editor>div .editor-filter-wrapper .filter-wrapper{margin-bottom:10px}
+.universal-editor>div .editor-filter-wrapper .filter-wrapper div .filter-name-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .universal-editor>div .editor-filter-wrapper .filter-wrapper .filter-name-label{display:inline-block;width:200px;float:left;padding-right:10px}
 .universal-editor>div .editor-filter-wrapper .filter-wrapper .filter-inner-wrapper .autocomplete-input-wrapper,.universal-editor>div .editor-filter-wrapper .filter-wrapper .filter-inner-wrapper .select-input-wrapper{width:100%}
 .universal-editor>div .editor-filter-wrapper .filter-wrapper .filter-inner-wrapper{margin-left:200px;display:block}
@@ -129,3 +129,4 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .universal-editor div input.form-control[type="text"]{height:34px;padding:6px 12px;font-size:14px;border:1px solid #ccc;background-color:#fff;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-webkit-transition:border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
 .universal-editor div input.form-control[type="text"]:focus{border-color:#66afe9;outline:0;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6)}
 .universal-editor>div .select-input-wrapper .select-input{padding-right:35px !important;border:0;box-shadow:none}
+.universal-editor>div .autocomplete-input-wrapper.form-control input{border:none !important;box-shadow:none !important}
