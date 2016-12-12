@@ -11,6 +11,10 @@
         var vm = this;
         vm.error = [];
         var entityObject = RestApiService.getEntityObject();
+        $scope.className = {};
+        if(angular.isString($scope.fieldName)) {
+          $scope.className['field-element-' + $scope.fieldName] = $scope.fieldName;
+        }
 
         if($scope.parentField){
             angular.forEach(entityObject.tabs, function (tab) {

@@ -8,7 +8,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFieldSelect/editorFieldSelect.html',
     '\n' +
     '<div>\n' +
-    '    <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '    <div data-ng-if="vm.multiple &amp;&amp; !vm.isTree" data-ng-class="vm.classWidth">\n' +
     '        <div class="select-border">\n' +
     '            <select name="{{vm.fieldName}}" data-ng-disabled="vm.readonly || !vm.parentValue" data-ng-model="vm.fieldValue" multiple="multiple" size="3" class="form-control">\n' +
     '                <option data-ng-repeat="option in vm.options" value="{{option[vm.field_id]}}">{{option[vm.field_search]}}</option>\n' +
@@ -18,7 +18,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <div class="processing-status">{{\'PERFORMS_ACTIONS\' | translate}}</div>\n' +
     '        </div>\n' +
     '    </div>\n' +
-    '    <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '    <div data-ng-if="!vm.multiple &amp;&amp; !vm.isTree" data-ng-class="vm.classWidth">\n' +
     '        <div data-ng-click="vm.clickSelect()" data-ng-class="{&quot;but-for-search&quot;: !vm.search, &quot;disabled-input&quot;: vm.readonly}" class="select-input-wrapper">\n' +
     '            <input type="text" data-ng-if="vm.search" placeholder="{{vm.placeholder}}" data-ng-class="vm.isSelection ? &quot;color-placeholder&quot; : &quot;&quot;" data-ng-model="vm.filterText" data-ng-change="vm.change()" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" ng-disabled="vm.readonly" class="form-control select-input"/>\n' +
     '            <input data-ng-if="!vm.search" data-ng-focus="vm.isShowPossible()" data-ng-blur="vm.isBlur()" class="focus-input"/>\n' +
@@ -35,7 +35,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <div class="processing-status">{{\'PERFORMS_ACTIONS\' | translate}}</div>\n' +
     '        </div>\n' +
     '    </div>\n' +
-    '    <div data-ng-if="vm.isTree" class="dropdown col-lg-3 col-md-3 col-sm-3 col-xs-3">\n' +
+    '    <div data-ng-if="vm.isTree" data-ng-class="vm.classWidth" class="dropdown">\n' +
     '        <div class="dropdown__host">\n' +
     '            <div data-ng-class="{\'dropdown__title_open\': isOpen}" data-ng-click="vm.clickSelect()" data-ng-style="{&quot;cursor&quot; : vm.search ? &quot;text&quot; : &quot;pointer&quot;}" class="dropdown__title form-control select-input">\n' +
     '                <div data-ng-repeat="value in vm.fieldValue" data-ng-if="vm.fieldValue.length &amp;&amp; (vm.multiple || vm.treeParentField &amp;&amp; vm.treeChildCountField) &amp;&amp; vm.multiple" class="selected-items__item">\n' +

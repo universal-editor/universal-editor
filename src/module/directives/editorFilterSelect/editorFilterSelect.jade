@@ -1,5 +1,5 @@
 div
-    .filter-name-label
+    .filter-name-label(title="{{vm.filterDisplayName}}")
         span {{vm.filterDisplayName}}
     .filter-inner-wrapper
         div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='!vm.search ? "but-for-search" : ""')

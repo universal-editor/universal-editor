@@ -1,5 +1,5 @@
 div
-    .filter-name-label
+    .filter-name-label(title="{{vm.filterDisplayName}}")
         span {{vm.filterDisplayName}}
     .filter-inner-wrapper
         label.checkbox-inline(data-ng-repeat="item in vm.selectedValues")

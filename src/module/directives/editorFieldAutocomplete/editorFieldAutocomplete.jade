@@ -1,5 +1,5 @@
 div
-    .col-lg-2.col-md-2.col-sm-3.col-xs-3
+    div(data-ng-class="vm.classWidth")
         .autocomplete-input-wrapper.form-control(
             data-ng-show="vm.preloadedData && vm.selectedValues.length < vm.maxItemsCount",
             data-ng-class='{"active" : vm.isActivePossible, "disabled-input": vm.readonly}',
