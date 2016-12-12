@@ -1,11 +1,11 @@
 div
-    .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="vm.multiple && !vm.isTree")
+    div(data-ng-if="vm.multiple && !vm.isTree", data-ng-class="vm.classWidth")
         div.select-border
             select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple, size="3")
                 option(data-ng-repeat="option in vm.options", value="{{option[vm.field_id]}}") {{option[vm.field_search]}}
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
-    .col-lg-2.col-md-2.col-sm-3.col-xs-3(data-ng-if="!vm.multiple && !vm.isTree")
+    div(data-ng-if="!vm.multiple && !vm.isTree", data-ng-class="vm.classWidth")
         div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='{"but-for-search": !vm.search, "disabled-input": vm.readonly}')
             input.form-control.select-input(
                 type="text"
@@ -39,7 +39,7 @@ div
         .processing-status-wrapper(data-ng-show="!!vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}
 
-    .dropdown.col-lg-3.col-md-3.col-sm-3.col-xs-3(data-ng-if="vm.isTree")
+    .dropdown(data-ng-if="vm.isTree", data-ng-class="vm.classWidth")
         .dropdown__host
             .dropdown__title.form-control.select-input(
                 data-ng-class="{'dropdown__title_open': isOpen}",

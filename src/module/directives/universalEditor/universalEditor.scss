@@ -781,3 +781,57 @@ body {
     border: none;
   }
 }
+
+.autocomplete-input-wrapper.form-control input {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.universal-editor > div .editor-filter-wrapper .filter-wrapper {
+  margin-bottom: 10px;
+  & .filter-name-label {
+      display: inline-block;
+      width: 200px;
+      float: left;
+  }
+
+  & .filter-inner-wrapper {    
+    & .autocomplete-input-wrapper, & .select-input-wrapper {
+      width: auto;
+    }
+  }
+
+  & .filter-inner-wrapper {
+      margin-left: 200px;
+      display: block;
+    & .editor-datetime input {
+          width: 180px;
+      }
+  }
+}
+
+.universal-editor div input.form-control[type="text"] {
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075); 
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075); 
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.universal-editor div input.form-control[type="text"]:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+}
+
+.universal-editor > div .select-input-wrapper .select-input {
+  padding-right: 35px !important;
+  border: 0;
+  box-shadow: none;
+}

@@ -40,6 +40,18 @@
             }
         }
 
+        vm.cols = $scope.field.width;
+        vm.classWidth = 'col-lg-2 col-md-2 col-sm-3 col-xs-3';
+        if (!!vm.cols) {
+            if (vm.cols > 6) {
+                vm.cols = 6;
+            }
+            if (vm.cols < 1) {
+                vm.cols = 1;
+            }
+            vm.classWidth = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
+        }
+
         vm.fieldName = $scope.field.name;
         vm.readonly = $scope.field.readonly || false;
         $scope.$parent.vm.error = [];
