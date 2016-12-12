@@ -8517,6 +8517,10 @@ module.run(['$templateCache', function($templateCache) {
         var vm = this;
         vm.error = [];
         var entityObject = RestApiService.getEntityObject();
+        $scope.className = {};
+        if(angular.isString($scope.fieldName)) {
+          $scope.className['field-element-' + $scope.fieldName] = $scope.fieldName;
+        }
 
         if($scope.parentField){
             angular.forEach(entityObject.tabs, function (tab) {
@@ -8595,7 +8599,7 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/fieldWrapper/fieldWrapper.html',
     '\n' +
-    '<div class="field-wrapper">\n' +
+    '<div data-ng-class="className" class="field-wrapper">\n' +
     '    <div data-ng-class="!vm.isArray ? \'row\' : \'\' ">\n' +
     '        <div data-ng-if="!vm.isArray" class="field-name-label col-lg-6 col-md-6 col-sm-5 col-xs-4">\n' +
     '            <div data-ng-if="vm.hint" class="field-hint">\n' +
