@@ -211,7 +211,6 @@
                     if (data.editorEntityType === "new") {
                         var obj = {};
                         self.fieldValue = transformToValue(componentSettings.defaultValue);
-
                         if (self.field_id) {
                             if (self.isTree) {
                                 self.fieldValue = [];
