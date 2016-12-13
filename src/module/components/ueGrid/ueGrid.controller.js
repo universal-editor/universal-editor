@@ -88,7 +88,7 @@
         if (vm.isMixMode) {
             vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
             vm.mixEntityType = vm.setting.component.settings.mixedMode.entityType;
-            vm.subType = vm.setting.component.settings.mixedMode.fieldsType;
+            vm.subType = vm.setting.component.settings.mixedMode.fieldType;
 
             angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
                 var newValue = angular.merge({}, value);
