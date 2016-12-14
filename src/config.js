@@ -503,7 +503,7 @@ var elementDataSource = {
             component: {
                 name: 'ue-checkbox',
                 settings: {
-                    label: 'checkbox с данными в конфиге,  defaultValue = "Variable 1"',
+                    label: 'checkbox с данными в конфиге,  defaultValue = ["a", "b"]',
                     values: {
                         "a": "Variable 1",
                         "b": "Variable 2",
@@ -592,13 +592,13 @@ var elementDataSource = {
             component: {
                 name: 'ue-radiolist',
                 settings: {
-                    label: 'radiolist с данными в конфиге,  defaultValue = "Variable 1"',
+                    label: 'radiolist с данными в конфиге,  defaultValue = "b"',
                     values: {
                         "a": "Variable 1",
                         "b": "Variable 2",
                         "c": "Variable 3"
                     },
-                    defaultValue : "a"
+                    defaultValue : "b"
                 }
             }
         },

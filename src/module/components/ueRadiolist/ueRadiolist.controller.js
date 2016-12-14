@@ -12,7 +12,8 @@
         var vm = this;
         vm.optionValues = [];
         vm.inputValue = "";
-        
+        vm.newEntityLoaded = newEntityLoaded;
+
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
         var componentSettings = vm.setting.component.settings;
@@ -36,6 +37,10 @@
 
         function addItem() {
             vm.fieldValue.push(null);
+        }
+
+        function newEntityLoaded(){
+            vm.fieldValue = vm.setting.component.settings.defaultValue || null;
         }
     }
 })();

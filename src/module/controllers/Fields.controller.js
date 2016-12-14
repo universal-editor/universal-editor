@@ -38,6 +38,9 @@
                         var obj = {};
                         obj[self.field_id] = key;
                         obj[self.field_search] = v;
+                        if (angular.isArray(componentSettings.values)){
+                            obj[self.field_id] = v;
+                        }
                         self.optionValues.push(obj);
                     });
                     componentSettings.$loadingPromise = $q.when(self.optionValues);
@@ -211,6 +214,12 @@
                     }
 
                     if (data.editorEntityType === "new") {
+
+                        if(!!self.newEntityLoaded){
+                            self.newEntityLoaded();
+                            return;
+                        }
+
                         var obj = {};
                         self.fieldValue = transformToValue(componentSettings.defaultValue);
                         if (self.field_id) {
