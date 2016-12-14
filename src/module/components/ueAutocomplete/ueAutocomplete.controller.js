@@ -11,6 +11,7 @@
         /* jshint validthis: true */
         var vm = this,
             inputTimeout;
+        vm.optionValues = [];
         angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
         var componentSettings = vm.setting.component.settings;
 
@@ -186,7 +187,7 @@
                         obj[vm.field_id] = key;
                     }
                     obj[vm.field_search] = v;
-                    if (v.toLowerCase().indexOf(searchString.toLowerCase()) >= 0 && !alreadyIn(v, vm.selectedValues)) {
+                    if (v.toLowerCase().indexOf(searchString.toLowerCase()) >= 0 && !alreadyIn(obj, vm.selectedValues)) {
                         vm.possibleValues.push(obj);
                     }
                 });
@@ -219,16 +220,17 @@
             return false;
         }
 
-        vm.listeners.push($scope.$watchCollection("vm.fieldValue", function(newValue) {
-            if (newValue) {
-                if (vm.fieldValue[vm.field_id]) {
-                    vm.fieldValue = vm.fieldValue[vm.field_id];
-                }
-                if (!vm.fieldValue[vm.field_search] && !vm.placeholder) {
-                    loadValues();
+        vm.listeners.push($scope.$watchCollection("vm.fieldValue",
+            function(newValue) {
+                if (newValue) {
+                    if (vm.fieldValue[vm.field_id]) {
+                        vm.fieldValue = vm.fieldValue[vm.field_id];
+                    }
+                    if (!vm.fieldValue[vm.field_search] && !vm.placeholder) {
+                        loadValues();
+                    }
                 }
             }
-        }
         ));
 
         function loadValues() {

@@ -147,6 +147,7 @@
         function getFieldValue() {
             var field = {},
                 wrappedFieldValue;
+
             if (self.multiple) {
                 wrappedFieldValue = [];
                 self.fieldValue.forEach(function(value) {
@@ -169,6 +170,7 @@
             } else {
                 field[self.fieldName] = wrappedFieldValue;
             }
+
             return field;
         }
 

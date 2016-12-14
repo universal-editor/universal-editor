@@ -923,7 +923,7 @@ var elementDataSource = {
                     valuesRemote: {
                         fields: {
                             value: "id",
-                            label: "title"
+                            label: "name"
                         },
                         url: "http://universal-backend.dev/rest/v1/staff"
                     }
@@ -939,7 +939,7 @@ var elementDataSource = {
                     valuesRemote: {
                         fields: {
                             value: "id",
-                            label: "title"
+                            label: "name"
                         },
                         url: "http://universal-backend.dev/rest/v1/staff"
                     },
@@ -959,8 +959,7 @@ var elementDataSource = {
                         "3": "Груша",
                         "4": "Дыня",
                         "5": "Арбуз"
-                    },
-                    multiple: true
+                    }
                 }
             }
         },
@@ -969,7 +968,7 @@ var elementDataSource = {
             component: {
                 name: "ue-autocomplete",
                 settings: {
-                    label: "Поле autocomplete с константными данными в виде объекта",
+                    label: "Поле autocomplete с константными данными в виде объекта в multiple",
                     values: [
                         "Яблоко",
                         "Апельсин",
