@@ -648,7 +648,7 @@ var elementDataSource = {
                 name: 'ue-colorpicker',
                 settings: {
                     label: 'colorpicker c defaultValue',
-                    defaultValue : "#FFFFFF"
+                    defaultValue : "#9C2525"
                 }
             }
         },
@@ -658,7 +658,7 @@ var elementDataSource = {
                 name: 'ue-colorpicker',
                 settings: {
                     label: 'colorpicker c defaultValue, multiple',
-                    defaultValue : '#FFFFFF',
+                    defaultValue : ['#9C2525'],
                     multiple: true
                 }
             }
@@ -678,11 +678,13 @@ var elementDataSource = {
             component: {
                 name: 'ue-select',
                 settings: {
-                    label: 'select с данными в конфиге',
+                    label: 'Значения для списка прописаны в конфигурации поля.',
                     values: {
-                        "a": "Variable 1",
-                        "b": "Variable 2",
-                        "c": "Variable 3"
+                        "1": "Яблоко",
+                        "2": "Апельсин",
+                        "3": "Груша",
+                        "4": "Дыня",
+                        "5": "Арбуз"
                     }
                 }
             }
@@ -723,11 +725,13 @@ var elementDataSource = {
                 settings: {
                     label: 'select с данными в конфиге,  defaultValue = "Variable 1"',
                     values: {
-                        "a": "Variable 1",
-                        "b": "Variable 2",
-                        "c": "Variable 3"
+                        "1": "Яблоко",
+                        "2": "Апельсин",
+                        "3": "Груша",
+                        "4": "Дыня",
+                        "5": "Арбуз"
                     },
-                    defaultValue : ["a", "b"]
+                    defaultValue : ["1", "2"]
                 }
             }
         },
@@ -759,6 +763,315 @@ var elementDataSource = {
                         },
                         url: "http://universal-backend.dev/rest/v1/country"
                     }
+                }
+            }
+        },
+        {
+            name: "select-simple-multiple",
+            component: {
+                name: "ue-select",
+                settings: {
+                    "label": "Множественный режим",
+                    "filterable": true,
+                    "values": {
+                        "1": "Яблоко",
+                        "2": "Апельсин",
+                        "3": "Груша",
+                        "4": "Дыня",
+                        "5": "Арбуз"
+                    },
+                    "multiple": true
+                }
+            }
+        },
+        {
+            name: "select-remote-search",
+            component: {
+                name: "ue-select",
+                settings: {
+                    label: "Поиск",
+                    filterable: true,
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "name"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/country"
+                    },
+                    placeholder: "Найти",
+                    search: true
+                }
+            }
+        },
+        {
+            name: "select-remote-tree",
+            component: {
+                name: "ue-select",
+                settings: {
+                    label: "Дерево",
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "title",
+                        },
+                        url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+                    },
+                    tree: {
+                        parentField: "parent_id",
+                        childCountField: "child_count",
+                        selectBranches: false
+                    }
+                }
+            }
+        },
+        {
+            name: "select-remote-tree-branch",
+            component: {
+                name: "ue-select",
+                settings: {
+                    label: "Дерево с ветвями",
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "title"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+                    },
+                    tree: {
+                        parentField: "parent_id",
+                        childCountField: "child_count",
+                        selectBranches: true
+                    }
+                }
+            }
+        },
+        {
+            name: "select-remote-tree-multiple",
+            component: {
+                name: "ue-select",
+                settings: {
+                    label: "Множественное дерево",
+                    multiple: true,
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "title"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+                    },
+                    tree: {
+                        parentField: "parent_id",
+                        childCountField: "child_count",
+                        selectBranches: false
+                    }
+                }
+            }
+        },
+        {
+            name: "select-remote-tree-search",
+            component: {
+                name: "ue-select",
+                settings: {
+                    label: "Дерево с поиском",
+                    search: true,
+                    placeholder: "Найти",
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "title"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+                    },
+                    tree: {
+                        parentField: "parent_id",
+                        childCountField: "child_count",
+                        selectBranches: false
+                    }
+                }
+            }
+        },
+        {
+            name: "select-remote-tree-full",
+            component: {
+                name: "ue-select",
+                settings: {
+                    label: "Множественное дерево с поиском и ветвями",
+                    multiple: true,
+                    search: true,
+                    placeholder: "Найти",
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "title"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+                    },
+                    tree: {
+                        parentField: "parent_id",
+                        childCountField: "child_count",
+                        selectBranches: true
+                    }
+                }
+            }
+        },
+        {
+            name: "autocomplete-valuesRemote",
+            component: {
+                name: "ue-autocomplete",
+                settings: {
+                    label: "Поле autocomplete",
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "title"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/staff"
+                    }
+                }
+            }
+        },
+        {
+            name: "autocomplete-multiple-valuesRemote",
+            component: {
+                name: "ue-autocomplete",
+                settings: {
+                    label: "Поле autocomplete в режиме multiple",
+                    valuesRemote: {
+                        fields: {
+                            value: "id",
+                            label: "title"
+                        },
+                        url: "http://universal-backend.dev/rest/v1/staff"
+                    },
+                    multiple: true
+                }
+            }
+        },
+        {
+            name: "autocomplete-values",
+            component: {
+                name: "ue-autocomplete",
+                settings: {
+                    label: "Поле autocomplete с константными данными в виде объекта",
+                    values: {
+                        "1": "Яблоко",
+                        "2": "Апельсин",
+                        "3": "Груша",
+                        "4": "Дыня",
+                        "5": "Арбуз"
+                    },
+                    multiple: true
+                }
+            }
+        },
+        {
+            name: "autocomplete-multiple-values-array",
+            component: {
+                name: "ue-autocomplete",
+                settings: {
+                    label: "Поле autocomplete с константными данными в виде объекта",
+                    values: [
+                        "Яблоко",
+                        "Апельсин",
+                        "Груша",
+                        "Дыня",
+                        "Арбуз",
+                        "Мандарин",
+                        "Помидор",
+                        "Огурец",
+                        "Морковь",
+                        "Картошка",
+                        "Тыква",
+                        "Банан"
+                    ],
+                    multiple: true
+                }
+            }
+        },
+        {
+            name: 'textarea',
+            component: {
+                name: 'ue-textarea',
+                settings: {
+                    label: 'Простое поле string'
+                }
+            }
+        },
+        {
+            name: 'textarea_trim',
+            component: {
+                name: 'ue-textarea',
+                settings: {
+                    label: 'string c trim->true',
+                    validators:[
+                        {
+                            type: 'string',
+                            trim: true
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'textarea_minmax',
+            component: {
+                name: 'ue-textarea',
+                settings: {
+                    label: 'string c ограничеме по длинне minLength = 2, maxLength = 25',
+                    validators:[
+                        {
+                            type: 'string',
+                            minLength: 2,
+                            maxLength: 25
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'textarea_minmax_trim',
+            component: {
+                name: 'ue-textarea',
+                settings: {
+                    label: 'string c ограничеме по длинне minLength = 2, maxLength = 25, trim',
+                    validators:[
+                        {
+                            type: 'string',
+                            minLength: 2,
+                            maxLength: 25,
+                            trim: true
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'textarea_pattern',
+            component: {
+                name: 'ue-textarea',
+                settings: {
+                    label: 'textarea pattern = [0-9][a-z]',
+                    validators:[
+                        {
+                            type: 'string',
+                            pattern: '[0-9][a-z]'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'textarea_multiple',
+            component: {
+                name: 'ue-textarea',
+                settings: {
+                    label: 'textarea multiple',
+                    validators:[
+                        {
+                            type: 'string'
+                        }
+                    ],
+                    multiple: true
                 }
             }
         }
@@ -1572,8 +1885,19 @@ var ue = new UniversalEditor('universal-editor', {
                                                     fields: [
                                                         'colorpicker',
                                                         'colorpicker_defaultValue',
-                                                        'colorpicker_defaultValue_multiple',
-                                                        'colorpicker_multiple'
+                                                        'colorpicker_defaultValue_multiple'
+                                                        //'colorpicker_multiple'
+                                                    ]
+                                                },
+                                                {
+                                                    label: 'TEXTAREA',
+                                                    fields: [
+                                                        'textarea',
+                                                        'textarea_trim',
+                                                        'textarea_minmax',
+                                                        'textarea_minmax_trim',
+                                                        'textarea_pattern',
+                                                        'textarea_multiple'
                                                     ]
                                                 },
                                                 {
@@ -1584,7 +1908,23 @@ var ue = new UniversalEditor('universal-editor', {
                                                         'select_array_defaultValue',
                                                         'select_defaultValue',
                                                         'select_valuesRemote',
-                                                        'select_valuesRemote_without_label'
+                                                        'select_valuesRemote_without_label',
+                                                        'select-simple-multiple',
+                                                        'select-remote-search',
+                                                        'select-remote-tree',
+                                                        'select-remote-tree-branch',
+                                                        'select-remote-tree-multiple',
+                                                        'select-remote-tree-search',
+                                                        'select-remote-tree-full'
+                                                    ]
+                                                },
+                                                {
+                                                    label: 'AUTOCOMPLETE',
+                                                    fields: [
+                                                        'autocomplete-values',
+                                                        'autocomplete-valuesRemote',
+                                                        'autocomplete-multiple-valuesRemote',
+                                                        'autocomplete-multiple-values-array'
                                                     ]
                                                 },
                                                 {
