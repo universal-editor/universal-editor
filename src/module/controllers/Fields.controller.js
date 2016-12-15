@@ -144,7 +144,7 @@
             if (value == 0) {
                 return value;
             }
-            return value || (self.multiple ? [] : null);
+            return angular.copy(value) || (self.multiple ? [] : null);
         }
 
         function getFieldValue() {

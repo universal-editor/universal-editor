@@ -15,7 +15,7 @@ module.run(['$templateCache', function($templateCache) {
     '    </label>\n' +
     '    <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" ng-style="{\'overflow:auto\':vm.multiple}"> \n' +
     '        <div data-ng-if="vm.multiple" ng-class="{\'col-lg-2 col-md-2 col-sm-3 col-xs-3 clear-padding-left\': (!vm.options.isGroup &amp;&amp; !vm.options.filter)}">\n' +
-    '            <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-colorpicker-wrapper input-group">\n' +
+    '            <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-colorpicker-wrappe input-group">\n' +
     '                <input type="text" data-ng-disabled="vm.readonly" data-minicolors="" data-ng-model="vm.fieldValue[$index]" class="form-control input-sm"/><span class="input-group-btn">\n' +
     '                    <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
     '            </div>\n' +

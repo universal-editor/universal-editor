@@ -1884,8 +1884,8 @@ var ue = new UniversalEditor('universal-editor', {
                                                     fields: [
                                                         'colorpicker',
                                                         'colorpicker_defaultValue',
-                                                        'colorpicker_defaultValue_multiple'
-                                                        //'colorpicker_multiple'
+                                                        'colorpicker_defaultValue_multiple',
+                                                        'colorpicker_multiple'
                                                     ]
                                                 },
                                                 {
