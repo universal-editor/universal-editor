@@ -26,7 +26,6 @@
         vm.sizeInput = 1;
         vm.classInput = { 'width': '1px' };
         vm.showPossible = false;
-        vm.placeholder = '';
 
         if (!vm.multiple) {
             vm.classInput.width = '99%';
@@ -137,18 +136,11 @@
             if (!vm.multiple) {
                 vm.selectedValues = [];
                 vm.placeholder = obj[vm.field_search];
-                if (!obj[vm.field_search]) {
-                    if (!angular.isObject(vm.fieldValue)) {
-                        loadValues();
-                    }
-                }
                 vm.fieldValue = obj[vm.field_id];
             } else {
                 vm.fieldValue.push(obj[vm.field_id]);
             }
-            if (obj[vm.field_search]) {
-                vm.selectedValues.push(obj);
-            }
+            vm.selectedValues.push(obj);
             $element.find('.autocomplete-field-search').removeClass('hidden');
             vm.inputValue = "";
             vm.sizeInput = 1;
@@ -159,11 +151,16 @@
         };
 
         vm.removeFromSelected = function(event, obj) {
+            if (!vm.multiple) {
+                vm.fieldValue = null;
+            }
             angular.forEach(vm.selectedValues, function(val, key) {
                 if (val[vm.field_id] == obj[vm.field_id]) {
                     vm.selectedValues.splice(key, 1);
                     if (!vm.multiple) {
                         vm.placeholder = '';
+                    } else {
+                        vm.fieldValue.splice(key, 1);
                     }
                 }
             });
@@ -219,19 +216,6 @@
             }
             return false;
         }
-
-        vm.listeners.push($scope.$watchCollection("vm.fieldValue",
-            function(newValue) {
-                if (newValue) {
-                    if (vm.fieldValue[vm.field_id]) {
-                        vm.fieldValue = vm.fieldValue[vm.field_id];
-                    }
-                    if (!vm.fieldValue[vm.field_search] && !vm.placeholder) {
-                        loadValues();
-                    }
-                }
-            }
-        ));
 
         function loadValues() {
             vm.preloadedData = false;
@@ -298,6 +282,7 @@
                 console.error('EditorFieldAutocompleteController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
             }
         }
+
         vm.focusPossible = function(isActive) {
             vm.isActivePossible = isActive;
             if (!vm.multiple) {

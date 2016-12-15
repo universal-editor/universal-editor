@@ -964,11 +964,28 @@ var elementDataSource = {
             }
         },
         {
+            name: "autocomplete-values-placeholder",
+            component: {
+                name: "ue-autocomplete",
+                settings: {
+                    label: "Поле autocomplete с константными данными в виде объекта и с placeholder",
+                    values: {
+                        "1": "Яблоко",
+                        "2": "Апельсин",
+                        "3": "Груша",
+                        "4": "Дыня",
+                        "5": "Арбуз"
+                    },
+                    placeholder: "Я тута"
+                }
+            }
+        },
+        {
             name: "autocomplete-multiple-values-array",
             component: {
                 name: "ue-autocomplete",
                 settings: {
-                    label: "Поле autocomplete с константными данными в виде объекта в multiple",
+                    label: "Поле autocomplete с константными данными в виде массива в multiple",
                     values: [
                         "Яблоко",
                         "Апельсин",
@@ -983,6 +1000,30 @@ var elementDataSource = {
                         "Тыква",
                         "Банан"
                     ],
+                    multiple: true
+                }
+            }
+        },
+        {
+            name: "autocomplete-multiple-values",
+            component: {
+                name: "ue-autocomplete",
+                settings: {
+                    label: "Поле autocomplete с константными данными в виде объекта в multiple",
+                    values: {
+                        'a': 'Яблоко',
+                        'b': 'Апельсин',
+                        'c': 'Груша',
+                        'd': 'Дыня',
+                        'e': 'Арбуз',
+                        'f': 'Мандарин',
+                        'g': 'Помидор',
+                        'q': 'Огурец',
+                        'w': 'Морковь',
+                        'r': 'Картошка',
+                        't': 'Тыква',
+                        'z': 'Банан'
+                    },
                     multiple: true
                 }
             }
@@ -1923,7 +1964,9 @@ var ue = new UniversalEditor('universal-editor', {
                                                         'autocomplete-values',
                                                         'autocomplete-valuesRemote',
                                                         'autocomplete-multiple-valuesRemote',
-                                                        'autocomplete-multiple-values-array'
+                                                        'autocomplete-multiple-values-array',
+                                                        'autocomplete-multiple-values',
+                                                        'autocomplete-values-placeholder'
                                                     ]
                                                 },
                                                 {
