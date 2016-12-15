@@ -752,21 +752,6 @@ var elementDataSource = {
             }
         },
         {
-            name: 'select_valuesRemote_without_label',
-            component: {
-                name: 'ue-select',
-                settings: {
-                    label: 'select с valuesRemote без value',
-                    valuesRemote: {
-                        fields: {
-                            value: "id"
-                        },
-                        url: "http://universal-backend.dev/rest/v1/country"
-                    }
-                }
-            }
-        },
-        {
             name: "select-simple-multiple",
             component: {
                 name: "ue-select",
@@ -812,7 +797,7 @@ var elementDataSource = {
                     valuesRemote: {
                         fields: {
                             value: "id",
-                            label: "title",
+                            label: "title"
                         },
                         url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
                     },
@@ -960,23 +945,6 @@ var elementDataSource = {
                         "4": "Дыня",
                         "5": "Арбуз"
                     }
-                }
-            }
-        },
-        {
-            name: "autocomplete-values-placeholder",
-            component: {
-                name: "ue-autocomplete",
-                settings: {
-                    label: "Поле autocomplete с константными данными в виде объекта и с placeholder",
-                    values: {
-                        "1": "Яблоко",
-                        "2": "Апельсин",
-                        "3": "Груша",
-                        "4": "Дыня",
-                        "5": "Арбуз"
-                    },
-                    placeholder: "Я тута"
                 }
             }
         },
@@ -1948,7 +1916,6 @@ var ue = new UniversalEditor('universal-editor', {
                                                         'select_array_defaultValue',
                                                         'select_defaultValue',
                                                         'select_valuesRemote',
-                                                        'select_valuesRemote_without_label',
                                                         'select-simple-multiple',
                                                         'select-remote-search',
                                                         'select-remote-tree',
@@ -1965,8 +1932,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         'autocomplete-valuesRemote',
                                                         'autocomplete-multiple-valuesRemote',
                                                         'autocomplete-multiple-values-array',
-                                                        'autocomplete-multiple-values',
-                                                        'autocomplete-values-placeholder'
+                                                        'autocomplete-multiple-values'
                                                     ]
                                                 },
                                                 {
