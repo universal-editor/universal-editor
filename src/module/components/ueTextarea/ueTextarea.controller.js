@@ -16,7 +16,7 @@
         vm.rows = componentSettings.height;  
         vm.addItem = addItem;
         vm.removeItem = removeItem;
-
+        vm.classComponent = (!vm.cols) ? '' : vm.classComponent;
         vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler)); 
 
         //-- private functions

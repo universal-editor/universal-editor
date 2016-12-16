@@ -1001,7 +1001,7 @@ var elementDataSource = {
             component: {
                 name: 'ue-textarea',
                 settings: {
-                    label: 'Простое поле string'
+                    label: 'Простое поле textarea'
                 }
             }
         },
@@ -1010,7 +1010,7 @@ var elementDataSource = {
             component: {
                 name: 'ue-textarea',
                 settings: {
-                    label: 'string c trim->true',
+                    label: 'textarea c trim->true',
                     validators:[
                         {
                             type: 'string',
@@ -1025,7 +1025,7 @@ var elementDataSource = {
             component: {
                 name: 'ue-textarea',
                 settings: {
-                    label: 'string c ограничеме по длинне minLength = 2, maxLength = 25',
+                    label: 'textarea c ограничеме по длинне minLength = 2, maxLength = 25',
                     validators:[
                         {
                             type: 'string',
@@ -1041,7 +1041,7 @@ var elementDataSource = {
             component: {
                 name: 'ue-textarea',
                 settings: {
-                    label: 'string c ограничеме по длинне minLength = 2, maxLength = 25, trim',
+                    label: 'textarea c ограничеме по длинне minLength = 2, maxLength = 25, trim',
                     validators:[
                         {
                             type: 'string',

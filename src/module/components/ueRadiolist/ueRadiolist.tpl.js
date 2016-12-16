@@ -26,7 +26,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <div data-ng-click="vm.addItem()" data-ng-disabled="vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
     '        </div>\n' +
     '        <div data-ng-if="!vm.multiple">\n' +
-    '            <div data-ng-repeat="item in vm.optionValues" data-ng-class="{\'radiodisabled\': vm.readonly}" class="radio">\n' +
+    '            <div data-ng-repeat="item in vm.optionValues" data-ng-class="{\'radiodisabled\': vm.readonly}">\n' +
     '                <label>\n' +
     '                    <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{item[vm.field_id]}}"/><span ng-bind="item[vm.field_search]"></span>\n' +
     '                </label>\n' +
