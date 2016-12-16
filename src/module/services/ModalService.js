@@ -53,7 +53,8 @@
             return isOpen;
         }
 
-        function closeWindow() {
+        function closeWindow(isUpdateParentComponent) {
+            console.log('closes');
             if (isOpen) {
                 var parentComponentId = self.options.$parentComponentId;
                 isOpen = false;
@@ -64,8 +65,11 @@
                 $location.search('relativeEntityId', null);
                 self.options = null;
                 if (settings.fromState) {
-                    $state.go(settings.fromState.name, settings.fromParams, { reload: false }).then(function() {  
-                        $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                    $state.go(settings.fromState.name, settings.fromParams, { reload: false }).then(function() {
+                        console.log(isUpdateParentComponent);
+                        if (!isUpdateParentComponent) {
+                            $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                        }
                     });
                 }
                 settings = null;                

@@ -59,7 +59,7 @@
             };
 
             vm.cancel = function() {
-                vm.close();
+                ModalService.close(true);
             };
 
             $scope.$on('exit_modal', function() {
