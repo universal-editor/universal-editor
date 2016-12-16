@@ -14,6 +14,8 @@
         componentSettings.$fieldType = 'array';
         vm.optionValues = [];
         vm.inputValue = "";
+        vm.newEntityLoaded = newEntityLoaded;
+
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
 
@@ -36,6 +38,17 @@
 
         function addItem() {
             vm.fieldValue.push(null);
+        }
+
+        function newEntityLoaded(){
+            vm.fieldValue = [];
+            angular.forEach(vm.setting.component.settings.defaultValue, function (item) {
+                if (vm.setting.component.settings.multiname) {
+                    vm.fieldValue.push(item[vm.setting.component.settings.multiname]);
+                } else {
+                    vm.fieldValue.push(item);
+                }
+            });
         }
     }
 })();

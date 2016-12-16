@@ -22,7 +22,9 @@
             $element.on('$destroy', function () {
                 $scope.$destroy();
             });
-            $element.append(new ComponentBuilder($scope).build());
+            var elem = new ComponentBuilder($scope).build();
+            $element.addClass('component-wrapper');
+            $element.append(elem);
         };
     }
 })();

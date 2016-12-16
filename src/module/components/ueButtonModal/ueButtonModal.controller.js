@@ -17,7 +17,7 @@
             if(vm.beforeAction) {
                 vm.beforeAction();
             }
-            ModalService.close();
+            ModalService.close(true);
           }
         });      
 }})();

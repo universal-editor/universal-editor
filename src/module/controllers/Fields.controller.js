@@ -24,7 +24,7 @@
         self.width = !isNaN(+componentSettings.width) ? componentSettings.width : null;
         self.defaultValue = transformToValue(componentSettings.defaultValue);
         self.placeholder = componentSettings.placeholder || null;
-
+        self.classComponent = 'col-lg-4 col-md-4 col-sm-4 col-xs-4 clear-padding-left';
         self.inputLeave = inputLeave;
 
         var values = componentSettings.values;
@@ -38,6 +38,9 @@
                         var obj = {};
                         obj[self.field_id] = key;
                         obj[self.field_search] = v;
+                        if (angular.isArray(componentSettings.values)){
+                            obj[self.field_id] = v;
+                        }
                         self.optionValues.push(obj);
                     });
                     componentSettings.$loadingPromise = $q.when(self.optionValues);
@@ -81,16 +84,17 @@
         }
 
         self.cols = self.width;
-        if (!!vm.cols) {
-            if (vm.cols > 12) {
-                vm.cols = 12;
+
+        if (!!self.cols) {
+            if (self.cols > 12) {
+                self.cols = 12;
                 console.warn('Значение длины для поля ' + self.label + ' превышает максимальное значение сетки (12).');
             }
-            if (vm.cols < 1) {
-                vm.cols = 1;
+            if (self.cols < 1) {
+                self.cols = 1;
                 console.warn('Значение длины для поля ' + self.label + ' ниже минимального значения сетки (1).');
             }
-            vm.classComponent = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
+            self.classComponent = 'col-lg-' + self.cols + ' col-md-' + self.cols + ' col-sm-' + self.cols + ' col-xs-' + self.cols + ' clear-padding-left';
         }
 
         //-- registration of the field's component
@@ -141,12 +145,13 @@
             if (value == 0) {
                 return value;
             }
-            return value || (self.multiple ? [] : null);
+            return angular.copy(value) || (self.multiple ? [] : null);
         }
 
         function getFieldValue() {
             var field = {},
                 wrappedFieldValue;
+
             if (self.multiple) {
                 wrappedFieldValue = [];
                 self.fieldValue.forEach(function(value) {
@@ -169,6 +174,7 @@
             } else {
                 field[self.fieldName] = wrappedFieldValue;
             }
+
             return field;
         }
 
@@ -209,9 +215,14 @@
                     }
 
                     if (data.editorEntityType === "new") {
+
+                        if(!!self.newEntityLoaded){
+                            self.newEntityLoaded();
+                            return;
+                        }
+
                         var obj = {};
                         self.fieldValue = transformToValue(componentSettings.defaultValue);
-
                         if (self.field_id) {
                             if (self.isTree) {
                                 self.fieldValue = [];

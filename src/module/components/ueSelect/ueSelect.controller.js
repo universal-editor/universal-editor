@@ -102,7 +102,7 @@
                 vm.placeholder = componentSettings.placeholder || '';
             }
             if (vm.isTree && !vm.multiple) {
-                vm.placeholder = (!!newVal.length && !!newVal[0][vm.field_search]) ? newVal[0][vm.field_search] : componentSettings.placeholder;
+                vm.placeholder = (!!newVal && !!newVal.length && !!newVal[0][vm.field_search]) ? newVal[0][vm.field_search] : componentSettings.placeholder;
             }
             vm.setColorPlaceholder();
             $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
@@ -286,6 +286,10 @@
                         }
                     }
                 }
+                if (!allOptions) {
+                    allOptions = angular.copy(vm.optionValues);
+                }
+                vm.optionValues = filter(angular.copy(allOptions), vm.filterText);
                 return;
             }
             vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;

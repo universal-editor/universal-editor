@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -88,9 +88,9 @@
         if (vm.isMixMode) {
             vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
             vm.mixEntityType = vm.setting.component.settings.mixedMode.entityType;
-            vm.subType = vm.setting.component.settings.mixedMode.fieldsType;
+            vm.subType = vm.setting.component.settings.mixedMode.fieldType;
 
-            angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
+            angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function (value) {
                 var newValue = angular.merge({}, value);
                 newValue.url = vm.setting.component.settings.mixedMode.dataSource.url;
                 newValue.parentField = parentField;
@@ -118,7 +118,7 @@
         }
         itemsKey = "items";
 
-        angular.forEach(vm.setting.component.settings.dataSource.fields, function(field) {
+        angular.forEach(vm.setting.component.settings.dataSource.fields, function (field) {
             if (field.component.hasOwnProperty("settings") && (vm.setting.component.settings.columns.indexOf(field.name) != -1)) {
                 vm.tableFields.push({
                     field: field.name,
@@ -130,7 +130,7 @@
             }
         });
 
-        angular.forEach(vm.setting.component.settings.contextMenu, function(value) {
+        angular.forEach(vm.setting.component.settings.contextMenu, function (value) {
             var newValue = angular.merge({}, value);
             newValue.url = url;
             newValue.parentField = parentField;
@@ -139,7 +139,7 @@
         });
 
         if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.controls) {
-            angular.forEach(vm.setting.component.settings.header.controls, function(control) {
+            angular.forEach(vm.setting.component.settings.header.controls, function (control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {
                     newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
@@ -150,7 +150,7 @@
         }
 
         if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
-            angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
+            angular.forEach(vm.setting.component.settings.footer.controls, function (control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {
                     newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
@@ -162,20 +162,20 @@
 
         vm.sortField = vm.setting.component.settings.dataSource.sortBy || vm.tableFields[0].field;
 
-        vm.getScope = function() {
+        vm.getScope = function () {
             return $scope;
         };
 
-        vm.setTabVisible = function(index, value) {
+        vm.setTabVisible = function (index, value) {
             vm.tabsVisibility[index] = value;
         };
 
-        vm.closeEditor = function() {
-            $scope.$apply(function() {
+        vm.closeEditor = function () {
+            $scope.$apply(function () {
                 vm.entityLoaded = false;
             });
         };
-        vm.changeSortField = function(field) {
+        vm.changeSortField = function (field) {
             vm.listLoaded = false;
             if (vm.sortField == field) {
                 vm.sortingDirection = !vm.sortingDirection;
@@ -194,34 +194,26 @@
         };
 
 
-        vm.toggleContextView = function(id) {
-            if (vm.contextId == id) {
-                vm.contextId = undefined;
-            } else {
-                vm.contextId = id;
-            }
-        };
-
-        vm.getParent = function() {
+        vm.getParent = function () {
             vm.request.childId = vm.parent;
             vm.request.parentField = parentField;
             vm.request.headComponent = vm.setting.headComponent;
             RestApiService.loadParent(vm.request);
         };
 
-        $scope.$on('editor:parent_id', function(event, data) {
+        $scope.$on('editor:parent_id', function (event, data) {
             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
                 vm.parent = data.parentId;
             }
         });
 
-        vm.toggleFilterVisibility = function() {
+        vm.toggleFilterVisibility = function () {
             if (!vm.entityLoaded) {
                 vm.visibleFilter = !vm.visibleFilter;
             }
         };
 
-        $scope.$on('editor:read_entity', function(event, parentComponentId) {
+        $scope.$on('editor:read_entity', function (event, parentComponentId) {
             if (parentComponentId === vm.options.$parentComponentId) {
                 var parentEntity = $location.search().parent;
                 if (parentEntity) {
@@ -233,12 +225,12 @@
             }
         });
 
-        $scope.$on('editor:items_list', function(event, data) {
+        $scope.$on('editor:items_list', function (event, data) {
             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
 
                 vm.listLoaded = true;
                 vm.items = data[itemsKey];
-                vm.autoCompleteFields.forEach(function(field) {
+                vm.autoCompleteFields.forEach(function (field) {
 
                     if (vm.autoCompleteFields.length === 0) {
                         return;
@@ -249,23 +241,25 @@
                         paramStr = ""; // стpока json c params,
                     if (!field.component.settings.multiple) {
                         if (fieldForEdit && field.component.settings.valuesRemote && field.component.settings.valuesRemote.fields.label) {
-                            vm.items.forEach(function(item) {
+                            vm.items.forEach(function (item) {
                                 var val = item[fieldForEdit];
                                 item[fieldForEdit + "_copy"] = val;
                                 item[fieldForEdit] = "";
-                                if (val && ids.indexOf(val) === -1) { ids.push(val); }
+                                if (val && ids.indexOf(val) === -1) {
+                                    ids.push(val);
+                                }
                             });
 
                             if (ids.length) {
                                 paramStr = '?filter={"' + field.component.settings.valuesRemote.fields.value + '":[' + ids.join(',') + ']}';
                             }
-                            RestApiService.getData(field.component.settings.valuesRemote.url + paramStr).then(function(res) {
+                            RestApiService.getData(field.component.settings.valuesRemote.url + paramStr).then(function (res) {
                                 if (res.data.items && res.data.items.length) {
                                     vm.linkedNames = res.data.items;
                                     for (var i = vm.linkedNames.length; i--;) {
                                         var linkItem = vm.linkedNames[i];
                                         if (linkItem) {
-                                            vm.items.forEach(function(item) {
+                                            vm.items.forEach(function (item) {
                                                 if (item[fieldForEdit + "_copy"] == linkItem.id) {
                                                     item[fieldForEdit] = linkItem[field.component.settings.valuesRemote.fields.label];
                                                 }
@@ -273,7 +267,7 @@
                                         }
                                     }
                                 }
-                            }, function(error) {
+                            }, function (error) {
                                 console.log(error);
                             });
                         }
@@ -291,18 +285,18 @@
                 vm.parentButton = !!vm.parent;
                 vm.pageItemsArray = [];
 
-                angular.forEach(vm.listFooterBar, function(control) {
+                angular.forEach(vm.listFooterBar, function (control) {
                     control.paginationData = data;
                 });
             }
         });
 
-        $scope.$on('editor:server_error', function(event, data) {
+        $scope.$on('editor:server_error', function (event, data) {
             vm.errors.push(data);
         });
 
-        $scope.$on('editor:parent_childs', function(event, data) {
-            angular.forEach(vm.items, function(item, ind) {
+        $scope.$on('editor:parent_childs', function (event, data) {
+            angular.forEach(vm.items, function (item, ind) {
 
                 var startInd = 1;
                 if (item[vm.idField] === data.id) {
@@ -311,7 +305,7 @@
                         vm.items.splice(ind + 1, data.childs.length);
                     } else {
                         item.isExpand = true;
-                        angular.forEach(data.childs, function(newItem) {
+                        angular.forEach(data.childs, function (newItem) {
                             if (vm.items[ind].hasOwnProperty.parentPadding) {
                                 newItem.parentPadding = vm.items[ind].parentPadding + 1;
                             } else {
@@ -325,21 +319,21 @@
             });
         });
 
-        $scope.$on('editor:entity_success_deleted', function(event, data) {
+        $scope.$on('editor:entity_success_deleted', function (event, data) {
         });
 
-        $scope.$on('editor:field_error', function(event, data) {
+        $scope.$on('editor:field_error', function (event, data) {
             vm.errors.push(data);
         });
 
-        $scope.$on('editor:request_start', function(event, data) {
+        $scope.$on('editor:request_start', function (event, data) {
             vm.errors = [];
             vm.notifys = [];
         });
 
-        $document.on('click', function(evt) {
-            if (!angular.element(evt.target).hasClass("context-toggle")) {
-                $timeout(function() {
+        $document.on('click', function (evt) {
+            if (!angular.element(evt.target).hasClass('context-toggle')) {
+                $timeout(function () {
                     vm.contextId = undefined;
                 }, 0);
             }
@@ -347,7 +341,7 @@
 
 
         function isInTableFields(name) {
-            var index = vm.tableFields.findIndex(function(field) {
+            var index = vm.tableFields.findIndex(function (field) {
                 return field.field === name;
             });
 
@@ -364,18 +358,38 @@
         }
 
         /*  vm.clickEnter = function(event) {
-              if (event.keyCode === 13) {
-                  vm.applyFilter();
-              }
-          };*/
+         if (event.keyCode === 13) {
+         vm.applyFilter();
+         }
+         };*/
 
-        vm.$onInit = function() {
+        vm.$onInit = function () {
             RestApiService.setFilterParams({});
             vm.request.childId = vm.parent;
             vm.request.options = vm.options;
             vm.request.parentField = parentField;
             vm.request.url = url;
             RestApiService.getItemsList(vm.request);
+        };
+
+        vm.toggleContextView = function (id) {
+            vm.styleContextMenu = {};
+            if (vm.contextId == id) {
+                vm.contextId = undefined;
+            } else {
+                vm.contextId = id;
+            }
+        };
+
+        vm.toggleContextViewByEvent = function (id, event) {
+            var left = event.pageX - $element.find('table')[0].offsetLeft;
+            if (event.which === 3) {
+                vm.styleContextMenu = {
+                    'top': event.offsetY,
+                    'left': left
+                };
+                vm.contextId = id;
+            }
         };
     }
 })();

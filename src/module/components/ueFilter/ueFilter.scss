@@ -1,25 +1,26 @@
 
 .modal-dialog .ue-modal-body .editor-body .close-editor {
-    display: none;
+  display: none;
 }
- .editor-entity-actions {
-    background: #ebf1f3;
-    padding: 10px;
-    border-top: 1px solid #E1E9EB;
-  }
-  .component-wrapper {
-    display: inline-block;
-  }
-  .editor-filter-footer {
-    margin-top: 15px;
-  }
-  .filter-content-wrapper {
-   margin: 10px 0;
-  }
-  .editor-filter-body component-wrapper {
+
+.editor-entity-actions {
+  background: #ebf1f3;
+  padding: 10px;
+  border-top: 1px solid #E1E9EB;
+}
+
+.editor-filter-footer {
+  margin-top: 15px;
+}
+
+.filter-content-wrapper {
+  margin: 10px 0;
+}
+
+.editor-filter-body {
   display: block;
   margin-left: 205px;
-    >.component-wrapper{
-      display: none;
-    }
+  > .component-wrapper {
+    display: none;
+  }
 }

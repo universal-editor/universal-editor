@@ -113,6 +113,7 @@ body {
 
 .field-wrapper.row {
   margin: 0 15px;
+  padding: 10px 0;
 }
 
 .editor-action-button {
@@ -324,7 +325,7 @@ label{
   width : auto;
 
   .context-menu-item {
-    padding: 0 7px 3px 7px;
+    padding: 3px 7px;
     cursor: pointer;
     &:hover {
       background-color : #eeeded;
@@ -424,7 +425,7 @@ label{
         border-top: 8px solid #2a3534;
         border-right: 4px solid transparent;
         border-left: 4px solid transparent;
-        z-index: 998;
+        z-index: 55;
         cursor: pointer;
       }
       &:after{
