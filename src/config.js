@@ -802,8 +802,6 @@ var elementDataSource = {
                         url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
                     },
                     tree: {
-                        parentField: "parent_id",
-                        childCountField: "child_count",
                         selectBranches: false
                     }
                 }
