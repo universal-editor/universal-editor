@@ -382,10 +382,11 @@
         };
 
         vm.toggleContextViewByEvent = function (id, event) {
+            var left = event.pageX - $element.find('table')[0].offsetLeft;
             if (event.which === 3) {
                 vm.styleContextMenu = {
                     'top': event.offsetY,
-                    'left': event.pageX
+                    'left': left
                 };
                 vm.contextId = id;
             }
