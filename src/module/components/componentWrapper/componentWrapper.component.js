@@ -8,9 +8,6 @@
             buttonClass: '@',
             options: '='
         },
-        template : ['$templateCache', function($templateCache) {
-            return $templateCache.get('module/components/componentWrapper/componentWrapper.html');
-        }],
         controller: 'ComponentWrapperController',
         controllerAs : 'vm'
     };

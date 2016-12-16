@@ -15,10 +15,10 @@
                 data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'asc' : vm.sortingDirection, 'desc' : !vm.sortingDirection}",
                 data-ng-click="vm.changeSortField(fieldItem.field)") {{fieldItem.displayName}}
         tbody(data-ng-if="vm.listLoaded")
-            tr(data-ng-repeat="item in vm.items", data-ng-class="{'zhs-item' : (vm.entityType !== item[vm.subType]) && item[vm.subType] !== undefined}")
+            tr(data-ng-repeat="item in vm.items", data-ng-class="{'zhs-item' : (vm.entityType !== item[vm.subType]) && item[vm.subType] !== undefined}", data-ng-mousedown="vm.toggleContextViewByEvent(item[vm.idField], $event)", oncontextmenu='return false;')
                 td.context-column(ng-if="vm.isContextMenu")
                     span.context-toggle(data-ng-click="vm.toggleContextView(item[vm.idField])", data-ng-show="(vm.contextLinks.length && (item[vm.subType] == vm.entityType || item[vm.subType] == undefined)) || (vm.mixContextLinks.length && (vm.mixEntityType && item[vm.subType] === vm.mixEntityType))") Toggle buttons
-                    .context-menu-wrapper(data-ng-show="vm.contextId == item[vm.idField]")
+                    .context-menu-wrapper(data-ng-show="vm.contextId == item[vm.idField]", data-ng-style='vm.styleContextMenu')
                         .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index", data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)", data-ng-class="{'component-separator': link.separator}")
                             component-wrapper(data-setting="link", data-entity-id="{{item[vm.idField]}}", 
                                 data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.options")
