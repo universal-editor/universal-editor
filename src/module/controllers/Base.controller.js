@@ -41,10 +41,14 @@
                 if (angular.isFunction(template)) {
                     template = template($scope);
                 }
-                if (template && htmlPattern.test(template)) {
-                    self.templates[property] = $templateCache.get(template);
-                    if (self.templates[property] === undefined) {
-                        console.warn('File ' + template + ' is not found!');
+                if (template) {
+                    if (htmlPattern.test(template)) {
+                        self.templates[property] = $templateCache.get(template);
+                        if (self.templates[property] === undefined) {
+                            console.warn('File ' + template + ' is not found!');
+                        }
+                    } else {
+                        self.templates[property] = template;
                     }
                 }
             });
@@ -70,6 +74,15 @@
         $scope.onDestroyHandler = onDestroyHandler;
 
         $scope.$on("$destroy", onDestroyHandler);
+        self.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+            if (!data.$parentComponentId || data.$parentComponentId === self.parentComponentId && !self.options.filter) {
+                if (data.editorEntityType === "exist" && self.regim === 'preview' && (self.options.$dataIndex || self.options.$dataIndex === 0) && angular.isArray(data.$items)) {
+                    $scope.data = self.data = data.$items[self.options.$dataIndex];
+                } else {
+                    $scope.data = self.data = data;
+                }
+            }
+        }));
 
         function onDestroyHandler() {
             if (angular.isArray(self.listeners)) {

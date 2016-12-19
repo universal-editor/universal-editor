@@ -290,13 +290,7 @@
                         }
                         return;
                     }
-
-                    if (data.editorEntityType === "exist" && self.regim === 'preview' && (self.options.$dataIndex || self.options.$dataIndex === 0) && angular.isArray(data.$items)) {
-                        self.data = data.$items[self.options.$dataIndex];
-                    } else {
-                        self.data = data;
-                    }
-
+                   
                     var apiValue;
                     if (!self.parentField) {
                         apiValue = self.data[self.fieldName];
