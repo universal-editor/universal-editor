@@ -4,6 +4,13 @@ body {
   background-color: #E1E9EB;
 }
 
+.universal-editor, .modal-dialog {
+  & .component-edit, .component-preview {
+        display: inline-block;
+    width: 100%
+  }
+}
+
 .universal-editor {
   .editor-header{
     padding: 0px 0px 5px 0px;
@@ -106,6 +113,10 @@ body {
     tbody {
       td {
         font-size: 12px;
+        & .field-wrapper.row {
+          margin: 0;
+          padding: 0;
+        }
       }
     }
   }
@@ -162,7 +173,7 @@ body {
 
 .error-item {
   padding: 3px;
-  margin: 5px;
+  margin: 5px 0;
 }
 
 .notify-item {
@@ -395,6 +406,9 @@ label{
   min-height: 28px;
 }
 .field-wrapper-ue-select {
+  & select[multiple] {
+        min-height: 150px;
+  }
 
   & .select-wrapper{
     & > div > .processing-status-wrapper{
@@ -413,6 +427,7 @@ label{
       background-color: #fff;
       height: 100%;
       padding: 2px;
+      padding-right: 25px !important;
       &:before {
         content: '';
         position: absolute;

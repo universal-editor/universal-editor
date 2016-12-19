@@ -13,7 +13,7 @@
 
         var parentComponentId = vm.options.$parentComponentId;
 
-        $element.find('button').bind("click", function() {
+        $element.bind("click", function() {
             var filterJSON = null, filters;
 
             var parentComponentId = vm.options.$parentComponentId;

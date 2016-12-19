@@ -38,11 +38,12 @@
                         var obj = {};
                         obj[self.field_id] = key;
                         obj[self.field_search] = v;
-                        if (angular.isArray(componentSettings.values)){
+                        if (angular.isArray(componentSettings.values)) {
                             obj[self.field_id] = v;
                         }
                         self.optionValues.push(obj);
                     });
+                    equalPreviewValue();
                     componentSettings.$loadingPromise = $q.when(self.optionValues);
                 } else if (remoteValues) {
                     if (remoteValues.fields) {
@@ -69,6 +70,7 @@
                             self.loadingData = false;
                             self.optionValues = componentSettings.$optionValues;
                         }
+                        equalPreviewValue();
                     }
                 }
             }
@@ -76,14 +78,17 @@
 
         self.fieldValue = transformToValue(self.defaultValue);
 
+        self.cols = self.width;
+
         if (self.options.filter) {
             self.multiple = false;
             self.readonly = false;
             self.required = false;
             self.fieldValue = null;
+            self.cols = 12;
         }
 
-        self.cols = self.width;
+        
 
         if (!!self.cols) {
             if (self.cols > 12) {
@@ -109,9 +114,6 @@
         self.listeners.push($scope.$watch(function() { return self.fieldValue; },
             function() {
                 self.error = [];
-                if (self.options.filter && vm.fieldValue && vm.fieldValue[vm.field_id]) {
-                    vm.fieldValue = vm.fieldValue[vm.field_id];
-                }
             }, true));
         if (self.options.filter) {
             $scope.$watch(function() {
@@ -126,6 +128,7 @@
 
         self.clear = clear;
         self.getFieldValue = getFieldValue;
+        self.equalPreviewValue = equalPreviewValue;
 
         function clear() {
             self.fieldValue = self.multiple ? [] : null;
@@ -146,6 +149,50 @@
                 return value;
             }
             return angular.copy(value) || (self.multiple ? [] : null);
+        }
+
+        function equalPreviewValue(source) {
+            source = source || self.optionValues || [];
+            if (angular.isArray(self.fieldValue)) {
+                self.previewValue = [];
+            }
+            if (self.fieldValue !== null && !angular.isUndefined(self.fieldValue)) {
+                if ((componentSettings.values || componentSettings.valuesRemote)) {
+                    if (angular.isArray(source)) {
+                        source.forEach(function(option) {
+                            if (angular.isObject(self.fieldValue) && !angular.isArray(self.fieldValue)) {
+                                compareId(self.fieldValue[self.field_id], option, false);
+                            }
+                            if (angular.isArray(self.fieldValue)) {
+                                self.fieldValue.forEach(function(value) {
+                                    if (angular.isObject(value)) {
+                                        compareId(value[self.field_id], option, true);
+                                    }
+                                    if (angular.isNumber(value) || angular.isString(value)) {
+                                        compareId(value, option, true);
+                                    }
+                                });
+                            }
+                            if (angular.isNumber(self.fieldValue) || angular.isString(self.fieldValue)) {
+                                compareId(self.fieldValue, option, false);
+                            }
+                        });
+                    }
+                } else {
+                    self.previewValue = self.fieldValue;
+                }
+            }
+
+            function compareId(id, option, multiple) {
+                if (id == option[self.field_id]) {
+                    if (multiple) {
+                        self.previewValue = self.previewValue || [];
+                        self.previewValue.push(option[self.field_search]);
+                    } else {
+                        self.previewValue = option[self.field_search];
+                    }
+                }
+            }
         }
 
         function getFieldValue() {
@@ -214,9 +261,10 @@
                         }, true);
                     }
 
+
                     if (data.editorEntityType === "new") {
 
-                        if(!!self.newEntityLoaded){
+                        if (!!self.newEntityLoaded) {
                             self.newEntityLoaded();
                             return;
                         }
@@ -242,13 +290,13 @@
                         }
                         return;
                     }
-
+                   
                     var apiValue;
                     if (!self.parentField) {
-                        apiValue = data[self.fieldName];
+                        apiValue = self.data[self.fieldName];
                     } else {
-                        apiValue = data[self.parentField];
-                        if (angular.isArray(data[self.parentField]) && angular.isNumber(self.parentFieldIndex)) {
+                        apiValue = self.data[self.parentField];
+                        if (angular.isArray(self.data[self.parentField]) && angular.isNumber(self.parentFieldIndex)) {
                             apiValue = apiValue[self.parentFieldIndex];
                         }
                         apiValue = apiValue[self.fieldName];
@@ -267,6 +315,7 @@
                     if (angular.isFunction(callback)) {
                         callback();
                     }
+                    equalPreviewValue();
                 }
             }
         }

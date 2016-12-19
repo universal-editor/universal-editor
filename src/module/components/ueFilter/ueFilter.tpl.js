@@ -7,16 +7,16 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueFilter/ueFilter.html',
     '\n' +
-    '<div style="margin: 10px 5px;">\n' +
+    '<div class="filter-component">\n' +
     '    <button data-ng-click="vm.toggleFilterVisibility()" class="btn btn-lg btn-default filter-button">Фильтр {{vm.visiable ? \'-\' : \'+\'}}</button>\n' +
     '    <div data-ng-hide="!vm.visiable" class="editor-filter">\n' +
     '        <div ng-keyup="vm.clickEnter($event)" class="editor-filter-wrapper">\n' +
     '            <div class="editor-filter-head">\n' +
     '                <label ng-bind="vm.header.label"></label>\n' +
     '            </div>\n' +
-    '            <div style="padding: 5px 15px;" class="editor-filter-body">\n' +
+    '            <div class="editor-filter-body">\n' +
     '                <div ng-repeat="group in vm.body track by $index" class="filter-content-wrapper">\n' +
-    '                    <label class="filter-name-label"> <span ng-bind="group.label"></span></label>\n' +
+    '                    <label ng-bind="group.label" title="{{group.label}}" class="filter-name-label"></label>\n' +
     '                    <component-wrapper ng-repeat="filter in group.filters" data-setting="filter.field" data-options="filter.options" style="{{filter.ngStyle}}"></component-wrapper>\n' +
     '                </div>\n' +
     '            </div>\n' +

@@ -18,26 +18,15 @@
         angular.extend(vm, baseController);
         var componentSettings = vm.setting.component.settings;
 
-        vm.addItem = addItem;
-        vm.removeItem = removeItem;
-
-        vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler));
-
-        //-- private methods
-
-        function removeItem(index) {
-            if (angular.isArray(vm.fieldValue)) {
-                vm.fieldValue.forEach(function(value, key) {
-                    if (key == index) {
-                        vm.fieldValue.splice(index, 1);
-                    }
-                });
-            }
-        }
-
-        function addItem() {
-            vm.fieldValue.push(null);
-        }
+         vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+            $scope.onLoadDataHandler(e, data);
+             componentSettings.$loadingPromise.then(function(optionValues) {
+                vm.optionValues = optionValues;
+                vm.equalPreviewValue();
+            }).finally(function() {
+                vm.loadingData = false;
+            });
+        }));
 
         function newEntityLoaded(){
             vm.fieldValue = vm.setting.component.settings.defaultValue || null;

@@ -82,6 +82,7 @@
                         vm.optionValues.push(angular.copy(v));
                     }
                 });
+                vm.equalPreviewValue(items);
             }).finally(function() {
                 vm.loadingData = false;
             });

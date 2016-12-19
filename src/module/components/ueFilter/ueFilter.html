@@ -1,14 +1,14 @@
 
-<div style="margin: 10px 5px;">
+<div class="filter-component">
     <button data-ng-click="vm.toggleFilterVisibility()" class="btn btn-lg btn-default filter-button">Фильтр {{vm.visiable ? '-' : '+'}}</button>
     <div data-ng-hide="!vm.visiable" class="editor-filter">
         <div ng-keyup="vm.clickEnter($event)" class="editor-filter-wrapper">
             <div class="editor-filter-head">
                 <label ng-bind="vm.header.label"></label>
             </div>
-            <div style="padding: 5px 15px;" class="editor-filter-body">
+            <div class="editor-filter-body">
                 <div ng-repeat="group in vm.body track by $index" class="filter-content-wrapper">
-                    <label class="filter-name-label"> <span ng-bind="group.label"></span></label>
+                    <label ng-bind="group.label" title="{{group.label}}" class="filter-name-label"></label>
                     <component-wrapper ng-repeat="filter in group.filters" data-setting="filter.field" data-options="filter.options" style="{{filter.ngStyle}}"></component-wrapper>
                 </div>
             </div>
