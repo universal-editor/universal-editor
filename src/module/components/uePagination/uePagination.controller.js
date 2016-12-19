@@ -5,9 +5,11 @@
         .module('universal.editor')
         .controller('UePaginationController', UePaginationController);
 
-    UePaginationController.$inject = ['$scope', 'RestApiService', '$httpParamSerializer', '$sce', '$location'];
+    UePaginationController.$inject = ['$scope', 'RestApiService', '$httpParamSerializer', '$sce', '$location', '$element'];
 
-    function UePaginationController($scope, RestApiService, $httpParamSerializer, $sce, $location) {
+    function UePaginationController($scope, RestApiService, $httpParamSerializer, $sce, $location, $element) {
+        $element.addClass('ue-pagination');
+        
         var vm = this;
         vm.metaKey = true;
         vm.parentComponentId = vm.options.$parentComponentId;

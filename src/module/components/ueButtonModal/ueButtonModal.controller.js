@@ -8,6 +8,8 @@
     UeButtonModalController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$window','ModalService','ButtonsService', '$controller'];
 
     function UeButtonModalController($rootScope,$scope,$element,RestApiService,configData, $window, ModalService, ButtonsService, $controller){
+        $element.addClass('ue-button');
+
         var vm = this;
 
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));

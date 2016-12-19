@@ -8,6 +8,8 @@
     UeButtonServiceController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService', 'ModalService', '$state', '$controller', '$location'];
 
     function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService, ModalService, $state, $controller, $location){
+        $element.addClass('ue-button');
+
         var vm = this;
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
         var request = {};
