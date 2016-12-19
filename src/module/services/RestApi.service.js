@@ -515,7 +515,7 @@
         }
 
         //-- read all pages
-        this.getUrlResource = function getUrlResource(url, res, def, fromP, toP) {
+        this.getUrlResource = function getUrlResource(url, callback, res, def, fromP, toP) {
             var defer = def || $q.defer();
             var result = res || [];
             var promiseStack = [];
@@ -551,20 +551,29 @@
                 for (var i = allResp.length; i--;) {
                     resp = allResp[i];
                     result = result.concat(resp.data.items);
+                    if (angular.isFunction(callback)) {
+                        callback(resp.data.items);
+                    }
                 }
-                if (resp.data._meta) {
+                if (resp && resp.data._meta) {
                     countP = resp.data._meta.pageCount;
                 }
 
                 if (!countP || countP === toP || countP === 1) {
                     defer.resolve({ data: { items: result } });
                 } else {
-                    fromP = (fromP === 1 ? 2 : (fromP + 10));
-                    toP += 10;
+                    if (fromP === 1) {
+                        fromP = 2;
+                    } else if (fromP === 2) {
+                        fromP += 4;
+                    } else {
+                        fromP += 5;
+                    }
+                    toP += 5;
                     if (toP > countP) {
                         toP = countP;
                     }
-                    return getUrlResource(url, result, defer, fromP, toP);
+                    return getUrlResource(url, callback, result, defer, fromP, toP);
                 }
             }, function(reject) { });
             return defer.promise;

@@ -12,7 +12,7 @@
 
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
 
-        $element.find('button').bind("click", function () {
+        $element.bind("click", function () {
           if(vm.action === 'close') {
             if(vm.beforeAction) {
                 vm.beforeAction();

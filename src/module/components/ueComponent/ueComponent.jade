@@ -1,0 +1,7 @@
+div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter}")
+    //-- with templates
+    .component-template(
+        on-render-template,
+        ng-class="{'component-filter': vm.options.filter,\
+                   'component-edit': ((vm.templates.edit && !vm.options.filter) || (vm.templates.filter && vm.options.filter)) && vm.regim === 'edit',\
+                   'component-preview': vm.templates.preview && vm.regim === 'preview'}")

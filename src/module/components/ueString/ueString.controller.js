@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeStringController', UeStringController);
 
-    UeStringController.$inject = ['$scope', '$element', 'EditEntityStorage', 'FilterFieldsStorage', '$location', '$controller'];
+    UeStringController.$inject = ['$scope', '$element', 'EditEntityStorage', 'FilterFieldsStorage', '$location', '$controller', '$timeout'];
 
-    function UeStringController($scope, $element, EditEntityStorage, FilterFieldsStorage, $location, $controller) {
+    function UeStringController($scope, $element, EditEntityStorage, FilterFieldsStorage, $location, $controller, $timeout) {
         /* jshint validthis: true */
         var vm = this;
         var baseController = $controller('FieldsController', {$scope: $scope});
@@ -19,7 +19,10 @@
             vm.typeInput = 'password';
         }
 
-        vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler));
+        vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+            $scope.onLoadDataHandler(e, data);
+            vm.equalPreviewValue();
+        }));
 
         function removeItem(index) {
             if (angular.isArray(vm.fieldValue)) {

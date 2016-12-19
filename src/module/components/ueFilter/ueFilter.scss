@@ -9,18 +9,33 @@
   border-top: 1px solid #E1E9EB;
 }
 
-.editor-filter-footer {
-  margin-top: 15px;
-}
+.filter-component {  
+  max-width: 600px;
+  margin: 10px 5px;
 
-.filter-content-wrapper {
-  margin: 10px 0;
-}
-
-.editor-filter-body {
-  display: block;
-  margin-left: 205px;
-  > .component-wrapper {
-    display: none;
+  & .editor-filter-body {
+    padding: 5px 15px;
+    & component-wrapper  {
+      display: block;
+      margin-left: 205px;
+      & .filter-inner-wrapper > div[class*="col-"] {
+        padding: 0;
+      }
+    }
+    & .filter-content-wrapper {
+      margin-bottom: 10px;
+      display: inline-block;
+      width:100%;
+      & label.filter-name-label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  & .editor-filter-footer {
+    margin-top: 15px;
   }
 }
+
+

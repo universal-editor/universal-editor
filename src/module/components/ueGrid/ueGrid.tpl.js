@@ -22,7 +22,7 @@ module.run(['$templateCache', function($templateCache) {
     '        <thead>\n' +
     '            <tr>\n' +
     '                <td ng-if="vm.isContextMenu" class="actions-header context-column"></td>\n' +
-    '                <td data-ng-repeat="fieldItem in vm.tableFields" data-ng-class="{ \'active\' : fieldItem.field == vm.sortField, \'asc\' : vm.sortingDirection, \'desc\' : !vm.sortingDirection}" data-ng-click="vm.changeSortField(fieldItem.field)">{{fieldItem.displayName}}</td>\n' +
+    '                <td data-ng-repeat="fieldItem in vm.tableFields" data-ng-class="{ \'active\' : fieldItem.field == vm.sortField, \'asc\' : vm.sortingDirection, \'desc\' : !vm.sortingDirection}" data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)">{{fieldItem.displayName}}</td>\n' +
     '            </tr>\n' +
     '        </thead>\n' +
     '        <tbody data-ng-if="vm.listLoaded">\n' +
@@ -37,7 +37,9 @@ module.run(['$templateCache', function($templateCache) {
     '                        </div>\n' +
     '                    </div>\n' +
     '                </td>\n' +
-    '                <td data-ng-repeat="fieldItem in vm.tableFields track by $index"><span data-ng-class="{\'glyphicon-folder-open icon-mix-mode\' : (vm.isMixMode &amp;&amp; !((vm.entityType !== item[vm.subType]) &amp;&amp; item[vm.subType] !== undefined))}" data-ng-if="vm.prependIcon === fieldItem.field" class="glyphicon"></span><span style="padding-left: {{ item.parentPadding ? item.parentPadding * 10 : 0 }}px;">{{item[fieldItem.field]}}</span></td>\n' +
+    '                <td data-ng-repeat="fieldItem in vm.tableFields track by $index"><span data-ng-class="{\'glyphicon-folder-open icon-mix-mode\' : (vm.isMixMode &amp;&amp; !((vm.entityType !== item[vm.subType]) &amp;&amp; item[vm.subType] !== undefined))}" data-ng-if="vm.prependIcon === fieldItem.field" class="glyphicon"></span>\n' +
+    '                    <component-wrapper data-setting="fieldItem.component" data-options="item.$options" ng-style="{\'padding-left\': (item.parentPadding || 0) * 10 + \'px\'}"></component-wrapper>\n' +
+    '                </td>\n' +
     '            </tr>\n' +
     '            <tr data-ng-if="vm.items.length == 0">\n' +
     '                <td colspan="{{vm.tableFields.length + vm.isContextMenu}}">{{\'ELEMENT_NO\' | translate}}</td>\n' +

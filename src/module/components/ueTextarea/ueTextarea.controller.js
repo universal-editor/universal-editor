@@ -17,7 +17,12 @@
         vm.addItem = addItem;
         vm.removeItem = removeItem;
         vm.classComponent = (!vm.cols) ? '' : vm.classComponent;
-        vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler)); 
+
+        vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+            $scope.onLoadDataHandler(e, data);
+            //-- for set preview value
+            vm.equalPreviewValue();
+        })); 
 
         //-- private functions
 
