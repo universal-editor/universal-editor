@@ -432,7 +432,6 @@
                 });
 
                 alertNotSaved = $rootScope.$on('$stateChangeStart', function(event) {
-                    console.log('старое',dataEntity);
                     var save = isSave(dataEntity);
                     if(!save && !confirm('Внесенные изменения не сохранятся. Перейти на другу страницу?')) {
                         event.preventDefault();
@@ -551,7 +550,6 @@
             for(var key in dataEntity){
                 dataEdit[key] = data[key];
             }
-            console.log('новое',dataEntity, 'старое' ,dataEdit);
             return angular.equals(dataEntity, dataEdit);
         }
 
