@@ -404,6 +404,16 @@ label {
     .dropdown {
         position: relative;
         border-radius: 2px;
+        & .select-input {
+            min-height: 34px;
+            &.disabled-input {
+                background-color: #eceff1;
+            }
+            &.disabled-input input[disabled] {
+                border: none;
+                background-color: #eceff1;
+            }
+        }
         * {
             box-sizing: border-box;
         }
@@ -690,6 +700,15 @@ label {
 .select-input-wrapper {
     position: relative;
     cursor: pointer;
+    &.disabled-input,
+    &.disabled-input .select-input {
+        color: #c8cbcd;
+        background-color: #eceff1;
+    }
+    &.disabled-input input[disabled] {
+        border: none;
+        background-color: #eceff1;
+    }
     &:before {
         content: '';
         position: absolute;
@@ -736,6 +755,7 @@ label {
     }
     .select-input {
         padding-right: 35px;
+        min-height: 28px;
     }
     .dropdown__selected-items {
         white-space: nowrap;
