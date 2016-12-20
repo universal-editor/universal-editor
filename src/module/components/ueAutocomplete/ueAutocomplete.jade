@@ -4,7 +4,7 @@ block append content
     include ../../template/labelField/labelField
     div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}"  ng-style="{'overflow:auto':vm.multiple}") 
         div(ng-class='vm.classComponent')
-            .autocomplete-input-wrapper.form-control(data-ng-class='{"active" : vm.isActivePossible}', data-ng-click="inputFocus()"   )
+            .autocomplete-input-wrapper.form-control(data-ng-class='{"active" : vm.isActivePossible, "disabled-input": vm.readonly}', data-ng-click="inputFocus()"   )
                 .autocomplete-item(data-ng-repeat="acItem in vm.selectedValues", 
                                     data-ng-show="acItem[vm.field_search]",
                                     data-ng-if="vm.multiple") {{acItem[vm.field_search]}}
@@ -23,7 +23,7 @@ block append content
                     data-ng-class='!vm.isActivePossible ? "color-placeholder" : ""'
                     )
                 span.selecte-delete.selecte-delete-autocomplete(
-                    data-ng-if="!vm.multiple && !!vm.selectedValues.length",
+                    data-ng-if="!vm.multiple && !!vm.selectedValues.length && !vm.readonly",
                     data-ng-click="vm.removeFromSelected($event, vm.selectedValues[0])"
                     ) ×
                 .loader-search-wrapper(data-ng-show="vm.searching || !vm.preloadedData")

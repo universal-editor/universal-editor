@@ -4,6 +4,6 @@ block append content
     include ../../template/labelField/labelField
     div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}")
         div(data-ng-repeat="item in vm.optionValues", data-ng-class="{'radiodisabled': vm.readonly}")		
-            label
+            label.radio
                 input(type="radio", data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue", value="{{item[vm.field_id]}}")
                 span(ng-bind = "item[vm.field_search]")

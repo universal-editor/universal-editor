@@ -46,6 +46,9 @@
         if (!vm.multiple) {
             vm.styleInput = { 'width': '99%' };
         }
+        if (vm.readonly) {
+            vm.styleInput = { 'width': '1px', 'padding': 0 };
+        }
 
         if (vm.options.filter) {
             vm.isTree = false;
@@ -538,7 +541,9 @@
         };
 
         vm.clickSelect = function() {
-            $element.find('input')[0].focus();
+            if(!vm.readonly) {
+              $element.find('input')[0].focus();
+            }
         };
 
         vm.deleteToSelected = function(event, isKeydown) {
