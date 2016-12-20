@@ -16,8 +16,8 @@ module.run(['$templateCache', function($templateCache) {
     '            </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="vm.label"></span>\n' +
     '        </label>\n' +
     '        <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}">\n' +
-    '            <div data-ng-class="{\'radiodisabled\': vm.readonly}">\n' +
-    '                <label data-ng-repeat="item in vm.optionValues" class="radio-inline">\n' +
+    '            <div data-ng-repeat="item in vm.optionValues" data-ng-class="{\'radiodisabled\': vm.readonly}">		\n' +
+    '                <label>\n' +
     '                    <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{item[vm.field_id]}}"/><span ng-bind="item[vm.field_search]"></span>\n' +
     '                </label>\n' +
     '            </div>\n' +

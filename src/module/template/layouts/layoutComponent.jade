@@ -20,3 +20,4 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
         div(ng-repeat="value in vm.previewValue track by $index", data-ng-show="!vm.loadingData", ng-if = "vm.multiple")
             span(ng-bind="value")
     include ../../template/errorField/errorField
+    

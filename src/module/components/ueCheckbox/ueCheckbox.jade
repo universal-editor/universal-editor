@@ -3,6 +3,7 @@ extends ../../template/layouts/layoutComponent
 block append content
     include ../../template/labelField/labelField
     div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}" style="{{vm.checkBoxStyle}}")  
-        .checkbox.checkbox-inline(data-ng-repeat="item in vm.optionValues", data-ng-class="{'disabled': vm.readonly}")
-             input(type="checkbox", data-ng-disabled="vm.readonly", data-checklist-model="vm.fieldValue", data-checklist-value="item[vm.field_id]")
-             span(ng-bind="item[vm.field_search]")
+        .checkbox(data-ng-repeat="item in vm.optionValues", data-ng-class="{'disabled': vm.readonly}")
+            label
+                input(type="checkbox", data-ng-disabled="vm.readonly", data-checklist-model="vm.fieldValue", data-checklist-value="item[vm.field_id]")
+                span(ng-bind="item[vm.field_search]")
