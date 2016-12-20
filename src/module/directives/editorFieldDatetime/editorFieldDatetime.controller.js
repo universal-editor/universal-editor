@@ -180,7 +180,7 @@
                 }
             } else {
                 if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.field.name] !== null ? moment.utc(data[$scope.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
+                    vm.fieldValue = data[$scope.parentField][$scope.field.name] !== null ? moment.utc(data[$scope.parentField][$scope.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
                 } else {
                     vm.fieldValue = [];
                     angular.forEach(data[$scope.parentField][$scope.field.name], function (timeItem) {

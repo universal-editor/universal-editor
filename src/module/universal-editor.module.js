@@ -6,14 +6,12 @@
         [
             'universal.editor.templates',
             'minicolors',
-            'ui.tinymce',
             'datePicker',
             'checklist-model',
             'angularMoment',
             'ngCookies',
             'ngFileUpload',
             'ui.router',
-            'yaMap',
             'ngRaven',
             'ui.mask',
             'toastr',
@@ -45,7 +43,7 @@
             'responseError': function (rejection) {
                 try {
                     var json = JSON.parse(JSON.stringify(rejection));
-                    
+
                     if (rejection.data !== null && rejection.data.hasOwnProperty('message') && rejection.data.message.length > 0) {
                         toastr.error(rejection.data.message);
                     } else if (rejection.status === 422 || rejection.status === 400) {
@@ -137,7 +135,7 @@
                 templateUrl : "module/directives/universalEditor/universalEditorList.html"
             })
             .state('editor.type.new',{
-                url : '/new?parent&type',
+                url : '/new?back&parent&type',
                 templateUrl : "module/directives/universalEditor/universalEditorForm.html",
                 onEnter : ["EditEntityStorage", function (EditEntityStorage) {
                     EditEntityStorage.createNewEntity();

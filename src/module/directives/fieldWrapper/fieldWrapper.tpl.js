@@ -7,7 +7,7 @@ try {
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/fieldWrapper/fieldWrapper.html',
     '\n' +
-    '<div class="field-wrapper">\n' +
+    '<div data-ng-class="className" class="field-wrapper">\n' +
     '    <div data-ng-class="!vm.isArray ? \'row\' : \'\' ">\n' +
     '        <div data-ng-if="!vm.isArray" class="field-name-label col-lg-6 col-md-6 col-sm-5 col-xs-4">\n' +
     '            <div data-ng-if="vm.hint" class="field-hint">\n' +

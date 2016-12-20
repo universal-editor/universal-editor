@@ -1,6 +1,29 @@
 div
-    .filter-name-label
+    .filter-name-label(title="{{vm.filterDisplayName}}")
         span {{vm.filterDisplayName}}
     .filter-inner-wrapper
-        select.form-control(ng-options="item[vm.field_id] as item[vm.field_search] for item in vm.selectedValues", data-ng-model="vm.filterValue")
-            option(value="") {{vm.placeholder}}
+        div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='!vm.search ? "but-for-search" : ""')
+            input.form-control(
+                data-ng-if="vm.search",
+                placeholder="{{vm.placeholder}}",
+                data-ng-class='vm.isSelection ? "color-placeholder" : ""',
+                data-ng-model="vm.filterText",
+                data-ng-change="vm.change()",
+                data-ng-focus="vm.isShowPossible()"
+                )
+            input.focus-input(
+                data-ng-if="!vm.search",
+                data-ng-focus="vm.isShowPossible()"
+                )
+            .form-control.select-input(
+                data-ng-if="!vm.search"
+                )
+                .dropdown__selected-items(data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""') {{vm.placeholder}}
+
+            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelected($event, false)") ×
+
+            .possible-values.active.possible-bottom(
+                data-ng-if="!vm.readonly && (vm.selectedValues.length > 0) && vm.showPossible"
+                )
+                .possible-scroll
+                    .possible-value-item(data-ng-repeat="option in vm.selectedValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}

@@ -8,7 +8,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorFilterDatetime/editorFilterDatetime.html',
     '\n' +
     '<div class="filter-datetime-wrapper">\n' +
-    '    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
     '    <div class="filter-inner-wrapper">\n' +
     '        <div class="filter-start">\n' +
     '            <div class="editor-datetime">\n' +

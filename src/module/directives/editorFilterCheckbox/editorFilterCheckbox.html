@@ -1,6 +1,6 @@
 
 <div>
-    <div class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>
+    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>
     <div class="filter-inner-wrapper">
         <label data-ng-repeat="item in vm.selectedValues" class="checkbox-inline">
             <input type="checkbox" data-checklist-model="vm.filterValue" data-checklist-value="item[vm.field_id]"/>{{item[vm.field_search]}}

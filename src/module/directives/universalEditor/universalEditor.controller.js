@@ -18,8 +18,7 @@
             mixEntityObject,
             alertNotSaved;
 
-        tinyMCE.baseURL = '../assets/mce-files';
-        vm.assetsPath = '../assets';
+        vm.assetsPath = '/assets/universal-editor';
 
         if ($scope.entity === undefined || angular.isUndefined(entityObject)){
             console.error("Editor: Сущность с типом \"" + $scope.entity + "\" не описана в конфигурационном файле");
@@ -55,6 +54,10 @@
         vm.pagination = entityObject.backend.hasOwnProperty("pagination") ? entityObject.backend.pagination : true;
         vm.autoCompleteFields = [];
         vm.entityType = $scope.entity;
+
+        if (!!vm.configData.ui && !!vm.configData.ui.assetsPath) {
+            vm.assetsPath = vm.configData.ui.assetsPath;
+        }
 
         if(entityObject.backend.hasOwnProperty('fields')){
             vm.idField = entityObject.backend.fields.primaryKey || vm.idField;
@@ -247,10 +250,6 @@
             }
         };
 
-        RestApiService.setQueryParams({
-            sort : vm.sortingDirection ? vm.sortField : "-" + vm.sortField
-        });
-
         $rootScope.$broadcast('editor:set_entity_type',$scope.entity);
 
 
@@ -258,6 +257,7 @@
             if ($state.is('editor.type.new')) {
                 return;
             }
+
             vm.metaKey = true;
             vm.listLoaded = true;
             vm.items = data[itemsKey];
@@ -277,7 +277,7 @@
                 var fieldForEdit = field.name, // ключ для замены
                     ids = [], // массив айдишников
                     paramStr = ""; // стpока json c params,
-                if (fieldForEdit && field.valuesRemote && field.valuesRemote.fieldSearch) {
+                if (fieldForEdit && field.valuesRemote && field.valuesRemote.fields.label) {
                     vm.items.forEach(function (item) {
                         var val = item[fieldForEdit];
                         item[fieldForEdit + "_copy"] = val;
@@ -286,7 +286,7 @@
                     });
 
                     if (ids.length) {
-                        paramStr = '?filter={"' + field.valuesRemote.fieldId + '":[' + ids.join(',') + ']}';
+                        paramStr = '?filter={"' + field.valuesRemote.fields.key + '":[' + ids.join(',') + ']}';
                     }
                     RestApiService.getData(field.valuesRemote.url + paramStr).then(function (res) {
                         if (res.data.items && res.data.items.length) {
@@ -296,7 +296,7 @@
                                 if (linkItem) {
                                     vm.items.forEach(function (item) {
                                         if (item[fieldForEdit + "_copy"] == linkItem.id) {
-                                            item[fieldForEdit] = linkItem[field.valuesRemote.fieldSearch];
+                                            item[fieldForEdit] = linkItem[field.valuesRemote.fields.label];
                                         }
                                     });
                                 }
@@ -322,6 +322,7 @@
             var startIndex;
             var endIndex;
             var qParams = RestApiService.getQueryParams();
+
             // PAGINATION
             if(vm.items.length === 0){
                 vm.metaKey = false;
@@ -415,7 +416,6 @@
                     });
                 }
             }
-
             //END PAGINATION
         });
 

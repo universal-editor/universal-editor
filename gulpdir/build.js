@@ -14,14 +14,22 @@ gulp.task('libs-min', function() {
     var jsFilter = gulpFilter('**/*.js',{ restore: true });
     var cssFilter = gulpFilter('**/*.css', { restore: true });
     return gulp.src(mainBowerFiles())
-        .pipe(jsFilter)
+        .pipe(jsFilter)        
+        .pipe(plugins.concat('vendor.js'))
+        .pipe(gulp.dest('./dist/js'))
+        .pipe(plugins.rename({
+            suffix: '.min'
+        }))
         .pipe(plugins.uglify())
-        .pipe(plugins.concat('vendor.min.js'))
         .pipe(gulp.dest('./dist/js'))
         .pipe(jsFilter.restore)
         .pipe(cssFilter)
-        .pipe(plugins.uglifycss())
-        .pipe(plugins.concat('vendor.min.css'))
+        .pipe(plugins.concat('vendor.css'))
+        .pipe(gulp.dest('./dist/css'))        
+        .pipe(plugins.rename({
+            suffix: '.min'
+        }))
+        .pipe(plugins.uglifycss())        
         .pipe(gulp.dest('./dist/css'))
         .pipe(cssFilter.restore);
 });
@@ -65,6 +73,7 @@ gulp.task('js', function () {
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
         .pipe(plugins.concat("universal-editor.js"))
+        .pipe(gulp.dest('./dist/js'))
         .pipe(plugins.rename({
             suffix: '.min'
         }))
@@ -76,6 +85,7 @@ gulp.task('css', function () {
     return gulp.src(['./src/*.scss','./src/**/*.scss'])
         .pipe(plugins.sass())
         .pipe(plugins.concat("universal-editor.css"))
+        .pipe(gulp.dest("./dist/css"))
         .pipe(plugins.uglifycss({
             maxLineLen : 80
         }))
@@ -102,8 +112,8 @@ gulp.task('config',function(){
 
 gulp.task('inject', function() {
     var target = gulp.src('./src/index.html');
-    var sourcesJs = gulp.src(['./dist/js/vendor.min.js','./dist/js/**/*.js','!./dist/js/config.js'], {read: false});
-    var sourcesCss = gulp.src(['./dist/css/vendor.min.css','./dist/css/**/*.css'], {read: false});
+    var sourcesJs = gulp.src(['./dist/js/vendor.min.js','!./dist/js/vendor.js','!./dist/js/universal-editor.js','./dist/js/**/*.js','!./dist/js/config.js'], {read: false});
+    var sourcesCss = gulp.src(['./dist/css/vendor.min.css','!./dist/css/vendor.css','!./dist/css/universal-editor.css','./dist/css/**/*.css'], {read: false});
     return target.pipe(plugins.inject(es.merge(sourcesJs,sourcesCss), {relative: false,  addRootSlash: false, ignorePath: 'dist'}))
         .pipe(plugins.inject(gulp.src('./dist/js/config.js', {read: false}),{relative: false,  addRootSlash: false, ignorePath: 'dist', name: 'config'}))
         .pipe(gulp.dest('./dist'));
