@@ -1188,9 +1188,8 @@ var staffDataSource = {
                 name: 'ue-checkbox',
                 settings: {
                     label: "Уволен",
-                    values: {
-                        "1": ""
-                    }
+                    trueValue: 1,
+                    falseValue: 0
                 }
             }
         },
@@ -1232,9 +1231,8 @@ var newsDataSource = {
                 name: 'ue-checkbox',
                 settings: {
                     label: "Опубликовано",
-                    values: {
-                        "1": ""
-                    }
+                    trueValue: 1,
+                    falseValue: 0
                 }
             }
         },
