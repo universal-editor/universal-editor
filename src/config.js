@@ -1698,12 +1698,12 @@ var ue = new UniversalEditor('universal-editor', {
             ]
         },
         {
-            name: 'element',
-            label: 'Элементы',
+            name: 'components',
+            label: 'Компоненты',
             states: [
                 {
                     name: 'index',
-                    url: '/element',
+                    url: '/components',
                     component: {
                         name: 'ue-grid',
                         settings: {
@@ -1795,7 +1795,7 @@ var ue = new UniversalEditor('universal-editor', {
                 },
                 {
                     name: 'edit',
-                    url: '/element/:pk',
+                    url: '/components/:pk',
                     component: {
                         name: 'ue-form',
                         settings: {
