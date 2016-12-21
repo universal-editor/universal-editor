@@ -18,7 +18,7 @@
 
         vm.body = [];
         angular.forEach(settings.dataSource.fields, function(field) {
-            if (field.component.hasOwnProperty("settings") && (!settings.fields || ~settings.fields.indexOf(field.name))) {
+            if (field.component.hasOwnProperty("settings") && (!settings.fields || ~settings.fields.indexOf(field.name)) && field.component.settings.filterable !== false) {
                 var fieldSettings = field.component.settings;
 
 
@@ -85,9 +85,7 @@
                         value = value[vm.options.filterParameters.index];
                     }
                     if (field.component.settings.$fieldType === 'array') {
-                        if (angular.isArray(value)) {
                             vm.fieldValue = value.split(',');
-                        }
                     } else {
                         vm.fieldValue = value;
                         if (vm.addToSelected && value) {

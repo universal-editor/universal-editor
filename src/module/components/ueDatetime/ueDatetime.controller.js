@@ -22,7 +22,10 @@
         $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format || 'YYYY-MM-DD HH:mm:ss');
         vm.format = vm.format || 'YYYY-MM-DD HH:mm:ss';
 
-        vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler)); 
+        vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+            $scope.onLoadDataHandler(e, data);
+            vm.equalPreviewValue();
+        })); 
 
         //-- private functions
         function removeItem(index) {

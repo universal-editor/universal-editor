@@ -1,4 +1,6 @@
-.field-wrapper-ue-select(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter}")
+extends ../../template/layouts/layoutComponent
+
+block append content
         include ../../template/labelField/labelField
         div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}" ng-style="{'overflow:auto': vm.multiple}")
             div(ng-class='vm.classComponent')
@@ -9,11 +11,11 @@
                     .processing-status-wrapper(data-ng-show="!!vm.loadingData" style="position: absolute; margin: -28px 0 0 20px;")
                         .processing-status {{'PERFORMS_ACTIONS' | translate}}
                 div(data-ng-if="!vm.multiple && !vm.isTree" )
-                    div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='!vm.search ? "but-for-search" : ""')
+                    div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='{"but-for-search": !vm.search, "disabled-input": vm.readonly}' )
                         //--span {{vm.optionValues}}
                         input.form-control.select-input(
-                            data-ng-if="vm.search",
-                            ng-disabled="vm.loadingData"
+                            data-ng-if="vm.search && !vm.loadingData",
+                            ng-disabled="vm.readonly"
                             placeholder="{{vm.placeholder}}",
                             data-ng-class='vm.isSelection ? "color-placeholder" : ""',
                             data-ng-model="vm.filterText",
@@ -31,7 +33,7 @@
                             .dropdown__selected-items(
                                 data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""'
                                 ) {{vm.placeholder}}
-                        span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelected($event, false)") ×
+                        span.selecte-delete(data-ng-if="vm.isSpanSelectDelete && !vm.readonly", data-ng-click="vm.deleteToSelected($event, false)") ×
                         .possible-values.active(
                             data-ng-if="!vm.readonly && (vm.optionValues.length > 0) && vm.showPossible",
                             data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'
@@ -45,7 +47,7 @@
                 .dropdown(data-ng-if="vm.isTree")
                     .dropdown__host
                         .dropdown__title.form-control.select-input(
-                            data-ng-class="{'dropdown__title_open': isOpen}",
+                            data-ng-class="{'dropdown__title_open': isOpen, 'disabled-input': vm.readonly}",
                             data-ng-click="vm.clickSelect()",
                             data-ng-style='{"cursor" : vm.search && !vm.loadingData ? "text" : "pointer"}'
                             )
@@ -55,10 +57,10 @@
                                 )
                                 .selected-item
                                     label(ng-bind="value[vm.field_search]" style="overflow: hidden; text-overflow: ellipsis; margin-right: 15px; display: block;")
-                                    span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)" style="float: right; width: 10px; margin-top: -24px;") ×
+                                    span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)" style="float: right; width: 10px; margin-top: -24px;", ng-if="!vm.readonly") ×
 
-                            input.dropdown__search-field(data-ng-if="vm.search"
-                                ng-disabled="vm.loadingData"
+                            input.dropdown__search-field(data-ng-if="vm.search && !vm.loadingData"
+                                ng-disabled="vm.readonly"
                                 data-ng-model="vm.filterText",
                                 data-ng-change="vm.change()",
                                 placeholder="{{vm.placeholder}}",
@@ -72,11 +74,12 @@
                             input.focus-input(
                                 data-ng-if="!vm.search",
                                 data-ng-focus="toggleDropdown()",
-                                data-ng-blur="vm.isBlur()"
+                                data-ng-blur="vm.isBlur()",
+                                ng-disabled="vm.readonly"
                                 )
                             .dropdown__selected(data-ng-if="!vm.search")
                                 .dropdown__selected-items.dropdown-tree(data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""', data-ng-if="!vm.loadingData") {{vm.placeholder}}
-                            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete", data-ng-click="vm.deleteToSelected($event, false)") ×
+                            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete && !vm.readonly", data-ng-click="vm.deleteToSelected($event, false)") ×
                             .dropdown__items.dropdown__items_with-padding.active.dropdown-bottom(
                                 data-ng-if="::(vm.treeParentField && vm.treeChildCountField)",
                                 data-ng-class="{'dropdown__items_with-selected': vm.fieldValue.length > 2 || (vm.search && vm.fieldValue.length)}",
@@ -96,4 +99,3 @@
                                 )
                     .processing-status-wrapper(data-ng-show="vm.loadingData" style="position: absolute; margin: -28px 0 0 20px;")
                         .processing-status {{'PERFORMS_ACTIONS' | translate}}
-    include ../../template/errorField/errorField

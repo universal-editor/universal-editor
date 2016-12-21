@@ -19,7 +19,10 @@
         vm.addItem = addItem;
         vm.removeItem = removeItem; 
 
-        vm.listeners.push($scope.$on('editor:entity_loaded', $scope.onLoadDataHandler));
+        vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+            $scope.onLoadDataHandler(e, data);
+            vm.equalPreviewValue();
+        })); 
         //-- private functions
         function removeItem(index) {
             if (angular.isArray(vm.fieldValue)) {
@@ -33,7 +36,6 @@
 
         function addItem() {
             vm.fieldValue.push('#000000');
-        }
-        
+        }        
     }
 })();

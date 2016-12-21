@@ -1,4 +1,6 @@
-div(ng-class="{'field-wrapper row':!vm.options.filter}")
+extends ../../template/layouts/layoutComponent
+
+block append content
     include ../../template/labelField/labelField
     div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}"  ng-style="{'overflow:auto':vm.multiple}")  
         div(data-ng-if="vm.multiple", ng-class="{'col-lg-2 col-md-2 col-sm-3 col-xs-3 clear-padding-left': (!vm.options.isGroup && !vm.options.filter)}")
@@ -29,4 +31,3 @@ div(ng-class="{'field-wrapper row':!vm.options.filter}")
                 data-min-date="minDate",
                 data-max-date="maxDate"
                 )
-    include ../../template/errorField/errorField

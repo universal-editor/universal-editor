@@ -1,29 +1,25 @@
 
-<div ng-class="{'field-wrapper row':!vm.options.filter}">
-    <label ng-if="!vm.options.filter &amp;&amp; !!vm.label" class="field-name-label">
-        <div data-ng-if="!!vm.hint" class="field-hint">
-            <div ng-bind="vm.hint" class="hint-text"></div>
-        </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="vm.label"></span>
-    </label>
-    <div ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}">
-        <div data-ng-if="vm.multiple">
-            <div data-ng-repeat="field_item in vm.fieldValue track by $index" ng-init="i = $index" class="item-string-wrapper input-group">
-                <div data-ng-repeat="item in vm.optionValues" data-ng-class="{'radiodisabled': vm.readonly}" class="radio">
-                    <label data-ng-repeat="item in vm.optionValues" data-ng-class="{'radiodisabled': vm.readonly}" class="radio-inline">
-                        <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[i]" value="{{item[vm.field_id]}}"/><span ng-bind="item[vm.field_search]"></span>
-                    </label>
-                </div><span class="input-group-btn">
-                    <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>
-            </div>
-            <div data-ng-click="vm.addItem()" data-ng-disabled="vm.readonly" class="btn btn-primary btn-sm">{{'BUTTON.ADD' | translate}}</div>
-        </div>
-        <div data-ng-if="!vm.multiple">
-            <div data-ng-repeat="item in vm.optionValues" data-ng-class="{'radiodisabled': vm.readonly}">
-                <label>
+<div ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter}">
+    <div on-render-template="on-render-template" ng-class="{'component-filter': vm.options.filter,                   'component-edit': ((vm.templates.edit &amp;&amp; !vm.options.filter) || (vm.templates.filter &amp;&amp; vm.options.filter)) &amp;&amp; vm.regim === 'edit',                   'component-preview': vm.templates.preview &amp;&amp; vm.regim === 'preview'}" class="component-template"></div>
+    <div ng-if="((!vm.templates.edit &amp;&amp; !vm.options.filter) || (!vm.templates.filter &amp;&amp; vm.options.filter)) &amp;&amp; vm.regim === 'edit'" ng-class="{'component-filter': vm.options.filter}" class="component-edit"> 
+        <label ng-if="!vm.options.filter &amp;&amp; !!vm.label" class="field-name-label">
+            <div data-ng-if="!!vm.hint" class="field-hint">
+                <div ng-bind="vm.hint" class="hint-text"></div>
+            </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="vm.label"></span>
+        </label>
+        <div ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}">
+            <div data-ng-repeat="item in vm.optionValues" data-ng-class="{'radiodisabled': vm.readonly}">		
+                <label class="radio">
                     <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{item[vm.field_id]}}"/><span ng-bind="item[vm.field_search]"></span>
                 </label>
             </div>
         </div>
+    </div>
+    <div ng-if="!vm.templates.preview &amp;&amp; vm.regim === 'preview'" class="component-preview"> 
+        <div data-ng-show="vm.loadingData" class="loader-search-wrapper">
+            <div class="loader-search">{{'LOADING' | translate}}</div>
+        </div><span ng-bind="vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>
+        <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData" ng-if="vm.multiple"><span ng-bind="value"></span></div>
     </div>
     <div ng-if="!vm.options.filter" class="field-error-wrapper">
         <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>

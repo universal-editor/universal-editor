@@ -8,13 +8,13 @@
   border-top: 1px solid #E1E9EB;
 }
 
-.filter-component {
+.filter-component {  
   max-width: 600px;
   margin: 10px 5px;
 
   & .editor-filter-body {
     padding: 5px 15px;
-    & .component-wrapper  {
+    & component-wrapper  {
       display: block;
       margin-left: 205px;
       & .filter-inner-wrapper > div[class*="col-"] {
@@ -36,3 +36,5 @@
     margin-top: 15px;
   }
 }
+
+
