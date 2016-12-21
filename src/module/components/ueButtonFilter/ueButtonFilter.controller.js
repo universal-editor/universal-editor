@@ -8,6 +8,9 @@
     UeButtonFilterController.$inject = ['$rootScope', '$scope', '$element', 'FilterFieldsStorage', '$location', '$controller'];
 
     function UeButtonFilterController($rootScope, $scope, $element, FilterFieldsStorage, $location, $controller) {
+        $element.addClass('ue-button');
+        $element.addClass('grey');
+
         var vm = this;
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
 

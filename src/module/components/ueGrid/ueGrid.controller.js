@@ -8,6 +8,7 @@
     UeGridController.$inject = ['$scope', '$rootScope', 'configData', 'RestApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', 'ConfigDataProvider', '$element', '$compile', 'EditEntityStorage'];
 
     function UeGridController($scope, $rootScope, configData, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, ConfigDataProvider, $element, $compile, EditEntityStorage) {
+        $element.addClass('ue-grid');
         $scope.entity = RestApiService.getEntityType();
         /* jshint validthis: true */
         var vm = this,

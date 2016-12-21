@@ -5,9 +5,10 @@
         .module('universal.editor')
         .controller('UeFormTabsController', UeFormTabsController);
 
-    UeFormTabsController.$inject = ['$scope', '$state', 'EditEntityStorage'];
+    UeFormTabsController.$inject = ['$scope', '$state', 'EditEntityStorage', '$element'];
 
-    function UeFormTabsController($scope, $state, EditEntityStorage) {
+    function UeFormTabsController($scope, $state, EditEntityStorage, $element) {
+        $element.addClass('ue-form-tabs');
         /* jshint validthis: true */
 
         var vm = this;

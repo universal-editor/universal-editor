@@ -8,6 +8,8 @@
     UeButtonRequestController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', 'ButtonsService', '$controller'];
 
     function UeButtonRequestController($rootScope,$scope,$element,RestApiService,configData, ButtonsService, $controller){
+        $element.addClass('ue-button');
+
         var vm = this;
 
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
