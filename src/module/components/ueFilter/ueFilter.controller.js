@@ -105,7 +105,7 @@
 
                 /*temprory custom logic for operators */
 
-                if (~['ue-select', 'ue-autocomplete', 'ue-checkbox', 'ue-radiolist', 'ue-colorpicker'].indexOf(field.component.name)) {
+                if (~['ue-dropdown', 'ue-autocomplete', 'ue-checkbox', 'ue-radiolist', 'ue-colorpicker'].indexOf(field.component.name)) {
                     group.filters[0].options.filterParameters.operator = ":text";
                 }
 

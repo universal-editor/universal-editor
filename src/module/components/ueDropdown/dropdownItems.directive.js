@@ -25,7 +25,7 @@
                 setActiveElement: '=',
                 lvlDropdown: '='
             },
-            template : $templateCache.get('module/components/ueSelect/dropdownItems.html'),
+            template : $templateCache.get('module/components/ueDropdown/dropdownItems.html'),
             controller: 'DropdownItemsController',
             controllerAs : 'vm',
             compile : compile

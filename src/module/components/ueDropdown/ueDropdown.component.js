@@ -1,23 +1,23 @@
 (function () {
     'use strict';
 
-    var ueSelect = {
+    var ueDropdown = {
          bindings : {
             setting: '=',
             options: '='
         },
         template : ['$templateCache', function ($templateCache) {
-            return $templateCache.get('module/components/ueSelect/ueSelect.html');
+            return $templateCache.get('module/components/ueDropdown/ueDropdown.html');
         }],
-        controller: 'UeSelectController',
+        controller: 'UeDropdownController',
         controllerAs : 'vm'
     };
 
     /**
      * @desc Select-type field.
-     * @example <ue-select></ue-select>
+     * @example <ue-dropdown></ue-dropdown>
      */
     angular
         .module('universal.editor')
-        .component('ueSelect',ueSelect);
+        .component('ueDropdown',ueDropdown);
 })();

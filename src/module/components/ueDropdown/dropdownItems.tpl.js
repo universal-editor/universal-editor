@@ -5,7 +5,7 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/components/ueSelect/dropdownItems.html',
+  $templateCache.put('module/components/ueDropdown/dropdownItems.html',
     '\n' +
     '<div data-ng-show="isOpen">\n' +
     '    <div data-ng-class="{&quot;dropdown-scroll&quot; : (lvlDropdown == 1)}">\n' +
