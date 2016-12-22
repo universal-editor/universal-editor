@@ -323,7 +323,9 @@ label {
     height: auto;
     width: auto;
     .context-menu-item {
-        padding: 3px 7px;
+        button {
+            padding: 3px 7px;
+        }
         cursor: pointer;
         &:hover {
             background-color: #eeeded;
@@ -391,7 +393,7 @@ label {
     min-height: 28px;
 }
 
-.field-wrapper-ue-select {
+.field-wrapper-ue-dropdown {
     & select[multiple] {
         min-height: 150px;
     }

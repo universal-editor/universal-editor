@@ -3,11 +3,11 @@
 
     angular
         .module('universal.editor')
-        .controller('UeSelectController', UeSelectController);
+        .controller('UeDropdownController', UeDropdownController);
 
-    UeSelectController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', '$timeout', 'configData', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q'];
+    UeDropdownController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', '$timeout', 'configData', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q'];
 
-    function UeSelectController($rootScope, $scope, EditEntityStorage, RestApiService, $timeout, configData, $document, $element, $window, FilterFieldsStorage, $controller, $q) {
+    function UeDropdownController($rootScope, $scope, EditEntityStorage, RestApiService, $timeout, configData, $document, $element, $window, FilterFieldsStorage, $controller, $q) {
         /* jshint validthis: true */
         var vm = this;
         vm.optionValues = [];
@@ -245,7 +245,7 @@
             }
 
             if (vm.fieldValue.length === 0 && !vm.filterText) {
-                vm.placeholder = $scope.field.placeholder || '';
+                vm.placeholder = componentSettings.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;
             } else {
                 vm.placeholder = '';

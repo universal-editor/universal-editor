@@ -676,7 +676,7 @@ var elementDataSource = {
         {
             name: 'select',
             component: {
-                name: 'ue-select',
+                name: 'ue-dropdown',
                 settings: {
                     label: 'Значения для списка прописаны в конфигурации поля.',
                     values: {
@@ -692,7 +692,7 @@ var elementDataSource = {
         {
             name: 'select_array',
             component: {
-                name: 'ue-select',
+                name: 'ue-dropdown',
                 settings: {
                     label: 'select с данными в конфиге value=array',
                     values: [
@@ -706,7 +706,7 @@ var elementDataSource = {
         {
             name: 'select_array_defaultValue',
             component: {
-                name: 'ue-select',
+                name: 'ue-dropdown',
                 settings: {
                     label: 'select с данными в конфиге value=array, defaultValue = "Variable 1"',
                     values: [
@@ -721,7 +721,7 @@ var elementDataSource = {
         {
             name: 'select_defaultValue',
             component: {
-                name: 'ue-select',
+                name: 'ue-dropdown',
                 settings: {
                     label: 'select с данными в конфиге,  defaultValue = "Variable 1"',
                     values: {
@@ -738,7 +738,7 @@ var elementDataSource = {
         {
             name: 'select_valuesRemote',
             component: {
-                name: 'ue-select',
+                name: 'ue-dropdown',
                 settings: {
                     label: 'select с valuesRemote',
                     valuesRemote: {
@@ -754,7 +754,7 @@ var elementDataSource = {
         {
             name: "select-simple-multiple",
             component: {
-                name: "ue-select",
+                name: "ue-dropdown",
                 settings: {
                     "label": "Множественный режим",
                     "filterable": true,
@@ -772,7 +772,7 @@ var elementDataSource = {
         {
             name: "select-remote-search",
             component: {
-                name: "ue-select",
+                name: "ue-dropdown",
                 settings: {
                     label: "Поиск",
                     filterable: true,
@@ -791,7 +791,7 @@ var elementDataSource = {
         {
             name: "select-remote-tree",
             component: {
-                name: "ue-select",
+                name: "ue-dropdown",
                 settings: {
                     label: "Дерево",
                     valuesRemote: {
@@ -810,7 +810,7 @@ var elementDataSource = {
         {
             name: "select-remote-tree-branch",
             component: {
-                name: "ue-select",
+                name: "ue-dropdown",
                 settings: {
                     label: "Дерево с ветвями",
                     valuesRemote: {
@@ -831,7 +831,7 @@ var elementDataSource = {
         {
             name: "select-remote-tree-multiple",
             component: {
-                name: "ue-select",
+                name: "ue-dropdown",
                 settings: {
                     label: "Множественное дерево",
                     multiple: true,
@@ -853,7 +853,7 @@ var elementDataSource = {
         {
             name: "select-remote-tree-search",
             component: {
-                name: "ue-select",
+                name: "ue-dropdown",
                 settings: {
                     label: "Дерево с поиском",
                     search: true,
@@ -876,7 +876,7 @@ var elementDataSource = {
         {
             name: "select-remote-tree-full",
             component: {
-                name: "ue-select",
+                name: "ue-dropdown",
                 settings: {
                     label: "Множественное дерево с поиском и ветвями",
                     multiple: true,
@@ -1130,7 +1130,7 @@ var staffDataSource = {
         {
             name: "country",
             component: {
-                name: "ue-select",
+                name: "ue-dropdown",
                 settings: {
                     label: 'Страна',
                     valuesRemote: {
@@ -1188,9 +1188,8 @@ var staffDataSource = {
                 name: 'ue-checkbox',
                 settings: {
                     label: "Уволен",
-                    values: {
-                        "1": ""
-                    }
+                    trueValue: 1,
+                    falseValue: 0
                 }
             }
         },
@@ -1232,9 +1231,8 @@ var newsDataSource = {
                 name: 'ue-checkbox',
                 settings: {
                     label: "Опубликовано",
-                    values: {
-                        "1": ""
-                    }
+                    trueValue: 1,
+                    falseValue: 0
                 }
             }
         },
@@ -1250,17 +1248,17 @@ var newsDataSource = {
         {
             name: "category_id",
             component: {
-                name: "ue-select",
+                name: "ue-dropdown",
                 settings: {
                     label: 'Категория',
                     valuesRemote: {
                         fields: {
                             value: "id",
-                            label: "title",
+                            label: "name",
                             "parent": "parent_id",
                             "childCount": "child_count"
                         },
-                        url: "http://universal-backend.dev/rest/v1/news/category?expand=child_count"
+                        url: "http://universal-backend.dev/rest/v1/staff"
                     },
                     search: true,
                     tree: true,
@@ -1700,12 +1698,12 @@ var ue = new UniversalEditor('universal-editor', {
             ]
         },
         {
-            name: 'element',
-            label: 'Элементы',
+            name: 'components',
+            label: 'Компоненты',
             states: [
                 {
                     name: 'index',
-                    url: '/element',
+                    url: '/components',
                     component: {
                         name: 'ue-grid',
                         settings: {
@@ -1797,7 +1795,7 @@ var ue = new UniversalEditor('universal-editor', {
                 },
                 {
                     name: 'edit',
-                    url: '/element/:pk',
+                    url: '/components/:pk',
                     component: {
                         name: 'ue-form',
                         settings: {
