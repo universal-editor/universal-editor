@@ -13,7 +13,7 @@ function UniversalEditor(id, config) {
             configDataProvider.setConfig(moduleName, config); 
         });
 
-        unEditor.append("<div data-ui-view='" + id + "'></div>");
+        unEditor.append("<div data-ui-view='" + moduleName + "'></div>");
         angular.bootstrap(unEditor[0], [moduleName]);
     }
 }

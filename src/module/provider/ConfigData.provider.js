@@ -27,7 +27,6 @@
                 if (hasTrailingSlash) {
                     return path.substr(0, path.length - 1);
                 }
-                return path;
             });
 
             var id = 0;
