@@ -798,3 +798,7 @@ label {
         border: none;
     }
 }
+
+span.glyphicon + .component-wrapper {
+    display: inline-block;
+}

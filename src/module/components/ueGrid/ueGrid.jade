@@ -3,11 +3,11 @@
         component-wrapper(ng-if="vm.filterComponent" data-setting="vm.filterComponent", data-options="vm.options")
         component-wrapper.header-action-button(ng-repeat="button in vm.listHeaderBar track by $index", data-setting="button", data-button-class="header", data-options="vm.options")        
     .groups-action
-        button.btn.btn-sm.btn-default(data-ng-if="vm.parentButton && !vm.entityLoaded && !vm.options.isLoading", data-ng-click="vm.getParent()") {{'BUTTON.HIGHER_LEVEL' | translate}}
+        button.btn.btn-sm.btn-default(data-ng-if="vm.parentButton && !vm.options.isLoading", data-ng-click="vm.getParent()") {{'BUTTON.HIGHER_LEVEL' | translate}}
     .processing-status-wrapper(data-ng-show="vm.request.isProcessing")
         .processing-status {{'PERFORMS_ACTIONS' | translate}}
-
-    table.table.table-bordered(data-ng-hide="vm.entityLoaded || vm.options.isLoading", class="items-list")
+    {{vm.request.isProcessing}}
+    table.table.table-bordered(data-ng-hide="vm.options.isLoading", class="items-list")
         thead
             tr
                 td.actions-header.context-column(ng-if="vm.isContextMenu")
@@ -15,20 +15,23 @@
                 data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'asc' : vm.sortingDirection, 'desc' : !vm.sortingDirection}",
                 data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)") {{fieldItem.displayName}}
         tbody(data-ng-if="vm.listLoaded")
-            tr(data-ng-repeat="item in vm.items", data-ng-class="{'zhs-item' : (vm.entityType !== item[vm.subType]) && item[vm.subType] !== undefined}", data-ng-mousedown="vm.toggleContextViewByEvent(item[vm.idField], $event)", oncontextmenu='return false;')
+            tr(data-ng-repeat="item in vm.items", data-ng-class="{'zhs-item' : item[vm.subType] && item[vm.subType] !== undefined}", data-ng-mousedown="vm.toggleContextViewByEvent(item[vm.idField], $event)", oncontextmenu='return false;')
                 td.context-column(ng-if="vm.isContextMenu")
                     span.context-toggle(data-ng-click="vm.toggleContextView(item[vm.idField])", 
-                                        data-ng-show="(vm.contextLinks.length && (item[vm.subType] == vm.entityType || item[vm.subType] == undefined)) || (vm.mixContextLinks.length && (vm.mixEntityType && item[vm.subType] === vm.mixEntityType))") Toggle buttons
+                                        data-ng-show="(vm.contextLinks.length && (item[vm.subType] || item[vm.subType] == undefined)) || (vm.mixContextLinks.length && vm.mixEntityType)") Toggle buttons
                     .context-menu-wrapper(data-ng-show="vm.contextId == item[vm.idField]" , data-ng-style='vm.styleContextMenu')
-                        .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index", data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)", data-ng-class="{'component-separator': link.separator}")
-                            component-wrapper(data-setting="link", data-entity-id="{{item[vm.idField]}}", 
-                                data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.options")
+                        .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index",
+                                           data-ng-if="item[vm.subType] !== vm.mixEntityType || !vm.isMixMode",
+                                           data-ng-class="{'component-separator': link.separator}")
+                            component-wrapper(data-setting="link", 
+                                              data-entity-id="{{item[vm.idField]}}", 
+                                              data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.options")
                         .context-menu-item(data-ng-repeat="link in vm.mixContextLinks track by $index", data-ng-if="vm.mixEntityType && item[vm.subType] === vm.mixEntityType", data-ng-class="{'component-separator': link.separator}")
                             component-wrapper(data-setting="link", data-entity-id="{{item[vm.idField]}}",
                                 data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.mixOption")
                 td(data-ng-repeat="fieldItem in vm.tableFields track by $index")
                     span.glyphicon(
-                    data-ng-class="{'glyphicon-folder-open icon-mix-mode' : (vm.isMixMode && !((vm.entityType !== item[vm.subType]) && item[vm.subType] !== undefined))}",
+                    data-ng-class="{'glyphicon-folder-open icon-mix-mode' : vm.isMixMode && item[vm.subType] !== vm.mixEntityType}",
                     data-ng-if='vm.prependIcon === fieldItem.field'
                     )
                     component-wrapper(data-setting="fieldItem.component", 

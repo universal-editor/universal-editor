@@ -24,7 +24,9 @@
 
         vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
             $scope.onLoadDataHandler(e, data);
-            vm.equalPreviewValue();
+            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                vm.equalPreviewValue();
+            }
         })); 
 
         //-- private functions

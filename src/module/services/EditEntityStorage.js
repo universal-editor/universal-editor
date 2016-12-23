@@ -11,7 +11,6 @@
         var sourceEntity,
             configuredFields = {},
             fieldControllers = [],
-            entityType,
             entityObject,
             self = this,
             storage = {};
@@ -47,20 +46,6 @@
                 data[parentField] = parent;
             }
             $rootScope.$broadcast("editor:entity_loaded", data);
-        };
-
-        this.setSourceEntity = function(data) {
-            data.editorEntityType = "exist";
-            //$rootScope.$broadcast("editor:component_init", data);
-            $rootScope.$broadcast("editor:entity_loaded", data);
-        };
-
-        this.getEntityType = function() {
-            return entityType;
-        };
-
-        this.setEntityType = function(type) {
-            entityType = type;
         };
 
         this.addFieldController = function(ctrl) {
@@ -145,7 +130,7 @@
                     fCtrl.inputLeave(fCtrl.fieldValue);
                 } else {
                     var flagError = true;
-                    angular.forEach(fCtrl.fieldValue, function(val, index){
+                    angular.forEach(fCtrl.fieldValue, function(val, index) {
                         if (flagError) {
                             fCtrl.inputLeave(val, index);
                             if (fCtrl.error.length !== 0) {
@@ -176,34 +161,25 @@
         };
 
         this.getEntity = function(stateName, entityName) {
-            return configData.entities.filter(function(item) {
-                return item.name === entityType;
-            })[0];
+            return configData;
         };
 
         this.getStateConfig = function(stateName, entityName) {
 
-            entityName = entityName || entityType;
+            entityName = entityName || configData;
             var result = null;
+            var entity = configData;
 
-            if (stateName.indexOf(entityName + '_') !== 0) {
-                stateName = entityName + '_' + stateName;
-            }
-
-            angular.forEach(configData.entities, function(entity) {
-                if (entity.name === entityName) {
-                    angular.forEach(entity.states, function(state) {
-                        if (state.name) {
-                            if (state.name.indexOf(entityName + '_') !== 0) {
-                                state.name = entityName + '_' + state.name;
-                            }
-                            if (state.name === stateName) {
-                                result = state;
-                            }
-                        }
-                    });
+            angular.forEach(configData.states, function(state) {
+                if (state.name) {
+                    if (state.name === stateName) {
+                        result = state;
+                    }
                 }
             });
+            if(!stateName) {
+                return configData.states[0];
+            }
             return result;
         };
 

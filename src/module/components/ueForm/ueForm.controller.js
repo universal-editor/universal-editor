@@ -8,8 +8,7 @@
     UeFormController.$inject = ['$scope', 'configData', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage'];
 
     function UeFormController($scope, configData, RestApiService, $location, $state, $translate, EditEntityStorage) {
-        $scope.entity = RestApiService.getEntityType();
-        var entityObject = RestApiService.getEntityObject();
+        // var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
         var vm = this,
             mixEntityObject;
@@ -26,7 +25,6 @@
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
         vm.idField = 'id';
-        vm.entityType = $scope.entity;
         var defaultEditFooterBar = [
             {
                 component: {
@@ -56,15 +54,13 @@
                 }
             }
         ];
-        if (!vm.options.$parentComponentId) {
-            vm.options = {
-                $parentComponentId: vm.setting.component.$id
-            };
-        }
-        vm.componentState = {
+
+        vm.options = angular.copy(vm.options);
+        angular.merge(vm.options, {
             isLoading: false,
-            $parentComponentId: vm.options.$parentComponentId || vm.setting.component.$id
-        };
+            $parentComponentId: vm.setting.component.$id,
+            $dataSource: vm.setting.component.settings.dataSource
+        });
 
         var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
         var pk = $state.params[pkKey];
@@ -89,7 +85,7 @@
         }
 
         if (vm.editFooterBar.length === 0) {
-            angular.forEach(defaultEditFooterBar, function (control) {
+            angular.forEach(defaultEditFooterBar, function(control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {
                     newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
@@ -150,11 +146,7 @@
                 params.parent = $location.search().parent;
                 isReload = false;
             }
-            var stateIndex = EditEntityStorage.getStateConfig('index', params.type);
-            var request = {
-                url: vm.setting.component.settings.dataSource.url,
-                options: vm.componentState
-            };
+            var stateIndex = EditEntityStorage.getStateConfig();
             var searchString = $location.search();
             $state.go(stateIndex.name, params, { reload: isReload }).then(function() {
                 if (searchString.back) {
@@ -178,13 +170,13 @@
 
         if (pk !== 'new') {
             if (pk) {
-                RestApiService.getItemById(pk, vm.setting.component.settings.dataSource, vm.componentState);
+                RestApiService.getItemById(pk, vm.setting.component.settings.dataSource, vm.options);
             } else if (vm.setting.pk) {
-                RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource, vm.componentState);
+                RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource, vm.options);
             }
         }
 
-        $scope.$on('editor:presave_entity_created', function(event, data) {            
+        $scope.$on('editor:presave_entity_created', function(event, data) {
             vm.entityId = data;
             vm.editorEntityType = "exist";
         });
