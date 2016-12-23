@@ -10,7 +10,7 @@
         <div ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}">
             <div data-ng-repeat="item in vm.optionValues" data-ng-class="{'radiodisabled': vm.readonly}">		
                 <label class="radio">
-                    <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{item[vm.field_id]}}"/><span ng-bind="::item[vm.field_search]"></span>
+                    <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{::item[vm.field_id]}}"/><span ng-bind="::item[vm.field_search]"></span>
                 </label>
             </div>
         </div>
