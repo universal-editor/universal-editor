@@ -341,6 +341,9 @@
                 case 'date':
                     self.minDate = validator.minDate;
                     self.maxDate = validator.maxDate;
+                    self.minView = validator.minView;
+                    self.maxView = validator.maxView;
+                    self.view = validator.view;
                     self.format = validator.format;
                     break;
                 case 'mask':

@@ -85,10 +85,9 @@
         .module('universal.editor')
         .config(universalEditorConfig);
 
-    universalEditorConfig.$inject = ['minicolorsProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$provide', '$injector'];
+    universalEditorConfig.$inject = ['minicolorsProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$provide', '$injector', 'moment'];
 
-    function universalEditorConfig(minicolorsProvider, $httpProvider, $stateProvider, $urlRouterProvider, $provide, $injector) {
-
+    function universalEditorConfig(minicolorsProvider, $httpProvider, $stateProvider, $urlRouterProvider, $provide, $injector, moment) {
         var dataResolver;
 
         angular.extend(minicolorsProvider.defaults, {

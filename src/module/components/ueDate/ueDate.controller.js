@@ -14,11 +14,17 @@
         componentSettings.$fieldType = 'date';
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
+
         vm.addItem = addItem;
         vm.removeItem = removeItem;
-        vm.format = vm.format || 'DD.MM.YYYY';
+
         $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format);
-        $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);       
+        $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);
+
+        vm.format = vm.format || 'DD.MM.YYYY';
+        vm.maxView = vm.maxView || 'year';
+        vm.minView = vm.minView || 'date';
+        vm.view = vm.view || 'date';
 
         vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
             $scope.onLoadDataHandler(e, data);
@@ -27,6 +33,7 @@
             }
         }));
 
+        //-- private functions
         function removeItem(index) {
             if (angular.isArray(vm.fieldValue)) {
                 vm.fieldValue.forEach(function(value, key) {
@@ -54,25 +61,25 @@
                         return;
                     }
                     var tempItem = {};
-                    tempItem[vm.multiname] = moment(valueItem).set({ 'second': 0, 'minute': 0, 'hour': 0 }).format(vm.format);
+                    tempItem[vm.multiname] = moment(valueItem).format(vm.format);
                     wrappedFieldValue.push(tempItem);
                 });
             } else if (vm.multiple) {
                 wrappedFieldValue = [];
                 angular.forEach(vm.fieldValue, function (valueItem) {
-                    wrappedFieldValue.push(moment(valueItem).set({ 'second': 0, 'minute': 0, 'hour': 0 }).format(vm.format));
+                    wrappedFieldValue.push(moment(valueItem).format(vm.format));
                 });
             } else {
                 if (vm.fieldValue === undefined || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
                     wrappedFieldValue = "";
                 } else {
-                    wrappedFieldValue = moment(vm.fieldValue).set({ 'second': 0, 'minute': 0, 'hour': 0 }).format(vm.format);
+                    wrappedFieldValue = moment(vm.fieldValue).format(vm.format);
                 }
             }
 
             if (vm.parentField) {
-                    field[vm.parentField] = {};
-                    field[vm.parentField][vm.fieldName] = wrappedFieldValue;
+                field[vm.parentField] = {};
+                field[vm.parentField][vm.fieldName] = wrappedFieldValue;
             } else {
                 field[vm.fieldName] = wrappedFieldValue;
             }
