@@ -802,3 +802,7 @@ label {
 span.glyphicon + .component-wrapper {
     display: inline-block;
 }
+.tab-content-wrapper .tab-item-content > .component-wrapper {
+    display: inline-block;
+    width: 100%;
+}
