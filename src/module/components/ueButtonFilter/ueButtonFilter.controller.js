@@ -56,7 +56,7 @@
                 }
             }
             $location.search('filter', filterJSON);
-            $rootScope.$broadcast('editor:read_entity', parentComponentId);
+            $rootScope.$broadcast('editor:read_entity', vm.options);
         });
 
         $element.on('$destroy', function() {

@@ -59,9 +59,9 @@
                 };
 
                 /** parse filter objects with operators*/
-                fieldSettings.$parseFilter = function(vm, filterValue) {
-                    var componentSettings = vm.setting.component.settings;
-                    var parentComponentId = vm.parentComponentId;
+                fieldSettings.$parseFilter = function(model, filterValue) {
+                    var componentSettings = model.setting.component.settings;
+                    var parentComponentId = model.parentComponentId;
                     var output = {};
                     angular.forEach(filterValue, function(value, key) {
                         //** delete operators from keys and value property
@@ -75,29 +75,30 @@
                         /** for date is required convert into date-type (at this moment we have two fields of date) */
                         if (field.component.settings.$fieldType === 'date') {
                             output[key] = output[key] || [];
-                            output[key].push(moment.utc(value, vm.format));
+                            output[key].push(moment.utc(value, model.format));
                         } else {
                             output[key] = value;
                         }
                     });
-                    var value = output[vm.fieldName];
+                    var value = output[model.fieldName];
                     if (angular.isArray(value)) {
-                        value = value[vm.options.filterParameters.index];
+                        value = value[model.options.filterParameters.index];
                     }
                     if (field.component.settings.$fieldType === 'array') {
-                            vm.fieldValue = value.split(',');
+                        model.fieldValue = value.split(',');
                     } else {
-                        vm.fieldValue = value;
-                        if (vm.addToSelected && value) {
-                            vm.fieldValue = {};
-                            vm.fieldValue[vm.field_id] = value;
-                            vm.addToSelected(null, vm.fieldValue);
+                        model.fieldValue = value;
+                        if (model.addToSelected && value) {
+                            model.fieldValue = {};
+                            model.fieldValue[model.field_id] = value;
+                            model.addToSelected(null, model.fieldValue);
                         }
                     }
                     $timeout(function() {
                         if (!FilterFieldsStorage.getFilterQueryObject(parentComponentId)) {
                             FilterFieldsStorage.calculate(parentComponentId);
-                            $rootScope.$broadcast('editor:read_entity', vm.parentComponentId);
+                            $rootScope.$broadcast('editor:read_entity', model.options);
+                            vm.visiable = true;
                         }
                     }, 0);
                     return output;

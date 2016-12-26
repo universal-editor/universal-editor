@@ -13,7 +13,6 @@
         var vm = this;
         angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
         var state = vm.setting.component.settings.state;
-        var type = vm.setting.component.settings.type;
         vm.entityId = vm.entityId || 'new';
 
         $element.bind("click", function() {
@@ -25,7 +24,10 @@
                 return;
             }
 
-            var toStateConfig = EditEntityStorage.getStateConfig(state, type);
+            var toStateConfig = EditEntityStorage.getStateConfig(state);
+            if(!toStateConfig) {
+                console.warn('Стейт ' + state + ' не зайден в конфигурационном файле.');
+            }
             var pkKey = 'pk' + EditEntityStorage.getLevelChild(toStateConfig.name);
             var params = {};
             params[pkKey] = vm.entityId;
@@ -37,7 +39,7 @@
                     stateOptions.reload = false;
                 } else {
                     if (!!vm.options && !!vm.options.back) {
-                        searchString.back = vm.options.back;
+                        searchString.back = EditEntityStorage.getStateConfig().name;
                     }
                 }
             }
@@ -48,7 +50,6 @@
                     var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
                     if (pk === 'new' && !ModalService.isModalOpen()) {
                         EditEntityStorage.newSourceEntity(vm.options.$parentComponentId, vm.setting.component.settings.dataSource.parentField);
-                        //EditEntityStorage.newSourceEntity();
                     }
                 }, 0);
             });

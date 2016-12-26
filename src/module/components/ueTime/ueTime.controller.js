@@ -20,20 +20,22 @@
         vm.addItem = addItem;
         vm.removeItem = removeItem;
         $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format);
-        $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);        
+        $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);
 
         vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
             $scope.onLoadDataHandler(e, data);
-            vm.equalPreviewValue();
-        })); 
-        
+            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                vm.equalPreviewValue();
+            }
+        }));
+
         //-- private functions
         function removeItem(index) {
             if (angular.isArray(vm.fieldValue)) {
                 vm.fieldValue.forEach(function(value, key) {
                     if (key == index) {
                         vm.fieldValue.splice(index, 1);
-                    }                    
+                    }
                 });
             }
         }
@@ -42,7 +44,7 @@
             vm.fieldValue.push(moment());
         }
 
-        vm.getFieldValue = function () {
+        vm.getFieldValue = function() {
 
             var field = {};
 
@@ -50,7 +52,7 @@
 
             if (vm.multiname) {
                 wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
+                angular.forEach(vm.fieldValue, function(valueItem) {
                     if (!valueItem || valueItem === "" || !moment.isMoment(valueItem)) {
                         return;
                     }
@@ -60,7 +62,7 @@
                 });
             } else if (vm.multiple) {
                 wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
+                angular.forEach(vm.fieldValue, function(valueItem) {
                     wrappedFieldValue.push(moment(valueItem).format(vm.format));
                 });
             } else {
@@ -72,8 +74,8 @@
             }
 
             if (vm.parentField) {
-                    field[vm.parentField] = {};
-                    field[vm.parentField][vm.fieldName] = wrappedFieldValue;
+                field[vm.parentField] = {};
+                field[vm.parentField][vm.fieldName] = wrappedFieldValue;
             } else {
                 field[vm.fieldName] = wrappedFieldValue;
             }

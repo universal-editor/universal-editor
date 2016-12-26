@@ -40,7 +40,6 @@
                 case 'delete':
                     if(confirm("Удалить запись «" + vm.entityId + "»?")){
                         request.entityId = vm.entityId;
-                        request.entityType = $scope.entityType;
                         request.setting = vm.setting;
                         RestApiService.deleteItemById(request);
                     }

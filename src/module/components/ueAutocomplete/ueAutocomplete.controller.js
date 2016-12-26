@@ -105,14 +105,16 @@
 
 
         vm.listeners.push($scope.$on('editor:entity_loaded', function(event, data) {
-            vm.loadingData = true;
-            $scope.onLoadDataHandler(event, data);
-            componentSettings.$loadingPromise.then(function(optionValues) {
-                vm.optionValues = optionValues;
-                vm.equalPreviewValue();
-            }).finally(function() {
-                vm.loadingData = false;
-            });
+            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                vm.loadingData = true;
+                $scope.onLoadDataHandler(event, data);
+                componentSettings.$loadingPromise.then(function(optionValues) {
+                    vm.optionValues = optionValues;
+                    vm.equalPreviewValue();
+                }).finally(function() {
+                    vm.loadingData = false;
+                });
+            }
         }));
 
         vm.listeners.push($scope.$watch(function() {

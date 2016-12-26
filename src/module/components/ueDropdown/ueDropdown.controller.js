@@ -60,35 +60,38 @@
         //   var destroyEntityLoaded = $scope.$on('editor:entity_loaded', );
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             $scope.onLoadDataHandler(event, data);
-            componentSettings.$loadingPromise.then(function(items) {
-                allOptions = allOptions.length ? allOptions : items;
-                vm.optionValues = [];
-                angular.forEach(allOptions, function(v) {
-                    var v_id = v[vm.field_id];
-                    if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
-                        if (angular.isArray(vm.fieldValue)) {
-                            for (var i = vm.fieldValue.length; i--;) {
-                                if (vm.fieldValue[i] == v_id) {
-                                    vm.fieldValue[i] = v;
-                                    break;
+            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+
+                componentSettings.$loadingPromise.then(function(items) {
+                    allOptions = allOptions.length ? allOptions : items;
+                    vm.optionValues = [];
+                    angular.forEach(allOptions, function(v) {
+                        var v_id = v[vm.field_id];
+                        if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
+                            if (angular.isArray(vm.fieldValue)) {
+                                for (var i = vm.fieldValue.length; i--;) {
+                                    if (vm.fieldValue[i] == v_id) {
+                                        vm.fieldValue[i] = v;
+                                        break;
+                                    }
                                 }
+                            } else if (v_id === vm.fieldValue) {
+                                vm.fieldValue = v;
                             }
-                        } else if (v_id === vm.fieldValue) {
-                            vm.fieldValue = v;
                         }
-                    }
-                    if (vm.isTree) {
-                        if (!v[vm.treeParentField]) {
+                        if (vm.isTree) {
+                            if (!v[vm.treeParentField]) {
+                                vm.optionValues.push(angular.copy(v));
+                            }
+                        } else {
                             vm.optionValues.push(angular.copy(v));
                         }
-                    } else {
-                        vm.optionValues.push(angular.copy(v));
-                    }
+                    });
+                    vm.equalPreviewValue(items);
+                }).finally(function() {
+                    vm.loadingData = false;
                 });
-                vm.equalPreviewValue(items);
-            }).finally(function() {
-                vm.loadingData = false;
-            });
+            }
         });
 
         var destroyWatchFieldValue = $scope.$watch(function() {
@@ -541,8 +544,8 @@
         };
 
         vm.clickSelect = function() {
-            if(!vm.readonly) {
-              $element.find('input')[0].focus();
+            if (!vm.readonly) {
+                $element.find('input')[0].focus();
             }
         };
 

@@ -1,15 +1,15 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('universal.editor')
         .controller('UeGridController', UeGridController);
 
-    UeGridController.$inject = ['$scope', '$rootScope', 'configData', 'RestApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', 'ConfigDataProvider', '$element', '$compile', 'EditEntityStorage'];
+    UeGridController.$inject = ['$scope', '$rootScope', 'configData', 'RestApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', '$element', '$compile', 'EditEntityStorage'];
 
-    function UeGridController($scope, $rootScope, configData, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, ConfigDataProvider, $element, $compile, EditEntityStorage) {
+    function UeGridController($scope, $rootScope, configData, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage) {
         $element.addClass('ue-grid');
-        $scope.entity = RestApiService.getEntityType();
+        //$scope.entity = RestApiService.getEntityType();
         /* jshint validthis: true */
         var vm = this,
             itemsKey,
@@ -19,7 +19,6 @@
 
         vm.configData = configData;
         vm.correctEntityType = true;
-        vm.entityLoaded = false;
         vm.listLoaded = false;
         vm.loadingData = true;
         vm.tableFields = [];
@@ -42,9 +41,10 @@
 
         vm.options = {
             $parentComponentId: vm.$parentComponentId,
+            $gridComponentId: vm.$parentComponentId,
             mixedMode: vm.setting.component.settings.mixedMode,
             sort: vm.setting.component.settings.dataSource.sortBy,
-            back: $scope.entity,
+            back: configData,
             isGrid: true
         };
         vm.mixOption = angular.merge({}, vm.options);
@@ -82,16 +82,16 @@
         vm.visibleFilter = true;
         vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty("pagination") ? vm.setting.component.settings.dataSource.pagination : true;
         vm.autoCompleteFields = [];
-        vm.entityType = vm.setting.component.settings.entityType || $scope.entity;
+        vm.entityType = vm.setting.component.settings.entityType || configData;
         vm.parent = null;
         vm.paginationData = [];
         vm.isMixMode = !!vm.setting.component.settings.mixedMode;
         if (vm.isMixMode) {
             vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
-            vm.mixEntityType = vm.setting.component.settings.mixedMode.entityType;
+            vm.entityType = vm.setting.component.settings.mixedMode.entityType;
             vm.subType = vm.setting.component.settings.mixedMode.fieldType;
 
-            angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function (value) {
+            angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
                 var newValue = angular.merge({}, value);
                 newValue.url = vm.setting.component.settings.mixedMode.dataSource.url;
                 newValue.parentField = parentField;
@@ -105,6 +105,7 @@
             parentField: parentField,
             url: url
         };
+        vm.request.options.$dataSource = vm.setting.component.settings.dataSource;
 
         // if (vm.setting.headComponent) {
         var parentEntity = $location.search().parent;
@@ -142,7 +143,7 @@
                         }
                     };
 
-                } 
+                }
                 if (tableField) {
                     vm.tableFields.push(tableField);
                 }
@@ -156,7 +157,7 @@
             }
         });
 
-        angular.forEach(vm.setting.component.settings.contextMenu, function (value) {
+        angular.forEach(vm.setting.component.settings.contextMenu, function(value) {
             var newValue = angular.merge({}, value);
             newValue.url = url;
             newValue.parentField = parentField;
@@ -165,7 +166,7 @@
         });
 
         if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.controls) {
-            angular.forEach(vm.setting.component.settings.header.controls, function (control) {
+            angular.forEach(vm.setting.component.settings.header.controls, function(control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {
                     newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
@@ -176,7 +177,7 @@
         }
 
         if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
-            angular.forEach(vm.setting.component.settings.footer.controls, function (control) {
+            angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
                 var newControl = angular.merge({}, control);
                 if (angular.isUndefined(newControl.component.settings.dataSource)) {
                     newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
@@ -188,18 +189,12 @@
 
         vm.sortField = vm.setting.component.settings.dataSource.sortBy || vm.tableFields[0].field;
 
-        vm.getScope = function () {
+        vm.getScope = function() {
             return $scope;
         };
 
-        vm.setTabVisible = function (index, value) {
+        vm.setTabVisible = function(index, value) {
             vm.tabsVisibility[index] = value;
-        };
-
-        vm.closeEditor = function () {
-            $scope.$apply(function () {
-                vm.entityLoaded = false;
-            });
         };
 
         vm.changeSortField = function(field, sorted) {
@@ -221,27 +216,23 @@
         };
 
 
-        vm.getParent = function () {
+        vm.getParent = function() {
             vm.request.childId = vm.parent;
             vm.request.parentField = parentField;
             vm.request.headComponent = vm.setting.headComponent;
             RestApiService.loadParent(vm.request);
         };
 
-        $scope.$on('editor:parent_id', function (event, data) {
+        $scope.$on('editor:parent_id', function(event, data) {
             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
                 vm.parent = data.parentId;
             }
         });
 
-        vm.toggleFilterVisibility = function () {
-            if (!vm.entityLoaded) {
-                vm.visibleFilter = !vm.visibleFilter;
-            }
-        };
 
-        $scope.$on('editor:read_entity', function (event, parentComponentId) {
-            if (parentComponentId === vm.options.$parentComponentId) {
+        $scope.$on('editor:read_entity', function(event, data) {
+            var eventComponentId = data.$gridComponentId || data.$parentComponentId || data;
+            if (vm.$parentComponentId === eventComponentId) {
                 var parentEntity = $location.search().parent;
                 if (parentEntity) {
                     parentEntity = JSON.parse(parentEntity);
@@ -252,13 +243,32 @@
             }
         });
 
-        $scope.$on('editor:items_list', function (event, data) {
+        $scope.$on('editor:update_item', function(event, data) {
+            var eventComponentId = data.$gridComponentId || data.$parentComponentId ;
+            if (!eventComponentId || (vm.$parentComponentId === eventComponentId && data.value)) {
+                var changed = false;
+                vm.items.filter(function(item) {
+                    if(item[vm.idField] === data.value[vm.idField]) {
+                        angular.merge(item, data.value);
+                        changed = true;
+                    }
+                });
+                if(changed) {
+                    var list = {};
+                    list[itemsKey] = vm.items;
+                $rootScope.$broadcast('editor:items_list', list);
+                }
+            }
+        });
+
+        $scope.$on('editor:items_list', function(event, data) {
             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+                debugger;
 
                 vm.listLoaded = true;
                 vm.items = data[itemsKey];
-                if (angular.isArray(vm.items)) {
-                    vm.items.forEach(function(item, index) {
+                if (angular.isObject(vm.items)) {
+                    angular.forEach(vm.items, function(item, index) {
                         item.$options = {
                             $parentComponentId: vm.$parentComponentId,
                             regim: 'preview',
@@ -275,22 +285,21 @@
                     $rootScope.$broadcast("editor:entity_loaded", eventObject);
                 });
 
-                vm.entityLoaded = false;
                 vm.parentButton = !!vm.parent;
                 vm.pageItemsArray = [];
 
-                angular.forEach(vm.listFooterBar, function (control) {
+                angular.forEach(vm.listFooterBar, function(control) {
                     control.paginationData = data;
                 });
             }
         });
 
-        $scope.$on('editor:server_error', function (event, data) {
+        $scope.$on('editor:server_error', function(event, data) {
             vm.errors.push(data);
         });
 
-        $scope.$on('editor:parent_childs', function (event, data) {
-            angular.forEach(vm.items, function (item, ind) {
+        $scope.$on('editor:parent_childs', function(event, data) {
+            angular.forEach(vm.items, function(item, ind) {
 
                 var startInd = 1;
                 if (item[vm.idField] === data.id) {
@@ -299,7 +308,7 @@
                         vm.items.splice(ind + 1, data.childs.length);
                     } else {
                         item.isExpand = true;
-                        angular.forEach(data.childs, function (newItem) {
+                        angular.forEach(data.childs, function(newItem) {
                             if (vm.items[ind].hasOwnProperty.parentPadding) {
                                 newItem.parentPadding = vm.items[ind].parentPadding + 1;
                             } else {
@@ -313,21 +322,21 @@
             });
         });
 
-        $scope.$on('editor:entity_success_deleted', function (event, data) {
+        $scope.$on('editor:entity_success_deleted', function(event, data) {
         });
 
-        $scope.$on('editor:field_error', function (event, data) {
+        $scope.$on('editor:field_error', function(event, data) {
             vm.errors.push(data);
         });
 
-        $scope.$on('editor:request_start', function (event, data) {
+        $scope.$on('editor:request_start', function(event, data) {
             vm.errors = [];
             vm.notifys = [];
         });
 
-        $document.on('click', function (evt) {
+        $document.on('click', function(evt) {
             if (!angular.element(evt.target).hasClass('context-toggle')) {
-                $timeout(function () {
+                $timeout(function() {
                     vm.contextId = undefined;
                 }, 0);
             }
@@ -335,7 +344,7 @@
 
 
         function isInTableFields(name) {
-            var index = vm.tableFields.findIndex(function (field) {
+            var index = vm.tableFields.findIndex(function(field) {
                 return field.field === name;
             });
 
@@ -357,7 +366,7 @@
          }
          };*/
 
-        vm.$onInit = function () {
+        vm.$onInit = function() {
             RestApiService.setFilterParams({});
             vm.request.childId = vm.parent;
             vm.request.options = vm.options;
@@ -366,7 +375,7 @@
             RestApiService.getItemsList(vm.request);
         };
 
-        vm.toggleContextView = function (id) {
+        vm.toggleContextView = function(id) {
             vm.styleContextMenu = {};
             if (vm.contextId == id) {
                 vm.contextId = undefined;
@@ -375,7 +384,7 @@
             }
         };
 
-        vm.toggleContextViewByEvent = function (id, event) {
+        vm.toggleContextViewByEvent = function(id, event) {
             var left = event.pageX - $element.find('table')[0].offsetLeft;
             if (event.which === 3) {
                 vm.styleContextMenu = {

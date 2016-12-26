@@ -8,8 +8,7 @@
     RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate'];
 
     function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate) {
-        var entityType,
-            self = this,
+        var self = this,
             queryTempParams,
             filterParams,
             itemsKey,
@@ -23,17 +22,8 @@
         self.editedEntityId = null;
 
         $rootScope.$on('editor:set_entity_type', function(event, type) {
-            //filterParams = undefined;
             entityObject = type;
-            //itemsKey = "items";
-            //entityObject = configData.entities.filter(function (item) {
-            //    return item.name === entityType;
-            //})[0];
-            //mixEntity = self.getMixModeByEntity();
             itemsKey = "items";
-            //if (angular.isDefined(entityObject.backend.keys)) {
-            //   itemsKey = entityObject.backend.keys.items || itemsKey;
-            //}
         });
 
         $rootScope.$on('editor:create_entity', function(event, request) {
@@ -88,6 +78,7 @@
             //** cancel previouse request if request start again 
             var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
             request.options.isLoading = true;
+            var dataSource = request.options.$dataSource;
 
             var deferred = $q.defer();
 
@@ -99,7 +90,6 @@
             if (!!request.options && request.options.sort !== undefined) {
                 params.sort = request.options.sort;
             }
-            //  request.options.queryTempParams = params;
 
             var id = request.options.$parentComponentId;
             var filters = FilterFieldsStorage.getFilterQueryObject(id);
@@ -128,7 +118,7 @@
                 });
             }
 
-            if (entityObject.dataSource.hasOwnProperty("parentField")) {
+            if (dataSource.hasOwnProperty("parentField")) {
                 params = params || {};
 
                 if (!params.hasOwnProperty("filter")) {
@@ -136,10 +126,10 @@
                 }
             }
 
-            if (entityObject.dataSource.hasOwnProperty("sortBy") && !params.hasOwnProperty(entityObject.dataSource.sortBy) && !params.sort) {
+            if (dataSource.hasOwnProperty("sortBy") && !params.hasOwnProperty(dataSource.sortBy) && !params.sort) {
                 params = params || {};
                 angular.extend(params, {
-                    sort: entityObject.dataSource.sortBy
+                    sort: dataSource.sortBy
                 });
             }
 
@@ -149,7 +139,7 @@
 
             var expandFields = [];
 
-            angular.forEach(entityObject.dataSource.fields, function(field) {
+            angular.forEach(dataSource.fields, function(field) {
                 if (field.hasOwnProperty("expandable") && field.expandable === true) {
                     expandFields.push(field.name);
                 }
@@ -171,11 +161,9 @@
                 }
                 response.data.$parentComponentId = request.options.$parentComponentId;
                 $rootScope.$broadcast('editor:items_list', response.data);
+                deferred.resolve(response.data);
+            }).finally(function() {
                 request.options.isLoading = false;
-                deferred.resolve();
-            }, function(reject) {
-                request.options.isLoading = false;
-                deferred.reject();
             });
 
             return deferred.promise;
@@ -194,8 +182,10 @@
             if (request.options.isLoading) {
                 return;
             }
+            var dataSource = request.options.$dataSource;
 
-            var parentField = entityObject.dataSource.fields.parent;
+
+            var parentField = dataSource.fields.parent;
             if (parentField && $location.search().parent) {
                 //-- проверяю редактируется ли поле parentField в форме. Если да, то его не нужно извлекать из адреса.
                 var isNotEditableParentField = !$document[0].querySelector(".field-wrapper [name='" + parentField + "']");
@@ -207,12 +197,12 @@
             request.options.isLoading = true;
             var params = {};
             var _method = 'POST';
-            var _url = entityObject.dataSource.url;
+            var _url = dataSource.url;
             var idField = 'id';
-            var type = entityType;
+            var state = EditEntityStorage.getStateConfig().name;
 
-            if (entityObject.dataSource.hasOwnProperty('fields')) {
-                idField = entityObject.dataSource.fields.primaryKey || idField;
+            if (dataSource.hasOwnProperty('fields')) {
+                idField = dataSource.fields.primaryKey || idField;
             }
             $http({
                 method: request.method || _method,
@@ -234,11 +224,11 @@
                     params.parent = $location.search().parent;
                 }
                 if ($location.search().back) {
-                    params.type = $location.search().back;
-                    type = $location.search().back;
+                    params.state = $location.search().back;
+                    state = $location.search().back;
                 }
                 if (!ModalService.isModalOpen()) {
-                    $state.go(type + '_index', params).then(function() {
+                    $state.go(state, params).then(function() {
                         $location.search(params);
                         $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
                     });
@@ -268,12 +258,14 @@
             if (request.options.isLoading) {
                 return;
             }
+            var dataSource = request.options.$dataSource;
 
             request.options.isLoading = true;
             var params = {};
             var _method = 'PUT';
-            var _url = entityObject.dataSource.url + '/' + self.editedEntityId;
-            var type = entityType;
+
+            var _url = dataSource.url + '/' + self.editedEntityId;
+            var state = EditEntityStorage.getStateConfig().name;
             var idField = 'id';
 
             $http({
@@ -296,10 +288,10 @@
                 }
                 if ($location.search().back) {
                     params.type = $location.search().back;
-                    type = $location.search().back;
+                    state = $location.search().back;
                 }
                 if (!ModalService.isModalOpen()) {
-                    $state.go(type + '_index', params).then(function() {
+                    $state.go(state, params).then(function() {
                         $location.search(params);
                         $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
                     });
@@ -333,19 +325,20 @@
             if (request.options.isLoading) {
                 return;
             }
+            var dataSource = request.options.$dataSource;
 
             request.options.isLoading = true;
 
             if (self.editedEntityId !== '') {
-                _url = entityObject.dataSource.url + '/' + self.editedEntityId;
+                _url = dataSource.url + '/' + self.editedEntityId;
                 _method = 'PUT';
                 isCreate = false;
             } else {
-                _url = entityObject.dataSource.url;
+                _url = dataSource.url;
             }
 
-            if (entityObject.dataSource.hasOwnProperty('fields')) {
-                idField = entityObject.dataSource.fields.primaryKey || idField;
+            if (dataSource.hasOwnProperty('fields')) {
+                idField = dataSource.fields.primaryKey || idField;
             }
 
             $http({
@@ -360,7 +353,10 @@
                 var searchString = $location.search();
                 $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                     $location.search(searchString);
-                    $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                    $rootScope.$broadcast('editor:update_item', {
+                        $gridComponentId: request.options.$gridComponentId,
+                        value: response.data
+                    });
                 });
                 var data = {
                     id: newId,
@@ -393,43 +389,42 @@
         };
 
         this.getItemById = function(id, par, options) {
+            var qParams = {},
+                expandFields = [],
+                expandParam = "",
+                dataSource = options.$dataSource || entityObject.dataSource;
 
-            var qParams = {};
             options.isLoading = true;
-
-            var expandFields = [];
-            var expandParam = "";
-
-            angular.forEach(entityObject.dataSource.fields, function(field) {
+            angular.forEach(dataSource.fields, function(field) {
                 if (field.hasOwnProperty("expandable") && field.expandable === true) {
                     expandFields.push(field.name);
                 }
             });
-
-
             if (expandFields.length > 0) {
                 qParams.expand = expandFields.join(',');
             }
 
             $http({
                 method: 'GET',
-                url: entityObject.dataSource.url + '/' + id,
+                url: dataSource.url + '/' + id,
                 params: qParams
             }).then(function(response) {
-                options.isLoading = false;
-                response.data.$parentComponentId = options.$parentComponentId;
-                EditEntityStorage.setSourceEntity(response.data);
-            }, function(reject) {
+                var data = response.data;
+                data.$parentComponentId = options.$parentComponentId;
+                data.editorEntityType = "exist";
+                $rootScope.$broadcast("editor:entity_loaded", data);
+            }).finally(function() {
                 options.isLoading = false;
             });
         };
 
         this.deleteItemById = function(request) {
+            var state = EditEntityStorage.getStateConfig().name;
             if (request.options.isLoading) {
                 return;
             }
-            var url = entityObject.dataSource.url;
-            var type = entityType;
+            var dataSource = request.options.$dataSource;
+            var url = dataSource.url;
 
             if (request.options.isMix) {
                 url = request.options.mixedMode.dataSource.url;
@@ -440,13 +435,6 @@
 
             if (request.setting.buttonClass === 'edit') {
                 _url = url.replace(':pk', request.entityId);
-            }
-
-            if (request.type === 'mix') {
-                var config = configData.entities.filter(function(item) {
-                    return item.name === mixEntity.entity;
-                })[0];
-                _url = config.dataSource.url + '/' + request.entityId;
             }
 
             return $http({
@@ -465,11 +453,11 @@
                 }
                 if ($location.search().back) {
                     params.type = $location.search().back;
-                    type = $location.search().back;
+                    state = $location.search().back;
                 }
 
                 if (!ModalService.isModalOpen()) {
-                    $state.go(type + '_index', params).then(function() {
+                    $state.go(state, params).then(function() {
                         $location.search(params);
                         $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
                     });
@@ -610,7 +598,6 @@
             $rootScope.$broadcast('editor:parent_id', data);
             request.childId = request.id;
             self.getItemsList(request).then(function() {
-                // if (request.headComponent) {
                 parent = $location.search().parent;
                 if (parent) {
                     parent = JSON.parse(parent);
@@ -621,7 +608,6 @@
                 }
                 var parentJSON = parent ? JSON.stringify(parent) : null;
                 $location.search("parent", parentJSON);
-                //  }
             });
         };
 
@@ -685,36 +671,8 @@
             }
         };
 
-        this.setEntityType = function(type) {
-            entityType = type;
-            //entityObject = configData.entities.filter(function (item) {
-            //    return item.name === entityType;
-            //})[0];
-            //mixEntity = self.getMixModeByEntity();
-        };
-
-        this.getEntityType = function() {
-            return entityType;
-        };
-
         this.getEntityObject = function() {
             return entityObject;
-        };
-
-        this.getMixModeByEntity = function() {
-            var mixMode = {};
-            mixMode.existence = false;
-            if (configData.hasOwnProperty("mixedMode")) {
-                angular.forEach(configData.mixedMode, function(item) {
-                    if (item.entities[0] == entityType) {
-                        mixMode.existence = true;
-                        mixMode.entity = item.entities[1];
-                        mixMode.entityTypeName = item.fields.type;
-                        mixMode.prependIcon = item.fields.prependIcon;
-                    }
-                });
-            }
-            return mixMode;
         };
     }
 })();

@@ -262,7 +262,7 @@
                     }
 
 
-                    if (data.editorEntityType === "new") {
+                    if (data.editorEntityType === "new" && self.regim !== 'preview') {
 
                         if (!!self.newEntityLoaded) {
                             self.newEntityLoaded();

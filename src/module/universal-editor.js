@@ -6,11 +6,15 @@
  */
 function UniversalEditor(id, config) {
     'use strict';
-
-    var app = angular.module('universal.editor');
-    var configData = config;
+    var moduleName = 'unEditor-' + id;
     var unEditor = $('#' + id);
-    unEditor.append("<div data-ui-view=''></div>");
-    app.constant('configData', config);
-    angular.bootstrap(unEditor[0], ["unEditor"]);
+    if (unEditor[0]) {
+        var app = angular.module(moduleName, ['universal.editor', 'ui.bootstrap']).config(function($stateProvider, $urlRouterProvider, $injector, configDataProvider) {
+            configDataProvider.setConfig(moduleName, config); 
+        });
+
+        unEditor.append("<div data-ui-view='" + moduleName + "'></div>");
+        angular.bootstrap(unEditor[0], [moduleName]);
+    }
 }
+

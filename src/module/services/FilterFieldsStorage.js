@@ -8,8 +8,7 @@
     FilterFieldsStorage.$inject = ['$rootScope', '$timeout', 'configData'];
 
     function FilterFieldsStorage($rootScope, $timeout, configData) {
-        var entityType,
-            storage = {},
+        var storage = {},
             queryObject = [],
             srvc = this,
             filterSearchString;
@@ -85,9 +84,5 @@
         function getFilterQueryObject(id) {
             return queryObject[id];
         }
-
-        $rootScope.$on('editor:set_entity_type', function(event, type) {
-            entityType = type;
-        });
     }
 })();

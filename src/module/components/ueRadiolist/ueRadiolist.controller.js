@@ -18,17 +18,19 @@
         angular.extend(vm, baseController);
         var componentSettings = vm.setting.component.settings;
 
-         vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+        vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
             $scope.onLoadDataHandler(e, data);
-             componentSettings.$loadingPromise.then(function(optionValues) {
-                vm.optionValues = optionValues;
-                vm.equalPreviewValue();
-            }).finally(function() {
-                vm.loadingData = false;
-            });
+            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                componentSettings.$loadingPromise.then(function(optionValues) {
+                    vm.optionValues = optionValues;
+                    vm.equalPreviewValue();
+                }).finally(function() {
+                    vm.loadingData = false;
+                });
+            }
         }));
 
-        function newEntityLoaded(){
+        function newEntityLoaded() {
             vm.fieldValue = vm.setting.component.settings.defaultValue || null;
         }
     }
