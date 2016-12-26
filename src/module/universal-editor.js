@@ -10,10 +10,10 @@ function UniversalEditor(id, config) {
     var unEditor = $('#' + id);
     if (unEditor[0]) {
         var app = angular.module(moduleName, ['universal.editor', 'ui.bootstrap']).config(function($stateProvider, $urlRouterProvider, $injector, configDataProvider) {
-            configDataProvider.setConfig(moduleName, config); 
+            configDataProvider.setConfig(id, config); 
         });
 
-        unEditor.append("<div data-ui-view='" + moduleName + "'></div>");
+        unEditor.append("<div class='u-editors' data-ui-view='" + id + "'></div>");
         angular.bootstrap(unEditor[0], [moduleName]);
     }
 }
