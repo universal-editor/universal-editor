@@ -3,8 +3,8 @@
 
     var ueAutocomplete = {
         bindings : {
-            setting: '=',
-            options: '='
+            setting: '<',
+            options: '<'
         },
         template : ['$templateCache', function ($templateCache) {
             return $templateCache.get('module/components/ueAutocomplete/ueAutocomplete.html');

@@ -1,9 +1,9 @@
 
 <div>
-    <button data-ng-class="{ processing : vm.options.isLoading}" data-ng-if="vm.setting.buttonClass == 'header'" class="btn btn-lg btn-create btn-success">{{vm.label}}
+    <button data-ng-class="{ processing : vm.options.isLoading}" data-ng-if="vm.setting.buttonClass == 'header'" class="btn btn-lg btn-create btn-success">{{::vm.label}}
         <div data-ng-show="vm.options.isLoading" class="loader-search-wrapper">
             <div class="loader-search">{{'LOADING' | translate}}</div>
         </div>
     </button>
-    <button data-ng-if="vm.setting.buttonClass == 'context'" class="editor-action-button">{{vm.label}}</button>
+    <button data-ng-if="vm.setting.buttonClass == 'context'" class="editor-action-button">{{::vm.label}}</button>
 </div>

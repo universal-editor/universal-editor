@@ -6,7 +6,7 @@
     <div ng-if="!vm.templates.preview &amp;&amp; vm.regim === 'preview'" class="component-preview"> 
         <div data-ng-show="vm.loadingData" class="loader-search-wrapper">
             <div class="loader-search">{{'LOADING' | translate}}</div>
-        </div><span ng-bind="vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>
+        </div><span ng-bind="::vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>
         <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData" ng-if="vm.multiple"><span ng-bind="value"></span></div>
     </div>
     <div ng-if="!vm.options.filter" class="field-error-wrapper">

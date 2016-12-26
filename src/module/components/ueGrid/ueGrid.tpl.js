@@ -30,10 +30,10 @@ module.run(['$templateCache', function($templateCache) {
     '                <td ng-if="vm.isContextMenu" class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="(vm.contextLinks.length &amp;&amp; (item[vm.subType] || item[vm.subType] == undefined)) || (vm.mixContextLinks.length &amp;&amp; vm.mixEntityType)" class="context-toggle">Toggle buttons</span>\n' +
     '                    <div data-ng-show="vm.contextId == item[vm.idField]" data-ng-style="vm.styleContextMenu" class="context-menu-wrapper">\n' +
     '                        <div data-ng-repeat="link in vm.contextLinks track by $index" data-ng-if="item[vm.subType] !== vm.mixEntityType || !vm.isMixMode" data-ng-class="{\'component-separator\': link.separator}" class="context-menu-item">\n' +
-    '                            <component-wrapper data-setting="link" data-entity-id="{{item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}" data-options="vm.options"></component-wrapper>\n' +
+    '                            <component-wrapper data-setting="link" data-entity-id="{{::item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}" data-options="vm.options"></component-wrapper>\n' +
     '                        </div>\n' +
     '                        <div data-ng-repeat="link in vm.mixContextLinks track by $index" data-ng-if="vm.mixEntityType &amp;&amp; item[vm.subType] === vm.mixEntityType" data-ng-class="{\'component-separator\': link.separator}" class="context-menu-item">\n' +
-    '                            <component-wrapper data-setting="link" data-entity-id="{{item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}" data-options="vm.mixOption"></component-wrapper>\n' +
+    '                            <component-wrapper data-setting="link" data-entity-id="{{::item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}" data-options="vm.mixOption"></component-wrapper>\n' +
     '                        </div>\n' +
     '                    </div>\n' +
     '                </td>\n' +
@@ -49,7 +49,6 @@ module.run(['$templateCache', function($templateCache) {
     '            <tr>\n' +
     '                <td colspan="{{vm.tableFields.length + vm.isContextMenu}}">\n' +
     '                    <component-wrapper data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component" data-options="vm.options"></component-wrapper>\n' +
-    '                    <!--ue-pagination(data-data="vm.paginationData")-->\n' +
     '                </td>\n' +
     '            </tr>\n' +
     '        </tfoot>\n' +

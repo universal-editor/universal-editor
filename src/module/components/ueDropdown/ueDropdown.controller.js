@@ -613,15 +613,6 @@
 
             $scope.isOpen = false;
 
-            $document.on('click', function(event) {
-                if (!$element[0].contains(event.target)) {
-                    $scope.$apply(function() {
-                        $scope.vm.isBlur();
-                    });
-
-                }
-            });
-
             $scope.toggleDropdown = function() {
                 $element.find('input')[0].focus();
                 var dHeight = $document.height();

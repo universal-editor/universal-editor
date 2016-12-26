@@ -6,8 +6,8 @@
             return $templateCache.get('module/components/ueButtonFilter/ueButtonFilter.html');
         }],
         bindings : {
-            setting: '=',
-            options: '='
+            setting: '<',
+            options: '<'
         },
         controller : 'UeButtonFilterController',
         controllerAs : 'vm'

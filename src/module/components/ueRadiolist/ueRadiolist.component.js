@@ -3,7 +3,7 @@
 
     var ueRadiolist = {
          bindings : {
-            setting: '=',
+            setting: '<',
             options: '='
         },
         template : ['$templateCache', function ($templateCache) {

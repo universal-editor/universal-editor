@@ -24,10 +24,10 @@
                                            data-ng-if="item[vm.subType] !== vm.mixEntityType || !vm.isMixMode",
                                            data-ng-class="{'component-separator': link.separator}")
                             component-wrapper(data-setting="link", 
-                                              data-entity-id="{{item[vm.idField]}}", 
+                                              data-entity-id="{{::item[vm.idField]}}", 
                                               data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.options")
                         .context-menu-item(data-ng-repeat="link in vm.mixContextLinks track by $index", data-ng-if="vm.mixEntityType && item[vm.subType] === vm.mixEntityType", data-ng-class="{'component-separator': link.separator}")
-                            component-wrapper(data-setting="link", data-entity-id="{{item[vm.idField]}}",
+                            component-wrapper(data-setting="link", data-entity-id="{{::item[vm.idField]}}",
                                 data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.mixOption")
                 td(data-ng-repeat="fieldItem in vm.tableFields track by $index")
                     span.glyphicon(
@@ -44,4 +44,3 @@
             tr
                 td(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
                     component-wrapper(data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component", data-options="vm.options")
-                    //ue-pagination(data-data="vm.paginationData")
