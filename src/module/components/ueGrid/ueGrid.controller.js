@@ -88,7 +88,7 @@
         vm.isMixMode = !!vm.setting.component.settings.mixedMode;
         if (vm.isMixMode) {
             vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
-            vm.mixEntityType = vm.setting.component.settings.mixedMode.mixEntityType;
+            vm.entityType = vm.setting.component.settings.mixedMode.entityType;
             vm.subType = vm.setting.component.settings.mixedMode.fieldType;
 
             angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {

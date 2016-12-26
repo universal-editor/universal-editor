@@ -27,17 +27,17 @@ module.run(['$templateCache', function($templateCache) {
     '        </thead>\n' +
     '        <tbody data-ng-if="vm.listLoaded">\n' +
     '            <tr data-ng-repeat="item in vm.items" data-ng-class="{\'zhs-item\' : item[vm.subType] &amp;&amp; item[vm.subType] !== undefined}" data-ng-mousedown="vm.toggleContextViewByEvent(item[vm.idField], $event)" oncontextmenu="return false;">\n' +
-    '                <td ng-if="vm.isContextMenu" class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="(vm.contextLinks.length &amp;&amp; (item[vm.subType] || item[vm.subType] == undefined)) || (vm.mixContextLinks.length &amp;&amp; vm.mixEntityType)" class="context-toggle">Toggle buttons</span>\n' +
+    '                <td ng-if="vm.isContextMenu" class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="(vm.contextLinks.length &amp;&amp; (item[vm.subType] || item[vm.subType] == undefined)) || (vm.mixContextLinks.length &amp;&amp; vm.entityType)" class="context-toggle">Toggle buttons</span>\n' +
     '                    <div data-ng-show="vm.contextId == item[vm.idField]" data-ng-style="vm.styleContextMenu" class="context-menu-wrapper">\n' +
-    '                        <div data-ng-repeat="link in vm.contextLinks track by $index" data-ng-if="item[vm.subType] !== vm.mixEntityType || !vm.isMixMode" data-ng-class="{\'component-separator\': link.separator}" class="context-menu-item">\n' +
+    '                        <div data-ng-repeat="link in vm.contextLinks track by $index" data-ng-if="item[vm.subType] !== vm.entityType || !vm.isMixMode" data-ng-class="{\'component-separator\': link.separator}" class="context-menu-item">\n' +
     '                            <component-wrapper data-setting="link" data-entity-id="{{::item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}" data-options="vm.options"></component-wrapper>\n' +
     '                        </div>\n' +
-    '                        <div data-ng-repeat="link in vm.mixContextLinks track by $index" data-ng-if="vm.mixEntityType &amp;&amp; item[vm.subType] === vm.mixEntityType" data-ng-class="{\'component-separator\': link.separator}" class="context-menu-item">\n' +
+    '                        <div data-ng-repeat="link in vm.mixContextLinks track by $index" data-ng-if="vm.entityType &amp;&amp; item[vm.subType] === vm.entityType" data-ng-class="{\'component-separator\': link.separator}" class="context-menu-item">\n' +
     '                            <component-wrapper data-setting="link" data-entity-id="{{::item[vm.idField]}}" data-button-class="context" data-scope-id-parent="{{vm.scopeIdParent}}" data-options="vm.mixOption"></component-wrapper>\n' +
     '                        </div>\n' +
     '                    </div>\n' +
     '                </td>\n' +
-    '                <td data-ng-repeat="fieldItem in vm.tableFields track by $index"><span data-ng-class="{\'glyphicon-folder-open icon-mix-mode\' : vm.isMixMode &amp;&amp; item[vm.subType] !== vm.mixEntityType}" data-ng-if="vm.prependIcon === fieldItem.field" class="glyphicon"></span>\n' +
+    '                <td data-ng-repeat="fieldItem in vm.tableFields track by $index"><span data-ng-class="{\'glyphicon-folder-open icon-mix-mode\' : vm.isMixMode &amp;&amp; item[vm.subType] !== vm.entityType}" data-ng-if="vm.prependIcon === fieldItem.field" class="glyphicon"></span>\n' +
     '                    <component-wrapper data-setting="fieldItem.component" data-options="item.$options" ng-style="{\'padding-left\': (item.parentPadding || 0) * 10 + \'px\'}"></component-wrapper>\n' +
     '                </td>\n' +
     '            </tr>\n' +
