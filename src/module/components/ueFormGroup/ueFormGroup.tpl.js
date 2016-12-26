@@ -10,8 +10,8 @@ module.run(['$templateCache', function($templateCache) {
     '<div class="editor-field-array">\n' +
     '    <label ng-if="!vm.options.filter &amp;&amp; !!vm.label" class="field-name-label">\n' +
     '        <div data-ng-if="!!vm.hint" class="field-hint">\n' +
-    '            <div ng-bind="vm.hint" class="hint-text"></div>\n' +
-    '        </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="vm.label"></span>\n' +
+    '            <div ng-bind="::vm.hint" class="hint-text"></div>\n' +
+    '        </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="::vm.label"></span>\n' +
     '    </label>\n' +
     '    <div class="field-array-wrapper editor-form-group col-md-12 col-xs-12 col-sm-12 col-lg-12">\n' +
     '        <div data-ng-if="vm.multiple">\n' +

@@ -6,8 +6,8 @@
             return $templateCache.get('module/components/ueButtonService/ueButtonService.html');
         }],
         bindings : {
-            setting: '=',
-            options: '='
+            setting: '<',
+            options: '<'
         },
         controller : 'UeButtonServiceController',
         controllerAs : 'vm'

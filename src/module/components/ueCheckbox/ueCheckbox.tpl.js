@@ -12,13 +12,13 @@ module.run(['$templateCache', function($templateCache) {
     '    <div ng-if="((!vm.templates.edit &amp;&amp; !vm.options.filter) || (!vm.templates.filter &amp;&amp; vm.options.filter)) &amp;&amp; vm.regim === \'edit\'" ng-class="{\'component-filter\': vm.options.filter}" class="component-edit"> \n' +
     '        <label ng-if="!vm.options.filter &amp;&amp; !!vm.label" class="field-name-label">\n' +
     '            <div data-ng-if="!!vm.hint" class="field-hint">\n' +
-    '                <div ng-bind="vm.hint" class="hint-text"></div>\n' +
-    '            </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="vm.label"></span>\n' +
+    '                <div ng-bind="::vm.hint" class="hint-text"></div>\n' +
+    '            </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="::vm.label"></span>\n' +
     '        </label>\n' +
-    '        <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" style="{{vm.checkBoxStyle}}"> \n' +
+    '        <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" style="{{::vm.checkBoxStyle}}">\n' +
     '            <div data-ng-repeat="item in vm.optionValues" data-ng-class="{\'disabled\': vm.readonly}" class="checkbox">\n' +
     '                <label>\n' +
-    '                    <input type="checkbox" data-ng-disabled="vm.readonly" data-checklist-model="vm.fieldValue" data-checklist-value="item[vm.field_id]"/><span ng-bind="item[vm.field_search]"></span>\n' +
+    '                    <input type="checkbox" data-ng-disabled="vm.readonly" data-checklist-model="vm.fieldValue" data-checklist-value="::item[vm.field_id]"/><span ng-bind="::item[vm.field_search]"></span>\n' +
     '                </label>\n' +
     '            </div>\n' +
     '        </div>\n' +

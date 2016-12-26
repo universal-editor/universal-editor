@@ -6,7 +6,7 @@
             return $templateCache.get('module/components/ueFilter/ueFilter.html');
         }],
         bindings: {
-            setting: '=',
+            setting: '<',
             options: '='
         },
         controllerAs: 'vm',

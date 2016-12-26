@@ -4,7 +4,7 @@
 
     var ueFormGroup = {
         bindings : {
-            setting: '=',
+            setting: '<',
             options: '='
         },
         transclude : true,

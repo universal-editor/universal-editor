@@ -3,7 +3,7 @@
 
     var ueCheckbox = {
         bindings : {
-            setting: '=',
+            setting: '<',
             options: '='
         },
         template : ['$templateCache', function ($templateCache) {

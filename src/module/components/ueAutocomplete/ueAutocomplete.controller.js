@@ -36,7 +36,7 @@
             loadValues();
         }
 
-        $element.find("input").bind("keydown", function(event) {
+        $element.bind("keydown", function(event) {
             var possibleValues;
             switch (event.which) {
                 case 13:
@@ -294,6 +294,9 @@
 
         vm.focusPossible = function(isActive) {
             vm.isActivePossible = isActive;
+            if (!isActive) {
+                vm.showPossible = false;
+            }
             if (!vm.multiple) {
                 if ($element.find('.autocomplete-item').length > 0) {
                     if (isActive) {
@@ -319,14 +322,6 @@
         };
 
         this.$postLink = function() {
-            $document.on('click', function(event) {
-                if (!$element[0].contains(event.target)) {
-                    $scope.$apply(function() {
-                        vm.showPossible = false;
-                    });
-
-                }
-            });
 
             $scope.inputFocus = function() {
                 if (!vm.multiple) {
