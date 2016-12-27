@@ -5,8 +5,8 @@
         .module('universal.editor')
         .provider('configData', ConfigDataProvider);
 
-    ConfigDataProvider.$inject = ['$stateProvider', '$urlRouterProvider', '$injector'];
-    function ConfigDataProvider($stateProvider, $urlRouterProvider, $injector) {
+    ConfigDataProvider.$inject = ['$stateProvider', '$urlRouterProvider', '$injector', 'moment'];
+    function ConfigDataProvider($stateProvider, $urlRouterProvider, $injector, moment) {
         var configData = {};
         return {
             setConfig: function(moduleName, config) {
@@ -19,7 +19,14 @@
                         'url': '/type/:pk?parent&back'
                     }
                 };
-
+                var locale = 'ru';
+                if (configData.hasOwnProperty('ui') && configData.ui.hasOwnProperty('language') && configData.ui.language.hasOwnProperty('code')){
+                    locale = configData.ui.language.code;
+                    console.log(locale);
+                }
+                console.log(moment.locale());
+                moment.locale(locale);
+                console.log(moment.locale());
                 //-- for deleting slash in the end of address
                 $urlRouterProvider.rule(function($injector, $location) {
                     var path = $location.path(),

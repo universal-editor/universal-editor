@@ -15,16 +15,17 @@
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
 
+        vm.format = vm.format || 'DD.MM.YYYY';
+        vm.maxView = vm.maxView || 'year';
+        vm.minView = vm.minView || 'date';
+        vm.view = vm.view || 'date';
+
         vm.addItem = addItem;
         vm.removeItem = removeItem;
 
         $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format);
         $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);
 
-        vm.format = vm.format || 'DD.MM.YYYY';
-        vm.maxView = vm.maxView || 'year';
-        vm.minView = vm.minView || 'date';
-        vm.view = vm.view || 'date';
 
         vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
             $scope.onLoadDataHandler(e, data);

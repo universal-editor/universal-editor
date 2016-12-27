@@ -384,9 +384,9 @@ var elementDataSource = {
                     validators:[
                         {
                             type: 'date',
-                            format: 'YYYY-DD-MM HH:mm',
-                            minDate: '2016-10-11 15:40',
-                            maxDate: '2016-10-12 15:55',
+                            format: 'YYYY-MM-DD HH:mm',
+                            minDate: '2016-11-10 15:40',
+                            maxDate: '2016-12-10 15:55',
                             maxView: 'year',
                             minView: 'minutes',
                             view: 'year'
@@ -1398,7 +1398,10 @@ var newsDataSource = {
 
 var ue = new UniversalEditor('universal-editor', {
     ui: {
-        assetsPath: '/assets'
+        assetsPath: '/assets',
+        language: {
+            code: 'ru'
+        }
     },
     states: [
     {

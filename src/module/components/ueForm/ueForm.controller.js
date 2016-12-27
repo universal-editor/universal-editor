@@ -190,15 +190,6 @@
             vm.notifys = [];
         });
 
-        //локализация
-        if (configData.hasOwnProperty("ui") && configData.ui.hasOwnProperty("language")) {
-            if (configData.ui.language.search(".json") !== (-1)) {
-                $translate.use(configData.ui.language);
-            } else if (configData.ui.language !== 'ru') {
-                $translate.use('assets/json/language/' + configData.ui.language + '.json');
-            }
-        }
-
         if (pk === 'new') {
             vm.entityLoaded = true;
         }
