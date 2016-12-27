@@ -12,7 +12,6 @@
             'ngCookies',
             'ngFileUpload',
             'ui.router',
-            'ngRaven',
             'ui.mask',
             'toastr',
             'pascalprecht.translate'
