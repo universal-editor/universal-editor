@@ -2,9 +2,7 @@
 
 ## Unreleased
 
-## 2.0.0
-
-## Update
+### Update
 
 * Removed the ability to describe in a config several entities.(One substance - one editor)
 * Changed the structure of the description of the config's editor.
