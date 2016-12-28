@@ -1,5 +1,5 @@
 .editor-body
-    .close-editor(data-ng-click="vm.closeButton()", ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}")
+    .close-editor(data-ng-click="vm.closeButton()")
     component-wrapper(ng-repeat="component in ::vm.components" data-setting="::component" data-options="::vm.options")
     .field-error-bottom-wrapper
         .error-item.alert.alert-danger(data-ng-repeat="err in vm.errors") {{err}}
