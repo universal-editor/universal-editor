@@ -19,14 +19,7 @@
                         'url': '/type/:pk?parent&back'
                     }
                 };
-                var locale = 'ru';
-                if (configData.hasOwnProperty('ui') && configData.ui.hasOwnProperty('language') && configData.ui.language.hasOwnProperty('code')){
-                    locale = configData.ui.language.code;
-                    console.log(locale);
-                }
-                console.log(moment.locale());
-                moment.locale(locale);
-                console.log(moment.locale());
+
                 //-- for deleting slash in the end of address
                 $urlRouterProvider.rule(function($injector, $location) {
                     var path = $location.path(),
@@ -94,11 +87,11 @@
                     };
                     $stateProvider.state(nameState, stateOptions);
                 });
+
                 if (!window.universal_editor_is_load) {
                     window.universal_editor_is_load = true;
                     $urlRouterProvider.otherwise(config.states[0].url || '/');
                 }
-
             },
 
             $get: ['$q', '$rootScope', function($q, $root) {

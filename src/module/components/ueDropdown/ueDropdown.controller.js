@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeDropdownController', UeDropdownController);
 
-    UeDropdownController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', '$timeout', 'configData', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q'];
+    UeDropdownController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', '$timeout', 'configData', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q', '$translate'];
 
-    function UeDropdownController($rootScope, $scope, EditEntityStorage, RestApiService, $timeout, configData, $document, $element, $window, FilterFieldsStorage, $controller, $q) {
+    function UeDropdownController($rootScope, $scope, EditEntityStorage, RestApiService, $timeout, configData, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
         /* jshint validthis: true */
         var vm = this;
         vm.optionValues = [];
@@ -134,7 +134,9 @@
                             allOptions = angular.copy(vm.optionValues);
                             vm.parentValue = true;
                         }, function(reject) {
-                            console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + vm.fieldName + '\" с удаленного ресурса');
+                            $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                                console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
+                            });
                         });
                 } else {
                     vm.parentValue = false;
@@ -170,7 +172,9 @@
                                 setSelectedValuesFromRemote(item);
                             }
                         }, function(reject) {
-                            console.error('EditorFieldSelectController: Не удалось получить значения для поля \"' + vm.fieldName + '\" с удаленного ресурса');
+                            $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                                console.error('EditorFieldSelectController: ' + translation.replace('%name_field', vm.fieldName));
+                            });
                         });
                 }
             } else {

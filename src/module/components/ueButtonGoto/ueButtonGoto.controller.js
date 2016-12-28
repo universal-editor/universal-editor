@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonGotoController', UeButtonGotoController);
 
-    UeButtonGotoController.$inject = ['$scope', '$element', 'RestApiService', '$state', '$location', 'configData', 'EditEntityStorage', 'ModalService', '$timeout', '$controller'];
+    UeButtonGotoController.$inject = ['$scope', '$element', 'RestApiService', '$state', '$location', 'configData', 'EditEntityStorage', 'ModalService', '$timeout', '$controller', '$translate'];
 
-    function UeButtonGotoController($scope, $element, RestApiService, $state, $location, configData, EditEntityStorage, ModalService, $timeout, $controller) {
+    function UeButtonGotoController($scope, $element, RestApiService, $state, $location, configData, EditEntityStorage, ModalService, $timeout, $controller, $translate) {
         $element.addClass('ue-button');
 
         var vm = this;
@@ -26,7 +26,9 @@
 
             var toStateConfig = EditEntityStorage.getStateConfig(state);
             if(!toStateConfig) {
-                console.warn('Стейт ' + state + ' не зайден в конфигурационном файле.');
+                $translate('ERROR.NOT_FOUND_STATE').then(function(translation) {
+                    console.warn(translation.replace('%state', state));
+                });
             }
             var pkKey = 'pk' + EditEntityStorage.getLevelChild(toStateConfig.name);
             var params = {};

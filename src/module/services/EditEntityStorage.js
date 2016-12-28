@@ -5,9 +5,9 @@
         .module('universal.editor')
         .service('EditEntityStorage', EditEntityStorage);
 
-    EditEntityStorage.$inject = ['$rootScope', '$timeout', 'configData', '$location', '$state'];
+    EditEntityStorage.$inject = ['$rootScope', '$timeout', 'configData', '$location', '$state', '$translate'];
 
-    function EditEntityStorage($rootScope, $timeout, configData, $location, $state) {
+    function EditEntityStorage($rootScope, $timeout, configData, $location, $state, $translate) {
         var sourceEntity,
             configuredFields = {},
             fieldControllers = [],
@@ -205,7 +205,9 @@
             var valid = true;
 
             if (sourceEntity === undefined || entityType === undefined) {
-                console.log("EditEntityStorage: Сущность не доступна для проверки так как она не указана или не указан её тип");
+                $translate('ERROR.EditEntityStorage').then(function(translation) {
+                    console.log(translation);
+                });
                 valid = false;
             }
 

@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
-    UeAutocompleteController.$inject = ['$scope', '$element', '$document', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$controller'];
+    UeAutocompleteController.$inject = ['$scope', '$element', '$document', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$controller', '$translate'];
 
-    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $controller) {
+    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $controller, $translate) {
         /* jshint validthis: true */
         var vm = this,
             inputTimeout;
@@ -215,7 +215,9 @@
                         vm.activeElement = 0;
                         vm.searching = false;
                     }, function(reject) {
-                        console.error('EditorFieldAutocompleteController: Не удалось получить значения для поля \"' + vm.fieldName + '\" с удаленного ресурса');
+                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                            console.error('EditorFieldAutocompleteController: ' + translation.replace('%name_field', vm.fieldName));
+                        });
                         vm.searching = false;
                     });
             }
@@ -286,11 +288,15 @@
                         vm.preloadedData = true;
                     }, function(reject) {
                         vm.preloadedData = true;
-                        console.error('EditorFieldAutocompleteController: Не удалось получить значения для поля \"' + vm.fieldName + '\" с удаленного ресурса');
+                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                            console.error('EditorFieldAutocompleteController: ' + translation.replace('%name_field', vm.fieldName));
+                        });
                     });
             } else {
                 vm.preloadedData = true;
-                console.error('EditorFieldAutocompleteController: Для поля не указан ни один тип получения значений ( локальный или удаленный )');
+                $translate('ERROR.FIELD.NOT_TYPE_VALUE').then(function(translation) {
+                    console.error('EditorFieldAutocompleteController: ' + translation);
+                });
             }
         }
 
