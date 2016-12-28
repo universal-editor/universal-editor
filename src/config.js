@@ -1398,7 +1398,6 @@ var newsDataSource = {
 
 var ue = new UniversalEditor('universal-editor', {
     ui: {
-        assetsPath: '/assets',
         language: {
             code: 'ru'
         }

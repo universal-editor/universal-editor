@@ -17,11 +17,6 @@
 
         var possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
 
-        vm.assetsPath = '/assets/universal-editor';
-        if (!!configData.ui && !!configData.ui.assetsPath) {
-            vm.assetsPath = configData.ui.assetsPath;
-        }
-
         vm.parentValue = !vm.depend;
         vm.search = componentSettings.search;
         vm.showPossible = false;

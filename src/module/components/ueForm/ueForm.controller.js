@@ -13,7 +13,6 @@
         var vm = this,
             mixEntityObject;
 
-        vm.assetsPath = '/assets/universal-editor';
         vm.configData = configData;
         vm.entityLoaded = false;
         vm.listLoaded = false;
@@ -64,10 +63,6 @@
 
         var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
         var pk = $state.params[pkKey];
-
-        if (!!vm.configData.ui && !!vm.configData.ui.assetsPath) {
-            vm.assetsPath = vm.configData.ui.assetsPath;
-        }
 
         if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
             vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
