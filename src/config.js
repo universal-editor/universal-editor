@@ -1364,6 +1364,15 @@ var ue = new UniversalEditor('universal-editor', {
                                     state: 'edit'
                                 }
                             }
+                        },
+                        {
+                            component: {
+                                name: 'ue-button-goto',
+                                settings: {
+                                    label: 'создать --force',
+                                    state: 'edit'
+                                }
+                            }
                         }
                     ]
                 },

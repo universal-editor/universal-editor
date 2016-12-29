@@ -8,12 +8,9 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueFilter/ueFilter.html',
     '\n' +
     '<div class="filter-component">\n' +
-    '    <button data-ng-click="vm.toggleFilterVisibility()" class="btn btn-lg btn-default filter-button">Фильтр {{vm.visiable ? \'-\' : \'+\'}}</button>\n' +
+    '    <button data-ng-click="vm.toggleFilterVisibility()" class="btn btn-lg btn-default glyphicon glyphicon-filter filter-button"> </button>\n' +
     '    <div data-ng-hide="!vm.visiable" class="editor-filter">\n' +
     '        <div ng-keyup="vm.clickEnter($event)" class="editor-filter-wrapper">\n' +
-    '            <div class="editor-filter-head">\n' +
-    '                <label ng-bind="vm.header.label"></label>\n' +
-    '            </div>\n' +
     '            <div class="editor-filter-body">\n' +
     '                <div ng-repeat="group in vm.body track by $index" class="filter-content-wrapper">\n' +
     '                    <label ng-bind="group.label" title="{{group.label}}" class="filter-name-label"></label>\n' +

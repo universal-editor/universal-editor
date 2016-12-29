@@ -7,7 +7,6 @@ angular
       link: function(scope, element, attr) {
         var vm = scope.vm;
         $timeout(function() {
-          //debugger
           if (angular.isObject(vm.templates)) {
             if (vm.templates.filter && element.hasClass('component-filter')) {
               insertHtml(element, vm.templates.filter);

@@ -8,7 +8,6 @@
     UeTextareaController.$inject = ['$scope', '$element', 'EditEntityStorage', 'FilterFieldsStorage', '$controller'];
 
     function UeTextareaController($scope, $element, EditEntityStorage, FilterFieldsStorage, $controller) {
-        /* jshint validthis: true */
         var vm = this;
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
@@ -20,13 +19,11 @@
 
         vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
             $scope.onLoadDataHandler(e, data);
-            //-- for set preview value
+
             if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
                 vm.equalPreviewValue();
             }
         })); 
-
-        //-- private functions
 
         function removeItem(index) {
             if (angular.isArray(vm.fieldValue)) {

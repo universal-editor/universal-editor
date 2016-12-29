@@ -1,11 +1,8 @@
 
 <div class="filter-component">
-    <button data-ng-click="vm.toggleFilterVisibility()" class="btn btn-lg btn-default filter-button">Фильтр {{vm.visiable ? '-' : '+'}}</button>
+    <button data-ng-click="vm.toggleFilterVisibility()" class="btn btn-lg btn-default glyphicon glyphicon-filter filter-button"> </button>
     <div data-ng-hide="!vm.visiable" class="editor-filter">
         <div ng-keyup="vm.clickEnter($event)" class="editor-filter-wrapper">
-            <div class="editor-filter-head">
-                <label ng-bind="vm.header.label"></label>
-            </div>
             <div class="editor-filter-body">
                 <div ng-repeat="group in vm.body track by $index" class="filter-content-wrapper">
                     <label ng-bind="group.label" title="{{group.label}}" class="filter-name-label"></label>
