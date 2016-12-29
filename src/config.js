@@ -1,6 +1,6 @@
 window.RequstCallback = {
-    beforeAction: function() {
-        console.log('Ïðèâåò ìèð!!! ÿ beforeSend');
+    beforeSend: function() {
+        alert('Before trigger');
     }
 };
 
@@ -1360,16 +1360,7 @@ var ue = new UniversalEditor('universal-editor', {
                             component: {
                                 name: 'ue-button-goto',
                                 settings: {
-                                    label: 'создать',
-                                    state: 'edit'
-                                }
-                            }
-                        },
-                        {
-                            component: {
-                                name: 'ue-button-goto',
-                                settings: {
-                                    label: 'создать --force',
+                                    label: 'Add',
                                     state: 'edit'
                                 }
                             }
@@ -1382,7 +1373,7 @@ var ue = new UniversalEditor('universal-editor', {
                         component: {
                             name: 'ue-button-goto',
                             settings: {
-                                label: 'редактировать',
+                                label: 'Edit',
                                 state: 'edit'
                             }
                         }
@@ -1392,7 +1383,7 @@ var ue = new UniversalEditor('universal-editor', {
                         component: {
                             name: 'ue-button-service',
                             settings: {
-                                label: 'Удалить',
+                                label: 'Delete',
                                 action: 'delete'
                             }
                         }
@@ -1402,7 +1393,7 @@ var ue = new UniversalEditor('universal-editor', {
                         component: {
                             name: 'ue-button-service',
                             settings: {
-                                label: 'Раскрыть',
+                                label: 'Expand',
                                 action: 'open'
                             }
                         }
@@ -1784,7 +1775,7 @@ var ue = new UniversalEditor('universal-editor', {
                             component: {
                                 name: 'ue-button-service',
                                 settings: {
-                                    label: 'Сохранить/обновить',
+                                    label: 'Save',
                                     action: 'save'
                                 }
                             }
@@ -1793,8 +1784,8 @@ var ue = new UniversalEditor('universal-editor', {
                             component: {
                                 name: 'ue-button-service',
                                 settings: {
-                                    label: 'Удалить',
-                                    action: 'delete'
+                                    label: 'Apply',
+                                    action: 'presave'
                                 }
                             }
                         },
@@ -1802,8 +1793,8 @@ var ue = new UniversalEditor('universal-editor', {
                             component: {
                                 name: 'ue-button-service',
                                 settings: {
-                                    label: 'Сохранить',
-                                    action: 'presave'
+                                    label: 'Delete',
+                                    action: 'delete'
                                 }
                             }
                         },
@@ -1825,20 +1816,9 @@ var ue = new UniversalEditor('universal-editor', {
                             component: {
                                 name: 'ue-button-request',
                                 settings: {
-                                    label: 'This _blank!!!',
-                                    url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg',
+                                    label: 'yandex.com',
+                                    url: 'https://www.yandex.com',
                                     target: '_blank'
-                                }
-                            }
-                        },
-                        {
-                            component: {
-                                name: 'ue-button-download',
-                                settings: {
-                                    label: 'This is button!!!',
-                                    request: {
-                                        url: 'http://333v.ru/uploads/12/12182eaff9b46ef1848fe409b0fa9ed5.jpg'
-                                    }
                                 }
                             }
                         }
