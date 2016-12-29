@@ -17,8 +17,8 @@
 
         var locale = 'ru';
         if (configData.hasOwnProperty('ui') && configData.ui.hasOwnProperty('language')) {
-            if (configData.ui.language.hasOwnProperty('part')) {
-                $translate.use(configData.ui.language.part);
+            if (configData.ui.language.hasOwnProperty('path')) {
+                $translate.use(configData.ui.language.path);
             } else if (configData.ui.language.hasOwnProperty('code')) {
                 $translate.use(configData.ui.language.code);
                 locale = configData.ui.language.code;
