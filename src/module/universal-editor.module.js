@@ -135,9 +135,7 @@
     universalEditorRun.$inject = ['$rootScope', '$location', '$state', 'EditEntityStorage', 'ModalService', 'FilterFieldsStorage', 'RestApiService'];
 
     function universalEditorRun($rootScope, $location, $state, EditEntityStorage, ModalService, FilterFieldsStorage, RestApiService) {
-        var itemsSelector = document.querySelectorAll(".nav.nav-tabs .item");
-
-        
+        var itemsSelector = document.querySelectorAll(".nav.nav-tabs .item");        
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams, options) {
@@ -186,5 +184,4 @@
             }
         });
     }
-
 })();

@@ -51,16 +51,7 @@ var webpackConfig = {
         new HtmlWebpackPlugin({
             template: __dirname + '/src/index.html',
             inject: 'body'
-        }),
-        new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery"
         })
-
-        /*,
-        new webpack.ProvidePlugin({
-            $: './bower_components/jquery/dist/jquery.js'
-        })*/
         //new webpack.optimize.CommonsChunkPlugin('inline', 'inline.js'),
         // new webpack.optimize.CommonsChunkPlugin({ name: 'bundle', filename: 'u-editor.all.js', minChunks: 2, chunks: ['vendor', 'u-editor'] })
         // new webpack.optimize.CommonsChunkPlugin({ name: 'common', filename: 'u-editor.all.js', minChunks: 2, chunks: ['main', 'vendor'] })

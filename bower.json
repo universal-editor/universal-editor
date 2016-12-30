@@ -22,7 +22,7 @@
   "dependencies": {
     "raven-js": "1.3.0",
     "jquery": "~2.1.4",
-    "angular": "~1.6",
+    "angular": "~1.6.1",
     "angular-raven": "~0.6.2",
     "jquery-minicolors": "~2.1.7",
     "angular-minicolors": "~0.0.7",
@@ -42,6 +42,6 @@
     "angular-bootstrap": "^2.1.4"
   },
   "resolutions": {
-    "angular": "~1.5.7"
+    "angular": "~1.6.1"
   }
 }
