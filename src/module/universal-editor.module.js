@@ -1,5 +1,6 @@
 (function() {
     'use strict';
+    //debugger;
 
     angular
         .module('universal.editor',
@@ -12,7 +13,6 @@
             'ngCookies',
             'ngFileUpload',
             'ui.router',
-            'ngRaven',
             'ui.mask',
             'toastr',
             'pascalprecht.translate'

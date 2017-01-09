@@ -1,5 +1,7 @@
 'use strict';
 
+const NODE_ENV = process.env.NODE_ENV || 'development';
+
 var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -10,52 +12,107 @@ var BowerWebpackPlugin = require("bower-webpack-plugin");
 var webpackConfig = {
     context: __dirname,
     entry: {
-        'u-editor': './src/module/universal-editor.js',
-        styles: './src/index.scss'
+        'u-editor': path.resolve(__dirname, 'src/main.js')
     },
     output: {
-        path: __dirname + '/dist',
+        path: path.resolve(__dirname, 'dist'),
         filename: '[name].core.js'
     },
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        modulesDirectories: ['node_modules', 'bower_components'],
+        extensions: ['', '.js'],
+        root: [
+            path.resolve(__dirname, 'bower_components')
+        ],
+        alias: {
+            'moment': 'moment/moment.js',
+            'jquery-minicolors': 'jquery-minicolors/jquery.minicolors.js',
+            'jquery': 'jquery/dist/jquery.js',
+            'angular': path.resolve(__dirname, 'src/module/inject/angular-inject.js'),
+            'angularjs': path.resolve(__dirname, 'bower_components/angular/angular.js'),
+        }
     },
+    resolveLoader: {
+        modulesDirectories: ['node_modules'],
+        moduleTemplates: ['*', '*-loader'],
+        extensions: ['', '.js']
+    },
+    watch: NODE_ENV == 'development',
+    watchOptions: {
+        aggregateTimeout: 100
+    },
+    //   devtool: NODE_ENV == 'development' ? 'cheap-inline-module-source-map' : null,
     module: {
         loaders: [
             {
+                test: /\.js$/,
+                loader: 'babel',
+                include: [
+                    path.resolve(__dirname, 'src')
+                ]
+            },
+            {
                 test: /\.scss$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader?sourceMap')
+                loader: 'style-loader!css-loader!sass-loader?sourceMap',
+                include: [
+                    path.resolve(__dirname, 'src')
+                ]
             },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+                loader: 'style-loader!css-loader'
             },
             {
-                test: /\.woff2?$|\.ttf$|\.eot$|\.svg$|\.png|\.jpe?g|\.gif$/,
-                loader: 'file-loader'
+                test: /\.jade$/,
+                loader: 'jade-loader',
+                include: [
+                    path.resolve(__dirname, 'src')
+                ]
+            },
+            {
+                test: /\.(jpe?g|png|ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
+                loader: 'base64-inline-loader'
+            },
+            {
+                test: /\.js$/,
+                loader: 'string-replace',
+                query: {
+                    search: '$window.angular',
+                    replace: 'angular'
+                }
             }
         ]
     },
     plugins: [
-        new ExtractTextPlugin('u-editor.all.css', {
-            allChunks: true
-        }),
-        new BowerWebpackPlugin({
-            modulesDirectories: ['bower_components'],
-            manifestFiles: ['bower.json', '.bower.json'],
-            excludes: []
-        }),
-        new CopyWebpackPlugin([{
-            from: __dirname + '/src/index.html'
-        }]),
         new HtmlWebpackPlugin({
-            template: __dirname + '/src/index.html',
+            filename: 'index.html',
+            title: 'Example Components Universal Editor',
+            template: path.resolve(__dirname, 'src/index.ejs'),
             inject: 'body'
+        }),
+        new webpack.ProvidePlugin({
+            'angular': 'angular',
+            '$': 'jquery',
+            'jQuery': 'jquery',
+            'window.jQuery': 'jquery',
+            'moment': 'moment'
+        }),
+        new webpack.DefinePlugin({
+            'NODE_ENV': JSON.stringify(NODE_ENV)
         })
-        //new webpack.optimize.CommonsChunkPlugin('inline', 'inline.js'),
-        // new webpack.optimize.CommonsChunkPlugin({ name: 'bundle', filename: 'u-editor.all.js', minChunks: 2, chunks: ['vendor', 'u-editor'] })
-        // new webpack.optimize.CommonsChunkPlugin({ name: 'common', filename: 'u-editor.all.js', minChunks: 2, chunks: ['main', 'vendor'] })
     ]
 };
 module.exports = webpackConfig;
+
+if (NODE_ENV == 'production') {
+    module.exports.plugins.push(
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false,
+                drop_console: true,
+                unsafe: true
+            }
+        })
+    );
+}
 

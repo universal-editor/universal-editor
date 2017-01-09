@@ -4,19 +4,8 @@
  * @param {Object} config - Configuration object
  * @constructor
  */
- debugger;
-var angular1 = window.angular;
-window.angular = {};
-require("angular");
-require("angular-moment");
-var angular2 = window.angular;
-window.angular = angular1;
-
-
-define("universal-editor", ["require"], function(require) {
-    return function(id, config) {
+function UniversalEditor(id, config) {
         'use strict';
-        debugger;
         var moduleName = 'unEditor-' + id;
         var unEditor = $('#' + id);
         if (unEditor[0]) {
@@ -27,16 +16,5 @@ define("universal-editor", ["require"], function(require) {
             angular.bootstrap(unEditor[0], [moduleName]);
         }
     };
-});
-
-require('./universal-editor.module.js');
-require('./localization.configFile.js');
-var context = require.context('./components', true, /\.js$/);
-    context.keys().forEach(context);
-require('universal-editor');
-/*['./components', './controllers', './directives', './factories', './provider', './services'].forEach(function(dir) {
-    var context = require.context(dir, true, /\.js$/);
-    context.keys().forEach(context);
-});*/
 
 
