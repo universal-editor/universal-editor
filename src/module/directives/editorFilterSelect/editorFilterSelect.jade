@@ -26,4 +26,4 @@ div
                 data-ng-if="!vm.readonly && (vm.selectedValues.length > 0) && vm.showPossible"
                 )
                 .possible-scroll
-                    .possible-value-item(data-ng-repeat="option in vm.selectedValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected(option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}
+                    .possible-value-item(data-ng-repeat="option in vm.selectedValues", data-ng-mouseover="vm.activeElement = $index", data-ng-click="vm.addToSelected($event,option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}

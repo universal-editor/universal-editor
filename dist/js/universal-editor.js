@@ -319,6 +319,28 @@ function UniversalEditor(id, config) {
 
     angular
         .module('universal.editor')
+        .provider('ConfigDataProvider', ConfigDataProvider);
+
+    ConfigDataProvider.$inject = ['configData'];
+    function ConfigDataProvider(configData){
+        return {
+            getDefaultEntity: function(){
+                return configData.entities[0].name;
+            },
+            $get: ['$q',function($q) {
+                var deferred = $q.defer();
+                deferred.resolve(configData);
+                return deferred;
+            }]
+        };
+    }
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
         .service('ArrayFieldStorage',ArrayFieldStorage);
 
     ArrayFieldStorage.$inject = ['$rootScope'];
@@ -1235,28 +1257,6 @@ function UniversalEditor(id, config) {
                 });
             }
             return mixMode;
-        };
-    }
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .provider('ConfigDataProvider', ConfigDataProvider);
-
-    ConfigDataProvider.$inject = ['configData'];
-    function ConfigDataProvider(configData){
-        return {
-            getDefaultEntity: function(){
-                return configData.entities[0].name;
-            },
-            $get: ['$q',function($q) {
-                var deferred = $q.defer();
-                deferred.resolve(configData);
-                return deferred;
-            }]
         };
     }
 })();
@@ -5830,328 +5830,6 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
-        .controller('EditorFieldTextareaController', EditorFieldTextareaController);
-
-    EditorFieldTextareaController.$inject = ['$scope', 'EditEntityStorage', 'ArrayFieldStorage'];
-
-    function EditorFieldTextareaController($scope, EditEntityStorage, ArrayFieldStorage) {
-        /* jshint validthis: true */
-        var vm = this;
-        var fieldErrorName;
-
-        if ($scope.parentField) {
-            if ($scope.parentFieldIndex) {
-                fieldErrorName = $scope.parentField + "_" + $scope.parentFieldIndex + "_" + $scope.fieldName;
-            } else {
-                fieldErrorName = $scope.parentField + "_" + $scope.fieldName;
-            }
-        } else {
-            fieldErrorName = $scope.fieldName;
-        }
-        vm.rows = $scope.field.height;
-        vm.cols = $scope.field.width;
-        vm.classTextarea = 'col-lg-6 col-md-6 col-sm-7 col-xs-8';
-        vm.fieldName = $scope.field.name;
-        vm.fieldValue = "";
-        vm.readonly = $scope.field.readonly || false;
-        $scope.$parent.vm.error = [];
-        vm.parentFieldIndex = $scope.parentFieldIndex || false;
-
-        if (!!vm.cols) {
-            if (vm.cols > 6) {
-                vm.cols = 6;
-            }
-            if (vm.cols < 1) {
-                vm.cols = 1;
-            }
-            vm.classTextarea = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
-        }
-
-        if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
-            vm.multiple = true;
-            vm.fieldValue = [];
-            if ($scope.field.multiname || angular.isString($scope.field.multiname)) {
-                vm.multiname = ('' + $scope.field.multiname) || "value";
-            }
-        } else {
-            vm.multiple = false;
-            vm.fieldValue = "";
-        }
-
-        if (vm.parentFieldIndex) {
-            if (vm.multiple) {
-                vm.fieldValue = [];
-                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
-                    if (vm.multiname) {
-                        vm.fieldValue.push(item[vm.multiname]);
-                    } else {
-                        vm.fieldValue.push(item);
-                    }
-                });
-            } else {
-                vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name) || "";
-            }
-        }
-
-        EditEntityStorage.addFieldController(this);
-
-        this.getFieldValue = function () {
-
-            var field = {};
-            var wrappedFieldValue;
-
-            if (vm.multiname) {
-                wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
-                    var tempItem = {};
-                    tempItem[vm.multiname] = valueItem;
-                    wrappedFieldValue.push(tempItem);
-                });
-            } else if (vm.multiple) {
-                wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
-                    wrappedFieldValue.push(valueItem);
-                });
-            } else {
-                wrappedFieldValue = vm.fieldValue;
-            }
-
-            if ($scope.parentField) {
-                if (vm.parentFieldIndex) {
-                    field[$scope.parentField] = [];
-                    field[$scope.parentField][vm.parentFieldIndex] = {};
-                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
-                } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
-                }
-
-            } else {
-                field[vm.fieldName] = wrappedFieldValue;
-            }
-
-            return field;
-        };
-
-        this.getInitialValue = function () {
-
-            var field = {};
-
-            if ($scope.parentField) {
-                if (vm.multiple) {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = [""];
-                } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = "";
-                }
-            } else {
-                if (vm.multiple) {
-                    field[vm.fieldName] = [""];
-                } else {
-                    field[vm.fieldName] = "";
-                }
-            }
-
-            return field;
-        };
-
-        vm.addItem = function () {
-            vm.fieldValue.push("");
-        };
-
-        vm.removeItem = function (index) {
-            angular.forEach(vm.fieldValue, function (value, key) {
-                if (key == index) {
-                    vm.fieldValue.splice(index, 1);
-                }
-            });
-        };
-
-        vm.inputLeave = function (val) {
-            if (!val) {
-                return;
-            }
-
-            if($scope.field.hasOwnProperty("maxLength") && val.length > $scope.field.maxLength){
-                var maxError = "Для поля превышено максимальное допустимое значение в " + $scope.field.maxLength + " символов. Сейчас введено " + val.length + " символов.";
-                if ($scope.$parent.vm.error.indexOf(maxError) < 0) {
-                    $scope.$parent.vm.error.push(maxError);
-                }
-            }
-
-            if($scope.field.hasOwnProperty("minLength") && val.length < $scope.field.minLength){
-                var minError = "Минимальное значение поля не может быть меньше " + $scope.field.minLength + " символов. Сейчас введено " + val.length + " символов.";
-                if($scope.$parent.vm.error.indexOf(minError) < 0){
-                    $scope.$parent.vm.error.push(minError);
-                }
-            }
-        };
-
-        function clear() {
-            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
-        }
-
-        $scope.$on('editor:entity_loaded', function (event, data) {
-
-            //-- functional for required fields
-            if ($scope.field.requiredField) {
-                $scope.$watch(function () {
-                    var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
-                    var result = false;
-                    var endRecursion = false;
-                    (function (value) {
-                        var keys = Object.keys(value);
-                        for (var i = keys.length; i--;) {
-                            var propValue = value[keys[i]];
-                            if (propValue !== null && propValue !== undefined && propValue !== "") {
-                                if (angular.isObject(propValue) && !endRecursion) {
-                                    arguments.callee(propValue);
-                                }
-                                result = true;
-                                endRecursion = true;
-                            }
-                        }
-                    })(f_value);
-                    return result;
-                }, function (value) {
-                    if (!value) {
-                        clear();
-                        vm.readonly = true;
-                    } else {
-                        vm.readonly = $scope.field.readonly || false;
-                    }
-                }, true);
-            }
-
-            if (data.editorEntityType === "new") {
-                if ($scope.field.defaultValue) {
-                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
-                } else {
-                    vm.fieldValue = vm.multiple ? [] : '';
-                }
-                return;
-            }
-
-            if (!$scope.parentField) {
-                if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.field.name];
-                } else if (vm.multiname) {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (item) {
-                        vm.fieldValue.push(item[vm.multiname]);
-                    });
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (item) {
-                        vm.fieldValue.push(item);
-                    });
-                }
-            } else {
-                if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.parentField][$scope.field.name];
-                } else if (vm.multiname) {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
-                        vm.fieldValue.push(item[vm.multiname]);
-                    });
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
-                        vm.fieldValue.push(item);
-                    });
-                }
-            }
-        });
-
-        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
-            if (angular.isArray(data)) {
-                angular.forEach(data, function (error) {
-                    if ($scope.$parent.vm.error.indexOf(error) < 0) {
-                        $scope.$parent.vm.error.push(error);
-                    }
-                });
-            } else {
-                if ($scope.$parent.vm.error.indexOf(data) < 0) {
-                    $scope.$parent.vm.error.push(data);
-                }
-            }
-        });
-
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
-            }
-        });
-
-        $scope.$watch(function () {
-            return vm.fieldValue;
-        }, function () {
-            $scope.$parent.vm.error = [];
-        }, true);
-    }
-})();
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('editorFieldTextarea',editorFieldTextarea);
-
-    editorFieldTextarea.$inject = ['$templateCache'];
-
-    function editorFieldTextarea($templateCache){
-        return {
-            restrict : 'A',
-            replace : true,
-            scope : true,
-            template : $templateCache.get('module/directives/editorFieldTextarea/editorFieldTextarea.html'),
-            controller: 'EditorFieldTextareaController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorFieldTextarea/editorFieldTextarea.html',
-    '\n' +
-    '<div>\n' +
-    '    <div data-ng-if="vm.multiple" data-ng-class="vm.classTextarea">\n' +
-    '        <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-textarea-wrapper">\n' +
-    '            <div>\n' +
-    '                <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" class="form-control editor-textarea"></textarea>\n' +
-    '                <div data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</div>\n' +
-    '            </div>\n' +
-    '        </div>\n' +
-    '        <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
-    '    </div>\n' +
-    '    <div data-ng-if="!vm.multiple" data-ng-class="vm.classTextarea">\n' +
-    '        <div>\n' +
-    '            <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-ng-blur="vm.inputLeave(vm.fieldValue)" class="form-control editor-textarea"></textarea>\n' +
-    '        </div>\n' +
-    '    </div>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
         .controller('EditorFieldStringController', EditorFieldStringController);
 
     EditorFieldStringController.$inject = ['$scope', 'EditEntityStorage', 'ArrayFieldStorage'];
@@ -6519,6 +6197,328 @@ module.run(['$templateCache', function($templateCache) {
     '    </div>\n' +
     '    <div data-ng-if="!vm.multiple" data-ng-class="vm.classTextarea">\n' +
     '        <input type="text" data-ui-mask="{{vm.mask}}" data-ng-disabled="vm.readonly" name="{{vm.fieldName}}" data-ng-model="vm.fieldValue" data-ng-blur="vm.inputLeave(vm.fieldValue)" size="{{vm.size}}" class="form-control input-sm"/>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .controller('EditorFieldTextareaController', EditorFieldTextareaController);
+
+    EditorFieldTextareaController.$inject = ['$scope', 'EditEntityStorage', 'ArrayFieldStorage'];
+
+    function EditorFieldTextareaController($scope, EditEntityStorage, ArrayFieldStorage) {
+        /* jshint validthis: true */
+        var vm = this;
+        var fieldErrorName;
+
+        if ($scope.parentField) {
+            if ($scope.parentFieldIndex) {
+                fieldErrorName = $scope.parentField + "_" + $scope.parentFieldIndex + "_" + $scope.fieldName;
+            } else {
+                fieldErrorName = $scope.parentField + "_" + $scope.fieldName;
+            }
+        } else {
+            fieldErrorName = $scope.fieldName;
+        }
+        vm.rows = $scope.field.height;
+        vm.cols = $scope.field.width;
+        vm.classTextarea = 'col-lg-6 col-md-6 col-sm-7 col-xs-8';
+        vm.fieldName = $scope.field.name;
+        vm.fieldValue = "";
+        vm.readonly = $scope.field.readonly || false;
+        $scope.$parent.vm.error = [];
+        vm.parentFieldIndex = $scope.parentFieldIndex || false;
+
+        if (!!vm.cols) {
+            if (vm.cols > 6) {
+                vm.cols = 6;
+            }
+            if (vm.cols < 1) {
+                vm.cols = 1;
+            }
+            vm.classTextarea = 'col-lg-' + vm.cols + ' col-md-' + vm.cols + ' col-sm-' + vm.cols + ' col-xs-' + vm.cols;
+        }
+
+        if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
+            vm.multiple = true;
+            vm.fieldValue = [];
+            if ($scope.field.multiname || angular.isString($scope.field.multiname)) {
+                vm.multiname = ('' + $scope.field.multiname) || "value";
+            }
+        } else {
+            vm.multiple = false;
+            vm.fieldValue = "";
+        }
+
+        if (vm.parentFieldIndex) {
+            if (vm.multiple) {
+                vm.fieldValue = [];
+                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
+                    if (vm.multiname) {
+                        vm.fieldValue.push(item[vm.multiname]);
+                    } else {
+                        vm.fieldValue.push(item);
+                    }
+                });
+            } else {
+                vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name) || "";
+            }
+        }
+
+        EditEntityStorage.addFieldController(this);
+
+        this.getFieldValue = function () {
+
+            var field = {};
+            var wrappedFieldValue;
+
+            if (vm.multiname) {
+                wrappedFieldValue = [];
+                angular.forEach(vm.fieldValue, function (valueItem) {
+                    var tempItem = {};
+                    tempItem[vm.multiname] = valueItem;
+                    wrappedFieldValue.push(tempItem);
+                });
+            } else if (vm.multiple) {
+                wrappedFieldValue = [];
+                angular.forEach(vm.fieldValue, function (valueItem) {
+                    wrappedFieldValue.push(valueItem);
+                });
+            } else {
+                wrappedFieldValue = vm.fieldValue;
+            }
+
+            if ($scope.parentField) {
+                if (vm.parentFieldIndex) {
+                    field[$scope.parentField] = [];
+                    field[$scope.parentField][vm.parentFieldIndex] = {};
+                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
+                } else {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
+                }
+
+            } else {
+                field[vm.fieldName] = wrappedFieldValue;
+            }
+
+            return field;
+        };
+
+        this.getInitialValue = function () {
+
+            var field = {};
+
+            if ($scope.parentField) {
+                if (vm.multiple) {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = [""];
+                } else {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = "";
+                }
+            } else {
+                if (vm.multiple) {
+                    field[vm.fieldName] = [""];
+                } else {
+                    field[vm.fieldName] = "";
+                }
+            }
+
+            return field;
+        };
+
+        vm.addItem = function () {
+            vm.fieldValue.push("");
+        };
+
+        vm.removeItem = function (index) {
+            angular.forEach(vm.fieldValue, function (value, key) {
+                if (key == index) {
+                    vm.fieldValue.splice(index, 1);
+                }
+            });
+        };
+
+        vm.inputLeave = function (val) {
+            if (!val) {
+                return;
+            }
+
+            if($scope.field.hasOwnProperty("maxLength") && val.length > $scope.field.maxLength){
+                var maxError = "Для поля превышено максимальное допустимое значение в " + $scope.field.maxLength + " символов. Сейчас введено " + val.length + " символов.";
+                if ($scope.$parent.vm.error.indexOf(maxError) < 0) {
+                    $scope.$parent.vm.error.push(maxError);
+                }
+            }
+
+            if($scope.field.hasOwnProperty("minLength") && val.length < $scope.field.minLength){
+                var minError = "Минимальное значение поля не может быть меньше " + $scope.field.minLength + " символов. Сейчас введено " + val.length + " символов.";
+                if($scope.$parent.vm.error.indexOf(minError) < 0){
+                    $scope.$parent.vm.error.push(minError);
+                }
+            }
+        };
+
+        function clear() {
+            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
+        }
+
+        $scope.$on('editor:entity_loaded', function (event, data) {
+
+            //-- functional for required fields
+            if ($scope.field.requiredField) {
+                $scope.$watch(function () {
+                    var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
+                    var result = false;
+                    var endRecursion = false;
+                    (function (value) {
+                        var keys = Object.keys(value);
+                        for (var i = keys.length; i--;) {
+                            var propValue = value[keys[i]];
+                            if (propValue !== null && propValue !== undefined && propValue !== "") {
+                                if (angular.isObject(propValue) && !endRecursion) {
+                                    arguments.callee(propValue);
+                                }
+                                result = true;
+                                endRecursion = true;
+                            }
+                        }
+                    })(f_value);
+                    return result;
+                }, function (value) {
+                    if (!value) {
+                        clear();
+                        vm.readonly = true;
+                    } else {
+                        vm.readonly = $scope.field.readonly || false;
+                    }
+                }, true);
+            }
+
+            if (data.editorEntityType === "new") {
+                if ($scope.field.defaultValue) {
+                    vm.fieldValue = vm.multiple ? [$scope.field.defaultValue] : $scope.field.defaultValue;
+                } else {
+                    vm.fieldValue = vm.multiple ? [] : '';
+                }
+                return;
+            }
+
+            if (!$scope.parentField) {
+                if (!vm.multiple) {
+                    vm.fieldValue = data[$scope.field.name];
+                } else if (vm.multiname) {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.field.name], function (item) {
+                        vm.fieldValue.push(item[vm.multiname]);
+                    });
+                } else {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.field.name], function (item) {
+                        vm.fieldValue.push(item);
+                    });
+                }
+            } else {
+                if (!vm.multiple) {
+                    vm.fieldValue = data[$scope.parentField][$scope.field.name];
+                } else if (vm.multiname) {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
+                        vm.fieldValue.push(item[vm.multiname]);
+                    });
+                } else {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
+                        vm.fieldValue.push(item);
+                    });
+                }
+            }
+        });
+
+        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
+            if (angular.isArray(data)) {
+                angular.forEach(data, function (error) {
+                    if ($scope.$parent.vm.error.indexOf(error) < 0) {
+                        $scope.$parent.vm.error.push(error);
+                    }
+                });
+            } else {
+                if ($scope.$parent.vm.error.indexOf(data) < 0) {
+                    $scope.$parent.vm.error.push(data);
+                }
+            }
+        });
+
+        $scope.$on('$destroy', function () {
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
+            }
+        });
+
+        $scope.$watch(function () {
+            return vm.fieldValue;
+        }, function () {
+            $scope.$parent.vm.error = [];
+        }, true);
+    }
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('editorFieldTextarea',editorFieldTextarea);
+
+    editorFieldTextarea.$inject = ['$templateCache'];
+
+    function editorFieldTextarea($templateCache){
+        return {
+            restrict : 'A',
+            replace : true,
+            scope : true,
+            template : $templateCache.get('module/directives/editorFieldTextarea/editorFieldTextarea.html'),
+            controller: 'EditorFieldTextareaController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorFieldTextarea/editorFieldTextarea.html',
+    '\n' +
+    '<div>\n' +
+    '    <div data-ng-if="vm.multiple" data-ng-class="vm.classTextarea">\n' +
+    '        <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-textarea-wrapper">\n' +
+    '            <div>\n' +
+    '                <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" class="form-control editor-textarea"></textarea>\n' +
+    '                <div data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</div>\n' +
+    '            </div>\n' +
+    '        </div>\n' +
+    '        <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
+    '    </div>\n' +
+    '    <div data-ng-if="!vm.multiple" data-ng-class="vm.classTextarea">\n' +
+    '        <div>\n' +
+    '            <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-ng-blur="vm.inputLeave(vm.fieldValue)" class="form-control editor-textarea"></textarea>\n' +
+    '        </div>\n' +
     '    </div>\n' +
     '</div>');
 }]);
@@ -8013,7 +8013,7 @@ module.run(['$templateCache', function($templateCache) {
             }
         });
 
-        vm.addToSelected = function (val) {
+        vm.addToSelected = function (e, val) {
             vm.filterValue = val[vm.field_id];
             vm.filterText = '';
             $timeout(function () {
@@ -8022,6 +8022,7 @@ module.run(['$templateCache', function($templateCache) {
                 vm.isSpanSelectDelete = true;
                 setColorPlaceholder();
             }, 0);
+            e.stopPropagation();
         };
 
         vm.isShowPossible = function (event) {
@@ -8241,7 +8242,7 @@ module.run(['$templateCache', function($templateCache) {
     '            </div><span data-ng-if="vm.isSpanSelectDelete" data-ng-click="vm.deleteToSelected($event, false)" class="selecte-delete">×</span>\n' +
     '            <div data-ng-if="!vm.readonly &amp;&amp; (vm.selectedValues.length &gt; 0) &amp;&amp; vm.showPossible" class="possible-values active possible-bottom">\n' +
     '                <div class="possible-scroll">\n' +
-    '                    <div data-ng-repeat="option in vm.selectedValues" data-ng-mouseover="vm.activeElement = $index" data-ng-click="vm.addToSelected(option)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{option[vm.field_search]}}</div>\n' +
+    '                    <div data-ng-repeat="option in vm.selectedValues" data-ng-mouseover="vm.activeElement = $index" data-ng-click="vm.addToSelected($event,option)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{option[vm.field_search]}}</div>\n' +
     '                </div>\n' +
     '            </div>\n' +
     '        </div>\n' +

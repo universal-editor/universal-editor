@@ -129,7 +129,7 @@
             }
         });
 
-        vm.addToSelected = function (val) {
+        vm.addToSelected = function (e, val) {
             vm.filterValue = val[vm.field_id];
             vm.filterText = '';
             $timeout(function () {
@@ -138,6 +138,7 @@
                 vm.isSpanSelectDelete = true;
                 setColorPlaceholder();
             }, 0);
+            e.stopPropagation();
         };
 
         vm.isShowPossible = function (event) {
