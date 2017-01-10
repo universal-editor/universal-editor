@@ -282,174 +282,228 @@ var elementDataSource = {
             }
         },
         {
-            name: 'datetime',
+            name: 'date_with_time',
             component: {
-                name: 'ue-datetime',
+                name: 'ue-date',
                 settings: {
-                    label: 'datetime'
-                }
-            }
-        },
-        {
-            name: 'datetime_max',
-            component: {
-                name: 'ue-datetime',
-                settings: {
-                    label: 'datetime max = 10.12.2016 15:55:00',
+                    label: 'date со временем',
                     validators:[
                         {
                             type: 'date',
-                            maxDate: '10.12.2016 15:55:00'
+                            maxView: 'year',
+                            minView: 'minutes',
+                            view: 'year',
+                            format: 'DD.MM.YYYY HH:mm:ss'
                         }
                     ]
                 }
             }
         },
         {
-            name: 'datetime_min',
+            name: 'date_with_time_max',
             component: {
-                name: 'ue-datetime',
+                name: 'ue-date',
                 settings: {
-                    label: 'datetime min = 10.11.2016 15:40:00',
+                    label: 'date со временем, max = 10.12.2016 15:55:00',
                     validators:[
                         {
                             type: 'date',
-                            minDate: '10.11.2016 15:40:00'
+                            maxDate: '10.12.2016 15:55:00',
+                            maxView: 'year',
+                            minView: 'minutes',
+                            view: 'year',
+                            format: 'DD.MM.YYYY HH:mm:ss'
                         }
                     ]
                 }
             }
         },
         {
-            name: 'datetime_minmax',
+            name: 'date_with_time_min',
             component: {
-                name: 'ue-datetime',
+                name: 'ue-date',
                 settings: {
-                    label: 'datetime min = 10.11.2016 15:40:00, max = 10.12.2016 15:55:00',
+                    label: 'date со временем, min = 10.11.2016 15:40:00',
                     validators:[
                         {
                             type: 'date',
                             minDate: '10.11.2016 15:40:00',
-                            maxDate: '10.12.2016 15:55:00'
+                            maxView: 'year',
+                            minView: 'minutes',
+                            view: 'year',
+                            format: 'DD.MM.YYYY HH:mm:ss'
                         }
                     ]
                 }
             }
         },
         {
-            name: 'datetime_format',
+            name: 'date_with_time_minmax',
             component: {
-                name: 'ue-datetime',
+                name: 'ue-date',
                 settings: {
-                    label: 'datetime min = 10.11.2016, max = 10.12.2016',
+                    label: 'date со временем, min = 10.11.2016 15:40:00, max = 10.12.2016 15:55:00',
                     validators:[
                         {
                             type: 'date',
-                            format: 'YYYY-DD-MM HH:mm'
+                            minDate: '10.11.2016 15:40:00',
+                            maxDate: '10.12.2016 15:55:00',
+                            maxView: 'year',
+                            minView: 'minutes',
+                            view: 'year',
+                            format: 'DD.MM.YYYY HH:mm:ss'
                         }
                     ]
                 }
             }
         },
         {
-            name: 'datetime_minmax_format',
+            name: 'date_with_time_format',
             component: {
-                name: 'ue-datetime',
+                name: 'ue-date',
                 settings: {
-                    label: 'datetime min = 10.11.2016, max = 10.12.2016',
+                    label: 'date со временем, format = YYYY-DD-MM HH:mm',
                     validators:[
                         {
                             type: 'date',
                             format: 'YYYY-DD-MM HH:mm',
-                            minDate: '2016-10-12 15:40',
-                            maxDate: '2016-10-11 15:55'
+                            maxView: 'year',
+                            minView: 'minutes',
+                            view: 'year'
                         }
                     ]
                 }
             }
         },
         {
-            name: 'time',
+            name: 'date_with_time_minmax_format',
             component: {
-                name: 'ue-time',
+                name: 'ue-date',
                 settings: {
-                    label: 'time'
-                }
-            }
-        },
-        {
-            name: 'time_max',
-            component: {
-                name: 'ue-time',
-                settings: {
-                    label: 'time max = 15:55',
+                    label: 'date со временем, min = 10.11.2016, max = 10.12.2016, format = YYYY-DD-MM HH:mm',
                     validators:[
                         {
                             type: 'date',
-                            maxDate: '15:55'
+                            format: 'YYYY-MM-DD HH:mm',
+                            minDate: '2016-11-10 15:40',
+                            maxDate: '2016-12-10 15:55',
+                            maxView: 'year',
+                            minView: 'minutes',
+                            view: 'year'
                         }
                     ]
                 }
             }
         },
         {
-            name: 'time_min',
+            name: 'time_together_date',
             component: {
-                name: 'ue-time',
+                name: 'ue-date',
                 settings: {
-                    label: 'time min 15:40:00',
+                    label: 'date только время(time)',
+                    validators: [
+                        {
+                            type: 'date',
+                            maxView: 'hours',
+                            minView: 'minutes',
+                            view: 'hours',
+                            format: 'HH:mm'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time_together_date_max',
+            component: {
+                name: 'ue-date',
+                settings: {
+                    label: 'date только время(time), max = 15:55',
                     validators:[
                         {
                             type: 'date',
-                            minDate: '15:40'
+                            maxDate: '15:55',
+                            maxView: 'hours',
+                            minView: 'minutes',
+                            view: 'hours',
+                            format: 'HH:mm'
                         }
                     ]
                 }
             }
         },
         {
-            name: 'time_minmax',
+            name: 'time_together_date_min',
             component: {
-                name: 'ue-time',
+                name: 'ue-date',
                 settings: {
-                    label: 'time min = 15:40, max = 15:55',
+                    label: 'date только время(time), min 15:40:00',
                     validators:[
                         {
                             type: 'date',
                             minDate: '15:40',
-                            maxDate: '15:55'
+                            maxView: 'hours',
+                            minView: 'minutes',
+                            view: 'hours',
+                            format: 'HH:mm'
                         }
                     ]
                 }
             }
         },
         {
-            name: 'time_format',
+            name: 'time_together_date_minmax',
             component: {
-                name: 'ue-time',
+                name: 'ue-date',
                 settings: {
-                    label: 'time format = mm:HH',
+                    label: 'date только время(time), min = 15:40, max = 15:55',
                     validators:[
                         {
                             type: 'date',
-                            format: 'mm:HH'
+                            minDate: '15:40',
+                            maxDate: '15:55',
+                            maxView: 'hours',
+                            minView: 'minutes',
+                            view: 'hours',
+                            format: 'HH:mm'
                         }
                     ]
                 }
             }
         },
         {
-            name: 'time_minmax_format',
+            name: 'time_together_date_format',
             component: {
-                name: 'ue-time',
+                name: 'ue-date',
                 settings: {
-                    label: 'time min = 15:40, max = 15:55 format = mm:HH',
+                    label: 'date только время(time), format = mm:HH',
+                    validators:[
+                        {
+                            type: 'date',
+                            format: 'mm:HH',
+                            maxView: 'hours',
+                            minView: 'minutes',
+                            view: 'hours'
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            name: 'time_together_date_minmax_format',
+            component: {
+                name: 'ue-date',
+                settings: {
+                    label: 'date только время(time), min = 15:40, max = 15:55 format = mm:HH',
                     validators:[
                         {
                             type: 'date',
                             format: 'mm:HH',
                             minDate: '15:40',
-                            maxDate: '15:55'
+                            maxDate: '15:55',
+                            maxView: 'hours',
+                            minView: 'minutes',
+                            view: 'hours'
                         }
                     ]
                 }
@@ -1377,7 +1431,9 @@ var newsDataSource = {
 
 var ue = new UniversalEditor('universal-editor', {
     ui: {
-        assetsPath: '/assets'
+        language: {
+            code: 'ru'
+        }
     },
     states: [
     {
@@ -1516,29 +1572,20 @@ var ue = new UniversalEditor('universal-editor', {
                                             'date_max',
                                             'date_minmax',
                                             'date_format',
-                                            'date_minmax_format'
-                                        ]
-                                    },
-                                    {
-                                        label: 'DATETIME',
-                                        fields: [
+                                            'date_minmax_format',
                                             'datetime',
-                                            'datetime_min',
-                                            'datetime_max',
-                                            'datetime_minmax',
-                                            'datetime_format',
-                                            'datetime_minmax_format'
-                                        ]
-                                    },
-                                    {
-                                        label: 'TIME',
-                                        fields: [
-                                            'time',
-                                            'time_min',
-                                            'time_max',
-                                            'time_minmax',
-                                            'time_format',
-                                            'time_minmax_format'
+                                            'date_with_time',
+                                            'date_with_time_max',
+                                            'date_with_time_min',
+                                            'date_with_time_minmax',
+                                            'date_with_time_format',
+                                            'date_with_time_minmax_format',
+                                            'time_together_date',
+                                            'time_together_date_max',
+                                            'time_together_date_min',
+                                            'time_together_date_minmax',
+                                            'time_together_date_format',
+                                            'time_together_date_minmax_format'
                                         ]
                                     },
                                     {
