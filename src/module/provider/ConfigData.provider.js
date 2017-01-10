@@ -5,8 +5,8 @@
         .module('universal.editor')
         .provider('configData', ConfigDataProvider);
 
-    ConfigDataProvider.$inject = ['$stateProvider', '$urlRouterProvider', '$injector'];
-    function ConfigDataProvider($stateProvider, $urlRouterProvider, $injector) {
+    ConfigDataProvider.$inject = ['$stateProvider', '$urlRouterProvider', '$injector', 'moment'];
+    function ConfigDataProvider($stateProvider, $urlRouterProvider, $injector, moment) {
         var configData = {};
         return {
             setConfig: function(moduleName, config) {
@@ -87,11 +87,11 @@
                     };
                     $stateProvider.state(nameState, stateOptions);
                 });
+
                 if (!window.universal_editor_is_load) {
                     window.universal_editor_is_load = true;
                     $urlRouterProvider.otherwise(config.states[0].url || '/');
                 }
-
             },
 
             $get: ['$q', '$rootScope', function($q, $root) {

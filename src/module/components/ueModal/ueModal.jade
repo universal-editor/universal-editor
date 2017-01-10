@@ -1,7 +1,6 @@
 div(style="background: #ebf1f3;")
     .close-editor(data-ng-click="vm.cancel()"
-                  style="display: block; position: absolute; top: 22px; right: 22px; width: 13px; height: 13px; cursor: pointer;"
-                  ng-style="{'background-image':'url('+ vm.assetsPath +'/images/close.jpg)'}")
+                  style="display: block; position: absolute; top: 22px; right: 22px; width: 13px; height: 13px; cursor: pointer;")
     .ue-modal-header(ng-show="vm.header")
         label(ng-bind="vm.header.label")
     .ue-modal-body(ng-show="vm.body")

@@ -263,7 +263,6 @@
 
         $scope.$on('editor:items_list', function(event, data) {
             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-                debugger;
 
                 vm.listLoaded = true;
                 vm.items = data[itemsKey];
@@ -350,21 +349,6 @@
 
             return index !== -1;
         }
-
-        //локализация
-        if (configData.hasOwnProperty("ui") && configData.ui.hasOwnProperty("language")) {
-            if (configData.ui.language.search(".json") !== (-1)) {
-                $translate.use(configData.ui.language);
-            } else if (configData.ui.language !== 'ru') {
-                $translate.use('assets/json/language/' + configData.ui.language + '.json');
-            }
-        }
-
-        /*  vm.clickEnter = function(event) {
-         if (event.keyCode === 13) {
-         vm.applyFilter();
-         }
-         };*/
 
         vm.$onInit = function() {
             RestApiService.setFilterParams({});

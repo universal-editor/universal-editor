@@ -15,12 +15,8 @@
             var vm = this;
             var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
             vm.entityId = $state.params[pkKey];
-            vm.assetsPath = '/assets/universal-editor';
             vm.options = ModalService.options;
 
-            if (!!configData.ui && !!configData.ui.assetsPath) {
-                vm.assetsPath = configData.ui.assetsPath;
-            }
             var modalDialog = $element.closest(".modal-dialog");
 
             vm.size = vm.resolve.settings.size;

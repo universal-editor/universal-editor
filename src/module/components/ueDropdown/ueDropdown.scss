@@ -1,0 +1,11 @@
+.checkbox__check{
+  &.checkbox{
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAYAAABLcGxfAAAA1klEQVR42ozRvy5EURDH8c/e3KBTConiJl5AolkPQscp9PSndQmJZGuNm5DVITqvoFYoJGdDo9FLFEdzd7M21ppmkpnv/PtNJ+dsltVNtYITfBT/gNfxgDWcFTPgLm5RYjuG9Fb+AW/iGgvYiiG9Qlk31TIWY0jPE2tcYRV7MaTHYa7EAXbqptrHDZZwjqr1F+OTC9xhHn0co4cNPKGOIf2QsZNzVjfVbtttro1/tkfeT942VKmPy7F48xs8KoghfeEQL3jH6TT1Rn+IIQ1a8AiDaQXfAwD9Sz+PtcxZ5gAAAABJRU5ErkJggg==');
+    background-repeat: no-repeat;
+  }
+
+  &.radio{
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAANUlEQVR42mNgoDtonau4v3We4n84BvJxK0ZWiIYJm4yO0W3CqxibLXTQQKofSA4lsuKBGAAA4H6aCIpvd8sAAAAASUVORK5CYII=');
+    background-repeat: no-repeat;
+  }
+}
