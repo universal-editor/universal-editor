@@ -599,6 +599,39 @@ var elementDataSource = {
             }
         },
         {
+            name: 'checkbox_one',
+            component: {
+                name: 'ue-checkbox',
+                settings: {
+                    label: 'checkbox одним значением',
+                    trueValue: "true",
+                    falseValue: "false"
+                }
+            }
+        },
+        {
+            name: 'checkbox_inline',
+            component: {
+                name: 'ue-checkbox',
+                settings: {
+                    label: 'checkbox значения в строку',
+                    values: {
+                        "a": "Variable 1",
+                        "b": "Variable 2",
+                        "c": "Variable 3"
+                    },
+                    templates: {
+                        edit: function(){
+                            var temp = '<div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" style="{{::vm.checkBoxStyle}}">'
+                                + '<div data-ng-repeat="item in vm.optionValues" data-ng-class="{\'disabled\': vm.readonly}" class="checkbox checkbox-inline">'
+                                + '<label> <input type="checkbox" data-ng-disabled="vm.readonly" data-checklist-model="vm.fieldValue" data-checklist-value="::item[vm.field_id]"/><span ng-bind="::item[vm.field_search]"></span> </label> </div> </div>';
+                            return temp;
+                        }
+                    }
+                }
+            }
+        },
+        {
             name: 'radiolist',
             component: {
                 name: 'ue-radiolist',
@@ -1563,7 +1596,9 @@ var ue = new UniversalEditor('universal-editor', {
                                             'checkbox_array_defaultValue',
                                             'checkbox_defaultValue',
                                             'checkbox_valuesRemote',
-                                            'checkbox_valuesRemote_without_label'
+                                            'checkbox_valuesRemote_without_label',
+                                            'checkbox_one',
+                                            'checkbox_inline'
                                         ]
                                     },
                                     {
