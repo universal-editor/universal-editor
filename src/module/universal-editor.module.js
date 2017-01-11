@@ -84,10 +84,9 @@
         .module('universal.editor')
         .config(universalEditorConfig);
 
-    universalEditorConfig.$inject = ['minicolorsProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$provide', '$injector'];
+    universalEditorConfig.$inject = ['minicolorsProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$provide', '$injector', 'moment'];
 
-    function universalEditorConfig(minicolorsProvider, $httpProvider, $stateProvider, $urlRouterProvider, $provide, $injector) {
-
+    function universalEditorConfig(minicolorsProvider, $httpProvider, $stateProvider, $urlRouterProvider, $provide, $injector, moment) {
         var dataResolver;
 
         angular.extend(minicolorsProvider.defaults, {
@@ -111,8 +110,6 @@
 
         $httpProvider.interceptors.push('EditorHttpInterceptor');
 
-
-
         $provide.decorator('mFormatFilter', function() {
             return function newFilter(m, format, tz) {
                 if (!(moment.isMoment(m))) {
@@ -135,8 +132,6 @@
 
     function universalEditorRun($rootScope, $location, $state, EditEntityStorage, ModalService, FilterFieldsStorage, RestApiService) {
         var itemsSelector = document.querySelectorAll(".nav.nav-tabs .item");
-
-        
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams, options) {

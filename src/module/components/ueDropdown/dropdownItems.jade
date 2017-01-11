@@ -12,8 +12,8 @@ div(data-ng-show="isOpen")
             data-ng-class='{"multi_radio" : !multiple}'
             )
             .checkbox__check(
-                data-ng-style="{'display': option.checked ? 'block' : '', 'background-image':'url('+ assetsPath + (!multiple ? '/images/radio_green.png)' : '/images/checkbox_green.png)')}",
-                data-ng-class='{"multi_radio" : !multiple}'
+                data-ng-style="{'display': option.checked ? 'block' : ''}",
+                data-ng-class='{"radio multi_radio": !multiple, "checkbox": multiple}'
                 )
           .option__label(data-ng-mousedown="onToggle($event, option, true)")
             span(data-ng-bind="option[fieldSearch]")
@@ -30,7 +30,6 @@ div(data-ng-show="isOpen")
             data-on-toggle="onToggle"
             data-api="api"
             data-select-branches="selectBranches"
-            data-assets-path="assetsPath",
             data-multiple="multiple",
             data-active-element="activeElement",
             data-set-active-element="setActiveElement",

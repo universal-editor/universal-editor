@@ -309,7 +309,9 @@ var demoDataSource = {
 
 var ue = new UniversalEditor('universal-editor', {
     ui: {
-        assetsPath: '/assets'
+        language: {
+            code: 'ru'
+        }
     },
     states: [
         {

@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('BaseController', BaseController);
 
-    BaseController.$inject = ['$scope', 'EditEntityStorage', 'FilterFieldsStorage', '$templateCache', '$compile'];
+    BaseController.$inject = ['$scope', 'EditEntityStorage', 'FilterFieldsStorage', '$templateCache', '$compile', '$translate'];
 
-    function BaseController($scope, EditEntityStorage, FilterFieldsStorage, $templateCache, $compile) {
+    function BaseController($scope, EditEntityStorage, FilterFieldsStorage, $templateCache, $compile, $translate) {
         /* jshint validthis: true */
         var vm = this;
         var self = $scope.vm;
@@ -23,8 +23,6 @@
         }
         self.parentField = self.setting.parentField;
         self.parentFieldIndex = angular.isNumber(self.setting.parentFieldIndex) ? self.setting.parentFieldIndex : false;
-
-
 
         self.label = componentSettings.label || null;
         self.hint = componentSettings.hint || null;
@@ -45,7 +43,10 @@
                     if (htmlPattern.test(template)) {
                         self.templates[property] = $templateCache.get(template);
                         if (self.templates[property] === undefined) {
-                            console.warn('File ' + template + ' is not found!');
+                            $translate('ERROR.FIELD.TEMPLATE').then(function(translation) {
+                                console.warn(translation.replace('%template', template));
+                            });
+
                         }
                     } else {
                         self.templates[property] = template;

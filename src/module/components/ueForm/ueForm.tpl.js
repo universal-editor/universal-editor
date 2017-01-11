@@ -8,7 +8,7 @@ module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/components/ueForm/ueForm.html',
     '\n' +
     '<div class="editor-body">\n' +
-    '    <div data-ng-click="vm.closeButton()" ng-style="{\'background-image\':\'url(\'+ vm.assetsPath +\'/images/close.jpg)\'}" class="close-editor"></div>\n' +
+    '    <div data-ng-click="vm.closeButton()" class="close-editor"></div>\n' +
     '    <component-wrapper ng-repeat="component in ::vm.components" data-setting="::component" data-options="::vm.options"></component-wrapper>\n' +
     '    <div class="field-error-bottom-wrapper">\n' +
     '        <div data-ng-repeat="err in vm.errors" class="error-item alert alert-danger">{{err}}</div>\n' +

@@ -19,7 +19,6 @@
                 onToggle: '=',
                 api: '=',
                 selectBranches: '=',
-                assetsPath: '=',
                 multiple: '=',
                 activeElement: '=',
                 setActiveElement: '=',
