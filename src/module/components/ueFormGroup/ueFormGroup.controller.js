@@ -71,7 +71,6 @@
         }
         
         function removeItem(ind) {
-            var tmpArray = vm.fieldsArray;
             vm.fieldsArray.splice(ind, 1);
         }    
 

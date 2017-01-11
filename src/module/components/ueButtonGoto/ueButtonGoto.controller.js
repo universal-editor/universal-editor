@@ -16,6 +16,8 @@
         vm.entityId = vm.entityId || 'new';
 
         $element.bind("click", function() {
+         //   console.log("angular version(webpack) is " + angular.version.full);
+         //   console.log("jquery version(webpack) is " + $.fn.jquery);
             var stateOptions = {
                 reload: true
             };
@@ -25,7 +27,7 @@
             }
 
             var toStateConfig = EditEntityStorage.getStateConfig(state);
-            if(!toStateConfig) {
+            if (!toStateConfig) {
                 console.warn('Стейт ' + state + ' не зайден в конфигурационном файле.');
             }
             var pkKey = 'pk' + EditEntityStorage.getLevelChild(toStateConfig.name);

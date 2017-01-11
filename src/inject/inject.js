@@ -1,5 +1,4 @@
 var angular_, angularOut;
-debugger;
 angular_ = angularOut = $(window).prop('angular');
 window.angular = null;
 
