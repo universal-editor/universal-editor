@@ -5,7 +5,7 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/components/ueFormGroup/ueFormGroup.html',
+  $templateCache.put('module/components/ueGroup/ueGroup.html',
     '\n' +
     '<div class="editor-field-array">\n' +
     '    <label ng-if="!vm.options.filter &amp;&amp; !!vm.label" class="field-name-label">\n' +
@@ -13,7 +13,7 @@ module.run(['$templateCache', function($templateCache) {
     '            <div ng-bind="::vm.hint" class="hint-text"></div>\n' +
     '        </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="::vm.label"></span>\n' +
     '    </label>\n' +
-    '    <div class="field-array-wrapper editor-form-group col-md-12 col-xs-12 col-sm-12 col-lg-12">\n' +
+    '    <div class="field-array-wrapper editor-group col-md-12 col-xs-12 col-sm-12 col-lg-12">\n' +
     '        <div data-ng-if="vm.multiple">\n' +
     '            <div data-ng-repeat="fields in vm.fieldsArray track by $index" data-ng-init="outerIndex = $index" class="item-array-wrapper">\n' +
     '                <data-component-wrapper ng-class="vm.className" data-ng-repeat="field in fields" data-setting="field" data-options="vm.options"></data-component-wrapper>\n' +
