@@ -1418,9 +1418,9 @@ var ue = new UniversalEditor('universal-editor', {
                                     fields: [
                                         {
                                             component: {
-                                                name: 'ue-button',
+                                                name: 'ue-button-goto',
                                                 settings: {
-                                                    label: 'Simple button',
+                                                    label: 'Simple button'
                                                 }
                                             }
                                         },
@@ -1463,7 +1463,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-button-goto',
                                                 settings: {
                                                     label: 'Open',
-                                                    state: 'modal-window'
+                                                    state: 'index.modal-window'
                                                 }
                                             }
                                         }
@@ -1597,7 +1597,7 @@ var ue = new UniversalEditor('universal-editor', {
             }
         },
         {
-            name: 'modal-window',
+            name: 'index.modal-window',
             url: '/components',
             component: {
                 name: 'ue-modal',
@@ -1614,7 +1614,8 @@ var ue = new UniversalEditor('universal-editor', {
                                 component: {
                                     name: 'ue-button-modal',
                                     settings: {
-                                        action: 'close'
+                                        action: 'close',
+                                        label: 'Close'
                                     }
                                 }
                             }
