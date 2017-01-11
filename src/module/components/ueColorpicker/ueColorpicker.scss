@@ -8,8 +8,13 @@
   height: 30px;
 }
 
-.minicolors {
-  position: relative;
+.item-colorpicker-wrappe {
+  display: block;
+}
+
+.minicolors-theme-bootstrap .minicolors-input {
+  padding-left: 34px;
+  width: 97px;
 }
 
 .minicolors-swatch{

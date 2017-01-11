@@ -1,9 +1,7 @@
 .filter-component
-    button.btn.btn-lg.btn-default.filter-button(data-ng-click="vm.toggleFilterVisibility()") Фильтр {{vm.visiable ? '-' : '+'}}
+    button.btn.btn-lg.btn-default.glyphicon.glyphicon-filter.filter-button(data-ng-click="vm.toggleFilterVisibility()") 
     .editor-filter(data-ng-hide="!vm.visiable")
         .editor-filter-wrapper(ng-keyup="vm.clickEnter($event)")
-            .editor-filter-head
-                label(ng-bind="vm.header.label")
             .editor-filter-body
                 .filter-content-wrapper(ng-repeat="group in vm.body track by $index")
                     label.filter-name-label(ng-bind="group.label", title="{{group.label}}")
