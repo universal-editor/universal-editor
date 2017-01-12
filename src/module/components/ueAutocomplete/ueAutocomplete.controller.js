@@ -107,7 +107,7 @@
         vm.listeners.push($scope.$on('editor:entity_loaded', function(event, data) {
             if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
                 vm.loadingData = true;
-                $scope.onLoadDataHandler(event, data);
+                $scope.onLoadDataHandler(event, data, loadValues);
                 componentSettings.$loadingPromise.then(function(optionValues) {
                     vm.optionValues = optionValues;
                     vm.equalPreviewValue();

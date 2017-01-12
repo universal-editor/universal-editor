@@ -29,6 +29,7 @@
 
         vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
             $scope.onLoadDataHandler(e, data);
+            vm.fieldValue = vm.fieldValue ? moment(vm.fieldValue, vm.format) : "";
             if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
                 vm.equalPreviewValue();
             }

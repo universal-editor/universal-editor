@@ -18,6 +18,11 @@
             self.parentComponentId = self.options.$parentComponentId || '';
             self.regim = self.options.regim || 'edit';
         }
+
+        if(componentSettings && componentSettings.modTemplate){
+            self.regim = componentSettings.modTemplate;
+        }
+
         if (!self.fieldName) {
             self.fieldName = self.setting.name;
         }
@@ -77,7 +82,7 @@
         $scope.$on("$destroy", onDestroyHandler);
         self.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
             if (!data.$parentComponentId || data.$parentComponentId === self.parentComponentId && !self.options.filter) {
-                if (data.editorEntityType === "exist" && self.regim === 'preview' && (self.options.$dataIndex || self.options.$dataIndex === 0) && angular.isObject(data.$items)) {
+                if ((self.options.$dataIndex || self.options.$dataIndex === 0) && angular.isObject(data.$items)) {
                     $scope.data = self.data = data.$items[self.options.$dataIndex];
                 } else {
                     $scope.data = self.data = data;
