@@ -263,7 +263,6 @@
 
         $scope.$on('editor:items_list', function(event, data) {
             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-                debugger;
 
                 vm.listLoaded = true;
                 vm.items = data[itemsKey];

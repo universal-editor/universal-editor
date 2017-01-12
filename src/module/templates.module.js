@@ -21,7 +21,6 @@ module.run(['$templateCache', function($templateCache) {
     } catch (e) {
         module = angular.module('universal.editor.templates', []);
     }
-    debugger;
     module.run(['$templateCache', function ($templateCache) {
         require.context('../module', true, /\.jade$/).keys().forEach(function (req) {
             var path = req.substr(2, req.length - 7);

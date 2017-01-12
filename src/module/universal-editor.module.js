@@ -1,6 +1,5 @@
 (function() {
     'use strict';
-    //debugger;
 
     angular
         .module('universal.editor',

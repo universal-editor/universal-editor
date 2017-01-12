@@ -7,7 +7,6 @@
     UniversalEditorController.$inject = ['$scope','$rootScope','configData','RestApiService', '$element', '$compile', 'component', '$state', 'EditEntityStorage'];
 
     function UniversalEditorController($scope,$rootScope,configData,RestApiService, $element, $compile, component, $state, EditEntityStorage){
-        debugger;
         var vm = this;
         vm.configData = configData;
         vm.menu = [];

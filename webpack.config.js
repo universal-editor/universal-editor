@@ -2,15 +2,13 @@
     'use strict';
 
     var localHost = 'universal-editor.local', defaultlocalHost = '127.0.0.1';
-    const NODE_ENV = require('argv').p ? JSON.stringify('production') : JSON.stringify('development');
+    var NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development';
+    var RUNNING_SERVER = process.title.indexOf(' webpack-dev-server ') !== -1;
 
     var webpack = require('webpack');
     var gutil = require('gulp-util');
     var path = require('path');
-    var ExtractTextPlugin = require('extract-text-webpack-plugin');
     var HtmlWebpackPlugin = require('html-webpack-plugin');
-    var CopyWebpackPlugin = require('copy-webpack-plugin');
-    var BowerWebpackPlugin = require("bower-webpack-plugin");
     var deepcopy = require("deepcopy");
 
     try {
@@ -30,8 +28,8 @@
     var webpackConfigTemplate = {
         context: __dirname,
         output: {
-            path: path.resolve(__dirname, 'dist'),
-            filename: '[name].js'
+            path: path.resolve(__dirname, NODE_ENV == 'production' ? 'dist' : 'app'),
+            filename: NODE_ENV == 'production' ? '[name].min.js' : '[name].js'
         },
         resolve: {
             modulesDirectories: ['node_modules', 'bower_components'],
@@ -87,10 +85,13 @@
         },
         plugins: [
             new webpack.DefinePlugin({
-                'NODE_ENV': JSON.stringify(NODE_ENV)
+                'NODE_ENV': JSON.stringify(NODE_ENV),
+                'RUNNING_SERVER': RUNNING_SERVER
             }),
             new webpack.HotModuleReplacementPlugin()
         ],
+
+        //-- SETTING FOR LOCAL SERVER
         devServer: {
             host: localHost,
             port: 8080,
@@ -114,8 +115,12 @@
     /** Configuration of bundle.js */
     var webpackConfigBundle = deepcopy(webpackConfigTemplate);
     webpackConfigBundle.entry = {
-        'bundle': ['webpack/hot/dev-server', 'webpack-dev-server/client?http://localhost:8080/', path.resolve(__dirname, 'src/main.js')]
+        'bundle': [path.resolve(__dirname, 'src/main.js')]
     };
+    if(RUNNING_SERVER) {
+        webpackConfigBundle.entry.bundle.unshift('webpack-dev-server/client?http://'+ localHost +':8080', 'webpack/hot/dev-server');
+    }
+    
     webpackConfigBundle.resolve.alias = {
         'moment': 'moment/moment.js',
         'jquery-minicolors': 'jquery-minicolors/jquery.minicolors.js',
@@ -152,7 +157,6 @@
     );
 
     /** Configuration of core.js */
-
     var webpackConfigCore = deepcopy(webpackConfigTemplate);
 
     webpackConfigCore.entry = {
@@ -164,6 +168,8 @@
             'INCLUDE_VENDOR': false
         })
     );
+
+    /** Running webpack in multicompilation */
     module.exports = [webpackConfigCore, webpackConfigBundle];
 
 })(require);

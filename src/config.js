@@ -1342,7 +1342,7 @@ var newsDataSource = {
     ]
 };
 
-var ue = new UniversalEditor('universal-editor', {
+var ue = new UniversalEditor.constructor('universal-editor', {
     ui: {
         assetsPath: '/assets'
     },
