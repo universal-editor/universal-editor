@@ -5,8 +5,7 @@
     .groups-action
         button.btn.btn-sm.btn-default(data-ng-if="vm.parentButton && !vm.options.isLoading", data-ng-click="vm.getParent()") {{'BUTTON.HIGHER_LEVEL' | translate}}
     .processing-status-wrapper(data-ng-show="vm.request.isProcessing")
-        .processing-status {{'PERFORMS_ACTIONS' | translate}}
-    {{vm.request.isProcessing}}
+        .processing-status {{'PERFORMS_ACTIONS' | translate}}    
     table.table.table-bordered(data-ng-hide="vm.options.isLoading", class="items-list")
         thead
             tr
