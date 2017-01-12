@@ -9,7 +9,7 @@
     var gutil = require('gulp-util');
     var path = require('path');
     var HtmlWebpackPlugin = require('html-webpack-plugin');
-    var deepcopy = require("deepcopy");
+    var deepcopy = require('deepcopy');
 
     try {
         var hostile = require('hostile');

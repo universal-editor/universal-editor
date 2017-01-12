@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('FieldsController', FieldsController);
 
-    FieldsController.$inject = ['$scope', '$rootScope', '$location', '$controller', '$timeout', 'FilterFieldsStorage', 'RestApiService', 'moment', 'EditEntityStorage', '$q'];
+    FieldsController.$inject = ['$scope', '$rootScope', '$location', '$controller', '$timeout', 'FilterFieldsStorage', 'RestApiService', 'moment', 'EditEntityStorage', '$q', '$translate'];
 
-    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, RestApiService, moment, EditEntityStorage, $q) {
+    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, RestApiService, moment, EditEntityStorage, $q, $translate) {
         /* jshint validthis: true */
         var vm = this;
         var baseController = $controller('BaseController', { $scope: $scope });
@@ -61,7 +61,9 @@
                                 componentSettings.$optionValues = self.optionValues;
                                 return self.optionValues;
                             }, function(reject) {
-                                console.error(self.constructor.name + ': Не удалось получить значения для поля \"' + self.fieldName + '\" с удаленного ресурса');
+                                $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                                    console.error(self.constructor.name + translation.replace('%name_field', self.fieldName));
+                                });
                             }).finally(function() {
                                 self.loadingData = false;
                             });
@@ -93,11 +95,15 @@
         if (!!self.cols) {
             if (self.cols > 12) {
                 self.cols = 12;
-                console.warn('Значение длины для поля ' + self.label + ' превышает максимальное значение сетки (12).');
+                $translate('ERROR.FIELD.MAX_SIZE').then(function(translation) {
+                    console.warn(translation.replace('%label_field', self.label));
+                });
             }
             if (self.cols < 1) {
                 self.cols = 1;
-                console.warn('Значение длины для поля ' + self.label + ' ниже минимального значения сетки (1).');
+                $translate('ERROR.FIELD.MIN_SIZE').then(function(translation) {
+                    console.warn(translation.replace('%label_field', self.label));
+                });
             }
             self.classComponent = 'col-lg-' + self.cols + ' col-md-' + self.cols + ' col-sm-' + self.cols + ' col-xs-' + self.cols + ' clear-padding-left';
         }
@@ -341,6 +347,9 @@
                 case 'date':
                     self.minDate = validator.minDate;
                     self.maxDate = validator.maxDate;
+                    self.minView = validator.minView;
+                    self.maxView = validator.maxView;
+                    self.view = validator.view;
                     self.format = validator.format;
                     break;
                 case 'mask':

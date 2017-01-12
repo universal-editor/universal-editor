@@ -13,7 +13,6 @@
         var vm = this,
             mixEntityObject;
 
-        vm.assetsPath = '/assets/universal-editor';
         vm.configData = configData;
         vm.entityLoaded = false;
         vm.listLoaded = false;
@@ -64,10 +63,6 @@
 
         var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
         var pk = $state.params[pkKey];
-
-        if (!!vm.configData.ui && !!vm.configData.ui.assetsPath) {
-            vm.assetsPath = vm.configData.ui.assetsPath;
-        }
 
         if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
             vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
@@ -189,15 +184,6 @@
             vm.errors = [];
             vm.notifys = [];
         });
-
-        //локализация
-        if (configData.hasOwnProperty("ui") && configData.ui.hasOwnProperty("language")) {
-            if (configData.ui.language.search(".json") !== (-1)) {
-                $translate.use(configData.ui.language);
-            } else if (configData.ui.language !== 'ru') {
-                $translate.use('assets/json/language/' + configData.ui.language + '.json');
-            }
-        }
 
         if (pk === 'new') {
             vm.entityLoaded = true;

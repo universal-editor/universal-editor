@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeFormGroupController', UeFormGroupController);
 
-    UeFormGroupController.$inject = ['$scope', 'EditEntityStorage', '$timeout',  'RestApiService', '$controller'];
+    UeFormGroupController.$inject = ['$scope', 'EditEntityStorage', '$timeout',  'RestApiService', '$controller', '$translate'];
 
-    function UeFormGroupController($scope, EditEntityStorage, $timeout,  RestApiService, $controller) {
+    function UeFormGroupController($scope, EditEntityStorage, $timeout,  RestApiService, $controller, $translate) {
         /* jshint validthis: true */
         var vm = this,
             componentSettings = vm.setting.component.settings,
@@ -27,7 +27,9 @@
         vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
 
         if(vm.multiple === true && !vm.fieldName) {
-          console.log('UeFormGroup: в режиме multiple обязательно должен быть указан параметр name.');
+            $translate('ERROR.MULTIPLE_NAME').then(function(translation) {
+                console.log('UeFormGroup:' + translation);
+            });
         }
 
         vm.addItem = addItem;

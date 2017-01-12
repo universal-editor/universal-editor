@@ -1,0 +1,14 @@
+
+<div class="editor-body">
+    <div data-ng-click="vm.closeButton()" class="close-editor"></div>
+    <component-wrapper ng-repeat="component in ::vm.components" data-setting="::component" data-options="::vm.options"></component-wrapper>
+    <div class="field-error-bottom-wrapper">
+        <div data-ng-repeat="err in vm.errors" class="error-item alert alert-danger">{{err}}</div>
+    </div>
+    <div class="field-notify-bottom-wrapper">
+        <div data-ng-repeat="notify in vm.notifys" class="notify-item">{{notify}}</div>
+    </div>
+    <div data-ng-if="vm.entityLoaded" class="editor-entity-actions">
+        <component-wrapper data-ng-repeat="button in vm.editFooterBar track by $index" data-entity-id="{{vm.entityId}}" data-setting="button" data-options="vm.options" data-button-class="footer" class="editor-action-button"></component-wrapper>
+    </div>
+</div>

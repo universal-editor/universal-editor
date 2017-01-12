@@ -54,7 +54,6 @@
         }
 
         function closeWindow(isUpdateParentComponent) {
-            console.log('closes');
             if (isOpen) {
                 var parentComponentId = self.options.$parentComponentId;
                 isOpen = false;
@@ -66,7 +65,6 @@
                 self.options = null;
                 if (settings.fromState) {
                     $state.go(settings.fromState.name, settings.fromParams, { reload: false }).then(function() {
-                        console.log(isUpdateParentComponent);
                         if (!isUpdateParentComponent) {
                             $rootScope.$broadcast('editor:read_entity', parentComponentId);
                         }
