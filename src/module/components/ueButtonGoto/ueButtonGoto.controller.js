@@ -15,9 +15,7 @@
         var state = vm.setting.component.settings.state;
         vm.entityId = vm.entityId || 'new';
 
-        $element.bind("click", function() {
-         //   console.log("angular version(webpack) is " + angular.version.full);
-         //   console.log("jquery version(webpack) is " + $.fn.jquery);
+        $element.bind('click', function() {
             var stateOptions = {
                 reload: true
             };

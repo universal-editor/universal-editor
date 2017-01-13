@@ -1,9 +1,9 @@
 ; (function(require) {
     'use strict';
 
-    var localHost = 'universal-editor.local', defaultlocalHost = '127.0.0.1';
+    var localHost = 'universal-editor.dev', defaultlocalHost = '127.0.0.1';
     var NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development';
-    var RUNNING_SERVER = process.title.indexOf(' webpack-dev-server ') !== -1;
+    var RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]);
 
     var webpack = require('webpack');
     var gutil = require('gulp-util');
@@ -11,15 +11,17 @@
     var HtmlWebpackPlugin = require('html-webpack-plugin');
     var deepcopy = require('deepcopy');
 
+    var publicPath = path.resolve(__dirname, NODE_ENV == 'production' ? 'dist' : 'app');
+
     if (RUNNING_SERVER) {
         try {
             var hostile = require('hostile');
             hostile.set(defaultlocalHost, localHost, function(err) {
                 if (err) {
-                    gutil.log(gutil.colors.red('Can\'t set hosts file change.'), err.toString());
+                    gutil.log(gutil.colors.red('Can\'t set hosts file change. Please, try run this as Administrator.'), err.toString());
                     localHost = 'localhost';
                 } else {
-                    gutil.log(gutil.colors.green('Set \'/etc/hosts\' successfully! Please, try run this as Administrator.'));
+                    gutil.log(gutil.colors.green('Set \'/etc/hosts\' successfully!'));
                 }
             });
         } catch (e) { localHost = 'localhost'; }
@@ -30,8 +32,8 @@
     var webpackConfigTemplate = {
         context: __dirname,
         output: {
-            path: path.resolve(__dirname, NODE_ENV == 'production' ? 'dist' : 'app'),
-            filename: NODE_ENV == 'production' ? '[name].min.js' : '[name].js'
+            filename: NODE_ENV == 'production' ? '[name].min.js' : '[name].js',
+            path: publicPath
         },
         resolve: {
             modulesDirectories: ['node_modules', 'bower_components'],

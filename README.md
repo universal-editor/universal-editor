@@ -13,10 +13,10 @@ Install dependences:
 
 Run build:
 
-* `webpack-dev-server`: watch sources and build, create web server.* 
-* `webpack-dev-server -p`: build and create web server.
-* `webpack -p`: build to `/dist` directory.
-* `webpack`: build to `/app` directory.
+* `npm run serve`: build and watch sources, create web server. 
+* `npm run serve:dist`: build production and create web server.
+* `npm run build`: build to `/dist` directory.
+* `npm run dev`: build to `/app` directory.
 
 if you running local server by command `webpack-dev-server` or `webpack-dev-server -p` then config.js with test configuration is included in the bundle.
 

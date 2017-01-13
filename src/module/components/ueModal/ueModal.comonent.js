@@ -17,7 +17,7 @@
             vm.entityId = $state.params[pkKey];
             vm.options = ModalService.options;
 
-            var modalDialog = $element.closest(".modal-dialog");
+            var modalDialog = $element.closest('.modal-dialog');
 
             vm.size = vm.resolve.settings.size;
             if (vm.size) {
@@ -51,7 +51,7 @@
             };
 
             vm.ok = function() {
-                vm.close({ $value: "ок modal" });
+                vm.close({ $value: 'ок modal' });
             };
 
             vm.cancel = function() {

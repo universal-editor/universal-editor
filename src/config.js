@@ -307,7 +307,7 @@ var demoDataSource = {
 
 
 
-var ue = new UniversalEditor.constructor('universal-editor', {
+var ue = new UniversalEditor('universal-editor', {
     ui: {
         language: {
             code: 'ru'

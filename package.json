@@ -2,6 +2,12 @@
   "name": "universal-editor",
   "description": "Universal editor to edit the entities from RESTful service",
   "version": "1.0.0-alpha",
+  "scripts": {
+    "serve": "webpack-dev-server --display-modules",
+    "serve:dist": "webpack-dev-server -p",
+    "build": "webpack -p",
+    "dev": "webpack --display-modules"
+  },
   "dependencies": {
     "autoprefixer": "^6.0.3",
     "babel-core": "^6.2.1",

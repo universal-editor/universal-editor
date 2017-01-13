@@ -16,7 +16,7 @@
         var componentSettings = vm.setting.component.settings;
 
         vm.selectedValues = [];
-        vm.inputValue = "";
+        vm.inputValue = '';
         vm.possibleValues = [];
         vm.activeElement = 0;
         vm.preloadedData = true;
@@ -36,7 +36,7 @@
             loadValues();
         }
 
-        $element.bind("keydown", function(event) {
+        $element.bind('keydown', function(event) {
             var possibleValues;
             switch (event.which) {
                 case 13:
@@ -56,7 +56,7 @@
                         break;
                     }
 
-                    possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
+                    possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
                     if (vm.activeElement < vm.possibleValues.length - 1) {
                         $timeout(function() {
@@ -64,8 +64,8 @@
                         }, 0);
 
                         $timeout(function() {
-                            var activeTop = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
-                                activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
+                            var activeTop = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].offsetTop,
+                                activeHeight = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].clientHeight,
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
 
@@ -81,7 +81,7 @@
                         break;
                     }
 
-                    possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
+                    possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
                     if (vm.activeElement > 0) {
                         $timeout(function() {
@@ -89,8 +89,8 @@
                         }, 0);
 
                         $timeout(function() {
-                            var activeTop = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
-                                activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
+                            var activeTop = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].offsetTop,
+                                activeHeight = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].clientHeight,
                                 wrapperScroll = possibleValues[0].scrollTop,
                                 wrapperHeight = possibleValues[0].clientHeight;
 
@@ -153,7 +153,7 @@
             }
             vm.selectedValues.push(obj);
             $element.find('.autocomplete-field-search').removeClass('hidden');
-            vm.inputValue = "";
+            vm.inputValue = '';
             vm.sizeInput = 1;
             vm.possibleValues = [];
             if (event && !vm.multiple) {
@@ -182,11 +182,11 @@
         function autocompleteSearch(searchString) {
             vm.error = [];
 
-            if (searchString === "" || searchString.length <= vm.minCount) {
+            if (searchString === '' || searchString.length <= vm.minCount) {
                 return;
             }
             vm.searching = true;
-            if (componentSettings.hasOwnProperty("values")) {
+            if (componentSettings.hasOwnProperty('values')) {
                 angular.forEach(componentSettings.values, function(v, key) {
                     var obj = {};
                     if (angular.isArray(componentSettings.values)) {
@@ -203,9 +203,9 @@
                 vm.searching = false;
             } else {
                 var urlParam = {};
-                urlParam[vm.field_search] = "%" + searchString + "%";
+                urlParam[vm.field_search] = '%' + searchString + '%';
                 RestApiService
-                    .getUrlResource(componentSettings.valuesRemote.url + "?filter=" + JSON.stringify(urlParam))
+                    .getUrlResource(componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {
                             if (!alreadyIn(v, vm.selectedValues) && !alreadyIn(v, vm.possibleValues)) {
@@ -232,7 +232,7 @@
 
         function loadValues() {
             vm.preloadedData = false;
-            if (componentSettings.hasOwnProperty("values")) {
+            if (componentSettings.hasOwnProperty('values')) {
                 angular.forEach(componentSettings.values, function(v, key) {
                     var obj = {};
                     if (Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple) {
@@ -349,7 +349,7 @@
         function clear() {
             vm.fieldValue = vm.multiple ? [] : null;
             $element.find('.autocomplete-field-search').removeClass('hidden');
-            vm.inputValue = "";
+            vm.inputValue = '';
             vm.sizeInput = 1;
             vm.selectedValues = [];
             vm.placeholder = '';

@@ -17,7 +17,7 @@
 
         /* PUBLIC METHODS */
 
-        this.actionType = "create";
+        this.actionType = 'create';
 
         this.getLevelChild = function(stateName) {
             return stateName.split('.').length;
@@ -41,11 +41,11 @@
                 parentEntity = JSON.parse(parentEntity);
                 parent = parentEntity[id] || null;
             }
-            var data = { editorEntityType: "new", $parentComponentId: (!!parentField ? undefined : id) };
+            var data = { editorEntityType: 'new', $parentComponentId: (!!parentField ? undefined : id) };
             if (!!parent && !!parentField) {
                 data[parentField] = parent;
             }
-            $rootScope.$broadcast("editor:entity_loaded", data);
+            $rootScope.$broadcast('editor:entity_loaded', data);
         };
 
         this.addFieldController = function(ctrl) {
@@ -96,7 +96,7 @@
                 }
 
                 isError = (fCtrl.error.length === 0) && isError;
-                if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
+                if (!fCtrl.hasOwnProperty('readonly') || fCtrl.readonly === false) {
                     if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
                         entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
                         entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
@@ -109,10 +109,10 @@
             if (isError) {
                 request.data = entityObject;
                 switch (type) {
-                    case "create":
+                    case 'create':
                         $rootScope.$emit('editor:create_entity', request);
                         break;
-                    case "update":
+                    case 'update':
                         $rootScope.$emit('editor:update_entity', request);
                         break;
                 }
@@ -140,7 +140,7 @@
                     });
                 }
                 isError = (fCtrl.error.length === 0) && isError;
-                if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
+                if (!fCtrl.hasOwnProperty('readonly') || fCtrl.readonly === false) {
                     if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
                         entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
                         entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
@@ -149,7 +149,7 @@
                         angular.merge(entityObject, value);
                     }
                 }
-                if (!fCtrl.hasOwnProperty("readonly") || fCtrl.readonly === false) {
+                if (!fCtrl.hasOwnProperty('readonly') || fCtrl.readonly === false) {
                     angular.merge(entityObject, fCtrl.getFieldValue());
                 }
             });
@@ -187,7 +187,7 @@
 
         /* EVENTS LISTENING */
 
-        $rootScope.$on("editor:add_entity", function(event, data) {
+        $rootScope.$on('editor:add_entity', function(event, data) {
             self.actionType = data;
         });
 

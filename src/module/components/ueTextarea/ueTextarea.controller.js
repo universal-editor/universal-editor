@@ -36,7 +36,7 @@
         }
 
         function addItem() {
-            vm.fieldValue.push("");
+            vm.fieldValue.push('');
         } 
     }
 })();

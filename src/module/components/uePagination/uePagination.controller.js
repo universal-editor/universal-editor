@@ -103,7 +103,7 @@
 
                 if (startIndex > 1) {
                     vm.pageItemsArray.push({
-                        label: "...",
+                        label: '...',
                         page: startIndex - 1
                     });
                 }
@@ -124,7 +124,7 @@
 
                 if (endIndex < data[metaKey].pageCount) {
                     vm.pageItemsArray.push({
-                        label: "...", 
+                        label: '...', 
                         page: endIndex + 1
                     });
                 }

@@ -27,9 +27,9 @@
         vm.errors = [];
         vm.notifys = [];
         vm.tabsVisibility = [];
-        vm.entityId = "";
-        vm.editorEntityType = "new";
-        vm.sortField = "";
+        vm.entityId = '';
+        vm.editorEntityType = 'new';
+        vm.sortField = '';
         vm.sortingDirection = true;
         vm.pageItemsArray = [];
         vm.contextLinks = [];
@@ -80,7 +80,7 @@
         vm.parentButton = false;
         vm.filterFields = [];
         vm.visibleFilter = true;
-        vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty("pagination") ? vm.setting.component.settings.dataSource.pagination : true;
+        vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty('pagination') ? vm.setting.component.settings.dataSource.pagination : true;
         vm.autoCompleteFields = [];
         vm.entityType = vm.setting.component.settings.entityType || configData;
         vm.parent = null;
@@ -118,7 +118,7 @@
         if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
             vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
         }
-        itemsKey = "items";
+        itemsKey = 'items';
 
         var colSettings = vm.setting.component.settings.columns;
 
@@ -152,7 +152,7 @@
 
 
         angular.forEach(vm.setting.component.settings.dataSource.fields, function(field) {
-            if (field.component.hasOwnProperty("settings") && (vm.setting.component.settings.columns.indexOf(field.name) != -1)) {
+            if (field.component.hasOwnProperty('settings') && (vm.setting.component.settings.columns.indexOf(field.name) != -1)) {
 
             }
         });
@@ -205,7 +205,7 @@
                 } else {
                     vm.sortField = field;
                 }
-                vm.options.sort = vm.sortingDirection ? field : "-" + field;
+                vm.options.sort = vm.sortingDirection ? field : '-' + field;
                 RestApiService.getItemsList({
                     url: url,
                     options: vm.options,
@@ -275,12 +275,12 @@
                     });
                 }
                 var eventObject = {
-                    editorEntityType: "exist",
+                    editorEntityType: 'exist',
                     $parentComponentId: vm.$parentComponentId,
                     $items: vm.items
                 };
                 $timeout(function() {
-                    $rootScope.$broadcast("editor:entity_loaded", eventObject);
+                    $rootScope.$broadcast('editor:entity_loaded', eventObject);
                 });
 
                 vm.parentButton = !!vm.parent;
