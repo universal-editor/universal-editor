@@ -26,7 +26,7 @@
         self.placeholder = componentSettings.placeholder || null;
         self.classComponent = 'col-lg-4 col-md-4 col-sm-4 col-xs-4 clear-padding-left';
         self.inputLeave = inputLeave;
-
+        self.disabled = componentSettings.disabled;
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
         if (values || remoteValues) {

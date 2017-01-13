@@ -2,7 +2,7 @@ extends ../../template/layouts/layoutComponent
 
 block append content
         include ../../template/labelField/labelField
-        div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}" ng-style="{'overflow:auto': vm.multiple}")
+        div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}", ng-style="{'overflow:auto': vm.multiple}", ng-if="!vm.disabled")
             div(ng-class='vm.classComponent')
                 div(data-ng-if="vm.multiple && !vm.isTree")
                     div.select-border
@@ -98,3 +98,5 @@ block append content
                                 )
                     .processing-status-wrapper(data-ng-show="vm.loadingData" style="position: absolute; margin: -28px 0 0 20px;")
                         .processing-status {{'PERFORMS_ACTIONS' | translate}}
+        div.disabled_field(ng-if="vm.disabled")
+            include ../../template/disabledField/default

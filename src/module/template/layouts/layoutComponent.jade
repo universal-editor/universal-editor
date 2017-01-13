@@ -10,7 +10,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
     .component-edit(
         ng-if="(!vm.templates.edit && vm.regim === 'edit') || (!vm.templates.filter && vm.regim === 'filter')",
         ng-class="{'component-filter': vm.regim === 'filter'}"
-        ) 
+        )
         block content
     //-- preview default template
     .component-preview(ng-if="!vm.templates.preview && vm.regim === 'preview'") 

@@ -33,6 +33,7 @@
             if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
                 vm.equalPreviewValue();
             }
+            vm.previewValue = moment(vm.previewValue).format(vm.format);
         }));
 
         //-- private functions
@@ -45,7 +46,6 @@
                 });
             }
         }
-
         function addItem() {
             vm.fieldValue.push(moment());
         }
