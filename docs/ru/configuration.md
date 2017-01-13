@@ -5,7 +5,7 @@
 Инициализация редактора происходит посредствам создания объекта редактора.
 
 ```javascript
-    var editor = new UniversalEditor.constructor('universal-editor', config [, callback]);
+    var editor = new UniversalEditor('universal-editor', config [, callback]);
     /** module – angular-модуль редактора, который можно расширять. */
     function(module) {
       // логика расширения редактора
