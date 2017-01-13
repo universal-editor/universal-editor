@@ -29,9 +29,9 @@
 
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
-        self.field_id = "id";
-        self.field_search = "title";
         if (values || remoteValues) {
+            self.field_id = "id";
+            self.field_search = "title";
             if (self.optionValues) {
                 if (values) {
                     angular.forEach(componentSettings.values, function(v, key) {

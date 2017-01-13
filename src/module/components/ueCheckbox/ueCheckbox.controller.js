@@ -15,7 +15,8 @@
         vm.optionValues = [];
         vm.inputValue = "";
         vm.newEntityLoaded = newEntityLoaded;
-
+        vm.field_id = "id";
+        vm.field_search = "title";
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
         //vm.singleValue = angular.isArray(vm.optionValues) && vm.optionValues.length === 1 && !vm.optionValues[0][vm.field_search];
