@@ -45,6 +45,11 @@
             moduleTemplates: ['*', '*-loader'],
             extensions: ['', '.js']
         },
+
+        /** Include this setting if you need source-map */
+        // devtool: 'inline-source-map',
+        // devtool: 'eval', // faster then previous type of source-map
+
         watch: NODE_ENV == 'development',
         watchOptions: {
             aggregateTimeout: 100
