@@ -5,17 +5,23 @@
  * @constructor
  */
 var UniversalEditor = {
-    constructor: function(id, config) {
+    constructor: function(id, config, callbackInject) {
         'use strict';
         var moduleName = 'unEditor-' + id;
         var unEditor = $('#' + id);
+        var app;
         if (unEditor[0]) {
-            var app = angular.module(moduleName, ['universal.editor', 'ui.bootstrap']).config(['$stateProvider', '$urlRouterProvider', '$injector', 'configDataProvider', function($stateProvider, $urlRouterProvider, $injector, configDataProvider) {
+            app = angular.module(moduleName, ['universal.editor', 'ui.bootstrap']).config(['$stateProvider', '$urlRouterProvider', '$injector', 'configDataProvider', function($stateProvider, $urlRouterProvider, $injector, configDataProvider) {
                 configDataProvider.setConfig(id, config);
             }]);
+            if (angular.isFunction(callbackInject)) {
+                callbackInject(app);
+            }
             unEditor.append("<div class='u-editors' data-ui-view='" + id + "'></div>");
             angular.bootstrap(unEditor[0], [moduleName]);
-        } 
+
+        }
+        return app;
     },
     angular: angular
 };

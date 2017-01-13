@@ -11,17 +11,19 @@
     var HtmlWebpackPlugin = require('html-webpack-plugin');
     var deepcopy = require('deepcopy');
 
-    try {
-        var hostile = require('hostile');
-        hostile.set(defaultlocalHost, localHost, function(err) {
-            if (err) {
-                gutil.log(gutil.colors.red('Can\'t set hosts file change.'), err.toString());
-                localHost = 'localhost';
-            } else {
-                gutil.log(gutil.colors.green('Set \'/etc/hosts\' successfully!'));
-            }
-        });
-    } catch (e) { localHost = 'localhost'; }
+    if (RUNNING_SERVER) {
+        try {
+            var hostile = require('hostile');
+            hostile.set(defaultlocalHost, localHost, function(err) {
+                if (err) {
+                    gutil.log(gutil.colors.red('Can\'t set hosts file change.'), err.toString());
+                    localHost = 'localhost';
+                } else {
+                    gutil.log(gutil.colors.green('Set \'/etc/hosts\' successfully! Please, try run this as Administrator.'));
+                }
+            });
+        } catch (e) { localHost = 'localhost'; }
+    }
 
 
     //** TEMPLATE CONFIGURATION */
@@ -89,17 +91,20 @@
                 'RUNNING_SERVER': RUNNING_SERVER
             }),
             new webpack.HotModuleReplacementPlugin()
-        ],
+        ]
+    };
 
+    if (RUNNING_SERVER) {
         //-- SETTING FOR LOCAL SERVER
-        devServer: {
+        webpackConfigTemplate.devServer = {
             host: localHost,
             port: 8080,
             hot: true,
             inline: true,
             open: true
-        }
-    };
+        };
+    }
+
     if (NODE_ENV == 'production') {
         webpackConfigTemplate.plugins.push(
             new webpack.optimize.UglifyJsPlugin({
@@ -117,10 +122,10 @@
     webpackConfigBundle.entry = {
         'bundle': [path.resolve(__dirname, 'src/main.js')]
     };
-    if(RUNNING_SERVER) {
-        webpackConfigBundle.entry.bundle.unshift('webpack-dev-server/client?http://'+ localHost +':8080', 'webpack/hot/dev-server');
+    if (RUNNING_SERVER) {
+        webpackConfigBundle.entry.bundle.unshift('webpack-dev-server/client?http://' + localHost + ':8080', 'webpack/hot/dev-server');
     }
-    
+
     webpackConfigBundle.resolve.alias = {
         'moment': 'moment/moment.js',
         'jquery-minicolors': 'jquery-minicolors/jquery.minicolors.js',
