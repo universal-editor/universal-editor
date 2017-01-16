@@ -10,6 +10,3 @@ if (INCLUDE_VENDOR) {
 } else {
   require('./index.scss');
 }
-if (NODE_ENV !== 'production' || RUNNING_SERVER) {
-  require('./config.js');
-}

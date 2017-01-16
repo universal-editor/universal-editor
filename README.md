@@ -22,9 +22,6 @@ Run build:
 * `npm run build`: build to `/dist` directory.
 * `npm run dev`: build to `/app` directory.
 
-if you running local server by command `webpack-dev-server` or `webpack-dev-server -p` then config.js with test configuration is included in the bundle.
-
-
 ## Documentation
 
 * [По-русски](docs/ru/README.md).

@@ -9,6 +9,7 @@
     var gutil = require('gulp-util');
     var path = require('path');
     var HtmlWebpackPlugin = require('html-webpack-plugin');
+    var copyWebpackPlugin = require('copy-webpack-plugin');
     var deepcopy = require('deepcopy');
 
     var publicPath = path.resolve(__dirname, NODE_ENV == 'production' ? 'dist' : 'app');
@@ -104,6 +105,7 @@
     if (RUNNING_SERVER) {
         //-- SETTING FOR LOCAL SERVER
         webpackConfigTemplate.devServer = {
+            outputPath: publicPath,
             host: localHost,
             port: 8080,
             hot: true,
@@ -150,11 +152,15 @@
     });
 
     webpackConfigBundle.plugins.push(
+        new copyWebpackPlugin([{
+            from: path.resolve(__dirname, 'src/config.js'),
+            to: publicPath       
+        }]),
         new HtmlWebpackPlugin({
             filename: 'index.html',
             title: 'Example Components Universal Editor',
             template: path.resolve(__dirname, 'src/index.ejs'),
-            inject: 'body'
+            inject: 'head'
         }),
         new webpack.ProvidePlugin({
             'angular': 'angular',
@@ -178,6 +184,12 @@
     webpackConfigCore.plugins.push(
         new webpack.DefinePlugin({
             'INCLUDE_VENDOR': false
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'index_core.html',
+            title: 'Example Components Universal Editor',
+            template: path.resolve(__dirname, 'src/index.without.vendor.ejs'),
+            inject: 'head'
         })
     );
 
