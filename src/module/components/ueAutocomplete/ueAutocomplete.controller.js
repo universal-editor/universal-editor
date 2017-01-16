@@ -26,7 +26,7 @@
         vm.sizeInput = 1;
         vm.classInput = { 'width': '1px' };
         vm.showPossible = false;
-
+        console.log(vm.options.filter);
         if (!vm.multiple) {
             vm.classInput.width = '99%';
             vm.classInput['padding-right'] = '25px';

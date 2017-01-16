@@ -15,7 +15,7 @@ module.run(['$templateCache', function($templateCache) {
     '                <div ng-bind="::vm.hint" class="hint-text"></div>\n' +
     '            </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="::vm.label"></span>\n' +
     '        </label>\n' +
-    '        <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" ng-if="!vm.disabled">\n' +
+    '        <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" ng-if="!vm.disabled || vm.options.filter">\n' +
     '            <div data-ng-if="vm.multiple" data-ng-class="vm.classComponent">\n' +
     '                <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-textarea-wrapper">\n' +
     '                    <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" data-ng-trim="false" data-ui-mask="{{vm.mask}}" data-ui-options="{maskDefinitions : vm.maskDefinitions}" class="form-control editor-textarea"></textarea>\n' +
@@ -27,7 +27,7 @@ module.run(['$templateCache', function($templateCache) {
     '                <textarea name="{{vm.fieldName}}" rows="{{vm.rows}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-ng-blur="vm.inputLeave(vm.fieldValue)" data-ng-trim="false" data-ui-mask="{{vm.mask}}" data-ui-options="{maskDefinitions : vm.maskDefinitions}" class="form-control editor-textarea"></textarea>\n' +
     '            </div>\n' +
     '        </div>\n' +
-    '        <div ng-if="vm.disabled" class="disabled_field">\n' +
+    '        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled_field">\n' +
     '            <div><span ng-bind="::vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>\n' +
     '                <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData" ng-if="vm.multiple"><span ng-bind="value"></span></div>\n' +
     '            </div>\n' +
