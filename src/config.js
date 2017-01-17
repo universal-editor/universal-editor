@@ -318,13 +318,13 @@ var ue = new UniversalEditor('universal-editor', {
             name: 'index',
             url: '/components',
             component: {
-                name: 'ue-form-group',
+                name: 'ue-group',
                 settings: {
                     label: 'Components',
                     fields: [
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'String',
                                     fields: [
@@ -443,7 +443,7 @@ var ue = new UniversalEditor('universal-editor', {
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Textareas',
                                     fields: [
@@ -534,7 +534,7 @@ var ue = new UniversalEditor('universal-editor', {
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Numbers',
                                     fields: [
@@ -602,7 +602,7 @@ var ue = new UniversalEditor('universal-editor', {
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Dates',
                                     fields: [
@@ -855,7 +855,7 @@ var ue = new UniversalEditor('universal-editor', {
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Checkboxes',
                                     fields: [
@@ -948,7 +948,7 @@ var ue = new UniversalEditor('universal-editor', {
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Radio buttons',
                                     fields: [
@@ -1041,7 +1041,7 @@ var ue = new UniversalEditor('universal-editor', {
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Colorpicker',
                                     fields: [
@@ -1087,7 +1087,7 @@ var ue = new UniversalEditor('universal-editor', {
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Dropdown',
                                     fields: [
@@ -1309,7 +1309,7 @@ var ue = new UniversalEditor('universal-editor', {
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Autocomplete',
                                     fields: [
@@ -1411,16 +1411,16 @@ var ue = new UniversalEditor('universal-editor', {
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Buttons',
                                     countInLine: 3,
                                     fields: [
                                         {
                                             component: {
-                                                name: 'ue-button',
+                                                name: 'ue-button-goto',
                                                 settings: {
-                                                    label: 'Simple button',
+                                                    label: 'Simple button'
                                                 }
                                             }
                                         },
@@ -1454,7 +1454,7 @@ var ue = new UniversalEditor('universal-editor', {
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Modal window',
                                     fields: [
@@ -1463,23 +1463,23 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-button-goto',
                                                 settings: {
                                                     label: 'Open',
-                                                    state: 'modal-window'
+                                                    state: 'index.modal-window'
                                                 }
                                             }
                                         }
                                     ]
-                                },
+                                }
                             }
                         },
                         {
                             component: {
-                                name: 'ue-form-group',
+                                name: 'ue-group',
                                 settings: {
                                     label: 'Data management',
                                     fields: [
                                         {
                                             component: {
-                                                name: 'ue-form-group',
+                                                name: 'ue-group',
                                                 settings: {
                                                     label: 'Grid',
                                                     fields: [
@@ -1498,7 +1498,7 @@ var ue = new UniversalEditor('universal-editor', {
                                         },
                                         {
                                             component: {
-                                                name: 'ue-form-group',
+                                                name: 'ue-group',
                                                 settings: {
                                                     label: 'Form',
                                                     fields: [
@@ -1597,7 +1597,7 @@ var ue = new UniversalEditor('universal-editor', {
             }
         },
         {
-            name: 'modal-window',
+            name: 'index.modal-window',
             url: '/components',
             component: {
                 name: 'ue-modal',
@@ -1614,7 +1614,8 @@ var ue = new UniversalEditor('universal-editor', {
                                 component: {
                                     name: 'ue-button-modal',
                                     settings: {
-                                        action: 'close'
+                                        action: 'close',
+                                        label: 'Close'
                                     }
                                 }
                             }

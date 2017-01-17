@@ -14,6 +14,7 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '    </button>\n' +
     '    <button data-ng-if="vm.setting.buttonClass == \'context\'" class="editor-action-button">{{::vm.label}}</button>\n' +
+    '    <button data-ng-if="vm.setting.buttonClass == \'default\'" class="btn btn-md btn-success button-footer">{{::vm.label}}</button>\n' +
     '</div>');
 }]);
 })();

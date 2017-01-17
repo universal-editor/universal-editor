@@ -3,11 +3,11 @@
 
     angular
         .module('universal.editor')
-        .controller('UeFormGroupController', UeFormGroupController);
+        .controller('UeGroupController', UeGroupController);
 
-    UeFormGroupController.$inject = ['$scope', 'EditEntityStorage', '$timeout',  'RestApiService', '$controller', '$translate'];
+    UeGroupController.$inject = ['$scope', 'EditEntityStorage', '$timeout',  'RestApiService', '$controller', '$translate'];
 
-    function UeFormGroupController($scope, EditEntityStorage, $timeout,  RestApiService, $controller, $translate) {
+    function UeGroupController($scope, EditEntityStorage, $timeout,  RestApiService, $controller, $translate) {
         /* jshint validthis: true */
         var vm = this,
             componentSettings = vm.setting.component.settings,
