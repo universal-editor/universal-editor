@@ -27,7 +27,7 @@ module.run(['$templateCache', function($templateCache) {
     '                <input data-date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-format="{{vm.format || \'DD.MM.YYYY\'}}" data-max-view="{{::vm.maxView}}" data-min-view="{{::vm.minView}}" data-view="{{::vm.view}}" data-ng-blur="vm.inputLeave(vm.fieldValue)" data-min-date="minDate" data-max-date="maxDate" class="form-control input-sm"/>\n' +
     '            </div>\n' +
     '        </div>\n' +
-    '        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled_field">\n' +
+    '        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled-field">\n' +
     '            <div><span ng-bind="::vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>\n' +
     '                <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData" ng-if="vm.multiple"><span ng-bind="value"></span></div>\n' +
     '            </div>\n' +

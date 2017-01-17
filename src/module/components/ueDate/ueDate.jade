@@ -36,5 +36,5 @@ block append content
                 data-min-date="minDate",
                 data-max-date="maxDate"
                 )
-    div.disabled_field(ng-if="vm.disabled && !vm.options.filter")
+    .disabled-field(ng-if="vm.disabled && !vm.options.filter")
         include ../../template/disabledField/default

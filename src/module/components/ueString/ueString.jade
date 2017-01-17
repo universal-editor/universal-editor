@@ -32,5 +32,5 @@ block append content
                     size="{{vm.size}}",
                     ng-trim="false"
                 )
-    div.disabled_field(ng-if="vm.disabled && !vm.options.filter")
+    .disabled-field(ng-if="vm.disabled && !vm.options.filter")
         include ../../template/disabledField/default

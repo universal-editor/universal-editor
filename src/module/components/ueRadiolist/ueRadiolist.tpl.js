@@ -18,11 +18,11 @@ module.run(['$templateCache', function($templateCache) {
     '        <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" ng-if="!vm.disabled || vm.options.filter">\n' +
     '            <div data-ng-repeat="item in vm.optionValues" data-ng-class="{\'radiodisabled\': vm.readonly}">		\n' +
     '                <label class="radio">\n' +
-    '                    <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{::item[vm.field_id]}}"/><span ng-bind="::item[vm.field_search]"></span>\n' +
+    '                    <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{::item[vm.fieldId]}}"/><span ng-bind="::item[vm.fieldSearch]"></span>\n' +
     '                </label>\n' +
     '            </div>\n' +
     '        </div>\n' +
-    '        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled_field">\n' +
+    '        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled-field">\n' +
     '            <div><span ng-bind="::vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>\n' +
     '                <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData" ng-if="vm.multiple"><span ng-bind="value"></span></div>\n' +
     '            </div>\n' +

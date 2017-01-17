@@ -30,16 +30,16 @@
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
         if (values || remoteValues) {
-            self.field_id = "id";
-            self.field_search = "title";
+            self.fieldId = "id";
+            self.fieldSearch = "title";
             if (self.optionValues) {
                 if (values) {
                     angular.forEach(componentSettings.values, function(v, key) {
                         var obj = {};
-                        obj[self.field_id] = key;
-                        obj[self.field_search] = v;
+                        obj[self.fieldId] = key;
+                        obj[self.fieldSearch] = v;
                         if (angular.isArray(componentSettings.values)) {
-                            obj[self.field_id] = v;
+                            obj[self.fieldId] = v;
                         }
                         self.optionValues.push(obj);
                     });
@@ -47,8 +47,8 @@
                     componentSettings.$loadingPromise = $q.when(self.optionValues);
                 } else if (remoteValues) {
                     if (remoteValues.fields) {
-                        self.field_id = remoteValues.fields.value || self.field_id;
-                        self.field_search = remoteValues.fields.label || self.field_id;
+                        self.fieldId = remoteValues.fields.value || self.fieldId;
+                        self.fieldSearch = remoteValues.fields.label || self.fieldId;
                     }
                     self.loadingData = true;
                     if (!componentSettings.$loadingPromise) {
@@ -90,7 +90,7 @@
             self.cols = 12;
         }
 
-        
+
 
         if (!!self.cols) {
             if (self.cols > 12) {
@@ -146,8 +146,8 @@
                 value = moment(object);
                 return self.multiple ? [value] : value;
             }
-            if (angular.isObject(object) && !angular.isArray(object) && self.field_id) {
-                value = object[self.field_id];
+            if (angular.isObject(object) && !angular.isArray(object) && self.fieldId) {
+                value = object[self.fieldId];
             } else {
                 value = object;
             }
@@ -167,12 +167,12 @@
                     if (angular.isArray(source)) {
                         source.forEach(function(option) {
                             if (angular.isObject(self.fieldValue) && !angular.isArray(self.fieldValue)) {
-                                compareId(self.fieldValue[self.field_id], option, false);
+                                compareId(self.fieldValue[self.fieldId], option, false);
                             }
                             if (angular.isArray(self.fieldValue)) {
                                 self.fieldValue.forEach(function(value) {
                                     if (angular.isObject(value)) {
-                                        compareId(value[self.field_id], option, true);
+                                        compareId(value[self.fieldId], option, true);
                                     }
                                     if (angular.isNumber(value) || angular.isString(value)) {
                                         compareId(value, option, true);
@@ -190,12 +190,12 @@
             }
 
             function compareId(id, option, multiple) {
-                if (id == option[self.field_id]) {
+                if (id == option[self.fieldId]) {
                     if (multiple) {
                         self.previewValue = self.previewValue || [];
-                        self.previewValue.push(option[self.field_search]);
+                        self.previewValue.push(option[self.fieldSearch]);
                     } else {
-                        self.previewValue = option[self.field_search];
+                        self.previewValue = option[self.fieldSearch];
                     }
                 }
             }
@@ -277,14 +277,14 @@
 
                         var obj = {};
                         self.fieldValue = transformToValue(componentSettings.defaultValue);
-                        if (self.field_id) {
+                        if (self.fieldId) {
                             if (self.isTree) {
                                 self.fieldValue = [];
                             }
 
                             if (!!componentSettings.defaultValue && !self.isTree) {
                                 obj = {};
-                                obj[self.field_id] = componentSettings.defaultValue;
+                                obj[self.fieldId] = componentSettings.defaultValue;
                                 self.fieldValue = obj;
                             }
                             if (data.hasOwnProperty(self.fieldName)) {
@@ -296,7 +296,7 @@
                         }
                         return;
                     }
-                   
+
                     var apiValue;
                     if (!self.parentField) {
                         apiValue = self.data[self.fieldName];

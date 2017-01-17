@@ -10,11 +10,11 @@
         <div ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}" ng-if="!vm.disabled || vm.options.filter">
             <div data-ng-repeat="item in vm.optionValues" data-ng-class="{'radiodisabled': vm.readonly}">		
                 <label class="radio">
-                    <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{::item[vm.field_id]}}"/><span ng-bind="::item[vm.field_search]"></span>
+                    <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{::item[vm.fieldId]}}"/><span ng-bind="::item[vm.fieldSearch]"></span>
                 </label>
             </div>
         </div>
-        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled_field">
+        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled-field">
             <div><span ng-bind="::vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>
                 <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData" ng-if="vm.multiple"><span ng-bind="value"></span></div>
             </div>

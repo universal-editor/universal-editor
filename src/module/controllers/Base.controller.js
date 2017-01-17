@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -19,7 +19,7 @@
             self.regim = self.options.regim || 'edit';
         }
 
-        if(componentSettings && componentSettings.modeTemplate){
+        if (componentSettings && componentSettings.modeTemplate) {
             self.regim = componentSettings.modeTemplate;
         }
 
@@ -39,7 +39,7 @@
         /** if template is set as a html-file */
         var htmlPattern = /[^\s]+(?=\.html$)/;
         if (angular.isObject(self.templates)) {
-            ['preview', 'filter', 'edit'].forEach(function(property) {
+            ['preview', 'filter', 'edit'].forEach(function (property) {
                 var template = self.templates[property];
                 if (angular.isFunction(template)) {
                     template = template($scope);
@@ -48,7 +48,7 @@
                     if (htmlPattern.test(template)) {
                         self.templates[property] = $templateCache.get(template);
                         if (self.templates[property] === undefined) {
-                            $translate('ERROR.FIELD.TEMPLATE').then(function(translation) {
+                            $translate('ERROR.FIELD.TEMPLATE').then(function (translation) {
                                 console.warn(translation.replace('%template', template));
                             });
 
@@ -80,7 +80,7 @@
         $scope.onDestroyHandler = onDestroyHandler;
 
         $scope.$on("$destroy", onDestroyHandler);
-        self.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+        self.listeners.push($scope.$on('editor:entity_loaded', function (e, data) {
             if (!data.$parentComponentId || data.$parentComponentId === self.parentComponentId && !self.options.filter) {
                 if ((self.options.$dataIndex || self.options.$dataIndex === 0) && angular.isObject(data.$items)) {
                     $scope.data = self.data = data.$items[self.options.$dataIndex];
@@ -92,7 +92,7 @@
 
         function onDestroyHandler() {
             if (angular.isArray(self.listeners)) {
-                self.listeners.forEach(function(listener) {
+                self.listeners.forEach(function (listener) {
                     if (angular.isFunction(listener)) {
                         listener();
                     }
@@ -104,7 +104,7 @@
 
         function onErrorApiHandler(event, data) {
             if (angular.isArray(data)) {
-                angular.forEach(data, function(error) {
+                angular.forEach(data, function (error) {
                     if (self.error.indexOf(error) < 0) {
                         self.error.push(error);
                     }

@@ -19,7 +19,7 @@
                 <input data-date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-format="{{vm.format || 'DD.MM.YYYY'}}" data-max-view="{{::vm.maxView}}" data-min-view="{{::vm.minView}}" data-view="{{::vm.view}}" data-ng-blur="vm.inputLeave(vm.fieldValue)" data-min-date="minDate" data-max-date="maxDate" class="form-control input-sm"/>
             </div>
         </div>
-        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled_field">
+        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled-field">
             <div><span ng-bind="::vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>
                 <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData" ng-if="vm.multiple"><span ng-bind="value"></span></div>
             </div>

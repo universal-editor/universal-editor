@@ -10,11 +10,11 @@
         <div ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}" style="{{::vm.checkBoxStyle}}" ng-if="!vm.disabled || vm.options.filter">
             <div data-ng-repeat="item in vm.optionValues" data-ng-class="{'disabled': vm.readonly}" class="checkbox">
                 <label>
-                    <input type="checkbox" data-ng-disabled="vm.readonly" data-checklist-model="vm.fieldValue" data-checklist-value="::item[vm.field_id]"/><span ng-bind="::item[vm.field_search]"></span>
+                    <input type="checkbox" data-ng-disabled="vm.readonly" data-checklist-model="vm.fieldValue" data-checklist-value="::item[vm.fieldId]"/><span ng-bind="::item[vm.fieldSearch]"></span>
                 </label>
             </div>
         </div>
-        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled_field">
+        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled-field">
             <div>
                 <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData"><span ng-bind="value"></span></div>
             </div>

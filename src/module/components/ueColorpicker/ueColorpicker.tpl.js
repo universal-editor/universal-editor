@@ -29,8 +29,8 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter">\n' +
     '            <div>\n' +
-    '                <div ng-if="!vm.multiple" ng-style="{ \'background-color\': vm.fieldValue}" class="disabled_colorpicker"></div>\n' +
-    '                <div ng-if="vm.multiple" ng-repeat="value in vm.fieldValue track by $index" ng-style="{ \'background-color\': value}" class="disabled_colorpicker"></div>\n' +
+    '                <div ng-if="!vm.multiple" ng-style="{ \'background-color\': vm.fieldValue}" class="disabled-colorpicker"></div>\n' +
+    '                <div ng-if="vm.multiple" ng-repeat="value in vm.fieldValue track by $index" ng-style="{ \'background-color\': value}" class="disabled-colorpicker"></div>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '    </div>\n' +

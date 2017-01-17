@@ -27,7 +27,7 @@ module.run(['$templateCache', function($templateCache) {
     '                <input type="{{vm.typeInput}}" data-ui-mask="{{vm.mask}}" data-ui-options="{maskDefinitions : vm.maskDefinitions}" data-ng-disabled="vm.readonly" name="{{vm.fieldName}}" data-ng-model="vm.fieldValue" step="{{vm.stepNumber}}" data-ng-blur="vm.inputLeave(vm.fieldValue)" size="{{vm.size}}" ng-trim="false" class="form-control input-sm"/>\n' +
     '            </div>\n' +
     '        </div>\n' +
-    '        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled_field">\n' +
+    '        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled-field">\n' +
     '            <div><span ng-bind="::vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>\n' +
     '                <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData" ng-if="vm.multiple"><span ng-bind="value"></span></div>\n' +
     '            </div>\n' +

@@ -19,7 +19,7 @@
                 <input type="{{vm.typeInput}}" data-ui-mask="{{vm.mask}}" data-ui-options="{maskDefinitions : vm.maskDefinitions}" data-ng-disabled="vm.readonly" name="{{vm.fieldName}}" data-ng-model="vm.fieldValue" step="{{vm.stepNumber}}" data-ng-blur="vm.inputLeave(vm.fieldValue)" size="{{vm.size}}" ng-trim="false" class="form-control input-sm"/>
             </div>
         </div>
-        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled_field">
+        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled-field">
             <div><span ng-bind="::vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>
                 <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData" ng-if="vm.multiple"><span ng-bind="value"></span></div>
             </div>

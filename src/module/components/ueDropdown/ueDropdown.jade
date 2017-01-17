@@ -7,7 +7,7 @@ block append content
                 div(data-ng-if="vm.multiple && !vm.isTree")
                     div.select-border
                         select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple, size="3")
-                            option(data-ng-repeat="option in vm.optionValues", value="{{option[vm.field_id]}}") {{option[vm.field_search]}}
+                            option(data-ng-repeat="option in vm.optionValues", value="{{option[vm.fieldId]}}") {{option[vm.fieldSearch]}}
                     .processing-status-wrapper(data-ng-show="!!vm.loadingData" style="position: absolute; margin: -28px 0 0 20px;")
                         .processing-status {{'PERFORMS_ACTIONS' | translate}}
                 div(data-ng-if="!vm.multiple && !vm.isTree" )
@@ -39,7 +39,7 @@ block append content
                             data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'
                             )
                             .possible-scroll
-                                .possible-value-item(data-ng-repeat="option in vm.optionValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.field_search]}}
+                                .possible-value-item(data-ng-repeat="option in vm.optionValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.fieldSearch]}}
 
                     .processing-status-wrapper(data-ng-show="vm.loadingData" style="position: absolute; margin: -28px 0 0 20px;")
                         .processing-status {{'PERFORMS_ACTIONS' | translate}}
@@ -53,10 +53,10 @@ block append content
                             )
                             .selected-items__item(
                                 data-ng-repeat="value in vm.fieldValue",
-                                data-ng-if="vm.fieldValue.length && vm.multiple && value[vm.field_search]"
+                                data-ng-if="vm.fieldValue.length && vm.multiple && value[vm.fieldSearch]"
                                 )
                                 .selected-item
-                                    label(ng-bind="value[vm.field_search]" style="overflow: hidden; text-overflow: ellipsis; margin-right: 15px; display: block;")
+                                    label(ng-bind="value[vm.fieldSearch]" style="overflow: hidden; text-overflow: ellipsis; margin-right: 15px; display: block;")
                                     span.selected-item__btn_delete(data-ng-click="vm.remove($event, value)" style="float: right; width: 10px; margin-top: -24px;", ng-if="!vm.readonly") ×
 
                             input.dropdown__search-field(data-ng-if="vm.search && !vm.loadingData"
@@ -86,7 +86,7 @@ block append content
                                 data-dropdown-items="",
                                 data-options="vm.optionValues",
                                 data-is-open="isOpen && vm.optionValues.length",
-                                data-field-search="vm.field_search",
+                                data-field-search="vm.fieldSearch",
                                 data-child-count-field="vm.treeChildCountField",
                                 data-on-toggle="vm.toggle",
                                 data-api="vm.field.values_remote.url",
@@ -98,5 +98,5 @@ block append content
                                 )
                     .processing-status-wrapper(data-ng-show="vm.loadingData" style="position: absolute; margin: -28px 0 0 20px;")
                         .processing-status {{'PERFORMS_ACTIONS' | translate}}
-        div.disabled_field(ng-if="vm.disabled && !vm.options.filter")
+        .disabled-field(ng-if="vm.disabled && !vm.options.filter")
             include ../../template/disabledField/default

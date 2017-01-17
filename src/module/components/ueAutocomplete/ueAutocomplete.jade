@@ -6,8 +6,8 @@ block append content
         div(ng-class='vm.classComponent')
             .autocomplete-input-wrapper.form-control(data-ng-class='{"active" : vm.isActivePossible, "disabled-input": vm.readonly}', data-ng-click="inputFocus()"   )
                 .autocomplete-item(data-ng-repeat="acItem in vm.selectedValues", 
-                                    data-ng-show="acItem[vm.field_search]",
-                                    data-ng-if="vm.multiple") {{acItem[vm.field_search]}}
+                                    data-ng-show="acItem[vm.fieldSearch]",
+                                    data-ng-if="vm.multiple") {{acItem[vm.fieldSearch]}}
                     span.remove-from-selected(data-ng-click="vm.removeFromSelected($event, acItem)", data-ng-if="!vm.readonly") ×
                 input.autocomplete-field-search(
                     ng-show="vm.preloadedData"
@@ -35,6 +35,6 @@ block append content
                         .possible-value-item(data-ng-repeat="possible in vm.possibleValues", 
                                             data-ng-mouseover="vm.activeElement = $index", 
                                             data-ng-mousedown="vm.addToSelected($event, possible)",
-                                            data-ng-class="vm.activeElement == $index ? 'active' : ''") {{::possible[vm.field_search]}}
-    div.disabled_field(ng-if="vm.disabled && !vm.options.filter")
+                                            data-ng-class="vm.activeElement == $index ? 'active' : ''") {{::possible[vm.fieldSearch]}}
+    .disabled-field(ng-if="vm.disabled && !vm.options.filter")
         include ../../template/disabledField/default

@@ -10,5 +10,5 @@ block append content
             .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-disabled="vm.readonly") {{'BUTTON.ADD' | translate}}
         div(data-ng-if="!vm.multiple", data-ng-class="vm.classComponent")
                 textarea.form-control(name="{{vm.fieldName}}", rows="{{vm.rows}}", data-ng-disabled="vm.readonly", data-ng-model="vm.fieldValue", class="editor-textarea", data-ng-blur="vm.inputLeave(vm.fieldValue)", data-ng-trim="false", data-ui-mask="{{vm.mask}}", data-ui-options="{maskDefinitions : vm.maskDefinitions}")
-    div.disabled_field(ng-if="vm.disabled && !vm.options.filter")
+    .disabled-field(ng-if="vm.disabled && !vm.options.filter")
         include ../../template/disabledField/default
