@@ -19,8 +19,8 @@
             self.regim = self.options.regim || 'edit';
         }
 
-        if (componentSettings && componentSettings.modeTemplate) {
-            self.regim = componentSettings.modeTemplate;
+        if (componentSettings && componentSettings.mode) {
+            self.regim = componentSettings.mode;
         }
 
         if (!self.fieldName) {
