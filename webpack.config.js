@@ -9,7 +9,7 @@
     var gutil = require('gulp-util');
     var path = require('path');
     var HtmlWebpackPlugin = require('html-webpack-plugin');
-    var copyWebpackPlugin = require('copy-webpack-plugin');
+    var copyWebpackPlugin = require('transfer-webpack-plugin');
     var deepcopy = require('deepcopy');
 
     var publicPath = path.resolve(__dirname, NODE_ENV == 'production' ? 'dist' : 'app');
@@ -102,6 +102,8 @@
         ]
     };
 
+   //  console.log(RUNNING_SERVER);
+
     if (RUNNING_SERVER) {
         //-- SETTING FOR LOCAL SERVER
         webpackConfigTemplate.devServer = {
@@ -153,8 +155,7 @@
 
     webpackConfigBundle.plugins.push(
         new copyWebpackPlugin([{
-            from: path.resolve(__dirname, 'src/config.js'),
-            to: publicPath       
+            from: 'src/config'    
         }]),
         new HtmlWebpackPlugin({
             filename: 'index.html',
