@@ -3,10 +3,9 @@
   "description": "Universal editor to edit the entities from RESTful service",
   "version": "1.0.0-alpha",
   "scripts": {
-    "serve": "webpack-dev-server --display-modules",
-    "serve:dist": "webpack-dev-server -p",
-    "build": "webpack -p",
-    "dev": "webpack --display-modules"
+    "dev": "webpack-dev-server --display-modules --progress --colors",
+    "dist": "http-server ./dist/ -a localhost -p 8080 -c-1 -o",
+    "build": "webpack -p --progress --colors"
   },
   "dependencies": {
     "autoprefixer": "^6.0.3",
@@ -28,6 +27,7 @@
     "jade": "^1.11.0",
     "jade-loader": "^0.8.0",
     "node-sass": "^4.2.0",
+    "open-url": "^2.0.2",
     "sass-loader": "^4.1.1",
     "string-replace-loader": "^1.0.5",
     "style-loader": "^0.13.0",

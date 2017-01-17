@@ -1,6 +1,6 @@
 ; (function(require) {
     'use strict';
-
+    
     var localHost = 'universal-editor.dev', defaultlocalHost = '127.0.0.1';
     var NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development';
     var RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]);

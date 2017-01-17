@@ -1,3 +1,4 @@
+
 window.RequstCallback = {
     beforeSend: function() {
         alert('Before trigger');
@@ -10,11 +11,11 @@ var staffDataSource = {
     sortBy: '-id',
     primaryKey: 'id',
     parentField: 'parent_id',
-    keys:{
+    keys: {
         items: 'items',
         meta: '_meta'
     },
-    fields:[
+    fields: [
         {
             name: "name",
             component: {
@@ -38,7 +39,7 @@ var staffDataSource = {
             name: "gender",
             component: {
                 name: 'ue-radiolist',
-                settings:{
+                settings: {
                     label: "Пол",
                     values: {
                         "male": "Мужской",
@@ -69,7 +70,7 @@ var staffDataSource = {
             name: "parent_id",
             component: {
                 name: "ue-autocomplete",
-                settings:{
+                settings: {
                     label: "Руководитель",
                     valuesRemote: {
                         fields: {
@@ -140,11 +141,11 @@ var newsDataSource = {
     sortBy: '-id',
     primaryKey: 'id',
     parentField: 'parent_id',
-    keys:{
+    keys: {
         items: 'items',
         meta: '_meta'
     },
-    fields:[
+    fields: [
         {
             name: "published",
             component: {
@@ -208,7 +209,7 @@ var newsDataSource = {
             name: "authors",
             component: {
                 name: "ue-autocomplete",
-                settings:{
+                settings: {
                     label: "Авторы",
                     valuesRemote: {
                         fields: {
@@ -227,7 +228,7 @@ var newsDataSource = {
             name: "tags",
             component: {
                 name: "ue-autocomplete",
-                settings:{
+                settings: {
                     label: "Теги",
                     valuesRemote: {
                         fields: {
@@ -330,6 +331,17 @@ var ue = new UniversalEditor('universal-editor', {
                                     fields: [
                                         {
                                             component: {
+                                                name: 'ue-custom-component',
+                                                settings: {
+                                                    //настройки компонента
+                                                    readonly: false,
+                                                    colorText: '#445866',
+                                                    widthField: '400px'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'Простое поле string'
@@ -341,7 +353,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'string c trim->true',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             trim: true
@@ -355,7 +367,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'string c ограничеме по длинне minLength = 2, maxLength = 25',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             minLength: 2,
@@ -370,7 +382,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'string c ограничеме по длинне minLength = 2, maxLength = 25, trim',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             minLength: 2,
@@ -386,7 +398,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'string contentType = url',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             contentType: 'url'
@@ -400,7 +412,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'string contentType = email',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             contentType: 'email'
@@ -414,7 +426,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'string contentType = password',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             contentType: 'password'
@@ -428,7 +440,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'string pattern = [0-9][a-z]',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             pattern: '[0-9][a-z]'
@@ -460,7 +472,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-textarea',
                                                 settings: {
                                                     label: 'textarea c trim->true',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             trim: true
@@ -474,7 +486,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-textarea',
                                                 settings: {
                                                     label: 'textarea c ограничеме по длинне minLength = 2, maxLength = 25',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             minLength: 2,
@@ -489,7 +501,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-textarea',
                                                 settings: {
                                                     label: 'textarea c ограничеме по длинне minLength = 2, maxLength = 25, trim',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             minLength: 2,
@@ -505,7 +517,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-textarea',
                                                 settings: {
                                                     label: 'textarea pattern = [0-9][a-z]',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string',
                                                             pattern: '[0-9][a-z]'
@@ -519,7 +531,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-textarea',
                                                 settings: {
                                                     label: 'textarea multiple',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'string'
                                                         }
@@ -543,7 +555,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'просто number',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'number'
                                                         }
@@ -556,7 +568,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'number c шагом(step) 10',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'number',
                                                             step: 10
@@ -570,7 +582,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'number c ограничением min = 0 и max = 100',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'number',
                                                             min: 0,
@@ -585,7 +597,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'number c ограничением min = 0 и max = 100 и шагом 10',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'number',
                                                             min: 0,
@@ -619,7 +631,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-date',
                                                 settings: {
                                                     label: 'date max = 10.12.2016',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             maxDate: '10.12.2016'
@@ -633,7 +645,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-date',
                                                 settings: {
                                                     label: 'date min = 10.11.2016',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             minDate: '10.11.2016'
@@ -647,7 +659,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-date',
                                                 settings: {
                                                     label: 'date min = 10.11.2016, max = 10.12.2016',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             minDate: '10.11.2016',
@@ -662,7 +674,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-date',
                                                 settings: {
                                                     label: 'date min = 10.11.2016, max = 10.12.2016',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             format: 'YYYY-DD-MM'
@@ -676,7 +688,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-date',
                                                 settings: {
                                                     label: 'date min = 10.11.2016, max = 10.12.2016',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             format: 'YYYY-DD-MM',
@@ -700,7 +712,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-datetime',
                                                 settings: {
                                                     label: 'datetime max = 10.12.2016 15:55:00',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             maxDate: '10.12.2016 15:55:00'
@@ -714,7 +726,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-datetime',
                                                 settings: {
                                                     label: 'datetime min = 10.11.2016 15:40:00',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             minDate: '10.11.2016 15:40:00'
@@ -728,7 +740,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-datetime',
                                                 settings: {
                                                     label: 'datetime min = 10.11.2016 15:40:00, max = 10.12.2016 15:55:00',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             minDate: '10.11.2016 15:40:00',
@@ -743,7 +755,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-datetime',
                                                 settings: {
                                                     label: 'datetime min = 10.11.2016, max = 10.12.2016',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             format: 'YYYY-DD-MM HH:mm'
@@ -757,7 +769,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-datetime',
                                                 settings: {
                                                     label: 'datetime min = 10.11.2016, max = 10.12.2016',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             format: 'YYYY-DD-MM HH:mm',
@@ -781,7 +793,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-time',
                                                 settings: {
                                                     label: 'time max = 15:55',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             maxDate: '15:55'
@@ -795,7 +807,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-time',
                                                 settings: {
                                                     label: 'time min 15:40:00',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             minDate: '15:40'
@@ -809,7 +821,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-time',
                                                 settings: {
                                                     label: 'time min = 15:40, max = 15:55',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             minDate: '15:40',
@@ -824,7 +836,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-time',
                                                 settings: {
                                                     label: 'time format = mm:HH',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             format: 'mm:HH'
@@ -838,7 +850,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-time',
                                                 settings: {
                                                     label: 'time min = 15:40, max = 15:55 format = mm:HH',
-                                                    validators:[
+                                                    validators: [
                                                         {
                                                             type: 'date',
                                                             format: 'mm:HH',
@@ -895,7 +907,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         "Variable 2",
                                                         "Variable 3"
                                                     ],
-                                                    defaultValue : ["Variable 1"]
+                                                    defaultValue: ["Variable 1"]
                                                 }
                                             }
                                         },
@@ -909,7 +921,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         "b": "Variable 2",
                                                         "c": "Variable 3"
                                                     },
-                                                    defaultValue : ["a", "b"]
+                                                    defaultValue: ["a", "b"]
                                                 }
                                             }
                                         },
@@ -988,7 +1000,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         "Variable 2",
                                                         "Variable 3"
                                                     ],
-                                                    defaultValue : "Variable 1"
+                                                    defaultValue: "Variable 1"
                                                 }
                                             }
                                         },
@@ -1002,7 +1014,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         "b": "Variable 2",
                                                         "c": "Variable 3"
                                                     },
-                                                    defaultValue : "b"
+                                                    defaultValue: "b"
                                                 }
                                             }
                                         },
@@ -1058,7 +1070,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-colorpicker',
                                                 settings: {
                                                     label: 'colorpicker c defaultValue',
-                                                    defaultValue : "#9C2525"
+                                                    defaultValue: "#9C2525"
                                                 }
                                             }
                                         },
@@ -1067,7 +1079,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                 name: 'ue-colorpicker',
                                                 settings: {
                                                     label: 'colorpicker c defaultValue, multiple',
-                                                    defaultValue : ['#9C2525'],
+                                                    defaultValue: ['#9C2525'],
                                                     multiple: true
                                                 }
                                             }
@@ -1129,7 +1141,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         "Variable 2",
                                                         "Variable 3"
                                                     ],
-                                                    defaultValue : ["Variable 1"]
+                                                    defaultValue: ["Variable 1"]
                                                 }
                                             }
                                         },
@@ -1145,7 +1157,7 @@ var ue = new UniversalEditor('universal-editor', {
                                                         "4": "Дыня",
                                                         "5": "Арбуз"
                                                     },
-                                                    defaultValue : ["1", "2"]
+                                                    defaultValue: ["1", "2"]
                                                 }
                                             }
                                         },
@@ -1625,3 +1637,4 @@ var ue = new UniversalEditor('universal-editor', {
         }
     ]
 });
+

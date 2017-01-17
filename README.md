@@ -17,10 +17,9 @@ Install dependences:
 
 Run build:
 
-* `npm run serve`: build and watch sources, create web server. 
-* `npm run serve:dist`: build production and create web server.
-* `npm run build`: build to `/dist` directory.
-* `npm run dev`: build to `/app` directory.
+* `npm run dev`: build and watch sources, create web server. 
+* `npm run dist`: create web server from './dist' directory.
+* `npm run build`: build to `./dist` directory.
 
 ## Documentation
 
