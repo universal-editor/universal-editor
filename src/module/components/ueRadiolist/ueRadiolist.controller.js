@@ -11,7 +11,7 @@
         /* jshint validthis: true */
         var vm = this;
         vm.optionValues = [];
-        vm.inputValue = "";
+        vm.inputValue = '';
         vm.newEntityLoaded = newEntityLoaded;
 
         var baseController = $controller('FieldsController', { $scope: $scope });

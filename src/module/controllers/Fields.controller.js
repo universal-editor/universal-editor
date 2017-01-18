@@ -246,7 +246,7 @@
                                     var keys = Object.keys(value);
                                     for (var i = keys.length; i--;) {
                                         var propValue = value[keys[i]];
-                                        if (propValue !== null && propValue !== undefined && propValue !== "") {
+                                        if (propValue !== null && propValue !== undefined && propValue !== '') {
                                             if (angular.isObject(propValue) && !result) {
                                                 check(propValue);
                                             } else {
@@ -268,7 +268,7 @@
                     }
 
 
-                    if (data.editorEntityType === "new" && self.regim !== 'preview') {
+                    if (data.editorEntityType === 'new' && self.regim !== 'preview') {
 
                         if (!!self.newEntityLoaded) {
                             self.newEntityLoaded();

@@ -24,21 +24,21 @@
         }
 
         request.options = vm.options;
-        $element.bind("click", function () {
+        $element.bind('click', function () {
             if (vm.options.isLoading || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;
             }
             switch (vm.action) {
                 case 'save':
                     if (vm.type == 'create') {
-                        EditEntityStorage.editEntityUpdate("create", request);
+                        EditEntityStorage.editEntityUpdate('create', request);
                     } else if (vm.type == 'update') {
                         RestApiService.editedEntityId = vm.entityId;
-                        EditEntityStorage.editEntityUpdate("update", request);
+                        EditEntityStorage.editEntityUpdate('update', request);
                     }
                     break;
                 case 'delete':
-                    if(confirm("Удалить запись «" + vm.entityId + "»?")){
+                    if(confirm('Удалить запись «' + vm.entityId + '»?')){
                         request.entityId = vm.entityId;
                         request.setting = vm.setting;
                         RestApiService.deleteItemById(request);
@@ -60,7 +60,7 @@
             }
         });
 
-        $scope.$on("editor:presave_entity_created", function(event, data) {
+        $scope.$on('editor:presave_entity_created', function(event, data) {
             if(!vm.options.isGrid && (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId)) {
                 vm.entityId = data[vm.setting.component.settings.dataSource.primaryKey];
                 vm.type = 'update';

@@ -15,7 +15,7 @@
         angular.extend(vm, baseController);
         var componentSettings = vm.setting.component.settings;
 
-        var possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
+        var possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
         vm.parentValue = !vm.depend;
         vm.search = componentSettings.search;
@@ -114,7 +114,7 @@
 
         if (vm.depend) {
             destroySelectField = $scope.$on('select_field:select_name_' + vm.dependField, function(event, data) {
-                if (data && data !== "") {
+                if (data && data !== '') {
                     vm.parentValue = false;
                     vm.optionValues = [];
                     RestApiService
@@ -426,7 +426,7 @@
         };
 
 
-        $document.bind("keydown", function(event) {
+        $document.bind('keydown', function(event) {
             if (vm.showPossible || $scope.isOpen) {
                 switch (event.which) {
                     case 27:
@@ -461,9 +461,9 @@
                             }
 
                             if (!vm.multiple && !vm.isTree) {
-                                possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
+                                possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
                             } else if (vm.isTree) {
-                                possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
+                                possibleValues = angular.element($element[0].getElementsByClassName('dropdown__items')[0]);
                             }
 
                             if (vm.activeElement < vm.optionValues.length - 1) {
@@ -472,8 +472,8 @@
                                 }, 0);
 
                                 $timeout(function() {
-                                    var activeTop = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
-                                        activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
+                                    var activeTop = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].offsetTop,
+                                        activeHeight = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].clientHeight,
                                         wrapperScroll = possibleValues[0].scrollTop,
                                         wrapperHeight = possibleValues[0].clientHeight;
 
@@ -492,9 +492,9 @@
                             }
 
                             if (!vm.multiple && !vm.isTree) {
-                                possibleValues = angular.element($element[0].getElementsByClassName("possible-scroll")[0]);
+                                possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
                             } else if (vm.isTree) {
-                                possibleValues = angular.element($element[0].getElementsByClassName("dropdown__items")[0]);
+                                possibleValues = angular.element($element[0].getElementsByClassName('dropdown__items')[0]);
                             }
 
                             if (vm.activeElement > 0) {
@@ -503,8 +503,8 @@
                                 }, 0);
 
                                 $timeout(function() {
-                                    var activeTop = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].offsetTop,
-                                        activeHeight = angular.element(possibleValues[0].getElementsByClassName("active")[0])[0].clientHeight,
+                                    var activeTop = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].offsetTop,
+                                        activeHeight = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].clientHeight,
                                         wrapperScroll = possibleValues[0].scrollTop,
                                         wrapperHeight = possibleValues[0].clientHeight;
 

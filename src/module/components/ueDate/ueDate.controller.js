@@ -59,7 +59,7 @@
             if (vm.multiname) {
                 wrappedFieldValue = [];
                 angular.forEach(vm.fieldValue, function (valueItem) {
-                    if (!valueItem || valueItem === "" || !moment.isMoment(valueItem)) {
+                    if (!valueItem || valueItem === '' || !moment.isMoment(valueItem)) {
                         return;
                     }
                     var tempItem = {};
@@ -72,8 +72,8 @@
                     wrappedFieldValue.push(moment(valueItem).format(vm.format));
                 });
             } else {
-                if (vm.fieldValue === undefined || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
-                    wrappedFieldValue = "";
+                if (vm.fieldValue === undefined || vm.fieldValue === '' || !moment.isMoment(vm.fieldValue)) {
+                    wrappedFieldValue = '';
                 } else {
                     wrappedFieldValue = moment(vm.fieldValue).format(vm.format);
                 }

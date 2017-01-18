@@ -18,7 +18,7 @@
 
         vm.body = [];
         angular.forEach(settings.dataSource.fields, function(field) {
-            if (field.component.hasOwnProperty("settings") && (!settings.fields || ~settings.fields.indexOf(field.name)) && field.component.settings.filterable !== false) {
+            if (field.component.hasOwnProperty('settings') && (!settings.fields || ~settings.fields.indexOf(field.name)) && field.component.settings.filterable !== false) {
                 var fieldSettings = field.component.settings;
 
 
@@ -41,7 +41,7 @@
                 /** convert to filter object from fields*/
                 fieldSettings.$toFilter = fieldSettings.$toFilter || function(operator, fieldValue) {
                     angular.forEach(fieldValue, function(value, key) {
-                        if (operator && operator.indexOf(":text") !== -1) {
+                        if (operator && operator.indexOf(':text') !== -1) {
                             if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
                                 fieldValue[key] = operator.replace(':text', value);
                             }
@@ -107,12 +107,12 @@
                 /*temprory custom logic for operators */
 
                 if (~['ue-dropdown', 'ue-autocomplete', 'ue-checkbox', 'ue-radiolist', 'ue-colorpicker'].indexOf(field.component.name)) {
-                    group.filters[0].options.filterParameters.operator = ":text";
+                    group.filters[0].options.filterParameters.operator = ':text';
                 }
 
                 if (~['ue-date', 'ue-time', 'ue-datetime'].indexOf(field.component.name)) {
-                    group.filters[0].ngStyle = "display: inline-block; width: 25%; margin-left: 5px;";
-                    group.filters[0].options.filterParameters.operator = ">=";
+                    group.filters[0].ngStyle = 'display: inline-block; width: 25%; margin-left: 5px;';
+                    group.filters[0].options.filterParameters.operator = '>=';
                     var cloneField = angular.copy(field);
                     group.filters.push({
                         field: cloneField,

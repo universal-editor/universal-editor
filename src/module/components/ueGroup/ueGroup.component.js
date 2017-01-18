@@ -1,23 +1,24 @@
 (function () {
     'use strict';
 
-    var uePagination = {
+
+    var ueGroup = {
         bindings : {
             setting: '<',
             options: '='
         },
+        transclude : true,
         template : ['$templateCache', function ($templateCache) {
-            return $templateCache.get('module/components/uePagination/uePagination.html');
+            return $templateCache.get('module/components/ueGroup/ueGroup.html');
         }],
-        controller: 'UePaginationController',
+        controller: 'UeGroupController',
         controllerAs : 'vm'
     };
-
     /**
-     * @desc String-type field.
-     * @example <ue-pagination></ue-pagination>
+     * @desc Array-type field.
+     * @example <ue-group></ue-group>
      */
     angular
         .module('universal.editor')
-        .component('uePagination',uePagination);
+        .component('ueGroup',ueGroup);
 })();

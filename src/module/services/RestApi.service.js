@@ -18,12 +18,12 @@
 
 
         self.isProcessing = false;
-        self.methodType = "";
+        self.methodType = '';
         self.editedEntityId = null;
 
         $rootScope.$on('editor:set_entity_type', function(event, type) {
             entityObject = type;
-            itemsKey = "items";
+            itemsKey = 'items';
         });
 
         $rootScope.$on('editor:create_entity', function(event, request) {
@@ -114,33 +114,33 @@
             if (!!request.options.mixedMode) {
                 params = params || {};
                 angular.extend(params, {
-                    mixed: request.options.mixedMode.entityType
+                    mixed: request.options.mixedMode.collectionType
                 });
             }
 
-            if (dataSource.hasOwnProperty("parentField")) {
+            if (dataSource.hasOwnProperty('parentField')) {
                 params = params || {};
 
-                if (!params.hasOwnProperty("filter")) {
+                if (!params.hasOwnProperty('filter')) {
                     params.root = true;
                 }
             }
 
-            if (dataSource.hasOwnProperty("sortBy") && !params.hasOwnProperty(dataSource.sortBy) && !params.sort) {
+            if (dataSource.hasOwnProperty('sortBy') && !params.hasOwnProperty(dataSource.sortBy) && !params.sort) {
                 params = params || {};
                 angular.extend(params, {
                     sort: dataSource.sortBy
                 });
             }
 
-            if (params.hasOwnProperty("filter")) {
+            if (params.hasOwnProperty('filter')) {
                 delete params.root;
             }
 
             var expandFields = [];
 
             angular.forEach(dataSource.fields, function(field) {
-                if (field.hasOwnProperty("expandable") && field.expandable === true) {
+                if (field.hasOwnProperty('expandable') && field.expandable === true) {
                     expandFields.push(field.name);
                 }
             });
@@ -157,7 +157,7 @@
                 beforeSend: beforeSend
             }).then(function(response) {
                 if (response.data[itemsKey].length === 0) {
-                    $rootScope.$broadcast("editor:parent_empty");
+                    $rootScope.$broadcast('editor:parent_empty');
                 }
                 response.data.$parentComponentId = request.options.$parentComponentId;
                 $rootScope.$broadcast('editor:items_list', response.data);
@@ -213,10 +213,10 @@
                     id: response.data[idField],
                     $parentComponentId: request.options.$parentComponentId
                 };
-                $rootScope.$broadcast("editor:presave_entity_created", data);
+                $rootScope.$broadcast('editor:presave_entity_created', data);
                 request.options.isLoading = false;
-                $rootScope.$broadcast("uploader:remove_session");
-                $rootScope.$broadcast("editor:entity_success");
+                $rootScope.$broadcast('uploader:remove_session');
+                $rootScope.$broadcast('editor:entity_success');
                 successCreateMessage();
 
                 var params = {};
@@ -277,7 +277,7 @@
                     id: response.data[idField],
                     $parentComponentId: request.options.$parentComponentId
                 };
-                $rootScope.$broadcast("editor:presave_entity_updated", data);
+                $rootScope.$broadcast('editor:presave_entity_updated', data);
                 request.options.isLoading = false;
                 $rootScope.$broadcast('uploader:remove_session');
                 $rootScope.$broadcast('editor:entity_success');
@@ -367,7 +367,7 @@
                     successPresaveCreateMessage();
                 } else {
                     successUpdateMessage();
-                    $rootScope.$broadcast("editor:presave_entity_updated", data);
+                    $rootScope.$broadcast('editor:presave_entity_updated', data);
                 }
             }, function(reject) {
                 if ((reject.status === 422 || reject.status === 400) && reject.data) {
@@ -391,12 +391,12 @@
         this.getItemById = function(id, par, options) {
             var qParams = {},
                 expandFields = [],
-                expandParam = "",
+                expandParam = '',
                 dataSource = options.$dataSource || entityObject.dataSource;
 
             options.isLoading = true;
             angular.forEach(dataSource.fields, function(field) {
-                if (field.hasOwnProperty("expandable") && field.expandable === true) {
+                if (field.hasOwnProperty('expandable') && field.expandable === true) {
                     expandFields.push(field.name);
                 }
             });
@@ -411,8 +411,8 @@
             }).then(function(response) {
                 var data = response.data;
                 data.$parentComponentId = options.$parentComponentId;
-                data.editorEntityType = "exist";
-                $rootScope.$broadcast("editor:entity_loaded", data);
+                data.editorEntityType = 'exist';
+                $rootScope.$broadcast('editor:entity_loaded', data);
             }).finally(function() {
                 options.isLoading = false;
             });
@@ -445,7 +445,7 @@
                 request.options.isLoading = false;
                 self.setQueryParams({});
                 self.setFilterParams({});
-                $rootScope.$broadcast("editor:entity_success_deleted");
+                $rootScope.$broadcast('editor:entity_success_deleted');
                 successDeleteMessage();
                 var params = {};
                 if ($location.search().parent) {
@@ -525,7 +525,7 @@
                     url: url,
                     params: {
                         page: page || 1,
-                        "per-page": 50
+                        'per-page': 50
                     }
                 });
             }
@@ -570,7 +570,7 @@
             var reqParams = request.params || {};
             var url = request.url;
             if (request.id) {
-                url = request.url.replace(":id", id);
+                url = request.url.replace(':id', id);
             }
             self.isProcessing = true;
 
@@ -607,7 +607,7 @@
                     parent[request.options.$parentComponentId] = request.childId;
                 }
                 var parentJSON = parent ? JSON.stringify(parent) : null;
-                $location.search("parent", parentJSON);
+                $location.search('parent', parentJSON);
             });
         };
 
@@ -620,7 +620,7 @@
                 request.options.isLoading = true;
                 $http({
                     method: 'GET',
-                    url: request.url + "/" + entityId
+                    url: request.url + '/' + entityId
                 }).then(function(response) {
                     var parentId = response.data[request.parentField];
 
@@ -639,7 +639,7 @@
                     if (!$.isEmptyObject(parent)) {
                         parentJSON = JSON.stringify(parent);
                     }
-                    $location.search("parent", parentJSON);
+                    $location.search('parent', parentJSON);
                     request.options.isLoading = false;
                     data.parentId = parentId;
                     $rootScope.$broadcast('editor:parent_id', data);
@@ -665,7 +665,7 @@
                         parentJSON = JSON.stringify(parent);
                     }
                 }
-                $location.search("parent", parentJSON);
+                $location.search('parent', parentJSON);
                 request.childId = null;
                 self.getItemsList(request);
             }

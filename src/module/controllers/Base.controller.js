@@ -64,9 +64,9 @@
 
         if (self.parentField) {
             if (self.parentFieldIndex) {
-                fieldErrorName = self.parentField + "_" + self.parentFieldIndex + "_" + self.fieldName;
+                fieldErrorName = self.parentField + '_' + self.parentFieldIndex + '_' + self.fieldName;
             } else {
-                fieldErrorName = self.parentField + "_" + self.fieldName;
+                fieldErrorName = self.parentField + '_' + self.fieldName;
             }
         } else {
             fieldErrorName = self.fieldName;
@@ -74,11 +74,10 @@
 
         //-- listener storage for handlers
         self.listeners = [];
-        self.listeners.push($scope.$on("editor:api_error_field_" + fieldErrorName, onErrorApiHandler));
+        self.listeners.push($scope.$on('editor:api_error_field_' + fieldErrorName, onErrorApiHandler));
 
         $scope.onErrorApiHandler = onErrorApiHandler;
         $scope.onDestroyHandler = onDestroyHandler;
-
         $scope.$on("$destroy", onDestroyHandler);
         self.listeners.push($scope.$on('editor:entity_loaded', function (e, data) {
             if (!data.$parentComponentId || data.$parentComponentId === self.parentComponentId && !self.options.filter) {

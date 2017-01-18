@@ -16,7 +16,7 @@
 
         var parentComponentId = vm.options.$parentComponentId;
 
-        $element.bind("click", function() {
+        $element.bind('click', function() {
             var filterJSON = null, filters;
 
             var parentComponentId = vm.options.$parentComponentId;

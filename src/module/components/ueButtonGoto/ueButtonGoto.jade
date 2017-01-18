@@ -4,3 +4,4 @@ div
         .loader-search-wrapper(data-ng-show="vm.options.isLoading")
             .loader-search {{'LOADING' | translate}}
     button.editor-action-button(data-ng-if="vm.setting.buttonClass == 'context'") {{::vm.label}}
+    button.btn.btn-md.btn-success.button-footer(data-ng-if="vm.setting.buttonClass == 'default'") {{::vm.label}}

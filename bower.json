@@ -3,8 +3,7 @@
   "description": "Universal editor to edit the entities from RESTful service",
   "version": "1.0.0-alpha",
   "main": [
-    "./dist/js/universal-editor.min.js",
-    "./dist/css/universal-editor.min.css"
+    "./dist/core.min.js"
   ],
   "moduleType": [],
   "keywords": [
@@ -25,7 +24,7 @@
     "jquery-minicolors": "~2.1.7",
     "angular-minicolors": "~0.0.7",
     "angular-moment": "~0.10.3",
-    "moment": "~2.10.6",
+    "moment": "^2.17.1",
     "angular-datepicker": "~2.0.3",
     "checklist-model": "~0.6.0",
     "ng-file-upload-shim": "~10.0.2",
@@ -40,6 +39,6 @@
     "angular-bootstrap": "^2.1.4"
   },
   "resolutions": {
-    "angular": "~1.5.7"
+    "angular": "~1.6.1"
   }
 }

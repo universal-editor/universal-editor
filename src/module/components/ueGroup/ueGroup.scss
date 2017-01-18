@@ -1,0 +1,20 @@
+.universal-editor, .modal-dialog {
+    & .field-array-wrapper .add-more {
+        margin-top : 10px;
+    }
+
+    & .editor-field-array {
+        overflow: visible;
+    }
+
+    & .editor-group  {
+        & .item-array-wrapper .btn {
+            margin: 10px 15px 0 15px; 
+            float: right;
+        }
+        padding: 0;
+        & .field-wrapper.row {
+            margin: 0;
+        }
+    }
+}
