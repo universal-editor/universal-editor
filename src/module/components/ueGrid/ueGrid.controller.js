@@ -82,13 +82,13 @@
         vm.visibleFilter = true;
         vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty('pagination') ? vm.setting.component.settings.dataSource.pagination : true;
         vm.autoCompleteFields = [];
-        vm.entityType = vm.setting.component.settings.entityType || configData;
+        vm.collectionType = vm.setting.component.settings.collectionType || configData;
         vm.parent = null;
         vm.paginationData = [];
         vm.isMixMode = !!vm.setting.component.settings.mixedMode;
         if (vm.isMixMode) {
             vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
-            vm.entityType = vm.setting.component.settings.mixedMode.entityType;
+            vm.collectionType = vm.setting.component.settings.mixedMode.collectionType;
             vm.subType = vm.setting.component.settings.mixedMode.fieldType;
 
             angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {

@@ -1,0 +1,32 @@
+
+<div ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter}">
+    <div on-render-template="on-render-template" ng-class="{'component-filter': vm.templates.filter &amp;&amp; vm.regim === 'filter',                   'component-edit': vm.templates.edit  &amp;&amp; vm.regim === 'edit',                   'component-preview': vm.templates.preview &amp;&amp; vm.regim === 'preview'}" class="component-template"></div>
+    <div ng-if="(!vm.templates.edit &amp;&amp; vm.regim === 'edit') || (!vm.templates.filter &amp;&amp; vm.regim === 'filter')" ng-class="{'component-filter': vm.regim === 'filter'}" class="component-edit">
+        <label ng-if="!vm.options.filter &amp;&amp; !!vm.label" class="field-name-label">
+            <div data-ng-if="!!vm.hint" class="field-hint">
+                <div ng-bind="::vm.hint" class="hint-text"></div>
+            </div><span data-ng-class="{'editor-required': vm.required}" ng-bind="::vm.label"></span>
+        </label>
+        <div ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}" style="{{::vm.checkBoxStyle}}" ng-if="!vm.disabled || vm.options.filter">
+            <div data-ng-repeat="item in vm.optionValues" data-ng-class="{'disabled': vm.readonly}" class="checkbox">
+                <label>
+                    <input type="checkbox" data-ng-disabled="vm.readonly" data-checklist-model="vm.fieldValue" data-checklist-value="::item[vm.fieldId]"/><span ng-bind="::item[vm.fieldSearch]"></span>
+                </label>
+            </div>
+        </div>
+        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled-field">
+            <div>
+                <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData"><span ng-bind="value"></span></div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="!vm.templates.preview &amp;&amp; vm.regim === 'preview'" class="component-preview"> 
+        <div data-ng-show="vm.loadingData" class="loader-search-wrapper">
+            <div class="loader-search">{{'LOADING' | translate}}</div>
+        </div><span ng-bind="::vm.previewValue" data-ng-show="!vm.loadingData" ng-if="!vm.multiple"></span>
+        <div ng-repeat="value in vm.previewValue track by $index" data-ng-show="!vm.loadingData" ng-if="vm.multiple"><span ng-bind="value"></span></div>
+    </div>
+    <div ng-if="!vm.options.filter" class="field-error-wrapper">
+        <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>
+    </div>
+</div>

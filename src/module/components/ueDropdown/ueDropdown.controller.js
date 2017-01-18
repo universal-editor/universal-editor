@@ -61,7 +61,7 @@
                     allOptions = allOptions.length ? allOptions : items;
                     vm.optionValues = [];
                     angular.forEach(allOptions, function(v) {
-                        var v_id = v[vm.field_id];
+                        var v_id = v[vm.fieldId];
                         if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
                             if (angular.isArray(vm.fieldValue)) {
                                 for (var i = vm.fieldValue.length; i--;) {
@@ -97,14 +97,14 @@
                     vm.filterText = '';
                     change();
                 }
-                vm.placeholder = (!!newVal && !!newVal[vm.field_search]) ? newVal[vm.field_search] : componentSettings.placeholder;
-                vm.isSelection = (!!newVal && !!newVal[vm.field_search]);
+                vm.placeholder = (!!newVal && !!newVal[vm.fieldSearch]) ? newVal[vm.fieldSearch] : componentSettings.placeholder;
+                vm.isSelection = (!!newVal && !!newVal[vm.fieldSearch]);
             }
             if (vm.isTree && !vm.search) {
                 vm.placeholder = componentSettings.placeholder || '';
             }
             if (vm.isTree && !vm.multiple) {
-                vm.placeholder = (!!newVal && !!newVal.length && !!newVal[0][vm.field_search]) ? newVal[0][vm.field_search] : componentSettings.placeholder;
+                vm.placeholder = (!!newVal && !!newVal.length && !!newVal[0][vm.fieldSearch]) ? newVal[0][vm.fieldSearch] : componentSettings.placeholder;
             }
             vm.setColorPlaceholder();
             $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
@@ -151,7 +151,7 @@
                 if (item[vm.treeChildCountField] && !item.childOpts) {
                     item.loadingData = true;
                     RestApiService
-                        .getUrlResource(componentSettings.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.field_id] + '"}')
+                        .getUrlResource(componentSettings.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.fieldId] + '"}')
                         .then(function(response) {
                             if (!item.childOpts) {
                                 item.childOpts = [];
@@ -176,7 +176,7 @@
                 if (!angular.isArray(vm.fieldValue)) {
                     vm.fieldValue = [];
                 }
-                var idx = findById(item[vm.field_id]);
+                var idx = findById(item[vm.fieldId]);
                 if (vm.multiple) {
                     if (idx !== null) {
                         item.checked = false;
@@ -209,7 +209,7 @@
                 vm.placeholder = componentSettings.placeholder || '';
                 vm.sizeInput = vm.placeholder.length;
             } else {
-                vm.placeholder = (vm.multiple) ? '' : vm.fieldValue[0][vm.field_search];
+                vm.placeholder = (vm.multiple) ? '' : vm.fieldValue[0][vm.fieldSearch];
                 vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
             if (!!e) {
@@ -229,17 +229,17 @@
 
         function remove(e, item) {
             if (vm.treeParentField && item[vm.treeParentField] && vm.multiple) {
-                uncheckByParentId(vm.optionValues, item[vm.treeParentField], item[vm.field_id]);
-                var idx = findById(item[vm.field_id], item[vm.treeParentField]);
+                uncheckByParentId(vm.optionValues, item[vm.treeParentField], item[vm.fieldId]);
+                var idx = findById(item[vm.fieldId], item[vm.treeParentField]);
                 if (idx !== null) {
                     vm.fieldValue.splice(idx, 1);
                 }
             } else {
-                var idx = findById(item[vm.field_id]);
+                var idx = findById(item[vm.fieldId]);
                 if (idx !== null) {
                     vm.fieldValue.splice(idx, 1);
                     for (var i = 0, len = vm.optionValues.length; i < len; i++) {
-                        if (vm.optionValues[i][vm.field_id] === item[vm.field_id]) {
+                        if (vm.optionValues[i][vm.fieldId] === item[vm.fieldId]) {
                             vm.optionValues[i].checked = false;
                         }
                     }
@@ -273,20 +273,20 @@
             if (!vm.filterText) {
                 if (!vm.multiple && !vm.isTree) {
                     if (vm.optionValues && vm.optionValues.length && vm.fieldValue) {
-                        var finded = vm.optionValues.filter(function(record) { return record[vm.field_id] === vm.fieldValue[vm.field_id] || record[vm.field_id] === vm.fieldValue; });
+                        var finded = vm.optionValues.filter(function(record) { return record[vm.fieldId] === vm.fieldValue[vm.fieldId] || record[vm.fieldId] === vm.fieldValue; });
                         if (finded.length) {
                             vm.fieldValue = finded[0];
                         }
                     }
-                    vm.placeholder = (!!vm.fieldValue && !!vm.fieldValue[vm.field_search]) ? vm.fieldValue[vm.field_search] : componentSettings.placeholder;
+                    vm.placeholder = (!!vm.fieldValue && !!vm.fieldValue[vm.fieldSearch]) ? vm.fieldValue[vm.fieldSearch] : componentSettings.placeholder;
                 } else if (!vm.multiple && vm.isTree) {
-                    vm.placeholder = (!!vm.fieldValue.length && !!vm.fieldValue[0][vm.field_search]) ? vm.fieldValue[0][vm.field_search] : componentSettings.placeholder;
+                    vm.placeholder = (!!vm.fieldValue.length && !!vm.fieldValue[0][vm.fieldSearch]) ? vm.fieldValue[0][vm.fieldSearch] : componentSettings.placeholder;
                 }
 
                 if (vm.fieldValue) {
                     for (var j = 0; j < vm.fieldValue.length; j++) {
                         for (var i = 0, len = vm.optionValues.length; i < len; i++) {
-                            if (vm.optionValues[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                            if (vm.optionValues[i][vm.fieldId] === vm.fieldValue[j][vm.fieldId]) {
                                 vm.optionValues[i].checked = true;
                             }
                         }
@@ -305,7 +305,7 @@
             vm.optionValues = filter(angular.copy(allOptions), vm.filterText);
             for (var j = 0; j < vm.fieldValue.length; j++) {
                 for (var i = 0, len = vm.optionValues.length; i < len; i++) {
-                    if (vm.optionValues[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                    if (vm.optionValues[i][vm.fieldId] === vm.fieldValue[j][vm.fieldId]) {
                         vm.optionValues[i].checked = true;
                     }
                 }
@@ -318,7 +318,7 @@
                 if (opt.childOpts && opt.childOpts.length) {
                     opt.childOpts = filter(opt.childOpts, filterText);
                 }
-                return (opt[vm.field_search].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length);
+                return (opt[vm.fieldSearch].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length);
             });
 
             return result;
@@ -327,13 +327,13 @@
         function findById(id, parentId) {
             if (parentId) {
                 for (var i = 0, len = vm.fieldValue.length; i < len; i++) {
-                    if (vm.fieldValue[i][vm.field_id] === id && vm.fieldValue[i][vm.treeParentField] === parentId) {
+                    if (vm.fieldValue[i][vm.fieldId] === id && vm.fieldValue[i][vm.treeParentField] === parentId) {
                         return i;
                     }
                 }
             } else {
                 for (var i = 0, len = vm.fieldValue.length; i < len; i++) {
-                    if (vm.fieldValue[i][vm.field_id] === id) {
+                    if (vm.fieldValue[i][vm.fieldId] === id) {
                         return i;
                     }
                 }
@@ -343,9 +343,9 @@
 
         function uncheckByParentId(arr, parentId, id) {
             for (var i = 0, len = arr.length; i < len; i++) {
-                if (arr[i][vm.field_id] === parentId && arr[i].childOpts) {
+                if (arr[i][vm.fieldId] === parentId && arr[i].childOpts) {
                     for (var j = 0, lenj = arr[i].childOpts.length; j < lenj; j++) {
-                        if (arr[i].childOpts[j][vm.field_id] === id) {
+                        if (arr[i].childOpts[j][vm.fieldId] === id) {
                             arr[i].childOpts[j].checked = false;
                         }
                     }
@@ -362,7 +362,7 @@
             if (item) {
                 for (var i = 0, len = item.childOpts.length; i < len; i++) {
                     for (var j = 0, lenj = vm.fieldValue.length; j < lenj; j++) {
-                        if (item[vm.field_id] === vm.fieldValue[j][vm.treeParentField] && item.childOpts[i][vm.field_id] === vm.fieldValue[j][vm.field_id]) {
+                        if (item[vm.fieldId] === vm.fieldValue[j][vm.treeParentField] && item.childOpts[i][vm.fieldId] === vm.fieldValue[j][vm.fieldId]) {
                             item.childOpts[i].checked = true;
                         }
                     }
@@ -370,7 +370,7 @@
             } else {
                 for (var i = 0, len = vm.optionValues.length; i < len; i++) {
                     for (var j = 0, lenj = vm.fieldValue.length; j < lenj; j++) {
-                        if (vm.optionValues[i][vm.field_id] === vm.fieldValue[j][vm.field_id] && !vm.fieldValue[j][vm.treeParentField]) {
+                        if (vm.optionValues[i][vm.fieldId] === vm.fieldValue[j][vm.fieldId] && !vm.fieldValue[j][vm.treeParentField]) {
                             vm.optionValues[i].checked = true;
                         }
                     }
@@ -383,7 +383,7 @@
                 vm.fieldValue.push(val);
             } else {
                 vm.fieldValue = val;
-                if (!vm.fieldValue[vm.field_search]) {
+                if (!vm.fieldValue[vm.fieldSearch]) {
                     if (vm.optionValues.length === 0 && componentSettings.$loadingPromise) {
                         componentSettings.$loadingPromise.then(convertToObject);
                     } else {
@@ -401,8 +401,8 @@
 
         function convertToObject(items) {
             angular.forEach(items, function(v) {
-                if (v[vm.field_id] == vm.fieldValue[vm.field_id]) {
-                    vm.fieldValue[vm.field_search] = v[vm.field_search];
+                if (v[vm.fieldId] == vm.fieldValue[vm.fieldId]) {
+                    vm.fieldValue[vm.fieldSearch] = v[vm.fieldSearch];
                 }
             });
         }

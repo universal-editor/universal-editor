@@ -90,7 +90,7 @@
                         model.fieldValue = value;
                         if (model.addToSelected && value) {
                             model.fieldValue = {};
-                            model.fieldValue[model.field_id] = value;
+                            model.fieldValue[model.fieldId] = value;
                             model.addToSelected(null, model.fieldValue);
                         }
                     }

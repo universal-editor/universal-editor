@@ -15,10 +15,10 @@
         vm.optionValues = [];
         vm.inputValue = '';
         vm.newEntityLoaded = newEntityLoaded;
-
+        vm.fieldId = 'id';
+        vm.fieldSearch = 'title';
         var baseController = $controller('FieldsController', { $scope: $scope });
         angular.extend(vm, baseController);
-        //vm.singleValue = angular.isArray(vm.optionValues) && vm.optionValues.length === 1 && !vm.optionValues[0][vm.field_search];
         vm.singleValue = !componentSettings.hasOwnProperty('values') && !componentSettings.hasOwnProperty('valuesRemote');
 
         if (vm.singleValue) {
@@ -50,8 +50,8 @@
                     vm.optionValues = [];
                     vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
                     var obj = {};
-                    obj[vm.field_id] = componentSettings.trueValue;
-                    obj[vm.field_search] = componentSettings.label;
+                    obj[vm.fieldId] = componentSettings.trueValue;
+                    obj[vm.fieldSearch] = componentSettings.label;
                     vm.label = '';
                     vm.optionValues.push(obj);
                 } else {
