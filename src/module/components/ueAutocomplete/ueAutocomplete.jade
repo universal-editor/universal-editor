@@ -1,5 +1,4 @@
 extends ../../template/layouts/layoutComponent
-
 block append content
     include ../../template/labelField/labelField
     div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}"  ng-style="{'overflow:auto':vm.multiple}") 
@@ -9,7 +8,7 @@ block append content
                                     data-ng-show="acItem[vm.field_search]",
                                     data-ng-if="vm.multiple") {{acItem[vm.field_search]}}
                     span.remove-from-selected(data-ng-click="vm.removeFromSelected($event, acItem)", data-ng-if="!vm.readonly") ×
-                input.autocomplete-field-search(
+                input.autocomplete-field-search( 
                     ng-show="vm.preloadedData"
                     type="text",
                     ng-disabled="vm.readonly",

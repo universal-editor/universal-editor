@@ -16,7 +16,7 @@
         vm.entityId = vm.entityId || 'new';
         vm.setting.buttonClass = vm.setting.buttonClass || 'default';
 
-        $element.bind("click", function() {
+        $element.bind('click', function() {
             var stateOptions = {
                 reload: true
             };

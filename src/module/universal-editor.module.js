@@ -14,7 +14,8 @@
             'ui.router',
             'ui.mask',
             'toastr',
-            'pascalprecht.translate'
+            'pascalprecht.translate',
+            'ui.bootstrap'
         ]);
 
     angular
@@ -96,8 +97,8 @@
         });
 
         $httpProvider.defaults.paramSerializer = '$httpParamSerializerJQLike';
-        $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8";
-        $httpProvider.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8";
+        $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+        $httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
         $httpProvider.defaults.transformRequest = function(data) {
 
 
@@ -131,7 +132,7 @@
     universalEditorRun.$inject = ['$rootScope', '$location', '$state', 'EditEntityStorage', 'ModalService', 'FilterFieldsStorage', 'RestApiService'];
 
     function universalEditorRun($rootScope, $location, $state, EditEntityStorage, ModalService, FilterFieldsStorage, RestApiService) {
-        var itemsSelector = document.querySelectorAll(".nav.nav-tabs .item");
+        var itemsSelector = document.querySelectorAll('.nav.nav-tabs .item');
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams, options) {
@@ -140,9 +141,9 @@
         $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
             var stateParamEntityId = toParams.type;
             angular.forEach(itemsSelector, function(item) {
-                $(item).removeClass("active");
-                if ($(item).find("a")[0].hash.split("/")[2] == stateParamEntityId) {
-                    $(item).addClass("active");
+                $(item).removeClass('active');
+                if ($(item).find('a')[0].hash.split('/')[2] == stateParamEntityId) {
+                    $(item).addClass('active');
                 }
             });
 
@@ -171,7 +172,7 @@
             }
         });
         if (itemsSelector.length == 1) {
-            angular.element(itemsSelector).css("display", "none");
+            angular.element(itemsSelector).css('display', 'none');
         }
         angular.element(document).ready(function() {
             var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
@@ -180,5 +181,4 @@
             }
         });
     }
-
 })();

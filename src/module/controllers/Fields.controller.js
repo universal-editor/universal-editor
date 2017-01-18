@@ -30,8 +30,8 @@
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
         if (values || remoteValues) {
-            self.field_id = "id";
-            self.field_search = "title";
+            self.field_id = 'id';
+            self.field_search = 'title';
             if (self.optionValues) {
                 if (values) {
                     angular.forEach(componentSettings.values, function(v, key) {
@@ -246,7 +246,7 @@
                                     var keys = Object.keys(value);
                                     for (var i = keys.length; i--;) {
                                         var propValue = value[keys[i]];
-                                        if (propValue !== null && propValue !== undefined && propValue !== "") {
+                                        if (propValue !== null && propValue !== undefined && propValue !== '') {
                                             if (angular.isObject(propValue) && !result) {
                                                 check(propValue);
                                             } else {
@@ -268,7 +268,7 @@
                     }
 
 
-                    if (data.editorEntityType === "new" && self.regim !== 'preview') {
+                    if (data.editorEntityType === 'new' && self.regim !== 'preview') {
 
                         if (!!self.newEntityLoaded) {
                             self.newEntityLoaded();

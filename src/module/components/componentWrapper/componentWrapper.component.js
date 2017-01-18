@@ -1,5 +1,6 @@
 (function () {
     'use strict';
+    //var $ = require('jquery');
 
     var componentWrapper = {
         bindings : {

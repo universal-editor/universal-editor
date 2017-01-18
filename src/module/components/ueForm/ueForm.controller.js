@@ -18,8 +18,8 @@
         vm.listLoaded = false;
         vm.errors = [];
         vm.notifys = [];
-        vm.entityId = "";
-        vm.editorEntityType = "new";
+        vm.entityId = '';
+        vm.editorEntityType = 'new';
         vm.editFooterBar = [];
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
@@ -173,7 +173,7 @@
 
         $scope.$on('editor:presave_entity_created', function(event, data) {
             vm.entityId = data;
-            vm.editorEntityType = "exist";
+            vm.editorEntityType = 'exist';
         });
 
         $scope.$on('editor:field_error', function(event, data) {

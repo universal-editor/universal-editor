@@ -13,7 +13,7 @@
         var componentSettings = vm.setting.component.settings;
         componentSettings.$fieldType = 'array';
         vm.optionValues = [];
-        vm.inputValue = "";
+        vm.inputValue = '';
         vm.newEntityLoaded = newEntityLoaded;
 
         var baseController = $controller('FieldsController', { $scope: $scope });
