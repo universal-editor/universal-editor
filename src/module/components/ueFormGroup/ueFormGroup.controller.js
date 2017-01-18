@@ -9,53 +9,58 @@
 
     function UeFormGroupController($scope, EditEntityStorage, $timeout,  RestApiService, $controller, $translate) {
         /* jshint validthis: true */
-        var vm = this,
+
+        var vm = this, componentSettings, entityObject, baseController, widthBootstrap;
+
+
+        vm.$onInit = function() {
             componentSettings = vm.setting.component.settings,
-            entityObject = RestApiService.getEntityObject(),
-            baseController,
-            widthBootstrap = 12;
+                entityObject = RestApiService.getEntityObject(),
+                widthBootstrap = 12;
 
-        vm.fieldName = componentSettings.name;
+            vm.fieldName = componentSettings.name;
 
-        baseController = $controller('BaseController', { $scope: $scope });
-        angular.extend(vm, baseController);
-        
-        vm.innerFields = [];
-        vm.fieldsArray = [];
-        vm.countInLine = componentSettings.countInLine || 1;          
-        widthBootstrap = Math.ceil(12 / vm.countInLine);       
-        vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
+            baseController = $controller('BaseController', { $scope: $scope });
+            angular.extend(vm, baseController);
 
-        if(vm.multiple === true && !vm.fieldName) {
-            $translate('ERROR.MULTIPLE_NAME').then(function(translation) {
-                console.log('UeFormGroup:' + translation);
-            });
-        }
+            vm.innerFields = [];
+            vm.fieldsArray = [];
+            vm.countInLine = componentSettings.countInLine || 1;
+            widthBootstrap = Math.ceil(12 / vm.countInLine);
+            vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
 
-        vm.addItem = addItem;
-        vm.removeItem = removeItem;
-
-        angular.forEach(componentSettings.fields, function(value, index) {
-            var field;
-            if (angular.isString(value)) {
-                field = entityObject.dataSource.fields.filter(function(k) {
-                    return k.name == value;
-                })[0];
-            } else if (value && value.component) {
-                field = value;
+            if(vm.multiple === true && !vm.fieldName) {
+                $translate('ERROR.MULTIPLE_NAME').then(function(translation) {
+                    console.log('UeFormGroup:' + translation);
+                });
             }
-            if (field) {
-                if (vm.fieldName) {
-                    field.parentField = vm.fieldName;
+
+            vm.addItem = addItem;
+            vm.removeItem = removeItem;
+
+            angular.forEach(componentSettings.fields, function(value, index) {
+                var field;
+                if (angular.isString(value)) {
+                    field = entityObject.dataSource.fields.filter(function(k) {
+                        return k.name == value;
+                    })[0];
+                } else if (value && value.component) {
+                    field = value;
                 }
-                vm.innerFields.push(field);
-            }
-        });
+                if (field) {
+                    if (vm.fieldName) {
+                        field.parentField = vm.fieldName;
+                    }
+                    vm.innerFields.push(field);
+                }
+            });
 
-        vm.$isOnlyChildsBroadcast = false;
-        vm.listeners.push($scope.$on('editor:entity_loaded', onLoadedHandler));
-        vm.option = angular.merge({}, vm.options);
-        vm.option.isGroup = true;
+            vm.$isOnlyChildsBroadcast = false;
+            vm.listeners.push($scope.$on('editor:entity_loaded', onLoadedHandler));
+            vm.option = angular.merge({}, vm.options);
+            vm.option.isGroup = true;
+        };
+
         function onLoadedHandler(event, data) {
             if (!vm.$isOnlyChildsBroadcast) {
                 var group = data[vm.fieldName];
@@ -71,10 +76,10 @@
                 }
             }
         }
-        
+
         function removeItem(ind) {
             vm.fieldsArray.splice(ind, 1);
-        }    
+        }
 
         function addItem() {
             var clone = vm.innerFields.map(function(field) { return angular.extend({}, field); });

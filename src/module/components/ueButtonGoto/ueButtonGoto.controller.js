@@ -10,10 +10,15 @@
     function UeButtonGotoController($scope, $element, RestApiService, $state, $location, configData, EditEntityStorage, ModalService, $timeout, $controller, $translate) {
         $element.addClass('ue-button');
 
-        var vm = this;
-        angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
-        var state = vm.setting.component.settings.state;
-        vm.entityId = vm.entityId || 'new';
+        var vm = this,
+            state;
+
+        vm.$onInit = function() {
+            angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
+            state = vm.setting.component.settings.state;
+            vm.entityId = vm.entityId || 'new';
+        };
+
 
         $element.bind('click', function() {
             var stateOptions = {

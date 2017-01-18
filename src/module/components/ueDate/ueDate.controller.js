@@ -9,30 +9,36 @@
 
     function UeDateController($scope, $element, EditEntityStorage, moment, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
-        var vm = this;
-        var componentSettings = vm.setting.component.settings;
-        componentSettings.$fieldType = 'date';
-        var baseController = $controller('FieldsController', { $scope: $scope });
-        angular.extend(vm, baseController);
+        var vm = this,
+            componentSettings,
+            baseController;
 
-        vm.format = vm.format || 'DD.MM.YYYY';
-        vm.maxView = vm.maxView || 'year';
-        vm.minView = vm.minView || 'date';
-        vm.view = vm.view || 'date';
+        vm.$onInit = function() {
+            componentSettings = vm.setting.component.settings;
+            componentSettings.$fieldType = 'date';
+            baseController = $controller('FieldsController', { $scope: $scope });
+            angular.extend(vm, baseController);
 
-        vm.addItem = addItem;
-        vm.removeItem = removeItem;
+            vm.format = vm.format || 'DD.MM.YYYY';
+            vm.maxView = vm.maxView || 'year';
+            vm.minView = vm.minView || 'date';
+            vm.view = vm.view || 'date';
 
-        $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format);
-        $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);
+            vm.addItem = addItem;
+            vm.removeItem = removeItem;
+            vm.getFieldValue = getFieldValue;
+
+            $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format);
+            $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);
 
 
-        vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
-            $scope.onLoadDataHandler(e, data);
-            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
-                vm.equalPreviewValue();
-            }
-        }));
+            vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+                $scope.onLoadDataHandler(e, data);
+                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                    vm.equalPreviewValue();
+                }
+            }));
+        };
 
         //-- private functions
         function removeItem(index) {
@@ -49,7 +55,7 @@
             vm.fieldValue.push(moment());
         }
 
-        vm.getFieldValue = function () {
+        function getFieldValue() {
 
             var field = {};
 

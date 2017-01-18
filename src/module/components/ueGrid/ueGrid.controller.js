@@ -14,190 +14,208 @@
         var vm = this,
             itemsKey,
             mixEntityObject,
-            url = vm.setting.component.settings.dataSource.url,
+            url,
+            parentField;
+
+        vm.$onInit = function() {
+            url = vm.setting.component.settings.dataSource.url;
             parentField = vm.setting.component.settings.dataSource.parentField;
+            vm.configData = configData;
+            vm.correctEntityType = true;
+            vm.listLoaded = false;
+            vm.loadingData = true;
+            vm.tableFields = [];
+            vm.items = [];
+            vm.links = [];
+            vm.errors = [];
+            vm.notifys = [];
+            vm.tabsVisibility = [];
+            vm.entityId = '';
+            vm.editorEntityType = 'new';
+            vm.sortField = '';
+            vm.sortingDirection = true;
+            vm.pageItemsArray = [];
+            vm.contextLinks = [];
+            vm.mixContextLinks = [];
+            vm.listHeaderBar = [];
+            vm.$parentComponentId = vm.setting.component.$id;
+            vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
 
-        vm.configData = configData;
-        vm.correctEntityType = true;
-        vm.listLoaded = false;
-        vm.loadingData = true;
-        vm.tableFields = [];
-        vm.items = [];
-        vm.links = [];
-        vm.errors = [];
-        vm.notifys = [];
-        vm.tabsVisibility = [];
-        vm.entityId = '';
-        vm.editorEntityType = 'new';
-        vm.sortField = '';
-        vm.sortingDirection = true;
-        vm.pageItemsArray = [];
-        vm.contextLinks = [];
-        vm.mixContextLinks = [];
-        vm.listHeaderBar = [];
-        vm.$parentComponentId = vm.setting.component.$id;
-        vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
 
-
-        vm.options = {
-            $parentComponentId: vm.$parentComponentId,
-            $gridComponentId: vm.$parentComponentId,
-            mixedMode: vm.setting.component.settings.mixedMode,
-            sort: vm.setting.component.settings.dataSource.sortBy,
-            back: configData,
-            isGrid: true
-        };
-        vm.mixOption = angular.merge({}, vm.options);
-        vm.mixOption.isMix = true;
-        if (!!vm.setting.component.settings.header) {
-            vm.filterComponent = vm.setting.component.settings.header.filter;
-        } else {
-            vm.filterComponent = vm.setting.component.settings.header;
-        }
-        if (vm.filterComponent !== false) {
-            if (angular.isUndefined(vm.filterComponent)) {
-                vm.filterComponent = {
-                    component: {
-                        name: 'ue-filter',
-                        settings: {
-                            header: {
-                                label: 'Фильтр'
+            vm.options = {
+                $parentComponentId: vm.$parentComponentId,
+                $gridComponentId: vm.$parentComponentId,
+                mixedMode: vm.setting.component.settings.mixedMode,
+                sort: vm.setting.component.settings.dataSource.sortBy,
+                back: configData,
+                isGrid: true
+            };
+            vm.mixOption = angular.merge({}, vm.options);
+            vm.mixOption.isMix = true;
+            if (!!vm.setting.component.settings.header) {
+                vm.filterComponent = vm.setting.component.settings.header.filter;
+            } else {
+                vm.filterComponent = vm.setting.component.settings.header;
+            }
+            if (vm.filterComponent !== false) {
+                if (angular.isUndefined(vm.filterComponent)) {
+                    vm.filterComponent = {
+                        component: {
+                            name: 'ue-filter',
+                            settings: {
+                                header: {
+                                    label: 'Фильтр'
+                                }
                             }
                         }
+                    };
+                }
+
+                if (angular.isUndefined(vm.filterComponent.component.settings.dataSource)) {
+                    vm.filterComponent.component.settings.dataSource = vm.setting.component.settings.dataSource;
+                }
+            }
+            vm.editFooterBarNew = [];
+            vm.editFooterBarExist = [];
+            vm.listFooterBar = [];
+            vm.contextId = undefined;
+            vm.idField = 'id';
+            vm.parentButton = false;
+            vm.filterFields = [];
+            vm.visibleFilter = true;
+            vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty('pagination') ? vm.setting.component.settings.dataSource.pagination : true;
+            vm.autoCompleteFields = [];
+            vm.entityType = vm.setting.component.settings.entityType || configData;
+            vm.parent = null;
+            vm.paginationData = [];
+            vm.isMixMode = !!vm.setting.component.settings.mixedMode;
+            if (vm.isMixMode) {
+                vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
+                vm.entityType = vm.setting.component.settings.mixedMode.entityType;
+                vm.subType = vm.setting.component.settings.mixedMode.fieldType;
+
+                angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
+                    var newValue = angular.merge({}, value);
+                    newValue.url = vm.setting.component.settings.mixedMode.dataSource.url;
+                    newValue.parentField = parentField;
+                    newValue.headComponent = vm.setting.headComponent;
+                    vm.mixContextLinks.push(newValue);
+                });
+            }
+            vm.request = {
+                childId: vm.parent,
+                options: vm.options,
+                parentField: parentField,
+                url: url
+            };
+            vm.request.options.$dataSource = vm.setting.component.settings.dataSource;
+
+            // if (vm.setting.headComponent) {
+            var parentEntity = $location.search().parent;
+            if (parentEntity) {
+                parentEntity = JSON.parse(parentEntity);
+                vm.parent = parentEntity[vm.$parentComponentId] || null;
+            }
+            //   }
+
+            if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
+                vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
+            }
+            itemsKey = 'items';
+
+            var colSettings = vm.setting.component.settings.columns;
+
+            if (angular.isArray(colSettings)) {
+                colSettings.forEach(function(col) {
+                    var tableField;
+                    var component = vm.setting.component.settings.dataSource.fields.filter(function(field) {
+                        return field.name === col;
+                    });
+                    if (component.length) {
+                        col = component[0];
                     }
-                };
+                    if (angular.isObject(col)) {
+                        tableField = {
+                            field: col.name || null,
+                            sorted: col.component.settings.multiple !== true,
+                            displayName: col.component.settings.label || col.name,
+                            component: col,
+                            options: {
+                                $parentComponentId: vm.$parentComponentId,
+                                regim: 'preview'
+                            }
+                        };
+
+                    }
+                    if (tableField) {
+                        vm.tableFields.push(tableField);
+                    }
+                });
             }
 
-            if (angular.isUndefined(vm.filterComponent.component.settings.dataSource)) {
-                vm.filterComponent.component.settings.dataSource = vm.setting.component.settings.dataSource;
-            }
-        }
-        vm.editFooterBarNew = [];
-        vm.editFooterBarExist = [];
-        vm.listFooterBar = [];
-        vm.contextId = undefined;
-        vm.idField = 'id';
-        vm.parentButton = false;
-        vm.filterFields = [];
-        vm.visibleFilter = true;
-        vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty('pagination') ? vm.setting.component.settings.dataSource.pagination : true;
-        vm.autoCompleteFields = [];
-        vm.entityType = vm.setting.component.settings.entityType || configData;
-        vm.parent = null;
-        vm.paginationData = [];
-        vm.isMixMode = !!vm.setting.component.settings.mixedMode;
-        if (vm.isMixMode) {
-            vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
-            vm.entityType = vm.setting.component.settings.mixedMode.entityType;
-            vm.subType = vm.setting.component.settings.mixedMode.fieldType;
 
-            angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
+            angular.forEach(vm.setting.component.settings.dataSource.fields, function(field) {
+                if (field.component.hasOwnProperty('settings') && (vm.setting.component.settings.columns.indexOf(field.name) != -1)) {
+
+                }
+            });
+
+            angular.forEach(vm.setting.component.settings.contextMenu, function(value) {
                 var newValue = angular.merge({}, value);
-                newValue.url = vm.setting.component.settings.mixedMode.dataSource.url;
+                newValue.url = url;
                 newValue.parentField = parentField;
                 newValue.headComponent = vm.setting.headComponent;
-                vm.mixContextLinks.push(newValue);
+                vm.contextLinks.push(newValue);
             });
-        }
-        vm.request = {
-            childId: vm.parent,
-            options: vm.options,
-            parentField: parentField,
-            url: url
-        };
-        vm.request.options.$dataSource = vm.setting.component.settings.dataSource;
 
-        // if (vm.setting.headComponent) {
-        var parentEntity = $location.search().parent;
-        if (parentEntity) {
-            parentEntity = JSON.parse(parentEntity);
-            vm.parent = parentEntity[vm.$parentComponentId] || null;
-        }
-        //   }
-
-        if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
-            vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
-        }
-        itemsKey = 'items';
-
-        var colSettings = vm.setting.component.settings.columns;
-
-        if (angular.isArray(colSettings)) {
-            colSettings.forEach(function(col) {
-                var tableField;
-                var component = vm.setting.component.settings.dataSource.fields.filter(function(field) {
-                    return field.name === col;
+            if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.controls) {
+                angular.forEach(vm.setting.component.settings.header.controls, function(control) {
+                    var newControl = angular.merge({}, control);
+                    if (angular.isUndefined(newControl.component.settings.dataSource)) {
+                        newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
+                    }
+                    newControl.paginationData = {};
+                    vm.listHeaderBar.push(newControl);
                 });
-                if (component.length) {
-                    col = component[0];
-                }
-                if (angular.isObject(col)) {
-                    tableField = {
-                        field: col.name || null,
-                        sorted: col.component.settings.multiple !== true,
-                        displayName: col.component.settings.label || col.name,
-                        component: col,
-                        options: {
-                            $parentComponentId: vm.$parentComponentId,
-                            regim: 'preview'
-                        }
-                    };
-
-                }
-                if (tableField) {
-                    vm.tableFields.push(tableField);
-                }
-            });
-        }
-
-
-        angular.forEach(vm.setting.component.settings.dataSource.fields, function(field) {
-            if (field.component.hasOwnProperty('settings') && (vm.setting.component.settings.columns.indexOf(field.name) != -1)) {
-
             }
-        });
 
-        angular.forEach(vm.setting.component.settings.contextMenu, function(value) {
-            var newValue = angular.merge({}, value);
-            newValue.url = url;
-            newValue.parentField = parentField;
-            newValue.headComponent = vm.setting.headComponent;
-            vm.contextLinks.push(newValue);
-        });
+            if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
+                angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
+                    var newControl = angular.merge({}, control);
+                    if (angular.isUndefined(newControl.component.settings.dataSource)) {
+                        newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
+                    }
+                    newControl.paginationData = {};
+                    vm.listFooterBar.push(newControl);
+                });
+            }
 
-        if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.controls) {
-            angular.forEach(vm.setting.component.settings.header.controls, function(control) {
-                var newControl = angular.merge({}, control);
-                if (angular.isUndefined(newControl.component.settings.dataSource)) {
-                    newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
-                }
-                newControl.paginationData = {};
-                vm.listHeaderBar.push(newControl);
-            });
-        }
+            vm.sortField = vm.setting.component.settings.dataSource.sortBy || vm.tableFields[0].field;
 
-        if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
-            angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
-                var newControl = angular.merge({}, control);
-                if (angular.isUndefined(newControl.component.settings.dataSource)) {
-                    newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
-                }
-                newControl.paginationData = {};
-                vm.listFooterBar.push(newControl);
-            });
-        }
+            vm.toggleContextView = toggleContextView;
+            vm.toggleContextViewByEvent = toggleContextViewByEvent;
+            vm.getParent = getParent;
+            vm.getScope = getScope;
+            vm.setTabVisible = setTabVisible;
+            vm.changeSortField = changeSortField;
 
-        vm.sortField = vm.setting.component.settings.dataSource.sortBy || vm.tableFields[0].field;
+            RestApiService.setFilterParams({});
+            vm.request.childId = vm.parent;
+            vm.request.options = vm.options;
+            vm.request.parentField = parentField;
+            vm.request.url = url;
+            RestApiService.getItemsList(vm.request);
+        };
 
-        vm.getScope = function() {
+        function getScope() {
             return $scope;
-        };
+        }
 
-        vm.setTabVisible = function(index, value) {
+        function setTabVisible(index, value) {
             vm.tabsVisibility[index] = value;
-        };
+        }
 
-        vm.changeSortField = function(field, sorted) {
+        function changeSortField(field, sorted) {
             if (field && sorted) {
                 vm.listLoaded = false;
                 if (vm.sortField == field) {
@@ -213,15 +231,14 @@
                     childId: vm.parent
                 });
             }
-        };
+        }
 
-
-        vm.getParent = function() {
+        function getParent() {
             vm.request.childId = vm.parent;
             vm.request.parentField = parentField;
             vm.request.headComponent = vm.setting.headComponent;
             RestApiService.loadParent(vm.request);
-        };
+        }
 
         $scope.$on('editor:parent_id', function(event, data) {
             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
@@ -349,25 +366,16 @@
             return index !== -1;
         }
 
-        vm.$onInit = function() {
-            RestApiService.setFilterParams({});
-            vm.request.childId = vm.parent;
-            vm.request.options = vm.options;
-            vm.request.parentField = parentField;
-            vm.request.url = url;
-            RestApiService.getItemsList(vm.request);
-        };
-
-        vm.toggleContextView = function(id) {
+        function toggleContextView(id) {
             vm.styleContextMenu = {};
             if (vm.contextId == id) {
                 vm.contextId = undefined;
             } else {
                 vm.contextId = id;
             }
-        };
+        }
 
-        vm.toggleContextViewByEvent = function(id, event) {
+        function toggleContextViewByEvent(id, event) {
             var left = event.pageX - $element.find('table')[0].offsetLeft;
             if (event.which === 3) {
                 vm.styleContextMenu = {
@@ -376,6 +384,6 @@
                 };
                 vm.contextId = id;
             }
-        };
+        }
     }
 })();
