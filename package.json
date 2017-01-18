@@ -4,7 +4,7 @@
   "version": "1.0.0-alpha",
   "scripts": {
     "dev": "webpack-dev-server --display-modules --progress --colors",
-    "dist": "http-server ./dist/ -a localhost -p 8080 -c-1 -o",
+    "dist": "http-server ./dist/ -a universal-editor.dev -p 8080 -c-1 -o",
     "build": "webpack -p --progress --colors"
   },
   "dependencies": {
