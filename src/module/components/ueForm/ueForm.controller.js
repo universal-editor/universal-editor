@@ -95,18 +95,6 @@
             }
             updateButton();
 
-            function updateButton() {
-                pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
-                pk = $state.params[pkKey];
-                angular.forEach(vm.editFooterBar, function(button, index) {
-                    if (pk === 'new') {
-                        button.type = 'create';
-                    } else {
-                        button.type = 'update';
-                    }
-                });
-            }
-
             vm.components = [];
 
             angular.forEach(vm.setting.component.settings.body, function(componentObject) {
@@ -136,6 +124,18 @@
                 }
             }
         };
+
+        function updateButton() {
+            pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+            pk = $state.params[pkKey];
+            angular.forEach(vm.editFooterBar, function(button, index) {
+                if (pk === 'new') {
+                    button.type = 'create';
+                } else {
+                    button.type = 'update';
+                }
+            });
+        }
 
         $scope.$watch(function() {
             return $state.params;

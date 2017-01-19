@@ -595,6 +595,7 @@
                 parentId: request.id,
                 $parentComponentId: request.options.$parentComponentId
             };
+            var parent;
             $rootScope.$broadcast('editor:parent_id', data);
             request.childId = request.id;
             self.getItemsList(request).then(function() {
@@ -616,6 +617,7 @@
                 $parentComponentId: request.options.$parentComponentId
             };
             var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
+            var parent;
             if (entityId) {
                 request.options.isLoading = true;
                 $http({
