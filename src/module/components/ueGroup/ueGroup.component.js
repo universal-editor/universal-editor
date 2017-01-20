@@ -2,23 +2,23 @@
     'use strict';
 
 
-    var ueFormGroup = {
+    var ueGroup = {
         bindings : {
             setting: '<',
             options: '='
         },
         transclude : true,
         template : ['$templateCache', function ($templateCache) {
-            return $templateCache.get('module/components/ueFormGroup/ueFormGroup.html');
+            return $templateCache.get('module/components/ueGroup/ueGroup.html');
         }],
-        controller: 'UeFormGroupController',
+        controller: 'UeGroupController',
         controllerAs : 'vm'
     };
     /**
      * @desc Array-type field.
-     * @example <ue-form-group></ue-form-group>
+     * @example <ue-group></ue-group>
      */
     angular
         .module('universal.editor')
-        .component('ueFormGroup',ueFormGroup);
+        .component('ueGroup',ueGroup);
 })();

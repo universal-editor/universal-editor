@@ -17,8 +17,8 @@
             angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
             state = vm.setting.component.settings.state;
             vm.entityId = vm.entityId || 'new';
+            vm.setting.buttonClass = vm.setting.buttonClass || 'default';
         };
-
 
         $element.bind('click', function() {
             var stateOptions = {

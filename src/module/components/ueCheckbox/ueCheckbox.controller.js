@@ -9,6 +9,7 @@
 
     function UeCheckboxController($scope, $element, EditEntityStorage, RestApiService, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
+
         var vm = this,
             componentSettings,
             baseController;
@@ -21,6 +22,8 @@
             vm.newEntityLoaded = newEntityLoaded;
             baseController = $controller('FieldsController', { $scope: $scope });
             angular.extend(vm, baseController);
+            vm.fieldId = 'id';
+            vm.fieldSearch = 'title';
 
             vm.singleValue = !componentSettings.hasOwnProperty('values') && !componentSettings.hasOwnProperty('valuesRemote');
 

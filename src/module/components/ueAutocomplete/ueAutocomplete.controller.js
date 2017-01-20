@@ -81,10 +81,6 @@
             }, true));
         };
 
-
-
-
-
         $element.bind('keydown', function(event) {
             var possibleValues;
             switch (event.which) {
@@ -158,10 +154,10 @@
             //** if you know only id  of the record            
             if (!vm.multiple) {
                 vm.selectedValues = [];
-                vm.placeholder = obj[vm.field_search];
-                vm.fieldValue = obj[vm.field_id];
+                vm.placeholder = obj[vm.fieldSearch];
+                vm.fieldValue = obj[vm.fieldId];
             } else {
-                vm.fieldValue.push(obj[vm.field_id]);
+                vm.fieldValue.push(obj[vm.fieldId]);
             }
             vm.selectedValues.push(obj);
             $element.find('.autocomplete-field-search').removeClass('hidden');
@@ -178,7 +174,7 @@
                 vm.fieldValue = null;
             }
             angular.forEach(vm.selectedValues, function(val, key) {
-                if (val[vm.field_id] == obj[vm.field_id]) {
+                if (val[vm.fieldId] == obj[vm.fieldId]) {
                     vm.selectedValues.splice(key, 1);
                     if (!vm.multiple) {
                         vm.placeholder = '';
@@ -202,11 +198,11 @@
                 angular.forEach(componentSettings.values, function(v, key) {
                     var obj = {};
                     if (angular.isArray(componentSettings.values)) {
-                        obj[vm.field_id] = v;
+                        obj[vm.fieldId] = v;
                     } else {
-                        obj[vm.field_id] = key;
+                        obj[vm.fieldId] = key;
                     }
-                    obj[vm.field_search] = v;
+                    obj[vm.field_Sarch] = v;
                     if (v.toLowerCase().indexOf(searchString.toLowerCase()) >= 0 && !alreadyIn(obj, vm.selectedValues)) {
                         vm.possibleValues.push(obj);
                     }
@@ -215,7 +211,7 @@
                 vm.searching = false;
             } else {
                 var urlParam = {};
-                urlParam[vm.field_search] = '%' + searchString + '%';
+                urlParam[vm.field_Sarch] = "%" + searchString + "%";
                 RestApiService
                     .getUrlResource(componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
                     .then(function(response) {
@@ -237,7 +233,7 @@
 
         function alreadyIn(obj, list) {
             if (list) {
-                return list.filter(function(v) { return v[vm.field_id] == obj[vm.field_id]; }).length;
+                return list.filter(function(v) { return v[vm.fieldId] == obj[vm.fieldId]; }).length;
             }
             return false;
         }
@@ -249,21 +245,21 @@
                     var obj = {};
                     if (Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple) {
                         if (angular.isArray(componentSettings.values)) {
-                            obj[vm.field_id] = v;
+                            obj[vm.fieldId] = v;
                         } else {
-                            obj[vm.field_id] = key;
+                            obj[vm.fieldId] = key;
                         }
-                        obj[vm.field_search] = v;
+                        obj[vm.field_Sarch] = v;
                         vm.selectedValues.push(obj);
                     } else if ((vm.fieldValue == key || vm.fieldValue == v) && !vm.multiple) {
                         if (angular.isArray(componentSettings.values)) {
-                            obj[vm.field_id] = v;
+                            obj[vm.fieldId] = v;
                         } else {
-                            obj[vm.field_id] = key;
+                            obj[vm.fieldId] = key;
                         }
-                        obj[vm.field_search] = v;
+                        obj[vm.field_Sarch] = v;
                         vm.selectedValues.push(obj);
-                        vm.placeholder = obj[vm.field_search];
+                        vm.placeholder = obj[vm.fieldSearch];
                     }
                 });
                 vm.preloadedData = true;
@@ -276,10 +272,10 @@
 
                 var urlParam = {};
                 if (angular.isArray(vm.fieldValue)) {
-                    urlParam[vm.field_id] = vm.fieldValue;
+                    urlParam[vm.fieldId] = vm.fieldValue;
                 } else {
-                    urlParam[vm.field_id] = [];
-                    urlParam[vm.field_id].push(vm.fieldValue);
+                    urlParam[vm.fieldId] = [];
+                    urlParam[vm.fieldId].push(vm.fieldValue);
                 }
 
                 RestApiService
@@ -287,13 +283,13 @@
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {
                             if (Array.isArray(vm.fieldValue) &&
-                                (vm.fieldValue.indexOf(v[vm.field_id]) >= 0 || vm.fieldValue.indexOf(String(v[vm.field_id])) >= 0) &&
+                                (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
                                 vm.multiple && !alreadyIn(v, vm.selectedValues)
                             ) {
                                 vm.selectedValues.push(v);
-                            } else if (vm.fieldValue == v[vm.field_id] && !vm.multiple) {
+                            } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
                                 vm.selectedValues.push(v);
-                                vm.placeholder = v[vm.field_search];
+                                vm.placeholder = v[vm.fieldSearch];
                             }
 
                         });

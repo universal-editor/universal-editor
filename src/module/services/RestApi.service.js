@@ -114,7 +114,7 @@
             if (!!request.options.mixedMode) {
                 params = params || {};
                 angular.extend(params, {
-                    mixed: request.options.mixedMode.entityType
+                    mixed: request.options.mixedMode.collectionType
                 });
             }
 

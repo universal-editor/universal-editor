@@ -31,14 +31,16 @@
             $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format);
             $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);
 
-
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
                 $scope.onLoadDataHandler(e, data);
+                vm.fieldValue = vm.fieldValue ? moment(vm.fieldValue, vm.format) : "";
                 if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
                     vm.equalPreviewValue();
                 }
+                vm.previewValue = moment(vm.previewValue).format(vm.format);
             }));
         };
+
 
         //-- private functions
         function removeItem(index) {
@@ -50,7 +52,6 @@
                 });
             }
         }
-
         function addItem() {
             vm.fieldValue.push(moment());
         }

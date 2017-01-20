@@ -110,13 +110,14 @@
             };
             vm.request.options.$dataSource = vm.setting.component.settings.dataSource;
 
+            vm.collectionType = vm.setting.component.settings.collectionType || configData;
+
             // if (vm.setting.headComponent) {
             var parentEntity = $location.search().parent;
             if (parentEntity) {
                 parentEntity = JSON.parse(parentEntity);
                 vm.parent = parentEntity[vm.$parentComponentId] || null;
             }
-            //   }
 
             if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
                 vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;

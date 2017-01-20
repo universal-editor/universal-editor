@@ -74,7 +74,7 @@
 
 
         this.editEntityUpdate = function(type, request) {
-            this.setActionType(request.entityType);
+            this.setActionType(request.collectionType);
             var entityObject = {};
             var controllers = storage[request.options.$parentComponentId] || [];
             var isError = true;

@@ -5,7 +5,7 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/components/ueDate/ueDate.html',
+  $templateCache.put('module/components/ueRadiolist/ueRadiolist.html',
     '\n' +
     '<div ng-class="{\'field-wrapper row\':!vm.options.filter, \'filter-wrapper-field\': vm.options.filter}">\n' +
     '    <div on-render-template="on-render-template" ng-class="{\'component-filter\': vm.templates.filter &amp;&amp; vm.regim === \'filter\',                   \'component-edit\': vm.templates.edit  &amp;&amp; vm.regim === \'edit\',                   \'component-preview\': vm.templates.preview &amp;&amp; vm.regim === \'preview\'}" class="component-template"></div>\n' +
@@ -15,16 +15,11 @@ module.run(['$templateCache', function($templateCache) {
     '                <div ng-bind="::vm.hint" class="hint-text"></div>\n' +
     '            </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="::vm.label"></span>\n' +
     '        </label>\n' +
-    '        <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" ng-style="{\'overflow:auto\':vm.multiple}" ng-if="!vm.disabled|| vm.options.filter">\n' +
-    '            <div data-ng-if="vm.multiple" ng-class="{\'col-lg-2 col-md-2 col-sm-3 col-xs-3 clear-padding-left\': (!vm.options.isGroup &amp;&amp; !vm.options.filter)}">\n' +
-    '                <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-datepicker-wrapper input-group">\n' +
-    '                    <input data-date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" min-date="vm.minDate" data-format="{{vm.format || \'DD.MM.YYYY\'}}" data-max-view="{{::vm.maxView}}" data-min-view="{{::vm.minView}}" data-view="{{::vm.view}}" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" data-min-date="minDate" data-max-date="maxDate" class="form-control input-sm"/><span class="input-group-btn">\n' +
-    '                        <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
-    '                </div>\n' +
-    '                <div data-ng-click="vm.addItem()" data-ng-disabled="vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
-    '            </div>\n' +
-    '            <div data-ng-if="!vm.multiple" ng-class="{\'col-lg-2 col-md-2 col-sm-3 col-xs-3 clear-padding-left\': (!vm.options.isGroup &amp;&amp; !vm.options.filter)}">\n' +
-    '                <input data-date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-format="{{vm.format || \'DD.MM.YYYY\'}}" data-max-view="{{::vm.maxView}}" data-min-view="{{::vm.minView}}" data-view="{{::vm.view}}" data-ng-blur="vm.inputLeave(vm.fieldValue)" data-min-date="minDate" data-max-date="maxDate" class="form-control input-sm"/>\n' +
+    '        <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" ng-if="!vm.disabled || vm.options.filter">\n' +
+    '            <div data-ng-repeat="item in vm.optionValues" data-ng-class="{\'radiodisabled\': vm.readonly}">		\n' +
+    '                <label class="radio">\n' +
+    '                    <input type="radio" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" value="{{::item[vm.fieldId]}}"/><span ng-bind="::item[vm.fieldSearch]"></span>\n' +
+    '                </label>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled-field">\n' +

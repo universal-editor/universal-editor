@@ -5,7 +5,7 @@ try {
   module = angular.module('universal.editor.templates', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/components/ueDate/ueDate.html',
+  $templateCache.put('module/components/ueAutocomplete/ueAutocomplete.html',
     '\n' +
     '<div ng-class="{\'field-wrapper row\':!vm.options.filter, \'filter-wrapper-field\': vm.options.filter}">\n' +
     '    <div on-render-template="on-render-template" ng-class="{\'component-filter\': vm.templates.filter &amp;&amp; vm.regim === \'filter\',                   \'component-edit\': vm.templates.edit  &amp;&amp; vm.regim === \'edit\',                   \'component-preview\': vm.templates.preview &amp;&amp; vm.regim === \'preview\'}" class="component-template"></div>\n' +
@@ -15,16 +15,20 @@ module.run(['$templateCache', function($templateCache) {
     '                <div ng-bind="::vm.hint" class="hint-text"></div>\n' +
     '            </div><span data-ng-class="{\'editor-required\': vm.required}" ng-bind="::vm.label"></span>\n' +
     '        </label>\n' +
-    '        <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" ng-style="{\'overflow:auto\':vm.multiple}" ng-if="!vm.disabled|| vm.options.filter">\n' +
-    '            <div data-ng-if="vm.multiple" ng-class="{\'col-lg-2 col-md-2 col-sm-3 col-xs-3 clear-padding-left\': (!vm.options.isGroup &amp;&amp; !vm.options.filter)}">\n' +
-    '                <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-datepicker-wrapper input-group">\n' +
-    '                    <input data-date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" min-date="vm.minDate" data-format="{{vm.format || \'DD.MM.YYYY\'}}" data-max-view="{{::vm.maxView}}" data-min-view="{{::vm.minView}}" data-view="{{::vm.view}}" data-ng-blur="vm.inputLeave(vm.fieldValue[$index])" data-min-date="minDate" data-max-date="maxDate" class="form-control input-sm"/><span class="input-group-btn">\n' +
-    '                        <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
+    '        <div ng-class="{\'filter-inner-wrapper\': vm.options.filter, \'field-element\': !vm.options.filter}" ng-style="{\'overflow:auto\':vm.multiple}" ng-if="!vm.disabled || vm.options.filter">\n' +
+    '            <div ng-class="vm.classComponent">\n' +
+    '                <div data-ng-class="{&quot;active&quot; : vm.isActivePossible, &quot;disabled-input&quot;: vm.readonly}" data-ng-click="inputFocus()" class="autocomplete-input-wrapper form-control">\n' +
+    '                    <div data-ng-repeat="acItem in vm.selectedValues" data-ng-show="acItem[vm.fieldSearch]" data-ng-if="vm.multiple" class="autocomplete-item">{{acItem[vm.fieldSearch]}}<span data-ng-click="vm.removeFromSelected($event, acItem)" data-ng-if="!vm.readonly" class="remove-from-selected">×</span></div>\n' +
+    '                    <input ng-show="vm.preloadedData" type="text" ng-disabled="vm.readonly" data-ng-model="vm.inputValue" data-ng-focus="vm.focusPossible(true)" data-ng-blur="vm.focusPossible(false)" size="{{vm.sizeInput}}" data-ng-style="vm.classInput" data-ng-keydown="vm.deleteToAutocomplete($event)" placeholder="{{vm.placeholder}}" data-ng-class="!vm.isActivePossible ? &quot;color-placeholder&quot; : &quot;&quot;" class="autocomplete-field-search"/><span data-ng-if="!vm.multiple &amp;&amp; !!vm.selectedValues.length &amp;&amp; !vm.readonly" data-ng-click="vm.removeFromSelected($event, vm.selectedValues[0])" class="selecte-delete selecte-delete-autocomplete">×</span>\n' +
+    '                    <div data-ng-show="vm.searching || !vm.preloadedData" class="loader-search-wrapper">\n' +
+    '                        <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
+    '                    </div>\n' +
+    '                    <div data-ng-if="!vm.readonly &amp;&amp; (vm.possibleValues.length &gt; 0) &amp;&amp; vm.showPossible" class="possible-values possible-autocomplete active possible-bottom">\n' +
+    '                        <div class="possible-scroll">\n' +
+    '                            <div data-ng-repeat="possible in vm.possibleValues" data-ng-mouseover="vm.activeElement = $index" data-ng-mousedown="vm.addToSelected($event, possible)" data-ng-class="vm.activeElement == $index ? \'active\' : \'\'" class="possible-value-item">{{::possible[vm.fieldSearch]}}</div>\n' +
+    '                        </div>\n' +
+    '                    </div>\n' +
     '                </div>\n' +
-    '                <div data-ng-click="vm.addItem()" data-ng-disabled="vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
-    '            </div>\n' +
-    '            <div data-ng-if="!vm.multiple" ng-class="{\'col-lg-2 col-md-2 col-sm-3 col-xs-3 clear-padding-left\': (!vm.options.isGroup &amp;&amp; !vm.options.filter)}">\n' +
-    '                <input data-date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-format="{{vm.format || \'DD.MM.YYYY\'}}" data-max-view="{{::vm.maxView}}" data-min-view="{{::vm.minView}}" data-view="{{::vm.view}}" data-ng-blur="vm.inputLeave(vm.fieldValue)" data-min-date="minDate" data-max-date="maxDate" class="form-control input-sm"/>\n' +
     '            </div>\n' +
     '        </div>\n' +
     '        <div ng-if="vm.disabled &amp;&amp; !vm.options.filter" class="disabled-field">\n' +
