@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope', 'configData', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage'];
+    UeFormController.$inject = ['$scope', 'configData', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window'];
 
-    function UeFormController($scope, configData, RestApiService, $location, $state, $translate, EditEntityStorage) {
+    function UeFormController($scope, configData, RestApiService, $location, $state, $translate, EditEntityStorage, $window) {
         // var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
         var vm = this,
@@ -24,6 +24,12 @@
         vm.editFooterBarNew = [];
         vm.editFooterBarExist = [];
         vm.idField = 'id';
+
+        vm.closeButtonSettings = vm.setting.component.settings.closeButton || { visible: true };
+        if(!angular.isBoolean(vm.closeButtonSettings.visible)) {
+            vm.closeButtonSettings.visible = true;
+        }
+
         var defaultEditFooterBar = [
             {
                 component: {
@@ -128,27 +134,41 @@
         });
 
         vm.closeButton = function() {
-            vm.entityLoaded = false;
-            vm.listLoaded = false;
-
-            var params = {};
-            var isReload = true;
-
-            if ($location.search().back) {
-                params.type = $location.search().back;
-            }
-            if ($location.search().parent) {
-                params.parent = $location.search().parent;
-                isReload = false;
-            }
-            var stateIndex = EditEntityStorage.getStateConfig();
-            var searchString = $location.search();
-            $state.go(stateIndex.name, params, { reload: isReload }).then(function() {
-                if (searchString.back) {
-                    delete searchString.back;
+            var state = vm.closeButtonSettings.state;
+            var url = vm.closeButtonSettings.url;
+            if (!state && url) {
+                if (angular.isString(url)) {
+                    url = url.replace(':id', vm.entityId);
+                    $window.location.href = url;
                 }
-                $location.search(searchString);
-            });
+            } else {
+                vm.entityLoaded = false;
+                vm.listLoaded = false;
+
+                var params = {};
+                var isReload = true;
+
+                if ($location.search().back) {
+                    params.type = $location.search().back;
+                }
+                if ($location.search().parent) {
+                    params.parent = $location.search().parent;
+                    isReload = false;
+                }
+
+                var stateIndex = EditEntityStorage.getStateConfig();
+                var searchString = $location.search();
+                var stateName;
+                if(!state) {
+                    state = stateIndex.name;
+                }
+                $state.go(state, params, { reload: isReload }).then(function() {
+                    if (searchString.back) {
+                        delete searchString.back;
+                    }
+                    $location.search(searchString);
+                });
+            }
         };
 
         $scope.$on('editor:entity_loaded', function(event, data) {
