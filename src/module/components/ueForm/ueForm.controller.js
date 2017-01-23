@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope', 'configData', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage'];
+    UeFormController.$inject = ['$scope', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage'];
 
-    function UeFormController($scope, configData, RestApiService, $location, $state, $translate, EditEntityStorage) {
+    function UeFormController($scope, RestApiService, $location, $state, $translate, EditEntityStorage) {
         // var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
         var vm = this,
@@ -46,7 +46,7 @@
         ];
 
         vm.$onInit = function() {
-            vm.configData = configData;
+
             vm.entityLoaded = false;
             vm.listLoaded = false;
             vm.errors = [];
