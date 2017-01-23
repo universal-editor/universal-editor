@@ -12,20 +12,24 @@
 
         var vm = this;
 
-        angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
+        vm.$onInit = function() {
+            angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
 
-        vm.classButton = 'btn btn-md btn-success button-footer';
+            vm.classButton = 'btn btn-md btn-success button-footer';
 
-        switch (vm.setting.buttonClass){
-            case 'header':
-                vm.classButton = 'btn btn-lg btn-success';
-                break;
-            case 'context':
-                vm.classButton = 'editor-action-button';
-                break;
-        }
+            switch (vm.setting.buttonClass){
+                case 'header':
+                    vm.classButton = 'btn btn-lg btn-success';
+                    break;
+                case 'context':
+                    vm.classButton = 'editor-action-button';
+                    break;
+            }
 
-        vm.buttonClick = function () {
+            vm.buttonClick = buttonClick;
+        };
+
+        function buttonClick() {
             if (!!vm.setting.component.settings.target) {
                 window.open(vm.setting.component.settings.url, vm.setting.component.settings.target);
             } else {
@@ -49,7 +53,7 @@
                     vm.options.isLoading = false;
                 });
             }
-        };
+        }
 
         vm.$postLink = function() {
             $element.on('$destroy', function () {

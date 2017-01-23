@@ -12,7 +12,9 @@
 
         var vm = this;
 
-        angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
+        vm.$onInit = function() {
+            angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
+        };
 
         $element.bind('click', function () {
           if(vm.action === 'close') {

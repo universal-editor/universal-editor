@@ -9,26 +9,31 @@
 
     function UeRadiolistController($scope, $element, EditEntityStorage, RestApiService, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
-        var vm = this;
-        vm.optionValues = [];
-        vm.inputValue = '';
-        vm.newEntityLoaded = newEntityLoaded;
+        var vm = this,
+            baseController,
+            componentSettings;
 
-        var baseController = $controller('FieldsController', { $scope: $scope });
-        angular.extend(vm, baseController);
-        var componentSettings = vm.setting.component.settings;
+        vm.$onInit = function() {
+            vm.optionValues = [];
+            vm.inputValue = '';
+            vm.newEntityLoaded = newEntityLoaded;
 
-        vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
-            $scope.onLoadDataHandler(e, data);
-            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
-                componentSettings.$loadingPromise.then(function(optionValues) {
-                    vm.optionValues = optionValues;
-                    vm.equalPreviewValue();
-                }).finally(function() {
-                    vm.loadingData = false;
-                });
-            }
-        }));
+            baseController = $controller('FieldsController', { $scope: $scope });
+            angular.extend(vm, baseController);
+            componentSettings = vm.setting.component.settings;
+
+            vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+                $scope.onLoadDataHandler(e, data);
+                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                    componentSettings.$loadingPromise.then(function(optionValues) {
+                        vm.optionValues = optionValues;
+                        vm.equalPreviewValue();
+                    }).finally(function() {
+                        vm.loadingData = false;
+                    });
+                }
+            }));
+        };
 
         function newEntityLoaded() {
             vm.fieldValue = vm.setting.component.settings.defaultValue || null;

@@ -10,21 +10,26 @@
     function UeStringController($scope, $element, EditEntityStorage, FilterFieldsStorage, $location, $controller, $timeout) {
         /* jshint validthis: true */
         var vm = this;
-        var baseController = $controller('FieldsController', {$scope: $scope});
-        angular.extend(vm, baseController);
-        vm.addItem = addItem;
-        vm.removeItem = removeItem;
+        var baseController;
 
-        if (vm.contentType == 'password') {
-            vm.typeInput = 'password';
-        }
+        vm.$onInit = function() {
+            baseController = $controller('FieldsController', {$scope: $scope});
 
-        vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
-            $scope.onLoadDataHandler(e, data);
-            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
-                vm.equalPreviewValue();
+            angular.extend(vm, baseController);
+            vm.addItem = addItem;
+            vm.removeItem = removeItem;
+
+            if (vm.contentType == 'password') {
+                vm.typeInput = 'password';
             }
-        }));
+
+            vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+                $scope.onLoadDataHandler(e, data);
+                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                    vm.equalPreviewValue();
+                }
+            }));
+        };
 
         function removeItem(index) {
             if (angular.isArray(vm.fieldValue)) {

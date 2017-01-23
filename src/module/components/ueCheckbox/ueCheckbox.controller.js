@@ -9,61 +9,71 @@
 
     function UeCheckboxController($scope, $element, EditEntityStorage, RestApiService, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
-        var vm = this;
-        var componentSettings = vm.setting.component.settings;
-        componentSettings.$fieldType = 'array';
-        vm.optionValues = [];
-        vm.inputValue = '';
-        vm.newEntityLoaded = newEntityLoaded;
-        vm.fieldId = 'id';
-        vm.fieldSearch = 'title';
-        var baseController = $controller('FieldsController', { $scope: $scope });
-        angular.extend(vm, baseController);
-        vm.singleValue = !componentSettings.hasOwnProperty('values') && !componentSettings.hasOwnProperty('valuesRemote');
 
-        if (vm.singleValue) {
-            vm.checkBoxStyle = 'display: inline;';
-            vm.getFieldValue = function() {
-                var field = {},
-                    wrappedFieldValue;
-                if (angular.isArray(vm.fieldValue)) {
-                    wrappedFieldValue = (vm.fieldValue.length == 0) ? componentSettings.falseValue : componentSettings.trueValue;
-                } else {
-                    wrappedFieldValue = vm.fieldValue || componentSettings.falseValue;
+        var vm = this,
+            componentSettings,
+            baseController;
+
+        vm.$onInit = function() {
+            componentSettings = vm.setting.component.settings;
+            componentSettings.$fieldType = 'array';
+            vm.optionValues = [];
+            vm.inputValue = '';
+            vm.newEntityLoaded = newEntityLoaded;
+            baseController = $controller('FieldsController', { $scope: $scope });
+            angular.extend(vm, baseController);
+            vm.fieldId = 'id';
+            vm.fieldSearch = 'title';
+
+            vm.singleValue = !componentSettings.hasOwnProperty('values') && !componentSettings.hasOwnProperty('valuesRemote');
+
+            if (vm.singleValue) {
+                vm.checkBoxStyle = 'display: inline;';
+                vm.getFieldValue = getFieldValue;
+            }
+
+            vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                    $scope.onLoadDataHandler(e, data);
+                    if (vm.singleValue) {
+                        vm.optionValues = [];
+                        vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
+                        var obj = {};
+                        obj[vm.field_id] = componentSettings.trueValue;
+                        obj[vm.field_search] = componentSettings.label;
+                        vm.label = '';
+                        vm.optionValues.push(obj);
+                    } else {
+                        componentSettings.$loadingPromise.then(function(optionValues) {
+                            vm.optionValues = optionValues;
+                            vm.equalPreviewValue();
+                        }).finally(function() {
+                            vm.loadingData = false;
+                        });
+                    }
                 }
+            }));
+        };
 
-                if (vm.parentField) {
-                    field[vm.parentField] = {};
-                    field[vm.parentField][vm.fieldName] = wrappedFieldValue;
-                } else {
-                    field[vm.fieldName] = wrappedFieldValue;
-                }
+        function getFieldValue() {
+            var field = {},
+                wrappedFieldValue;
+            if (angular.isArray(vm.fieldValue)) {
+                wrappedFieldValue = (vm.fieldValue.length == 0) ? componentSettings.falseValue : componentSettings.trueValue;
+            } else {
+                wrappedFieldValue = vm.fieldValue || componentSettings.falseValue;
+            }
 
-                return field;
-            };
+            if (vm.parentField) {
+                field[vm.parentField] = {};
+                field[vm.parentField][vm.fieldName] = wrappedFieldValue;
+            } else {
+                field[vm.fieldName] = wrappedFieldValue;
+            }
+
+            return field;
         }
 
-        vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
-            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
-                $scope.onLoadDataHandler(e, data);
-                if (vm.singleValue) {
-                    vm.optionValues = [];
-                    vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
-                    var obj = {};
-                    obj[vm.fieldId] = componentSettings.trueValue;
-                    obj[vm.fieldSearch] = componentSettings.label;
-                    vm.label = '';
-                    vm.optionValues.push(obj);
-                } else {
-                    componentSettings.$loadingPromise.then(function(optionValues) {
-                        vm.optionValues = optionValues;
-                        vm.equalPreviewValue();
-                    }).finally(function() {
-                        vm.loadingData = false;
-                    });
-                }
-            }
-        }));
 
         function newEntityLoaded() {
             vm.fieldValue = [];

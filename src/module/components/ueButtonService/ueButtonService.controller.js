@@ -10,20 +10,27 @@
     function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService, ModalService, $state, $controller, $location){
         $element.addClass('ue-button');
 
-        var vm = this;
-        angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
-        var request = {};
-        if(vm.setting.component.settings.request) {
-            request = JSON.parse(vm.setting.component.settings.request);
-        }       
-        
-        var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
-        var pk = $state.params[pkKey];
-        if(vm.action === 'delete') {
-            vm.disabled = pk === 'new' || !pk;
-        }
+        var vm = this,
+            request = {},
+            pkKey,
+            pk;
 
-        request.options = vm.options;
+        vm.$onInit = function() {
+            angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
+
+            if(vm.setting.component.settings.request) {
+                request = JSON.parse(vm.setting.component.settings.request);
+            }
+
+            pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+            pk = $state.params[pkKey];
+            if(vm.action === 'delete') {
+                vm.disabled = pk === 'new' || !pk;
+            }
+
+            request.options = vm.options;
+        };
+
         $element.bind('click', function () {
             if (vm.options.isLoading || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;

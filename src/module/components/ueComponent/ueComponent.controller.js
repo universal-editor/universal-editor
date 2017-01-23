@@ -9,8 +9,12 @@
 
     function UeComponentController($scope, $element, EditEntityStorage, FilterFieldsStorage, $location, $controller, $timeout) {
         /* jshint validthis: true */
-        var vm = this;
-        var baseController = $controller('BaseController', {$scope: $scope});
-        angular.extend(vm, baseController);
+        var vm = this,
+            baseController;
+
+        vm.$onInit = function() {
+            baseController= $controller('BaseController', {$scope: $scope});
+            angular.extend(vm, baseController);
+        };
     }
 })();

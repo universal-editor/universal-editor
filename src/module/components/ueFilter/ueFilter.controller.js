@@ -9,165 +9,176 @@
 
     function UeFilterController($scope, $rootScope, $element, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage) {
         /* jshint validthis: true */
-        var vm = this;
-        var fieldErrorName;
-        var settings = vm.setting.component.settings;
-        vm.visiable = false;
+        var vm = this,
+            settings,
+            fieldErrorName;
 
-        vm.header = settings.header;
+        vm.$onInit = function() {
+            settings = vm.setting.component.settings;
+            vm.visiable = false;
 
-        vm.body = [];
-        angular.forEach(settings.dataSource.fields, function(field) {
-            if (field.component.hasOwnProperty('settings') && (!settings.fields || ~settings.fields.indexOf(field.name)) && field.component.settings.filterable !== false) {
-                var fieldSettings = field.component.settings;
+            vm.header = settings.header;
+
+            vm.body = [];
 
 
-                var group = {
-                    label: fieldSettings.label,
-                    operators: [],
-                    filters: [{
-                        field: field,
-                        options: {
-                            filterParameters: {
-                                operator: '%:text%',
-                                index: 0
-                            },
-                            filter: true,
-                            $parentComponentId: vm.options.$parentComponentId
+
+
+            angular.forEach(settings.dataSource.fields, function(field) {
+                if (field.component.hasOwnProperty('settings') && (!settings.fields || ~settings.fields.indexOf(field.name)) && field.component.settings.filterable !== false) {
+                    var fieldSettings = field.component.settings;
+
+
+                    var group = {
+                        label: fieldSettings.label,
+                        operators: [],
+                        filters: [{
+                            field: field,
+                            options: {
+                                filterParameters: {
+                                    operator: '%:text%',
+                                    index: 0
+                                },
+                                filter: true,
+                                $parentComponentId: vm.options.$parentComponentId
+                            }
+                        }]
+                    };
+
+                    /** convert to filter object from fields*/
+                    fieldSettings.$toFilter = fieldSettings.$toFilter || function(operator, fieldValue) {
+                            angular.forEach(fieldValue, function(value, key) {
+                                if (operator && operator.indexOf(':text') !== -1) {
+                                    if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
+                                        fieldValue[key] = operator.replace(':text', value);
+                                    }
+                                    if (value === undefined || value === null || value === '' || (angular.isObject(value) && $.isEmptyObject(value))) {
+                                        delete fieldValue[key];
+                                    }
+                                } else {
+                                    if (value) {
+                                        fieldValue[operator + key] = fieldValue[key];
+                                    }
+                                    delete fieldValue[key];
+                                }
+                            });
+                            return fieldValue;
+                        };
+
+                    /** parse filter objects with operators*/
+                    fieldSettings.$parseFilter = function(model, filterValue) {
+                        var componentSettings = model.setting.component.settings;
+                        var parentComponentId = model.parentComponentId;
+                        var output = {};
+                        angular.forEach(filterValue, function(value, key) {
+                            //** delete operators from keys and value property
+                            if (angular.isString(value)) {
+                                value = value.replace(/^%/, '').replace(/%$/, '');
+                            }
+                            if (angular.isString(key)) {
+                                key = key.replace(/^\>\=/, '').replace(/^\<\=/, '');
+                            }
+
+                            /** for date is required convert into date-type (at this moment we have two fields of date) */
+                            if (field.component.settings.$fieldType === 'date') {
+                                output[key] = output[key] || [];
+                                output[key].push(moment.utc(value, model.format));
+                            } else {
+                                output[key] = value;
+                            }
+                        });
+                        var value = output[model.fieldName];
+                        if (angular.isArray(value)) {
+                            value = value[model.options.filterParameters.index];
                         }
-                    }]
-                };
-
-                /** convert to filter object from fields*/
-                fieldSettings.$toFilter = fieldSettings.$toFilter || function(operator, fieldValue) {
-                    angular.forEach(fieldValue, function(value, key) {
-                        if (operator && operator.indexOf(':text') !== -1) {
-                            if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
-                                fieldValue[key] = operator.replace(':text', value);
-                            }
-                            if (value === undefined || value === null || value === '' || (angular.isObject(value) && $.isEmptyObject(value))) {
-                                delete fieldValue[key];
-                            }
+                        if (field.component.settings.$fieldType === 'array') {
+                            model.fieldValue = value.split(',');
                         } else {
-                            if (value) {
-                                fieldValue[operator + key] = fieldValue[key];
+                            model.fieldValue = value;
+                            if (model.addToSelected && value) {
+                                model.fieldValue = {};
+                                model.fieldValue[model.field_id] = value;
+                                model.addToSelected(null, model.fieldValue);
                             }
-                            delete fieldValue[key];
                         }
-                    });
-                    return fieldValue;
-                };
+                        $timeout(function() {
+                            if (!FilterFieldsStorage.getFilterQueryObject(parentComponentId)) {
+                                FilterFieldsStorage.calculate(parentComponentId);
+                                $rootScope.$broadcast('editor:read_entity', model.options);
+                                vm.visiable = true;
+                            }
+                        }, 0);
+                        return output;
+                    };
 
-                /** parse filter objects with operators*/
-                fieldSettings.$parseFilter = function(model, filterValue) {
-                    var componentSettings = model.setting.component.settings;
-                    var parentComponentId = model.parentComponentId;
-                    var output = {};
-                    angular.forEach(filterValue, function(value, key) {
-                        //** delete operators from keys and value property
-                        if (angular.isString(value)) {
-                            value = value.replace(/^%/, '').replace(/%$/, '');
-                        }
-                        if (angular.isString(key)) {
-                            key = key.replace(/^\>\=/, '').replace(/^\<\=/, '');
-                        }
+                    /*temprory custom logic for operators */
 
-                        /** for date is required convert into date-type (at this moment we have two fields of date) */
-                        if (field.component.settings.$fieldType === 'date') {
-                            output[key] = output[key] || [];
-                            output[key].push(moment.utc(value, model.format));
-                        } else {
-                            output[key] = value;
-                        }
-                    });
-                    var value = output[model.fieldName];
-                    if (angular.isArray(value)) {
-                        value = value[model.options.filterParameters.index];
+                    if (~['ue-dropdown', 'ue-autocomplete', 'ue-checkbox', 'ue-radiolist', 'ue-colorpicker'].indexOf(field.component.name)) {
+                        group.filters[0].options.filterParameters.operator = ':text';
                     }
-                    if (field.component.settings.$fieldType === 'array') {
-                        model.fieldValue = value.split(',');
-                    } else {
-                        model.fieldValue = value;
-                        if (model.addToSelected && value) {
-                            model.fieldValue = {};
-                            model.fieldValue[model.fieldId] = value;
-                            model.addToSelected(null, model.fieldValue);
-                        }
-                    }
-                    $timeout(function() {
-                        if (!FilterFieldsStorage.getFilterQueryObject(parentComponentId)) {
-                            FilterFieldsStorage.calculate(parentComponentId);
-                            $rootScope.$broadcast('editor:read_entity', model.options);
-                            vm.visiable = true;
-                        }
-                    }, 0);
-                    return output;
-                };
 
-                /*temprory custom logic for operators */
-
-                if (~['ue-dropdown', 'ue-autocomplete', 'ue-checkbox', 'ue-radiolist', 'ue-colorpicker'].indexOf(field.component.name)) {
-                    group.filters[0].options.filterParameters.operator = ':text';
-                }
-
-                if (~['ue-date', 'ue-time', 'ue-datetime'].indexOf(field.component.name)) {
-                    group.filters[0].ngStyle = 'display: inline-block; width: 25%; margin-left: 5px;';
-                    group.filters[0].options.filterParameters.operator = '>=';
-                    var cloneField = angular.copy(field);
-                    group.filters.push({
-                        field: cloneField,
-                        options: {
-                            filterParameters: {
-                                operator: '<=',
-                                index: 1
+                    if (~['ue-date', 'ue-time', 'ue-datetime'].indexOf(field.component.name)) {
+                        group.filters[0].ngStyle = 'display: inline-block; width: 25%; margin-left: 5px;';
+                        group.filters[0].options.filterParameters.operator = '>=';
+                        var cloneField = angular.copy(field);
+                        group.filters.push({
+                            field: cloneField,
+                            options: {
+                                filterParameters: {
+                                    operator: '<=',
+                                    index: 1
+                                },
+                                filter: true,
+                                $parentComponentId: vm.options.$parentComponentId
                             },
-                            filter: true,
-                            $parentComponentId: vm.options.$parentComponentId
-                        },
-                        ngStyle: 'display: inline-block; width: 25%; margin-left: 20px;'
-                    });
-                }
-
-                vm.body.push(group);
-            }
-        });
-
-        vm.footer = [];
-        if (!settings.footer || !settings.footer.controls) {
-            settings.footer = {
-                controls: [
-                    {
-                        component: {
-                            name: 'ue-button-filter',
-                            settings: {
-                                $groups: vm.body,
-                                label: 'Применить',
-                                action: 'send'
-                            }
-                        }
-                    },
-                    {
-                        component: {
-                            name: 'ue-button-filter',
-                            settings: {
-                                label: 'Очистить',
-                                action: 'clear'
-                            }
-                        }
+                            ngStyle: 'display: inline-block; width: 25%; margin-left: 20px;'
+                        });
                     }
-                ]
-            };
-        }
 
-        if (settings.footer && settings.footer.controls) {
-            angular.forEach(settings.footer.controls, function(control) {
-                vm.footer.push(control);
+                    vm.body.push(group);
+                }
             });
-        }
 
-        vm.toggleFilterVisibility = function() {
-            vm.visiable = !vm.visiable;
+            vm.footer = [];
+            if (!settings.footer || !settings.footer.controls) {
+                settings.footer = {
+                    controls: [
+                        {
+                            component: {
+                                name: 'ue-button-filter',
+                                settings: {
+                                    $groups: vm.body,
+                                    label: 'Применить',
+                                    action: 'send'
+                                }
+                            }
+                        },
+                        {
+                            component: {
+                                name: 'ue-button-filter',
+                                settings: {
+                                    label: 'Очистить',
+                                    action: 'clear'
+                                }
+                            }
+                        }
+                    ]
+                };
+            }
+
+            if (settings.footer && settings.footer.controls) {
+                angular.forEach(settings.footer.controls, function(control) {
+                    vm.footer.push(control);
+                });
+            }
+
+            vm.toggleFilterVisibility = toggleFilterVisibility;
         };
+
+
+        function toggleFilterVisibility() {
+            vm.visiable = !vm.visiable;
+        }
 
         $element.on('$destroy', function() {
             $scope.$destroy();
