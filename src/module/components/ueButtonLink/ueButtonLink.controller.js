@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonLinkController', UeButtonLinkController);
 
-    UeButtonLinkController.$inject = ['$scope', '$element', 'RestApiService', '$state', '$location', 'configData', 'EditEntityStorage', 'ModalService', '$timeout', '$controller', '$window'];
+    UeButtonLinkController.$inject = ['$scope', '$element', 'RestApiService', '$state', '$location', 'configData', 'EditEntityStorage', 'ModalService', '$timeout', '$controller', '$window', '$httpParamSerializerJQLike'];
 
-    function UeButtonLinkController($scope, $element, RestApiService, $state, $location, configData, EditEntityStorage, ModalService, $timeout, $controller, $window) {
+    function UeButtonLinkController($scope, $element, RestApiService, $state, $location, configData, EditEntityStorage, ModalService, $timeout, $controller, $window, $httpParamSerializerJQLike) {
         $element.addClass('ue-button');
 
         var vm = this;
@@ -30,7 +30,11 @@
                     ModalService.options = vm.options;
                     url = url.replace(':id', vm.entityId);
                     var isReload = !~url.indexOf($location.path());
-                    $window.location.href = url;
+                    var searchParams = $httpParamSerializerJQLike($location.search());
+                    if (searchParams) {
+                        searchParams = '?' + searchParams;
+                    }
+                    $window.location.href = url + searchParams;
                     if (isReload) {
                         $window.location.reload();
                     }
