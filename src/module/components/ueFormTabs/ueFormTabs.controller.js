@@ -11,39 +11,46 @@
         $element.addClass('ue-form-tabs');
         /* jshint validthis: true */
 
-        var vm = this;
-        var pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
-        var pk = $state.params[pkKey];
-        var componentSettings = vm.setting.component.settings;
+        var vm = this,
+            pkKey,
+            pk,
+            componentSettings;
 
-        vm.tabs = [];
-        vm.indexTab = 0;
-        vm.activateTab = activateTab;
-        if (angular.isArray(componentSettings.tabs)) {
-            angular.forEach(componentSettings.tabs, function(tab) {
-                var newTab = {};
-                newTab.label = tab.label;
-                newTab.fields = [];
-                if (angular.isArray(tab.fields)) {
-                    angular.forEach(tab.fields, function(field) {
-                        if (angular.isString(field)) {
-                            var newField = componentSettings.dataSource.fields.filter(function(k) {
-                                return k.name == field;
-                            });
-                            if (newField.length > 0) {
-                                newTab.fields.push(newField[0]);
+
+        vm.$onInit = function() {
+            pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+            pk = $state.params[pkKey];
+            componentSettings = vm.setting.component.settings;
+
+            vm.tabs = [];
+            vm.indexTab = 0;
+            vm.activateTab = activateTab;
+            if (angular.isArray(componentSettings.tabs)) {
+                angular.forEach(componentSettings.tabs, function(tab) {
+                    var newTab = {};
+                    newTab.label = tab.label;
+                    newTab.fields = [];
+                    if (angular.isArray(tab.fields)) {
+                        angular.forEach(tab.fields, function(field) {
+                            if (angular.isString(field)) {
+                                var newField = componentSettings.dataSource.fields.filter(function(k) {
+                                    return k.name == field;
+                                });
+                                if (newField.length > 0) {
+                                    newTab.fields.push(newField[0]);
+                                }
+                            } else {
+                                if (field.component.settings.dataSource === undefined) {
+                                    field.component.settings.dataSource = componentSettings.dataSource;
+                                }
+                                newTab.fields.push(field);
                             }
-                        } else {
-                            if (field.component.settings.dataSource === undefined) {
-                                field.component.settings.dataSource = componentSettings.dataSource;
-                            }
-                            newTab.fields.push(field);
-                        }
-                    });
-                }
-                vm.tabs.push(newTab);
-            });
-        }
+                        });
+                    }
+                    vm.tabs.push(newTab);
+                });
+            }
+        };
 
         function activateTab(indexTab) {
             vm.indexTab = indexTab;

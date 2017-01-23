@@ -9,50 +9,102 @@
 
     function UeDropdownController($rootScope, $scope, EditEntityStorage, RestApiService, $timeout, configData, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
         /* jshint validthis: true */
-        var vm = this;
-        vm.optionValues = [];
-        var baseController = $controller('FieldsController', { $scope: $scope });
-        angular.extend(vm, baseController);
-        var componentSettings = vm.setting.component.settings;
+        var vm = this,
+            possibleValues,
+            componentSettings,
+            baseController,
+            destroySelectField;
 
-        var possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
+        vm.$onInit = function() {
+            vm.optionValues = [];
+            baseController = $controller('FieldsController', { $scope: $scope });
+            angular.extend(vm, baseController);
+            componentSettings = vm.setting.component.settings;
 
-        vm.parentValue = !vm.depend;
-        vm.search = componentSettings.search;
-        vm.showPossible = false;
-        vm.activeElement = 0;
-        vm.isSelection = false;
-        vm.possibleLocation = true;
-        vm.isSpanSelectDelete = false;
+            possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
-        if (componentSettings.hasOwnProperty('valuesRemote') && componentSettings.tree) {
-            vm.treeParentField = componentSettings.tree.parentField;
-            vm.treeChildCountField = componentSettings.tree.childCountField;
-            vm.treeSelectBranches = componentSettings.tree.selectBranches;
-            vm.isTree = vm.treeParentField && vm.treeChildCountField;
-            vm.sizeInput = vm.placeholder ? vm.placeholder.length : 0;
-        }
+            vm.parentValue = !vm.depend;
+            vm.search = componentSettings.search;
+            vm.showPossible = false;
+            vm.activeElement = 0;
+            vm.isSelection = false;
+            vm.possibleLocation = true;
+            vm.isSpanSelectDelete = false;
 
-        if (vm.depend) {
-            vm.dependField = vm.depend.fieldName;
-            vm.dependFilter = vm.depend.filter;
-        }
+            vm.addToSelected = addToSelected;
+            vm.isShowPossible = isShowPossible;
+            vm.setActiveElement = setActiveElement;
+            vm.setColorPlaceholder = setColorPlaceholder;
+            vm.isBlur = isBlur;
+            vm.getDistanceByClass = getDistanceByClass;
+            vm.deleteToSelected = deleteToSelected;
+            vm.clickSelect = clickSelect;
+            vm.clear = clear;
 
-        if (!vm.multiple) {
-            vm.styleInput = { 'width': '99%' };
-        }
-        if (vm.readonly) {
-            vm.styleInput = { 'width': '1px', 'padding': 0 };
-        }
+            if (componentSettings.hasOwnProperty('valuesRemote') && componentSettings.tree) {
+                vm.treeParentField = componentSettings.tree.parentField;
+                vm.treeChildCountField = componentSettings.tree.childCountField;
+                vm.treeSelectBranches = componentSettings.tree.selectBranches;
+                vm.isTree = vm.treeParentField && vm.treeChildCountField;
+                vm.sizeInput = vm.placeholder ? vm.placeholder.length : 0;
+            }
 
-        if (vm.options.filter) {
-            vm.isTree = false;
-        }
+            if (vm.depend) {
+                vm.dependField = vm.depend.fieldName;
+                vm.dependFilter = vm.depend.filter;
+            }
+
+            if (!vm.multiple) {
+                vm.styleInput = { 'width': '99%' };
+            }
+            if (vm.readonly) {
+                vm.styleInput = { 'width': '1px', 'padding': 0 };
+            }
+
+            if (vm.options.filter) {
+                vm.isTree = false;
+            }
+
+            if (vm.depend) {
+                destroySelectField = $scope.$on('select_field:select_name_' + vm.dependField, function(event, data) {
+                    if (data && data !== '') {
+                        vm.parentValue = false;
+                        vm.optionValues = [];
+                        RestApiService
+                            .getUrlResource(componentSettings.valuesRemote.url + '?filter={"' + vm.dependFilter + '":"' + data + '"}')
+                            .then(function(response) {
+                                angular.forEach(response.data.items, function(v) {
+                                    vm.optionValues.push(v);
+                                });
+                                $timeout(function() {
+                                    setSizeSelect();
+                                }, 0);
+                                allOptions = angular.copy(vm.optionValues);
+                                vm.parentValue = true;
+                            }, function(reject) {
+                                $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                                    console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
+                                });
+                            });
+                    } else {
+                        vm.parentValue = false;
+                    }
+                });
+            }
+
+            // dropdown functions
+            vm.toggle = toggle;
+            vm.remove = remove;
+            vm.focus = focus;
+            vm.change = change;
+        };
+
+
 
         var allOptions = [];
 
         var destroyWatchEntityLoaded;
-        //   var destroyEntityLoaded = $scope.$on('editor:entity_loaded', );
+
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             $scope.onLoadDataHandler(event, data);
             if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
@@ -110,40 +162,6 @@
             $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
         }, true);
 
-        var destroySelectField;
-
-        if (vm.depend) {
-            destroySelectField = $scope.$on('select_field:select_name_' + vm.dependField, function(event, data) {
-                if (data && data !== '') {
-                    vm.parentValue = false;
-                    vm.optionValues = [];
-                    RestApiService
-                        .getUrlResource(componentSettings.valuesRemote.url + '?filter={"' + vm.dependFilter + '":"' + data + '"}')
-                        .then(function(response) {
-                            angular.forEach(response.data.items, function(v) {
-                                vm.optionValues.push(v);
-                            });
-                            $timeout(function() {
-                                setSizeSelect();
-                            }, 0);
-                            allOptions = angular.copy(vm.optionValues);
-                            vm.parentValue = true;
-                        }, function(reject) {
-                            $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
-                                console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
-                            });
-                        });
-                } else {
-                    vm.parentValue = false;
-                }
-            });
-        }
-
-        // dropdown functions
-        vm.toggle = toggle;
-        vm.remove = remove;
-        vm.focus = focus;
-        vm.change = change;
 
         function toggle(e, item, loadChilds) {
             if (loadChilds && item[vm.treeChildCountField]) {
@@ -378,7 +396,7 @@
             }
         }
 
-        vm.addToSelected = function(event, val) {
+        function addToSelected(event, val) {
             if (vm.multiple) {
                 vm.fieldValue.push(val);
             } else {
@@ -397,7 +415,7 @@
                 vm.showPossible = false;
                 vm.setColorPlaceholder();
             }, 0);
-        };
+        }
 
         function convertToObject(items) {
             angular.forEach(items, function(v) {
@@ -407,7 +425,7 @@
             });
         }
 
-        vm.isShowPossible = function() {
+        function isShowPossible() {
             vm.activeElement = 0;
             vm.showPossible = !vm.showPossible;
             var formControl = $element.find('.select-input');
@@ -423,7 +441,7 @@
                 vm.possibleLocation = !(dHeight - dropdownBottom < 162);
             });
             vm.setColorPlaceholder();
-        };
+        }
 
 
         $document.bind('keydown', function(event) {
@@ -519,36 +537,36 @@
             }
         });
 
-        vm.setActiveElement = function(event, index) {
+        function setActiveElement(event, index) {
             event.stopPropagation();
             $timeout(function() {
                 vm.activeElement = index;
             }, 0);
-        };
+        }
 
-        vm.setColorPlaceholder = function() {
+        function setColorPlaceholder() {
             if (!vm.search && !vm.isTree) {
                 vm.colorPlaceholder = !(vm.placeholder === componentSettings.placeholder) && !vm.showPossible;
             } else {
                 vm.colorPlaceholder = !(vm.placeholder === componentSettings.placeholder) && !$scope.isOpen;
             }
-        };
+        }
 
-        vm.isBlur = function() {
+        function isBlur() {
             vm.showPossible = false;
             $scope.isOpen = false;
             var formControl = $element.find('.select-input');
             formControl.removeClass('active');
             vm.setColorPlaceholder();
-        };
+        }
 
-        vm.clickSelect = function() {
+        function clickSelect() {
             if (!vm.readonly) {
                 $element.find('input')[0].focus();
             }
-        };
+        }
 
-        vm.deleteToSelected = function(event, isKeydown) {
+        function deleteToSelected(event, isKeydown) {
             if (isKeydown &&
                 event.which == 8 &&
                 !!vm.fieldValue &&
@@ -566,9 +584,8 @@
                 remove(null, vm.fieldValue[0]);
                 event.stopPropagation();
             }
-        };
+        }
 
-        vm.clear = clear;
         function clear() {
             vm.fieldValue = vm.multiple ? [] : null;
             vm.isSpanSelectDelete = false;
@@ -589,12 +606,13 @@
             }
         }
 
-        vm.getDistanceByClass = function(className) {
+
+        function getDistanceByClass(className) {
             var elem = angular.element($element.find(className)[0]);
             return $window.innerHeight - elem.offset().top;
-        };
+        }
 
-        this.$onDestroy = function() {
+        vm.$onDestroy = function() {
             if (angular.isFunction(destroyWatchEntityLoaded)) {
                 destroyWatchEntityLoaded();
             }
@@ -605,7 +623,7 @@
             }
         };
 
-        this.$postLink = function() {
+        vm.$postLink = function() {
             $element.on('$destroy', function() {
                 $scope.$destroy();
             });

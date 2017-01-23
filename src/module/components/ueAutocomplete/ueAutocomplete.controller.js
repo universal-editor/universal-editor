@@ -10,31 +10,76 @@
     function UeAutocompleteController($scope, $element, $document, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $controller, $translate) {
         /* jshint validthis: true */
         var vm = this,
-            inputTimeout;
-        vm.optionValues = [];
-        angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
-        var componentSettings = vm.setting.component.settings;
+            inputTimeout,
+            componentSettings;
 
-        vm.selectedValues = [];
-        vm.inputValue = '';
-        vm.possibleValues = [];
-        vm.activeElement = 0;
-        vm.preloadedData = true;
-        vm.searching = false;
-        vm.maxItemsCount = componentSettings.maxItems || Number.POSITIVE_INFINITY;
-        vm.minCount = componentSettings.minCount || 2;
-        vm.sizeInput = 1;
-        vm.classInput = { 'width': '1px' };
-        vm.showPossible = false;
+        vm.$onInit = function() {
+            vm.optionValues = [];
+            angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
+            componentSettings = vm.setting.component.settings;
 
-        if (!vm.multiple) {
-            vm.classInput.width = '99%';
-            vm.classInput['padding-right'] = '25px';
-        }
+            vm.selectedValues = [];
+            vm.inputValue = '';
+            vm.possibleValues = [];
+            vm.activeElement = 0;
+            vm.preloadedData = true;
+            vm.searching = false;
+            vm.maxItemsCount = componentSettings.maxItems || Number.POSITIVE_INFINITY;
+            vm.minCount = componentSettings.minCount || 2;
+            vm.sizeInput = 1;
+            vm.classInput = { 'width': '1px' };
+            vm.showPossible = false;
 
-        if (vm.options.filter) {
-            loadValues();
-        }
+            vm.addToSelected = addToSelected;
+            vm.removeFromSelected = removeFromSelected;
+            vm.focusPossible = focusPossible;
+            vm.deleteToAutocomplete = deleteToAutocomplete;
+
+            if (!vm.multiple) {
+                vm.classInput.width = '99%';
+                vm.classInput['padding-right'] = '25px';
+            }
+
+            if (vm.options.filter) {
+                loadValues();
+            }
+
+            vm.listeners.push($scope.$on('editor:entity_loaded', function(event, data) {
+                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                    vm.loadingData = true;
+                    $scope.onLoadDataHandler(event, data);
+                    componentSettings.$loadingPromise.then(function(optionValues) {
+                        vm.optionValues = optionValues;
+                        vm.equalPreviewValue();
+                    }).finally(function() {
+                        vm.loadingData = false;
+                    });
+                }
+            }));
+
+            vm.listeners.push($scope.$watch(function() {
+                return vm.inputValue;
+            }, function(newValue) {
+                if (newValue) {
+                    if (inputTimeout) {
+                        $timeout.cancel(inputTimeout);
+                    }
+                    vm.showPossible = true;
+                    vm.possibleValues = [];
+                    if (vm.multiple) {
+                        vm.sizeInput = newValue.length || 1;
+                        if (vm.sizeInput === 1 && (newValue.length != 1)) {
+                            vm.classInput.width = '1px';
+                        } else {
+                            vm.classInput.width = 'initial';
+                        }
+                    }
+                    inputTimeout = $timeout(function() {
+                        autocompleteSearch(newValue);
+                    }, 300);
+                }
+            }, true));
+        };
 
         $element.bind('keydown', function(event) {
             var possibleValues;
@@ -103,46 +148,9 @@
             }
         });
 
-
-        vm.listeners.push($scope.$on('editor:entity_loaded', function(event, data) {
-            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
-                vm.loadingData = true;
-                $scope.onLoadDataHandler(event, data, loadValues);
-                componentSettings.$loadingPromise.then(function(optionValues) {
-                    vm.optionValues = optionValues;
-                    vm.equalPreviewValue();
-                }).finally(function() {
-                    vm.loadingData = false;
-                });
-            }
-        }));
-
-        vm.listeners.push($scope.$watch(function() {
-            return vm.inputValue;
-        }, function(newValue) {
-            if (newValue) {
-                if (inputTimeout) {
-                    $timeout.cancel(inputTimeout);
-                }
-                vm.showPossible = true;
-                vm.possibleValues = [];
-                if (vm.multiple) {
-                    vm.sizeInput = newValue.length || 1;
-                    if (vm.sizeInput === 1 && (newValue.length != 1)) {
-                        vm.classInput.width = '1px';
-                    } else {
-                        vm.classInput.width = 'initial';
-                    }
-                }
-                inputTimeout = $timeout(function() {
-                    autocompleteSearch(newValue);
-                }, 300);
-            }
-        }, true));
-
         /* PUBLIC METHODS */
 
-        vm.addToSelected = function(event, obj) {
+        function addToSelected(event, obj) {
             //** if you know only id  of the record            
             if (!vm.multiple) {
                 vm.selectedValues = [];
@@ -159,9 +167,9 @@
             if (event && !vm.multiple) {
                 event.stopPropagation();
             }
-        };
+        }
 
-        vm.removeFromSelected = function(event, obj) {
+        function removeFromSelected(event, obj) {
             if (!vm.multiple) {
                 vm.fieldValue = null;
             }
@@ -175,7 +183,7 @@
                     }
                 }
             });
-        };
+        }
 
         /* PRIVATE METHODS */
 
@@ -300,7 +308,7 @@
             }
         }
 
-        vm.focusPossible = function(isActive) {
+        function focusPossible(isActive) {
             vm.isActivePossible = isActive;
             if (!isActive) {
                 vm.showPossible = false;
@@ -318,7 +326,7 @@
             }
         };
 
-        vm.deleteToAutocomplete = function(event) {
+        function deleteToAutocomplete(event) {
             if (event.which == 8 &&
                 !!vm.selectedValues &&
                 !!vm.selectedValues.length &&
