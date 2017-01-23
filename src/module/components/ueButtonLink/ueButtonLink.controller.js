@@ -33,7 +33,7 @@
             if (!state && url) {
                 if (angular.isString(url)) {
                     ModalService.options = vm.options;
-                    url = url.replace(':id', vm.entityId);
+                    url = url.replace(':pk', vm.entityId);
                     var isReload = !~url.indexOf($location.path());
                     var searchParams = $httpParamSerializerJQLike($location.search());
                     if (searchParams) {
