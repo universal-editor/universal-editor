@@ -26,10 +26,14 @@
             }
 
             if (!state && url) {
-                if (angular.isString(url)) {                    
+                if (angular.isString(url)) {
                     ModalService.options = vm.options;
                     url = url.replace(':id', vm.entityId);
+                    var isReload = !~url.indexOf($location.path());
                     $window.location.href = url;
+                    if (isReload) {
+                        $window.location.reload();
+                    }
                 }
             } else {
                 var toStateConfig = EditEntityStorage.getStateConfig(state);

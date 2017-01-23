@@ -26,7 +26,7 @@
         vm.idField = 'id';
 
         vm.closeButtonSettings = vm.setting.component.settings.closeButton || { visible: true };
-        if(!angular.isBoolean(vm.closeButtonSettings.visible)) {
+        if(typeof vm.closeButtonSettings.visible !== 'boolean') {
             vm.closeButtonSettings.visible = true;
         }
 
