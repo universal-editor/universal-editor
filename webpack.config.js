@@ -155,6 +155,8 @@
     webpackConfigBundle.plugins.push(
         new copyWebpackPlugin([{
             from: 'src/config.js'  
+        },{
+            from: 'src/test/index.js'
         }]),
         new HtmlWebpackPlugin({
             filename: 'index.html',

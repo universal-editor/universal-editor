@@ -1,6 +1,5 @@
 node_modules
 bower_components
-test
 tests
 .idea
 npm-debug.log
