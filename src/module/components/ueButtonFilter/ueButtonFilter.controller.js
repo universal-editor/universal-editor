@@ -11,10 +11,13 @@
         $element.addClass('ue-button');
         $element.addClass('grey');
 
-        var vm = this;
-        angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
+        var vm = this,
+            parentComponentId;
 
-        var parentComponentId = vm.options.$parentComponentId;
+        vm.$onInit = function() {
+            angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
+            parentComponentId = vm.options.$parentComponentId;
+        };
 
         $element.bind('click', function() {
             var filterJSON = null, filters;

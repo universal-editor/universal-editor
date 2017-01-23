@@ -9,14 +9,13 @@
 
     function ComponentWrapperController($element, $scope, ComponentBuilder){
         var vm = this;
-        $scope.setting = vm.setting;
-        $scope.setting.entityId = vm.entityId;
-        $scope.setting.buttonClass = vm.buttonClass;
-        $scope.options = vm.options || {};
 
-        //$scope.filter = vm.filter || false;
-        //$scope.filterParameters = vm.filterParameters;
-        //$scope.setting.scopeIdParent = vm.scopeIdParent;
+        vm.$onInit = function() {
+            $scope.setting = vm.setting;
+            $scope.setting.entityId = vm.entityId;
+            $scope.setting.buttonClass = vm.buttonClass;
+            $scope.options = vm.options || {};
+        };
 
         this.$postLink = function() {
             $element.on('$destroy', function () {

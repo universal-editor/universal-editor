@@ -11,8 +11,13 @@
         $element.addClass('ue-pagination');
         
         var vm = this;
-        vm.metaKey = true;
-        vm.parentComponentId = vm.options.$parentComponentId;
+
+        vm.$onInit = function() {
+            vm.metaKey = true;
+            vm.parentComponentId = vm.options.$parentComponentId;
+            vm.changePage = changePage;
+        };
+
         var watchData = $scope.$watch(function() {
             return vm.setting.paginationData;
         }, function(data) {
@@ -148,7 +153,7 @@
             }
         });
 
-        vm.changePage = function(event, pageItem) {
+        function changePage(event, pageItem) {
             event.preventDefault();
             vm.request.params.page = pageItem.page;
             var parentEntity = $location.search().parent;
@@ -160,7 +165,7 @@
                 vm.request.childId = null;
             }
             RestApiService.getItemsList(vm.request);
-        };
+        }
 
         vm.$onDestroy = function() {
             watchData();

@@ -9,22 +9,29 @@
 
     function UeColorpickerController($scope, $element, EditEntityStorage, FilterFieldsStorage, $state, $controller) {
         /* jshint validthis: true */
-        var vm = this;
-        var componentSettings = vm.setting.component.settings;
+        var vm = this,
+            componentSettings,
+            baseController;
 
-        componentSettings.defaultValue = componentSettings.multiple ? (componentSettings.defaultValue || ['#000000']) : (componentSettings.defaultValue || '#000000');
-        var baseController = $controller('FieldsController', { $scope: $scope });
-        angular.extend(vm, baseController);
+        vm.$onInit = function() {
+            componentSettings = vm.setting.component.settings;
+            componentSettings.defaultValue = componentSettings.multiple ? (componentSettings.defaultValue || ['#000000']) : (componentSettings.defaultValue || '#000000');
+            baseController = $controller('FieldsController', { $scope: $scope });
+            angular.extend(vm, baseController);
 
-        vm.addItem = addItem;
-        vm.removeItem = removeItem; 
+            vm.addItem = addItem;
+            vm.removeItem = removeItem;
 
-        vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
-            $scope.onLoadDataHandler(e, data);
-            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
-                vm.equalPreviewValue();
-            }
-        })); 
+            vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+                $scope.onLoadDataHandler(e, data);
+                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                    vm.equalPreviewValue();
+                }
+            }));
+        };
+
+
+
         //-- private functions
         function removeItem(index) {
             if (angular.isArray(vm.fieldValue)) {
