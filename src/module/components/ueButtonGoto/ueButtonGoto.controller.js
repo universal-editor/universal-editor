@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonGotoController', UeButtonGotoController);
 
-    UeButtonGotoController.$inject = ['$scope', '$element', 'RestApiService', '$state', '$location', 'configData', 'EditEntityStorage', 'ModalService', '$timeout', '$controller', '$translate'];
+    UeButtonGotoController.$inject = ['$scope', '$element', '$state', '$location', 'EditEntityStorage', 'ModalService', '$timeout', '$controller', '$translate'];
 
-    function UeButtonGotoController($scope, $element, RestApiService, $state, $location, configData, EditEntityStorage, ModalService, $timeout, $controller, $translate) {
+    function UeButtonGotoController($scope, $element, $state, $location, EditEntityStorage, ModalService, $timeout, $controller, $translate) {
         $element.addClass('ue-button');
 
         var vm = this,

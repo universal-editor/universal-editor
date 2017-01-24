@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeDropdownController', UeDropdownController);
 
-    UeDropdownController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', '$timeout', 'configData', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q', '$translate'];
+    UeDropdownController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', '$timeout', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q', '$translate'];
 
-    function UeDropdownController($rootScope, $scope, EditEntityStorage, RestApiService, $timeout, configData, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
+    function UeDropdownController($rootScope, $scope, EditEntityStorage, RestApiService, $timeout, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
         /* jshint validthis: true */
         var vm = this,
             possibleValues,

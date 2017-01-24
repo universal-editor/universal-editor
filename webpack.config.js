@@ -134,6 +134,8 @@
     webpackConfigTemplate.plugins.push( 
         new copyWebpackPlugin([{
             from: 'src/config.js'  
+        },{
+            from: 'src/test/index.js'
         }]),
         new webpack.DefinePlugin({
             'INCLUDE_VENDOR': false

@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonModalController',UeButtonModalController);
 
-    UeButtonModalController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$window','ModalService','ButtonsService', '$controller'];
+    UeButtonModalController.$inject = ['$rootScope','$scope','$element', '$window','ModalService','ButtonsService', '$controller'];
 
-    function UeButtonModalController($rootScope,$scope,$element,RestApiService,configData, $window, ModalService, ButtonsService, $controller){
+    function UeButtonModalController($rootScope,$scope,$element, $window, ModalService, ButtonsService, $controller){
         $element.addClass('ue-button');
 
         var vm = this;

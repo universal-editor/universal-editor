@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeGridController', UeGridController);
 
-    UeGridController.$inject = ['$scope', '$rootScope', 'configData', 'RestApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', '$element', '$compile', 'EditEntityStorage'];
+    UeGridController.$inject = ['$scope', '$rootScope', 'RestApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', '$element', '$compile', 'EditEntityStorage'];
 
-    function UeGridController($scope, $rootScope, configData, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage) {
+    function UeGridController($scope, $rootScope, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage) {
         $element.addClass('ue-grid');
         //$scope.entity = RestApiService.getEntityType();
         /* jshint validthis: true */
@@ -20,7 +20,6 @@
         vm.$onInit = function() {
             url = vm.setting.component.settings.dataSource.url;
             parentField = vm.setting.component.settings.dataSource.parentField;
-            vm.configData = configData;
             vm.correctEntityType = true;
             vm.listLoaded = false;
             vm.loadingData = true;
@@ -47,7 +46,6 @@
                 $gridComponentId: vm.$parentComponentId,
                 mixedMode: vm.setting.component.settings.mixedMode,
                 sort: vm.setting.component.settings.dataSource.sortBy,
-                back: configData,
                 isGrid: true
             };
             vm.mixOption = angular.merge({}, vm.options);
@@ -85,7 +83,7 @@
             vm.visibleFilter = true;
             vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty('pagination') ? vm.setting.component.settings.dataSource.pagination : true;
             vm.autoCompleteFields = [];
-            vm.entityType = vm.setting.component.settings.entityType || configData;
+            vm.entityType = vm.setting.component.settings.entityType;
             vm.parent = null;
             vm.paginationData = [];
             vm.isMixMode = !!vm.setting.component.settings.mixedMode;
@@ -110,7 +108,7 @@
             };
             vm.request.options.$dataSource = vm.setting.component.settings.dataSource;
 
-            vm.collectionType = vm.setting.component.settings.collectionType || configData;
+            vm.collectionType = vm.setting.component.settings.collectionType;
 
             // if (vm.setting.headComponent) {
             var parentEntity = $location.search().parent;
