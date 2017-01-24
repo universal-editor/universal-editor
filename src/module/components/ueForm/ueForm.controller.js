@@ -46,7 +46,7 @@
         ];
 
         vm.$onInit = function() {
-            vm.configData = configData;
+
             vm.entityLoaded = false;
             vm.listLoaded = false;
             vm.errors = [];
