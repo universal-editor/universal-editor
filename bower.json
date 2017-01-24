@@ -3,7 +3,7 @@
   "description": "Universal editor to edit the entities from RESTful service",
   "version": "1.0.0-alpha",
   "main": [
-    "./dist/core.min.js"
+    "./dist/ue.min.js"
   ],
   "moduleType": [],
   "keywords": [

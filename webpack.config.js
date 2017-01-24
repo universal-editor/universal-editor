@@ -127,75 +127,28 @@
         );
     }
 
-    /** Configuration of bundle.js */
-    var webpackConfigBundle = deepcopy(webpackConfigTemplate);
-    webpackConfigBundle.entry = {
-        'bundle': [path.resolve(__dirname, 'src/main.js')]
+    webpackConfigTemplate.entry = {
+        'ue': [path.resolve(__dirname, 'src/main.js')]
     };
-    if (RUNNING_SERVER) {
-        webpackConfigBundle.entry.bundle.unshift('webpack-dev-server/client?http://' + localHost + ':8080', 'webpack/hot/dev-server');
-    }
 
-    webpackConfigBundle.resolve.alias = {
-        'moment': 'moment/moment.js',
-        'jquery-minicolors': 'jquery-minicolors/jquery.minicolors.js',
-        'jquery': 'jquery/dist/jquery.js',
-        'angular': path.resolve(__dirname, 'src/inject/inject.js'),
-        'angularjs': path.resolve(__dirname, 'bower_components/angular/angular.js'),
-    };
-    webpackConfigBundle.module.loaders.push({
-        test: /\.js$/,
-        loader: 'string-replace',
-        query: {
-            search: '$window.angular',
-            replace: 'angular'
-        }
-    });
-
-    webpackConfigBundle.plugins.push(
+    webpackConfigTemplate.plugins.push( 
         new copyWebpackPlugin([{
             from: 'src/config.js'  
         },{
             from: 'src/test/index.js'
         }]),
+        new webpack.DefinePlugin({
+            'INCLUDE_VENDOR': false
+        }),
         new HtmlWebpackPlugin({
             filename: 'index.html',
             title: 'Example Components Universal Editor',
             template: path.resolve(__dirname, 'src/index.ejs'),
             inject: 'head'
-        }),
-        new webpack.ProvidePlugin({
-            'angular': 'angular',
-            '$': 'jquery',
-            'jQuery': 'jquery',
-            'window.jQuery': 'jquery',
-            'moment': 'moment'
-        }),
-        new webpack.DefinePlugin({
-            'INCLUDE_VENDOR': true
-        })
-    );
-
-    /** Configuration of core.js */
-    var webpackConfigCore = deepcopy(webpackConfigTemplate);
-
-    webpackConfigCore.entry = {
-        'core': [path.resolve(__dirname, 'src/main.js')]
-    };
-
-    webpackConfigCore.plugins.push(
-        new webpack.DefinePlugin({
-            'INCLUDE_VENDOR': false
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'index_core.html',
-            title: 'Example Components Universal Editor',
-            template: path.resolve(__dirname, 'src/index.without.vendor.ejs'),
-            inject: 'head'
         })
     );
 
     /** Running webpack in multicompilation */
-    module.exports = [webpackConfigCore, webpackConfigBundle];
+    module.exports = [webpackConfigTemplate];
 
 })(require);
