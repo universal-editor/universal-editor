@@ -31,6 +31,7 @@
     "ng-file-upload": "~10.0.2",
     "angular-cookies": "~1.4.8",
     "angular-ui-router": "~0.3.2",
+    "angular-ui-mask": "~1.6.7",
     "angular-toastr": "~1.7.0",
     "angular-translate": "^2.11.0",
     "angular-translate-loader-static-files": "^2.11.0",

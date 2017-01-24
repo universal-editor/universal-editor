@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage'];
+    UeFormController.$inject = ['$scope', 'configData', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window'];
 
-    function UeFormController($scope, RestApiService, $location, $state, $translate, EditEntityStorage) {
+    function UeFormController($scope, configData, RestApiService, $location, $state, $translate, EditEntityStorage, $window) {
         // var entityObject = RestApiService.getEntityObject();
         /* jshint validthis: true */
         var vm = this,
@@ -57,6 +57,11 @@
             vm.editFooterBarNew = [];
             vm.editFooterBarExist = [];
             vm.idField = 'id';
+
+            vm.closeButtonSettings = vm.setting.component.settings.closeButton || { visible: true };
+            if (typeof vm.closeButtonSettings.visible !== 'boolean') {
+                vm.closeButtonSettings.visible = true;
+            }
 
             vm.options = angular.copy(vm.options);
             angular.merge(vm.options, {
@@ -143,29 +148,60 @@
             updateButton();
         });
 
-        function closeButton() {
-            vm.entityLoaded = false;
-            vm.listLoaded = false;
-
-            var params = {};
-            var isReload = true;
-
-            if ($location.search().back) {
-                params.type = $location.search().back;
-            }
-            if ($location.search().parent) {
-                params.parent = $location.search().parent;
-                isReload = false;
-            }
-            var stateIndex = EditEntityStorage.getStateConfig();
-            var searchString = $location.search();
-            $state.go(stateIndex.name, params, { reload: isReload }).then(function() {
-                if (searchString.back) {
-                    delete searchString.back;
+        angular.forEach(vm.setting.component.settings.body, function(componentObject) {
+            if (angular.isObject(componentObject) && componentObject.component) {
+                vm.components.push(componentObject);
+                if (componentObject.component.settings.dataSource === undefined) {
+                    componentObject.component.settings.dataSource = vm.setting.component.settings.dataSource;
                 }
-                $location.search(searchString);
-            });
-        }
+            }
+            if (angular.isString(componentObject)) {
+                var dataSourceComponent = vm.setting.component.settings.dataSource.fields.filter(function(k) {
+                    return k.name == componentObject;
+                });
+                if (dataSourceComponent.length > 0) {
+                    vm.components.push(dataSourceComponent[0]);
+                }
+            }
+        });
+
+        vm.closeButton = function() {
+            var state = vm.closeButtonSettings.state;
+            var url = vm.closeButtonSettings.url;
+            if (!state && url) {
+                if (angular.isString(url)) {
+                    url = url.replace(':id', vm.entityId);
+                    $window.location.href = url;
+                }
+            } else {
+                vm.entityLoaded = false;
+                vm.listLoaded = false;
+
+                var params = {};
+                var isReload = true;
+
+                if ($location.search().back) {
+                    params.type = $location.search().back;
+                }
+                if ($location.search().parent) {
+                    params.parent = $location.search().parent;
+                    isReload = false;
+                }
+
+                var stateIndex = EditEntityStorage.getStateConfig();
+                var searchString = $location.search();
+                var stateName;
+                if (!state) {
+                    state = stateIndex.name;
+                }
+                $state.go(state, params, { reload: isReload }).then(function() {
+                    if (searchString.back) {
+                        delete searchString.back;
+                    }
+                    $location.search(searchString);
+                });
+            }
+        };
 
         $scope.$on('editor:entity_loaded', function(event, data) {
             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
