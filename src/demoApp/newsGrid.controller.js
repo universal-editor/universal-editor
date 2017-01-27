@@ -45,15 +45,11 @@
                             valuesRemote: {
                                 fields: {
                                     value: 'id',
-                                    label: 'name',
-                                    parent: 'parent_id',
-                                    childCount: 'child_count'
+                                    label: 'title',
                                 },
-                                url: 'http://universal-backend.dev/rest/v1/staff'
+                                url: 'http://universal-backend.dev/rest/v1/news/category'
                             },
-                            search: true,
-                            tree: true,
-                            selectBranches: true
+                            search: true
                         }
                     }
                 },
@@ -140,6 +136,11 @@
                     dataSource: newsDataSource,
                     header: {
                         toolbar: [
+                            {
+                                component: {
+                                    name: 'ue-filter'
+                                }
+                            },
                             {
                                 component: {
                                     name: 'ue-button-link',

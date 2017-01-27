@@ -56,30 +56,6 @@
 
             vm.mixOption = angular.merge({}, vm.options);
             vm.mixOption.isMix = true;
-
-            if (!!vm.setting.component.settings.header) {
-                vm.filterComponent = vm.setting.component.settings.header.filter;
-            } else {
-                vm.filterComponent = vm.setting.component.settings.header;
-            }
-            if (vm.filterComponent !== false) {
-                if (angular.isUndefined(vm.filterComponent)) {
-                    vm.filterComponent = {
-                        component: {
-                            name: 'ue-filter',
-                            settings: {
-                                header: {
-                                    label: 'Фильтр'
-                                }
-                            }
-                        }
-                    };
-                }
-
-                if (angular.isUndefined(vm.filterComponent.component.settings.dataSource)) {
-                    vm.filterComponent.component.settings.dataSource = vm.setting.component.settings.dataSource;
-                }
-            }
             vm.editFooterBarNew = [];
             vm.editFooterBarExist = [];
             vm.listFooterBar = [];
@@ -172,6 +148,9 @@
             if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.toolbar) {
                 angular.forEach(vm.setting.component.settings.header.toolbar, function(control) {
                     var newControl = angular.merge({}, control);
+                    if (angular.isUndefined(newControl.component.settings)) {
+                        newControl.component.settings = {};
+                    }
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
                     }
@@ -183,6 +162,9 @@
             if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.toolbar) {
                 angular.forEach(vm.setting.component.settings.footer.toolbar, function(control) {
                     var newControl = angular.merge({}, control);
+                    if (angular.isUndefined(newControl.component.settings)) {
+                        newControl.component.settings = {};
+                    }
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
                     }
