@@ -79,15 +79,6 @@
         $scope.onErrorApiHandler = onErrorApiHandler;
         $scope.onDestroyHandler = onDestroyHandler;
         $scope.$on("$destroy", onDestroyHandler);
-        self.listeners.push($scope.$on('editor:entity_loaded', function (e, data) {
-            if (!data.$parentComponentId || data.$parentComponentId === self.parentComponentId && !self.options.filter) {
-                if ((self.options.$dataIndex || self.options.$dataIndex === 0) && angular.isObject(data.$items)) {
-                    $scope.data = self.data = data.$items[self.options.$dataIndex];
-                } else {
-                    $scope.data = self.data = data;
-                }
-            }
-        }));
 
         function onDestroyHandler() {
             if (angular.isArray(self.listeners)) {

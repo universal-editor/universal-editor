@@ -1,4 +1,5 @@
 .editor-body
+    component-wrapper(data-setting="vm.closeButtonSetting" data-options="::vm.options")
     .close-editor(data-ng-click="vm.closeButton()" ng-if="vm.closeButtonSettings.visible")
     component-wrapper(ng-repeat="component in ::vm.components" data-setting="::component" data-options="::vm.options")
     .field-error-bottom-wrapper

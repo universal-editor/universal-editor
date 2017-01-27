@@ -269,7 +269,6 @@
                         }, true);
                     }
 
-
                     if (data.editorEntityType === 'new' && self.regim !== 'preview') {
 
                         if (!!self.newEntityLoaded) {
@@ -298,6 +297,8 @@
                         }
                         return;
                     }
+
+                    $scope.data = self.data = ((self.options.$dataIndex >= 0) && angular.isObject(data.$items)) ? data.$items[self.options.$dataIndex] : data;
 
                     var apiValue;
                     if (!self.parentField) {

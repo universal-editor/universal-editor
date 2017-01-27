@@ -46,11 +46,18 @@
         ];
 
         vm.$onInit = function() {
-            vm.closeButtonSettings = vm.setting.component.settings.closeButton || { visible: true };
-            if(typeof vm.closeButtonSettings.visible !== 'boolean') {
-                vm.closeButtonSettings.visible = true;
-            }
-
+            vm.closeButtonSetting = {
+                component: {
+                    name: 'ue-button-link',
+                    settings: {
+                        label: 'Назад',
+                        back: true,
+                        template: function($scope) {
+                            return '<div class="close-editor" ng-click="vm.click()"> </div>';
+                        }
+                    }
+                }
+            };
             vm.entityLoaded = false;
             vm.listLoaded = false;
             vm.errors = [];
@@ -61,11 +68,6 @@
             vm.editFooterBarNew = [];
             vm.editFooterBarExist = [];
             vm.idField = 'id';
-
-            vm.closeButtonSettings = vm.setting.component.settings.closeButton || { visible: true };
-            if (typeof vm.closeButtonSettings.visible !== 'boolean') {
-                vm.closeButtonSettings.visible = true;
-            }
 
             vm.options = angular.copy(vm.options);
             angular.merge(vm.options, {
