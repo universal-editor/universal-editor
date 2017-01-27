@@ -160,13 +160,12 @@
             }
         };
 
-        this.getEntity = function(stateName, entityName) {
+        this.getEntity = function(stateName) {
             return configData;
         };
 
-        this.getStateConfig = function(stateName, entityName) {
+        this.getStateConfig = function(stateName) {
 
-            entityName = entityName || configData;
             var result = null;
             var entity = configData;
 

@@ -11,7 +11,7 @@
             dismiss: '&'
         },
         controllerAs: 'vm',
-        controller: function($uibModal, $scope, configData, $element, $state, EditEntityStorage, ModalService) {
+        controller: function($uibModal, $scope, $element, $state, EditEntityStorage, ModalService) {
             var vm = this,
                 pkKey,
                 modalDialog;

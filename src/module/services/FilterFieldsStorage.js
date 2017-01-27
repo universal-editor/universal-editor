@@ -9,7 +9,7 @@
 
     function FilterFieldsStorage($rootScope, $timeout, configData) {
         var storage = {},
-            queryObject = [],
+            queryObject = {},
             srvc = this,
             filterSearchString;
 
@@ -45,16 +45,16 @@
             }
         }
 
-        function clearFiltersValue(id) {
+        function clearFiltersValue(id, paramName) {
             if (storage[id]) {
                 angular.forEach(storage[id], function(ctrl) {
                     ctrl.clear();
                 });
-                calculate(id);
+                calculate(id, paramName);
             }
         }
 
-        function calculate(id) {
+        function calculate(id, paramName) {
             var ctrls = storage[id];
             var filters = {};
             //-- get list of filter fields
@@ -73,16 +73,16 @@
 
             //** storage filter object
             if (!$.isEmptyObject(filters)) {
-                queryObject[id] = angular.copy(filters);
+                queryObject[paramName] = angular.copy(filters);
             } else {
-                delete queryObject[id];
+                delete queryObject[paramName];
                 filters = false;
             }
             return filters;
         }
 
-        function getFilterQueryObject(id) {
-            return queryObject[id];
+        function getFilterQueryObject(paramName) {
+            return queryObject[paramName];
         }
     }
 })();

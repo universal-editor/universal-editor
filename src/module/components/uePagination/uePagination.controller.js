@@ -30,7 +30,7 @@
             var parentField = vm.setting.component.settings.dataSource.parentField;
             var startIndex;
             var endIndex;
-            //var qParams = vm.options.queryTempParams;
+
             vm.request = {
                 params: {},
                 options: vm.options,
@@ -156,14 +156,9 @@
         function changePage(event, pageItem) {
             event.preventDefault();
             vm.request.params.page = pageItem.page;
-            var parentEntity = $location.search().parent;
-            if (parentEntity) {
-                parentEntity = JSON.parse(parentEntity);
-                vm.parent = parentEntity[vm.parentComponentId] || null;
-                vm.request.childId = vm.parent;
-            } else {
-                vm.request.childId = null;
-            }
+            var parentEntity = $location.search()[vm.options.prefixGrid  ? vm.options.prefixGrid + '-parent' : 'parent'];
+            vm.parent = parentEntity || null;
+            vm.request.childId = vm.parent;
             RestApiService.getItemsList(vm.request);
         }
 

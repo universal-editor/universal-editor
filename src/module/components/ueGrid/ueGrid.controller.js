@@ -9,7 +9,6 @@
 
     function UeGridController($scope, $rootScope, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage) {
         $element.addClass('ue-grid');
-        //$scope.entity = RestApiService.getEntityType();
         /* jshint validthis: true */
         var vm = this,
             itemsKey,
@@ -39,17 +38,25 @@
             vm.listHeaderBar = [];
             vm.$parentComponentId = vm.setting.component.$id;
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
+            vm.prefixGrid = undefined;
+
+            if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix){
+                vm.prefixGrid = vm.setting.component.settings.routing.paramsPrefix;
+            }
 
 
             vm.options = {
                 $parentComponentId: vm.$parentComponentId,
                 $gridComponentId: vm.$parentComponentId,
+                prefixGrid: vm.prefixGrid,
                 mixedMode: vm.setting.component.settings.mixedMode,
                 sort: vm.setting.component.settings.dataSource.sortBy,
                 isGrid: true
             };
+
             vm.mixOption = angular.merge({}, vm.options);
             vm.mixOption.isMix = true;
+
             if (!!vm.setting.component.settings.header) {
                 vm.filterComponent = vm.setting.component.settings.header.filter;
             } else {
@@ -91,6 +98,7 @@
                 vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
                 vm.entityType = vm.setting.component.settings.mixedMode.entityType;
                 vm.subType = vm.setting.component.settings.mixedMode.fieldType;
+                vm.collectionType = vm.setting.component.settings.mixedMode.collectionType;
 
                 angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
                     var newValue = angular.merge({}, value);
@@ -108,14 +116,8 @@
             };
             vm.request.options.$dataSource = vm.setting.component.settings.dataSource;
 
-            vm.collectionType = vm.setting.component.settings.collectionType;
-
-            // if (vm.setting.headComponent) {
-            var parentEntity = $location.search().parent;
-            if (parentEntity) {
-                parentEntity = JSON.parse(parentEntity);
-                vm.parent = parentEntity[vm.$parentComponentId] || null;
-            }
+            var parentEntity = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'];
+            vm.parent = parentEntity || null;
 
             if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
                 vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
@@ -235,6 +237,7 @@
         function getParent() {
             vm.request.childId = vm.parent;
             vm.request.parentField = parentField;
+            vm.request.prefixGrid = vm.prefixGrid;
             vm.request.headComponent = vm.setting.headComponent;
             RestApiService.loadParent(vm.request);
         }
@@ -249,11 +252,7 @@
         $scope.$on('editor:read_entity', function(event, data) {
             var eventComponentId = data.$gridComponentId || data.$parentComponentId || data;
             if (vm.$parentComponentId === eventComponentId) {
-                var parentEntity = $location.search().parent;
-                if (parentEntity) {
-                    parentEntity = JSON.parse(parentEntity);
-                    vm.parent = parentEntity[vm.$parentComponentId] || null;
-                }
+                vm.parent = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'] || null;
                 vm.request.childId = vm.parent;
                 RestApiService.getItemsList(vm.request);
             }

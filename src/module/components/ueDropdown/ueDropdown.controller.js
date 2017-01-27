@@ -106,6 +106,7 @@
         var destroyWatchEntityLoaded;
 
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
+            vm.data = data;
             $scope.onLoadDataHandler(event, data);
             if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
 

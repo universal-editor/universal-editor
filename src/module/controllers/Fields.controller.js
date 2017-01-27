@@ -121,13 +121,15 @@
             function() {
                 self.error = [];
             }, true));
+
         if (self.options.filter) {
             $scope.$watch(function() {
                 return $location.search();
             }, function(newVal) {
-                if (newVal && newVal.filter) {
-                    var filter = JSON.parse(newVal.filter);
-                    componentSettings.$parseFilter($scope.vm, filter[self.parentComponentId]);
+                var filterName = self.options.paramsPefix ? self.options.paramsPefix + '-filter' : 'filter';
+                if (newVal && newVal[filterName]) {
+                    var filter = JSON.parse(newVal[filterName]);
+                    componentSettings.$parseFilter($scope.vm, filter);
                 }
             });
         }

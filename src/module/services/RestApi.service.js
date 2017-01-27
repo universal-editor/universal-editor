@@ -92,7 +92,7 @@
             }
 
             var id = request.options.$parentComponentId;
-            var filters = FilterFieldsStorage.getFilterQueryObject(id);
+            var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
             var beforeSend;
             if (!!request.childId) {
                 filters = filters || {};
@@ -186,11 +186,11 @@
 
 
             var parentField = dataSource.fields.parent;
-            if (parentField && $location.search().parent) {
-                //-- проверяю редактируется ли поле parentField в форме. Если да, то его не нужно извлекать из адреса.
+            var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+            if (parentField && $location.search()[paramName]) {
                 var isNotEditableParentField = !$document[0].querySelector(".field-wrapper [name='" + parentField + "']");
                 if (isNotEditableParentField) {
-                    request.data[parentField] = $location.search().parent;
+                    request.data[parentField] = $location.search()[paramName];
                 }
             }
 
@@ -199,7 +199,7 @@
             var _method = 'POST';
             var _url = dataSource.url;
             var idField = 'id';
-            var state = EditEntityStorage.getStateConfig().name;
+            var state;
 
             if (dataSource.hasOwnProperty('fields')) {
                 idField = dataSource.fields.primaryKey || idField;
@@ -220,8 +220,9 @@
                 successCreateMessage();
 
                 var params = {};
-                if ($location.search().parent) {
-                    params.parent = $location.search().parent;
+                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                if ($location.search()[paramName]) {
+                    params.parent = $location.search()[paramName];
                 }
                 if ($location.search().back) {
                     params.state = $location.search().back;
@@ -229,6 +230,9 @@
                 }
                 if (!ModalService.isModalOpen()) {
                     $state.go(state, params).then(function() {
+                        if (params.back){
+                            delete params.back;
+                        }
                         $location.search(params);
                         $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
                     });
@@ -265,7 +269,7 @@
             var _method = 'PUT';
 
             var _url = dataSource.url + '/' + self.editedEntityId;
-            var state = EditEntityStorage.getStateConfig().name;
+            var state;
             var idField = 'id';
 
             $http({
@@ -283,11 +287,11 @@
                 $rootScope.$broadcast('editor:entity_success');
                 successUpdateMessage();
                 var params = {};
-                if ($location.search().parent) {
-                    params.parent = $location.search().parent;
+                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                if ($location.search()[paramName]) {
+                    params.parent = $location.search()[paramName];
                 }
                 if ($location.search().back) {
-                    params.type = $location.search().back;
                     state = $location.search().back;
                 }
                 if (!ModalService.isModalOpen()) {
@@ -419,15 +423,17 @@
         };
 
         this.deleteItemById = function(request) {
-            var state = EditEntityStorage.getStateConfig().name;
+            var state;
             if (request.options.isLoading) {
                 return;
             }
             var dataSource = request.options.$dataSource;
-            var url = dataSource.url;
+            var url;
 
             if (request.options.isMix) {
                 url = request.options.mixedMode.dataSource.url;
+            } else {
+                url = dataSource.url
             }
             request.options.isLoading = true;
 
@@ -448,13 +454,15 @@
                 $rootScope.$broadcast('editor:entity_success_deleted');
                 successDeleteMessage();
                 var params = {};
-                if ($location.search().parent) {
-                    params.parent = $location.search().parent;
+                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                if ($location.search()[paramName]) {
+                    params[paramName] = $location.search()[paramName];
                 }
                 if ($location.search().back) {
-                    params.type = $location.search().back;
                     state = $location.search().back;
                 }
+
+                state = state || $state.current.name;
 
                 if (!ModalService.isModalOpen()) {
                     $state.go(state, params).then(function() {
@@ -599,16 +607,12 @@
             $rootScope.$broadcast('editor:parent_id', data);
             request.childId = request.id;
             self.getItemsList(request).then(function() {
-                parent = $location.search().parent;
-                if (parent) {
-                    parent = JSON.parse(parent);
-                }
+                parent = null;
                 if (request.childId) {
-                    parent = parent || {};
-                    parent[request.options.$parentComponentId] = request.childId;
+                    parent = request.childId;
                 }
-                var parentJSON = parent ? JSON.stringify(parent) : null;
-                $location.search('parent', parentJSON);
+                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                $location.search(paramName, parent);
             });
         };
 
@@ -626,22 +630,12 @@
                 }).then(function(response) {
                     var parentId = response.data[request.parentField];
 
-                    parent = $location.search().parent;
-                    if (parent) {
-                        parent = JSON.parse(parent);
-                    }
+                    parent = null;
                     if (parentId) {
-                        parent = parent || {};
-                        parent[request.options.$parentComponentId] = parentId;
-                    } else {
-                        delete parent[request.options.$parentComponentId];
+                        parent = parentId;
                     }
-
-                    var parentJSON = null;
-                    if (!$.isEmptyObject(parent)) {
-                        parentJSON = JSON.stringify(parent);
-                    }
-                    $location.search('parent', parentJSON);
+                    var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                    $location.search(paramName, parent);
                     request.options.isLoading = false;
                     data.parentId = parentId;
                     $rootScope.$broadcast('editor:parent_id', data);
@@ -658,16 +652,8 @@
                 request.options.isLoading = false;
                 request.parentField = null;
                 $rootScope.$broadcast('editor:parent_id', data);
-                var parentJSON = null;
-                parent = $location.search().parent;
-                if (parent) {
-                    parent = JSON.parse(parent);
-                    delete parent[request.options.$parentComponentId];
-                    if (!$.isEmptyObject(parent)) {
-                        parentJSON = JSON.stringify(parent);
-                    }
-                }
-                $location.search('parent', parentJSON);
+                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                $location.search(paramName, null);
                 request.childId = null;
                 self.getItemsList(request);
             }

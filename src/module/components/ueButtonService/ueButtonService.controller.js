@@ -22,13 +22,14 @@
                 request = JSON.parse(vm.setting.component.settings.request);
             }
 
-            pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+            pkKey = 'pk';
             pk = $state.params[pkKey];
             if(vm.action === 'delete') {
                 vm.disabled = pk === 'new' || !pk;
             }
 
             request.options = vm.options;
+            request.state = vm.setting.component.settings.state
         };
 
         $element.bind('click', function () {

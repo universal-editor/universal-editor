@@ -40,7 +40,8 @@
                                     index: 0
                                 },
                                 filter: true,
-                                $parentComponentId: vm.options.$parentComponentId
+                                $parentComponentId: vm.options.$parentComponentId,
+                                paramsPefix: vm.options.prefixGrid
                             }
                         }]
                     };
@@ -102,8 +103,9 @@
                             }
                         }
                         $timeout(function() {
-                            if (!FilterFieldsStorage.getFilterQueryObject(parentComponentId)) {
-                                FilterFieldsStorage.calculate(parentComponentId);
+                            var paramName = vm.options.prefixGrid ? vm.options.prefixGrid + '-filter' : 'filter';
+                            if (!FilterFieldsStorage.getFilterQueryObject(paramName)) {
+                                FilterFieldsStorage.calculate(parentComponentId, paramName);
                                 $rootScope.$broadcast('editor:read_entity', model.options);
                                 vm.visiable = true;
                             }

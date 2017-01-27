@@ -5,10 +5,10 @@
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope', 'configData', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window'];
+    UeFormController.$inject = ['$scope', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window'];
 
-    function UeFormController($scope, configData, RestApiService, $location, $state, $translate, EditEntityStorage, $window) {
-        // var entityObject = RestApiService.getEntityObject();
+    function UeFormController($scope, RestApiService, $location, $state, $translate, EditEntityStorage, $window) {
+
         /* jshint validthis: true */
         var vm = this,
             mixEntityObject,
@@ -46,6 +46,10 @@
         ];
 
         vm.$onInit = function() {
+            vm.closeButtonSettings = vm.setting.component.settings.closeButton || { visible: true };
+            if(typeof vm.closeButtonSettings.visible !== 'boolean') {
+                vm.closeButtonSettings.visible = true;
+            }
 
             vm.entityLoaded = false;
             vm.listLoaded = false;
@@ -70,7 +74,7 @@
                 $dataSource: vm.setting.component.settings.dataSource
             });
 
-            pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+            pkKey = 'pk';
             pk = $state.params[pkKey];
 
             if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
@@ -128,10 +132,14 @@
                     RestApiService.getItemById(vm.setting.pk, vm.setting.component.settings.dataSource, vm.options);
                 }
             }
+
+            if (pk === 'new') {
+                vm.entityLoaded = true;
+            }
         };
 
         function updateButton() {
-            pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+            pkKey = 'pk';
             pk = $state.params[pkKey];
             angular.forEach(vm.editFooterBar, function(button, index) {
                 if (pk === 'new') {
@@ -148,25 +156,13 @@
             updateButton();
         });
 
-        angular.forEach(vm.setting.component.settings.body, function(componentObject) {
-            if (angular.isObject(componentObject) && componentObject.component) {
-                vm.components.push(componentObject);
-                if (componentObject.component.settings.dataSource === undefined) {
-                    componentObject.component.settings.dataSource = vm.setting.component.settings.dataSource;
-                }
+        function closeButton() {
+            var state;
+            if ($location.search().back) {
+                state = $location.search().back;
+            } else {
+                state = vm.closeButtonSettings.state;
             }
-            if (angular.isString(componentObject)) {
-                var dataSourceComponent = vm.setting.component.settings.dataSource.fields.filter(function(k) {
-                    return k.name == componentObject;
-                });
-                if (dataSourceComponent.length > 0) {
-                    vm.components.push(dataSourceComponent[0]);
-                }
-            }
-        });
-
-        vm.closeButton = function() {
-            var state = vm.closeButtonSettings.state;
             var url = vm.closeButtonSettings.url;
             if (!state && url) {
                 if (angular.isString(url)) {
@@ -180,6 +176,7 @@
                 var params = {};
                 var isReload = true;
 
+
                 if ($location.search().back) {
                     params.type = $location.search().back;
                 }
@@ -188,12 +185,8 @@
                     isReload = false;
                 }
 
-                var stateIndex = EditEntityStorage.getStateConfig();
                 var searchString = $location.search();
-                var stateName;
-                if (!state) {
-                    state = stateIndex.name;
-                }
+
                 $state.go(state, params, { reload: isReload }).then(function() {
                     if (searchString.back) {
                         delete searchString.back;
@@ -201,7 +194,7 @@
                     $location.search(searchString);
                 });
             }
-        };
+        }
 
         $scope.$on('editor:entity_loaded', function(event, data) {
             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
@@ -228,9 +221,5 @@
             vm.errors = [];
             vm.notifys = [];
         });
-
-        if (pk === 'new') {
-            vm.entityLoaded = true;
-        }
     }
 })();

@@ -133,9 +133,17 @@
 
     webpackConfigTemplate.plugins.push( 
         new copyWebpackPlugin([{
-            from: 'src/config.js'  
+            from: 'src/demoApp/index.js'
         },{
-            from: 'src/test/index.js'
+            from: 'src/demoApp/components.controller.js'
+        },{
+            from: 'src/demoApp/staffForm.controller.js'
+        },{
+            from: 'src/demoApp/staffGrid.controller.js'
+        },{
+            from: 'src/demoApp/newsForm.controller.js'
+        },{
+            from: 'src/demoApp/newsGrid.controller.js'
         }]),
         new webpack.DefinePlugin({
             'INCLUDE_VENDOR': false

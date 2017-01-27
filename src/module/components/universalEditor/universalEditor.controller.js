@@ -5,14 +5,32 @@
         .module('universal.editor')
         .controller('UniversalEditorController',UniversalEditorController);
 
-    UniversalEditorController.$inject = ['$scope','$rootScope', '$element', '$compile', '$translate', 'moment'];
+    UniversalEditorController.$inject = ['$scope','$rootScope', '$element', '$compile', '$translate', 'moment', '$state', '$location'];
 
-    function UniversalEditorController($scope,$rootScope, $element, $compile, $translate, moment){
+    function UniversalEditorController($scope, $rootScope, $element, $compile, $translate, moment, $state, $location){
         var vm = this,
             component;
 
         vm.$onInit = function() {
-            component = angular.merge({}, vm.ueConfig.component);
+
+            var ueConfig = angular.merge({}, vm.ueConfig);
+
+
+            var id = 0;
+            (function check(value) {
+                var keys = Object.keys(value);
+                for (var i = keys.length; i--;) {
+                    var propValue = value[keys[i]];
+                    if (keys[i] === 'component') {
+                        propValue.$id = propValue.$id || getRandomId();
+                    }
+                    if (angular.isObject(propValue)) {
+                        check(propValue);
+                    }
+                }
+            })(ueConfig);
+
+            component = angular.merge({}, ueConfig.component);
 
             $rootScope.$broadcast('editor:set_entity_type', component.settings);
 
@@ -26,7 +44,20 @@
                 }
             }
             moment.locale(locale);
+
         };
+
+        /**
+         *
+         * @returns {string} Randomly generated id
+         */
+        function getRandomId() {
+            return 'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
+                function(c) {
+                    var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);
+                }
+            );
+        }
 
         this.$postLink = function() {
             var element = $element.find('.universal-editor');

@@ -27,38 +27,28 @@
             if (vm.beforeSend) {
                 FilterFieldsStorage.callbackBeforeSend = vm.beforeSend;
             }
-
-            filters = $location.search().filter;
+            var filterName = vm.options.prefixGrid ? vm.options.prefixGrid + '-filter' : 'filter';
+            filters = $location.search()[filterName];
             if (filters) {
                 filters = JSON.parse(filters);
             }
 
-
             if (vm.action === 'send') {
-                var filterEntity = FilterFieldsStorage.calculate(parentComponentId);
+                var filterEntity = FilterFieldsStorage.calculate(parentComponentId, filterName);
 
                 if (filterEntity) {
                     filters = filters || {};
-                    filters[parentComponentId] = filterEntity;
+                    filters = angular.merge(filters, filterEntity);
                 }
-
-                if (filterEntity === false) {
-                    filters = filters || {};
-                    delete filters[parentComponentId];
-                }
-                filterJSON = filters && !$.isEmptyObject(filters) ? JSON.stringify(filters) : null;
             }
 
             if (vm.action === 'clear') {
-                FilterFieldsStorage.clearFiltersValue(parentComponentId);
+                FilterFieldsStorage.clearFiltersValue(parentComponentId, filterName);
                 if (filters) {
                     delete filters[parentComponentId];
-                    if (!$.isEmptyObject(filters)) {
-                        filterJSON = JSON.stringify(filters);
-                    }
                 }
             }
-            $location.search('filter', filterJSON);
+            $location.search(filterName, JSON.stringify(filters));
             $rootScope.$broadcast('editor:read_entity', vm.options);
         });
 

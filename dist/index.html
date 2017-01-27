@@ -32,8 +32,19 @@
     <title>Example Components Universal Editor</title>   
   <script type="text/javascript" src="ue.min.js"></script></head>
   <body>
-    <div id="universal-editor"></div> 
-    <script type="text/javascript" src="config.js"></script>
-  </body>
+  <div ng-app="demoApp">
+    <ul class="nav nav-tabs">
+      <li role="presentation"><a class='edit_components' ui-sref="components" ui-sref-opts="{reload: true, inherit: false}">Компоненты</a></li>
+      <li role="presentation"><a class='edit_staff' ui-sref="staff" ui-sref-opts="{reload: true, inherit: false}">Сотрудники</a></li>
+      <li role="presentation"><a class='edit_news' ui-sref="news" ui-sref-opts="{reload: true, inherit: false}">Новости</a></li>
+    </ul>
+    <div ui-view=""></div>
+  </div>
+  <script type="text/javascript" src="index.js"></script>
+  <script type="text/javascript" src="components.controller.js"></script>
+  <script type="text/javascript" src="staffForm.controller.js"></script>
+  <script type="text/javascript" src="staffGrid.controller.js"></script>
+  <script type="text/javascript" src="newsForm.controller.js"></script>
+  <script type="text/javascript" src="newsGrid.controller.js"></script>
   </body>
 </html>

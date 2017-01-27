@@ -5,18 +5,19 @@
         .module('universal.editor')
         .controller('UeButtonLinkController', UeButtonLinkController);
 
-    UeButtonLinkController.$inject = ['$scope', '$element', 'RestApiService', '$state', '$location', 'configData', 'EditEntityStorage', 'ModalService', '$timeout', '$controller', '$window', '$httpParamSerializerJQLike'];
+    UeButtonLinkController.$inject = ['$scope', '$element', '$state', '$location', 'EditEntityStorage', 'ModalService', '$timeout', '$controller', '$window', '$httpParamSerializerJQLike', '$translate'];
 
-    function UeButtonLinkController($scope, $element, RestApiService, $state, $location, configData, EditEntityStorage, ModalService, $timeout, $controller, $window, $httpParamSerializerJQLike) {
+    function UeButtonLinkController($scope, $element, $state, $location, EditEntityStorage, ModalService, $timeout, $controller, $window, $httpParamSerializerJQLike,$translate) {
         $element.addClass('ue-button');
 
         var vm = this,
-            state;
+            state,
+            url;
 
         vm.$onInit = function() {
             angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
             state = vm.setting.component.settings.state;
-             var url = vm.setting.component.settings.url;
+            url = vm.setting.component.settings.url;
             vm.entityId = vm.entityId || 'new';
             vm.setting.buttonClass = vm.setting.buttonClass || 'default';
         };
@@ -35,7 +36,9 @@
                     ModalService.options = vm.options;
                     url = url.replace(':pk', vm.entityId);
                     var isReload = !~url.indexOf($location.path());
-                    var searchParams = $httpParamSerializerJQLike($location.search());
+                    var params = $location.search();
+                    params['back'] = $state.current.name;
+                    var searchParams = $httpParamSerializerJQLike(params);
                     if (searchParams) {
                         searchParams = '?' + searchParams;
                     }
@@ -45,18 +48,15 @@
                     }
                 }
             } else {
-                var toStateConfig = EditEntityStorage.getStateConfig(state);
-                if (!toStateConfig) {
-                    console.warn('Стейт ' + state + ' не найден в конфигурационном файле.');
-                }
-                var pkKey = 'pk' + EditEntityStorage.getLevelChild(toStateConfig.name);
+                var toStateConfig;
+
+                var pkKey = 'pk';
                 var params = {};
                 params[pkKey] = vm.entityId;
 
-
                 var searchString = $location.search();
-                if (toStateConfig) {
-                    if (toStateConfig.component.name === 'ue-modal') {
+                if (state) {
+                    if (state === 'ue-modal') {
                         ModalService.options = vm.options;
                         stateOptions.reload = false;
                     } else {
@@ -65,7 +65,9 @@
                         }
                     }
                 }
-                $state.go(toStateConfig.name, params, stateOptions).then(function() {
+
+                searchString.back = $state.current.name;
+                $state.go(state, params, stateOptions).then(function() {
                     $location.search(searchString);
                     $timeout(function() {
                         var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
