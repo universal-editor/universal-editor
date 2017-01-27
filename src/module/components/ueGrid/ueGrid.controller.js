@@ -169,8 +169,8 @@
                 vm.contextLinks.push(newValue);
             });
 
-            if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.controls) {
-                angular.forEach(vm.setting.component.settings.header.controls, function(control) {
+            if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.toolbar) {
+                angular.forEach(vm.setting.component.settings.header.toolbar, function(control) {
                     var newControl = angular.merge({}, control);
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
@@ -180,8 +180,8 @@
                 });
             }
 
-            if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
-                angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
+            if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.toolbar) {
+                angular.forEach(vm.setting.component.settings.footer.toolbar, function(control) {
                     var newControl = angular.merge({}, control);
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;

@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -141,6 +141,22 @@
                 name: 'ue-form',
                 settings: {
                     dataSource: newsDataSource,
+                    header: {
+                        toolbar: [
+                            {
+                                component: {
+                                    name: 'ue-button-link',
+                                    settings: {
+                                        label: 'Назад',
+                                        back: true,
+                                        template: function($scope) {
+                                            return '<div class="close-editor" ng-click="vm.click()"> </div>';
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
                     body: [
                         {
                             component: {

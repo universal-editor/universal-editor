@@ -142,7 +142,7 @@
                 settings: {
                     dataSource: newsDataSource,
                     header: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
                                     name: 'ue-button-link',

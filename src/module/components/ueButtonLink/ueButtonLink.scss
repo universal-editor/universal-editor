@@ -1,7 +1,10 @@
 .universal-editor {
     & .component-wrapper {
-        & .ue-button-link-body {
-            & .ue-button-template {     
+        & .field-wrapper-ue-button-link {
+            display: inline-block;
+            & .ue-button-link-body {
+                margin: 5px 5px 5px 0;
+                & .ue-button-template {}
             }
         }
     }

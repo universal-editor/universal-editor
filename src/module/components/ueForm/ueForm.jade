@@ -1,6 +1,6 @@
 .editor-body
-    component-wrapper(data-setting="vm.closeButtonSetting" data-options="::vm.options")
-    .close-editor(data-ng-click="vm.closeButton()" ng-if="vm.closeButtonSettings.visible")
+    .editor-toolbar
+        component-wrapper.header-action-button(ng-repeat="control in vm.toolbar track by $index", data-setting="control", data-button-class="header", data-options="vm.options")
     component-wrapper(ng-repeat="component in ::vm.components" data-setting="::component" data-options="::vm.options")
     .field-error-bottom-wrapper
         .error-item.alert.alert-danger(data-ng-repeat="err in vm.errors") {{err}}

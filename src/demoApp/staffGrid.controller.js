@@ -144,7 +144,7 @@
                 settings: {
                     dataSource: staffDataSource,
                     header:{
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
                                     name: 'ue-button-link',

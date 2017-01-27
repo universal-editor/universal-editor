@@ -14,11 +14,11 @@
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',
-            keys:{
+            keys: {
                 items: 'items',
                 meta: '_meta'
             },
-            fields:[
+            fields: [
                 {
                     name: "name",
                     component: {
@@ -143,6 +143,22 @@
                 name: 'ue-form',
                 settings: {
                     dataSource: staffDataSource,
+                    header: {
+                        toolbar: [
+                            {
+                                component: {
+                                    name: 'ue-button-link',
+                                    settings: {
+                                        label: 'Назад',
+                                        back: true,
+                                        template: function($scope) {
+                                            return '<div class="close-editor" ng-click="vm.click()"> </div>';
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    },
                     body: [
                         {
                             component: {
