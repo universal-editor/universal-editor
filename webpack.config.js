@@ -108,7 +108,7 @@
         //-- SETTING FOR LOCAL SERVER
         webpackConfigTemplate.devServer = {
             host: localHost,
-            port: 8080,
+            port: 5555,
             hot: true,
             inline: true,
             open: true
