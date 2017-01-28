@@ -189,7 +189,7 @@
                                     name: 'ue-button-service',
                                     settings: {
                                         label: 'Save',
-                                        action: 'presave'
+                                        action: 'save'
                                     }
                                 }
                             },
@@ -198,7 +198,7 @@
                                     name: 'ue-button-service',
                                     settings: {
                                         label: 'Apply',
-                                        action: 'save'
+                                        action: 'presave'
                                     }
                                 }
                             },

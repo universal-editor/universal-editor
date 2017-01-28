@@ -3,11 +3,11 @@
 
     angular
         .module('universal.editor')
-        .controller('UeButtonServiceController',UeButtonServiceController);
+        .controller('UeButtonServiceController', UeButtonServiceController);
 
-    UeButtonServiceController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService', 'ModalService', '$state', '$controller', '$location'];
+    UeButtonServiceController.$inject = ['$rootScope', '$scope', '$element', 'EditEntityStorage', 'RestApiService', 'ModalService', '$state', '$controller', '$location'];
 
-    function UeButtonServiceController($rootScope,$scope,$element,EditEntityStorage,RestApiService, ModalService, $state, $controller, $location){
+    function UeButtonServiceController($rootScope, $scope, $element, EditEntityStorage, RestApiService, ModalService, $state, $controller, $location) {
         $element.addClass('ue-button');
 
         var vm = this,
@@ -15,16 +15,16 @@
             pkKey,
             pk;
 
-        vm.$onInit = function() {
-            angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
+        vm.$onInit = function () {
+            angular.extend(vm, $controller('ButtonsController', {$scope: $scope}));
 
-            if(vm.setting.component.settings.request) {
+            if (vm.setting.component.settings.request) {
                 request = JSON.parse(vm.setting.component.settings.request);
             }
 
             pkKey = 'pk';
             pk = $state.params[pkKey];
-            if(vm.action === 'delete') {
+            if (vm.action === 'delete') {
                 vm.disabled = pk === 'new' || !pk;
             }
 
@@ -46,7 +46,7 @@
                     }
                     break;
                 case 'delete':
-                    if(confirm('Удалить запись «' + vm.entityId + '»?')){
+                    if (confirm('Удалить запись «' + vm.entityId + '»?')) {
                         request.entityId = vm.entityId;
                         request.setting = vm.setting;
                         RestApiService.deleteItemById(request);
@@ -68,11 +68,11 @@
             }
         });
 
-        $scope.$on('editor:presave_entity_created', function(event, data) {
-            if(!vm.options.isGrid && (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId)) {
+        $scope.$on('editor:presave_entity_created', function (event, data) {
+            if (!vm.options.isGrid && (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId)) {
                 vm.entityId = data[vm.setting.component.settings.dataSource.primaryKey];
                 vm.type = 'update';
-                if(vm.action === 'delete') {
+                if (vm.action === 'delete') {
                     vm.disabled = false;
                 }
             }

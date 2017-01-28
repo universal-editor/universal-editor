@@ -193,7 +193,7 @@
                                     name: 'ue-button-service',
                                     settings: {
                                         label: 'Save',
-                                        action: 'presave',
+                                        action: 'save',
                                         state: 'staff'
                                     }
                                 }
@@ -203,8 +203,7 @@
                                     name: 'ue-button-service',
                                     settings: {
                                         label: 'Apply',
-                                        action: 'save',
-                                        state: 'staff'
+                                        action: 'presave'
                                     }
                                 }
                             },

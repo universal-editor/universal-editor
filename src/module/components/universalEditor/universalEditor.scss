@@ -121,6 +121,15 @@ body {
         font-size: 8px;
         line-height: 15px;
     }
+    .btn-delete {
+        background: none;
+        .glyphicon-remove {
+            padding-right: 5px;
+        }
+    }
+    .btn-delete:hover {
+        color: #d2322d;
+    }
 }
 
 .items-list .child {
