@@ -15,11 +15,11 @@
         vm.$onInit = function() {
             angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
 
-            vm.classButton = 'btn btn-md btn-success button-footer';
+            vm.classButton = 'btn btn-md button-footer';
 
             switch (vm.setting.buttonClass){
                 case 'header':
-                    vm.classButton = 'btn btn-lg btn-success';
+                    vm.classButton = 'btn btn-lg';
                     break;
                 case 'context':
                     vm.classButton = 'editor-action-button';
