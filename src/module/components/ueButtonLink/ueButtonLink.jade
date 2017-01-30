@@ -2,7 +2,5 @@
     div(data-ng-if="!vm.template")
         button.btn.btn-md.btn-create(data-ng-class="{ processing : vm.options.isLoading}", data-ng-if="vm.setting.buttonClass == 'header'", ng-click="vm.click()")
             | {{::vm.label}}
-            .loader-search-wrapper(data-ng-show="vm.options.isLoading")
-                .loader-search {{'LOADING' | translate}}
         button.editor-action-button(data-ng-if="vm.setting.buttonClass == 'context'", ng-click="vm.click()") {{::vm.label}}
     .ue-button-template(data-ng-if="vm.template", on-render-template="")

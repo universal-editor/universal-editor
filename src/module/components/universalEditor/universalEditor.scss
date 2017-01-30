@@ -400,11 +400,9 @@ label {
     & select[multiple] {
         min-height: 150px;
     }
-    & .select-wrapper {
-        &>div>.processing-status-wrapper {
-            margin: -16px 0 0 20px;
-            position: absolute;
-        }
+    & .processing-status-wrapper {
+        margin: -24px 0 0 20px;
+        position: absolute;
     }
     .dropdown {
         position: relative;

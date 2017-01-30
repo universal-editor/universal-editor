@@ -159,8 +159,8 @@
                 });
             }
 
-            if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.toolbar) {
-                angular.forEach(vm.setting.component.settings.footer.toolbar, function(control) {
+            if (!!vm.setting.component.settings.footer && !!vm.setting.component.settings.footer.controls) {
+                angular.forEach(vm.setting.component.settings.footer.controls, function(control) {
                     var newControl = angular.merge({}, control);
                     if (angular.isUndefined(newControl.component.settings)) {
                         newControl.component.settings = {};

@@ -2,6 +2,4 @@ div
     button.btn.btn-md(data-ng-class="{processing : vm.options.isLoading, 'btn-success': vm.setting.component.settings.action == 'save', 'btn-delete': vm.setting.component.settings.action == 'delete'}", ng-disabled="vm.disabled", data-ng-if="vm.setting.buttonClass == 'footer'")
         span.glyphicon.glyphicon-remove(ng-if="vm.setting.component.settings.action == 'delete'")
         | {{::vm.label}}
-        .loader-search-wrapper(data-ng-show="vm.options.isLoading")
-            .loader-search {{'LOADING' | translate}}
     button.editor-action-button(data-ng-if="vm.setting.buttonClass == 'context'") {{::vm.label}}

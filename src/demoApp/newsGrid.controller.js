@@ -45,9 +45,9 @@
                             valuesRemote: {
                                 fields: {
                                     value: 'id',
-                                    label: 'title',
+                                    label: 'title'
                                 },
-                                url: 'http://universal-backend.dev/rest/v1/news/category'
+                                url: 'http://universal-backend.dev/rest/v1/news/categories'
                             },
                             search: true
                         }
