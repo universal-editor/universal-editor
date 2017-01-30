@@ -39,8 +39,8 @@
                         vm.optionValues = [];
                         vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
                         var obj = {};
-                        obj[vm.field_id] = componentSettings.trueValue;
-                        obj[vm.field_search] = componentSettings.label;
+                        obj[vm.fieldId] = componentSettings.trueValue;
+                        obj[vm.fieldSearch] = componentSettings.label;
                         vm.label = '';
                         vm.optionValues.push(obj);
                     } else {
