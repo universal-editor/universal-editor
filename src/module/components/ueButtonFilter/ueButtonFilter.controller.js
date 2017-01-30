@@ -41,14 +41,14 @@
                     filters = angular.merge(filters, filterEntity);
                 }
             }
-
+            filters = JSON.stringify(filters);
             if (vm.action === 'clear') {
                 FilterFieldsStorage.clearFiltersValue(parentComponentId, filterName);
                 if (filters) {
-                    delete filters[parentComponentId];
+                    filters = null;
                 }
             }
-            $location.search(filterName, JSON.stringify(filters));
+            $location.search(filterName, filters);
             $rootScope.$broadcast('editor:read_entity', vm.options);
         });
 
