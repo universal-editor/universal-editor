@@ -20,10 +20,10 @@
             vm.optionValues = [];
             vm.inputValue = '';
             vm.newEntityLoaded = newEntityLoaded;
-            baseController = $controller('FieldsController', { $scope: $scope });
-            angular.extend(vm, baseController);
             vm.fieldId = 'id';
             vm.fieldSearch = 'title';
+            baseController = $controller('FieldsController', { $scope: $scope });
+            angular.extend(vm, baseController);
 
             vm.singleValue = !componentSettings.hasOwnProperty('values') && !componentSettings.hasOwnProperty('valuesRemote');
 
