@@ -24,7 +24,7 @@
 
             if (elementParent.length !== 0 && elementParent.parent().find('.grid-filter-edit').length !== 0) {
                 var el = elementParent.parent().find('.grid-filter-edit');
-                el.addClass('.filter-component');
+                el.addClass('filter-component');
                 el.append(templateEditorFilter);
             } else {
                 $element.find('.filter-component').append(templateEditorFilter);
@@ -105,6 +105,9 @@
                             value = value[model.options.filterParameters.index];
                         }
                         if (field.component.settings.$fieldType === 'array') {
+                            if (!angular.isString(value)) {
+                                value  = value.toString();
+                            }
                             model.fieldValue = value.split(',');
                         } else {
                             model.fieldValue = value;

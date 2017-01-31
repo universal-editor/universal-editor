@@ -33,14 +33,18 @@
             }
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
-                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
                     $scope.onLoadDataHandler(e, data);
                     if (vm.singleValue) {
                         vm.optionValues = [];
                         vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
                         var obj = {};
                         obj[vm.fieldId] = componentSettings.trueValue;
-                        obj[vm.fieldSearch] = componentSettings.label;
+                        if (!vm.options.filter) {
+                            obj[vm.fieldSearch] = componentSettings.label;
+                        } else {
+                            obj[vm.fieldSearch] = '';
+                        }
                         vm.label = '';
                         vm.optionValues.push(obj);
                     } else {
