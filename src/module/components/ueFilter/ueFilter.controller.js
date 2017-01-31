@@ -53,7 +53,8 @@
                                 },
                                 filter: true,
                                 $parentComponentId: vm.options.$parentComponentId,
-                                paramsPefix: vm.options.prefixGrid
+                                paramsPefix: vm.options.prefixGrid,
+                                regim: 'filter'
                             }
                         }]
                     };

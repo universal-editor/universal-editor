@@ -19,14 +19,14 @@ angular
             } else {
               element.remove();
             }
-          } if (angular.isString(vm.template)) {
-            insertHtml(element, vm.template);
+          } else if (angular.isString(vm.templates)) {
+            insertHtml(element, vm.templates);
           } else {
             element.remove();
           }
-        });
+        }, 0);
         function insertHtml(el, html) {
-          element.html($compile(angular.element(html))(scope));
+          console.log(element.html($compile(angular.element(html))(scope)));
         }
       }
     };
