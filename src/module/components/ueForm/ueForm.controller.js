@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window'];
+    UeFormController.$inject = ['$scope', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window', 'ModalService', '$timeout'];
 
-    function UeFormController($scope, RestApiService, $location, $state, $translate, EditEntityStorage, $window) {
+    function UeFormController($scope, RestApiService, $location, $state, $translate, EditEntityStorage, $window, ModalService, $timeout) {
 
         /* jshint validthis: true */
         var vm = this,
@@ -133,6 +133,13 @@
 
             if (pk === 'new') {
                 vm.entityLoaded = true;
+                if (pk === 'new' && !ModalService.isModalOpen()) {
+                    $timeout(function() {
+                        if (pk === 'new' && !ModalService.isModalOpen()) {
+                            EditEntityStorage.newSourceEntity(vm.options.$parentComponentId, vm.setting.component.settings.dataSource.parentField);
+                        }
+                    });
+                }
             }
         };
 

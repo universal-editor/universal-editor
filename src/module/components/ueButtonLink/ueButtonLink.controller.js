@@ -66,12 +66,6 @@
                 searchString.back = $state.current.name;
                 $state.go(state, params, stateOptions).then(function() {
                     $location.search(searchString);
-                    $timeout(function() {
-                        var pk = $state.params['pk'];
-                        if (pk === 'new' && !ModalService.isModalOpen()) {
-                            EditEntityStorage.newSourceEntity(vm.options.$parentComponentId, vm.setting.component.settings.dataSource.parentField);
-                        }
-                    }, 0);
                 });
             }
         }

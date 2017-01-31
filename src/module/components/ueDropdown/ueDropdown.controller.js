@@ -108,7 +108,7 @@
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             vm.data = data;
             $scope.onLoadDataHandler(event, data);
-            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
 
                 componentSettings.$loadingPromise.then(function(items) {
                     allOptions = allOptions.length ? allOptions : items;
