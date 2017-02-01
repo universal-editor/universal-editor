@@ -19,8 +19,8 @@ angular
             } else {
               element.remove();
             }
-          } else if (angular.isString(vm.templates)) {
-            insertHtml(element, vm.templates);
+          } else if (angular.isString(vm.template)) {
+            insertHtml(element, vm.template);
           } else {
             element.remove();
           }
