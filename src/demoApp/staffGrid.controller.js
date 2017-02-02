@@ -14,7 +14,7 @@
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',
-            keys:{
+            keys: {
                 items: 'items',
                 meta: '_meta'
             },
@@ -147,10 +147,10 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-link',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'создать',
-                                        state: 'staff_edit'
+                                        sref: 'staff_edit'
                                     }
                                 }
                             }
@@ -160,28 +160,28 @@
                     contextMenu:[
                         {
                             component: {
-                                name: 'ue-button-link',
+                                name: 'ue-button',
                                 settings: {
                                     label: 'редактировать',
-                                    state: 'staff_edit'
+                                    sref: 'staff_edit'
                                 }
                             }
                         },
                         {
                             separator: true,
                             component: {
-                                name: 'ue-button-service',
+                                name: 'ue-button',
                                 settings: {
                                     label: 'Удалить',
                                     action: 'delete',
-                                    state: 'staff'
+                                    sref: 'staff'
                                 }
                             }
                         },
                         {
                             separator: true,
                             component: {
-                                name: 'ue-button-service',
+                                name: 'ue-button',
                                 settings: {
                                     label: 'Раскрыть',
                                     action: 'open'
@@ -190,7 +190,7 @@
                         }
                     ],
                     footer: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
                                     name: 'ue-pagination',

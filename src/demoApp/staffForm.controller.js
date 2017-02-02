@@ -191,34 +191,35 @@
                         }
                     ],
                     footer: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Сохранить/обновить',
                                         action: 'save',
-                                        state: 'staff'
+                                        sref: 'staff',
+                                        useBackUrl: true
                                     }
                                 }
                             },
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Удалить',
                                         action: 'delete',
-                                        state: 'staff'
+                                        sref: 'staff',
+                                        useBackUrl: true
                                     }
                                 }
                             },
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Сохранить',
-                                        action: 'presave',
-                                        state: 'staff'
+                                        action: 'presave'
                                     }
                                 }
                             }

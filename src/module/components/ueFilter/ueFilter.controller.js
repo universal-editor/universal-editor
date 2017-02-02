@@ -15,20 +15,18 @@
 
         vm.$onInit = function() {
             settings = vm.setting.component.settings;
+            vm.parentComponentId = vm.options.$parentComponentId;
             vm.visiable = false;
+            vm.filterName = vm.options.prefixGrid ? vm.options.prefixGrid + '-filter' : 'filter';
+
+            FilterFieldsStorage.registerFilterController(vm);
 
             vm.header = settings.header;
 
             vm.body = [];
-
-
-
-
             angular.forEach(settings.dataSource.fields, function(field) {
                 if (field.component.hasOwnProperty('settings') && (!settings.fields || ~settings.fields.indexOf(field.name)) && field.component.settings.filterable !== false) {
                     var fieldSettings = field.component.settings;
-
-
                     var group = {
                         label: fieldSettings.label,
                         operators: [],
@@ -48,23 +46,23 @@
 
                     /** convert to filter object from fields*/
                     fieldSettings.$toFilter = fieldSettings.$toFilter || function(operator, fieldValue) {
-                            angular.forEach(fieldValue, function(value, key) {
-                                if (operator && operator.indexOf(':text') !== -1) {
-                                    if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
-                                        fieldValue[key] = operator.replace(':text', value);
-                                    }
-                                    if (value === undefined || value === null || value === '' || (angular.isObject(value) && $.isEmptyObject(value))) {
-                                        delete fieldValue[key];
-                                    }
-                                } else {
-                                    if (value) {
-                                        fieldValue[operator + key] = fieldValue[key];
-                                    }
+                        angular.forEach(fieldValue, function(value, key) {
+                            if (operator && operator.indexOf(':text') !== -1) {
+                                if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
+                                    fieldValue[key] = operator.replace(':text', value);
+                                }
+                                if (value === undefined || value === null || value === '' || (angular.isObject(value) && $.isEmptyObject(value))) {
                                     delete fieldValue[key];
                                 }
-                            });
-                            return fieldValue;
-                        };
+                            } else {
+                                if (value) {
+                                    fieldValue[operator + key] = fieldValue[key];
+                                }
+                                delete fieldValue[key];
+                            }
+                        });
+                        return fieldValue;
+                    };
 
                     /** parse filter objects with operators*/
                     fieldSettings.$parseFilter = function(model, filterValue) {
@@ -92,7 +90,7 @@
                         if (angular.isArray(value)) {
                             value = value[model.options.filterParameters.index];
                         }
-                        if (field.component.settings.$fieldType === 'array') {
+                        if (field.component.settings.$fieldType === 'array' && value) {
                             model.fieldValue = value.split(',');
                         } else {
                             model.fieldValue = value;
@@ -136,31 +134,33 @@
                             ngStyle: 'display: inline-block; width: 25%; margin-left: 20px;'
                         });
                     }
-
                     vm.body.push(group);
                 }
             });
 
             vm.footer = [];
-            if (!settings.footer || !settings.footer.controls) {
+            if (!settings.footer || !settings.footer.toolbar) {
                 settings.footer = {
-                    controls: [
+                    toolbar: [
                         {
                             component: {
-                                name: 'ue-button-filter',
+                                name: 'ue-button',
                                 settings: {
-                                    $groups: vm.body,
                                     label: 'Применить',
-                                    action: 'send'
+                                    action: function(componentId) {
+                                        FilterFieldsStorage.apply(componentId);
+                                    }
                                 }
                             }
                         },
                         {
                             component: {
-                                name: 'ue-button-filter',
+                                name: 'ue-button',
                                 settings: {
                                     label: 'Очистить',
-                                    action: 'clear'
+                                    action: function(componentId) {
+                                        FilterFieldsStorage.clear(componentId);
+                                    }
                                 }
                             }
                         }
@@ -168,21 +168,33 @@
                 };
             }
 
-            if (settings.footer && settings.footer.controls) {
-                angular.forEach(settings.footer.controls, function(control) {
+            if (settings.footer && settings.footer.toolbar) {
+                angular.forEach(settings.footer.toolbar, function(control) {
                     vm.footer.push(control);
                 });
             }
 
             vm.toggleFilterVisibility = toggleFilterVisibility;
-        };
 
+            vm.apply = function() {
+                if (vm.options.$parentComponentId) {
+                    FilterFieldsStorage.apply(vm.options.$parentComponentId);
+                }
+            };
+
+            vm.clear = function() {
+                if (vm.options.$parentComponentId) {
+                    FilterFieldsStorage.clear(vm.options.$parentComponentId);
+                }
+            };
+        };
 
         function toggleFilterVisibility() {
             vm.visiable = !vm.visiable;
         }
 
         $element.on('$destroy', function() {
+            FilterFieldsStorage.unRegisterFilterController(vm.options);
             $scope.$destroy();
         });
     }

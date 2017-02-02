@@ -1,0 +1,6 @@
+.ue-button-body
+    div(data-ng-if="!vm.template")
+        button.btn.btn-lg.btn-success(data-ng-if="vm.setting.buttonClass == 'header' || vm.setting.buttonClass == 'footer'", ng-class = "'btn-' + vm.setting.buttonClass", ng-disabled="vm.disabled", ng-click="vm.click()")
+            | {{::vm.label}}
+        button.editor-action-button(data-ng-if="vm.setting.buttonClass == 'context'", ng-click="vm.click()") {{::vm.label}}
+    .ue-button-template(data-ng-if="vm.template", on-render-template="")

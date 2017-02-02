@@ -1,19 +1,19 @@
 (function () {
     'use strict';
 
-    var ueButtonLink = {
+    var ueButton = {
         template : ['$templateCache', function ($templateCache) {
-            return $templateCache.get('module/components/ueButtonLink/ueButtonLink.html');
+            return $templateCache.get('module/components/ueButton/ueButton.html');
         }],
         bindings : {
             setting: '<',
             options: '<'
         },
-        controller : 'UeButtonLinkController',
+        controller : 'UeButtonController',
         controllerAs : 'vm'
     };
 
     angular
         .module('universal.editor')
-        .component('ueButtonLink',ueButtonLink);
+        .component('ueButton', ueButton);
 })();

@@ -1160,7 +1160,7 @@
                                     fields: [
                                         {
                                             component: {
-                                                name: 'ue-button-goto',
+                                                name: 'ue-button',
                                                 settings: {
                                                     label: 'Simple button'
                                                 }
@@ -1168,23 +1168,24 @@
                                         },
                                         {
                                             component: {
-                                                name: 'ue-button-request',
+                                                name: 'ue-button',
                                                 settings: {
                                                     label: 'Send request to server',
-                                                    url: '//universal-backend.dev/rest/v1/staff',
-                                                    method: 'GET',
-                                                    beforeSend: function() {
-                                                        alert('Before trigger');
+                                                    href: '//universal-backend.dev/rest/v1/staff',
+                                                    handlers: {
+                                                        before: function() {
+                                                            alert('Before trigger');
+                                                        }
                                                     }
                                                 }
                                             }
                                         },
                                         {
                                             component: {
-                                                name: 'ue-button-request',
+                                                name: 'ue-button',
                                                 settings: {
                                                     label: 'Open Yandex.com',
-                                                    url: 'https://www.yandex.com',
+                                                    href: 'https://www.yandex.com',
                                                     target: '_blank'
                                                 }
                                             }
@@ -1201,10 +1202,10 @@
                                     fields: [
                                         {
                                             component: {
-                                                name: 'ue-button-goto',
+                                                name: 'ue-button',
                                                 settings: {
                                                     label: 'Open',
-                                                    state: 'index.modal-window'
+                                                    sref: 'index.modal-window'
                                                 }
                                             }
                                         }
@@ -1252,10 +1253,10 @@
                                                                         toolbar: [
                                                                             {
                                                                                 component: {
-                                                                                    name: 'ue-button-link',
+                                                                                    name: 'ue-button',
                                                                                     settings: {
                                                                                         label: 'Назад',
-                                                                                        back: true,
+                                                                                        useBackUrl: true,
                                                                                         template: function($scope) {
                                                                                             return '<div class="close-editor" ng-click="vm.click()"> </div>';
                                                                                         }

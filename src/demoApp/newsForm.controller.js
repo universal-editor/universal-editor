@@ -145,10 +145,11 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-link',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Назад',
-                                        back: true,
+                                        sref: 'news',
+                                        useBackUrl: true,
                                         template: function($scope) {
                                             return '<div class="close-editor" ng-click="vm.click()"> </div>';
                                         }
@@ -193,28 +194,30 @@
                         }
                     ],
                     footer: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Сохранить/обновить',
-                                        action: 'save'
+                                        action: 'save',
+                                        sref: 'news'
                                     }
                                 }
                             },
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Удалить',
-                                        action: 'delete'
+                                        action: 'delete',
+                                        sref: 'news'
                                     }
                                 }
                             },
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Сохранить',
                                         action: 'presave'

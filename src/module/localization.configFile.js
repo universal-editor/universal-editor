@@ -51,6 +51,9 @@
                 },
                 'MULTIPLE_NAME': ' в режиме multiple обязательно должен быть указан параметр name.',
                 'NOT_FOUND_STATE': 'Стейт %state не найден в конфигурационном файле.'
+            },
+            'WARNING': {
+                'DELETE_RECORD': 'Удалить запись «%id»?'
             }
         };
 
