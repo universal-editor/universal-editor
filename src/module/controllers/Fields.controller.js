@@ -268,7 +268,7 @@
                             if (result) {
                                 self.dependValue = f_value[componentSettings.depend];
                             }
-                            if (oldValue != self.dependValue) {
+                            if (oldValue != self.dependValue && angular.isFunction(self.dependUpdate)) {
                                 self.loadingData = true;
                                 $timeout.cancel(timeUpdateDepend);
                                 timeUpdateDepend = $timeout(function() {
