@@ -25,7 +25,7 @@
                 controller: 'StaffGridController'
             })
             .state('staff_edit', {
-                url: '/staff/:pk?back',
+                url: '/staff/:pk',
                 template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
                 controllerAs: 'vm',
                 controller: 'StaffFormController'
@@ -37,7 +37,7 @@
                 controller: 'NewsGridController'
             })
             .state('news_edit', {
-                url: '/news/:pk?back',
+                url: '/news/:pk',
                 template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
                 controllerAs: 'vm',
                 controller: 'NewsFormController'
