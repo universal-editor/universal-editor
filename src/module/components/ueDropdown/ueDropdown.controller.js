@@ -13,7 +13,8 @@
             possibleValues,
             componentSettings,
             baseController,
-            destroySelectField;
+            allOptions = [],
+            destroyWatchEntityLoaded;
 
         vm.$onInit = function() {
             vm.optionValues = [];
@@ -40,6 +41,7 @@
             vm.deleteToSelected = deleteToSelected;
             vm.clickSelect = clickSelect;
             vm.clear = clear;
+            vm.dependUpdate = dependUpdate;
 
             if (componentSettings.hasOwnProperty('valuesRemote') && componentSettings.tree) {
                 vm.treeParentField = componentSettings.tree.parentField;
@@ -47,11 +49,6 @@
                 vm.treeSelectBranches = componentSettings.tree.selectBranches;
                 vm.isTree = vm.treeParentField && vm.treeChildCountField;
                 vm.sizeInput = vm.placeholder ? vm.placeholder.length : 0;
-            }
-
-            if (vm.depend) {
-                vm.dependField = vm.depend.fieldName;
-                vm.dependFilter = vm.depend.filter;
             }
 
             if (!vm.multiple) {
@@ -65,31 +62,34 @@
                 vm.isTree = false;
             }
 
-            if (vm.depend) {
-                destroySelectField = $scope.$on('select_field:select_name_' + vm.dependField, function(event, data) {
-                    if (data && data !== '') {
-                        vm.parentValue = false;
-                        vm.optionValues = [];
-                        RestApiService
-                            .getUrlResource(componentSettings.valuesRemote.url + '?filter={"' + vm.dependFilter + '":"' + data + '"}')
-                            .then(function(response) {
-                                angular.forEach(response.data.items, function(v) {
-                                    vm.optionValues.push(v);
-                                });
-                                $timeout(function() {
-                                    setSizeSelect();
-                                }, 0);
-                                allOptions = angular.copy(vm.optionValues);
-                                vm.parentValue = true;
-                            }, function(reject) {
-                                $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
-                                    console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
-                                });
+            function dependUpdate (dependField,  dependValue) {
+                if (dependValue && dependValue !== '') {
+                    vm.loadingData = true;
+                    vm.parentValue = false;
+                    vm.optionValues = [];
+                    var url = componentSettings.valuesRemote.url.replace(':dependField', dependField).replace(':dependValue', dependValue);
+                    RestApiService
+                        .getUrlResource(url)
+                        .then(function(response) {
+                            angular.forEach(response.data.items, function(v) {
+                                vm.optionValues.push(v);
                             });
-                    } else {
-                        vm.parentValue = false;
-                    }
-                });
+                            $timeout(function() {
+                                setSizeSelect();
+                            }, 0);
+                            allOptions = angular.copy(vm.optionValues);
+                            vm.parentValue = true;
+                        }, function(reject) {
+                            $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                                console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
+                            });
+                        })
+                        .finally(function() {
+                            vm.loadingData = false;
+                        });
+                } else {
+                    vm.parentValue = false;
+                }
             }
 
             // dropdown functions
@@ -99,11 +99,6 @@
             vm.change = change;
         };
 
-
-
-        var allOptions = [];
-
-        var destroyWatchEntityLoaded;
 
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             vm.data = data;
@@ -619,9 +614,6 @@
             }
             destroyEntityLoaded();
             destroyWatchFieldValue();
-            if (angular.isFunction(destroySelectField)) {
-                destroySelectField();
-            }
         };
 
         vm.$postLink = function() {
