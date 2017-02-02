@@ -209,9 +209,17 @@
 }
 
 .loader-search-wrapper {
-  display: inline-block;
-  width: 30px;
-  margin-left: 10px;
-  position: relative;
-  height : 12px;
+  position: absolute;
+  top: 11px;
+  right: 0;
+}
+
+.ue-grid {
+  .loader-search-wrapper {
+    display: inline-block;
+    width: 30px;
+    margin-left: 10px;
+    position: relative;
+    height : 12px;
+  }
 }
