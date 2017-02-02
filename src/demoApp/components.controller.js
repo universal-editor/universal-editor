@@ -1197,25 +1197,6 @@
                             component: {
                                 name: 'ue-group',
                                 settings: {
-                                    label: 'Modal window',
-                                    fields: [
-                                        {
-                                            component: {
-                                                name: 'ue-button-goto',
-                                                settings: {
-                                                    label: 'Open',
-                                                    state: 'index.modal-window'
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            component: {
-                                name: 'ue-group',
-                                settings: {
                                     label: 'Data management',
                                     fields: [
                                         {
