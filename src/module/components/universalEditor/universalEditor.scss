@@ -511,6 +511,7 @@ label {
             width: 100%;
             box-sizing: content-box;
             background-color: #fff;
+            cursor: default;
             &.dropdown {
                 &-top {
                     margin-bottom: -2px;
@@ -550,6 +551,7 @@ label {
             }
             &__item {
                 min-height: 31px;
+                cursor: pointer;
                 &.active {
                     background-color: #f3f3f3;
                 }
