@@ -26,7 +26,7 @@ angular
           }
         }, 0);
         function insertHtml(el, html) {
-          console.log(element.html($compile(angular.element(html))(scope)));
+          element.html($compile(angular.element(html))(scope));
         }
       }
     };
