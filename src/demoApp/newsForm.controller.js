@@ -140,12 +140,12 @@
                                 component: {
                                     name: 'ue-button',
                                     settings: {
+                                        label: 'Back to news list',
                                         sref: 'news',
                                         useBackUrl: true,
                                         template: function($scope) {
                                             return '<div class="close-editor" ng-click="vm.click()"> </div>';
                                         }
-                                        label: 'Back to news list',
                                     }
                                 }
                             }

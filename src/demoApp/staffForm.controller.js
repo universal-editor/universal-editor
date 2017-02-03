@@ -146,10 +146,10 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-link',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Back to staff list',
-                                        back: true
+                                        useBackUrl: true
                                     }
                                 }
                             }

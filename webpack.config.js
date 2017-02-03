@@ -126,7 +126,7 @@
     }
 
     webpackConfigTemplate.entry = {
-        'ue': ['webpack-dev-server/client', 'webpack/hot/dev-server', path.resolve(__dirname, 'src/main.js') ]
+        'ue': [path.resolve(__dirname, 'src/main.js') ]
     };
 
     webpackConfigTemplate.plugins.push(

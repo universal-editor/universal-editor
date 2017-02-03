@@ -173,7 +173,7 @@
                         },
                         {
                             component: {
-                                name: 'ue-button-link',
+                                name: 'ue-button',
                                 settings: {
                                     label: 'Edit',
                                     sref: 'staff_edit'
