@@ -319,10 +319,12 @@
                 allOptions = angular.copy(vm.optionValues);
             }
             vm.optionValues = filter(angular.copy(allOptions), vm.filterText);
-            for (var j = 0; j < vm.fieldValue.length; j++) {
-                for (var i = 0, len = vm.optionValues.length; i < len; i++) {
-                    if (vm.optionValues[i][vm.fieldId] === vm.fieldValue[j][vm.fieldId]) {
-                        vm.optionValues[i].checked = true;
+            if (vm.fieldValue) {
+                for (var j = 0; j < vm.fieldValue.length; j++) {
+                    for (var i = 0, len = vm.optionValues.length; i < len; i++) {
+                        if (vm.optionValues[i][vm.fieldId] === vm.fieldValue[j][vm.fieldId]) {
+                            vm.optionValues[i].checked = true;
+                        }
                     }
                 }
             }
