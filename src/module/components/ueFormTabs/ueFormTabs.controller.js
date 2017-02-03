@@ -18,7 +18,7 @@
 
 
         vm.$onInit = function() {
-            pkKey = 'pk' + EditEntityStorage.getLevelChild($state.current.name);
+            pkKey = 'pk';
             pk = $state.params[pkKey];
             componentSettings = vm.setting.component.settings;
 

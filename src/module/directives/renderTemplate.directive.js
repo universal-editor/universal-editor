@@ -19,12 +19,12 @@ angular
             } else {
               element.remove();
             }
-          } if (angular.isString(vm.template)) {
+          } else if (angular.isString(vm.template)) {
             insertHtml(element, vm.template);
           } else {
             element.remove();
           }
-        });
+        }, 0);
         function insertHtml(el, html) {
           element.html($compile(angular.element(html))(scope));
         }

@@ -29,6 +29,7 @@
         self.disabled = componentSettings.disabled;
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
+        var timeUpdateDepend;
         if (values || remoteValues) {
             self.fieldId = "id";
             self.fieldSearch = "title";
@@ -117,10 +118,14 @@
 
 
         //-- listener storage for handlers        
-        self.listeners.push($scope.$watch(function() { return self.fieldValue; },
+        self.listeners.push($scope.$watch(
+            function() {
+                return self.fieldValue;
+            },
             function() {
                 self.error = [];
-            }, true));
+            }, true)
+        );
 
         if (self.options.filter) {
             $scope.$watch(function() {
@@ -243,6 +248,8 @@
                         $scope.$watch(function() {
                             var f_value = EditEntityStorage.getValueField(self.parentComponentId, componentSettings.depend);
                             var result = false;
+                            var oldValue = self.dependValue;
+                            self.dependValue = undefined;
                             if (f_value !== false) {
                                 (function check(value) {
                                     var keys = Object.keys(value);
@@ -258,11 +265,23 @@
                                     }
                                 })(f_value);
                             }
+                            if (result) {
+                                self.dependValue = f_value[componentSettings.depend];
+                            }
+                            if (oldValue != self.dependValue && angular.isFunction(self.dependUpdate)) {
+                                self.loadingData = true;
+                                $timeout.cancel(timeUpdateDepend);
+                                timeUpdateDepend = $timeout(function() {
+                                    self.dependUpdate(componentSettings.depend, self.dependValue);
+                                    $timeout.cancel(timeUpdateDepend);
+                                }, 500);
+                            }
                             return result;
                         }, function(value) {
                             if (!value) {
                                 self.clear();
                                 self.readonly = true;
+                                self.loadingData = false;
                             } else {
                                 self.readonly = componentSettings.readonly || false;
                             }

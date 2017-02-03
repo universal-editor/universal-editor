@@ -106,7 +106,7 @@
         //-- SETTING FOR LOCAL SERVER
         webpackConfigTemplate.devServer = {
             host: localHost,
-            port: 8080,
+            port: 5555,
             hot: true,
             inline: true,
             open: true
@@ -126,7 +126,7 @@
     }
 
     webpackConfigTemplate.entry = {
-        'ue': ['webpack-dev-server/client', 'webpack/hot/dev-server', path.resolve(__dirname, 'src/main.js') ]
+        'ue': [path.resolve(__dirname, 'src/main.js') ]
     };
 
     webpackConfigTemplate.plugins.push(

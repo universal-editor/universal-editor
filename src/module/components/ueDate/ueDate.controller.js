@@ -19,9 +19,9 @@
             baseController = $controller('FieldsController', { $scope: $scope });
             angular.extend(vm, baseController);
 
-            vm.format = vm.format || 'DD.MM.YYYY';
+            vm.format = vm.format || 'DD.MM.YYYY HH:mm:ss';
             vm.maxView = vm.maxView || 'year';
-            vm.minView = vm.minView || 'date';
+            vm.minView = vm.minView || 'minutes';
             vm.view = vm.view || 'date';
 
             vm.addItem = addItem;
@@ -93,6 +93,6 @@
             }
 
             return field;
-        };
+        }
     }
 })();

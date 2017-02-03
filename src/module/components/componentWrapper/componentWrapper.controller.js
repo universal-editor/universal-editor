@@ -15,6 +15,9 @@
             $scope.setting.entityId = vm.entityId;
             $scope.setting.buttonClass = vm.buttonClass;
             $scope.options = vm.options || {};
+            $scope.options.getParentElement = function() {
+                return $element;
+            }
         };
 
         this.$postLink = function() {

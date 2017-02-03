@@ -39,7 +39,7 @@
 
             modalInstance.rendered.then(function() {
                 isOpen = true;
-                var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
+                var pk = $state.params['pk'];
                 if (pk === 'new') {
                    EditEntityStorage.newSourceEntity(self.options.$parentComponentId);
                 }

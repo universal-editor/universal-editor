@@ -33,6 +33,9 @@
   }
   & .editor-filter-footer {
     margin-top: 15px;
+    .component-wrapper {
+      display: inline-block;
+    }
   }
 }
 

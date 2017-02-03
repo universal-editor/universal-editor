@@ -1,6 +1,7 @@
 .ue-button-body
     div(data-ng-if="!vm.template")
-        button.btn.btn-lg.btn-success(data-ng-if="vm.setting.buttonClass == 'header' || vm.setting.buttonClass == 'footer'", ng-class = "'btn-' + vm.setting.buttonClass", ng-disabled="vm.disabled", ng-click="vm.click()")
+        button.btn.btn-md(data-ng-if="vm.setting.buttonClass == 'header' || vm.setting.buttonClass == 'footer' || vm.setting.buttonClass == 'default'", ng-class = "['btn-' + vm.setting.buttonClass,{'btn-success': vm.setting.component.settings.action == 'save', 'btn-delete': vm.setting.component.settings.action == 'delete'}]", ng-disabled="vm.disabled", ng-click="vm.click()")
+            span.glyphicon.glyphicon-remove(ng-if="vm.setting.component.settings.action == 'delete'")
             | {{::vm.label}}
         button.editor-action-button(data-ng-if="vm.setting.buttonClass == 'context'", ng-click="vm.click()") {{::vm.label}}
     .ue-button-template(data-ng-if="vm.template", on-render-template="")

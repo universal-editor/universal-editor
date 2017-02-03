@@ -1,28 +1,42 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('universal.editor')
         .controller('UeFilterController', UeFilterController);
 
-    UeFilterController.$inject = ['$scope', '$rootScope', '$element', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage'];
+    UeFilterController.$inject = ['$scope', '$rootScope', '$element', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$compile', '$document'];
 
-    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage) {
+    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $compile, $document) {
         /* jshint validthis: true */
         var vm = this,
             settings,
             fieldErrorName;
 
-        vm.$onInit = function() {
+        vm.$onInit = function () {
+            var elementParent = vm.options.getParentElement().parents('.grid-toolbar');//.parent().find('.grid-filter-edit');
+            var templateEditorFilter = $compile('<div class="editor-filter" data-ng-hide="!vm.visiable"><div class="editor-filter-wrapper" ng-keyup="vm.clickEnter($event)">' +
+                '<div class="editor-filter-body"><div class="filter-content-wrapper" ng-repeat="group in vm.body track by $index">' +
+                '<label class="filter-name-label" ng-bind="group.label" title="{{group.label}}"></label>' +
+                '<component-wrapper ng-repeat="filter in group.filters" data-setting="filter.field" data-options="filter.options" style="{{filter.ngStyle}};"></component-wrapper>' +
+                '</div></div><div class="editor-filter-footer"><component-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" data-options="vm.options" data-button-class="header">' +
+                '</component-wrapper></div></div></div>')($scope);
+
+            if (elementParent.length !== 0 && elementParent.parent().find('.grid-filter-edit').length !== 0) {
+                var el = elementParent.parent().find('.grid-filter-edit');
+                el.addClass('filter-component');
+                el.append(templateEditorFilter);
+            } else {
+                $element.find('.filter-component').append(templateEditorFilter);
+            }
+
+
             settings = vm.setting.component.settings;
             vm.parentComponentId = vm.options.$parentComponentId;
             vm.visiable = false;
             vm.filterName = vm.options.prefixGrid ? vm.options.prefixGrid + '-filter' : 'filter';
-
             FilterFieldsStorage.registerFilterController(vm);
-
             vm.header = settings.header;
-
             vm.body = [];
             angular.forEach(settings.dataSource.fields, function(field) {
                 if (field.component.hasOwnProperty('settings') && (!settings.fields || ~settings.fields.indexOf(field.name)) && field.component.settings.filterable !== false) {
@@ -39,7 +53,8 @@
                                 },
                                 filter: true,
                                 $parentComponentId: vm.options.$parentComponentId,
-                                paramsPefix: vm.options.prefixGrid
+                                paramsPefix: vm.options.prefixGrid,
+                                regim: 'filter'
                             }
                         }]
                     };
@@ -65,11 +80,11 @@
                     };
 
                     /** parse filter objects with operators*/
-                    fieldSettings.$parseFilter = function(model, filterValue) {
+                    fieldSettings.$parseFilter = function (model, filterValue) {
                         var componentSettings = model.setting.component.settings;
                         var parentComponentId = model.parentComponentId;
                         var output = {};
-                        angular.forEach(filterValue, function(value, key) {
+                        angular.forEach(filterValue, function (value, key) {
                             //** delete operators from keys and value property
                             if (angular.isString(value)) {
                                 value = value.replace(/^%/, '').replace(/%$/, '');
@@ -91,16 +106,19 @@
                             value = value[model.options.filterParameters.index];
                         }
                         if (field.component.settings.$fieldType === 'array' && value) {
+                            if (!angular.isString(value)) {
+                                value  = value.toString();
+                            }
                             model.fieldValue = value.split(',');
                         } else {
                             model.fieldValue = value;
                             if (model.addToSelected && value) {
                                 model.fieldValue = {};
-                                model.fieldValue[model.field_id] = value;
+                                model.fieldValue[model.fieldId] = value;
                                 model.addToSelected(null, model.fieldValue);
                             }
                         }
-                        $timeout(function() {
+                        $timeout(function () {
                             var paramName = vm.options.prefixGrid ? vm.options.prefixGrid + '-filter' : 'filter';
                             if (!FilterFieldsStorage.getFilterQueryObject(paramName)) {
                                 FilterFieldsStorage.calculate(parentComponentId, paramName);

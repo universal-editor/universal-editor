@@ -384,7 +384,7 @@
                 }
                 var newId = response.data[idField];
                 var par = {};
-                par['pk' + EditEntityStorage.getLevelChild($state.current.name)] = newId;
+                par['pk'] = newId;
                 var searchString = $location.search();
                 $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                     $location.search(searchString);

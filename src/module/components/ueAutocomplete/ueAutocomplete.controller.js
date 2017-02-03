@@ -202,7 +202,7 @@
                     } else {
                         obj[vm.fieldId] = key;
                     }
-                    obj[vm.field_Sarch] = v;
+                    obj[vm.fieldSearch] = v;
                     if (v.toLowerCase().indexOf(searchString.toLowerCase()) >= 0 && !alreadyIn(obj, vm.selectedValues)) {
                         vm.possibleValues.push(obj);
                     }
@@ -211,7 +211,7 @@
                 vm.searching = false;
             } else {
                 var urlParam = {};
-                urlParam[vm.field_Sarch] = "%" + searchString + "%";
+                urlParam[vm.fieldSearch] = "%" + searchString + "%";
                 RestApiService
                     .getUrlResource(componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
                     .then(function(response) {
@@ -249,7 +249,7 @@
                         } else {
                             obj[vm.fieldId] = key;
                         }
-                        obj[vm.field_Sarch] = v;
+                        obj[vm.fieldSearch] = v;
                         vm.selectedValues.push(obj);
                     } else if ((vm.fieldValue == key || vm.fieldValue == v) && !vm.multiple) {
                         if (angular.isArray(componentSettings.values)) {
@@ -257,7 +257,7 @@
                         } else {
                             obj[vm.fieldId] = key;
                         }
-                        obj[vm.field_Sarch] = v;
+                        obj[vm.fieldSearch] = v;
                         vm.selectedValues.push(obj);
                         vm.placeholder = obj[vm.fieldSearch];
                     }
