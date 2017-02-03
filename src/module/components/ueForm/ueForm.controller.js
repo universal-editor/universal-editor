@@ -80,8 +80,8 @@
                 vm.idField = dataSource.primaryKey || vm.idField;
             }
 
-            if (!!vm.componentSettings.footer && !!vm.componentSettings.footer.controls) {
-                angular.forEach(vm.componentSettings.footer.controls, function(control) {
+            if (!!vm.componentSettings.footer && !!vm.componentSettings.footer.toolbar) {
+                angular.forEach(vm.componentSettings.footer.toolbar, function(control) {
                     var newControl = angular.merge({}, control);
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = dataSource;

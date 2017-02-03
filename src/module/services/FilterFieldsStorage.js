@@ -5,24 +5,32 @@
         .module('universal.editor')
         .service('FilterFieldsStorage', FilterFieldsStorage);
 
-    FilterFieldsStorage.$inject = ['$rootScope', '$timeout', 'configData'];
+    FilterFieldsStorage.$inject = ['$rootScope', '$timeout', 'configData', '$location'];
 
-    function FilterFieldsStorage($rootScope, $timeout, configData) {
+    function FilterFieldsStorage($rootScope, $timeout, configData, $location) {
         var storage = {},
+            filterComponentsStorage = {},
             queryObject = {},
             srvc = this,
             filterSearchString;
 
         /** set functions for service */
         angular.extend(srvc, {
-            addFilterController: addFilterController,
-            deleteFilterController: deleteFilterController,
+            addFilterFieldController: addFilterFieldController,
+            deleteFilterFieldController: deleteFilterFieldController,
             clearFiltersValue: clearFiltersValue,
             calculate: calculate,
-            getFilterQueryObject: getFilterQueryObject
+            getFilterQueryObject: getFilterQueryObject,
+            getFilterFieldController: getFilterFieldController,
+            getFilterController: getFilterController,
+            getFilterApi: getFilterApi,
+            registerFilterController: registerFilterController,
+            unRegisterFilterController: unRegisterFilterController,
+            apply: apply,
+            clear: clear
         });
 
-        function addFilterController(ctrl) {
+        function addFilterFieldController(ctrl) {
             var id = ctrl.parentComponentId;
             if (id) {
                 storage[id] = storage[id] || [];
@@ -31,7 +39,48 @@
             }
         }
 
-        function deleteFilterController(ctrl) {
+        function registerFilterController(ctrl) {
+            var id = ctrl.parentComponentId;
+            if (id) {
+                filterComponentsStorage[id] = filterComponentsStorage[id] || {};
+                filterComponentsStorage[id] = ctrl;
+            }
+        }
+
+        function unRegisterFilterController(ctrl) {
+            var id = ctrl.parentComponentId;
+            if (id) {
+                delete filterComponentsStorage[id];
+            }
+        }
+        function getFilterController(id) {
+            if (id) {
+                return filterComponentsStorage[id];
+            }
+            return false;
+        }
+
+        function getFilterApi(options) {
+            var id = options.$parentComponentId;
+            if (id) {
+                var fCtrl = filterComponentsStorage[id];
+                if (fCtrl) {
+                    return {
+                        apply: fCtrl.apply,
+                        clear: fCtrl.clear
+                    };
+                }
+            }
+        }
+
+        function getFilterFieldController(id) {
+            if (id && storage[id]) {
+                return storage[id];
+            }
+            return false;
+        }
+
+        function deleteFilterFieldController(ctrl) {
             var id = ctrl.parentComponentId;
             if (id) {
                 var filterControllers = storage[id];
@@ -83,6 +132,47 @@
 
         function getFilterQueryObject(paramName) {
             return queryObject[paramName];
+        }
+
+        function apply(parentComponentId, filterName) {
+            var filterJSON = null, filters;
+            if (parentComponentId) {
+                var fCtrl = filterComponentsStorage[parentComponentId];
+                if (fCtrl) {
+                    filterName = filterName || fCtrl.filterName;
+                }
+                filters = $location.search()[filterName];
+                if (filters) {
+                    filters = JSON.parse(filters);
+                }
+                var filterEntity = calculate(parentComponentId, filterName);
+
+                if (filterEntity) {
+                    filters = filters || {};
+                    filters = JSON.stringify(angular.merge(filters, filterEntity));
+                } else {
+                    filters = null;
+                }
+                $location.search(filterName, filters);
+                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+            }
+        }
+
+        function clear(parentComponentId, filterName) {
+            var filterJSON = null, filters;
+            if (parentComponentId) {
+                var fCtrl = filterComponentsStorage[parentComponentId];
+                if (fCtrl) {
+                    filterName = filterName || fCtrl.filterName;
+                }
+                filters = $location.search()[filterName];
+                if (filters) {
+                    filters = JSON.parse(filters);
+                }
+                clearFiltersValue(parentComponentId, filterName);
+                $location.search(filterName, null);
+                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+            }
         }
     }
 })();

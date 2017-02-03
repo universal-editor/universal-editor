@@ -187,20 +187,21 @@
                         }
                     ],
                     footer: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Save',
                                         action: 'save',
-                                        state: 'staff'
+                                        sref: 'staff',
+                                        useBackUrl: true
                                     }
                                 }
                             },
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Apply',
                                         action: 'presave'
@@ -209,11 +210,12 @@
                             },
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Delete',
                                         action: 'delete',
-                                        state: 'staff'
+                                        sref: 'staff',
+                                        useBackUrl: true
                                     }
                                 }
                             }

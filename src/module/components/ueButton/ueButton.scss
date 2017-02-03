@@ -1,0 +1,13 @@
+.universal-editor {
+    & .component-wrapper {
+        & .field-wrapper-ue-button {
+            display: inline-block;
+            & .ue-button-body {
+                & .btn-header,
+                & .btn-footer {
+                    margin: 5px 5px 5px 0;
+                }
+            }
+        }
+    }
+}

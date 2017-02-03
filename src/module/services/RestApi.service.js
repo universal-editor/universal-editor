@@ -5,9 +5,9 @@
         .module('universal.editor')
         .service('RestApiService', RestApiService);
 
-    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate'];
+    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate', '$httpParamSerializerJQLike', '$window'];
 
-    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate) {
+    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window) {
         var self = this,
             queryTempParams,
             filterParams,
@@ -99,11 +99,6 @@
                 filters[request.parentField] = request.childId;
             }
 
-            /** beforeSend handler */
-            if (angular.isFunction(FilterFieldsStorage.callbackBeforeSend)) {
-                beforeSend = FilterFieldsStorage.callbackBeforeSend;
-                delete FilterFieldsStorage.callbackBeforeSend;
-            }
 
             if (filters) {
                 angular.extend(params, { filter: JSON.stringify(filters) });
@@ -184,7 +179,6 @@
             }
             var dataSource = request.options.$dataSource;
 
-
             var parentField = dataSource.fields.parent;
             var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
             if (parentField && $location.search()[paramName]) {
@@ -207,8 +201,12 @@
             $http({
                 method: request.method || _method,
                 url: request.method || _url,
-                data: request.data
+                data: request.data,
+                beforeSend: request.before
             }).then(function(response) {
+                if (!!request.success) {
+                    request.success(response);
+                }
                 var data = {
                     id: response.data[idField],
                     $parentComponentId: request.options.$parentComponentId
@@ -224,22 +222,31 @@
                 if ($location.search()[paramName]) {
                     params.parent = $location.search()[paramName];
                 }
-                if ($location.search().back) {
+                if ($location.search().back && request.useBackUrl) {
                     params.state = $location.search().back;
                     state = $location.search().back;
+                } else {
+                    state = request.state;
                 }
                 if (!ModalService.isModalOpen()) {
-                    $state.go(state, params).then(function() {
-                        if (params.back){
-                            delete params.back;
-                        }
-                        $location.search(params);
-                        $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
-                    });
+                    if (state) {
+                        $state.go(state, params).then(function() {
+                            if (params.back) {
+                                delete params.back;
+                            }
+                            $location.search(params);
+                            $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                        });
+                    } else {
+                        replaceToURL(request.href);
+                    }
                 } else {
                     ModalService.close();
                 }
             }, function(reject) {
+                if (!!request.error) {
+                    request.error(reject);
+                }
                 var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
 
                 if (wrongFields.length > 0) {
@@ -255,6 +262,10 @@
                     });
                 }
                 request.options.isLoading = false;
+            }).finally(function() {
+                if (!!request.complete) {
+                    request.complete();
+                }
             });
         };
 
@@ -275,8 +286,12 @@
             $http({
                 method: request.method || _method,
                 url: request.url || _url,
-                data: request.data || {}
+                data: request.data || {},
+                beforeSend: request.before
             }).then(function(response) {
+                if (!!request.success) {
+                    request.success(response);
+                }
                 var data = {
                     id: response.data[idField],
                     $parentComponentId: request.options.$parentComponentId
@@ -291,18 +306,27 @@
                 if ($location.search()[paramName]) {
                     params.parent = $location.search()[paramName];
                 }
-                if ($location.search().back) {
+                if ($location.search().back && request.useBackUrl) {
                     state = $location.search().back;
+                } else {
+                    state = request.state;
                 }
                 if (!ModalService.isModalOpen()) {
-                    $state.go(state, params).then(function() {
-                        $location.search(params);
-                        $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
-                    });
+                    if (state) {
+                        $state.go(state, params).then(function() {
+                            $location.search(params);
+                            $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                        });
+                    } else {
+                        replaceToURL(request.href);
+                    }
                 } else {
                     ModalService.close();
                 }
             }, function(reject) {
+                if (!!request.error) {
+                    request.error(reject);
+                }
                 var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
 
                 if (wrongFields.length > 0) {
@@ -318,6 +342,10 @@
                     });
                 }
                 request.options.isLoading = false;
+            }).finally(function() {
+                if (!!request.complete) {
+                    request.complete();
+                }
             });
         };
 
@@ -348,9 +376,12 @@
             $http({
                 method: request.method || _method,
                 url: request.url || _url,
-                data: request.data || {}
+                data: request.data || {},
+                beforeSend: request.before
             }).then(function(response) {
-                request.options.isLoading = false;
+                if (!!request.success) {
+                    request.success(response);
+                }
                 var newId = response.data[idField];
                 var par = {};
                 par['pk'] = newId;
@@ -374,6 +405,9 @@
                     $rootScope.$broadcast('editor:presave_entity_updated', data);
                 }
             }, function(reject) {
+                if (!!request.error) {
+                    request.error(reject);
+                }
                 if ((reject.status === 422 || reject.status === 400) && reject.data) {
                     var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
 
@@ -387,6 +421,10 @@
                             }
                         }
                     });
+                }
+            }).finally(function() {
+                if (!!request.complete) {
+                    request.complete();
                 }
                 request.options.isLoading = false;
             });
@@ -433,7 +471,7 @@
             if (request.options.isMix) {
                 url = request.options.mixedMode.dataSource.url;
             } else {
-                url = dataSource.url
+                url = dataSource.url;
             }
             request.options.isLoading = true;
 
@@ -442,12 +480,15 @@
             if (request.setting.buttonClass === 'edit') {
                 _url = url.replace(':pk', request.entityId);
             }
-
             return $http({
                 method: request.method || 'DELETE',
                 url: request.url || _url,
-                params: request.params || {}
+                params: request.params || {},
+                beforeSend: request.before
             }).then(function(response) {
+                if (!!request.success) {
+                    request.success(response);
+                }
                 request.options.isLoading = false;
                 self.setQueryParams({});
                 self.setFilterParams({});
@@ -458,22 +499,35 @@
                 if ($location.search()[paramName]) {
                     params[paramName] = $location.search()[paramName];
                 }
-                if ($location.search().back) {
+                if ($location.search().back && request.useBackUrl) {
                     state = $location.search().back;
+                } else {
+                    state = request.state;
                 }
 
                 state = state || $state.current.name;
 
                 if (!ModalService.isModalOpen()) {
-                    $state.go(state, params).then(function() {
-                        $location.search(params);
-                        $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
-                    });
+                    if (state) {
+                        $state.go(state, params).then(function() {
+                            $location.search(params);
+                            $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                        });
+                    } else {
+                        replaceToURL(request.href);
+                    }
                 } else {
                     ModalService.close();
                 }
             }, function(reject) {
+                if (!!request.error) {
+                    request.error(reject);
+                }
                 request.options.isLoading = false;
+            }).finally(function() {
+                if (!!request.complete) {
+                    request.complete();
+                }
             });
         };
 
@@ -586,13 +640,22 @@
                 method: request.method,
                 url: url,
                 params: reqParams,
-                beforeSend: request.beforeSend
+                beforeSend: request.before
             }).then(function(response) {
-                self.isProcessing = false;
+                if (!!request.success) {
+                    request.success(response);
+                }
                 deferred.resolve(response);
             }, function(reject) {
-                self.isProcessing = false;
+                if (!!request.error) {
+                    request.error(reject);
+                }
                 deferred.reject(reject);
+            }).finally(function() {
+                if (!!request.complete) {
+                    request.complete();
+                }
+                self.isProcessing = false;
             });
 
             return deferred.promise;
@@ -662,5 +725,24 @@
         this.getEntityObject = function() {
             return entityObject;
         };
+
+        function replaceToURL(url, entityId) {
+            if (entityId) {
+                url = url.replace(':pk', entityId);
+            }
+            var params = $location.search();
+            if (params.back) {
+                delete params.back;
+            }
+            var isReload = !~url.indexOf($location.path());
+            var searchParams = $httpParamSerializerJQLike(params);
+            if (searchParams) {
+                searchParams = '?' + searchParams;
+            }
+            $window.location.href = url + searchParams;
+            if (isReload) {
+                $window.location.reload();
+            }
+        }
     }
 })();

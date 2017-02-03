@@ -1,6 +1,6 @@
 ; (function(require) {
     'use strict';
-    
+
     var localHost = 'universal-editor.dev', defaultlocalHost = '127.0.0.1';
     var NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development';
     var RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]);
@@ -102,8 +102,6 @@
         ]
     };
 
-   //  console.log(RUNNING_SERVER);
-
     if (RUNNING_SERVER) {
         //-- SETTING FOR LOCAL SERVER
         webpackConfigTemplate.devServer = {
@@ -128,21 +126,21 @@
     }
 
     webpackConfigTemplate.entry = {
-        'ue': [path.resolve(__dirname, 'src/main.js')]
+        'ue': ['webpack-dev-server/client', 'webpack/hot/dev-server', path.resolve(__dirname, 'src/main.js') ]
     };
 
-    webpackConfigTemplate.plugins.push( 
+    webpackConfigTemplate.plugins.push(
         new copyWebpackPlugin([{
             from: 'src/demoApp/index.js'
-        },{
+        }, {
             from: 'src/demoApp/components.controller.js'
-        },{
+        }, {
             from: 'src/demoApp/staffForm.controller.js'
-        },{
+        }, {
             from: 'src/demoApp/staffGrid.controller.js'
-        },{
+        }, {
             from: 'src/demoApp/newsForm.controller.js'
-        },{
+        }, {
             from: 'src/demoApp/newsGrid.controller.js'
         }]),
         new webpack.DefinePlugin({

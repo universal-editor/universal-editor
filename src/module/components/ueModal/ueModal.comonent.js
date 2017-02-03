@@ -43,8 +43,8 @@
 
                 vm.footer = [];
 
-                if (vm.resolve.settings.footer && vm.resolve.settings.footer.controls) {
-                    angular.forEach(vm.resolve.settings.footer.controls, function(control) {
+                if (vm.resolve.settings.footer && vm.resolve.settings.footer.toolbar) {
+                    angular.forEach(vm.resolve.settings.footer.toolbar, function(control) {
                         vm.footer.push(control);
                     });
                 }

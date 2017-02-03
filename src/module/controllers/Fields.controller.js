@@ -111,7 +111,7 @@
 
         //-- registration of the field's component
         if (self.options.filter) {
-            FilterFieldsStorage.addFilterController(self);
+            FilterFieldsStorage.addFilterFieldController(self);
         } else {
             EditEntityStorage.addFieldController(self);
         }

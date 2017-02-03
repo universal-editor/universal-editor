@@ -143,10 +143,10 @@
                             },
                             {
                                 component: {
-                                    name: 'ue-button-link',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Add news',
-                                        state: 'news_edit'
+                                        sref: 'news_edit'
                                     }
                                 }
                             }
@@ -156,17 +156,17 @@
                     contextMenu: [
                         {
                             component: {
-                                name: 'ue-button-link',
+                                name: 'ue-button',
                                 settings: {
                                     label: 'Edit',
-                                    state: 'news_edit'
+                                    sref: 'news_edit'
                                 }
                             }
                         },
                         {
                             separator: true,
                             component: {
-                                name: 'ue-button-service',
+                                name: 'ue-button',
                                 settings: {
                                     label: 'Delete',
                                     action: 'delete'
@@ -175,7 +175,7 @@
                         }
                     ],
                     footer: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
                                     name: 'ue-pagination',

@@ -138,10 +138,14 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-link',
+                                    name: 'ue-button',
                                     settings: {
+                                        sref: 'news',
+                                        useBackUrl: true,
+                                        template: function($scope) {
+                                            return '<div class="close-editor" ng-click="vm.click()"> </div>';
+                                        }
                                         label: 'Back to news list',
-                                        back: true
                                     }
                                 }
                             }
@@ -183,19 +187,20 @@
                         }
                     ],
                     footer: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Save',
-                                        action: 'save'
+                                        action: 'save',
+                                        sref: 'news'
                                     }
                                 }
                             },
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Apply',
                                         action: 'presave'
@@ -204,10 +209,11 @@
                             },
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Delete',
-                                        action: 'delete'
+                                        action: 'delete',
+                                        sref: 'news'
                                     }
                                 }
                             }

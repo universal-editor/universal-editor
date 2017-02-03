@@ -89,7 +89,7 @@
                 });
             }
             EditEntityStorage.deleteFieldController(self);
-            FilterFieldsStorage.deleteFilterController(self);
+            FilterFieldsStorage.deleteFilterFieldController(self);
         }
 
         function onErrorApiHandler(event, data) {

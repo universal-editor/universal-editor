@@ -15,7 +15,11 @@
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',
-            fields: [
+            keys: {
+                items: 'items',
+                meta: '_meta'
+            },
+            fields:[
                 {
                     name: 'name',
                     component: {
@@ -146,10 +150,10 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-link',
+                                    name: 'ue-button',
                                     settings: {
                                         label: 'Add',
-                                        state: 'staff_edit'
+                                        sref: 'staff_edit'
                                     }
                                 }
                             }
@@ -160,7 +164,7 @@
                         {
                             separator: true,
                             component: {
-                                name: 'ue-button-service',
+                                name: 'ue-button',
                                 settings: {
                                     label: 'Subordinate',
                                     action: 'open'
@@ -172,24 +176,24 @@
                                 name: 'ue-button-link',
                                 settings: {
                                     label: 'Edit',
-                                    state: 'staff_edit'
+                                    sref: 'staff_edit'
                                 }
                             }
                         },
                         {
                             separator: true,
                             component: {
-                                name: 'ue-button-service',
+                                name: 'ue-button',
                                 settings: {
                                     label: 'Delete',
                                     action: 'delete',
-                                    state: 'staff'
+                                    sref: 'staff'
                                 }
                             }
                         }
                     ],
                     footer: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
                                     name: 'ue-pagination',

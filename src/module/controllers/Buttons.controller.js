@@ -17,11 +17,6 @@
 
             self.template = self.setting.component.settings.template;
             self.label = componentSettings.label;
-            self.action = componentSettings.action;
-            self.beforeSend = componentSettings.beforeSend;
-            self.success = componentSettings.success;
-            self.error = componentSettings.error;
-            self.complete = componentSettings.complete;
             self.type = self.setting.type;
             self.entityId = self.setting.entityId;
 
