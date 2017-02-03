@@ -1014,10 +1014,7 @@
                                             component: {
                                                 name: 'ue-button',
                                                 settings: {
-                                                    label: 'Simple button',
-                                                    action: function() {
-                                                        alert('This is action for button!');
-                                                    }
+                                                    label: 'Simple button'
                                                 }
                                             }
                                         },
