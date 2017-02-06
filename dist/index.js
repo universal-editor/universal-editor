@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular.module('demoApp', ['ui.router', 'universal.editor']);
@@ -25,7 +25,7 @@
                 controller: 'StaffGridController'
             })
             .state('staff_edit', {
-                url: '/staff/:pk?back',
+                url: '/staff/:pk',
                 template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
                 controllerAs: 'vm',
                 controller: 'StaffFormController'
@@ -37,7 +37,7 @@
                 controller: 'NewsGridController'
             })
             .state('news_edit', {
-                url: '/news/:pk?back',
+                url: '/news/:pk',
                 template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
                 controllerAs: 'vm',
                 controller: 'NewsFormController'
@@ -54,13 +54,13 @@ angular
 demoAppRun.$inject = ['$rootScope'];
 
 function demoAppRun($rootScope) {
-    var itemsSelector = document.querySelectorAll(".nav.nav-tabs li");
-    $rootScope.$on('$stateChangeSuccess', function (event,toState) {
+    var itemsSelector = document.querySelectorAll('.nav.nav-tabs li');
+    $rootScope.$on('$stateChangeSuccess', function (event, toState) {
         var stateParamEntityId = toState.name;
         angular.forEach(itemsSelector, function (item) {
-            $(item).removeClass("active");
-            if(~stateParamEntityId.indexOf($(item).find("a")[0].hash.split("/")[1])){
-                $(item).addClass("active");
+            $(item).removeClass('active');
+            if (~stateParamEntityId.indexOf($(item).find('a')[0].hash.split('/')[1])) {
+                $(item).addClass('active');
             }
         });
     });
