@@ -17,6 +17,7 @@
             vm.optionValues = [];
             vm.inputValue = '';
             vm.newEntityLoaded = newEntityLoaded;
+            vm.dependUpdate = dependUpdate;
 
             baseController = $controller('FieldsController', { $scope: $scope });
             angular.extend(vm, baseController);
@@ -34,6 +35,29 @@
                 }
             }));
         };
+
+        function dependUpdate(dependField, dependValue) {
+            vm.optionValues = [];
+            if (dependValue && dependValue !== '') {
+                vm.loadingData = true;
+
+                var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                RestApiService
+                    .getUrlResource(url)
+                    .then(function (response) {
+                        angular.forEach(response.data.items, function (v) {
+                            vm.optionValues.push(v);
+                        });
+                    }, function (reject) {
+                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function (translation) {
+                            console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
+                        });
+                    })
+                    .finally(function () {
+                        vm.loadingData = false;
+                    });
+            }
+        }
 
         function newEntityLoaded() {
             vm.fieldValue = vm.setting.component.settings.defaultValue || null;
