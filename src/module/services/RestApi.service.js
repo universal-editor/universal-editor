@@ -744,5 +744,26 @@
                 $window.location.reload();
             }
         }
+
+        this.getUrlWithParams = function (url, queryParams) {
+            url = decodeURI(url);
+            var urlArray = url.split('?'),
+                search = [],
+                searchObject = {},
+                split;
+
+            if (!!urlArray[1]) {
+                search = urlArray[1].split('&');
+            }
+
+            for (var i = 0; i < search.length; i++ ) {
+                split = search[i].split('=');
+                searchObject[split[0]] = eval('(' + split[1] + ')');
+            }
+            if (queryParams) {
+                searchObject = angular.merge(searchObject, queryParams);
+            }
+            return urlArray[0] + '?' + $httpParamSerializer(searchObject);
+        };
     }
 })();
