@@ -30,30 +30,39 @@
             if (vm.singleValue) {
                 vm.checkBoxStyle = 'display: inline;';
                 vm.getFieldValue = getFieldValue;
+                vm.trueValue = componentSettings.trueValue;
+                vm.falseValue = componentSettings.falseValue;
+                vm.optionValues = [];
+                vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
+                var obj = {};
+                obj[vm.fieldId] = componentSettings.trueValue;
+                if (!vm.options.filter) {
+                    obj[vm.fieldSearch] = componentSettings.label;
+                } else {
+                    obj[vm.fieldSearch] = '';
+                }
+                vm.label = '';
+                vm.optionValues.push(obj);
             }
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
                 if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
                     $scope.onLoadDataHandler(e, data);
-                    if (vm.singleValue) {
-                        vm.optionValues = [];
-                        vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
-                        var obj = {};
-                        obj[vm.fieldId] = componentSettings.trueValue;
-                        if (!vm.options.filter) {
-                            obj[vm.fieldSearch] = componentSettings.label;
-                        } else {
-                            obj[vm.fieldSearch] = '';
-                        }
-                        vm.label = '';
-                        vm.optionValues.push(obj);
-                    } else {
+                    if (!vm.singleValue) {
                         componentSettings.$loadingPromise.then(function(optionValues) {
                             vm.optionValues = optionValues;
                             vm.equalPreviewValue();
                         }).finally(function() {
                             vm.loadingData = false;
                         });
+                    } else {
+                        var value = data[vm.fieldName];
+                        if (model.falseValue == value) {
+                            model.fieldValue = [model.falseValue];
+                        }
+                        if (model.trueValue == value) {
+                            model.fieldValue = [model.trueValue];
+                        }
                     }
                 }
             }));
