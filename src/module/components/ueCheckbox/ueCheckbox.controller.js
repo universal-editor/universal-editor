@@ -57,11 +57,11 @@
                         });
                     } else {
                         var value = data[vm.fieldName];
-                        if (model.falseValue == value) {
-                            model.fieldValue = [model.falseValue];
+                        if (vm.falseValue == value) {
+                            vm.fieldValue = [vm.falseValue];
                         }
-                        if (model.trueValue == value) {
-                            model.fieldValue = [model.trueValue];
+                        if (vm.trueValue == value) {
+                            vm.fieldValue = [vm.trueValue];
                         }
                     }
                 }
