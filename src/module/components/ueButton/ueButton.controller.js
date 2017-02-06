@@ -82,10 +82,10 @@
 
             if (state) {
                 params[pkKey] = vm.entityId;
-                if (state && !!vm.options && !!vm.options.back) {
-                    searchString.back = EditEntityStorage.getStateConfig().name;
-                }
                 searchString.back = $state.current.name;
+                if(vm.back) {
+                    delete searchString.back;
+                }
                 $state.go(state, params).then(function() {
                     $location.search(searchString);
                     $timeout(function() {
