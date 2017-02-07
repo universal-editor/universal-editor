@@ -56,9 +56,11 @@
                         componentSettings.$loadingPromise = RestApiService
                             .getUrlResource(remoteValues.url)
                             .then(function(response) {
-                                angular.forEach(response.data.items, function(v) {
-                                    self.optionValues.push(v);
-                                });
+                                if (!componentSettings.depend) {
+                                    angular.forEach(response.data.items, function (v) {
+                                        self.optionValues.push(v);
+                                    });
+                                }
                                 componentSettings.$optionValues = self.optionValues;
                                 return self.optionValues;
                             }, function(reject) {

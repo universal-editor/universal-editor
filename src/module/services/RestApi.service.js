@@ -751,6 +751,9 @@
                 dependValue = '"' + dependValue + '"';
             }
             if (angular.isArray(dependValue)) {
+                dependValue = dependValue.filter(function (item) {
+                    return !!item;
+                });
                 dependValue = '"' + dependValue.join(',') + '"';
             }
             url = url.replace(':dependField', dependField).replace(':dependValue', dependValue);
