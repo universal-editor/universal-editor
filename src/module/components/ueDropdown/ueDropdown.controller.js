@@ -67,7 +67,8 @@
                     vm.loadingData = true;
                     vm.parentValue = false;
                     vm.optionValues = [];
-                    var url = componentSettings.valuesRemote.url.replace(':dependField', dependField).replace(':dependValue', dependValue);
+
+                    var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                     RestApiService
                         .getUrlResource(url)
                         .then(function (response) {

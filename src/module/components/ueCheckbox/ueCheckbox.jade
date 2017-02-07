@@ -7,5 +7,7 @@ block append content
             label
                 input(type="checkbox", data-ng-disabled="vm.readonly", data-checklist-model="vm.fieldValue", data-checklist-value="::item[vm.fieldId]")
                 span(ng-bind="::item[vm.fieldSearch]")
+        .processing-status-wrapper(data-ng-show="vm.loadingData")
+            .processing-status {{'PERFORMS_ACTIONS' | translate}}
     .disabled-field(ng-if="vm.disabled && !vm.options.filter")
         include ../../template/disabledField/checkBox

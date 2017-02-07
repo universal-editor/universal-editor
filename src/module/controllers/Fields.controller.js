@@ -56,9 +56,11 @@
                         componentSettings.$loadingPromise = RestApiService
                             .getUrlResource(remoteValues.url)
                             .then(function(response) {
-                                angular.forEach(response.data.items, function(v) {
-                                    self.optionValues.push(v);
-                                });
+                                if (!componentSettings.depend) {
+                                    angular.forEach(response.data.items, function (v) {
+                                        self.optionValues.push(v);
+                                    });
+                                }
                                 componentSettings.$optionValues = self.optionValues;
                                 return self.optionValues;
                             }, function(reject) {
@@ -75,6 +77,7 @@
                         }
                         equalPreviewValue();
                     }
+
                 }
             }
         }
@@ -268,7 +271,7 @@
                             if (result) {
                                 self.dependValue = f_value[componentSettings.depend];
                             }
-                            if (oldValue != self.dependValue && angular.isFunction(self.dependUpdate)) {
+                            if (!angular.equals(oldValue, self.dependValue) && angular.isFunction(self.dependUpdate)) {
                                 self.loadingData = true;
                                 $timeout.cancel(timeUpdateDepend);
                                 timeUpdateDepend = $timeout(function() {
