@@ -5,9 +5,9 @@
         .module('universal.editor')
         .service('RestApiService', RestApiService);
 
-    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate', '$httpParamSerializerJQLike', '$window'];
+    RestApiService.$inject = ['$q', '$rootScope', '$http', '$location', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate', '$httpParamSerializerJQLike', '$window', '$injector'];
 
-    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window) {
+    function RestApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
         var self = this,
             queryTempParams,
             filterParams,
@@ -15,7 +15,6 @@
             entityObject,
             mixEntity,
             cancelerPromises = [];
-
 
         self.isProcessing = false;
         self.methodType = '';
@@ -74,62 +73,26 @@
         }
 
         this.getItemsList = function (request) {
-
+            var servise = getCustomService(dataSource.type);
             //** cancel previouse request if request start again 
             var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
+            var isUseServise =
             request.options.isLoading = true;
             var dataSource = request.options.$dataSource;
 
             var deferred = $q.defer();
 
-            var _method = 'GET';
             var _url = request.url;
+            var _method = request.method || 'GET';
+            var id = request.options.$parentComponentId;
 
             var params = request.params || {};
-            _method = request.method || _method;
-            if (!!request.options && request.options.sort !== undefined) {
-                params.sort = request.options.sort;
-            }
-
-            var id = request.options.$parentComponentId;
             var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
             var beforeSend;
+
             if (!!request.childId) {
                 filters = filters || {};
                 filters[request.parentField] = request.childId;
-            }
-
-
-            if (filters) {
-                angular.extend(params, {filter: JSON.stringify(filters)});
-            } else {
-                delete params.filter;
-            }
-
-            if (!!request.options.mixedMode) {
-                params = params || {};
-                angular.extend(params, {
-                    mixed: request.options.mixedMode.collectionType
-                });
-            }
-
-            if (dataSource.hasOwnProperty('parentField')) {
-                params = params || {};
-
-                if (!params.hasOwnProperty('filter')) {
-                    params.root = true;
-                }
-            }
-
-            if (dataSource.hasOwnProperty('sortBy') && !params.hasOwnProperty(dataSource.sortBy) && !params.sort) {
-                params = params || {};
-                angular.extend(params, {
-                    sort: dataSource.sortBy
-                });
-            }
-
-            if (params.hasOwnProperty('filter')) {
-                delete params.root;
             }
 
             var expandFields = [];
@@ -144,13 +107,73 @@
                 params.expand = expandFields.join(',');
             }
 
-            $http({
-                method: _method,
+            var config = {
+                action: 'list',
                 url: _url,
-                params: params,
-                timeout: canceler.promise,
-                beforeSend: beforeSend
-            }).then(function (response) {
+                method: _method,
+                data: {}
+            };
+
+            if (angular.isUndefined(servise) && !angular.isFunction(servise.getParams)) {
+
+                if (!!request.options && request.options.sort !== undefined) {
+                    params.sort = request.options.sort;
+                }
+
+                if (filters) {
+                    angular.extend(params, {filter: JSON.stringify(filters)});
+                } else {
+                    delete params.filter;
+                }
+
+                if (!!request.options.mixedMode) {
+                    params = params || {};
+                    angular.extend(params, {
+                        mixed: request.options.mixedMode.collectionType
+                    });
+                }
+
+                if (dataSource.hasOwnProperty('parentField')) {
+                    params = params || {};
+
+                    if (!params.hasOwnProperty('filter')) {
+                        params.root = true;
+                    }
+                }
+
+                if (dataSource.hasOwnProperty('sortBy') && !params.hasOwnProperty(dataSource.sortBy) && !params.sort) {
+                    params = params || {};
+                    angular.extend(params, {
+                        sort: dataSource.sortBy
+                    });
+                }
+
+                if (params.hasOwnProperty('filter')) {
+                    delete params.root;
+                }
+            } else{
+                config.sortFieldName = (!!request.options && request.options.sort !== undefined) ? request.options.sort : '';
+                config.pagination = {
+                    perPage: 20,
+                    page: 1
+                };
+
+                if (params.page) {
+                    config.pagination.page = params.page;
+                    delete params.page;
+                }
+
+                if (!!request.options.mixedMode) {
+                    config.mixMode = request.options.mixedMode.collectionType;
+                }
+            }
+
+            config.params = request.params || {};
+
+            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            options.beforeSend = request.before;
+
+            $http(options).then(function (response) {
                 if (response.data[itemsKey].length === 0) {
                     $rootScope.$broadcast('editor:parent_empty');
                 }
@@ -173,11 +196,11 @@
         };
 
         this.addNewItem = function (request) {
+            var dataSource = request.options.$dataSource;
 
             if (request.options.isLoading) {
                 return;
             }
-            var dataSource = request.options.$dataSource;
 
             var parentField = dataSource.fields.parent;
             var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
@@ -189,21 +212,24 @@
             }
 
             request.options.isLoading = true;
-            var params = {};
-            var _method = 'POST';
-            var _url = dataSource.url;
             var idField = 'id';
             var state;
 
             if (dataSource.hasOwnProperty('fields')) {
                 idField = dataSource.fields.primaryKey || idField;
             }
-            $http({
-                method: request.method || _method,
-                url: request.method || _url,
+
+            var config = {
+                action: 'create',
+                url: request.url || dataSource.url,
+                method: request.method || 'POST',
                 data: request.data,
-                beforeSend: request.before
-            }).then(function (response) {
+                params: request.params || {}
+            };
+            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            options.beforeSend = request.before;
+
+            $http(options).then(function (response) {
                 if (!!request.success) {
                     request.success(response);
                 }
@@ -276,19 +302,22 @@
             var dataSource = request.options.$dataSource;
 
             request.options.isLoading = true;
-            var params = {};
-            var _method = 'PUT';
 
             var _url = dataSource.url + '/' + self.editedEntityId;
             var state;
             var idField = 'id';
 
-            $http({
-                method: request.method || _method,
+            var config = {
+                action: 'update',
                 url: request.url || _url,
-                data: request.data || {},
-                beforeSend: request.before
-            }).then(function (response) {
+                method: request.method || 'PUT',
+                data: request.data,
+                params: request.params || {}
+            };
+            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            options.beforeSend = request.before;
+
+            $http(options).then(function (response) {
                 if (!!request.success) {
                     request.success(response);
                 }
@@ -350,8 +379,6 @@
         };
 
         this.presaveItem = function (request) {
-            var _url;
-            var _method = 'POST';
             var idField = 'id';
             var isCreate = true;
             if (request.options.isLoading) {
@@ -361,24 +388,30 @@
 
             request.options.isLoading = true;
 
+            var config = {
+                action: 'create',
+                method: 'POST',
+                data: request.data,
+                params: request.params || {}
+            };
+
             if (self.editedEntityId !== '') {
-                _url = dataSource.url + '/' + self.editedEntityId;
-                _method = 'PUT';
+                config.url = dataSource.url + '/' + self.editedEntityId;
+                config.method = 'PUT';
+                config.action = 'update';
                 isCreate = false;
             } else {
-                _url = dataSource.url;
+                config.url = dataSource.url;
             }
 
             if (dataSource.hasOwnProperty('fields')) {
                 idField = dataSource.fields.primaryKey || idField;
             }
 
-            $http({
-                method: request.method || _method,
-                url: request.url || _url,
-                data: request.data || {},
-                beforeSend: request.before
-            }).then(function (response) {
+            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            options.beforeSend = request.before;
+
+            $http(options).then(function (response) {
                 if (!!request.success) {
                     request.success(response);
                 }
@@ -433,7 +466,6 @@
         this.getItemById = function (id, par, options) {
             var qParams = {},
                 expandFields = [],
-                expandParam = '',
                 dataSource = options.$dataSource || entityObject.dataSource;
 
             options.isLoading = true;
@@ -446,11 +478,15 @@
                 qParams.expand = expandFields.join(',');
             }
 
-            $http({
-                method: 'GET',
+            var config = {
+                action: 'one',
                 url: dataSource.url + '/' + id,
+                method: 'GET',
                 params: qParams
-            }).then(function (response) {
+            };
+            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+
+            $http(options).then(function (response) {
                 var data = response.data;
                 data.$parentComponentId = options.$parentComponentId;
                 data.editorEntityType = 'exist';
@@ -480,12 +516,18 @@
             if (request.setting.buttonClass === 'edit') {
                 _url = url.replace(':pk', request.entityId);
             }
-            return $http({
-                method: request.method || 'DELETE',
+
+            var config = {
+                action: 'update',
                 url: request.url || _url,
-                params: request.params || {},
-                beforeSend: request.before
-            }).then(function (response) {
+                method: request.method || 'DELETE',
+                data: request.data,
+                params: request.params || {}
+            };
+            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            options.beforeSend = request.before;
+
+            return $http(options).then(function (response) {
                 if (!!request.success) {
                     request.success(response);
                 }
@@ -781,5 +823,45 @@
             var params = $httpParamSerializer(searchObject);
             return urlArray[0] + (params ? ('?' + params) : '');
         };
+
+        function getCustomService(type) {
+            if ( $injector.has(type + 'ApiTypeService')) {
+                return $injector.get(type + 'ApiTypeService');
+            }
+            return undefined;
+        }
+
+        function getAjaxOptionsByTypeServise(config, type) {
+
+            var serviseApi = getCustomService(type);
+
+            var options = {
+                headers : config.headers,
+                method : config.method,
+                data : config.data,
+                params : config.params,
+                url : config.url
+            };
+
+            if (angular.isDefined(serviseApi)) {
+                if (angular.isFunction(serviseApi.getHeaders)){
+                    options.headers = serviseApi.getHeaders(config);
+                }
+                if (angular.isFunction(serviseApi.getMethod)){
+                    options.method = serviseApi.getMethod(config);
+                }
+                if (angular.isFunction(serviseApi.getData)){
+                    options.data = serviseApi.getData(config);
+                }
+                if (angular.isFunction(serviseApi.getParams)){
+                    options.params = serviseApi.getParams(config);
+                }
+                if (angular.isFunction(serviseApi.getURL)){
+                    options.url = serviseApi.getURL(config);
+                }
+            }
+
+            return options;
+        }
     }
 })();
