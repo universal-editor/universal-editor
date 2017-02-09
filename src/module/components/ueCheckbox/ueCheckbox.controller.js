@@ -20,6 +20,7 @@
             vm.optionValues = [];
             vm.inputValue = '';
             vm.newEntityLoaded = newEntityLoaded;
+            vm.dependUpdate = dependUpdate;
             vm.fieldId = 'id';
             vm.fieldSearch = 'title';
             baseController = $controller('FieldsController', { $scope: $scope });
@@ -33,7 +34,9 @@
                 vm.trueValue = componentSettings.trueValue;
                 vm.falseValue = componentSettings.falseValue;
                 vm.optionValues = [];
-                vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
+                if (!vm.options.filter) {
+                    vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
+                }
                 var obj = {};
                 obj[vm.fieldId] = componentSettings.trueValue;
                 if (!vm.options.filter) {
@@ -46,6 +49,7 @@
             }
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+                $scope.onLoadDataHandler(e, data);
                 if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
                     $scope.onLoadDataHandler(e, data);
                     if (!vm.singleValue) {
@@ -68,13 +72,42 @@
             }));
         };
 
+        function dependUpdate(dependField, dependValue) {
+            vm.optionValues = [];
+            if (dependValue && dependValue !== '') {
+                vm.loadingData = true;
+
+                var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                RestApiService
+                    .getUrlResource(url)
+                    .then(function(response) {
+                        angular.forEach(response.data.items, function(v) {
+                            vm.optionValues.push(v);
+                        });
+                    }, function(reject) {
+                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                            console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
+                        });
+                    })
+                    .finally(function() {
+                        vm.loadingData = false;
+                    });
+            }
+        }
+
         function getFieldValue() {
             var field = {},
                 wrappedFieldValue;
-            if (angular.isArray(vm.fieldValue)) {
-                wrappedFieldValue = (vm.fieldValue.length == 0) ? componentSettings.falseValue : componentSettings.trueValue;
-            } else {
-                wrappedFieldValue = vm.fieldValue || componentSettings.falseValue;
+            wrappedFieldValue = vm.fieldValue;
+
+            if (vm.singleValue) {
+                wrappedFieldValue = (!vm.fieldValue || vm.fieldValue.length === 0) ? componentSettings.falseValue : componentSettings.trueValue;
+            }
+
+            if (vm.options.filter) {
+                if (vm.fieldValue === null) {
+                    wrappedFieldValue = vm.fieldValue;
+                }
             }
 
             if (vm.parentField) {

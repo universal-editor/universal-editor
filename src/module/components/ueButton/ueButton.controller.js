@@ -125,6 +125,9 @@
             angular.merge(request, handlers);
             switch (vm.action) {
                 case 'save':
+                    if(vm.entityId && vm.entityId !== 'new') {
+                        vm.type = 'update';
+                    }
                     if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate('create', request);
                     } else if (vm.type == 'update') {

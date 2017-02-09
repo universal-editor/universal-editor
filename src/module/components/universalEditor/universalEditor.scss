@@ -671,6 +671,13 @@ label {
     }
 }
 
+.field-wrapper-ue-radiolist,
+.field-wrapper-ue-checkbox {
+    & .processing-status-wrapper {
+        margin: 0 0 0 30px;
+    }
+}
+
 .item {
     &-datepicker-wrapper,
     &-colorpicker-wrapper,
