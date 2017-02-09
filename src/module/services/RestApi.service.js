@@ -73,12 +73,11 @@
         }
 
         this.getItemsList = function (request) {
-            var servise = getCustomService(dataSource.type);
+            var dataSource = request.options.$dataSource;
             //** cancel previouse request if request start again 
             var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
-            var isUseServise =
+            var servise = getCustomService(dataSource.type);
             request.options.isLoading = true;
-            var dataSource = request.options.$dataSource;
 
             var deferred = $q.defer();
 
@@ -88,11 +87,11 @@
 
             var params = request.params || {};
             var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
+            var filtersParams = {};
             var beforeSend;
 
             if (!!request.childId) {
-                filters = filters || {};
-                filters[request.parentField] = request.childId;
+                filtersParams[request.parentField] = request.childId;
             }
 
             var expandFields = [];
@@ -114,14 +113,16 @@
                 data: {}
             };
 
-            if (angular.isUndefined(servise) && !angular.isFunction(servise.getParams)) {
+            if (angular.isUndefined(servise) || !angular.isFunction(servise.getParams)) {
+
+                filtersParams = angular.merge(filtersParams, filters);
 
                 if (!!request.options && request.options.sort !== undefined) {
                     params.sort = request.options.sort;
                 }
 
-                if (filters) {
-                    angular.extend(params, {filter: JSON.stringify(filters)});
+                if (filtersParams) {
+                    angular.extend(params, {filter: JSON.stringify(filtersParams)});
                 } else {
                     delete params.filter;
                 }
@@ -151,7 +152,8 @@
                 if (params.hasOwnProperty('filter')) {
                     delete params.root;
                 }
-            } else{
+            } else {
+                config.filterObject = FilterFieldsStorage.getFilterObject(id, filters);
                 config.sortFieldName = (!!request.options && request.options.sort !== undefined) ? request.options.sort : '';
                 config.pagination = {
                     perPage: 20,
@@ -168,7 +170,7 @@
                 }
             }
 
-            config.params = request.params || {};
+            config.params = params || {};
 
             var options = getAjaxOptionsByTypeServise(config, dataSource.type);
             options.beforeSend = request.before;
@@ -825,7 +827,7 @@
         };
 
         function getCustomService(type) {
-            if ( $injector.has(type + 'ApiTypeService')) {
+            if ($injector.has(type + 'ApiTypeService')) {
                 return $injector.get(type + 'ApiTypeService');
             }
             return undefined;
@@ -836,27 +838,27 @@
             var serviseApi = getCustomService(type);
 
             var options = {
-                headers : config.headers,
-                method : config.method,
-                data : config.data,
-                params : config.params,
-                url : config.url
+                headers: config.headers,
+                method: config.method,
+                data: config.data,
+                params: config.params,
+                url: config.url
             };
 
             if (angular.isDefined(serviseApi)) {
-                if (angular.isFunction(serviseApi.getHeaders)){
+                if (angular.isFunction(serviseApi.getHeaders)) {
                     options.headers = serviseApi.getHeaders(config);
                 }
-                if (angular.isFunction(serviseApi.getMethod)){
+                if (angular.isFunction(serviseApi.getMethod)) {
                     options.method = serviseApi.getMethod(config);
                 }
-                if (angular.isFunction(serviseApi.getData)){
+                if (angular.isFunction(serviseApi.getData)) {
                     options.data = serviseApi.getData(config);
                 }
-                if (angular.isFunction(serviseApi.getParams)){
+                if (angular.isFunction(serviseApi.getParams)) {
                     options.params = serviseApi.getParams(config);
                 }
-                if (angular.isFunction(serviseApi.getURL)){
+                if (angular.isFunction(serviseApi.getURL)) {
                     options.url = serviseApi.getURL(config);
                 }
             }

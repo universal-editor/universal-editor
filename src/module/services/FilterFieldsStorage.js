@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -27,7 +27,8 @@
             registerFilterController: registerFilterController,
             unRegisterFilterController: unRegisterFilterController,
             apply: apply,
-            clear: clear
+            clear: clear,
+            getFilterObject: getFilterObject
         });
 
         function addFilterFieldController(ctrl) {
@@ -53,6 +54,7 @@
                 delete filterComponentsStorage[id];
             }
         }
+
         function getFilterController(id) {
             if (id) {
                 return filterComponentsStorage[id];
@@ -85,7 +87,7 @@
             if (id) {
                 var filterControllers = storage[id];
                 if (filterControllers) {
-                    angular.forEach(filterControllers, function(fc, ind) {
+                    angular.forEach(filterControllers, function (fc, ind) {
                         if (fc.$fieldHash === ctrl.$fieldHash) {
                             filterControllers.splice(ind, 1);
                         }
@@ -96,7 +98,7 @@
 
         function clearFiltersValue(id, paramName) {
             if (storage[id]) {
-                angular.forEach(storage[id], function(ctrl) {
+                angular.forEach(storage[id], function (ctrl) {
                     ctrl.clear();
                 });
                 calculate(id, paramName);
@@ -107,7 +109,7 @@
             var ctrls = storage[id];
             var filters = {};
             //-- get list of filter fields
-            angular.forEach(ctrls, function(ctrl) {
+            angular.forEach(ctrls, function (ctrl) {
                 //--get settings of the field
                 var settings = ctrl.setting.component.settings;
                 //--get operator from settings of the field
@@ -173,6 +175,45 @@
                 $location.search(filterName, null);
                 $rootScope.$broadcast('editor:read_entity', parentComponentId);
             }
+        }
+
+        function getFilterObject(parentComponentId) {
+            var filters = {};
+            var filterCtrl = getFilterFieldController(parentComponentId);
+            if (filterCtrl) {
+                angular.forEach(filterCtrl, function (item) {
+                    filters[item.fieldName] = filters[item.fieldName] || [];
+                    var operator = item.options.filterParameters.operator;
+                    var value = item.getFieldValue();
+                    switch (operator) {
+                        case '%:text%':
+                            operator = '%:value%';
+                            break;
+                        case '<=':
+                            operator = '<=:key';
+                            break;
+                        case '>=':
+                            operator = '>=:key';
+                            break;
+                        default :
+                            operator = ':value';
+                    }
+                    for (var key in value) {
+                        if (!!value[key]) {
+                            filters[item.fieldName].push({
+                                operator: operator,
+                                value: value[key]
+                            });
+                        }
+                    }
+                });
+            }
+            for (var key in filters) {
+                if (filters[key].length == 0) {
+                    delete filters[key];
+                }
+            }
+            return filters;
         }
     }
 })();

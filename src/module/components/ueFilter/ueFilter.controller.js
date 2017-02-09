@@ -135,7 +135,7 @@
                         group.filters[0].options.filterParameters.operator = ':text';
                     }
 
-                    if (~['ue-date', 'ue-time', 'ue-datetime'].indexOf(field.component.name)) {
+                    if (~['ue-date'].indexOf(field.component.name)) {
                         group.filters[0].ngStyle = 'display: inline-block; width: 25%; margin-left: 5px;';
                         group.filters[0].options.filterParameters.operator = '>=';
                         var cloneField = angular.copy(field);
