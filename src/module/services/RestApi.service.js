@@ -61,7 +61,6 @@
             }
         };
 
-
         function setTimeOutPromise(id, mode) {
             var def = $q.defer();
             cancelerPromises[id] = cancelerPromises[id] || {};
@@ -76,7 +75,7 @@
             var dataSource = request.options.$dataSource;
             //** cancel previouse request if request start again 
             var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
-            var servise = getCustomService(dataSource.type);
+            var service = getCustomService(dataSource.standard);
             request.options.isLoading = true;
 
             var deferred = $q.defer();
@@ -113,7 +112,7 @@
                 data: {}
             };
 
-            if (angular.isUndefined(servise) || !angular.isFunction(servise.getParams)) {
+            if (angular.isUndefined(service) || !angular.isFunction(service.getParams)) {
 
                 filtersParams = angular.merge(filtersParams, filters);
 
@@ -172,16 +171,19 @@
 
             config.params = params || {};
 
-            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
             $http(options).then(function (response) {
-                if (response.data[itemsKey].length === 0) {
-                    $rootScope.$broadcast('editor:parent_empty');
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    successAnswer.bind({ action: 'list', parentComponentId: request.options.$parentComponentId})(response.data);
+                    deferred.resolve(response.data);
+                } else {
+                    var data = service.processResponse(response,
+                        successAnswer.bind({ action: 'list', parentComponentId: request.options.$parentComponentId}),
+                        failAnswer.bind({ action: 'list', parentComponentId: request.options.$parentComponentId}));
+                    deferred.resolve(data);
                 }
-                response.data.$parentComponentId = request.options.$parentComponentId;
-                $rootScope.$broadcast('editor:items_list', response.data);
-                deferred.resolve(response.data);
             }).finally(function () {
                 request.options.isLoading = false;
             });
@@ -199,6 +201,7 @@
 
         this.addNewItem = function (request) {
             var dataSource = request.options.$dataSource;
+            var service = getCustomService(dataSource.standard);
 
             if (request.options.isLoading) {
                 return;
@@ -228,66 +231,41 @@
                 data: request.data,
                 params: request.params || {}
             };
-            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
             $http(options).then(function (response) {
-                if (!!request.success) {
-                    request.success(response);
-                }
-                var data = {
-                    id: response.data[idField],
-                    $parentComponentId: request.options.$parentComponentId
-                };
-                $rootScope.$broadcast('editor:presave_entity_created', data);
-                request.options.isLoading = false;
-                $rootScope.$broadcast('uploader:remove_session');
-                $rootScope.$broadcast('editor:entity_success');
-                successCreateMessage();
-
-                var params = {};
-                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
-                if ($location.search()[paramName]) {
-                    params.parent = $location.search()[paramName];
-                }
-                if ($location.search().back && request.useBackUrl) {
-                    params.state = $location.search().back;
-                    state = $location.search().back;
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    successAnswer.bind({
+                        action: 'create',
+                        parentComponentId: request.options.$parentComponentId,
+                        request: request,
+                        idField: idField
+                    })(response.data);
                 } else {
-                    state = request.state;
-                }
-                if (!ModalService.isModalOpen()) {
-                    if (state) {
-                        $state.go(state, params).then(function () {
-                            if (params.back) {
-                                delete params.back;
-                            }
-                            $location.search(params);
-                            $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
-                        });
-                    } else {
-                        replaceToURL(request.href);
-                    }
-                } else {
-                    ModalService.close();
+                    service.processResponse(response, successAnswer, failAnswer);
                 }
             }, function (reject) {
-                if (!!request.error) {
-                    request.error(reject);
-                }
-                var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    if (!!request.error) {
+                        request.error(reject);
+                    }
+                    var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
 
-                if (wrongFields.length > 0) {
-                    angular.forEach(wrongFields, function (err) {
-                        if (err.hasOwnProperty('field')) {
-                            $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
-                            if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function (innerError, key) {
-                                    $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
-                                });
+                    if (wrongFields.length > 0) {
+                        angular.forEach(wrongFields, function (err) {
+                            if (err.hasOwnProperty('field')) {
+                                $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
+                                if (err.hasOwnProperty('fields')) {
+                                    angular.forEach(err.fields, function (innerError, key) {
+                                        $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                } else {
+                    service.processResponse(reject, successAnswer, failAnswer);
                 }
                 request.options.isLoading = false;
             }).finally(function () {
@@ -302,11 +280,10 @@
                 return;
             }
             var dataSource = request.options.$dataSource;
-
+            var service = getCustomService(dataSource.standard);
             request.options.isLoading = true;
 
             var _url = dataSource.url + '/' + self.editedEntityId;
-            var state;
             var idField = 'id';
 
             var config = {
@@ -316,61 +293,41 @@
                 data: request.data,
                 params: request.params || {}
             };
-            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
             $http(options).then(function (response) {
-                if (!!request.success) {
-                    request.success(response);
-                }
-                var data = {
-                    id: response.data[idField],
-                    $parentComponentId: request.options.$parentComponentId
-                };
-                $rootScope.$broadcast('editor:presave_entity_updated', data);
-                request.options.isLoading = false;
-                $rootScope.$broadcast('uploader:remove_session');
-                $rootScope.$broadcast('editor:entity_success');
-                successUpdateMessage();
-                var params = {};
-                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
-                if ($location.search()[paramName]) {
-                    params.parent = $location.search()[paramName];
-                }
-                if ($location.search().back && request.useBackUrl) {
-                    state = $location.search().back;
+                if (angular.isDefined(service) || !angular.isFunction(service.processResponse)) {
+                    successAnswer.bind({
+                        action: 'update',
+                        parentComponentId: request.options.$parentComponentId,
+                        request: request,
+                        idField: idField
+                    })(response.data);
                 } else {
-                    state = request.state;
-                }
-                if (!ModalService.isModalOpen()) {
-                    if (state) {
-                        $state.go(state, params).then(function () {
-                            $location.search(params);
-                            $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
-                        });
-                    } else {
-                        replaceToURL(request.href);
-                    }
-                } else {
-                    ModalService.close();
+                    service.processResponse(response, successAnswer, failAnswer);
                 }
             }, function (reject) {
-                if (!!request.error) {
-                    request.error(reject);
-                }
-                var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    if (!!request.error) {
+                        request.error(reject);
+                    }
+                    var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
 
-                if (wrongFields.length > 0) {
-                    angular.forEach(wrongFields, function (err) {
-                        if (err.hasOwnProperty('field')) {
-                            $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
-                            if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function (innerError, key) {
-                                    $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
-                                });
+                    if (wrongFields.length > 0) {
+                        angular.forEach(wrongFields, function (err) {
+                            if (err.hasOwnProperty('field')) {
+                                $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
+                                if (err.hasOwnProperty('fields')) {
+                                    angular.forEach(err.fields, function (innerError, key) {
+                                        $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                } else {
+                    service.processResponse(reject, successAnswer, failAnswer)
                 }
                 request.options.isLoading = false;
             }).finally(function () {
@@ -387,6 +344,7 @@
                 return;
             }
             var dataSource = request.options.$dataSource;
+            var service = getCustomService(dataSource.standard);
 
             request.options.isLoading = true;
 
@@ -410,52 +368,61 @@
                 idField = dataSource.fields.primaryKey || idField;
             }
 
-            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
             $http(options).then(function (response) {
-                if (!!request.success) {
-                    request.success(response);
-                }
-                var newId = response.data[idField];
-                var par = {};
-                par['pk'] = newId;
-                var searchString = $location.search();
-                $state.go($state.current.name, par, {reload: false, notify: false}).then(function () {
-                    $location.search(searchString);
-                    $rootScope.$broadcast('editor:update_item', {
-                        $gridComponentId: request.options.$gridComponentId,
-                        value: response.data
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    if (!!request.success) {
+                        request.success(response);
+                    }
+                    var newId = response.data[idField];
+                    var par = {};
+                    par['pk'] = newId;
+                    var searchString = $location.search();
+                    $state.go($state.current.name, par, {reload: false, notify: false}).then(function () {
+                        $location.search(searchString);
+                        $rootScope.$broadcast('editor:update_item', {
+                            $gridComponentId: request.options.$gridComponentId,
+                            value: response.data
+                        });
                     });
-                });
-                var data = {
-                    id: newId,
-                    $parentComponentId: request.options.$parentComponentId
-                };
-                if (isCreate) {
-                    $rootScope.$broadcast('editor:presave_entity_created', data);
-                    successPresaveCreateMessage();
+                    var data = {
+                        id: newId,
+                        $parentComponentId: request.options.$parentComponentId
+                    };
+                    if (isCreate) {
+                        $rootScope.$broadcast('editor:presave_entity_created', data);
+                        successPresaveCreateMessage();
+                    } else {
+                        successUpdateMessage();
+                        $rootScope.$broadcast('editor:presave_entity_updated', data);
+                    }
                 } else {
-                    successUpdateMessage();
-                    $rootScope.$broadcast('editor:presave_entity_updated', data);
+                    service.processResponse(reject, successAnswer, failAnswer)
                 }
             }, function (reject) {
-                if (!!request.error) {
-                    request.error(reject);
-                }
-                if ((reject.status === 422 || reject.status === 400) && reject.data) {
-                    var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
 
-                    angular.forEach(wrongFields, function (err) {
-                        if (err.hasOwnProperty('field')) {
-                            $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
-                            if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function (innerError, key) {
-                                    $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
-                                });
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    if (!!request.error) {
+                        request.error(reject);
+                    }
+                    if ((reject.status === 422 || reject.status === 400) && reject.data) {
+                        var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
+
+                        angular.forEach(wrongFields, function (err) {
+                            if (err.hasOwnProperty('field')) {
+                                $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
+                                if (err.hasOwnProperty('fields')) {
+                                    angular.forEach(err.fields, function (innerError, key) {
+                                        $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                } else {
+                    service.processResponse(reject, successAnswer, failAnswer)
                 }
             }).finally(function () {
                 if (!!request.complete) {
@@ -469,7 +436,7 @@
             var qParams = {},
                 expandFields = [],
                 dataSource = options.$dataSource || entityObject.dataSource;
-
+            var service = getCustomService(dataSource.standard);
             options.isLoading = true;
             angular.forEach(dataSource.fields, function (field) {
                 if (field.hasOwnProperty('expandable') && field.expandable === true) {
@@ -486,13 +453,16 @@
                 method: 'GET',
                 params: qParams
             };
-            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            var optionsHttp = getAjaxOptionsByTypeService(config, dataSource.standard);
 
-            $http(options).then(function (response) {
-                var data = response.data;
-                data.$parentComponentId = options.$parentComponentId;
-                data.editorEntityType = 'exist';
-                $rootScope.$broadcast('editor:entity_loaded', data);
+            $http(optionsHttp).then(function (response) {
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    successAnswer.bind({ action: 'one', parentComponentId: options.$parentComponentId})(response.data)
+                } else {
+                    service.processResponse(reject,
+                        successAnswer.bind({ action: 'one', parentComponentId: options.$parentComponentId}),
+                        failAnswer.bind({ action: 'list', parentComponentId: options.$parentComponentId}))
+                }
             }).finally(function () {
                 options.isLoading = false;
             });
@@ -504,6 +474,7 @@
                 return;
             }
             var dataSource = request.options.$dataSource;
+            var service = getCustomService(dataSource.standard);
             var url;
 
             if (request.options.isMix) {
@@ -526,42 +497,46 @@
                 data: request.data,
                 params: request.params || {}
             };
-            var options = getAjaxOptionsByTypeServise(config, dataSource.type);
+            var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
             return $http(options).then(function (response) {
-                if (!!request.success) {
-                    request.success(response);
-                }
-                request.options.isLoading = false;
-                self.setQueryParams({});
-                self.setFilterParams({});
-                $rootScope.$broadcast('editor:entity_success_deleted');
-                successDeleteMessage();
-                var params = {};
-                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
-                if ($location.search()[paramName]) {
-                    params[paramName] = $location.search()[paramName];
-                }
-                if ($location.search().back && request.useBackUrl) {
-                    state = $location.search().back;
-                } else {
-                    state = request.state;
-                }
-
-                state = state || $state.current.name;
-
-                if (!ModalService.isModalOpen()) {
-                    if (state) {
-                        $state.go(state, params).then(function () {
-                            $location.search(params);
-                            $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
-                        });
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    if (!!request.success) {
+                        request.success(response);
+                    }
+                    request.options.isLoading = false;
+                    self.setQueryParams({});
+                    self.setFilterParams({});
+                    $rootScope.$broadcast('editor:entity_success_deleted');
+                    successDeleteMessage();
+                    var params = {};
+                    var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                    if ($location.search()[paramName]) {
+                        params[paramName] = $location.search()[paramName];
+                    }
+                    if ($location.search().back && request.useBackUrl) {
+                        state = $location.search().back;
                     } else {
-                        replaceToURL(request.href);
+                        state = request.state;
+                    }
+
+                    state = state || $state.current.name;
+
+                    if (!ModalService.isModalOpen()) {
+                        if (state) {
+                            $state.go(state, params).then(function () {
+                                $location.search(params);
+                                $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                            });
+                        } else {
+                            replaceToURL(request.href);
+                        }
+                    } else {
+                        ModalService.close();
                     }
                 } else {
-                    ModalService.close();
+                    service.processResponse(reject, successAnswer, failAnswer)
                 }
             }, function (reject) {
                 if (!!request.error) {
@@ -826,16 +801,16 @@
             return urlArray[0] + (params ? ('?' + params) : '');
         };
 
-        function getCustomService(type) {
-            if ($injector.has(type + 'ApiTypeService')) {
-                return $injector.get(type + 'ApiTypeService');
+        function getCustomService(standard) {
+            if ($injector.has(standard + 'ApiTypeService')) {
+                return $injector.get(standard + 'ApiTypeService');
             }
             return undefined;
         }
 
-        function getAjaxOptionsByTypeServise(config, type) {
+        function getAjaxOptionsByTypeService(config, standard) {
 
-            var serviseApi = getCustomService(type);
+            var serviceApi = getCustomService(standard);
 
             var options = {
                 headers: config.headers,
@@ -845,25 +820,124 @@
                 url: config.url
             };
 
-            if (angular.isDefined(serviseApi)) {
-                if (angular.isFunction(serviseApi.getHeaders)) {
-                    options.headers = serviseApi.getHeaders(config);
+            if (angular.isDefined(serviceApi)) {
+                if (angular.isFunction(serviceApi.getHeaders)) {
+                    options.headers = serviceApi.getHeaders(config);
                 }
-                if (angular.isFunction(serviseApi.getMethod)) {
-                    options.method = serviseApi.getMethod(config);
+                if (angular.isFunction(serviceApi.getMethod)) {
+                    options.method = serviceApi.getMethod(config);
                 }
-                if (angular.isFunction(serviseApi.getData)) {
-                    options.data = serviseApi.getData(config);
+                if (angular.isFunction(serviceApi.getData)) {
+                    options.data = serviceApi.getData(config);
                 }
-                if (angular.isFunction(serviseApi.getParams)) {
-                    options.params = serviseApi.getParams(config);
+                if (angular.isFunction(serviceApi.getParams)) {
+                    options.params = serviceApi.getParams(config);
                 }
-                if (angular.isFunction(serviseApi.getURL)) {
-                    options.url = serviseApi.getURL(config);
+                if (angular.isFunction(serviceApi.getURL)) {
+                    options.url = serviceApi.getURL(config);
                 }
             }
 
             return options;
+        }
+
+        function successAnswer(data) {
+            switch (this.action) {
+                case 'list':
+                    if (data[itemsKey].length === 0) {
+                        $rootScope.$broadcast('editor:parent_empty');
+                    }
+                    data.$parentComponentId = this.parentComponentId;
+                    $rootScope.$broadcast('editor:items_list', data);
+                    break;
+                case 'one':
+                    data.$parentComponentId = this.parentComponentId;
+                    data.editorEntityType = 'exist';
+                    $rootScope.$broadcast('editor:entity_loaded', data);
+                    break;
+                case 'update':
+                    var state;
+                    var parentComponentId = this.parentComponentId;
+                    if (!!this.request.success) {
+                        this.request.success(data);
+                    }
+                    $rootScope.$broadcast('editor:presave_entity_updated', {
+                        id: data[this.idField],
+                        $parentComponentId: parentComponentId
+                    });
+                    this.request.options.isLoading = false;
+                    $rootScope.$broadcast('uploader:remove_session');
+                    $rootScope.$broadcast('editor:entity_success');
+                    successUpdateMessage();
+                    var params = {};
+                    var paramName = this.request.options.prefixGrid ? this.request.options.prefixGrid + '-parent' : 'parent';
+                    if ($location.search()[paramName]) {
+                        params.parent = $location.search()[paramName];
+                    }
+                    if ($location.search().back && this.request.useBackUrl) {
+                        state = $location.search().back;
+                    } else {
+                        state = this.request.state;
+                    }
+                    if (!ModalService.isModalOpen()) {
+                        if (state) {
+                            $state.go(state, params).then(function () {
+                                $location.search(params);
+                                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                            });
+                        } else {
+                            replaceToURL(this.request.href);
+                        }
+                    } else {
+                        ModalService.close();
+                    }
+                    break;
+                case 'create':
+                    var parentComponentId = this.parentComponentId;
+                    if (!!this.request.success) {
+                        this.request.success(data);
+                    }
+                    $rootScope.$broadcast('editor:presave_entity_created', {
+                        id: data[this.idField],
+                        $parentComponentId: parentComponentId
+                    });
+                    this.request.options.isLoading = false;
+                    $rootScope.$broadcast('uploader:remove_session');
+                    $rootScope.$broadcast('editor:entity_success');
+                    successCreateMessage();
+
+                    var params = {};
+                    var paramName = this.request.options.prefixGrid ? this.request.options.prefixGrid + '-parent' : 'parent';
+                    if ($location.search()[paramName]) {
+                        params.parent = $location.search()[paramName];
+                    }
+                    if ($location.search().back && this.request.useBackUrl) {
+                        params.state = $location.search().back;
+                        state = $location.search().back;
+                    } else {
+                        state = this.request.state;
+                    }
+                    if (!ModalService.isModalOpen()) {
+                        if (state) {
+                            $state.go(state, params).then(function () {
+                                if (params.back) {
+                                    delete params.back;
+                                }
+                                $location.search(params);
+                                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                            });
+                        } else {
+                            replaceToURL(this.request.href);
+                        }
+                    } else {
+                        ModalService.close();
+                    }
+                    break;
+            }
+        }
+
+        function failAnswer() {
+
         }
     }
 })();
