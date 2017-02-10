@@ -356,7 +356,7 @@
         }
 
         function toggleContextViewByEvent(id, event) {
-            var left = event.pageX - $element.find('table')[0].offsetLeft;
+            var left = event.pageX - $element.find('table')[0].getBoundingClientRect().left;
             if (event.which === 3) {
                 vm.styleContextMenu = {
                     'top': event.offsetY,
