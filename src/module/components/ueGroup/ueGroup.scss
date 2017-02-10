@@ -1,17 +1,21 @@
-.universal-editor, .modal-dialog {
+.universal-editor,
+.modal-dialog {
     & .field-array-wrapper .add-more {
-        margin-top : 10px;
+        margin-top: 10px;
     }
-
     & .editor-field-array {
         overflow: visible;
     }
-
-    & .editor-group  {
-        & .item-array-wrapper .btn {
-            margin: 10px 15px 0 15px; 
-            float: right;
+    & .field-wrapper-ue-group {
+        & .editor-group {
+            & .clear-padding-left {
+                padding-left: 0;
+            }
+            & .item-array-wrapper .btn {
+                margin: 10px 15px 0 15px;
+                float: right;
+            }
+            padding: 5px 0;
         }
-        padding: 5px 0;
     }
 }
