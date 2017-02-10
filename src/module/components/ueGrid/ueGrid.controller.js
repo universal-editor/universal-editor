@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeGridController', UeGridController);
 
-    UeGridController.$inject = ['$scope', '$rootScope', 'RestApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', '$element', '$compile', 'EditEntityStorage'];
+    UeGridController.$inject = ['$scope', '$rootScope', 'YiiSoftApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', '$element', '$compile', 'EditEntityStorage'];
 
-    function UeGridController($scope, $rootScope, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage) {
+    function UeGridController($scope, $rootScope, YiiSoftApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage) {
         $element.addClass('ue-grid');
         /* jshint validthis: true */
         var vm = this,
@@ -182,12 +182,12 @@
             vm.setTabVisible = setTabVisible;
             vm.changeSortField = changeSortField;
 
-            RestApiService.setFilterParams({});
+            YiiSoftApiService.setFilterParams({});
             vm.request.childId = vm.parent;
             vm.request.options = vm.options;
             vm.request.parentField = parentField;
             vm.request.url = url;
-            RestApiService.getItemsList(vm.request);
+            YiiSoftApiService.getItemsList(vm.request);
         };
 
         function getScope() {
@@ -207,7 +207,7 @@
                     vm.sortField = field;
                 }
                 vm.options.sort = vm.sortingDirection ? field : '-' + field;
-                RestApiService.getItemsList({
+                YiiSoftApiService.getItemsList({
                     url: url,
                     options: vm.options,
                     parentField: parentField,
@@ -221,7 +221,7 @@
             vm.request.parentField = parentField;
             vm.request.prefixGrid = vm.prefixGrid;
             vm.request.headComponent = vm.setting.headComponent;
-            RestApiService.loadParent(vm.request);
+            YiiSoftApiService.loadParent(vm.request);
         }
 
         $scope.$on('editor:parent_id', function(event, data) {
@@ -236,7 +236,7 @@
             if (vm.$parentComponentId === eventComponentId) {
                 vm.parent = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'] || null;
                 vm.request.childId = vm.parent;
-                RestApiService.getItemsList(vm.request);
+                YiiSoftApiService.getItemsList(vm.request);
             }
         });
 

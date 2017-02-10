@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeCheckboxController', UeCheckboxController);
 
-    UeCheckboxController.$inject = ['$scope', '$element', 'EditEntityStorage', 'RestApiService', 'FilterFieldsStorage', '$controller'];
+    UeCheckboxController.$inject = ['$scope', '$element', 'EditEntityStorage', 'YiiSoftApiService', 'FilterFieldsStorage', '$controller'];
 
-    function UeCheckboxController($scope, $element, EditEntityStorage, RestApiService, FilterFieldsStorage, $controller) {
+    function UeCheckboxController($scope, $element, EditEntityStorage, YiiSoftApiService, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
 
         var vm = this,
@@ -65,8 +65,8 @@
             if (dependValue && dependValue !== '') {
                 vm.loadingData = true;
 
-                var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
-                RestApiService
+                var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                YiiSoftApiService
                     .getUrlResource(url)
                     .then(function (response) {
                         angular.forEach(response.data.items, function (v) {

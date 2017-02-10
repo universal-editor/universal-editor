@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UePaginationController', UePaginationController);
 
-    UePaginationController.$inject = ['$scope', 'RestApiService', '$httpParamSerializer', '$sce', '$location', '$element'];
+    UePaginationController.$inject = ['$scope', 'YiiSoftApiService', '$httpParamSerializer', '$sce', '$location', '$element'];
 
-    function UePaginationController($scope, RestApiService, $httpParamSerializer, $sce, $location, $element) {
+    function UePaginationController($scope, YiiSoftApiService, $httpParamSerializer, $sce, $location, $element) {
         $element.addClass('ue-pagination');
         
         var vm = this;
@@ -159,7 +159,7 @@
             var parentEntity = $location.search()[vm.options.prefixGrid  ? vm.options.prefixGrid + '-parent' : 'parent'];
             vm.parent = parentEntity || null;
             vm.request.childId = vm.parent;
-            RestApiService.getItemsList(vm.request);
+            YiiSoftApiService.getItemsList(vm.request);
         }
 
         vm.$onDestroy = function() {

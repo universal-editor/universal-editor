@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window', 'ModalService', '$timeout'];
+    UeFormController.$inject = ['$scope', 'YiiSoftApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window', 'ModalService', '$timeout'];
 
-    function UeFormController($scope, RestApiService, $location, $state, $translate, EditEntityStorage, $window, ModalService, $timeout) {
+    function UeFormController($scope, YiiSoftApiService, $location, $state, $translate, EditEntityStorage, $window, ModalService, $timeout) {
 
         /* jshint validthis: true */
         var vm = this,
@@ -125,9 +125,9 @@
 
             if (pk !== 'new') {
                 if (pk) {
-                    RestApiService.getItemById(pk, dataSource, vm.options);
+                    YiiSoftApiService.getItemById(pk, dataSource, vm.options);
                 } else if (vm.setting.pk) {
-                    RestApiService.getItemById(vm.setting.pk, dataSource, vm.options);
+                    YiiSoftApiService.getItemById(vm.setting.pk, dataSource, vm.options);
                 }
             }
 

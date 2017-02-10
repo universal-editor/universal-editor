@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeDropdownController', UeDropdownController);
 
-    UeDropdownController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', '$timeout', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q', '$translate'];
+    UeDropdownController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'YiiSoftApiService', '$timeout', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q', '$translate'];
 
-    function UeDropdownController($rootScope, $scope, EditEntityStorage, RestApiService, $timeout, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
+    function UeDropdownController($rootScope, $scope, EditEntityStorage, YiiSoftApiService, $timeout, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
         /* jshint validthis: true */
         var vm = this,
             possibleValues,
@@ -68,8 +68,8 @@
                     vm.parentValue = false;
                     vm.optionValues = [];
 
-                    var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
-                    RestApiService
+                    var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                    YiiSoftApiService
                         .getUrlResource(url)
                         .then(function (response) {
                             angular.forEach(response.data.items, function (v) {
@@ -165,7 +165,7 @@
                 item.isOpen = !item.isOpen;
                 if (item[vm.treeChildCountField] && !item.childOpts) {
                     item.loadingData = true;
-                    RestApiService
+                    YiiSoftApiService
                         .getUrlResource(componentSettings.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.fieldId] + '"}')
                         .then(function (response) {
                             if (!item.childOpts) {

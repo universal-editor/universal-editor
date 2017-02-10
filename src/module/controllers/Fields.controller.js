@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('FieldsController', FieldsController);
 
-    FieldsController.$inject = ['$scope', '$rootScope', '$location', '$controller', '$timeout', 'FilterFieldsStorage', 'RestApiService', 'moment', 'EditEntityStorage', '$q', '$translate'];
+    FieldsController.$inject = ['$scope', '$rootScope', '$location', '$controller', '$timeout', 'FilterFieldsStorage', 'YiiSoftApiService', 'moment', 'EditEntityStorage', '$q', '$translate'];
 
-    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, RestApiService, moment, EditEntityStorage, $q, $translate) {
+    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, YiiSoftApiService, moment, EditEntityStorage, $q, $translate) {
         /* jshint validthis: true */
         var vm = this;
         var baseController = $controller('BaseController', { $scope: $scope });
@@ -53,7 +53,7 @@
                     }
                     self.loadingData = true;
                     if (!componentSettings.$loadingPromise) {
-                        componentSettings.$loadingPromise = RestApiService
+                        componentSettings.$loadingPromise = YiiSoftApiService
                             .getUrlResource(remoteValues.url)
                             .then(function(response) {
                                 if (!componentSettings.depend) {

@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeGroupController', UeGroupController);
 
-    UeGroupController.$inject = ['$scope', 'EditEntityStorage', '$timeout',  'RestApiService', '$controller', '$translate'];
+    UeGroupController.$inject = ['$scope', 'EditEntityStorage', '$timeout',  'YiiSoftApiService', '$controller', '$translate'];
 
-    function UeGroupController($scope, EditEntityStorage, $timeout,  RestApiService, $controller, $translate) {
+    function UeGroupController($scope, EditEntityStorage, $timeout,  YiiSoftApiService, $controller, $translate) {
         /* jshint validthis: true */
         var vm = this,
             componentSettings,
@@ -17,7 +17,7 @@
 
         vm.$onInit = function() {
             componentSettings = vm.setting.component.settings;
-            entityObject = RestApiService.getEntityObject();
+            entityObject = YiiSoftApiService.getEntityObject();
             vm.fieldName = componentSettings.name;
 
             baseController = $controller('BaseController', { $scope: $scope });

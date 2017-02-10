@@ -3,11 +3,11 @@
 
     angular
         .module('universal.editor')
-        .service('RestApiService', RestApiService);
+        .service('YiiSoftApiService', YiiSoftApiService);
 
-    RestApiService.$inject = ['$q', '$rootScope', '$http', '$location', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate', '$httpParamSerializerJQLike', '$window', '$injector'];
+    YiiSoftApiService.$inject = ['$q', '$rootScope', '$http', '$location', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate', '$httpParamSerializerJQLike', '$window', '$injector'];
 
-    function RestApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
+    function YiiSoftApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
         var self = this,
             queryTempParams,
             filterParams,
@@ -152,7 +152,7 @@
                     delete params.root;
                 }
             } else {
-                config.filterObject = FilterFieldsStorage.getFilterObject(id, filters);
+                config.filter = FilterFieldsStorage.getFilterObject(id, filters);
                 config.sortFieldName = (!!request.options && request.options.sort !== undefined) ? request.options.sort : '';
                 config.pagination = {
                     perPage: 20,

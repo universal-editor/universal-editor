@@ -5,16 +5,15 @@
         .module('universal.editor')
         .controller('UniversalEditorController',UniversalEditorController);
 
-    UniversalEditorController.$inject = ['$scope','$rootScope', '$element', '$compile', '$translate', 'moment', '$state', '$location'];
+    UniversalEditorController.$inject = ['$scope','$rootScope', '$element', '$compile', '$translate', 'moment', '$state', '$location', 'YiiSoftApiService'];
 
-    function UniversalEditorController($scope, $rootScope, $element, $compile, $translate, moment, $state, $location){
+    function UniversalEditorController($scope, $rootScope, $element, $compile, $translate, moment, $state, $location, YiiSoftApiService){
         var vm = this,
             component;
 
         vm.$onInit = function() {
 
             var ueConfig = angular.merge({}, vm.ueConfig);
-
 
             var id = 0;
             (function check(value) {

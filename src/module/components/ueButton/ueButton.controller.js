@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeButtonController', UeButtonController);
 
-    UeButtonController.$inject = ['$scope', '$element', '$state', '$location', 'EditEntityStorage', 'ModalService', '$timeout', '$controller', '$window', '$httpParamSerializerJQLike', '$translate', 'RestApiService', 'FilterFieldsStorage'];
+    UeButtonController.$inject = ['$scope', '$element', '$state', '$location', 'EditEntityStorage', 'ModalService', '$timeout', '$controller', '$window', '$httpParamSerializerJQLike', '$translate', 'YiiSoftApiService', 'FilterFieldsStorage'];
 
-    function UeButtonController($scope, $element, $state, $location, EditEntityStorage, ModalService, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, RestApiService, FilterFieldsStorage) {
+    function UeButtonController($scope, $element, $state, $location, EditEntityStorage, ModalService, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, YiiSoftApiService, FilterFieldsStorage) {
         $element.addClass('ue-button');
 
         var vm = this,
@@ -128,7 +128,7 @@
                     if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate('create', request);
                     } else if (vm.type == 'update') {
-                        RestApiService.editedEntityId = vm.entityId;
+                        YiiSoftApiService.editedEntityId = vm.entityId;
                         EditEntityStorage.editEntityUpdate('update', request);
                     }
                     break;
@@ -137,12 +137,12 @@
                         if (confirm(translation.replace('%id', vm.entityId))) {
                             request.entityId = vm.entityId;
                             request.setting = vm.setting;
-                            RestApiService.deleteItemById(request);
+                            YiiSoftApiService.deleteItemById(request);
                         }
                     });
                     break;
                 case 'presave':
-                    RestApiService.editedEntityId = vm.entityId;
+                    YiiSoftApiService.editedEntityId = vm.entityId;
                     EditEntityStorage.editEntityPresave(request);
                     break;
                 case 'open':
@@ -153,7 +153,7 @@
                     newRequest.parentField = vm.setting.parentField;
                     newRequest.headComponent = vm.setting.headComponent;
                     angular.merge(newRequest, handlers);
-                    RestApiService.loadChilds(newRequest);
+                    YiiSoftApiService.loadChilds(newRequest);
                     break;
             }
         }
@@ -164,7 +164,7 @@
                 method: vm.method
             };
             angular.merge(request, handlers);
-            RestApiService.actionRequest(request);
+            YiiSoftApiService.actionRequest(request);
         }
 
         vm.$postLink = function() {

@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeFilterController', UeFilterController);
 
-    UeFilterController.$inject = ['$scope', '$rootScope', '$element', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$compile', '$document'];
+    UeFilterController.$inject = ['$scope', '$rootScope', '$element', 'EditEntityStorage', 'YiiSoftApiService', '$timeout', 'FilterFieldsStorage', '$compile', '$document'];
 
-    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $compile, $document) {
+    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, YiiSoftApiService, $timeout, FilterFieldsStorage, $compile, $document) {
         /* jshint validthis: true */
         var vm = this,
             settings,

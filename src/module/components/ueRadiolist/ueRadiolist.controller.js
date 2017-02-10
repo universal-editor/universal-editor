@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeRadiolistController', UeRadiolistController);
 
-    UeRadiolistController.$inject = ['$scope', '$element', 'EditEntityStorage', 'RestApiService', 'FilterFieldsStorage', '$controller'];
+    UeRadiolistController.$inject = ['$scope', '$element', 'EditEntityStorage', 'YiiSoftApiService', 'FilterFieldsStorage', '$controller'];
 
-    function UeRadiolistController($scope, $element, EditEntityStorage, RestApiService, FilterFieldsStorage, $controller) {
+    function UeRadiolistController($scope, $element, EditEntityStorage, YiiSoftApiService, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
         var vm = this,
             baseController,
@@ -41,8 +41,8 @@
             if (dependValue && dependValue !== '') {
                 vm.loadingData = true;
 
-                var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
-                RestApiService
+                var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                YiiSoftApiService
                     .getUrlResource(url)
                     .then(function (response) {
                         angular.forEach(response.data.items, function (v) {

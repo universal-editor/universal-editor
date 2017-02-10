@@ -5,9 +5,9 @@
         .module('universal.editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
-    UeAutocompleteController.$inject = ['$scope', '$element', '$document', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$controller', '$translate'];
+    UeAutocompleteController.$inject = ['$scope', '$element', '$document', 'EditEntityStorage', 'YiiSoftApiService', '$timeout', 'FilterFieldsStorage', '$controller', '$translate'];
 
-    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $controller, $translate) {
+    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, YiiSoftApiService, $timeout, FilterFieldsStorage, $controller, $translate) {
         /* jshint validthis: true */
         var vm = this,
             inputTimeout,
@@ -213,8 +213,8 @@
                 urlParam.filter = {};
                 urlParam.filter[vm.fieldSearch] = "%" + searchString + "%";
 
-                var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
-                RestApiService
+                var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
+                YiiSoftApiService
                     .getUrlResource(url)
                     .then(function (response) {
                         angular.forEach(response.data.items, function (v) {
@@ -282,7 +282,7 @@
                     urlParam[vm.fieldId].push(vm.fieldValue);
                 }
 
-                RestApiService
+                YiiSoftApiService
                     .getUrlResource(componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
                     .then(function (response) {
                         angular.forEach(response.data.items, function (v) {
