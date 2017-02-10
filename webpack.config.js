@@ -68,7 +68,7 @@
                 },
                 {
                     test: /\.scss$/,
-                    loader: 'style-loader!css-loader!sass-loader',
+                    loader: 'style-loader!css-loader!sass-loader?sourceMap=0',
                     include: [
                         path.resolve(__dirname, 'src')
                     ]
