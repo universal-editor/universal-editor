@@ -68,7 +68,7 @@
                 },
                 {
                     test: /\.scss$/,
-                    loader: 'style-loader!css-loader!sass-loader',
+                    loader: 'style-loader!css-loader!sass-loader?sourceMap=0',
                     include: [
                         path.resolve(__dirname, 'src')
                     ]
@@ -106,7 +106,7 @@
         //-- SETTING FOR LOCAL SERVER
         webpackConfigTemplate.devServer = {
             host: localHost,
-            port: 5555,
+            port: 8080,
             hot: true,
             inline: true,
             open: true

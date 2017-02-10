@@ -1,9 +1,10 @@
-.ue-tab-wrapper {
-  .button-footer {
-    margin-left: 15px;
-  }
-
-}
-.clear-padding-left {
-  padding-left: 0;
+.universal-editor .ue-tab-wrapper {
+    & .button-footer {
+        margin-left: 15px;
+    }
+    & .tab-content-wrapper {
+        & .clear-padding-left {
+            padding-left: 0;
+        }
+    }
 }

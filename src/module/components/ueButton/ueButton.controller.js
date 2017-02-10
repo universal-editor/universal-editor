@@ -82,10 +82,10 @@
 
             if (state) {
                 params[pkKey] = vm.entityId;
-                if (state && !!vm.options && !!vm.options.back) {
-                    searchString.back = EditEntityStorage.getStateConfig().name;
-                }
                 searchString.back = $state.current.name;
+                if (vm.back) {
+                    delete searchString.back;
+                }
                 $state.go(state, params).then(function() {
                     $location.search(searchString);
                     $timeout(function() {
@@ -125,6 +125,9 @@
             angular.merge(request, handlers);
             switch (vm.action) {
                 case 'save':
+                    if (vm.entityId && vm.entityId !== 'new') {
+                        vm.type = 'update';
+                    }
                     if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate('create', request);
                     } else if (vm.type == 'update') {

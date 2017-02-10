@@ -31,30 +31,41 @@
             if (vm.singleValue) {
                 vm.checkBoxStyle = 'display: inline;';
                 vm.getFieldValue = getFieldValue;
+                vm.trueValue = componentSettings.trueValue;
+                vm.falseValue = componentSettings.falseValue;
+                vm.optionValues = [];
+                if (!vm.options.filter) {
+                    vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
+                }
+                var obj = {};
+                obj[vm.fieldId] = componentSettings.trueValue;
+                if (!vm.options.filter) {
+                    obj[vm.fieldSearch] = componentSettings.label;
+                } else {
+                    obj[vm.fieldSearch] = '';
+                }
+                vm.label = '';
+                vm.optionValues.push(obj);
             }
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
-                $scope.onLoadDataHandler(e, data);
                 if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
-                    if (vm.singleValue) {
-                        vm.optionValues = [];
-                        vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
-                        var obj = {};
-                        obj[vm.fieldId] = componentSettings.trueValue;
-                        if (!vm.options.filter) {
-                            obj[vm.fieldSearch] = componentSettings.label;
-                        } else {
-                            obj[vm.fieldSearch] = '';
-                        }
-                        vm.label = '';
-                        vm.optionValues.push(obj);
-                    } else {
+                    $scope.onLoadDataHandler(e, data);
+                    if (!vm.singleValue) {
                         componentSettings.$loadingPromise.then(function(optionValues) {
                             vm.optionValues = optionValues;
                             vm.equalPreviewValue();
                         }).finally(function() {
                             vm.loadingData = false;
                         });
+                    } else {
+                        var value = data[vm.fieldName];
+                        if (vm.falseValue == value) {
+                            vm.fieldValue = [vm.falseValue];
+                        }
+                        if (vm.trueValue == value) {
+                            vm.fieldValue = [vm.trueValue];
+                        }
                     }
                 }
             }));
@@ -68,16 +79,16 @@
                 var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                 RestApiService
                     .getUrlResource(url)
-                    .then(function (response) {
-                        angular.forEach(response.data.items, function (v) {
+                    .then(function(response) {
+                        angular.forEach(response.data.items, function(v) {
                             vm.optionValues.push(v);
                         });
-                    }, function (reject) {
-                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function (translation) {
+                    }, function(reject) {
+                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
                             console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
                         });
                     })
-                    .finally(function () {
+                    .finally(function() {
                         vm.loadingData = false;
                     });
             }
@@ -86,10 +97,16 @@
         function getFieldValue() {
             var field = {},
                 wrappedFieldValue;
-            if (angular.isArray(vm.fieldValue)) {
-                wrappedFieldValue = (vm.fieldValue.length == 0) ? componentSettings.falseValue : componentSettings.trueValue;
-            } else {
-                wrappedFieldValue = vm.fieldValue || componentSettings.falseValue;
+            wrappedFieldValue = vm.fieldValue;
+
+            if (vm.singleValue) {
+                wrappedFieldValue = (!vm.fieldValue || vm.fieldValue.length === 0) ? componentSettings.falseValue : componentSettings.trueValue;
+            }
+
+            if (vm.options.filter) {
+                if (vm.fieldValue === null) {
+                    wrappedFieldValue = vm.fieldValue;
+                }
             }
 
             if (vm.parentField) {

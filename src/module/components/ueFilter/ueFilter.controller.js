@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -13,7 +13,7 @@
             settings,
             fieldErrorName;
 
-        vm.$onInit = function () {
+        vm.$onInit = function() {
             var elementParent = vm.options.getParentElement().parents('.grid-toolbar');//.parent().find('.grid-filter-edit');
             var templateEditorFilter = $compile('<div class="editor-filter" data-ng-hide="!vm.visiable"><div class="editor-filter-wrapper" ng-keyup="vm.clickEnter($event)">' +
                 '<div class="editor-filter-body"><div class="filter-content-wrapper" ng-repeat="group in vm.body track by $index">' +
@@ -80,11 +80,11 @@
                     };
 
                     /** parse filter objects with operators*/
-                    fieldSettings.$parseFilter = function (model, filterValue) {
+                    fieldSettings.$parseFilter = function(model, filterValue) {
                         var componentSettings = model.setting.component.settings;
                         var parentComponentId = model.parentComponentId;
                         var output = {};
-                        angular.forEach(filterValue, function (value, key) {
+                        angular.forEach(filterValue, function(value, key) {
                             //** delete operators from keys and value property
                             if (angular.isString(value)) {
                                 value = value.replace(/^%/, '').replace(/%$/, '');
@@ -106,10 +106,19 @@
                             value = value[model.options.filterParameters.index];
                         }
                         if (field.component.settings.$fieldType === 'array' && value) {
-                            if (!angular.isString(value)) {
-                                value  = value.toString();
+                            if (model.singleValue) {
+                                if (model.falseValue == value) {
+                                    model.fieldValue = [model.falseValue];
+                                }
+                                if (model.trueValue == value) {
+                                    model.fieldValue = [model.trueValue];
+                                }
+                            } else {
+                                if (!angular.isString(value)) {
+                                    value = value.toString();
+                                }
+                                model.fieldValue = value.split(',');
                             }
-                            model.fieldValue = value.split(',');
                         } else {
                             model.fieldValue = value;
                             if (model.addToSelected && value) {
@@ -118,7 +127,7 @@
                                 model.addToSelected(null, model.fieldValue);
                             }
                         }
-                        $timeout(function () {
+                        $timeout(function() {
                             var paramName = vm.options.prefixGrid ? vm.options.prefixGrid + '-filter' : 'filter';
                             if (!FilterFieldsStorage.getFilterQueryObject(paramName)) {
                                 FilterFieldsStorage.calculate(parentComponentId, paramName);
