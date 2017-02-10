@@ -174,14 +174,16 @@
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
+            var objectBind = { action: 'list', parentComponentId: request.options.$parentComponentId};
+
             $http(options).then(function (response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind({ action: 'list', parentComponentId: request.options.$parentComponentId})(response.data);
+                    successAnswer.bind(objectBind)(response.data);
                     deferred.resolve(response.data);
                 } else {
                     var data = service.processResponse(response,
-                        successAnswer.bind({ action: 'list', parentComponentId: request.options.$parentComponentId}),
-                        failAnswer.bind({ action: 'list', parentComponentId: request.options.$parentComponentId}));
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind));
                     deferred.resolve(data);
                 }
             }).finally(function () {
@@ -245,13 +247,21 @@
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                 } else {
-                    service.processResponse(response, successAnswer, failAnswer);
+                    service.processResponse(
+                        response,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind)
+                    );
                 }
             }, function (reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     failAnswer.bind(objectBind)(reject.data);
                 } else {
-                    service.processResponse(reject, successAnswer, failAnswer);
+                    service.processResponse(
+                        reject,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind)
+                    );
                 }
                 request.options.isLoading = false;
             }).finally(function () {
@@ -291,13 +301,21 @@
                 if (angular.isDefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                 } else {
-                    service.processResponse(response, successAnswer, failAnswer);
+                    service.processResponse(
+                        response,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind)
+                    );
                 }
             }, function (reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     failAnswer.bind(objectBind)(reject.data);
                 } else {
-                    service.processResponse(reject, successAnswer, failAnswer)
+                    service.processResponse(
+                        reject,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind)
+                    );
                 }
                 request.options.isLoading = false;
             }).finally(function () {
@@ -354,13 +372,21 @@
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                 } else {
-                    service.processResponse(reject, successAnswer, failAnswer)
+                    service.processResponse(
+                        response,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind)
+                    );
                 }
             }, function (reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     failAnswer.bind(objectBind)(reject.data);
                 } else {
-                    service.processResponse(reject, successAnswer, failAnswer)
+                    service.processResponse(
+                        reject,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind)
+                    );
                 }
             }).finally(function () {
                 if (!!request.complete) {
@@ -393,13 +419,19 @@
             };
             var optionsHttp = getAjaxOptionsByTypeService(config, dataSource.standard);
 
+            var objectBind = {
+                action: 'one',
+                parentComponentId: options.$parentComponentId
+            };
+
             $http(optionsHttp).then(function (response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind({ action: 'one', parentComponentId: options.$parentComponentId})(response.data)
+                    successAnswer.bind(objectBind)(response.data);
                 } else {
-                    service.processResponse(reject,
-                        successAnswer.bind({ action: 'one', parentComponentId: options.$parentComponentId}),
-                        failAnswer.bind({ action: 'list', parentComponentId: options.$parentComponentId}))
+                    service.processResponse(response,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind)
+                    );
                 }
             }).finally(function () {
                 options.isLoading = false;
@@ -448,13 +480,19 @@
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                 } else {
-                    service.processResponse(response, successAnswer, failAnswer)
+                    service.processResponse(response,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind)
+                    );
                 }
             }, function (reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     failAnswer.bind(objectBind)(reject.data);
                 } else {
-                    service.processResponse(response, successAnswer, failAnswer)
+                    service.processResponse(reject,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind)
+                    );
                 }
             }).finally(function () {
                 if (!!request.complete) {
