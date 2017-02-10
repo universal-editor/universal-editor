@@ -49,7 +49,6 @@
             }
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
-                $scope.onLoadDataHandler(e, data);
                 if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
                     $scope.onLoadDataHandler(e, data);
                     if (!vm.singleValue) {

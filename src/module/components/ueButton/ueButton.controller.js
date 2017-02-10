@@ -83,7 +83,7 @@
             if (state) {
                 params[pkKey] = vm.entityId;
                 searchString.back = $state.current.name;
-                if(vm.back) {
+                if (vm.back) {
                     delete searchString.back;
                 }
                 $state.go(state, params).then(function() {
@@ -125,7 +125,7 @@
             angular.merge(request, handlers);
             switch (vm.action) {
                 case 'save':
-                    if(vm.entityId && vm.entityId !== 'new') {
+                    if (vm.entityId && vm.entityId !== 'new') {
                         vm.type = 'update';
                     }
                     if (vm.type == 'create') {
