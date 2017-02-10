@@ -373,31 +373,14 @@
 
             $http(options).then(function (response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    if (!!request.success) {
-                        request.success(response);
-                    }
-                    var newId = response.data[idField];
-                    var par = {};
-                    par['pk'] = newId;
-                    var searchString = $location.search();
-                    $state.go($state.current.name, par, {reload: false, notify: false}).then(function () {
-                        $location.search(searchString);
-                        $rootScope.$broadcast('editor:update_item', {
-                            $gridComponentId: request.options.$gridComponentId,
-                            value: response.data
-                        });
-                    });
-                    var data = {
-                        id: newId,
-                        $parentComponentId: request.options.$parentComponentId
-                    };
-                    if (isCreate) {
-                        $rootScope.$broadcast('editor:presave_entity_created', data);
-                        successPresaveCreateMessage();
-                    } else {
-                        successUpdateMessage();
-                        $rootScope.$broadcast('editor:presave_entity_updated', data);
-                    }
+                    successAnswer.bind({
+                        parentComponentId: request.options.$parentComponentId,
+                        gridComponentId: request.options.$gridComponentId,
+                        action: 'presave',
+                        isCreate: isCreate,
+                        request: request,
+                        idField: idField
+                    })(response.data);
                 } else {
                     service.processResponse(reject, successAnswer, failAnswer)
                 }
@@ -491,7 +474,7 @@
             }
 
             var config = {
-                action: 'update',
+                action: 'delete',
                 url: request.url || _url,
                 method: request.method || 'DELETE',
                 data: request.data,
@@ -502,41 +485,13 @@
 
             return $http(options).then(function (response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    if (!!request.success) {
-                        request.success(response);
-                    }
-                    request.options.isLoading = false;
-                    self.setQueryParams({});
-                    self.setFilterParams({});
-                    $rootScope.$broadcast('editor:entity_success_deleted');
-                    successDeleteMessage();
-                    var params = {};
-                    var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
-                    if ($location.search()[paramName]) {
-                        params[paramName] = $location.search()[paramName];
-                    }
-                    if ($location.search().back && request.useBackUrl) {
-                        state = $location.search().back;
-                    } else {
-                        state = request.state;
-                    }
-
-                    state = state || $state.current.name;
-
-                    if (!ModalService.isModalOpen()) {
-                        if (state) {
-                            $state.go(state, params).then(function () {
-                                $location.search(params);
-                                $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
-                            });
-                        } else {
-                            replaceToURL(request.href);
-                        }
-                    } else {
-                        ModalService.close();
-                    }
+                    successAnswer.bind({
+                        parentComponentId: request.options.$parentComponentId,
+                        action: 'delete',
+                        request: request
+                    })(response.data);
                 } else {
-                    service.processResponse(reject, successAnswer, failAnswer)
+                    service.processResponse(response, successAnswer, failAnswer)
                 }
             }, function (reject) {
                 if (!!request.error) {
@@ -842,22 +797,22 @@
         }
 
         function successAnswer(data) {
+            var parentComponentId = this.parentComponentId;
             switch (this.action) {
                 case 'list':
                     if (data[itemsKey].length === 0) {
                         $rootScope.$broadcast('editor:parent_empty');
                     }
-                    data.$parentComponentId = this.parentComponentId;
+                    data.$parentComponentId = parentComponentId;
                     $rootScope.$broadcast('editor:items_list', data);
                     break;
                 case 'one':
-                    data.$parentComponentId = this.parentComponentId;
+                    data.$parentComponentId = parentComponentId;
                     data.editorEntityType = 'exist';
                     $rootScope.$broadcast('editor:entity_loaded', data);
                     break;
                 case 'update':
                     var state;
-                    var parentComponentId = this.parentComponentId;
                     if (!!this.request.success) {
                         this.request.success(data);
                     }
@@ -893,7 +848,6 @@
                     }
                     break;
                 case 'create':
-                    var parentComponentId = this.parentComponentId;
                     if (!!this.request.success) {
                         this.request.success(data);
                     }
@@ -933,11 +887,96 @@
                         ModalService.close();
                     }
                     break;
+                case 'presave':
+                    var gridComponentId = this.request.options.$gridComponentId;
+                    if (!!this.request.success) {
+                        this.request.success(data);
+                    }
+                    var newId = data[this.idField];
+                    var par = {};
+                    par['pk'] = newId;
+                    var searchString = $location.search();
+                    $state.go($state.current.name, par, {reload: false, notify: false}).then(function () {
+                        $location.search(searchString);
+                        $rootScope.$broadcast('editor:update_item', {
+                            $gridComponentId: gridComponentId,
+                            value: data
+                        });
+                    });
+                    if (this.isCreate) {
+                        $rootScope.$broadcast('editor:presave_entity_created', {
+                            id: newId,
+                            $parentComponentId: parentComponentId
+                        });
+                        successPresaveCreateMessage();
+                    } else {
+                        successUpdateMessage();
+                        $rootScope.$broadcast('editor:presave_entity_updated', {
+                            id: newId,
+                            $parentComponentId: parentComponentId
+                        });
+                    }
+                    break;
+                case 'delete':
+                    if (!!this.request.success) {
+                        this.request.success(response);
+                    }
+                    this.request.options.isLoading = false;
+                    self.setQueryParams({});
+                    self.setFilterParams({});
+                    $rootScope.$broadcast('editor:entity_success_deleted');
+                    successDeleteMessage();
+                    var params = {};
+                    var paramName = this.request.options.prefixGrid ? this.request.options.prefixGrid + '-parent' : 'parent';
+                    if ($location.search()[paramName]) {
+                        params[paramName] = $location.search()[paramName];
+                    }
+                    if ($location.search().back && this.request.useBackUrl) {
+                        state = $location.search().back;
+                    } else {
+                        state = this.request.state;
+                    }
+
+                    state = state || $state.current.name;
+
+                    if (!ModalService.isModalOpen()) {
+                        if (state) {
+                            $state.go(state, params).then(function () {
+                                $location.search(params);
+                                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                            });
+                        } else {
+                            replaceToURL(this.request.href);
+                        }
+                    } else {
+                        ModalService.close();
+                    }
+                    break;
             }
         }
 
         function failAnswer() {
+            var parentComponentId = this.parentComponentId;
+            switch (this.action) {
+                case 'list':
 
+                    break;
+                case 'one':
+
+                    break;
+                case 'update':
+
+                    break;
+                case 'create':
+
+                    break;
+                case 'presave':
+
+                    break;
+                case 'delete':
+
+                    break;
+            }
         }
     }
 })();
