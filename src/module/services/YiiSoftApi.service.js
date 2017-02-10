@@ -234,36 +234,22 @@
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
+            var objectBind = {
+                action: 'create',
+                parentComponentId: request.options.$parentComponentId,
+                request: request,
+                idField: idField
+            };
+
             $http(options).then(function (response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind({
-                        action: 'create',
-                        parentComponentId: request.options.$parentComponentId,
-                        request: request,
-                        idField: idField
-                    })(response.data);
+                    successAnswer.bind(objectBind)(response.data);
                 } else {
                     service.processResponse(response, successAnswer, failAnswer);
                 }
             }, function (reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    if (!!request.error) {
-                        request.error(reject);
-                    }
-                    var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
-
-                    if (wrongFields.length > 0) {
-                        angular.forEach(wrongFields, function (err) {
-                            if (err.hasOwnProperty('field')) {
-                                $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
-                                if (err.hasOwnProperty('fields')) {
-                                    angular.forEach(err.fields, function (innerError, key) {
-                                        $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
-                                    });
-                                }
-                            }
-                        });
-                    }
+                    failAnswer.bind(objectBind)(reject.data);
                 } else {
                     service.processResponse(reject, successAnswer, failAnswer);
                 }
@@ -295,37 +281,21 @@
             };
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
-
+            var objectBind = {
+                action: 'update',
+                parentComponentId: request.options.$parentComponentId,
+                request: request,
+                idField: idField
+            };
             $http(options).then(function (response) {
                 if (angular.isDefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind({
-                        action: 'update',
-                        parentComponentId: request.options.$parentComponentId,
-                        request: request,
-                        idField: idField
-                    })(response.data);
+                    successAnswer.bind(objectBind)(response.data);
                 } else {
                     service.processResponse(response, successAnswer, failAnswer);
                 }
             }, function (reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    if (!!request.error) {
-                        request.error(reject);
-                    }
-                    var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
-
-                    if (wrongFields.length > 0) {
-                        angular.forEach(wrongFields, function (err) {
-                            if (err.hasOwnProperty('field')) {
-                                $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
-                                if (err.hasOwnProperty('fields')) {
-                                    angular.forEach(err.fields, function (innerError, key) {
-                                        $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
-                                    });
-                                }
-                            }
-                        });
-                    }
+                    failAnswer.bind(objectBind)(reject.data);
                 } else {
                     service.processResponse(reject, successAnswer, failAnswer)
                 }
@@ -371,39 +341,24 @@
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
+            var objectBind = {
+                parentComponentId: request.options.$parentComponentId,
+                gridComponentId: request.options.$gridComponentId,
+                action: 'presave',
+                isCreate: isCreate,
+                request: request,
+                idField: idField
+            };
+
             $http(options).then(function (response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind({
-                        parentComponentId: request.options.$parentComponentId,
-                        gridComponentId: request.options.$gridComponentId,
-                        action: 'presave',
-                        isCreate: isCreate,
-                        request: request,
-                        idField: idField
-                    })(response.data);
+                    successAnswer.bind(objectBind)(response.data);
                 } else {
                     service.processResponse(reject, successAnswer, failAnswer)
                 }
             }, function (reject) {
-
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    if (!!request.error) {
-                        request.error(reject);
-                    }
-                    if ((reject.status === 422 || reject.status === 400) && reject.data) {
-                        var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
-
-                        angular.forEach(wrongFields, function (err) {
-                            if (err.hasOwnProperty('field')) {
-                                $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
-                                if (err.hasOwnProperty('fields')) {
-                                    angular.forEach(err.fields, function (innerError, key) {
-                                        $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
-                                    });
-                                }
-                            }
-                        });
-                    }
+                    failAnswer.bind(objectBind)(reject.data);
                 } else {
                     service.processResponse(reject, successAnswer, failAnswer)
                 }
@@ -483,21 +438,24 @@
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
+            var objectBind = {
+                parentComponentId: request.options.$parentComponentId,
+                action: 'delete',
+                request: request
+            };
+
             return $http(options).then(function (response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind({
-                        parentComponentId: request.options.$parentComponentId,
-                        action: 'delete',
-                        request: request
-                    })(response.data);
+                    successAnswer.bind(objectBind)(response.data);
                 } else {
                     service.processResponse(response, successAnswer, failAnswer)
                 }
             }, function (reject) {
-                if (!!request.error) {
-                    request.error(reject);
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    failAnswer.bind(objectBind)(reject.data);
+                } else {
+                    service.processResponse(response, successAnswer, failAnswer)
                 }
-                request.options.isLoading = false;
             }).finally(function () {
                 if (!!request.complete) {
                     request.complete();
@@ -955,27 +913,32 @@
             }
         }
 
-        function failAnswer() {
+        function failAnswer(data) {
             var parentComponentId = this.parentComponentId;
-            switch (this.action) {
-                case 'list':
+            if (this.action == 'update' || this.action == 'create' || this.action == 'presave') {
+                if (!!this.request.error) {
+                    this.request.error(reject);
+                }
+                var wrongFields = data.hasOwnProperty('data') ? data.data : data;
 
-                    break;
-                case 'one':
-
-                    break;
-                case 'update':
-
-                    break;
-                case 'create':
-
-                    break;
-                case 'presave':
-
-                    break;
-                case 'delete':
-
-                    break;
+                if (wrongFields.length > 0) {
+                    angular.forEach(wrongFields, function (err) {
+                        if (err.hasOwnProperty('field')) {
+                            $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
+                            if (err.hasOwnProperty('fields')) {
+                                angular.forEach(err.fields, function (innerError, key) {
+                                    $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+            if (this.action == 'delete') {
+                if (!!this.request.error) {
+                    this.request.error(reject);
+                }
+                this.request.options.isLoading = false;
             }
         }
     }
