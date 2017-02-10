@@ -3,7 +3,7 @@
 
     angular
         .module('ModuleWithService', [])
-        .service('JSONAPITypeService', JSONAPITypeService);
+        .service('JSONAPIApiTypeService', JSONAPITypeService);
 
     function JSONAPITypeService() {
         var self = this;
@@ -50,6 +50,8 @@
             if (config.action == 'update') {
                 data = {};
                 data.attributes = config.data;
+                data.id = config.data.id;
+                delete config.data.id;
             }
             return { data: data };
         };

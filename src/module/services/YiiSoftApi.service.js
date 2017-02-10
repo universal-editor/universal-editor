@@ -281,7 +281,7 @@
 
             var _url = dataSource.url + '/' + self.editedEntityId;
             var idField = 'id';
-
+            request.data.id = self.editedEntityId;
             var config = {
                 action: 'update',
                 url: request.url || _url,
