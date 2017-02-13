@@ -23,8 +23,8 @@
 40%{top:3px;height:6px}}@keyframes load1{0%,80%,100%{top:0;height:12px}
 40%{top:3px;height:6px}}.loader-search-wrapper{display:inline-block;width:30px;margin-left:10px;position:relative;height:12px}
 .minicolors input{height:30px}.minicolors input.wrong{border:1px solid red;height:32px}
-.minicolors{position:relative}.minicolors-swatch{z-index:50}.editor-textarea{width:100%;resize:vertical}
-.timepicker.wrong{border:1px solid red}.filter-date-wrapper .filter-start,.filter-date-wrapper .filter-end,.filter-date-wrapper .divider{display:inline-block}
+.minicolors{position:relative}.minicolors-swatch{z-index:50}.timepicker.wrong{border:1px solid red}
+.editor-textarea{width:100%;resize:vertical}.filter-date-wrapper .filter-start,.filter-date-wrapper .filter-end,.filter-date-wrapper .divider{display:inline-block}
 .filter-date-wrapper .divider{padding:0 5px}.editor-date,.editor-time{display:inline-block}
 .editor-date input{width:85px}.editor-time input{width:70px}.filter-datetime-wrapper .filter-start,.filter-datetime-wrapper .filter-end,.filter-datetime-wrapper .divider{display:inline-block}
 .filter-datetime-wrapper .divider{padding:0 5px}.editor-datetime,.editor-time{display:inline-block}

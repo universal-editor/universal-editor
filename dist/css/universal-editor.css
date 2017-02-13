@@ -187,12 +187,12 @@
 .minicolors-swatch {
   z-index: 50; }
 
+.timepicker.wrong {
+  border: 1px solid red; }
+
 .editor-textarea {
   width: 100%;
   resize: vertical; }
-
-.timepicker.wrong {
-  border: 1px solid red; }
 
 .filter-date-wrapper .filter-start,
 .filter-date-wrapper .filter-end,
