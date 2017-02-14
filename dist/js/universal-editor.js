@@ -1266,84 +1266,6 @@ function UniversalEditor(id, config) {
 
     angular
         .module('universal.editor')
-        .controller('EditorButtonCreateController',EditorButtonCreateController);
-
-    EditorButtonCreateController.$inject = ['$scope','$element','EditEntityStorage','$location','$state'];
-
-    function EditorButtonCreateController($scope,$element,EditEntityStorage,$location,$state){
-        var vm = this;
-
-        vm.label = $scope.buttonLabel;
-
-        $element.bind("click", function () {
-            if($location.search().hasOwnProperty("id")){
-                $location.search("id",null);
-            }
-
-            var parentId = $location.search().parent !== '' ? $location.search().parent : undefined;
-
-            var newPageType = $scope.type || $state.params.type;
-            var newPageBack = $state.params.type || $scope.type;
-
-            $state.go('editor.type.new',{
-                parent: parentId,
-                type: newPageType,
-                back: newPageBack
-            });
-        });
-    }
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('editorButtonCreate',editorButtonCreate);
-
-    editorButtonCreate.$inject = ['$templateCache','RestApiService'];
-
-    function editorButtonCreate($templateCache,RestApiService){
-        return {
-            restrict : "A",
-            replace : true,
-            template : $templateCache.get('module/directives/editorButtonCreate/editorButtonCreate.html'),
-            scope : {
-                buttonLabel : "@",
-                buttonParams : "@",
-                type : '='
-            },
-            controller : 'EditorButtonCreateController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorButtonCreate/editorButtonCreate.html',
-    '\n' +
-    '<button class="btn btn-lg btn-success">{{vm.label}}</button>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
         .controller('EditorButtonAddController',EditorButtonAddController);
 
     EditorButtonAddController.$inject = ['$rootScope','$scope','$element','EditEntityStorage','RestApiService'];
@@ -1419,6 +1341,84 @@ module.run(['$templateCache', function($templateCache) {
     '        <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
     '    </div>\n' +
     '</button>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .controller('EditorButtonCreateController',EditorButtonCreateController);
+
+    EditorButtonCreateController.$inject = ['$scope','$element','EditEntityStorage','$location','$state'];
+
+    function EditorButtonCreateController($scope,$element,EditEntityStorage,$location,$state){
+        var vm = this;
+
+        vm.label = $scope.buttonLabel;
+
+        $element.bind("click", function () {
+            if($location.search().hasOwnProperty("id")){
+                $location.search("id",null);
+            }
+
+            var parentId = $location.search().parent !== '' ? $location.search().parent : undefined;
+
+            var newPageType = $scope.type || $state.params.type;
+            var newPageBack = $state.params.type || $scope.type;
+
+            $state.go('editor.type.new',{
+                parent: parentId,
+                type: newPageType,
+                back: newPageBack
+            });
+        });
+    }
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('editorButtonCreate',editorButtonCreate);
+
+    editorButtonCreate.$inject = ['$templateCache','RestApiService'];
+
+    function editorButtonCreate($templateCache,RestApiService){
+        return {
+            restrict : "A",
+            replace : true,
+            template : $templateCache.get('module/directives/editorButtonCreate/editorButtonCreate.html'),
+            scope : {
+                buttonLabel : "@",
+                buttonParams : "@",
+                type : '='
+            },
+            controller : 'EditorButtonCreateController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorButtonCreate/editorButtonCreate.html',
+    '\n' +
+    '<button class="btn btn-lg btn-success">{{vm.label}}</button>');
 }]);
 })();
 
@@ -1820,6 +1820,91 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
+        .controller('EditorButtonTargetBlankController',EditorButtonTargetBlankController);
+
+    EditorButtonTargetBlankController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$http'];
+
+    function EditorButtonTargetBlankController($rootScope, $scope, $element, RestApiService, configData, $http) {
+        var vm = this;
+        var params;
+        var request;
+        try {
+            request = JSON.parse($scope.buttonRequest);
+        } catch(e){
+
+        }
+        vm.class = $scope.buttonClass;
+        vm.label = $scope.buttonLabel;
+        $element.bind("click", function () {
+            var url = request.url;
+            for (var key in $scope.itemValue) {
+                if ($scope.itemValue[key]) {
+                    url = url.replace(":" + key, $scope.itemValue[key]);
+                }
+            }
+            window.open(url, '_blank');
+            
+        }); 
+    }
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('editorButtonTargetBlank',editorButtonTargetBlank);
+
+    editorButtonTargetBlank.$inject = ['$templateCache','RestApiService','configData'];
+
+    function editorButtonTargetBlank($templateCache,RestApiService,configData){
+        return {
+            restrict : "A",
+            replace : true,
+            template : $templateCache.get('module/directives/editorButtonTargetBlank/editorButtonTargetBlank.html'),
+            scope : {
+                itemValue : "=",
+                buttonLabel : "@",
+                buttonRequest : "@",
+                index: "@",
+                buttonClass: "@"
+            },
+            controller : 'EditorButtonTargetBlankController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            scope.editor = RestApiService.getEntityType();
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorButtonTargetBlank/editorButtonTargetBlank.html',
+    '\n' +
+    '<div>\n' +
+    '    <button data-ng-if="vm.class == \'editor\'" class="btn btn-md btn-success">{{vm.label}}</button>\n' +
+    '    <button data-ng-if="vm.class == \'header\'" class="btn btn-lg btn-success">{{vm.label}}</button>\n' +
+    '    <button data-ng-if="vm.class == \'context\'" class="editor-action-button">{{vm.label}}</button>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
         .controller('EditorButtonPresaveController',EditorButtonPresaveController);
 
     EditorButtonPresaveController.$inject = ['$scope','$element','$rootScope','EditEntityStorage','RestApiService'];
@@ -1906,180 +1991,6 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorButtonPresave/editorButtonPresave.html',
-    '\n' +
-    '<button data-ng-class="{ processing : vm.processing}" class="btn btn-md btn-success">{{vm.label}}\n' +
-    '    <div data-ng-show="vm.processing" class="loader-search-wrapper">\n' +
-    '        <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
-    '    </div>\n' +
-    '</button>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('EditorButtonTargetBlankController',EditorButtonTargetBlankController);
-
-    EditorButtonTargetBlankController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$http'];
-
-    function EditorButtonTargetBlankController($rootScope, $scope, $element, RestApiService, configData, $http) {
-        var vm = this;
-        var params;
-        var request;
-        try {
-            request = JSON.parse($scope.buttonRequest);
-        } catch(e){
-
-        }
-        vm.class = $scope.buttonClass;
-        vm.label = $scope.buttonLabel;
-        $element.bind("click", function () {
-            var url = request.url;
-            for (var key in $scope.itemValue) {
-                if ($scope.itemValue[key]) {
-                    url = url.replace(":" + key, $scope.itemValue[key]);
-                }
-            }
-            window.open(url, '_blank');
-            
-        }); 
-    }
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('editorButtonTargetBlank',editorButtonTargetBlank);
-
-    editorButtonTargetBlank.$inject = ['$templateCache','RestApiService','configData'];
-
-    function editorButtonTargetBlank($templateCache,RestApiService,configData){
-        return {
-            restrict : "A",
-            replace : true,
-            template : $templateCache.get('module/directives/editorButtonTargetBlank/editorButtonTargetBlank.html'),
-            scope : {
-                itemValue : "=",
-                buttonLabel : "@",
-                buttonRequest : "@",
-                index: "@",
-                buttonClass: "@"
-            },
-            controller : 'EditorButtonTargetBlankController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            scope.editor = RestApiService.getEntityType();
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorButtonTargetBlank/editorButtonTargetBlank.html',
-    '\n' +
-    '<div>\n' +
-    '    <button data-ng-if="vm.class == \'editor\'" class="btn btn-md btn-success">{{vm.label}}</button>\n' +
-    '    <button data-ng-if="vm.class == \'header\'" class="btn btn-lg btn-success">{{vm.label}}</button>\n' +
-    '    <button data-ng-if="vm.class == \'context\'" class="editor-action-button">{{vm.label}}</button>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('EditorButtonUpdateController',EditorButtonUpdateController);
-
-    EditorButtonUpdateController.$inject = ['$scope','$element','$rootScope','EditEntityStorage','RestApiService'];
-
-    function EditorButtonUpdateController($scope,$element,$rootScope,EditEntityStorage,RestApiService){
-        var vm = this;
-
-        vm.label = $scope.buttonLabel;
-        vm.entityId = $scope.entityId;
-        vm.processing = RestApiService.isProcessing;
-
-        var watchEntityId = $scope.$watch('entityId', function (entityId) {
-            vm.entityId = entityId;
-        });
-
-        var watchRest = $scope.$watch(function () {
-            return RestApiService.isProcessing;
-        }, function (val) {
-            vm.processing = val;
-        });
-
-        $scope.$on('$destroy', function () {
-            watchEntityId();
-            watchRest();
-        });
-
-        $element.bind("click", function () {
-            if(vm.processing){
-                return;
-            }
-            RestApiService.editedEntityId = vm.entityId;
-            EditEntityStorage.editEntityUpdate("update");
-        });
-    }
-})();
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('editorButtonUpdate',editorButtonUpdate);
-
-    editorButtonUpdate.$inject = ['$templateCache','RestApiService'];
-
-    function editorButtonUpdate($templateCache,RestApiService){
-        return {
-            restrict : "A",
-            replace : true,
-            template : $templateCache.get('module/directives/editorButtonUpdate/editorButtonUpdate.html'),
-            scope : {
-                entityId : "@",
-                buttonLabel : "@",
-                buttonParams : "@"
-            },
-            controller : 'EditorButtonUpdateController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            scope.editor = RestApiService.getEntityType();
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorButtonUpdate/editorButtonUpdate.html',
     '\n' +
     '<button data-ng-class="{ processing : vm.processing}" class="btn btn-md btn-success">{{vm.label}}\n' +
     '    <div data-ng-show="vm.processing" class="loader-search-wrapper">\n' +
@@ -2253,6 +2164,95 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '    </div>\n' +
     '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .controller('EditorButtonUpdateController',EditorButtonUpdateController);
+
+    EditorButtonUpdateController.$inject = ['$scope','$element','$rootScope','EditEntityStorage','RestApiService'];
+
+    function EditorButtonUpdateController($scope,$element,$rootScope,EditEntityStorage,RestApiService){
+        var vm = this;
+
+        vm.label = $scope.buttonLabel;
+        vm.entityId = $scope.entityId;
+        vm.processing = RestApiService.isProcessing;
+
+        var watchEntityId = $scope.$watch('entityId', function (entityId) {
+            vm.entityId = entityId;
+        });
+
+        var watchRest = $scope.$watch(function () {
+            return RestApiService.isProcessing;
+        }, function (val) {
+            vm.processing = val;
+        });
+
+        $scope.$on('$destroy', function () {
+            watchEntityId();
+            watchRest();
+        });
+
+        $element.bind("click", function () {
+            if(vm.processing){
+                return;
+            }
+            RestApiService.editedEntityId = vm.entityId;
+            EditEntityStorage.editEntityUpdate("update");
+        });
+    }
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('editorButtonUpdate',editorButtonUpdate);
+
+    editorButtonUpdate.$inject = ['$templateCache','RestApiService'];
+
+    function editorButtonUpdate($templateCache,RestApiService){
+        return {
+            restrict : "A",
+            replace : true,
+            template : $templateCache.get('module/directives/editorButtonUpdate/editorButtonUpdate.html'),
+            scope : {
+                entityId : "@",
+                buttonLabel : "@",
+                buttonParams : "@"
+            },
+            controller : 'EditorButtonUpdateController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            scope.editor = RestApiService.getEntityType();
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorButtonUpdate/editorButtonUpdate.html',
+    '\n' +
+    '<button data-ng-class="{ processing : vm.processing}" class="btn btn-md btn-success">{{vm.label}}\n' +
+    '    <div data-ng-show="vm.processing" class="loader-search-wrapper">\n' +
+    '        <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
+    '    </div>\n' +
+    '</button>');
 }]);
 })();
 
@@ -3503,281 +3503,6 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
-        .controller('EditorFieldDatetimeController', EditorFieldDatetimeController);
-
-    EditorFieldDatetimeController.$inject = ['$scope', 'EditEntityStorage', 'moment', 'ArrayFieldStorage'];
-
-    function EditorFieldDatetimeController($scope, EditEntityStorage, moment, ArrayFieldStorage) {
-        /* jshint validthis: true */
-        var vm = this;
-        var fieldErrorName;
-
-        if ($scope.parentField) {
-            if ($scope.parentFieldIndex) {
-                fieldErrorName = $scope.parentField + "_" + $scope.parentFieldIndex + "_" + $scope.fieldName;
-            } else {
-                fieldErrorName = $scope.parentField + "_" + $scope.fieldName;
-            }
-        } else {
-            fieldErrorName = $scope.fieldName;
-        }
-
-        vm.fieldName = $scope.field.name;
-        vm.fieldValue = "";
-        vm.readonly = $scope.field.readonly || false;
-        $scope.$parent.vm.error = [];
-        vm.parentFieldIndex = $scope.parentFieldIndex || false;
-        vm.multiname = $scope.field.multiname || "value";
-
-        if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
-            vm.multiple = true;
-            vm.fieldValue = [];
-        } else {
-            vm.multiple = false;
-            vm.fieldValue = moment.utc();
-        }
-
-        if (vm.parentFieldIndex) {
-            if (vm.multiple) {
-                vm.fieldValue = [];
-                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
-                    vm.fieldValue.push(item[vm.multiname]);
-                });
-            } else {
-                vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name) || vm.fieldValue;
-            }
-        }
-
-        EditEntityStorage.addFieldController(this);
-
-        this.getFieldValue = function () {
-
-            var field = {};
-
-            var wrappedFieldValue;
-
-            if (vm.multiple && vm.multiname) {
-                wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
-                    if (!valueItem || valueItem === "" || !moment.isMoment(valueItem)) {
-                        return;
-                    }
-                    var tempItem = {};
-                    tempItem[vm.multiname] = moment.utc(valueItem).format('YYYY-MM-DD HH:mm:ss');
-                    wrappedFieldValue.push(tempItem);
-                });
-            } else {
-                if (vm.fieldValue === undefined || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
-                    wrappedFieldValue = "";
-                } else {
-                    wrappedFieldValue = moment.utc(vm.fieldValue).format('YYYY-MM-DD HH:mm:ss');
-                }
-            }
-
-            if ($scope.parentField) {
-                if (vm.parentFieldIndex) {
-                    field[$scope.parentField] = [];
-                    field[$scope.parentField][vm.parentFieldIndex] = {};
-                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
-                } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
-                }
-
-            } else {
-                field[vm.fieldName] = wrappedFieldValue;
-            }
-
-            return field;
-        };
-
-        this.getInitialValue = function () {
-
-            var field = {};
-
-            if ($scope.parentField) {
-                if (vm.multiple) {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = [];
-                } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = moment.utc();
-                }
-            } else {
-                if (vm.multiple) {
-                    field[vm.fieldName] = [];
-                } else {
-                    field[vm.fieldName] = moment.utc();
-                }
-            }
-
-            return field;
-        };
-
-        vm.addItem = function () {
-            vm.fieldValue.push(moment.utc());
-        };
-
-        vm.removeItem = function (index) {
-            angular.forEach(vm.fieldValue, function (value, key) {
-                if (key == index) {
-                    vm.fieldValue.splice(index, 1);
-                }
-            });
-        };
-
-        function clear() {
-            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
-        }
-
-        $scope.$on('editor:entity_loaded', function (event, data) {
-            //-- functional for required fields
-            if ($scope.field.requiredField) {
-                $scope.$watch(function () {
-                    var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
-                    var result = false;
-                    var endRecursion = false;
-                    (function (value) {
-                        var keys = Object.keys(value);
-                        for (var i = keys.length; i--;) {
-                            var propValue = value[keys[i]];
-                            if (propValue !== null && propValue !== undefined && propValue !== "") {
-                                if (angular.isObject(propValue) && !endRecursion) {
-                                    arguments.callee(propValue);
-                                }
-                                result = true;
-                                endRecursion = true;
-                            }
-                        }
-                    })(f_value);
-                    return result;
-                }, function (value) {
-                    if (!value) {
-                        clear();
-                        vm.readonly = true;
-                    } else {
-                        vm.readonly = $scope.field.readonly || false;
-                    }
-                }, true);
-            }
-            if (data.editorEntityType === "new") {
-                var defaultValue = moment().utc();
-                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue).isValid()){
-                    defaultValue = moment($scope.field.defaultValue, 'YYYY-MM-DD HH:mm').utc();
-                }
-                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
-                return;
-            }
-
-            if (!$scope.parentField) {
-                if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.field.name] !== null ? moment.utc(data[$scope.field.name]) : "";
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (timeItem) {
-                        vm.fieldValue.push(moment.utc(timeItem[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
-                    });
-                }
-            } else {
-                if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.parentField][$scope.field.name] !== null ? moment.utc(data[$scope.parentField][$scope.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (timeItem) {
-                        vm.fieldValue.push(moment.utc(timeItem[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
-                    });
-                }
-            }
-        });
-
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
-            }
-        });
-
-        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
-            if (angular.isArray(data)) {
-                angular.forEach(data, function (error) {
-                    if ($scope.$parent.vm.error.indexOf(error) < 0) {
-                        $scope.$parent.vm.error.push(error);
-                    }
-                });
-            } else {
-                if ($scope.$parent.vm.error.indexOf(data) < 0) {
-                    $scope.$parent.vm.error.push(data);
-                }
-            }
-        });
-
-        $scope.$watch(function () {
-            return vm.fieldValue;
-        }, function () {
-            $scope.$parent.vm.error = [];
-        }, true);
-    }
-})();
-(function () {
-    'use strict';
-
-    /**
-     * @desc Datetime-type field.
-     * @example <div editor-field-datetime=""></div>
-     */
-    angular
-        .module('universal.editor')
-        .directive('editorFieldDatetime',editorFieldDatetime);
-
-    editorFieldDatetime.$inject = ['$templateCache'];
-
-    function editorFieldDatetime($templateCache){
-        return {
-            restrict : 'A',
-            replace : true,
-            scope : true,
-            template : $templateCache.get('module/directives/editorFieldDatetime/editorFieldDatetime.html'),
-            controller: 'EditorFieldDatetimeController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorFieldDatetime/editorFieldDatetime.html',
-    '\n' +
-    '<div>\n' +
-    '    <div data-ng-if="vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-datepicker-wrapper input-group">\n' +
-    '            <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue[$index]" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/><span class="input-group-btn">\n' +
-    '                <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
-    '        </div>\n' +
-    '        <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
-    '    </div>\n' +
-    '    <div data-ng-if="!vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
-    '    </div>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
         .controller('EditorFieldDateController', EditorFieldDateController);
 
     EditorFieldDateController.$inject = ['$scope', 'EditEntityStorage', 'moment', 'ArrayFieldStorage'];
@@ -4068,6 +3793,281 @@ module.run(['$templateCache', function($templateCache) {
     '    </div>\n' +
     '    <div data-ng-if="!vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
     '        <input data-date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-format="DD.MM.YYYY" data-max-view="year" data-min-view="date" data-view="date" class="form-control input-sm"/>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .controller('EditorFieldDatetimeController', EditorFieldDatetimeController);
+
+    EditorFieldDatetimeController.$inject = ['$scope', 'EditEntityStorage', 'moment', 'ArrayFieldStorage'];
+
+    function EditorFieldDatetimeController($scope, EditEntityStorage, moment, ArrayFieldStorage) {
+        /* jshint validthis: true */
+        var vm = this;
+        var fieldErrorName;
+
+        if ($scope.parentField) {
+            if ($scope.parentFieldIndex) {
+                fieldErrorName = $scope.parentField + "_" + $scope.parentFieldIndex + "_" + $scope.fieldName;
+            } else {
+                fieldErrorName = $scope.parentField + "_" + $scope.fieldName;
+            }
+        } else {
+            fieldErrorName = $scope.fieldName;
+        }
+
+        vm.fieldName = $scope.field.name;
+        vm.fieldValue = "";
+        vm.readonly = $scope.field.readonly || false;
+        $scope.$parent.vm.error = [];
+        vm.parentFieldIndex = $scope.parentFieldIndex || false;
+        vm.multiname = $scope.field.multiname || "value";
+
+        if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
+            vm.multiple = true;
+            vm.fieldValue = [];
+        } else {
+            vm.multiple = false;
+            vm.fieldValue = moment.utc();
+        }
+
+        if (vm.parentFieldIndex) {
+            if (vm.multiple) {
+                vm.fieldValue = [];
+                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
+                    vm.fieldValue.push(item[vm.multiname]);
+                });
+            } else {
+                vm.fieldValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name) || vm.fieldValue;
+            }
+        }
+
+        EditEntityStorage.addFieldController(this);
+
+        this.getFieldValue = function () {
+
+            var field = {};
+
+            var wrappedFieldValue;
+
+            if (vm.multiple && vm.multiname) {
+                wrappedFieldValue = [];
+                angular.forEach(vm.fieldValue, function (valueItem) {
+                    if (!valueItem || valueItem === "" || !moment.isMoment(valueItem)) {
+                        return;
+                    }
+                    var tempItem = {};
+                    tempItem[vm.multiname] = moment.utc(valueItem).format('YYYY-MM-DD HH:mm:ss');
+                    wrappedFieldValue.push(tempItem);
+                });
+            } else {
+                if (vm.fieldValue === undefined || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
+                    wrappedFieldValue = "";
+                } else {
+                    wrappedFieldValue = moment.utc(vm.fieldValue).format('YYYY-MM-DD HH:mm:ss');
+                }
+            }
+
+            if ($scope.parentField) {
+                if (vm.parentFieldIndex) {
+                    field[$scope.parentField] = [];
+                    field[$scope.parentField][vm.parentFieldIndex] = {};
+                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
+                } else {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
+                }
+
+            } else {
+                field[vm.fieldName] = wrappedFieldValue;
+            }
+
+            return field;
+        };
+
+        this.getInitialValue = function () {
+
+            var field = {};
+
+            if ($scope.parentField) {
+                if (vm.multiple) {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = [];
+                } else {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = moment.utc();
+                }
+            } else {
+                if (vm.multiple) {
+                    field[vm.fieldName] = [];
+                } else {
+                    field[vm.fieldName] = moment.utc();
+                }
+            }
+
+            return field;
+        };
+
+        vm.addItem = function () {
+            vm.fieldValue.push(moment.utc());
+        };
+
+        vm.removeItem = function (index) {
+            angular.forEach(vm.fieldValue, function (value, key) {
+                if (key == index) {
+                    vm.fieldValue.splice(index, 1);
+                }
+            });
+        };
+
+        function clear() {
+            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
+        }
+
+        $scope.$on('editor:entity_loaded', function (event, data) {
+            //-- functional for required fields
+            if ($scope.field.requiredField) {
+                $scope.$watch(function () {
+                    var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
+                    var result = false;
+                    var endRecursion = false;
+                    (function (value) {
+                        var keys = Object.keys(value);
+                        for (var i = keys.length; i--;) {
+                            var propValue = value[keys[i]];
+                            if (propValue !== null && propValue !== undefined && propValue !== "") {
+                                if (angular.isObject(propValue) && !endRecursion) {
+                                    arguments.callee(propValue);
+                                }
+                                result = true;
+                                endRecursion = true;
+                            }
+                        }
+                    })(f_value);
+                    return result;
+                }, function (value) {
+                    if (!value) {
+                        clear();
+                        vm.readonly = true;
+                    } else {
+                        vm.readonly = $scope.field.readonly || false;
+                    }
+                }, true);
+            }
+            if (data.editorEntityType === "new") {
+                var defaultValue = moment().utc();
+                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue).isValid()){
+                    defaultValue = moment($scope.field.defaultValue, 'YYYY-MM-DD HH:mm').utc();
+                }
+                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
+                return;
+            }
+
+            if (!$scope.parentField) {
+                if (!vm.multiple) {
+                    vm.fieldValue = data[$scope.field.name] !== null ? moment.utc(data[$scope.field.name]) : "";
+                } else {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.field.name], function (timeItem) {
+                        vm.fieldValue.push(moment.utc(timeItem[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
+                    });
+                }
+            } else {
+                if (!vm.multiple) {
+                    vm.fieldValue = data[$scope.parentField][$scope.field.name] !== null ? moment.utc(data[$scope.parentField][$scope.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
+                } else {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.parentField][$scope.field.name], function (timeItem) {
+                        vm.fieldValue.push(moment.utc(timeItem[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
+                    });
+                }
+            }
+        });
+
+        $scope.$on('$destroy', function () {
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
+            }
+        });
+
+        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
+            if (angular.isArray(data)) {
+                angular.forEach(data, function (error) {
+                    if ($scope.$parent.vm.error.indexOf(error) < 0) {
+                        $scope.$parent.vm.error.push(error);
+                    }
+                });
+            } else {
+                if ($scope.$parent.vm.error.indexOf(data) < 0) {
+                    $scope.$parent.vm.error.push(data);
+                }
+            }
+        });
+
+        $scope.$watch(function () {
+            return vm.fieldValue;
+        }, function () {
+            $scope.$parent.vm.error = [];
+        }, true);
+    }
+})();
+(function () {
+    'use strict';
+
+    /**
+     * @desc Datetime-type field.
+     * @example <div editor-field-datetime=""></div>
+     */
+    angular
+        .module('universal.editor')
+        .directive('editorFieldDatetime',editorFieldDatetime);
+
+    editorFieldDatetime.$inject = ['$templateCache'];
+
+    function editorFieldDatetime($templateCache){
+        return {
+            restrict : 'A',
+            replace : true,
+            scope : true,
+            template : $templateCache.get('module/directives/editorFieldDatetime/editorFieldDatetime.html'),
+            controller: 'EditorFieldDatetimeController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorFieldDatetime/editorFieldDatetime.html',
+    '\n' +
+    '<div>\n' +
+    '    <div data-ng-if="vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '        <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-datepicker-wrapper input-group">\n' +
+    '            <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue[$index]" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/><span class="input-group-btn">\n' +
+    '                <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
+    '        </div>\n' +
+    '        <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
+    '    </div>\n' +
+    '    <div data-ng-if="!vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '        <input date-time="" name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" ng-model="vm.fieldValue" view="date" timezone="UTC" format="YYYY-MM-DD HH:mm:ss" class="form-control input-sm"/>\n' +
     '    </div>\n' +
     '</div>');
 }]);
@@ -6529,6 +6529,309 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
+        .controller('EditorFieldTimeController', EditorFieldTimeController);
+
+    EditorFieldTimeController.$inject = ['$scope', 'EditEntityStorage', '$element', 'moment', 'ArrayFieldStorage'];
+
+    function EditorFieldTimeController($scope, EditEntityStorage, $element, moment, ArrayFieldStorage) {
+        /* jshint validthis: true */
+        var vm = this;
+        var regExpPattern = /^([01]\d|2[0-3]):([0-5]\d)$/i;
+        var fieldErrorName;
+
+        if ($scope.parentField) {
+            if ($scope.parentFieldIndex) {
+                fieldErrorName = $scope.parentField + "_" + $scope.parentFieldIndex + "_" + $scope.fieldName;
+            } else {
+                fieldErrorName = $scope.parentField + "_" + $scope.fieldName;
+            }
+        } else {
+            fieldErrorName = $scope.fieldName;
+        }
+
+        vm.fieldName = $scope.field.name;
+        vm.fieldValue = "";
+        vm.readonly = $scope.field.readonly || false;
+        vm.sourceTime = moment();
+        $scope.$parent.vm.error = [];
+        vm.parentFieldIndex = $scope.parentFieldIndex || false;
+
+        if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
+            vm.multiple = true;
+            vm.fieldValue = [];
+            if ($scope.field.multiname || angular.isString($scope.field.multiname)) {
+                vm.multiname = ('' + $scope.field.multiname) || "value";
+            }
+        } else {
+            vm.multiple = false;
+            vm.fieldValue = "";
+        }
+
+        if (vm.parentFieldIndex) {
+            if (vm.multiple) {
+                vm.fieldValue = [];
+                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
+                    if (vm.multiname) {
+                        vm.fieldValue.push(item[vm.multiname] ? moment(item[vm.multiname], 'YYYY-MM-DD HH:mm:ss') : "");
+                    } else {
+                        vm.fieldValue.push(item ? moment(item, 'YYYY-MM-DD HH:mm:ss') : "");
+                    }
+                });
+            } else {
+                var timeValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
+                vm.fieldValue = timeValue ? moment(timeValue, 'YYYY-MM-DD HH:mm:ss') : vm.fieldValue;
+            }
+        }
+
+        EditEntityStorage.addFieldController(this);
+
+        this.getFieldValue = function () {
+
+            var field = {};
+            var wrappedFieldValue;
+
+            if (vm.multiname) {
+                wrappedFieldValue = [];
+                angular.forEach(vm.fieldValue, function (valueItem) {
+                    if (!valueItem || valueItem === "" || !moment.isMoment(valueItem)) {
+                        return;
+                    }
+                    var tempItem = {};
+                    tempItem[vm.multiname] = moment(valueItem).format('YYYY-MM-DD HH:mm:ss');
+                    wrappedFieldValue.push(tempItem);
+                });
+            } else if (vm.multiple) {
+                wrappedFieldValue = [];
+                angular.forEach(vm.fieldValue, function (valueItem) {
+                    wrappedFieldValue.push(moment(valueItem).format('YYYY-MM-DD HH:mm:ss'));
+                });
+            } else {
+                if (!vm.fieldValue || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
+                    wrappedFieldValue = "";
+                } else {
+                    wrappedFieldValue = moment(vm.fieldValue).format('YYYY-MM-DD HH:mm:ss');
+                }
+            }
+
+            if ($scope.parentField) {
+                if (vm.parentFieldIndex) {
+                    field[$scope.parentField] = [];
+                    field[$scope.parentField][vm.parentFieldIndex] = {};
+                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
+                } else {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
+                }
+            } else {
+                field[vm.fieldName] = wrappedFieldValue;
+            }
+
+            return field;
+        };
+
+        this.getInitialValue = function () {
+
+            var field = {};
+
+            if ($scope.parentField) {
+                if (vm.multiple) {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = [];
+                } else {
+                    field[$scope.parentField] = {};
+                    field[$scope.parentField][vm.fieldName] = moment();
+                }
+            } else {
+                if (vm.multiple) {
+                    field[vm.fieldName] = [];
+                } else {
+                    field[vm.fieldName] = moment();
+                }
+            }
+
+            return field;
+        };
+
+        vm.addItem = function () {
+            vm.fieldValue.push(moment());
+        };
+
+        vm.removeItem = function (index) {
+            angular.forEach(vm.fieldValue, function (value, key) {
+                if (key == index) {
+                    vm.fieldValue.splice(index, 1);
+                }
+            });
+        };
+
+        function clear() {
+            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
+        }
+
+        $scope.$on('editor:entity_loaded', function (event, data) {
+
+            //-- functional for required fields
+            if ($scope.field.requiredField) {
+                $scope.$watch(function () {
+                    var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
+                    var result = false;
+                    var endRecursion = false;
+                    (function (value) {
+                        var keys = Object.keys(value);
+                        for (var i = keys.length; i--;) {
+                            var propValue = value[keys[i]];
+                            if (propValue !== null && propValue !== undefined && propValue !== "") {
+                                if (angular.isObject(propValue) && !endRecursion) {
+                                    arguments.callee(propValue);
+                                }
+                                result = true;
+                                endRecursion = true;
+                            }
+                        }
+                    })(f_value);
+                    return result;
+                }, function (value) {
+                    if (!value) {
+                        clear();
+                        vm.readonly = true;
+                    } else {
+                        vm.readonly = $scope.field.readonly || false;
+                    }
+                }, true);
+            }
+
+
+            if (data.editorEntityType === "new") {
+                var defaultValue = moment();
+                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue, 'HH:mm').isValid()){
+                    defaultValue = moment($scope.field.defaultValue, 'HH:mm');
+                }
+                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
+                return;
+            }
+
+            if (!$scope.parentField) {
+                if (!vm.multiple) {
+                    vm.fieldValue = data[$scope.field.name] ?
+                        moment(data[$scope.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
+                } else if (vm.multiname) {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.field.name], function (item) {
+                        vm.fieldValue.push(moment(item[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
+                    });
+                } else {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.field.name], function (item) {
+                        vm.fieldValue.push(moment(item, 'YYYY-MM-DD HH:mm:ss'));
+                    });
+                }
+            } else {
+                if (!vm.multiple) {
+                    vm.fieldValue = data[$scope.parentField][$scope.field.name] ?
+                        moment(data[$scope.parentField][$scope.field.name], 'YYYY-MM-DD HH:mm:ss') :
+                        "";
+                } else if (vm.multiname) {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
+                        vm.fieldValue.push(moment(item[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
+                    });
+                } else {
+                    vm.fieldValue = [];
+                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
+                        vm.fieldValue.push(moment(item, 'YYYY-MM-DD HH:mm:ss'));
+                    });
+                }
+            }
+        });
+
+        $scope.$watch(function () {
+            return vm.fieldValue;
+        }, function () {
+            $scope.$parent.vm.error = [];
+        }, true);
+
+        $scope.$on('$destroy', function () {
+            EditEntityStorage.deleteFieldController(vm);
+            if (vm.parentFieldIndex) {
+                ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
+            }
+        });
+
+        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
+            if (angular.isArray(data)) {
+                angular.forEach(data, function (error) {
+                    if ($scope.$parent.vm.error.indexOf(error) < 0) {
+                        $scope.$parent.vm.error.push(error);
+                    }
+                });
+            } else {
+                if ($scope.$parent.vm.error.indexOf(data) < 0) {
+                    $scope.$parent.vm.error.push(data);
+                }
+            }
+        });
+    }
+})();
+(function () {
+    'use strict';
+
+    /**
+     * @desc String-type field.
+     * @example <div editor-field-time=""></div>
+     */
+    angular
+        .module('universal.editor')
+        .directive('editorFieldTime',editorFieldTime);
+
+    editorFieldTime.$inject = ['$templateCache'];
+
+    function editorFieldTime($templateCache){
+        return {
+            restrict : 'A',
+            replace : true,
+            scope : true,
+            template : $templateCache.get('module/directives/editorFieldTime/editorFieldTime.html'),
+            controller: 'EditorFieldTimeController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorFieldTime/editorFieldTime.html',
+    '\n' +
+    '<div>\n' +
+    '    <div data-ng-if="vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '        <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-timepicker-wrapper input-group">\n' +
+    '            <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-date-time="" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm timepicker"/><span class="input-group-btn">\n' +
+    '                <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
+    '        </div>\n' +
+    '        <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
+    '    </div>\n' +
+    '    <div data-ng-if="!vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
+    '        <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-date-time="" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm timepicker"/>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
         .controller('EditorFilterAutocompleteController', EditorFilterAutocompleteController);
 
     EditorFilterAutocompleteController.$inject = ['$scope', '$element', 'FilterFieldsStorage', '$location', 'RestApiService', '$timeout', 'ArrayFieldStorage'];
@@ -6945,309 +7248,6 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
-        .controller('EditorFieldTimeController', EditorFieldTimeController);
-
-    EditorFieldTimeController.$inject = ['$scope', 'EditEntityStorage', '$element', 'moment', 'ArrayFieldStorage'];
-
-    function EditorFieldTimeController($scope, EditEntityStorage, $element, moment, ArrayFieldStorage) {
-        /* jshint validthis: true */
-        var vm = this;
-        var regExpPattern = /^([01]\d|2[0-3]):([0-5]\d)$/i;
-        var fieldErrorName;
-
-        if ($scope.parentField) {
-            if ($scope.parentFieldIndex) {
-                fieldErrorName = $scope.parentField + "_" + $scope.parentFieldIndex + "_" + $scope.fieldName;
-            } else {
-                fieldErrorName = $scope.parentField + "_" + $scope.fieldName;
-            }
-        } else {
-            fieldErrorName = $scope.fieldName;
-        }
-
-        vm.fieldName = $scope.field.name;
-        vm.fieldValue = "";
-        vm.readonly = $scope.field.readonly || false;
-        vm.sourceTime = moment();
-        $scope.$parent.vm.error = [];
-        vm.parentFieldIndex = $scope.parentFieldIndex || false;
-
-        if ($scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true) {
-            vm.multiple = true;
-            vm.fieldValue = [];
-            if ($scope.field.multiname || angular.isString($scope.field.multiname)) {
-                vm.multiname = ('' + $scope.field.multiname) || "value";
-            }
-        } else {
-            vm.multiple = false;
-            vm.fieldValue = "";
-        }
-
-        if (vm.parentFieldIndex) {
-            if (vm.multiple) {
-                vm.fieldValue = [];
-                angular.forEach(ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name), function (item) {
-                    if (vm.multiname) {
-                        vm.fieldValue.push(item[vm.multiname] ? moment(item[vm.multiname], 'YYYY-MM-DD HH:mm:ss') : "");
-                    } else {
-                        vm.fieldValue.push(item ? moment(item, 'YYYY-MM-DD HH:mm:ss') : "");
-                    }
-                });
-            } else {
-                var timeValue = ArrayFieldStorage.getFieldValue($scope.parentField, $scope.parentFieldIndex, $scope.field.name);
-                vm.fieldValue = timeValue ? moment(timeValue, 'YYYY-MM-DD HH:mm:ss') : vm.fieldValue;
-            }
-        }
-
-        EditEntityStorage.addFieldController(this);
-
-        this.getFieldValue = function () {
-
-            var field = {};
-            var wrappedFieldValue;
-
-            if (vm.multiname) {
-                wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
-                    if (!valueItem || valueItem === "" || !moment.isMoment(valueItem)) {
-                        return;
-                    }
-                    var tempItem = {};
-                    tempItem[vm.multiname] = moment(valueItem).format('YYYY-MM-DD HH:mm:ss');
-                    wrappedFieldValue.push(tempItem);
-                });
-            } else if (vm.multiple) {
-                wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
-                    wrappedFieldValue.push(moment(valueItem).format('YYYY-MM-DD HH:mm:ss'));
-                });
-            } else {
-                if (!vm.fieldValue || vm.fieldValue === "" || !moment.isMoment(vm.fieldValue)) {
-                    wrappedFieldValue = "";
-                } else {
-                    wrappedFieldValue = moment(vm.fieldValue).format('YYYY-MM-DD HH:mm:ss');
-                }
-            }
-
-            if ($scope.parentField) {
-                if (vm.parentFieldIndex) {
-                    field[$scope.parentField] = [];
-                    field[$scope.parentField][vm.parentFieldIndex] = {};
-                    field[$scope.parentField][vm.parentFieldIndex][vm.fieldName] = wrappedFieldValue;
-                } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = wrappedFieldValue;
-                }
-            } else {
-                field[vm.fieldName] = wrappedFieldValue;
-            }
-
-            return field;
-        };
-
-        this.getInitialValue = function () {
-
-            var field = {};
-
-            if ($scope.parentField) {
-                if (vm.multiple) {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = [];
-                } else {
-                    field[$scope.parentField] = {};
-                    field[$scope.parentField][vm.fieldName] = moment();
-                }
-            } else {
-                if (vm.multiple) {
-                    field[vm.fieldName] = [];
-                } else {
-                    field[vm.fieldName] = moment();
-                }
-            }
-
-            return field;
-        };
-
-        vm.addItem = function () {
-            vm.fieldValue.push(moment());
-        };
-
-        vm.removeItem = function (index) {
-            angular.forEach(vm.fieldValue, function (value, key) {
-                if (key == index) {
-                    vm.fieldValue.splice(index, 1);
-                }
-            });
-        };
-
-        function clear() {
-            vm.fieldValue = $scope.field.hasOwnProperty("multiple") && $scope.field.multiple === true ? [] : "";
-        }
-
-        $scope.$on('editor:entity_loaded', function (event, data) {
-
-            //-- functional for required fields
-            if ($scope.field.requiredField) {
-                $scope.$watch(function () {
-                    var f_value = EditEntityStorage.getValueField($scope.field.requiredField);
-                    var result = false;
-                    var endRecursion = false;
-                    (function (value) {
-                        var keys = Object.keys(value);
-                        for (var i = keys.length; i--;) {
-                            var propValue = value[keys[i]];
-                            if (propValue !== null && propValue !== undefined && propValue !== "") {
-                                if (angular.isObject(propValue) && !endRecursion) {
-                                    arguments.callee(propValue);
-                                }
-                                result = true;
-                                endRecursion = true;
-                            }
-                        }
-                    })(f_value);
-                    return result;
-                }, function (value) {
-                    if (!value) {
-                        clear();
-                        vm.readonly = true;
-                    } else {
-                        vm.readonly = $scope.field.readonly || false;
-                    }
-                }, true);
-            }
-
-
-            if (data.editorEntityType === "new") {
-                var defaultValue = moment();
-                if(!!$scope.field.defaultValue && moment($scope.field.defaultValue, 'HH:mm').isValid()){
-                    defaultValue = moment($scope.field.defaultValue, 'HH:mm');
-                }
-                vm.fieldValue = vm.multiple ? [defaultValue] : defaultValue;
-                return;
-            }
-
-            if (!$scope.parentField) {
-                if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.field.name] ?
-                        moment(data[$scope.field.name], 'YYYY-MM-DD HH:mm:ss') : "";
-                } else if (vm.multiname) {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (item) {
-                        vm.fieldValue.push(moment(item[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
-                    });
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.field.name], function (item) {
-                        vm.fieldValue.push(moment(item, 'YYYY-MM-DD HH:mm:ss'));
-                    });
-                }
-            } else {
-                if (!vm.multiple) {
-                    vm.fieldValue = data[$scope.parentField][$scope.field.name] ?
-                        moment(data[$scope.parentField][$scope.field.name], 'YYYY-MM-DD HH:mm:ss') :
-                        "";
-                } else if (vm.multiname) {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
-                        vm.fieldValue.push(moment(item[vm.multiname], 'YYYY-MM-DD HH:mm:ss'));
-                    });
-                } else {
-                    vm.fieldValue = [];
-                    angular.forEach(data[$scope.parentField][$scope.field.name], function (item) {
-                        vm.fieldValue.push(moment(item, 'YYYY-MM-DD HH:mm:ss'));
-                    });
-                }
-            }
-        });
-
-        $scope.$watch(function () {
-            return vm.fieldValue;
-        }, function () {
-            $scope.$parent.vm.error = [];
-        }, true);
-
-        $scope.$on('$destroy', function () {
-            EditEntityStorage.deleteFieldController(vm);
-            if (vm.parentFieldIndex) {
-                ArrayFieldStorage.fieldDestroy($scope.parentField, $scope.parentFieldIndex, $scope.field.name, vm.fieldValue);
-            }
-        });
-
-        $scope.$on("editor:api_error_field_" + fieldErrorName, function (event, data) {
-            if (angular.isArray(data)) {
-                angular.forEach(data, function (error) {
-                    if ($scope.$parent.vm.error.indexOf(error) < 0) {
-                        $scope.$parent.vm.error.push(error);
-                    }
-                });
-            } else {
-                if ($scope.$parent.vm.error.indexOf(data) < 0) {
-                    $scope.$parent.vm.error.push(data);
-                }
-            }
-        });
-    }
-})();
-(function () {
-    'use strict';
-
-    /**
-     * @desc String-type field.
-     * @example <div editor-field-time=""></div>
-     */
-    angular
-        .module('universal.editor')
-        .directive('editorFieldTime',editorFieldTime);
-
-    editorFieldTime.$inject = ['$templateCache'];
-
-    function editorFieldTime($templateCache){
-        return {
-            restrict : 'A',
-            replace : true,
-            scope : true,
-            template : $templateCache.get('module/directives/editorFieldTime/editorFieldTime.html'),
-            controller: 'EditorFieldTimeController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorFieldTime/editorFieldTime.html',
-    '\n' +
-    '<div>\n' +
-    '    <div data-ng-if="vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <div data-ng-repeat="field_item in vm.fieldValue track by $index" class="item-timepicker-wrapper input-group">\n' +
-    '            <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue[$index]" data-date-time="" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm timepicker"/><span class="input-group-btn">\n' +
-    '                <button data-ng-click="vm.removeItem($index)" data-ng-if="!vm.readonly" class="btn btn-default btn-sm">x</button></span>\n' +
-    '        </div>\n' +
-    '        <div data-ng-click="vm.addItem()" data-ng-if="!vm.readonly" class="btn btn-primary btn-sm">{{\'BUTTON.ADD\' | translate}}</div>\n' +
-    '    </div>\n' +
-    '    <div data-ng-if="!vm.multiple" class="col-lg-2 col-md-2 col-sm-3 col-xs-3">\n' +
-    '        <input name="{{vm.fieldName}}" data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue" data-date-time="" data-format="HH:mm" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm timepicker"/>\n' +
-    '    </div>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
         .controller('EditorFilterCheckboxController',EditorFilterCheckboxController);
 
     EditorFilterCheckboxController.$inject = ['$scope','FilterFieldsStorage','RestApiService'];
@@ -7641,6 +7641,110 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
+        .controller('EditorFilterNumberController',EditorFilterNumberController);
+
+    EditorFilterNumberController.$inject = ['$scope','FilterFieldsStorage','$location','RestApiService'];
+
+    function EditorFilterNumberController($scope,FilterFieldsStorage,$location,RestApiService){
+        /* jshint validthis: true */
+        var vm = this;
+
+        vm.filterName = $scope.filter.name;
+        vm.filterDisplayName = $scope.filter.label;
+        vm.filterValue = $location.search()[vm.filterName] || null;
+
+        FilterFieldsStorage.addFilterController(this);
+        this.getFilterValue = function () {
+            var field = {};
+            if(vm.filterValue !== null){
+                field[vm.filterName] = vm.filterValue;
+                return field;
+            } else {
+                return false;
+            }
+        };
+
+        this.getInitialValue = function () {
+            var filter = {};
+            filter[vm.filterName] = null;
+            return filter;
+        };
+
+        this.setInitialValue = function () {
+            vm.filterValue = null;
+        };
+
+        $scope.$on('$destroy', function () {
+            FilterFieldsStorage.deleteFilterController(vm);
+        });
+
+        $scope.$watch(function () {
+            return vm.filterValue;
+        }, function (newVal) {
+            if(newVal !== null){
+                $location.search(vm.filterName,newVal);
+            } else {
+                $location.search(vm.filterName,null);
+            }
+        });
+    }
+})();
+
+(function () {
+    'use strict';
+
+    /**
+     * @desc String-type filter.
+     * @example <div editor-filter-number=""></div>
+     */
+    angular
+        .module('universal.editor')
+        .directive('editorFilterNumber',editorFilterNumber);
+
+    editorFilterNumber.$inject = ['$templateCache'];
+
+    function editorFilterNumber($templateCache){
+        return {
+            restrict : 'A',
+            replace : true,
+            scope : true,
+            template : $templateCache.get('module/directives/editorFilterNumber/editorFilterNumber.html'),
+            controller: 'EditorFilterNumberController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorFilterNumber/editorFilterNumber.html',
+    '\n' +
+    '<div>\n' +
+    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
+    '    <div class="filter-inner-wrapper">\n' +
+    '        <input type="number" name="{{vm.filterName}}" data-ng-model="vm.filterValue" class="form-control input-sm"/>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
         .controller('EditorFilterRadiolistController',EditorFilterRadiolistController);
 
     EditorFilterRadiolistController.$inject = ['$scope','FilterFieldsStorage','RestApiService'];
@@ -7773,110 +7877,6 @@ module.run(['$templateCache', function($templateCache) {
     '        <label data-ng-repeat="item in vm.selectedValues" class="radio-inline">\n' +
     '            <input type="radio" data-ng-model="vm.filterValue" value="{{item[vm.field_id]}}"/>{{item[vm.field_search]}}\n' +
     '        </label>\n' +
-    '    </div>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('EditorFilterNumberController',EditorFilterNumberController);
-
-    EditorFilterNumberController.$inject = ['$scope','FilterFieldsStorage','$location','RestApiService'];
-
-    function EditorFilterNumberController($scope,FilterFieldsStorage,$location,RestApiService){
-        /* jshint validthis: true */
-        var vm = this;
-
-        vm.filterName = $scope.filter.name;
-        vm.filterDisplayName = $scope.filter.label;
-        vm.filterValue = $location.search()[vm.filterName] || null;
-
-        FilterFieldsStorage.addFilterController(this);
-        this.getFilterValue = function () {
-            var field = {};
-            if(vm.filterValue !== null){
-                field[vm.filterName] = vm.filterValue;
-                return field;
-            } else {
-                return false;
-            }
-        };
-
-        this.getInitialValue = function () {
-            var filter = {};
-            filter[vm.filterName] = null;
-            return filter;
-        };
-
-        this.setInitialValue = function () {
-            vm.filterValue = null;
-        };
-
-        $scope.$on('$destroy', function () {
-            FilterFieldsStorage.deleteFilterController(vm);
-        });
-
-        $scope.$watch(function () {
-            return vm.filterValue;
-        }, function (newVal) {
-            if(newVal !== null){
-                $location.search(vm.filterName,newVal);
-            } else {
-                $location.search(vm.filterName,null);
-            }
-        });
-    }
-})();
-
-(function () {
-    'use strict';
-
-    /**
-     * @desc String-type filter.
-     * @example <div editor-filter-number=""></div>
-     */
-    angular
-        .module('universal.editor')
-        .directive('editorFilterNumber',editorFilterNumber);
-
-    editorFilterNumber.$inject = ['$templateCache'];
-
-    function editorFilterNumber($templateCache){
-        return {
-            restrict : 'A',
-            replace : true,
-            scope : true,
-            template : $templateCache.get('module/directives/editorFilterNumber/editorFilterNumber.html'),
-            controller: 'EditorFilterNumberController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorFilterNumber/editorFilterNumber.html',
-    '\n' +
-    '<div>\n' +
-    '    <div title="{{vm.filterDisplayName}}" class="filter-name-label"><span>{{vm.filterDisplayName}}</span></div>\n' +
-    '    <div class="filter-inner-wrapper">\n' +
-    '        <input type="number" name="{{vm.filterName}}" data-ng-model="vm.filterValue" class="form-control input-sm"/>\n' +
     '    </div>\n' +
     '</div>');
 }]);
@@ -8389,6 +8389,117 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
+        .controller('FieldWrapperController',FieldWrapperController);
+
+    FieldWrapperController.$inject = ['$scope', 'RestApiService'];
+
+    function FieldWrapperController($scope, RestApiService){
+        var vm = this;
+        vm.error = [];
+        var entityObject = RestApiService.getEntityObject();
+        $scope.className = {};
+        if(angular.isString($scope.fieldName)) {
+          $scope.className['field-element-' + $scope.fieldName] = $scope.fieldName;
+        }
+
+        if($scope.parentField){
+            angular.forEach(entityObject.tabs, function (tab) {
+                angular.forEach(tab.fields, function (field) {
+                    if(field.name == $scope.parentField){
+                        angular.forEach(field.fields, function (innerField) {
+                            if(innerField.name == $scope.fieldName){
+                                $scope.field = innerField;
+                                return;
+                            }
+                        });
+                    }
+                });
+            });
+        } else {
+            angular.forEach(entityObject.tabs, function (tab) {
+                angular.forEach(tab.fields, function (field) {
+                    if(field.name == $scope.fieldName){
+                        $scope.field = field;
+                        return;
+                    }
+                });
+            });
+        }
+
+        vm.fieldDisplayName = $scope.field.label;
+        vm.hint = $scope.field.hint || false;
+        vm.required = $scope.field.required || false;
+        vm.isArray = ($scope.field.type == 'array');
+    }
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('fieldWrapper',fieldWrapper);
+
+    fieldWrapper.$inject = ['$templateCache','FieldBuilder','configData','$timeout'];
+
+    function fieldWrapper($templateCache,FieldBuilder,configData,$timeout){
+        return {
+            restrict : 'A',
+            replace : true,
+            scope : {
+                fieldName : '@',
+                parentField : '@',
+                parentFieldIndex : '@'
+            },
+            template : $templateCache.get('module/directives/fieldWrapper/fieldWrapper.html'),
+            controller: 'FieldWrapperController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            var element = elem.find('.field-element');
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+
+            $timeout(function () {
+                element.addClass("field-wrapper-" + scope.field.type);
+            },0);
+
+            element.append(new FieldBuilder(scope).build());
+        }
+    }
+})();
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/fieldWrapper/fieldWrapper.html',
+    '\n' +
+    '<div data-ng-class="className" class="field-wrapper">\n' +
+    '    <div data-ng-class="!vm.isArray ? \'row\' : \'\' ">\n' +
+    '        <div data-ng-if="!vm.isArray" class="field-name-label col-lg-6 col-md-6 col-sm-5 col-xs-4">\n' +
+    '            <div data-ng-if="vm.hint" class="field-hint">\n' +
+    '                <div class="hint-text">{{vm.hint}}</div>\n' +
+    '            </div><span data-ng-class="vm.required ? \'editor-required\' : \'\' ">{{vm.fieldDisplayName}}:</span>\n' +
+    '        </div>\n' +
+    '        <div class="field-element"></div>\n' +
+    '    </div>\n' +
+    '    <div data-ng-if="!vm.isArray" class="field-error-wrapper">\n' +
+    '        <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
         .controller('EditorFilterTimeController',EditorFilterTimeController);
 
     EditorFilterTimeController.$inject = ['$scope','FilterFieldsStorage','moment'];
@@ -8500,117 +8611,6 @@ module.run(['$templateCache', function($templateCache) {
     '                <input data-date-time="" data-ng-model="vm.filterValueEndTime" data-format="HH:mm:ss" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm"/>\n' +
     '            </div>\n' +
     '        </div>\n' +
-    '    </div>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('FieldWrapperController',FieldWrapperController);
-
-    FieldWrapperController.$inject = ['$scope', 'RestApiService'];
-
-    function FieldWrapperController($scope, RestApiService){
-        var vm = this;
-        vm.error = [];
-        var entityObject = RestApiService.getEntityObject();
-        $scope.className = {};
-        if(angular.isString($scope.fieldName)) {
-          $scope.className['field-element-' + $scope.fieldName] = $scope.fieldName;
-        }
-
-        if($scope.parentField){
-            angular.forEach(entityObject.tabs, function (tab) {
-                angular.forEach(tab.fields, function (field) {
-                    if(field.name == $scope.parentField){
-                        angular.forEach(field.fields, function (innerField) {
-                            if(innerField.name == $scope.fieldName){
-                                $scope.field = innerField;
-                                return;
-                            }
-                        });
-                    }
-                });
-            });
-        } else {
-            angular.forEach(entityObject.tabs, function (tab) {
-                angular.forEach(tab.fields, function (field) {
-                    if(field.name == $scope.fieldName){
-                        $scope.field = field;
-                        return;
-                    }
-                });
-            });
-        }
-
-        vm.fieldDisplayName = $scope.field.label;
-        vm.hint = $scope.field.hint || false;
-        vm.required = $scope.field.required || false;
-        vm.isArray = ($scope.field.type == 'array');
-    }
-})();
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('fieldWrapper',fieldWrapper);
-
-    fieldWrapper.$inject = ['$templateCache','FieldBuilder','configData','$timeout'];
-
-    function fieldWrapper($templateCache,FieldBuilder,configData,$timeout){
-        return {
-            restrict : 'A',
-            replace : true,
-            scope : {
-                fieldName : '@',
-                parentField : '@',
-                parentFieldIndex : '@'
-            },
-            template : $templateCache.get('module/directives/fieldWrapper/fieldWrapper.html'),
-            controller: 'FieldWrapperController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            var element = elem.find('.field-element');
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-
-            $timeout(function () {
-                element.addClass("field-wrapper-" + scope.field.type);
-            },0);
-
-            element.append(new FieldBuilder(scope).build());
-        }
-    }
-})();
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/fieldWrapper/fieldWrapper.html',
-    '\n' +
-    '<div data-ng-class="className" class="field-wrapper">\n' +
-    '    <div data-ng-class="!vm.isArray ? \'row\' : \'\' ">\n' +
-    '        <div data-ng-if="!vm.isArray" class="field-name-label col-lg-6 col-md-6 col-sm-5 col-xs-4">\n' +
-    '            <div data-ng-if="vm.hint" class="field-hint">\n' +
-    '                <div class="hint-text">{{vm.hint}}</div>\n' +
-    '            </div><span data-ng-class="vm.required ? \'editor-required\' : \'\' ">{{vm.fieldDisplayName}}:</span>\n' +
-    '        </div>\n' +
-    '        <div class="field-element"></div>\n' +
-    '    </div>\n' +
-    '    <div data-ng-if="!vm.isArray" class="field-error-wrapper">\n' +
-    '        <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>\n' +
     '    </div>\n' +
     '</div>');
 }]);
