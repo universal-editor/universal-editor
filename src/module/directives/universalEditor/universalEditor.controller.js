@@ -278,6 +278,7 @@
                     ids = [], // массив айдишников
                     paramStr = ""; // стpока json c params,
                 if (fieldForEdit && field.valuesRemote && field.valuesRemote.fields.label) {
+                    var url = field.valuesRemote.url.split('?')[0];
                     vm.items.forEach(function (item) {
                         var val = item[fieldForEdit];
                         item[fieldForEdit + "_copy"] = val;
@@ -288,7 +289,7 @@
                     if (ids.length) {
                         paramStr = '?filter={"' + field.valuesRemote.fields.key + '":[' + ids.join(',') + ']}';
                     }
-                    RestApiService.getData(field.valuesRemote.url + paramStr).then(function (res) {
+                    RestApiService.getData(url + paramStr).then(function (res) {
                         if (res.data.items && res.data.items.length) {
                             vm.linkedNames = res.data.items;
                             for (var i = vm.linkedNames.length; i--;) {

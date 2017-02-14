@@ -45,13 +45,13 @@ module.run(['$templateCache', function($templateCache) {
     '        <table data-ng-hide="vm.entityLoaded || vm.loadingData" class="table table-bordered items-list">\n' +
     '            <thead>\n' +
     '                <tr>\n' +
-    '                    <td class="actions-header context-column"></td>\n' +
+    '                    <td ng-if="vm.contextLinks.length" class="actions-header context-column"></td>\n' +
     '                    <td data-ng-repeat="fieldItem in vm.tableFields" data-ng-class="{ \'active\' : fieldItem.field == vm.sortField, \'asc\' : vm.sortingDirection, \'desc\' : !vm.sortingDirection}" data-ng-click="vm.changeSortField(fieldItem.field)">{{fieldItem.displayName}}</td>\n' +
     '                </tr>\n' +
     '            </thead>\n' +
     '            <tbody data-ng-if="vm.listLoaded">\n' +
     '                <tr data-ng-repeat="item in vm.items" data-ng-class="{\'zhs-item\' : (vm.entityType !== item[vm.subType]) &amp;&amp; item[vm.subType] !== undefined}">\n' +
-    '                    <td class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="vm.contextLinks.length" class="context-toggle">Toggle buttons</span>\n' +
+    '                    <td ng-if="vm.contextLinks.length" class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="vm.contextLinks.length" class="context-toggle">Toggle buttons</span>\n' +
     '                        <div data-ng-show="vm.contextId == item[vm.idField]" class="context-menu-wrapper">\n' +
     '                            <div data-ng-repeat="link in vm.contextLinks track by $index" data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)" class="context-menu-item">\n' +
     '                                <div data-ng-if="link.type == \'request\'" data-ng-click="vm.contextAction(link,item[vm.idField])">{{link.label}}</div>\n' +

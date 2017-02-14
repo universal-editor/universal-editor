@@ -29,13 +29,13 @@ ul.nav.nav-tabs(data-ng-if="vm.configData.entities.length > 1")
       table.table.table-bordered(data-ng-hide="vm.entityLoaded || vm.loadingData", class="items-list")
          thead
             tr
-               td.actions-header.context-column
+               td.actions-header.context-column(ng-if="vm.contextLinks.length")
                td( data-ng-repeat="fieldItem in vm.tableFields",
                data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'asc' : vm.sortingDirection, 'desc' : !vm.sortingDirection}",
                data-ng-click="vm.changeSortField(fieldItem.field)") {{fieldItem.displayName}}
          tbody(data-ng-if="vm.listLoaded")
             tr(data-ng-repeat="item in vm.items", data-ng-class="{'zhs-item' : (vm.entityType !== item[vm.subType]) && item[vm.subType] !== undefined}")
-               td.context-column
+               td.context-column(ng-if="vm.contextLinks.length")
                   span.context-toggle(data-ng-click="vm.toggleContextView(item[vm.idField])", data-ng-show="vm.contextLinks.length") Toggle buttons
                   .context-menu-wrapper(data-ng-show="vm.contextId == item[vm.idField]")
                      .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index", data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)")

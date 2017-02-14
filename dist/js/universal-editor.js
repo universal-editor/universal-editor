@@ -1820,6 +1820,91 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
+        .controller('EditorButtonTargetBlankController',EditorButtonTargetBlankController);
+
+    EditorButtonTargetBlankController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$http'];
+
+    function EditorButtonTargetBlankController($rootScope, $scope, $element, RestApiService, configData, $http) {
+        var vm = this;
+        var params;
+        var request;
+        try {
+            request = JSON.parse($scope.buttonRequest);
+        } catch(e){
+
+        }
+        vm.class = $scope.buttonClass;
+        vm.label = $scope.buttonLabel;
+        $element.bind("click", function () {
+            var url = request.url;
+            for (var key in $scope.itemValue) {
+                if ($scope.itemValue[key]) {
+                    url = url.replace(":" + key, $scope.itemValue[key]);
+                }
+            }
+            window.open(url, '_blank');
+            
+        }); 
+    }
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('editorButtonTargetBlank',editorButtonTargetBlank);
+
+    editorButtonTargetBlank.$inject = ['$templateCache','RestApiService','configData'];
+
+    function editorButtonTargetBlank($templateCache,RestApiService,configData){
+        return {
+            restrict : "A",
+            replace : true,
+            template : $templateCache.get('module/directives/editorButtonTargetBlank/editorButtonTargetBlank.html'),
+            scope : {
+                itemValue : "=",
+                buttonLabel : "@",
+                buttonRequest : "@",
+                index: "@",
+                buttonClass: "@"
+            },
+            controller : 'EditorButtonTargetBlankController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            scope.editor = RestApiService.getEntityType();
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorButtonTargetBlank/editorButtonTargetBlank.html',
+    '\n' +
+    '<div>\n' +
+    '    <button data-ng-if="vm.class == \'editor\'" class="btn btn-md btn-success">{{vm.label}}</button>\n' +
+    '    <button data-ng-if="vm.class == \'header\'" class="btn btn-lg btn-success">{{vm.label}}</button>\n' +
+    '    <button data-ng-if="vm.class == \'context\'" class="editor-action-button">{{vm.label}}</button>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
         .controller('EditorButtonPresaveController',EditorButtonPresaveController);
 
     EditorButtonPresaveController.$inject = ['$scope','$element','$rootScope','EditEntityStorage','RestApiService'];
@@ -1906,180 +1991,6 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('module/directives/editorButtonPresave/editorButtonPresave.html',
-    '\n' +
-    '<button data-ng-class="{ processing : vm.processing}" class="btn btn-md btn-success">{{vm.label}}\n' +
-    '    <div data-ng-show="vm.processing" class="loader-search-wrapper">\n' +
-    '        <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
-    '    </div>\n' +
-    '</button>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('EditorButtonTargetBlankController',EditorButtonTargetBlankController);
-
-    EditorButtonTargetBlankController.$inject = ['$rootScope','$scope','$element','RestApiService','configData', '$http'];
-
-    function EditorButtonTargetBlankController($rootScope, $scope, $element, RestApiService, configData, $http) {
-        var vm = this;
-        var params;
-        var request;
-        try {
-            request = JSON.parse($scope.buttonRequest);
-        } catch(e){
-
-        }
-        vm.class = $scope.buttonClass;
-        vm.label = $scope.buttonLabel;
-        $element.bind("click", function () {
-            var url = request.url;
-            for (var key in $scope.itemValue) {
-                if ($scope.itemValue[key]) {
-                    url = url.replace(":" + key, $scope.itemValue[key]);
-                }
-            }
-            window.open(url, '_blank');
-            
-        }); 
-    }
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('editorButtonTargetBlank',editorButtonTargetBlank);
-
-    editorButtonTargetBlank.$inject = ['$templateCache','RestApiService','configData'];
-
-    function editorButtonTargetBlank($templateCache,RestApiService,configData){
-        return {
-            restrict : "A",
-            replace : true,
-            template : $templateCache.get('module/directives/editorButtonTargetBlank/editorButtonTargetBlank.html'),
-            scope : {
-                itemValue : "=",
-                buttonLabel : "@",
-                buttonRequest : "@",
-                index: "@",
-                buttonClass: "@"
-            },
-            controller : 'EditorButtonTargetBlankController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            scope.editor = RestApiService.getEntityType();
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorButtonTargetBlank/editorButtonTargetBlank.html',
-    '\n' +
-    '<div>\n' +
-    '    <button data-ng-if="vm.class == \'editor\'" class="btn btn-md btn-success">{{vm.label}}</button>\n' +
-    '    <button data-ng-if="vm.class == \'header\'" class="btn btn-lg btn-success">{{vm.label}}</button>\n' +
-    '    <button data-ng-if="vm.class == \'context\'" class="editor-action-button">{{vm.label}}</button>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('EditorButtonUpdateController',EditorButtonUpdateController);
-
-    EditorButtonUpdateController.$inject = ['$scope','$element','$rootScope','EditEntityStorage','RestApiService'];
-
-    function EditorButtonUpdateController($scope,$element,$rootScope,EditEntityStorage,RestApiService){
-        var vm = this;
-
-        vm.label = $scope.buttonLabel;
-        vm.entityId = $scope.entityId;
-        vm.processing = RestApiService.isProcessing;
-
-        var watchEntityId = $scope.$watch('entityId', function (entityId) {
-            vm.entityId = entityId;
-        });
-
-        var watchRest = $scope.$watch(function () {
-            return RestApiService.isProcessing;
-        }, function (val) {
-            vm.processing = val;
-        });
-
-        $scope.$on('$destroy', function () {
-            watchEntityId();
-            watchRest();
-        });
-
-        $element.bind("click", function () {
-            if(vm.processing){
-                return;
-            }
-            RestApiService.editedEntityId = vm.entityId;
-            EditEntityStorage.editEntityUpdate("update");
-        });
-    }
-})();
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('editorButtonUpdate',editorButtonUpdate);
-
-    editorButtonUpdate.$inject = ['$templateCache','RestApiService'];
-
-    function editorButtonUpdate($templateCache,RestApiService){
-        return {
-            restrict : "A",
-            replace : true,
-            template : $templateCache.get('module/directives/editorButtonUpdate/editorButtonUpdate.html'),
-            scope : {
-                entityId : "@",
-                buttonLabel : "@",
-                buttonParams : "@"
-            },
-            controller : 'EditorButtonUpdateController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            scope.editor = RestApiService.getEntityType();
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-        }
-    }
-})();
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/editorButtonUpdate/editorButtonUpdate.html',
     '\n' +
     '<button data-ng-class="{ processing : vm.processing}" class="btn btn-md btn-success">{{vm.label}}\n' +
     '    <div data-ng-show="vm.processing" class="loader-search-wrapper">\n' +
@@ -2253,6 +2164,95 @@ module.run(['$templateCache', function($templateCache) {
     '        </div>\n' +
     '    </div>\n' +
     '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .controller('EditorButtonUpdateController',EditorButtonUpdateController);
+
+    EditorButtonUpdateController.$inject = ['$scope','$element','$rootScope','EditEntityStorage','RestApiService'];
+
+    function EditorButtonUpdateController($scope,$element,$rootScope,EditEntityStorage,RestApiService){
+        var vm = this;
+
+        vm.label = $scope.buttonLabel;
+        vm.entityId = $scope.entityId;
+        vm.processing = RestApiService.isProcessing;
+
+        var watchEntityId = $scope.$watch('entityId', function (entityId) {
+            vm.entityId = entityId;
+        });
+
+        var watchRest = $scope.$watch(function () {
+            return RestApiService.isProcessing;
+        }, function (val) {
+            vm.processing = val;
+        });
+
+        $scope.$on('$destroy', function () {
+            watchEntityId();
+            watchRest();
+        });
+
+        $element.bind("click", function () {
+            if(vm.processing){
+                return;
+            }
+            RestApiService.editedEntityId = vm.entityId;
+            EditEntityStorage.editEntityUpdate("update");
+        });
+    }
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('editorButtonUpdate',editorButtonUpdate);
+
+    editorButtonUpdate.$inject = ['$templateCache','RestApiService'];
+
+    function editorButtonUpdate($templateCache,RestApiService){
+        return {
+            restrict : "A",
+            replace : true,
+            template : $templateCache.get('module/directives/editorButtonUpdate/editorButtonUpdate.html'),
+            scope : {
+                entityId : "@",
+                buttonLabel : "@",
+                buttonParams : "@"
+            },
+            controller : 'EditorButtonUpdateController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            scope.editor = RestApiService.getEntityType();
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+        }
+    }
+})();
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/editorButtonUpdate/editorButtonUpdate.html',
+    '\n' +
+    '<button data-ng-class="{ processing : vm.processing}" class="btn btn-md btn-success">{{vm.label}}\n' +
+    '    <div data-ng-show="vm.processing" class="loader-search-wrapper">\n' +
+    '        <div class="loader-search">{{\'LOADING\' | translate}}</div>\n' +
+    '    </div>\n' +
+    '</button>');
 }]);
 })();
 
@@ -8389,6 +8389,117 @@ module.run(['$templateCache', function($templateCache) {
 
     angular
         .module('universal.editor')
+        .controller('FieldWrapperController',FieldWrapperController);
+
+    FieldWrapperController.$inject = ['$scope', 'RestApiService'];
+
+    function FieldWrapperController($scope, RestApiService){
+        var vm = this;
+        vm.error = [];
+        var entityObject = RestApiService.getEntityObject();
+        $scope.className = {};
+        if(angular.isString($scope.fieldName)) {
+          $scope.className['field-element-' + $scope.fieldName] = $scope.fieldName;
+        }
+
+        if($scope.parentField){
+            angular.forEach(entityObject.tabs, function (tab) {
+                angular.forEach(tab.fields, function (field) {
+                    if(field.name == $scope.parentField){
+                        angular.forEach(field.fields, function (innerField) {
+                            if(innerField.name == $scope.fieldName){
+                                $scope.field = innerField;
+                                return;
+                            }
+                        });
+                    }
+                });
+            });
+        } else {
+            angular.forEach(entityObject.tabs, function (tab) {
+                angular.forEach(tab.fields, function (field) {
+                    if(field.name == $scope.fieldName){
+                        $scope.field = field;
+                        return;
+                    }
+                });
+            });
+        }
+
+        vm.fieldDisplayName = $scope.field.label;
+        vm.hint = $scope.field.hint || false;
+        vm.required = $scope.field.required || false;
+        vm.isArray = ($scope.field.type == 'array');
+    }
+})();
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
+        .directive('fieldWrapper',fieldWrapper);
+
+    fieldWrapper.$inject = ['$templateCache','FieldBuilder','configData','$timeout'];
+
+    function fieldWrapper($templateCache,FieldBuilder,configData,$timeout){
+        return {
+            restrict : 'A',
+            replace : true,
+            scope : {
+                fieldName : '@',
+                parentField : '@',
+                parentFieldIndex : '@'
+            },
+            template : $templateCache.get('module/directives/fieldWrapper/fieldWrapper.html'),
+            controller: 'FieldWrapperController',
+            controllerAs : 'vm',
+            link : link
+        };
+
+        function link(scope, elem, attrs, ctrl){
+            var element = elem.find('.field-element');
+            elem.on('$destroy', function () {
+                scope.$destroy();
+            });
+
+            $timeout(function () {
+                element.addClass("field-wrapper-" + scope.field.type);
+            },0);
+
+            element.append(new FieldBuilder(scope).build());
+        }
+    }
+})();
+(function(module) {
+try {
+  module = angular.module('universal.editor.templates');
+} catch (e) {
+  module = angular.module('universal.editor.templates', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('module/directives/fieldWrapper/fieldWrapper.html',
+    '\n' +
+    '<div data-ng-class="className" class="field-wrapper">\n' +
+    '    <div data-ng-class="!vm.isArray ? \'row\' : \'\' ">\n' +
+    '        <div data-ng-if="!vm.isArray" class="field-name-label col-lg-6 col-md-6 col-sm-5 col-xs-4">\n' +
+    '            <div data-ng-if="vm.hint" class="field-hint">\n' +
+    '                <div class="hint-text">{{vm.hint}}</div>\n' +
+    '            </div><span data-ng-class="vm.required ? \'editor-required\' : \'\' ">{{vm.fieldDisplayName}}:</span>\n' +
+    '        </div>\n' +
+    '        <div class="field-element"></div>\n' +
+    '    </div>\n' +
+    '    <div data-ng-if="!vm.isArray" class="field-error-wrapper">\n' +
+    '        <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>\n' +
+    '    </div>\n' +
+    '</div>');
+}]);
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('universal.editor')
         .controller('EditorFilterTimeController',EditorFilterTimeController);
 
     EditorFilterTimeController.$inject = ['$scope','FilterFieldsStorage','moment'];
@@ -8500,117 +8611,6 @@ module.run(['$templateCache', function($templateCache) {
     '                <input data-date-time="" data-ng-model="vm.filterValueEndTime" data-format="HH:mm:ss" data-max-view="hours" data-min-view="minutes" data-view="hours" class="form-control input-sm"/>\n' +
     '            </div>\n' +
     '        </div>\n' +
-    '    </div>\n' +
-    '</div>');
-}]);
-})();
-
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .controller('FieldWrapperController',FieldWrapperController);
-
-    FieldWrapperController.$inject = ['$scope', 'RestApiService'];
-
-    function FieldWrapperController($scope, RestApiService){
-        var vm = this;
-        vm.error = [];
-        var entityObject = RestApiService.getEntityObject();
-        $scope.className = {};
-        if(angular.isString($scope.fieldName)) {
-          $scope.className['field-element-' + $scope.fieldName] = $scope.fieldName;
-        }
-
-        if($scope.parentField){
-            angular.forEach(entityObject.tabs, function (tab) {
-                angular.forEach(tab.fields, function (field) {
-                    if(field.name == $scope.parentField){
-                        angular.forEach(field.fields, function (innerField) {
-                            if(innerField.name == $scope.fieldName){
-                                $scope.field = innerField;
-                                return;
-                            }
-                        });
-                    }
-                });
-            });
-        } else {
-            angular.forEach(entityObject.tabs, function (tab) {
-                angular.forEach(tab.fields, function (field) {
-                    if(field.name == $scope.fieldName){
-                        $scope.field = field;
-                        return;
-                    }
-                });
-            });
-        }
-
-        vm.fieldDisplayName = $scope.field.label;
-        vm.hint = $scope.field.hint || false;
-        vm.required = $scope.field.required || false;
-        vm.isArray = ($scope.field.type == 'array');
-    }
-})();
-(function () {
-    'use strict';
-
-    angular
-        .module('universal.editor')
-        .directive('fieldWrapper',fieldWrapper);
-
-    fieldWrapper.$inject = ['$templateCache','FieldBuilder','configData','$timeout'];
-
-    function fieldWrapper($templateCache,FieldBuilder,configData,$timeout){
-        return {
-            restrict : 'A',
-            replace : true,
-            scope : {
-                fieldName : '@',
-                parentField : '@',
-                parentFieldIndex : '@'
-            },
-            template : $templateCache.get('module/directives/fieldWrapper/fieldWrapper.html'),
-            controller: 'FieldWrapperController',
-            controllerAs : 'vm',
-            link : link
-        };
-
-        function link(scope, elem, attrs, ctrl){
-            var element = elem.find('.field-element');
-            elem.on('$destroy', function () {
-                scope.$destroy();
-            });
-
-            $timeout(function () {
-                element.addClass("field-wrapper-" + scope.field.type);
-            },0);
-
-            element.append(new FieldBuilder(scope).build());
-        }
-    }
-})();
-(function(module) {
-try {
-  module = angular.module('universal.editor.templates');
-} catch (e) {
-  module = angular.module('universal.editor.templates', []);
-}
-module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('module/directives/fieldWrapper/fieldWrapper.html',
-    '\n' +
-    '<div data-ng-class="className" class="field-wrapper">\n' +
-    '    <div data-ng-class="!vm.isArray ? \'row\' : \'\' ">\n' +
-    '        <div data-ng-if="!vm.isArray" class="field-name-label col-lg-6 col-md-6 col-sm-5 col-xs-4">\n' +
-    '            <div data-ng-if="vm.hint" class="field-hint">\n' +
-    '                <div class="hint-text">{{vm.hint}}</div>\n' +
-    '            </div><span data-ng-class="vm.required ? \'editor-required\' : \'\' ">{{vm.fieldDisplayName}}:</span>\n' +
-    '        </div>\n' +
-    '        <div class="field-element"></div>\n' +
-    '    </div>\n' +
-    '    <div data-ng-if="!vm.isArray" class="field-error-wrapper">\n' +
-    '        <div data-ng-repeat="err in vm.error track by $index" class="error-item alert alert-danger">{{err}}</div>\n' +
     '    </div>\n' +
     '</div>');
 }]);
@@ -8976,6 +8976,7 @@ module.run(['$templateCache', function($templateCache) {
                     ids = [], // массив айдишников
                     paramStr = ""; // стpока json c params,
                 if (fieldForEdit && field.valuesRemote && field.valuesRemote.fields.label) {
+                    var url = field.valuesRemote.url.split('?')[0];
                     vm.items.forEach(function (item) {
                         var val = item[fieldForEdit];
                         item[fieldForEdit + "_copy"] = val;
@@ -8986,7 +8987,7 @@ module.run(['$templateCache', function($templateCache) {
                     if (ids.length) {
                         paramStr = '?filter={"' + field.valuesRemote.fields.key + '":[' + ids.join(',') + ']}';
                     }
-                    RestApiService.getData(field.valuesRemote.url + paramStr).then(function (res) {
+                    RestApiService.getData(url + paramStr).then(function (res) {
                         if (res.data.items && res.data.items.length) {
                             vm.linkedNames = res.data.items;
                             for (var i = vm.linkedNames.length; i--;) {
@@ -9464,13 +9465,13 @@ module.run(['$templateCache', function($templateCache) {
     '        <table data-ng-hide="vm.entityLoaded || vm.loadingData" class="table table-bordered items-list">\n' +
     '            <thead>\n' +
     '                <tr>\n' +
-    '                    <td class="actions-header context-column"></td>\n' +
+    '                    <td ng-if="vm.contextLinks.length" class="actions-header context-column"></td>\n' +
     '                    <td data-ng-repeat="fieldItem in vm.tableFields" data-ng-class="{ \'active\' : fieldItem.field == vm.sortField, \'asc\' : vm.sortingDirection, \'desc\' : !vm.sortingDirection}" data-ng-click="vm.changeSortField(fieldItem.field)">{{fieldItem.displayName}}</td>\n' +
     '                </tr>\n' +
     '            </thead>\n' +
     '            <tbody data-ng-if="vm.listLoaded">\n' +
     '                <tr data-ng-repeat="item in vm.items" data-ng-class="{\'zhs-item\' : (vm.entityType !== item[vm.subType]) &amp;&amp; item[vm.subType] !== undefined}">\n' +
-    '                    <td class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="vm.contextLinks.length" class="context-toggle">Toggle buttons</span>\n' +
+    '                    <td ng-if="vm.contextLinks.length" class="context-column"><span data-ng-click="vm.toggleContextView(item[vm.idField])" data-ng-show="vm.contextLinks.length" class="context-toggle">Toggle buttons</span>\n' +
     '                        <div data-ng-show="vm.contextId == item[vm.idField]" class="context-menu-wrapper">\n' +
     '                            <div data-ng-repeat="link in vm.contextLinks track by $index" data-ng-if="(item[vm.subType] == vm.entityType || item[vm.subType] == undefined)" class="context-menu-item">\n' +
     '                                <div data-ng-if="link.type == \'request\'" data-ng-click="vm.contextAction(link,item[vm.idField])">{{link.label}}</div>\n' +

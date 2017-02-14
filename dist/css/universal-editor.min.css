@@ -1,7 +1,7 @@
 .editor-entity-actions .loader-search-wrapper{width:7px !important}.field-array-wrapper .add-more{margin-top:10px}
 .autocomplete-item{background:#cbd6da;border:1px solid #959ea9;-webkit-border-radius:4px;border-radius:4px;color:#444;margin:2px;padding:0 5px;display:inline-block;height:24px;line-height:22px}
 .autocomplete-item.opacity-item{opacity:.2}.autocomplete-item .remove-from-selected{margin:0 0 0 5px;padding:0;border:0;background:0;cursor:pointer;vertical-align:middle;font:700 16px Arial,sans-serif;color:#585858}
-.autocomplete-input-wrapper{position:relative;height:100%;padding:2px}.autocomplete-input-wrapper.disabled-input,.autocomplete-input-wrapper.disabled-input input{color:#c8cbcd;background-color:#eceff1;border:1px solid #ccc}
+.autocomplete-input-wrapper{position:relative;padding:2px}.autocomplete-input-wrapper.disabled-input,.autocomplete-input-wrapper.disabled-input input{color:#c8cbcd;background-color:#eceff1;border:1px solid #ccc}
 .autocomplete-input-wrapper.disabled-input input{border:0}.autocomplete-input-wrapper:after{content:'';display:table;clear:both}
 .autocomplete-input-wrapper .form-control{display:inline-block}.autocomplete-input-wrapper .autocomplete-field-search{display:inline-block;position:relative;padding:0;margin-left:3px;background-color:#fff;border:0;height:28px;max-width:100%;box-sizing:border-box;overflow:hidden;text-overflow:ellipsis}
 .autocomplete-input-wrapper .autocomplete-field-search:focus{outline:0}.autocomplete-input-wrapper .autocomplete-field-search.color-placeholder::-webkit-input-placeholder{color:#555}
@@ -128,5 +128,6 @@ body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;back
 .universal-editor>div .editor-filter-wrapper .filter-wrapper .filter-inner-wrapper .editor-datetime input{width:180px}
 .universal-editor div input.form-control[type="text"]{height:34px;padding:6px 12px;font-size:14px;border:1px solid #ccc;background-color:#fff;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);-webkit-transition:border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
 .universal-editor div input.form-control[type="text"]:focus{border-color:#66afe9;outline:0;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6)}
+.universal-editor>div .field-element.field-wrapper-colorpicker .minicolors-theme-bootstrap .minicolors-input{padding-left:44px;height:30px}
 .universal-editor>div .select-input-wrapper .select-input{padding-right:35px !important;border:0;box-shadow:none}
 .universal-editor>div .autocomplete-input-wrapper.form-control input{border:none !important;box-shadow:none !important}

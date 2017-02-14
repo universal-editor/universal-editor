@@ -836,6 +836,12 @@ body {
 }
 
 .universal-editor > div {
+  & .field-element.field-wrapper-colorpicker {
+    & .minicolors-theme-bootstrap .minicolors-input {
+      padding-left: 44px;
+      height: 30px;
+    }
+  }
   & .select-input-wrapper .select-input {
     padding-right: 35px !important;
     border: 0;
