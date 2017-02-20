@@ -1,0 +1,152 @@
+  .universal-editor,
+  .modal-dialog {
+      & .grid-toolbar {
+          padding: 0px 0px 5px 0px;
+          .header-action-button {
+              border: none;
+              display: inline-block;
+              margin-right: 10px;
+              outline: none;
+          }
+      }
+      & .groups-action {
+          margin-bottom: 10px;
+      }
+      & .ue-grid {
+          padding: 10px 0;
+          & table.items-list {
+              background-color: #FFFFFF;
+              border-spacing: 0;
+              & td {
+                  &.context-column {
+                      width: 15px;
+                      min-width: 32px;
+                      .context-toggle {
+                          display: block;
+                          width: 15px;
+                          height: 13px;
+                          border-top: 3px solid #94A0A5;
+                          border-bottom: 3px solid #94A0A5;
+                          position: relative;
+                          text-indent: -9999px;
+                          cursor: pointer;
+                          &:before {
+                              content: '';
+                              display: block;
+                              position: absolute;
+                              top: 2px;
+                              width: 15px;
+                              height: 3px;
+                              background-color: #94A0A5;
+                          }
+                      }
+                      .context-menu-wrapper {
+                          position: absolute;
+                          top: 28px;
+                          background: #fff;
+                          border-radius: 5px;
+                          box-shadow: 0px 5px 6px #B9B8B8;
+                          overflow: hidden;
+                          z-index: 10;
+                          display: block;
+                          height: auto;
+                          width: auto;
+                          .context-menu-item {
+                              button {
+                                  padding: 3px 7px;
+                              }
+                              cursor: pointer;
+                              &:hover {
+                                  background-color: #eeeded;
+                              }
+                              display: block;
+                              position: relative;
+                              min-width: 120px;
+                          }
+                          .editor-action-button {
+                              color: #000;
+                              width: 100%;
+                              outline: 0;
+                              text-transform: none;
+                              font-size: 12px;
+                              text-shadow: none;
+                              padding: 0;
+                              margin: 0;
+                              background: transparent;
+                              border: none;
+                              border-radius: 0px;
+                              line-height: 15px;
+                              text-align: left;
+                          }
+                      }
+                  }
+                  vertical-align: top;
+                  position: relative;
+                  & span.glyphicon {
+                      display: none;
+                      &.icon-mix-mode {
+                          display: inline-block;
+                          &+.component-wrapper {
+                              display: inline-block;
+                              padding-left: 5px;
+                          }
+                      }
+                  }
+              }
+              & thead td {
+                  font-weight: 700;
+                  cursor: pointer;
+                  &.actions-header {
+                      cursor: default;
+                  }
+                  &.active.asc:after {
+                      content: "";
+                      width: 0;
+                      height: 0;
+                      border-left: 5px solid transparent;
+                      border-right: 5px solid transparent;
+                      border-bottom: 7px solid #000000;
+                      display: block;
+                      float: right;
+                      transform: scale(-1, -1);
+                      margin-top: 3px;
+                  }
+                  &.active.desc:after {
+                      content: "";
+                      width: 0;
+                      height: 0;
+                      border-left: 5px solid transparent;
+                      border-right: 5px solid transparent;
+                      border-top: 7px solid #000000;
+                      display: block;
+                      float: right;
+                      transform: scale(-1, -1);
+                      margin-top: 3px;
+                  }
+              }
+              & tbody {
+                  & td {
+                      font-size: 12px;
+                      & .field-wrapper.row {
+                          margin: 0;
+                          padding: 0;
+                      }
+                  }
+              }
+              & tfoot {
+                  & tr {
+                      & td {
+                          background-color: #cbd6da !important;
+                      }
+                  }
+              }
+          }
+          & .loader-search-wrapper {
+              display: inline-block;
+              width: 30px;
+              margin-left: 10px;
+              position: relative;
+              height: 12px;
+          }
+      }
+  }

@@ -37,7 +37,7 @@
         self.templates = componentSettings.templates;
 
         /** if template is set as a html-file */
-        var htmlPattern = /[^\s]+(?=\.html$)/;
+        var htmlPattern = /[^\s]+(?=\.(html|jade)$)/;
         if (angular.isObject(self.templates)) {
             ['preview', 'filter', 'edit'].forEach(function (property) {
                 var template = self.templates[property];

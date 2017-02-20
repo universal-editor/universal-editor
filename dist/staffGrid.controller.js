@@ -162,7 +162,6 @@
                     columns: ['name', 'email', 'gender', 'parent_id'],
                     contextMenu: [
                         {
-                            separator: true,
                             component: {
                                 name: 'ue-button',
                                 settings: {

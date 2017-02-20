@@ -32,7 +32,7 @@ block append content
                             .dropdown__selected-items(
                                 data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""'
                                 ) {{vm.placeholder}}
-                        span.selecte-delete(data-ng-if="vm.isSpanSelectDelete && !vm.readonly", data-ng-click="vm.deleteToSelected($event, false)") ×
+                        span.select-delete(data-ng-if="vm.isSpanSelectDelete && !vm.readonly", data-ng-click="vm.deleteToSelected($event, false)") ×
                         .possible-values.active(
                             data-ng-if="!vm.readonly && (vm.optionValues.length > 0) && vm.showPossible",
                             data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'
@@ -76,7 +76,7 @@ block append content
                                 )
                             .dropdown__selected(data-ng-if="!vm.search")
                                 .dropdown__selected-items.dropdown-tree(data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""', data-ng-if="!vm.loadingData") {{vm.placeholder}}
-                            span.selecte-delete(data-ng-if="vm.isSpanSelectDelete && !vm.readonly", data-ng-click="vm.deleteToSelected($event, false)") ×
+                            span.select-delete(data-ng-if="vm.isSpanSelectDelete && !vm.readonly", data-ng-click="vm.deleteToSelected($event, false)") ×
                             .dropdown__items.dropdown__items_with-padding.active.dropdown-bottom(
                                 data-ng-if="::(vm.treeParentField && vm.treeChildCountField)",
                                 data-ng-class="{'dropdown__items_with-selected': vm.fieldValue.length > 2 || (vm.search && vm.fieldValue.length)}",

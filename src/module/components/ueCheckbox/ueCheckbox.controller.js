@@ -3,7 +3,21 @@
 
     angular
         .module('universal.editor')
-        .controller('UeCheckboxController', UeCheckboxController);
+        .controller('UeCheckboxController', UeCheckboxController)
+        .directive('ngIndeterminate', function() {
+            return {
+                restrict: 'A',
+                scope: {
+                    'ngIndeterminate': '='
+                },
+                link: function(scope, element, attrs) {
+                    element.prop('indeterminate', scope.ngIndeterminate);
+                    scope.$watch('ngIndeterminate', function(n, o) {
+                        element.prop('indeterminate', n);
+                    });
+                }
+            };
+        });
 
     UeCheckboxController.$inject = ['$scope', '$element', 'EditEntityStorage', 'RestApiService', 'FilterFieldsStorage', '$controller'];
 
@@ -23,6 +37,13 @@
             vm.dependUpdate = dependUpdate;
             vm.fieldId = 'id';
             vm.fieldSearch = 'title';
+            vm.indeterminate = false;
+
+            if (!componentSettings.valuesRemote && !componentSettings.values) {
+                componentSettings.templates = componentSettings.templates || {};
+                componentSettings.templates.preview = 'module/components/ueCheckbox/previewTemplate.html';
+            }
+
             baseController = $controller('FieldsController', { $scope: $scope });
             angular.extend(vm, baseController);
 
@@ -34,8 +55,9 @@
                 vm.trueValue = componentSettings.trueValue;
                 vm.falseValue = componentSettings.falseValue;
                 vm.optionValues = [];
-                if (!vm.options.filter) {
-                    vm.fieldValue = vm.fieldValue == componentSettings.trueValue ? [componentSettings.trueValue] : [];
+                if (vm.options.filter) {
+                    vm.indeterminate = true;
+                    vm.fieldValue = [];
                 }
                 var obj = {};
                 obj[vm.fieldId] = componentSettings.trueValue;
@@ -69,8 +91,32 @@
                     }
                 }
             }));
+
+            function clear() {
+                vm.defaultClear();
+                vm.indeterminate = true;
+                vm.fieldValue = [];
+            }
+
+            function isEmptyVar(n) {
+                return n === null || n === undefined || (!angular.isArray(n) || n.length === 0);
+            }
         };
 
+        vm.switch = function(e) {
+            if (vm.options.filter && vm.singleValue) {
+                var input = $element.find('[type="checkbox"]');
+                if (vm.fieldValue && vm.fieldValue.length > 0) {
+                    if (vm.trueValue !== undefined && vm.trueValue !== null && vm.trueValue === vm.fieldValue[0]) {
+                        vm.indeterminate = false;
+                        vm.fieldValue = [vm.falseValue];
+                    } else if (vm.falseValue !== undefined && vm.falseValue !== null && vm.falseValue === vm.fieldValue[0]) {
+                        vm.indeterminate = true;
+                        vm.fieldValue = [];
+                    }
+                }
+            }
+        };
         function dependUpdate(dependField, dependValue) {
             vm.optionValues = [];
             if (dependValue && dependValue !== '') {
@@ -99,14 +145,12 @@
                 wrappedFieldValue;
             wrappedFieldValue = vm.fieldValue;
 
-            if (vm.singleValue) {
+            if (vm.singleValue && !vm.options.filter) {
                 wrappedFieldValue = (!vm.fieldValue || vm.fieldValue.length === 0) ? componentSettings.falseValue : componentSettings.trueValue;
             }
 
-            if (vm.options.filter) {
-                if (vm.fieldValue === null) {
-                    wrappedFieldValue = vm.fieldValue;
-                }
+            if (vm.options.filter && vm.fieldValue === null) {
+                wrappedFieldValue = vm.fieldValue;
             }
 
             if (vm.parentField) {

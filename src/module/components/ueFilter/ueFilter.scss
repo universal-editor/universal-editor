@@ -1,42 +1,67 @@
-.modal-dialog .ue-modal-body .editor-body .close-editor {
-  display: none;
-}
-
-.editor-entity-actions {
-  background: #ebf1f3;
-  padding: 10px;
-  border-top: 1px solid #E1E9EB;
-}
-
-.filter-component {  
-  max-width: 600px;
-
-  & .editor-filter-body {
-    padding: 5px 15px;
-    & component-wrapper  {
-      display: block;
-      margin-left: 205px;
-      & .filter-inner-wrapper > div[class*="col-"] {
-        padding: 0;
-      }
+.universal-editor div, .modal-dialog  {
+    & .field-wrapper-ue-filter {
+        & .filter-button {
+            border-width: 0;
+            padding: 0;
+            height: 32px;
+            width: 32px;
+            outline: none !important;
+            color: #000;
+            text-shadow: 0 1px 0 #dde8ec;
+            background: #cbd6da;
+        }
     }
-    & .filter-content-wrapper {
-      margin-bottom: 10px;
-      display: inline-block;
-      width:100%;
-      & label.filter-name-label {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+    & .filter-wrapper-body.filter-component {
+        max-width: 600px;
+        & .filter-connect {
+            width: 32px;
+            height: 16px;
+            position: absolute;
+            background-color: #cbd6da;
+            margin-top: -12px;
+        }
+        & .editor-filter {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #9ca9ae;
+            background: #cbd6da;
+            -webkit-border-radius: 0 3px 3px;
+            border-radius: 0 3px 3px;
+            padding: 10px;
+            min-width: 600px;
+            display: inline-block;
+            width: auto;
+            & .editor-filter-wrapper {
+                & .editor-filter-body {
+                    padding: 5px 20px 5px 15px;
+                    & component-wrapper {
+                        display: block;
+                        margin-left: 205px;
+                        & .filter-inner-wrapper>div[class*="col-"] {
+                            padding: 0;
+                        }
+                    }
+                    & .filter-content-wrapper {
+                        margin-bottom: 10px;
+                        display: inline-block;
+                        width: 100%;
+                        & label.filter-name-label {
+                            float: left;
+                            width: 200px;
+                            vertical-align: top;
+                            height: 25px;
+                            font-weight: normal;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                }
+                & .editor-filter-footer {
+                    .component-wrapper {
+                        display: inline-block;
+                    }
+                }
+            }
+        }
     }
-  }
-  & .editor-filter-footer {
-    margin-top: 15px;
-    .component-wrapper {
-      display: inline-block;
-    }
-  }
 }
-
-

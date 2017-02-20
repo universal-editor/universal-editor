@@ -1,18 +1,26 @@
 ; (function(require) {
     'use strict';
 
-    var localHost = 'universal-editor.dev', defaultlocalHost = '127.0.0.1';
-    var NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development';
-    var RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]);
+     var webpack = require('webpack'),
+        gutil = require('gulp-util'),
+        path = require('path'),
+        HtmlWebpackPlugin = require('html-webpack-plugin'),
+        copyWebpackPlugin = require('copy-webpack-plugin'),
+        cleanWebpackPlugin = require('clean-webpack-plugin');
 
-    var webpack = require('webpack');
-    var gutil = require('gulp-util');
-    var path = require('path');
-    var HtmlWebpackPlugin = require('html-webpack-plugin');
-    var copyWebpackPlugin = require('copy-webpack-plugin');
-    var deepcopy = require('deepcopy');
+    var localHost = 'universal-editor.dev',
+        defaultlocalHost = '127.0.0.1',
+        NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development',
+        RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]),
+        isProd = NODE_ENV == 'production',
+        isDev = NODE_ENV == 'development',
+        publicPath = path.resolve(__dirname, isProd ? 'dist' : 'app'),
+        copyOptions = [{
+            from: 'src/demoApp/index.js'
+        }, {
+            from: 'src/demoApp/components.controller.js'
+        }];
 
-    var publicPath = path.resolve(__dirname, NODE_ENV == 'production' ? 'dist' : 'app');
 
     if (RUNNING_SERVER) {
         try {
@@ -33,7 +41,7 @@
     var webpackConfigTemplate = {
         context: __dirname,
         output: {
-            filename: NODE_ENV == 'production' ? '[name].min.js' : '[name].js',
+            filename: isProd ? '[name].min.js' : '[name].js',
             path: publicPath
         },
         resolve: {
@@ -53,7 +61,7 @@
         // devtool: 'inline-source-map',
         // devtool: 'eval', // faster then previous type of source-map
 
-        watch: NODE_ENV == 'development',
+        watch: isDev,
         watchOptions: {
             aggregateTimeout: 100
         },
@@ -98,7 +106,8 @@
                 'NODE_ENV': JSON.stringify(NODE_ENV),
                 'RUNNING_SERVER': RUNNING_SERVER
             }),
-            new webpack.HotModuleReplacementPlugin()
+            new webpack.HotModuleReplacementPlugin(),
+            new cleanWebpackPlugin([publicPath], { verbose: true })
         ]
     };
 
@@ -113,7 +122,7 @@
         };
     }
 
-    if (NODE_ENV == 'production') {
+    if (isProd) {
         webpackConfigTemplate.plugins.push(
             new webpack.optimize.UglifyJsPlugin({
                 compress: {
@@ -144,7 +153,7 @@
             from: 'src/demoApp/newsGrid.controller.js'
         }]),
         new webpack.DefinePlugin({
-            'INCLUDE_VENDOR': false
+            'IS_DEV': isDev
         }),
         new HtmlWebpackPlugin({
             filename: 'index.html',

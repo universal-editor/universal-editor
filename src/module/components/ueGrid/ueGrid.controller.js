@@ -8,8 +8,7 @@
     UeGridController.$inject = ['$scope', '$rootScope', 'RestApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', '$element', '$compile', 'EditEntityStorage'];
 
     function UeGridController($scope, $rootScope, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage) {
-        $element.addClass('ue-grid');
-        /* jshint validthis: true */
+          /* jshint validthis: true */
         var vm = this,
             itemsKey,
             mixEntityObject,
@@ -290,6 +289,9 @@
         });
 
         $scope.$on('editor:server_error', function(event, data) {
+             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+                 vm.listLoaded = true;
+             }
             vm.errors.push(data);
         });
 

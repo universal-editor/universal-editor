@@ -142,9 +142,12 @@
             });
         }
 
+
         self.clear = clear;
         self.getFieldValue = getFieldValue;
         self.equalPreviewValue = equalPreviewValue;
+
+        self.clearDefault = clear;        
 
         function clear() {
             self.fieldValue = self.multiple ? [] : null;

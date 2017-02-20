@@ -3,8 +3,13 @@
         margin-left: 15px;
     }
     & .tab-content-wrapper {
+        background: #ebf1f3;
         & .clear-padding-left {
             padding-left: 0;
+        }
+        & .tab-item-content>.component-wrapper {
+            display: inline-block;
+            width: 100%;
         }
     }
 }

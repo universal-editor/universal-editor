@@ -21,7 +21,7 @@ block append content
                     placeholder="{{vm.placeholder}}",
                     data-ng-class='!vm.isActivePossible ? "color-placeholder" : ""'
                     )
-                span.selecte-delete.selecte-delete-autocomplete(
+                span.select-delete.select-delete-autocomplete(
                     data-ng-if="!vm.multiple && !!vm.selectedValues.length && !vm.readonly",
                     data-ng-click="vm.removeFromSelected($event, vm.selectedValues[0])"
                     ) ×

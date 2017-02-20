@@ -5,31 +5,23 @@
         .module('universal.editor')
         .controller('UeFilterController', UeFilterController);
 
-    UeFilterController.$inject = ['$scope', '$rootScope', '$element', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$compile', '$document'];
+    UeFilterController.$inject = ['$scope', '$rootScope', '$element', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$compile', '$document', '$templateCache'];
 
-    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $compile, $document) {
+    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $compile, $document, $templateCache) {
         /* jshint validthis: true */
         var vm = this,
-            settings,
-            fieldErrorName;
+            settings;
 
         vm.$onInit = function() {
-            var elementParent = vm.options.getParentElement().parents('.grid-toolbar');//.parent().find('.grid-filter-edit');
-            var templateEditorFilter = $compile('<div class="editor-filter" data-ng-hide="!vm.visiable"><div class="editor-filter-wrapper" ng-keyup="vm.clickEnter($event)">' +
-                '<div class="editor-filter-body"><div class="filter-content-wrapper" ng-repeat="group in vm.body track by $index">' +
-                '<label class="filter-name-label" ng-bind="group.label" title="{{group.label}}"></label>' +
-                '<component-wrapper ng-repeat="filter in group.filters" data-setting="filter.field" data-options="filter.options" style="{{filter.ngStyle}};"></component-wrapper>' +
-                '</div></div><div class="editor-filter-footer"><component-wrapper data-ng-repeat="button in vm.footer track by $index" data-setting="button" data-options="vm.options" data-button-class="header">' +
-                '</component-wrapper></div></div></div>')($scope);
+            var elementParent = vm.options.getParentElement().parents('.grid-toolbar');
+            var templateEditorFilter = $compile($templateCache.get('module/components/ueFilter/filter-body.html'))($scope);
+            var filterBody = elementParent.parent().find('.grid-filter-edit');
 
-            if (elementParent.length !== 0 && elementParent.parent().find('.grid-filter-edit').length !== 0) {
-                var el = elementParent.parent().find('.grid-filter-edit');
-                el.addClass('filter-component');
-                el.append(templateEditorFilter);
+            if (filterBody.length !== 0) {
+                filterBody.addClass('filter-component').append(templateEditorFilter);
             } else {
                 $element.find('.filter-component').append(templateEditorFilter);
             }
-
 
             settings = vm.setting.component.settings;
             vm.parentComponentId = vm.options.$parentComponentId;
@@ -109,9 +101,11 @@
                             if (model.singleValue) {
                                 if (model.falseValue == value) {
                                     model.fieldValue = [model.falseValue];
+                                    model.indeterminate = false;
                                 }
                                 if (model.trueValue == value) {
-                                    model.fieldValue = [model.trueValue];
+                                    model.fieldValue = [model.trueValue];                                    
+                                    model.indeterminate = false;
                                 }
                             } else {
                                 if (!angular.isString(value)) {

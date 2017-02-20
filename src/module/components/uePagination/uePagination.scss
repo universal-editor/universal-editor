@@ -1,3 +1,14 @@
-.pagination{
-  margin-top: 0;
+.universal-editor div {
+    & .pagination {
+        margin-top: 10px;
+        
+    }
+    & .meta-info {
+        text-align: right;
+        float: right;
+        padding: 10px;
+        padding-bottom: 0px;
+        font-size: 11px;
+        color: #6a7b8b;
+    }
 }

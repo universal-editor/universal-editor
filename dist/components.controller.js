@@ -926,6 +926,20 @@
                                             component: {
                                                 name: "ue-autocomplete",
                                                 settings: {
+                                                    label: "Поле autocomplete",
+                                                    values: {
+                                                        'key1': 'value1',
+                                                        'key2': 'value2',
+                                                        'key3': 'value3'
+                                                    },
+                                                    multiple: true
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: "ue-autocomplete",
+                                                settings: {
                                                     label: "Поле autocomplete в режиме multiple",
                                                     valuesRemote: {
                                                         fields: {

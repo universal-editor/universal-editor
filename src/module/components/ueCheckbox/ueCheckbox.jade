@@ -4,8 +4,9 @@ block append content
     include ../../template/labelField/labelField
     div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}" style="{{::vm.checkBoxStyle}}", ng-if="!vm.disabled || vm.options.filter")
         .checkbox(data-ng-repeat="item in vm.optionValues", data-ng-class="{'disabled': vm.readonly}")
-            label
-                input(type="checkbox", data-ng-disabled="vm.readonly", data-checklist-model="vm.fieldValue", data-checklist-value="::item[vm.fieldId]")
+            label.checkbox-label
+                input(type="checkbox", data-ng-disabled="vm.readonly", data-checklist-model="vm.fieldValue", 
+                        data-checklist-value="::item[vm.fieldId]", ng-indeterminate="vm.indeterminate", ng-change="vm.switch($event)")
                 span(ng-bind="::item[vm.fieldSearch]")
         .processing-status-wrapper(data-ng-show="vm.loadingData")
             .processing-status {{'PERFORMS_ACTIONS' | translate}}

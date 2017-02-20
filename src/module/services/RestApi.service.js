@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -21,24 +21,24 @@
         self.methodType = '';
         self.editedEntityId = null;
 
-        $rootScope.$on('editor:set_entity_type', function (event, type) {
+        $rootScope.$on('editor:set_entity_type', function(event, type) {
             entityObject = type;
             itemsKey = 'items';
         });
 
-        $rootScope.$on('editor:create_entity', function (event, request) {
+        $rootScope.$on('editor:create_entity', function(event, request) {
             self.addNewItem(request);
         });
 
-        $rootScope.$on('editor:update_entity', function (event, request) {
+        $rootScope.$on('editor:update_entity', function(event, request) {
             self.updateItem(request);
         });
 
-        $rootScope.$on('editor:presave_entity', function (event, request) {
+        $rootScope.$on('editor:presave_entity', function(event, request) {
             self.presaveItem(request);
         });
 
-        this.getQueryParams = function () {
+        this.getQueryParams = function() {
             try {
                 return JSON.parse(JSON.stringify(queryTempParams));
             } catch (e) {
@@ -46,7 +46,7 @@
             }
         };
 
-        this.setQueryParams = function (params) {
+        this.setQueryParams = function(params) {
             if (Object.keys(params).length > 0) {
                 queryTempParams = params;
             } else {
@@ -54,7 +54,7 @@
             }
         };
 
-        this.setFilterParams = function (params) {
+        this.setFilterParams = function(params) {
             if (Object.keys(params).length > 0) {
                 filterParams = params;
             } else {
@@ -73,7 +73,7 @@
             return def;
         }
 
-        this.getItemsList = function (request) {
+        this.getItemsList = function(request) {
 
             //** cancel previouse request if request start again 
             var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
@@ -101,7 +101,7 @@
 
 
             if (filters) {
-                angular.extend(params, {filter: JSON.stringify(filters)});
+                angular.extend(params, { filter: JSON.stringify(filters) });
             } else {
                 delete params.filter;
             }
@@ -134,7 +134,7 @@
 
             var expandFields = [];
 
-            angular.forEach(dataSource.fields, function (field) {
+            angular.forEach(dataSource.fields, function(field) {
                 if (field.hasOwnProperty('expandable') && field.expandable === true) {
                     expandFields.push(field.name);
                 }
@@ -150,21 +150,24 @@
                 params: params,
                 timeout: canceler.promise,
                 beforeSend: beforeSend
-            }).then(function (response) {
+            }).then(function(response) {
                 if (response.data[itemsKey].length === 0) {
                     $rootScope.$broadcast('editor:parent_empty');
                 }
                 response.data.$parentComponentId = request.options.$parentComponentId;
                 $rootScope.$broadcast('editor:items_list', response.data);
                 deferred.resolve(response.data);
-            }).finally(function () {
+            }, function(reject) {
+                reject.$parentComponentId = request.options.$parentComponentId;
+                $rootScope.$broadcast('editor:server_error', reject);
+            }).finally(function() {
                 request.options.isLoading = false;
             });
 
             return deferred.promise;
         };
 
-        this.getData = function (api, params) {
+        this.getData = function(api, params) {
             return $http({
                 method: 'GET',
                 url: api,
@@ -172,7 +175,7 @@
             });
         };
 
-        this.addNewItem = function (request) {
+        this.addNewItem = function(request) {
 
             if (request.options.isLoading) {
                 return;
@@ -203,7 +206,7 @@
                 url: request.method || _url,
                 data: request.data,
                 beforeSend: request.before
-            }).then(function (response) {
+            }).then(function(response) {
                 if (!!request.success) {
                     request.success(response);
                 }
@@ -230,7 +233,7 @@
                 }
                 if (!ModalService.isModalOpen()) {
                     if (state) {
-                        $state.go(state, params).then(function () {
+                        $state.go(state, params).then(function() {
                             if (params.back) {
                                 delete params.back;
                             }
@@ -243,18 +246,18 @@
                 } else {
                     ModalService.close();
                 }
-            }, function (reject) {
+            }, function(reject) {
                 if (!!request.error) {
                     request.error(reject);
                 }
                 var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
 
                 if (wrongFields.length > 0) {
-                    angular.forEach(wrongFields, function (err) {
+                    angular.forEach(wrongFields, function(err) {
                         if (err.hasOwnProperty('field')) {
                             $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
                             if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function (innerError, key) {
+                                angular.forEach(err.fields, function(innerError, key) {
                                     $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
                                 });
                             }
@@ -262,14 +265,14 @@
                     });
                 }
                 request.options.isLoading = false;
-            }).finally(function () {
+            }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
                 }
             });
         };
 
-        this.updateItem = function (request) {
+        this.updateItem = function(request) {
             if (request.options.isLoading) {
                 return;
             }
@@ -288,7 +291,7 @@
                 url: request.url || _url,
                 data: request.data || {},
                 beforeSend: request.before
-            }).then(function (response) {
+            }).then(function(response) {
                 if (!!request.success) {
                     request.success(response);
                 }
@@ -313,7 +316,7 @@
                 }
                 if (!ModalService.isModalOpen()) {
                     if (state) {
-                        $state.go(state, params).then(function () {
+                        $state.go(state, params).then(function() {
                             $location.search(params);
                             $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
                         });
@@ -323,18 +326,18 @@
                 } else {
                     ModalService.close();
                 }
-            }, function (reject) {
+            }, function(reject) {
                 if (!!request.error) {
                     request.error(reject);
                 }
                 var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
 
                 if (wrongFields.length > 0) {
-                    angular.forEach(wrongFields, function (err) {
+                    angular.forEach(wrongFields, function(err) {
                         if (err.hasOwnProperty('field')) {
                             $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
                             if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function (innerError, key) {
+                                angular.forEach(err.fields, function(innerError, key) {
                                     $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
                                 });
                             }
@@ -342,14 +345,14 @@
                     });
                 }
                 request.options.isLoading = false;
-            }).finally(function () {
+            }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
                 }
             });
         };
 
-        this.presaveItem = function (request) {
+        this.presaveItem = function(request) {
             var _url;
             var _method = 'POST';
             var idField = 'id';
@@ -378,7 +381,7 @@
                 url: request.url || _url,
                 data: request.data || {},
                 beforeSend: request.before
-            }).then(function (response) {
+            }).then(function(response) {
                 if (!!request.success) {
                     request.success(response);
                 }
@@ -386,7 +389,7 @@
                 var par = {};
                 par['pk'] = newId;
                 var searchString = $location.search();
-                $state.go($state.current.name, par, {reload: false, notify: false}).then(function () {
+                $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                     $location.search(searchString);
                     $rootScope.$broadcast('editor:update_item', {
                         $gridComponentId: request.options.$gridComponentId,
@@ -404,25 +407,25 @@
                     successUpdateMessage();
                     $rootScope.$broadcast('editor:presave_entity_updated', data);
                 }
-            }, function (reject) {
+            }, function(reject) {
                 if (!!request.error) {
                     request.error(reject);
                 }
                 if ((reject.status === 422 || reject.status === 400) && reject.data) {
                     var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
 
-                    angular.forEach(wrongFields, function (err) {
+                    angular.forEach(wrongFields, function(err) {
                         if (err.hasOwnProperty('field')) {
                             $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
                             if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function (innerError, key) {
+                                angular.forEach(err.fields, function(innerError, key) {
                                     $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
                                 });
                             }
                         }
                     });
                 }
-            }).finally(function () {
+            }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
                 }
@@ -430,14 +433,14 @@
             });
         };
 
-        this.getItemById = function (id, par, options) {
+        this.getItemById = function(id, par, options) {
             var qParams = {},
                 expandFields = [],
                 expandParam = '',
                 dataSource = options.$dataSource || entityObject.dataSource;
 
             options.isLoading = true;
-            angular.forEach(dataSource.fields, function (field) {
+            angular.forEach(dataSource.fields, function(field) {
                 if (field.hasOwnProperty('expandable') && field.expandable === true) {
                     expandFields.push(field.name);
                 }
@@ -450,17 +453,17 @@
                 method: 'GET',
                 url: dataSource.url + '/' + id,
                 params: qParams
-            }).then(function (response) {
+            }).then(function(response) {
                 var data = response.data;
                 data.$parentComponentId = options.$parentComponentId;
                 data.editorEntityType = 'exist';
                 $rootScope.$broadcast('editor:entity_loaded', data);
-            }).finally(function () {
+            }).finally(function() {
                 options.isLoading = false;
             });
         };
 
-        this.deleteItemById = function (request) {
+        this.deleteItemById = function(request) {
             var state;
             if (request.options.isLoading) {
                 return;
@@ -485,7 +488,7 @@
                 url: request.url || _url,
                 params: request.params || {},
                 beforeSend: request.before
-            }).then(function (response) {
+            }).then(function(response) {
                 if (!!request.success) {
                     request.success(response);
                 }
@@ -509,7 +512,7 @@
 
                 if (!ModalService.isModalOpen()) {
                     if (state) {
-                        $state.go(state, params).then(function () {
+                        $state.go(state, params).then(function() {
                             $location.search(params);
                             $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
                         });
@@ -519,12 +522,12 @@
                 } else {
                     ModalService.close();
                 }
-            }, function (reject) {
+            }, function(reject) {
                 if (!!request.error) {
                     request.error(reject);
                 }
                 request.options.isLoading = false;
-            }).finally(function () {
+            }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
                 }
@@ -532,31 +535,31 @@
         };
 
         function successDeleteMessage() {
-            $translate('CHANGE_RECORDS.DELETE').then(function (translation) {
+            $translate('CHANGE_RECORDS.DELETE').then(function(translation) {
                 toastr.success(translation);
             });
         }
 
         function successUpdateMessage() {
-            $translate('CHANGE_RECORDS.UPDATE').then(function (translation) {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
                 toastr.success(translation);
             });
         }
 
         function successPresaveUpdateMessage() {
-            $translate('CHANGE_RECORDS.UPDATE').then(function (translation) {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
                 toastr.success(translation);
             });
         }
 
         function successPresaveCreateMessage() {
-            $translate('CHANGE_RECORDS.CREATE').then(function (translation) {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
                 toastr.success(translation);
             });
         }
 
         function successCreateMessage() {
-            $translate('CHANGE_RECORDS.CREATE').then(function (translation) {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
                 toastr.success(translation);
             });
         }
@@ -592,7 +595,7 @@
                 });
             }
 
-            $q.all(promiseStack).then(function (allResp) {
+            $q.all(promiseStack).then(function(allResp) {
                 var resp;
                 var countP;
                 for (var i = allResp.length; i--;) {
@@ -607,7 +610,7 @@
                 }
 
                 if (!countP || countP === toP || countP === 1) {
-                    defer.resolve({data: {items: result}});
+                    defer.resolve({ data: { items: result } });
                 } else {
                     if (fromP === 1) {
                         fromP = 2;
@@ -622,12 +625,12 @@
                     }
                     return getUrlResource(url, callback, result, defer, fromP, toP);
                 }
-            }, function (reject) {
+            }, function(reject) {
             });
             return defer.promise;
         };
 
-        this.actionRequest = function (request) {
+        this.actionRequest = function(request) {
             var deferred = $q.defer();
 
             var reqParams = request.params || {};
@@ -642,17 +645,17 @@
                 url: url,
                 params: reqParams,
                 beforeSend: request.before
-            }).then(function (response) {
+            }).then(function(response) {
                 if (!!request.success) {
                     request.success(response);
                 }
                 deferred.resolve(response);
-            }, function (reject) {
+            }, function(reject) {
                 if (!!request.error) {
                     request.error(reject);
                 }
                 deferred.reject(reject);
-            }).finally(function () {
+            }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
                 }
@@ -662,7 +665,7 @@
             return deferred.promise;
         };
 
-        this.loadChilds = function (request) {
+        this.loadChilds = function(request) {
             var data = {
                 parentId: request.id,
                 $parentComponentId: request.options.$parentComponentId
@@ -670,7 +673,7 @@
             var parent;
             $rootScope.$broadcast('editor:parent_id', data);
             request.childId = request.id;
-            self.getItemsList(request).then(function () {
+            self.getItemsList(request).then(function() {
                 parent = null;
                 if (request.childId) {
                     parent = request.childId;
@@ -680,7 +683,7 @@
             });
         };
 
-        this.loadParent = function (request) {
+        this.loadParent = function(request) {
             var data = {
                 $parentComponentId: request.options.$parentComponentId
             };
@@ -691,7 +694,7 @@
                 $http({
                     method: 'GET',
                     url: request.url + '/' + entityId
-                }).then(function (response) {
+                }).then(function(response) {
                     var parentId = response.data[request.parentField];
 
                     parent = null;
@@ -706,7 +709,7 @@
                     request.childId = parentId;
                     self.getItemsList(request);
 
-                }, function (reject) {
+                }, function(reject) {
                     request.options.isLoading = false;
                 });
             } else {
@@ -723,7 +726,7 @@
             }
         };
 
-        this.getEntityObject = function () {
+        this.getEntityObject = function() {
             return entityObject;
         };
 
@@ -746,12 +749,12 @@
             }
         }
 
-        this.getUrlDepend = function (url, queryParams, dependField, dependValue) {
+        this.getUrlDepend = function(url, queryParams, dependField, dependValue) {
             if (angular.isString(dependValue)) {
                 dependValue = '"' + dependValue + '"';
             }
             if (angular.isArray(dependValue)) {
-                dependValue = dependValue.filter(function (item) {
+                dependValue = dependValue.filter(function(item) {
                     return !!item;
                 });
                 dependValue = '"' + dependValue.join(',') + '"';
@@ -760,7 +763,7 @@
             return this.getUrlWithParams(url, queryParams);
         };
 
-        this.getUrlWithParams = function (url, queryParams) {
+        this.getUrlWithParams = function(url, queryParams) {
             url = decodeURI(url);
             var urlArray = url.split('?'),
                 search = [],
