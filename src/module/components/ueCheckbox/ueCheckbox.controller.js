@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeCheckboxController', UeCheckboxController)
         .directive('ngIndeterminate', function() {
             return {
@@ -71,7 +71,7 @@
             }
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
-                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
+                if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                     $scope.onLoadDataHandler(e, data);
                     if (!vm.singleValue) {
                         componentSettings.$loadingPromise.then(function(optionValues) {
@@ -123,8 +123,12 @@
                 vm.loadingData = true;
 
                 var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                var request = {
+                    url: url,
+                    $id: vm.setting.component.$id
+                };
                 RestApiService
-                    .getUrlResource(url)
+                    .getUrlResource(request)
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {
                             vm.optionValues.push(v);

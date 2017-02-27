@@ -18,6 +18,6 @@
      * @example <ue-component></ue-component>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueComponent',ueComponent);
 })();

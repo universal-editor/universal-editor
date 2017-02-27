@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeRadiolistController', UeRadiolistController);
 
     UeRadiolistController.$inject = ['$scope', '$element', 'EditEntityStorage', 'RestApiService', 'FilterFieldsStorage', '$controller'];
@@ -25,7 +25,7 @@
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
                 $scope.onLoadDataHandler(e, data);
-                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId) && !vm.options.filter) {
                     componentSettings.$loadingPromise.then(function(optionValues) {
                         vm.optionValues = optionValues;
                         vm.equalPreviewValue();
@@ -42,18 +42,23 @@
                 vm.loadingData = true;
 
                 var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+
+                var request = {
+                    url: url,
+                    $id: vm.setting.component.$id
+                };
                 RestApiService
-                    .getUrlResource(url)
-                    .then(function (response) {
-                        angular.forEach(response.data.items, function (v) {
+                    .getUrlResource(request)
+                    .then(function(response) {
+                        angular.forEach(response.data.items, function(v) {
                             vm.optionValues.push(v);
                         });
-                    }, function (reject) {
-                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function (translation) {
+                    }, function(reject) {
+                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
                             console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
                         });
                     })
-                    .finally(function () {
+                    .finally(function() {
                         vm.loadingData = false;
                     });
             }

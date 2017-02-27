@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeDropdownController', UeDropdownController);
 
     UeDropdownController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', '$timeout', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q', '$translate'];
@@ -69,8 +69,12 @@
                     vm.optionValues = [];
 
                     var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                    var request = {
+                        url: url,
+                        $id: vm.setting.component.$id
+                    };
                     RestApiService
-                        .getUrlResource(url)
+                        .getUrlResource(request)
                         .then(function(response) {
                             angular.forEach(response.data.items, function(v) {
                                 vm.optionValues.push(v);
@@ -135,7 +139,7 @@
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             vm.data = data;
             $scope.onLoadDataHandler(event, data);
-            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
+            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 componentSettings.$loadingPromise.then(function(items) {
                     allOptions = allOptions.length ? allOptions : items;
                     vm.optionValues = [];
@@ -174,8 +178,12 @@
                 item.isOpen = !item.isOpen;
                 if (item[vm.treeChildCountField] && !item.childOpts) {
                     item.loadingData = true;
+                    var request = {
+                        url: componentSettings.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.fieldId] + '"}',
+                        $id: vm.setting.component.$id
+                    };
                     RestApiService
-                        .getUrlResource(componentSettings.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.fieldId] + '"}')
+                        .getUrlResource(request)
                         .then(function(response) {
                             if (!item.childOpts) {
                                 item.childOpts = [];
@@ -661,7 +669,7 @@
     }
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .filter('selectedValues', function() {
             return function(arr, fieldSearch) {
                 var titles = arr.map(function(item) {

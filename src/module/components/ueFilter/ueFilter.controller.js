@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeFilterController', UeFilterController);
 
     UeFilterController.$inject = ['$scope', '$rootScope', '$element', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$compile', '$document', '$templateCache'];

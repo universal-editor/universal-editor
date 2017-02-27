@@ -2,13 +2,13 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeGridController', UeGridController);
 
-    UeGridController.$inject = ['$scope', '$rootScope', 'RestApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', '$element', '$compile', 'EditEntityStorage'];
+    UeGridController.$inject = ['$scope', '$rootScope', 'RestApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', '$element', '$compile', 'EditEntityStorage', '$controller'];
 
-    function UeGridController($scope, $rootScope, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage) {
-          /* jshint validthis: true */
+    function UeGridController($scope, $rootScope, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage, $controller) {
+        /* jshint validthis: true */
         var vm = this,
             itemsKey,
             mixEntityObject,
@@ -16,10 +16,14 @@
             parentField;
 
         vm.$onInit = function() {
+
+            //** Nested base controller */
+            angular.extend(vm, $controller('BaseController', { $scope: $scope }));
+
             url = vm.setting.component.settings.dataSource.url;
             parentField = vm.setting.component.settings.dataSource.parentField;
             vm.correctEntityType = true;
-            vm.listLoaded = false;
+            vm.loaded = false;
             vm.loadingData = true;
             vm.tableFields = [];
             vm.items = [];
@@ -39,7 +43,7 @@
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
             vm.prefixGrid = undefined;
 
-            if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix){
+            if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix) {
                 vm.prefixGrid = vm.setting.component.settings.routing.paramsPrefix;
             }
 
@@ -199,7 +203,7 @@
 
         function changeSortField(field, sorted) {
             if (field && sorted) {
-                vm.listLoaded = false;
+                vm.loaded = false;
                 if (vm.sortField == field) {
                     vm.sortingDirection = !vm.sortingDirection;
                 } else {
@@ -224,7 +228,7 @@
         }
 
         $scope.$on('editor:parent_id', function(event, data) {
-            if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 vm.parent = data.parentId;
             }
         });
@@ -240,26 +244,26 @@
         });
 
         $scope.$on('editor:update_item', function(event, data) {
-            var eventComponentId = data.$gridComponentId || data.$parentComponentId ;
+            var eventComponentId = data.$gridComponentId || data.$parentComponentId;
             if (!eventComponentId || (vm.$parentComponentId === eventComponentId && data.value)) {
                 var changed = false;
                 vm.items.filter(function(item) {
-                    if(item[vm.idField] === data.value[vm.idField]) {
+                    if (item[vm.idField] === data.value[vm.idField]) {
                         angular.merge(item, data.value);
                         changed = true;
                     }
                 });
-                if(changed) {
+                if (changed) {
                     var list = {};
                     list[itemsKey] = vm.items;
-                $rootScope.$broadcast('editor:items_list', list);
+                    $rootScope.$broadcast('editor:items_list', list);
                 }
             }
         });
 
         $scope.$on('editor:items_list', function(event, data) {
-            if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-                vm.listLoaded = true;
+            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
+                vm.loaded = true;
                 vm.items = data[itemsKey];
                 if (angular.isObject(vm.items)) {
                     angular.forEach(vm.items, function(item, index) {
@@ -286,13 +290,6 @@
                     control.paginationData = data;
                 });
             }
-        });
-
-        $scope.$on('editor:server_error', function(event, data) {
-             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-                 vm.listLoaded = true;
-             }
-            vm.errors.push(data);
         });
 
         $scope.$on('editor:parent_childs', function(event, data) {

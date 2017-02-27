@@ -2,9 +2,9 @@
     'use strict';
 
     angular
-        .module('universal.editor',
+        .module('universal-editor',
         [
-            'universal.editor.templates',
+            'universal-editor.templates',
             'minicolors',
             'datePicker',
             'checklist-model',
@@ -19,7 +19,7 @@
         ]);
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .factory('EditorHttpInterceptor', EditorHttpInterceptor);
 
     EditorHttpInterceptor.$inject = ['$q', '$rootScope', 'toastr', '$translate'];
@@ -43,46 +43,12 @@
                 }
 
                 return config;
-            },
-            'responseError': function(rejection) {
-                if (rejection.status !== -1) {
-                    try {
-                        var json = JSON.parse(JSON.stringify(rejection));
-
-                        if (rejection.data !== null && rejection.data.hasOwnProperty('message') && rejection.data.message.length > 0) {
-                            toastr.error(rejection.data.message);
-                        } else if (rejection.status === 422 || rejection.status === 400) {
-                            $translate('RESPONSE_ERROR.INVALID_DATA').then(function(translation) {
-                                toastr.warning(translation);
-                            });
-                        } else if (rejection.status === 401) {
-                            $translate('RESPONSE_ERROR.UNAUTHORIZED').then(function(translation) {
-                                toastr.warning(translation);
-                            });
-                        } else if (rejection.status === 403) {
-                            $translate('RESPONSE_ERROR.FORBIDDEN').then(function(translation) {
-                                toastr.error(translation);
-                            });
-                        } else {
-                            $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function(translation) {
-                                toastr.error(translation);
-                            });
-                        }
-                    } catch (e) {
-                        console.error(e);
-                        $translate('RESPONSE_ERROR.UNEXPECTED_RESPONSE').then(function(translation) {
-                            toastr.error(translation);
-                        });
-                    }
-                }
-
-                return $q.reject(rejection);
             }
         };
     }
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .config(universalEditorConfig);
 
     universalEditorConfig.$inject = ['minicolorsProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$provide', '$injector', 'moment'];
@@ -126,7 +92,7 @@
     }
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .run(universalEditorRun);
 
     universalEditorRun.$inject = ['$rootScope', '$location', '$state', 'EditEntityStorage', 'ModalService', 'FilterFieldsStorage', 'RestApiService'];

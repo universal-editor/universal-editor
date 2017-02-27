@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeGroupController', UeGroupController);
 
-    UeGroupController.$inject = ['$scope', 'EditEntityStorage', '$timeout',  'RestApiService', '$controller', '$translate'];
+    UeGroupController.$inject = ['$scope', 'EditEntityStorage', '$timeout', 'RestApiService', '$controller', '$translate'];
 
-    function UeGroupController($scope, EditEntityStorage, $timeout,  RestApiService, $controller, $translate) {
+    function UeGroupController($scope, EditEntityStorage, $timeout, RestApiService, $controller, $translate) {
         /* jshint validthis: true */
         var vm = this,
             componentSettings,
@@ -29,7 +29,7 @@
             widthBootstrap = Math.ceil(12 / vm.countInLine);
             vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
 
-            if(vm.multiple === true && !vm.fieldName) {
+            if (vm.multiple === true && !vm.fieldName) {
                 $translate('ERROR.MULTIPLE_NAME').then(function(translation) {
                     console.log('UeFormGroup:' + translation);
                 });
@@ -48,6 +48,7 @@
                     field = value;
                 }
                 if (field) {
+                    checkReadonlyEmpty(field);
                     if (vm.fieldName) {
                         field.parentField = vm.fieldName;
                     }
@@ -60,6 +61,11 @@
             vm.option = angular.merge({}, vm.options);
             vm.option.isGroup = true;
         };
+        function checkReadonlyEmpty(control) {
+            if (control.component && control.component.settings && control.component.settings.readonly === true && vm.options.isNewRecord) {
+                control.component.settings.unVisible = true;
+            }
+        }
 
         function onLoadedHandler(event, data) {
             if (!vm.$isOnlyChildsBroadcast) {
@@ -76,10 +82,10 @@
                 }
             }
         }
-        
+
         function removeItem(ind) {
             vm.fieldsArray.splice(ind, 1);
-        }    
+        }
 
         function addItem() {
             var clone = vm.innerFields.map(function(field) { return angular.extend({}, field); });

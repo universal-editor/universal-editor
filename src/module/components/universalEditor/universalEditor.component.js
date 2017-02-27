@@ -17,6 +17,6 @@
      * @example <universal-editor></universal-editor>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('universalEditor',universalEditor);
 })();

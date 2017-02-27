@@ -13,6 +13,6 @@
     };
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('componentWrapper',componentWrapper);
 })();

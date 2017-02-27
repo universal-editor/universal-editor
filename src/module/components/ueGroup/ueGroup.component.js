@@ -19,6 +19,6 @@
      * @example <ue-group></ue-group>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueGroup',ueGroup);
 })();

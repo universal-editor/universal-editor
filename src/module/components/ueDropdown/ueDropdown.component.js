@@ -18,6 +18,6 @@
      * @example <ue-dropdown></ue-dropdown>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueDropdown',ueDropdown);
 })();

@@ -18,6 +18,6 @@
      * @example <ue-date></ue-date>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueDate',ueDate);
 })();

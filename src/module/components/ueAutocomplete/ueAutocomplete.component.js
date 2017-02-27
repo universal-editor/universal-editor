@@ -18,6 +18,6 @@
      * @example <ue-autocomplete></ue-autocomplete>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueAutocomplete',ueAutocomplete);
 })();

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .service('RestApiService', RestApiService);
 
     RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate', '$httpParamSerializerJQLike', '$window'];
@@ -159,7 +159,7 @@
                 deferred.resolve(response.data);
             }, function(reject) {
                 reject.$parentComponentId = request.options.$parentComponentId;
-                $rootScope.$broadcast('editor:server_error', reject);
+                $rootScope.$broadcast('editor:error_get_data', reject);
             }).finally(function() {
                 request.options.isLoading = false;
             });
@@ -264,6 +264,7 @@
                         }
                     });
                 }
+                proccessRejection(reject);
                 request.options.isLoading = false;
             }).finally(function() {
                 if (!!request.complete) {
@@ -344,6 +345,7 @@
                         }
                     });
                 }
+                proccessRejection(reject);
                 request.options.isLoading = false;
             }).finally(function() {
                 if (!!request.complete) {
@@ -407,6 +409,7 @@
                     successUpdateMessage();
                     $rootScope.$broadcast('editor:presave_entity_updated', data);
                 }
+                proccessRejection(reject);
             }, function(reject) {
                 if (!!request.error) {
                     request.error(reject);
@@ -458,6 +461,9 @@
                 data.$parentComponentId = options.$parentComponentId;
                 data.editorEntityType = 'exist';
                 $rootScope.$broadcast('editor:entity_loaded', data);
+            }, function(reject) {
+                reject.$parentComponentId = options.$parentComponentId;
+                $rootScope.$broadcast('editor:error_get_data', reject);
             }).finally(function() {
                 options.isLoading = false;
             });
@@ -526,6 +532,7 @@
                 if (!!request.error) {
                     request.error(reject);
                 }
+                proccessRejection(reject);
                 request.options.isLoading = false;
             }).finally(function() {
                 if (!!request.complete) {
@@ -565,21 +572,21 @@
         }
 
         //-- read all pages
-        this.getUrlResource = function getUrlResource(url, callback, res, def, fromP, toP) {
-            var defer = def || $q.defer();
-            var result = res || [];
+        this.getUrlResource = function getUrlResource(request) {
+            request.defer = request.defer || $q.defer();
+            request.res = request.res || [];
             var promiseStack = [];
-            fromP = fromP || 1;
-            toP = toP || 0;
+            request.fromP = request.fromP || 1;
+            request.toP = request.toP || 0;
 
-            if (fromP === 12) {
-                fromP = 11;
+            if (request.fromP === 12) {
+                request.fromP = 11;
             }
-            if (!toP) {
-                promiseStack.push(getPromise(url));
+            if (!request.toP) {
+                promiseStack.push(getPromise(request.url));
             } else {
-                for (var i = fromP; i <= toP; i++) {
-                    promiseStack.push(getPromise(url, i));
+                for (var i = request.fromP; i <= request.toP; i++) {
+                    promiseStack.push(getPromise(request.url, i));
                 }
             }
 
@@ -600,34 +607,36 @@
                 var countP;
                 for (var i = allResp.length; i--;) {
                     resp = allResp[i];
-                    result = result.concat(resp.data.items);
-                    if (angular.isFunction(callback)) {
-                        callback(resp.data.items);
+                    request.res = request.res.concat(resp.data.items);
+                    if (angular.isFunction(request.callback)) {
+                        request.callback(resp.data.items);
                     }
                 }
                 if (resp && resp.data._meta) {
                     countP = resp.data._meta.pageCount;
                 }
 
-                if (!countP || countP === toP || countP === 1) {
-                    defer.resolve({ data: { items: result } });
+                if (!countP || countP === request.toP || countP === 1) {
+                    request.defer.resolve({ data: { items: request.res } });
                 } else {
-                    if (fromP === 1) {
-                        fromP = 2;
-                    } else if (fromP === 2) {
-                        fromP += 4;
+                    if (request.fromP === 1) {
+                        request.fromP = 2;
+                    } else if (request.fromP === 2) {
+                        request.fromP += 4;
                     } else {
-                        fromP += 5;
+                        request.fromP += 5;
                     }
-                    toP += 5;
-                    if (toP > countP) {
-                        toP = countP;
+                    request.toP += 5;
+                    if (request.toP > countP) {
+                        request.toP = countP;
                     }
-                    return getUrlResource(url, callback, result, defer, fromP, toP);
+                    return getrequest.urlResource(request);
                 }
             }, function(reject) {
+                reject.$parentComponentId = request.$id;
+                $rootScope.$broadcast('editor:error_get_data', reject);
             });
-            return defer.promise;
+            return request.defer.promise;
         };
 
         this.actionRequest = function(request) {
@@ -654,6 +663,7 @@
                 if (!!request.error) {
                     request.error(reject);
                 }
+                proccessRejection(reject);
                 deferred.reject(reject);
             }).finally(function() {
                 if (!!request.complete) {
@@ -710,6 +720,8 @@
                     self.getItemsList(request);
 
                 }, function(reject) {
+                    reject.$parentComponentId = request.options.$parentComponentId;
+                    $rootScope.$broadcast('editor:error_get_data', reject);
                     request.options.isLoading = false;
                 });
             } else {
@@ -784,5 +796,39 @@
             var params = $httpParamSerializer(searchObject);
             return urlArray[0] + (params ? ('?' + params) : '');
         };
+
+
+        function proccessRejection(rejection) {
+            if (rejection.status !== -1) {
+                try {
+                    var json = JSON.parse(JSON.stringify(rejection));
+
+                    if (rejection.data !== null && rejection.data.hasOwnProperty('message') && rejection.data.message.length > 0) {
+                        toastr.error(rejection.data.message);
+                    } else if (rejection.status === 422 || rejection.status === 400) {
+                        $translate('RESPONSE_ERROR.INVALID_DATA').then(function(translation) {
+                            toastr.warning(translation);
+                        });
+                    } else if (rejection.status === 401) {
+                        $translate('RESPONSE_ERROR.UNAUTHORIZED').then(function(translation) {
+                            toastr.warning(translation);
+                        });
+                    } else if (rejection.status === 403) {
+                        $translate('RESPONSE_ERROR.FORBIDDEN').then(function(translation) {
+                            toastr.error(translation);
+                        });
+                    } else {
+                        $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function(translation) {
+                            toastr.error(translation);
+                        });
+                    }
+                } catch (e) {
+                    console.error(e);
+                    $translate('RESPONSE_ERROR.UNEXPECTED_RESPONSE').then(function(translation) {
+                        toastr.error(translation);
+                    });
+                }
+            }
+        }
     }
 })();

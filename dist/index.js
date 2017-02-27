@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('demoApp', ['ui.router', 'universal.editor']);
+    angular.module('demoApp', ['ui.router', 'universal-editor']);
 
 
     angular

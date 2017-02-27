@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .service('EditEntityStorage', EditEntityStorage);
 
     EditEntityStorage.$inject = ['$rootScope', '$timeout', 'configData', '$location', '$state', '$translate'];

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('ComponentWrapperController',ComponentWrapperController);
 
     ComponentWrapperController.$inject = ['$element', '$scope', 'ComponentBuilder'];

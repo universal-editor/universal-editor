@@ -13,6 +13,6 @@
         controllerAs : 'vm'
     };
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueGrid',ueGrid);
 })();

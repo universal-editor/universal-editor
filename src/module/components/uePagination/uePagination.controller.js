@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UePaginationController', UePaginationController);
 
     UePaginationController.$inject = ['$scope', 'RestApiService', '$httpParamSerializer', '$sce', '$location', '$element'];

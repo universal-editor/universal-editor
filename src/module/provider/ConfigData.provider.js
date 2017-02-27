@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .provider('configData', ConfigDataProvider);
 
     ConfigDataProvider.$inject = ['$stateProvider', '$urlRouterProvider', '$injector', 'moment'];

@@ -1,5 +1,5 @@
 angular
-  .module('universal.editor')
+  .module('universal-editor')
   .directive('onRenderTemplate', ['$timeout', '$compile', function($timeout, $compile) {
     return {
       restrict: 'A',

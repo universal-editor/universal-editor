@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeColorpickerController', UeColorpickerController);
 
     UeColorpickerController.$inject = ['$scope', '$element', 'EditEntityStorage', 'FilterFieldsStorage', '$state', '$controller'];
@@ -24,7 +24,7 @@
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
                 $scope.onLoadDataHandler(e, data);
-                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId) && !vm.options.filter) {
                     vm.equalPreviewValue();
                 }
             }));

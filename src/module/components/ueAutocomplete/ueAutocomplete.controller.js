@@ -1,8 +1,8 @@
-(function () {
+(function() {
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
     UeAutocompleteController.$inject = ['$scope', '$element', '$document', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$controller', '$translate'];
@@ -13,9 +13,9 @@
             inputTimeout,
             componentSettings;
 
-        vm.$onInit = function () {
+        vm.$onInit = function() {
             vm.optionValues = [];
-            angular.extend(vm, $controller('FieldsController', {$scope: $scope}));
+            angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
             componentSettings = vm.setting.component.settings;
 
             vm.selectedValues = [];
@@ -27,7 +27,7 @@
             vm.maxItemsCount = componentSettings.maxItems || Number.POSITIVE_INFINITY;
             vm.minCount = componentSettings.minCount || 2;
             vm.sizeInput = 1;
-            vm.classInput = {'width': '1px'};
+            vm.classInput = { 'width': '1px' };
             vm.showPossible = false;
 
             vm.addToSelected = addToSelected;
@@ -44,22 +44,22 @@
                 loadValues();
             }
 
-            vm.listeners.push($scope.$on('editor:entity_loaded', function (event, data) {
-                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+            vm.listeners.push($scope.$on('editor:entity_loaded', function(event, data) {
+                if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId) && !vm.options.filter) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
-                    componentSettings.$loadingPromise.then(function (optionValues) {
+                    componentSettings.$loadingPromise.then(function(optionValues) {
                         vm.optionValues = optionValues;
                         vm.equalPreviewValue();
-                    }).finally(function () {
+                    }).finally(function() {
                         vm.loadingData = false;
                     });
                 }
             }));
 
-            vm.listeners.push($scope.$watch(function () {
+            vm.listeners.push($scope.$watch(function() {
                 return vm.inputValue;
-            }, function (newValue) {
+            }, function(newValue) {
                 if (newValue) {
                     if (inputTimeout) {
                         $timeout.cancel(inputTimeout);
@@ -74,14 +74,14 @@
                             vm.classInput.width = 'initial';
                         }
                     }
-                    inputTimeout = $timeout(function () {
+                    inputTimeout = $timeout(function() {
                         autocompleteSearch(newValue);
                     }, 300);
                 }
             }, true));
         };
 
-        $element.bind('keydown', function (event) {
+        $element.bind('keydown', function(event) {
             var possibleValues;
             switch (event.which) {
                 case 13:
@@ -90,7 +90,7 @@
                         break;
                     }
 
-                    $timeout(function () {
+                    $timeout(function() {
                         vm.addToSelected(event, vm.possibleValues[vm.activeElement]);
                     }, 0);
 
@@ -104,11 +104,11 @@
                     possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
                     if (vm.activeElement < vm.possibleValues.length - 1) {
-                        $timeout(function () {
+                        $timeout(function() {
                             vm.activeElement++;
                         }, 0);
 
-                        $timeout(function () {
+                        $timeout(function() {
                             var activeTop = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].offsetTop,
                                 activeHeight = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].clientHeight,
                                 wrapperScroll = possibleValues[0].scrollTop,
@@ -129,11 +129,11 @@
                     possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
                     if (vm.activeElement > 0) {
-                        $timeout(function () {
+                        $timeout(function() {
                             vm.activeElement--;
                         }, 0);
 
-                        $timeout(function () {
+                        $timeout(function() {
                             var activeTop = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].offsetTop,
                                 activeHeight = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].clientHeight,
                                 wrapperScroll = possibleValues[0].scrollTop,
@@ -173,7 +173,7 @@
             if (!vm.multiple) {
                 vm.fieldValue = null;
             }
-            angular.forEach(vm.selectedValues, function (val, key) {
+            angular.forEach(vm.selectedValues, function(val, key) {
                 if (val[vm.fieldId] == obj[vm.fieldId]) {
                     vm.selectedValues.splice(key, 1);
                     if (!vm.multiple) {
@@ -194,7 +194,7 @@
             }
             vm.searching = true;
             if (componentSettings.hasOwnProperty('values')) {
-                angular.forEach(componentSettings.values, function (v, key) {
+                angular.forEach(componentSettings.values, function(v, key) {
                     var obj = {};
                     if (angular.isArray(componentSettings.values)) {
                         obj[vm.fieldId] = v;
@@ -214,18 +214,22 @@
                 urlParam.filter[vm.fieldSearch] = "%" + searchString + "%";
 
                 var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
+                var request = {
+                    url: url,
+                    $id: vm.setting.component.$id
+                };
                 RestApiService
-                    .getUrlResource(url)
-                    .then(function (response) {
-                        angular.forEach(response.data.items, function (v) {
+                    .getUrlResource(request)
+                    .then(function(response) {
+                        angular.forEach(response.data.items, function(v) {
                             if (!alreadyIn(v, vm.selectedValues) && !alreadyIn(v, vm.possibleValues)) {
                                 vm.possibleValues.push(v);
                             }
                         });
                         vm.activeElement = 0;
                         vm.searching = false;
-                    }, function (reject) {
-                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function (translation) {
+                    }, function(reject) {
+                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
                             console.error('EditorFieldAutocompleteController: ' + translation.replace('%name_field', vm.fieldName));
                         });
                         vm.searching = false;
@@ -235,7 +239,7 @@
 
         function alreadyIn(obj, list) {
             if (list) {
-                return list.filter(function (v) {
+                return list.filter(function(v) {
                     return v[vm.fieldId] == obj[vm.fieldId];
                 }).length;
             }
@@ -245,7 +249,7 @@
         function loadValues() {
             vm.preloadedData = false;
             if (componentSettings.hasOwnProperty('values')) {
-                angular.forEach(componentSettings.values, function (v, key) {
+                angular.forEach(componentSettings.values, function(v, key) {
                     var obj = {};
                     if (Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple) {
                         if (angular.isArray(componentSettings.values)) {
@@ -282,10 +286,15 @@
                     urlParam[vm.fieldId].push(vm.fieldValue);
                 }
 
+                var request = {
+                    url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
+                    $id: vm.setting.component.$id
+                };
+
                 RestApiService
-                    .getUrlResource(componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam))
-                    .then(function (response) {
-                        angular.forEach(response.data.items, function (v) {
+                    .getUrlResource(request)
+                    .then(function(response) {
+                        angular.forEach(response.data.items, function(v) {
                             if (Array.isArray(vm.fieldValue) &&
                                 (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
                                 vm.multiple && !alreadyIn(v, vm.selectedValues)
@@ -298,15 +307,15 @@
 
                         });
                         vm.preloadedData = true;
-                    }, function (reject) {
+                    }, function(reject) {
                         vm.preloadedData = true;
-                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function (translation) {
+                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
                             console.error('EditorFieldAutocompleteController: ' + translation.replace('%name_field', vm.fieldName));
                         });
                     });
             } else {
                 vm.preloadedData = true;
-                $translate('ERROR.FIELD.NOT_TYPE_VALUE').then(function (translation) {
+                $translate('ERROR.FIELD.NOT_TYPE_VALUE').then(function(translation) {
                     console.error('EditorFieldAutocompleteController: ' + translation);
                 });
             }
@@ -338,9 +347,9 @@
             }
         };
 
-        this.$postLink = function () {
+        this.$postLink = function() {
 
-            $scope.inputFocus = function () {
+            $scope.inputFocus = function() {
                 if (!vm.multiple) {
                     $element.find('.autocomplete-field-search').removeClass('hidden');
                     $element.find('.autocomplete-item').addClass('opacity-item');
@@ -349,7 +358,7 @@
                 $element.find('input')[0].focus();
             };
 
-            $element.on('$destroy', function () {
+            $element.on('$destroy', function() {
                 $scope.$destroy();
             });
         };

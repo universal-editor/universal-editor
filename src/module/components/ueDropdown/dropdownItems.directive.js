@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .directive('dropdownItems',dropdownItems);
 
     dropdownItems.$inject = ['$templateCache', '$document', '$compile'];

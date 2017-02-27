@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('FieldsController', FieldsController);
 
     FieldsController.$inject = ['$scope', '$rootScope', '$location', '$controller', '$timeout', 'FilterFieldsStorage', 'RestApiService', 'moment', 'EditEntityStorage', '$q', '$translate'];
@@ -17,6 +17,7 @@
         var regEmail = new RegExp('^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$', 'i');
         var regUrl = new RegExp('^(?:(?:ht|f)tps?://)?(?:[\\-\\w]+:[\\-\\w]+@)?(?:[0-9a-z][\\-0-9a-z]*[0-9a-z]\\.)+[a-z]{2,6}(?::\\d{1,5})?(?:[?/\\\\#][?!^$.(){}:|=[\\]+\\-/\\\\*;&~#@,%\\wА-Яа-я]*)?$', 'i');
 
+        self.unVisible = componentSettings.unVisible === true;
 
         self.readonly = componentSettings.readonly === true;
         self.multiname = componentSettings.multiname || null;
@@ -54,7 +55,7 @@
                     self.loadingData = true;
                     if (!componentSettings.$loadingPromise) {
                         componentSettings.$loadingPromise = RestApiService
-                            .getUrlResource(remoteValues.url)
+                            .getUrlResource({url: remoteValues.url, $id: self.setting.component.$id})
                             .then(function(response) {
                                 if (!componentSettings.depend) {
                                     angular.forEach(response.data.items, function (v) {
@@ -247,7 +248,7 @@
         $scope.onLoadDataHandler = onLoadDataHandler;
 
         function onLoadDataHandler(event, data, callback) {
-            if (!data.$parentComponentId || data.$parentComponentId === self.parentComponentId) {
+            if (!data.$parentComponentId || self.isParentComponent(data.$parentComponentId)) {
                 if (!self.options.filter) {
                     //-- functional for required fields
                     if (componentSettings.depend) {

@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window', 'ModalService', '$timeout'];
+    UeFormController.$inject = ['$scope', 'RestApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window', 'ModalService', '$timeout', '$controller'];
 
-    function UeFormController($scope, RestApiService, $location, $state, $translate, EditEntityStorage, $window, ModalService, $timeout) {
+    function UeFormController($scope, RestApiService, $location, $state, $translate, EditEntityStorage, $window, ModalService, $timeout, $controller) {
 
         /* jshint validthis: true */
         var vm = this,
@@ -46,6 +46,9 @@
         ];
 
         vm.$onInit = function() {
+            //** Nested base controller */
+            angular.extend(vm, $controller('BaseController', { $scope: $scope }));
+
             vm.componentSettings = vm.setting.component.settings;
             var dataSource = vm.componentSettings.dataSource;
             var header = vm.componentSettings.header;
@@ -56,7 +59,7 @@
                 }
             }
             vm.entityLoaded = false;
-            vm.listLoaded = false;
+            vm.loaded = false;
             vm.errors = [];
             vm.notifys = [];
             vm.entityId = '';
@@ -76,6 +79,8 @@
             pkKey = 'pk';
             pk = $state.params[pkKey];
 
+            vm.options.isNewRecord = pk === 'new';
+
             if (dataSource.hasOwnProperty('primaryKey')) {
                 vm.idField = dataSource.primaryKey || vm.idField;
             }
@@ -86,6 +91,7 @@
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = dataSource;
                     }
+                    checkReadonlyEmpty(newControl);
                     newControl.paginationData = {};
                     vm.editFooterBar.push(newControl);
                 });
@@ -97,11 +103,18 @@
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = dataSource;
                     }
+                    checkReadonlyEmpty(newControl);
                     newControl.paginationData = {};
                     vm.editFooterBar.push(newControl);
                 });
             }
             updateButton();
+
+            function checkReadonlyEmpty(control) {
+                if (control.component && control.component.settings && control.component.settings.readonly === true && isNewRecord) {
+                    control.component.settings.unVisible = true;
+                }
+            }
 
             vm.components = [];
 
@@ -111,13 +124,15 @@
                     if (componentObject.component.settings.dataSource === undefined) {
                         componentObject.component.settings.dataSource = dataSource;
                     }
+                    checkReadonlyEmpty(componentObject);
                 }
                 if (angular.isString(componentObject)) {
                     var dataSourceComponent = dataSource.fields.filter(function(k) {
                         return k.name == componentObject;
-                    });
-                    if (dataSourceComponent.length > 0) {
-                        vm.components.push(dataSourceComponent[0]);
+                    })[0];
+                    if (dataSourceComponent) {
+                        vm.components.push(dataSourceComponent);
+                        checkReadonlyEmpty(dataSourceComponent);
                     }
                 }
             });
@@ -163,7 +178,7 @@
 
 
         $scope.$on('editor:entity_loaded', function(event, data) {
-            if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 vm.editorEntityType = data.editorEntityType;
                 vm.entityId = data[vm.idField];
                 vm.entityLoaded = true;

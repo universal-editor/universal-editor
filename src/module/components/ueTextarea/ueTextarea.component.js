@@ -18,6 +18,6 @@
      * @example <ue-textarea></ue-textarea>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueTextarea',ueTextarea);
 })();
