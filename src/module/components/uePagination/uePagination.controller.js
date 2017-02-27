@@ -5,9 +5,8 @@
         .module('universal.editor')
         .controller('UePaginationController', UePaginationController);
 
-    UePaginationController.$inject = ['$scope', 'YiiSoftApiService', '$httpParamSerializer', '$sce', '$location', '$element'];
-
     function UePaginationController($scope, YiiSoftApiService, $httpParamSerializer, $sce, $location, $element) {
+        "ngInject";
         $element.addClass('ue-pagination');
         
         var vm = this;

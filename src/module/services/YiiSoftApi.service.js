@@ -1,13 +1,12 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('universal.editor')
         .service('YiiSoftApiService', YiiSoftApiService);
 
-    YiiSoftApiService.$inject = ['$q', '$rootScope', '$http', '$location', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate', '$httpParamSerializerJQLike', '$window', '$injector'];
-
     function YiiSoftApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
+        "ngInject";
         var self = this,
             queryTempParams,
             filterParams,
@@ -20,24 +19,24 @@
         self.methodType = '';
         self.editedEntityId = null;
 
-        $rootScope.$on('editor:set_entity_type', function (event, type) {
+        $rootScope.$on('editor:set_entity_type', function(event, type) {
             entityObject = type;
             itemsKey = 'items';
         });
 
-        $rootScope.$on('editor:create_entity', function (event, request) {
+        $rootScope.$on('editor:create_entity', function(event, request) {
             self.addNewItem(request);
         });
 
-        $rootScope.$on('editor:update_entity', function (event, request) {
+        $rootScope.$on('editor:update_entity', function(event, request) {
             self.updateItem(request);
         });
 
-        $rootScope.$on('editor:presave_entity', function (event, request) {
+        $rootScope.$on('editor:presave_entity', function(event, request) {
             self.presaveItem(request);
         });
 
-        this.getQueryParams = function () {
+        this.getQueryParams = function() {
             try {
                 return JSON.parse(JSON.stringify(queryTempParams));
             } catch (e) {
@@ -45,7 +44,7 @@
             }
         };
 
-        this.setQueryParams = function (params) {
+        this.setQueryParams = function(params) {
             if (Object.keys(params).length > 0) {
                 queryTempParams = params;
             } else {
@@ -53,7 +52,7 @@
             }
         };
 
-        this.setFilterParams = function (params) {
+        this.setFilterParams = function(params) {
             if (Object.keys(params).length > 0) {
                 filterParams = params;
             } else {
@@ -71,7 +70,7 @@
             return def;
         }
 
-        this.getItemsList = function (request) {
+        this.getItemsList = function(request) {
             var dataSource = request.options.$dataSource;
             //** cancel previouse request if request start again 
             var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
@@ -95,8 +94,8 @@
 
             var expandFields = [];
 
-            angular.forEach(dataSource.fields, function (field) {
-                if (field.hasOwnProperty('expandable') && field.expandable === true) {
+            angular.forEach(dataSource.fields, function(field) {
+                if (field.component && field.component.settings && field.component.settings.expandable === true) {
                     expandFields.push(field.name);
                 }
             });
@@ -112,6 +111,11 @@
                 data: {}
             };
 
+            if (dataSource.type) {
+                config.__type = dataSource.type;
+            }
+
+
             if (angular.isUndefined(service) || !angular.isFunction(service.getParams)) {
 
                 filtersParams = angular.merge(filtersParams, filters);
@@ -120,8 +124,8 @@
                     params.sort = request.options.sort;
                 }
 
-                if (filtersParams) {
-                    angular.extend(params, {filter: JSON.stringify(filtersParams)});
+                if (filtersParams && !$.isEmptyObject(filtersParams)) {
+                    angular.extend(params, { filter: JSON.stringify(filtersParams) });
                 } else {
                     delete params.filter;
                 }
@@ -174,26 +178,27 @@
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
-            var objectBind = { action: 'list', parentComponentId: request.options.$parentComponentId};
+            var objectBind = { action: 'list', parentComponentId: request.options.$parentComponentId };
 
-            $http(options).then(function (response) {
+            $http(options).then(function(response) {
+                debugger;
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                     deferred.resolve(response.data);
                 } else {
-                    var data = service.processResponse(response,
+                    var data = service.processResponse(config, response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));
                     deferred.resolve(data);
                 }
-            }).finally(function () {
+            }).finally(function() {
                 request.options.isLoading = false;
             });
 
             return deferred.promise;
         };
 
-        this.getData = function (api, params) {
+        this.getData = function(api, params) {
             return $http({
                 method: 'GET',
                 url: api,
@@ -201,7 +206,7 @@
             });
         };
 
-        this.addNewItem = function (request) {
+        this.addNewItem = function(request) {
             var dataSource = request.options.$dataSource;
             var service = getCustomService(dataSource.standard);
 
@@ -233,6 +238,11 @@
                 data: request.data,
                 params: request.params || {}
             };
+
+            if (dataSource.type) {
+                config.__type = dataSource.type;
+            }
+
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
@@ -243,35 +253,37 @@
                 idField: idField
             };
 
-            $http(options).then(function (response) {
+            $http(options).then(function(response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                 } else {
                     service.processResponse(
+                        config,
                         response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
                 }
-            }, function (reject) {
+            }, function(reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     failAnswer.bind(objectBind)(reject.data);
                 } else {
                     service.processResponse(
+                        config,
                         reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
                 }
                 request.options.isLoading = false;
-            }).finally(function () {
+            }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
                 }
             });
         };
 
-        this.updateItem = function (request) {
+        this.updateItem = function(request) {
             if (request.options.isLoading) {
                 return;
             }
@@ -289,6 +301,13 @@
                 data: request.data,
                 params: request.params || {}
             };
+
+            config.id = self.editedEntityId;
+
+            if (dataSource.type) {
+                config.__type = dataSource.type;
+            }
+
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
             var objectBind = {
@@ -297,35 +316,37 @@
                 request: request,
                 idField: idField
             };
-            $http(options).then(function (response) {
+            $http(options).then(function(response) {
                 if (angular.isDefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                 } else {
                     service.processResponse(
+                        config,
                         response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
                 }
-            }, function (reject) {
+            }, function(reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     failAnswer.bind(objectBind)(reject.data);
                 } else {
                     service.processResponse(
+                        config,
                         reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
                 }
                 request.options.isLoading = false;
-            }).finally(function () {
+            }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
                 }
             });
         };
 
-        this.presaveItem = function (request) {
+        this.presaveItem = function(request) {
             var idField = 'id';
             var isCreate = true;
             if (request.options.isLoading) {
@@ -342,6 +363,12 @@
                 data: request.data,
                 params: request.params || {}
             };
+            config.id = self.editedEntityId;
+
+            if (dataSource.type) {
+                config.__type = dataSource.type;
+            }
+
 
             if (self.editedEntityId !== '') {
                 config.url = dataSource.url + '/' + self.editedEntityId;
@@ -368,27 +395,30 @@
                 idField: idField
             };
 
-            $http(options).then(function (response) {
+
+            $http(options).then(function(response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                 } else {
                     service.processResponse(
+                        config,
                         response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
                 }
-            }, function (reject) {
+            }, function(reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     failAnswer.bind(objectBind)(reject.data);
                 } else {
                     service.processResponse(
+                        config,
                         reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
                 }
-            }).finally(function () {
+            }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
                 }
@@ -396,14 +426,14 @@
             });
         };
 
-        this.getItemById = function (id, par, options) {
+        this.getItemById = function(id, par, options) {
             var qParams = {},
                 expandFields = [],
                 dataSource = options.$dataSource || entityObject.dataSource;
             var service = getCustomService(dataSource.standard);
             options.isLoading = true;
-            angular.forEach(dataSource.fields, function (field) {
-                if (field.hasOwnProperty('expandable') && field.expandable === true) {
+            angular.forEach(dataSource.fields, function(field) {
+                if (field.component && field.component.settings && field.component.settings.expandable === true) {
                     expandFields.push(field.name);
                 }
             });
@@ -417,6 +447,11 @@
                 method: 'GET',
                 params: qParams
             };
+
+            if (dataSource.type) {
+                config.__type = dataSource.type;
+            }
+
             var optionsHttp = getAjaxOptionsByTypeService(config, dataSource.standard);
 
             var objectBind = {
@@ -424,21 +459,23 @@
                 parentComponentId: options.$parentComponentId
             };
 
-            $http(optionsHttp).then(function (response) {
+            $http(optionsHttp).then(function(response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                 } else {
-                    service.processResponse(response,
+                    service.processResponse(
+                        config,
+                        response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
                 }
-            }).finally(function () {
+            }).finally(function() {
                 options.isLoading = false;
             });
         };
 
-        this.deleteItemById = function (request) {
+        this.deleteItemById = function(request) {
             var state;
             if (request.options.isLoading) {
                 return;
@@ -467,6 +504,11 @@
                 data: request.data,
                 params: request.params || {}
             };
+
+            if (dataSource.type) {
+                config.__type = dataSource.type;
+            }
+
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
@@ -476,25 +518,25 @@
                 request: request
             };
 
-            return $http(options).then(function (response) {
+            return $http(options).then(function(response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                 } else {
-                    service.processResponse(response,
+                    service.processResponse(config, response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
                 }
-            }, function (reject) {
+            }, function(reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     failAnswer.bind(objectBind)(reject.data);
                 } else {
-                    service.processResponse(reject,
+                    service.processResponse(config, reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
                 }
-            }).finally(function () {
+            }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
                 }
@@ -502,102 +544,130 @@
         };
 
         function successDeleteMessage() {
-            $translate('CHANGE_RECORDS.DELETE').then(function (translation) {
+            $translate('CHANGE_RECORDS.DELETE').then(function(translation) {
                 toastr.success(translation);
             });
         }
 
         function successUpdateMessage() {
-            $translate('CHANGE_RECORDS.UPDATE').then(function (translation) {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
                 toastr.success(translation);
             });
         }
 
         function successPresaveUpdateMessage() {
-            $translate('CHANGE_RECORDS.UPDATE').then(function (translation) {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
                 toastr.success(translation);
             });
         }
 
         function successPresaveCreateMessage() {
-            $translate('CHANGE_RECORDS.CREATE').then(function (translation) {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
                 toastr.success(translation);
             });
         }
 
         function successCreateMessage() {
-            $translate('CHANGE_RECORDS.CREATE').then(function (translation) {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
                 toastr.success(translation);
             });
         }
 
         //-- read all pages
-        this.getUrlResource = function getUrlResource(url, callback, res, def, fromP, toP) {
-            var defer = def || $q.defer();
-            var result = res || [];
+        this.getUrlResource = function getUrlResource(config) {
+            config.defer = config.defer || $q.defer();
+            config.result = config.result || [];
             var promiseStack = [];
-            fromP = fromP || 1;
-            toP = toP || 0;
+            config.fromP = config.fromP || 1;
+            config.toP = config.toP || 0;
+            var defaultStandard = !config.standard || config.standard === 'YiiSoft';
+            var options = {};
 
-            if (fromP === 12) {
-                fromP = 11;
-            }
-            if (!toP) {
-                promiseStack.push(getPromise(url));
+            if (defaultStandard && config.filter) {
+                var filter = null;
+                angular.forEach(config.filter, function(value, key) {
+                    value.forEach(function(f) {
+                        if (filter) {
+                            filter += ',';
+                        }
+                        filter += '"' + key + '" : "' + f.value.toString() + '"';
+                    });
+                });
+                if (filter) {
+                    config.params.filter = '{' + filter + '}';
+                }
             } else {
-                for (var i = fromP; i <= toP; i++) {
-                    promiseStack.push(getPromise(url, i));
+            }
+
+            if (config.fromP === 12) {
+                config.fromP = 11;
+            }
+            if (!config.toP) {
+                promiseStack.push(getPromise(config.url));
+            } else {
+                for (var i = config.fromP; i <= config.toP; i++) {
+                    promiseStack.push(getPromise(config.url, i));
                 }
             }
 
             //-- read items from one page
             function getPromise(url, page) {
-                return $http({
-                    method: 'GET',
-                    url: url,
-                    params: {
-                        page: page || 1,
-                        'per-page': 50
-                    }
-                });
+                if (defaultStandard) {
+                    options.params = options.params || {};
+                    options.params.page = page || 1;
+                    options.params['per-page'] = 50;
+                } else {
+                    config.pagination = {};
+                    config.pagination.page = page || 1;
+                    config.pagination.perPage = 50;
+                }
+                config.action = 'list';
+                options = getAjaxOptionsByTypeService(config, config.standard);
+                return $http(options);
             }
 
-            $q.all(promiseStack).then(function (allResp) {
+            $q.all(promiseStack).then(function(allResp) {
                 var resp;
                 var countP;
                 for (var i = allResp.length; i--;) {
                     resp = allResp[i];
-                    result = result.concat(resp.data.items);
-                    if (angular.isFunction(callback)) {
-                        callback(resp.data.items);
+                    var service = getCustomService(config.standard);
+                    var list = [];
+                    if(defaultStandard) {
+                        list = resp.data.items;
+                    } else {
+                        list = service.proccessApiElements.bind(config)(resp.data);
+                    }
+                    config.result = config.result.concat(list);
+                    if (angular.isFunction(config.callback)) {
+                        config.callback(list);
                     }
                 }
                 if (resp && resp.data._meta) {
                     countP = resp.data._meta.pageCount;
                 }
 
-                if (!countP || countP === toP || countP === 1) {
-                    defer.resolve({data: {items: result}});
+                if (!countP || countP === config.toP || countP === 1) {
+                    config.defer.resolve({ data: { items: config.result } });
                 } else {
-                    if (fromP === 1) {
-                        fromP = 2;
-                    } else if (fromP === 2) {
-                        fromP += 4;
+                    if (config.fromP === 1) {
+                        config.fromP = 2;
+                    } else if (config.fromP === 2) {
+                        config.fromP += 4;
                     } else {
-                        fromP += 5;
+                        config.fromP += 5;
                     }
-                    toP += 5;
-                    if (toP > countP) {
-                        toP = countP;
+                    config.toP += 5;
+                    if (config.toP > countP) {
+                        config.toP = countP;
                     }
-                    return getUrlResource(url, callback, result, defer, fromP, toP);
+                    return getUrlResource(config);
                 }
-            }, function (reject) {
-            });
-            return defer.promise;
+            }, function(reject) { });
+            return config.defer.promise;
         };
 
-        this.actionRequest = function (request) {
+        this.actionRequest = function(request) {
             var deferred = $q.defer();
 
             var reqParams = request.params || {};
@@ -612,17 +682,17 @@
                 url: url,
                 params: reqParams,
                 beforeSend: request.before
-            }).then(function (response) {
+            }).then(function(response) {
                 if (!!request.success) {
                     request.success(response);
                 }
                 deferred.resolve(response);
-            }, function (reject) {
+            }, function(reject) {
                 if (!!request.error) {
                     request.error(reject);
                 }
                 deferred.reject(reject);
-            }).finally(function () {
+            }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
                 }
@@ -632,7 +702,7 @@
             return deferred.promise;
         };
 
-        this.loadChilds = function (request) {
+        this.loadChilds = function(request) {
             var data = {
                 parentId: request.id,
                 $parentComponentId: request.options.$parentComponentId
@@ -640,7 +710,7 @@
             var parent;
             $rootScope.$broadcast('editor:parent_id', data);
             request.childId = request.id;
-            self.getItemsList(request).then(function () {
+            self.getItemsList(request).then(function() {
                 parent = null;
                 if (request.childId) {
                     parent = request.childId;
@@ -650,7 +720,7 @@
             });
         };
 
-        this.loadParent = function (request) {
+        this.loadParent = function(request) {
             var data = {
                 $parentComponentId: request.options.$parentComponentId
             };
@@ -661,7 +731,7 @@
                 $http({
                     method: 'GET',
                     url: request.url + '/' + entityId
-                }).then(function (response) {
+                }).then(function(response) {
                     var parentId = response.data[request.parentField];
 
                     parent = null;
@@ -676,7 +746,7 @@
                     request.childId = parentId;
                     self.getItemsList(request);
 
-                }, function (reject) {
+                }, function(reject) {
                     request.options.isLoading = false;
                 });
             } else {
@@ -693,7 +763,7 @@
             }
         };
 
-        this.getEntityObject = function () {
+        this.getEntityObject = function() {
             return entityObject;
         };
 
@@ -716,12 +786,12 @@
             }
         }
 
-        this.getUrlDepend = function (url, queryParams, dependField, dependValue) {
+        this.getUrlDepend = function(url, queryParams, dependField, dependValue) {
             if (angular.isString(dependValue)) {
                 dependValue = '"' + dependValue + '"';
             }
             if (angular.isArray(dependValue)) {
-                dependValue = dependValue.filter(function (item) {
+                dependValue = dependValue.filter(function(item) {
                     return !!item;
                 });
                 dependValue = '"' + dependValue.join(',') + '"';
@@ -730,7 +800,7 @@
             return this.getUrlWithParams(url, queryParams);
         };
 
-        this.getUrlWithParams = function (url, queryParams) {
+        this.getUrlWithParams = function(url, queryParams) {
             url = decodeURI(url);
             var urlArray = url.split('?'),
                 search = [],
@@ -793,8 +863,9 @@
         }
 
         function successAnswer(data) {
-            var parentComponentId = this.parentComponentId;
-            switch (this.action) {
+            var config = this, params, paramName;
+            var parentComponentId = config.parentComponentId;
+            switch (config.action) {
                 case 'list':
                     if (data[itemsKey].length === 0) {
                         $rootScope.$broadcast('editor:parent_empty');
@@ -809,67 +880,67 @@
                     break;
                 case 'update':
                     var state;
-                    if (!!this.request.success) {
-                        this.request.success(data);
+                    if (!!config.request.success) {
+                        config.request.success(data);
                     }
                     $rootScope.$broadcast('editor:presave_entity_updated', {
-                        id: data[this.idField],
+                        id: data[config.idField],
                         $parentComponentId: parentComponentId
                     });
-                    this.request.options.isLoading = false;
+                    config.request.options.isLoading = false;
                     $rootScope.$broadcast('uploader:remove_session');
                     $rootScope.$broadcast('editor:entity_success');
                     successUpdateMessage();
-                    var params = {};
-                    var paramName = this.request.options.prefixGrid ? this.request.options.prefixGrid + '-parent' : 'parent';
+                    params = {};
+                    paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
                     if ($location.search()[paramName]) {
                         params.parent = $location.search()[paramName];
                     }
-                    if ($location.search().back && this.request.useBackUrl) {
+                    if ($location.search().back && config.request.useBackUrl) {
                         state = $location.search().back;
                     } else {
-                        state = this.request.state;
+                        state = config.request.state;
                     }
                     if (!ModalService.isModalOpen()) {
                         if (state) {
-                            $state.go(state, params).then(function () {
+                            $state.go(state, params).then(function() {
                                 $location.search(params);
                                 $rootScope.$broadcast('editor:read_entity', parentComponentId);
                             });
                         } else {
-                            replaceToURL(this.request.href);
+                            replaceToURL(config.request.href);
                         }
                     } else {
                         ModalService.close();
                     }
                     break;
                 case 'create':
-                    if (!!this.request.success) {
-                        this.request.success(data);
+                    if (!!config.request.success) {
+                        config.request.success(data);
                     }
                     $rootScope.$broadcast('editor:presave_entity_created', {
-                        id: data[this.idField],
+                        id: data[config.idField],
                         $parentComponentId: parentComponentId
                     });
-                    this.request.options.isLoading = false;
+                    config.request.options.isLoading = false;
                     $rootScope.$broadcast('uploader:remove_session');
                     $rootScope.$broadcast('editor:entity_success');
                     successCreateMessage();
 
-                    var params = {};
-                    var paramName = this.request.options.prefixGrid ? this.request.options.prefixGrid + '-parent' : 'parent';
+                    params = {};
+                    paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
                     if ($location.search()[paramName]) {
                         params.parent = $location.search()[paramName];
                     }
-                    if ($location.search().back && this.request.useBackUrl) {
+                    if ($location.search().back && config.request.useBackUrl) {
                         params.state = $location.search().back;
                         state = $location.search().back;
                     } else {
-                        state = this.request.state;
+                        state = config.request.state;
                     }
                     if (!ModalService.isModalOpen()) {
                         if (state) {
-                            $state.go(state, params).then(function () {
+                            $state.go(state, params).then(function() {
                                 if (params.back) {
                                     delete params.back;
                                 }
@@ -877,29 +948,29 @@
                                 $rootScope.$broadcast('editor:read_entity', parentComponentId);
                             });
                         } else {
-                            replaceToURL(this.request.href);
+                            replaceToURL(config.request.href);
                         }
                     } else {
                         ModalService.close();
                     }
                     break;
                 case 'presave':
-                    var gridComponentId = this.request.options.$gridComponentId;
-                    if (!!this.request.success) {
-                        this.request.success(data);
+                    var gridComponentId = config.request.options.$gridComponentId;
+                    if (!!config.request.success) {
+                        config.request.success(data);
                     }
-                    var newId = data[this.idField];
+                    var newId = data[config.idField];
                     var par = {};
                     par['pk'] = newId;
                     var searchString = $location.search();
-                    $state.go($state.current.name, par, {reload: false, notify: false}).then(function () {
+                    $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                         $location.search(searchString);
                         $rootScope.$broadcast('editor:update_item', {
                             $gridComponentId: gridComponentId,
                             value: data
                         });
                     });
-                    if (this.isCreate) {
+                    if (config.isCreate) {
                         $rootScope.$broadcast('editor:presave_entity_created', {
                             id: newId,
                             $parentComponentId: parentComponentId
@@ -914,35 +985,35 @@
                     }
                     break;
                 case 'delete':
-                    if (!!this.request.success) {
-                        this.request.success(response);
+                    if (!!config.request.success) {
+                        config.request.success(response);
                     }
-                    this.request.options.isLoading = false;
+                    config.request.options.isLoading = false;
                     self.setQueryParams({});
                     self.setFilterParams({});
                     $rootScope.$broadcast('editor:entity_success_deleted');
                     successDeleteMessage();
-                    var params = {};
-                    var paramName = this.request.options.prefixGrid ? this.request.options.prefixGrid + '-parent' : 'parent';
+                    params = {};
+                    paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
                     if ($location.search()[paramName]) {
                         params[paramName] = $location.search()[paramName];
                     }
-                    if ($location.search().back && this.request.useBackUrl) {
+                    if ($location.search().back && config.request.useBackUrl) {
                         state = $location.search().back;
                     } else {
-                        state = this.request.state;
+                        state = config.request.state;
                     }
 
                     state = state || $state.current.name;
 
                     if (!ModalService.isModalOpen()) {
                         if (state) {
-                            $state.go(state, params).then(function () {
+                            $state.go(state, params).then(function() {
                                 $location.search(params);
                                 $rootScope.$broadcast('editor:read_entity', parentComponentId);
                             });
                         } else {
-                            replaceToURL(this.request.href);
+                            replaceToURL(config.request.href);
                         }
                     } else {
                         ModalService.close();
@@ -952,19 +1023,19 @@
         }
 
         function failAnswer(data) {
-            var parentComponentId = this.parentComponentId;
-            if (this.action == 'update' || this.action == 'create' || this.action == 'presave') {
-                if (!!this.request.error) {
-                    this.request.error(reject);
+            var config = this, parentComponentId = config.parentComponentId;
+            if (config.action == 'update' || config.action == 'create' || config.action == 'presave') {
+                if (!!config.request.error) {
+                    config.request.error(reject);
                 }
                 var wrongFields = data.hasOwnProperty('data') ? data.data : data;
 
                 if (wrongFields.length > 0) {
-                    angular.forEach(wrongFields, function (err) {
+                    angular.forEach(wrongFields, function(err) {
                         if (err.hasOwnProperty('field')) {
                             $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
                             if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function (innerError, key) {
+                                angular.forEach(err.fields, function(innerError, key) {
                                     $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
                                 });
                             }
@@ -972,11 +1043,11 @@
                     });
                 }
             }
-            if (this.action == 'delete') {
-                if (!!this.request.error) {
-                    this.request.error(reject);
+            if (config.action == 'delete') {
+                if (!!config.request.error) {
+                    config.request.error(reject);
                 }
-                this.request.options.isLoading = false;
+                config.request.options.isLoading = false;
             }
         }
     }

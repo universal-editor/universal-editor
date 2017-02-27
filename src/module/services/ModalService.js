@@ -4,10 +4,8 @@
     angular
         .module('universal.editor')
         .service('ModalService', ModalService);
-
-    ModalService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', '$uibModal'];
-
     function ModalService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, $uibModal) {
+        "ngInject";
         var self = this,
             modalInstance,
             isOpen = false,

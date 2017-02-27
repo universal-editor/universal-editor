@@ -6,8 +6,6 @@
         .module('demoApp')
         .controller('ComponentsController', ComponentsController);
 
-    ComponentsController.$inject = [];
-
     function ComponentsController() {
         var demoDataSource = {
             type: 'REST',
@@ -39,7 +37,7 @@
                 {
                     name: 'date',
                     component: {
-                        name: 'ue-datetime',
+                        name: 'ue-date',
                         settings: {
                             label: 'Date of publication'
                         }
@@ -431,161 +429,13 @@
                                         },
                                         {
                                             component: {
-                                                name: 'ue-datetime',
+                                                name: 'ue-date',
                                                 settings: {
-                                                    label: 'datetime'
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-datetime',
-                                                settings: {
-                                                    label: 'datetime max = 10.12.2016 15:55:00',
+                                                    label: 'time format = HH:mm',
                                                     validators: [
                                                         {
                                                             type: 'date',
-                                                            maxDate: '10.12.2016 15:55:00'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-datetime',
-                                                settings: {
-                                                    label: 'datetime min = 10.11.2016 15:40:00',
-                                                    validators: [
-                                                        {
-                                                            type: 'date',
-                                                            minDate: '10.11.2016 15:40:00'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-datetime',
-                                                settings: {
-                                                    label: 'datetime min = 10.11.2016 15:40:00, max = 10.12.2016 15:55:00',
-                                                    validators: [
-                                                        {
-                                                            type: 'date',
-                                                            minDate: '10.11.2016 15:40:00',
-                                                            maxDate: '10.12.2016 15:55:00'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-datetime',
-                                                settings: {
-                                                    label: 'datetime min = 10.11.2016, max = 10.12.2016',
-                                                    validators: [
-                                                        {
-                                                            type: 'date',
-                                                            format: 'YYYY-DD-MM HH:mm'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-datetime',
-                                                settings: {
-                                                    label: 'datetime min = 10.11.2016, max = 10.12.2016',
-                                                    validators: [
-                                                        {
-                                                            type: 'date',
-                                                            format: 'YYYY-DD-MM HH:mm',
-                                                            minDate: '2016-10-12 15:40',
-                                                            maxDate: '2016-10-11 15:55'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-time',
-                                                settings: {
-                                                    label: 'time'
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-time',
-                                                settings: {
-                                                    label: 'time max = 15:55',
-                                                    validators: [
-                                                        {
-                                                            type: 'date',
-                                                            maxDate: '15:55'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-time',
-                                                settings: {
-                                                    label: 'time min 15:40:00',
-                                                    validators: [
-                                                        {
-                                                            type: 'date',
-                                                            minDate: '15:40'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-time',
-                                                settings: {
-                                                    label: 'time min = 15:40, max = 15:55',
-                                                    validators: [
-                                                        {
-                                                            type: 'date',
-                                                            minDate: '15:40',
-                                                            maxDate: '15:55'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-time',
-                                                settings: {
-                                                    label: 'time format = mm:HH',
-                                                    validators: [
-                                                        {
-                                                            type: 'date',
-                                                            format: 'mm:HH'
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-time',
-                                                settings: {
-                                                    label: 'time min = 15:40, max = 15:55 format = mm:HH',
-                                                    validators: [
-                                                        {
-                                                            type: 'date',
-                                                            format: 'mm:HH',
-                                                            minDate: '15:40',
-                                                            maxDate: '15:55'
+                                                            format: 'HH:mm'
                                                         }
                                                     ]
                                                 }
@@ -1074,6 +924,20 @@
                                             component: {
                                                 name: "ue-autocomplete",
                                                 settings: {
+                                                    label: "Поле autocomplete",
+                                                    values: {
+                                                        'key1': 'value1',
+                                                        'key2': 'value2',
+                                                        'key3': 'value3'
+                                                    },
+                                                    multiple: true
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: "ue-autocomplete",
+                                                settings: {
                                                     label: "Поле autocomplete в режиме multiple",
                                                     valuesRemote: {
                                                         fields: {
@@ -1160,7 +1024,7 @@
                                     fields: [
                                         {
                                             component: {
-                                                name: 'ue-button-goto',
+                                                name: 'ue-button',
                                                 settings: {
                                                     label: 'Simple button'
                                                 }
@@ -1168,43 +1032,25 @@
                                         },
                                         {
                                             component: {
-                                                name: 'ue-button-request',
+                                                name: 'ue-button',
                                                 settings: {
                                                     label: 'Send request to server',
-                                                    url: '//universal-backend.dev/rest/v1/staff',
-                                                    method: 'GET',
-                                                    beforeSend: function() {
-                                                        alert('Before trigger');
+                                                    href: '//universal-backend.dev/rest/v1/staff',
+                                                    handlers: {
+                                                        before: function() {
+                                                            alert('Before trigger');
+                                                        }
                                                     }
                                                 }
                                             }
                                         },
                                         {
                                             component: {
-                                                name: 'ue-button-request',
+                                                name: 'ue-button',
                                                 settings: {
                                                     label: 'Open Yandex.com',
-                                                    url: 'https://www.yandex.com',
+                                                    href: 'https://www.yandex.com',
                                                     target: '_blank'
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            component: {
-                                name: 'ue-group',
-                                settings: {
-                                    label: 'Modal window',
-                                    fields: [
-                                        {
-                                            component: {
-                                                name: 'ue-button-goto',
-                                                settings: {
-                                                    label: 'Open',
-                                                    state: 'index.modal-window'
                                                 }
                                             }
                                         }
@@ -1280,7 +1126,7 @@
                                                                                                 },
                                                                                                 {
                                                                                                     component: {
-                                                                                                        name: 'ue-datetime',
+                                                                                                        name: 'ue-date',
                                                                                                         settings: {
                                                                                                             label: 'Date of publication'
                                                                                                         }

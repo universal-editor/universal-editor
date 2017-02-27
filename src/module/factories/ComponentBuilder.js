@@ -5,9 +5,8 @@
         .module('universal.editor')
         .factory('ComponentBuilder',ComponentBuilder);
 
-    ComponentBuilder.$inject = ['$compile'];
-
     function ComponentBuilder($compile){
+        "ngInject";
         var Component = function (scope) {
             this.scope = scope.$new();
             this.scope.setting = scope.setting;

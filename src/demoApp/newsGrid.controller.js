@@ -5,13 +5,12 @@
         .module('demoApp')
         .controller('NewsGridController', NewsGridController);
 
-    NewsGridController.$inject = [];
-
     function NewsGridController() {
+        "ngInject";
         var vm = this;
         var newsDataSource = {
             type: 'REST',
-            url: '//universal-backend.dev/rest/v1/news',
+            url: '//universal-backend.dev/rest/v1/ne',
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',

@@ -6,8 +6,6 @@
         .module('demoApp')
         .controller('ComponentsController', ComponentsController);
 
-    ComponentsController.$inject = [];
-
     function ComponentsController() {
         var demoDataSource = {
             type: 'REST',
@@ -919,6 +917,20 @@
                                                         },
                                                         url: "http://universal-backend.dev/rest/v1/staff"
                                                     }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: "ue-autocomplete",
+                                                settings: {
+                                                    label: "Поле autocomplete",
+                                                    values: {
+                                                        'key1': 'value1',
+                                                        'key2': 'value2',
+                                                        'key3': 'value3'
+                                                    },
+                                                    multiple: true
                                                 }
                                             }
                                         },

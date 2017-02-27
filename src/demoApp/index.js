@@ -1,16 +1,15 @@
-(function () {
+(function() {
     'use strict';
 
-    angular.module('demoApp', ['ui.router', 'universal.editor']);
+    angular.module('demoApp', ['ui.router', 'universal.editor', 'JSONAPIService']);
 
 
     angular
         .module('demoApp')
         .config(routerConfig);
 
-    routerConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
-
     function routerConfig($stateProvider, $urlRouterProvider) {
+        "ngInject";
         $stateProvider
             .state('components', {
                 url: '/components',
@@ -41,6 +40,18 @@
                 template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
                 controllerAs: 'vm',
                 controller: 'NewsFormController'
+            })
+            .state('articles', {
+                url: '/articles',
+                template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
+                controllerAs: 'vm',
+                controller: 'ArticlesGridController'
+            })
+            .state('articles_edit', {
+                url: '/articles/:pk',
+                template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
+                controllerAs: 'vm',
+                controller: 'ArticlesFormController'
             });
 
         $urlRouterProvider.otherwise('/components');
@@ -51,13 +62,12 @@ angular
     .module('demoApp')
     .run(demoAppRun);
 
-demoAppRun.$inject = ['$rootScope'];
-
 function demoAppRun($rootScope) {
+    "ngInject";
     var itemsSelector = document.querySelectorAll('.nav.nav-tabs li');
-    $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+    $rootScope.$on('$stateChangeSuccess', function(event, toState) {
         var stateParamEntityId = toState.name;
-        angular.forEach(itemsSelector, function (item) {
+        angular.forEach(itemsSelector, function(item) {
             $(item).removeClass('active');
             if (~stateParamEntityId.indexOf($(item).find('a')[0].hash.split('/')[1])) {
                 $(item).addClass('active');

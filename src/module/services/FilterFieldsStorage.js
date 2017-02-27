@@ -5,9 +5,8 @@
         .module('universal.editor')
         .service('FilterFieldsStorage', FilterFieldsStorage);
 
-    FilterFieldsStorage.$inject = ['$rootScope', '$timeout', 'configData', '$location'];
-
     function FilterFieldsStorage($rootScope, $timeout, configData, $location) {
+        "ngInject";
         var storage = {},
             filterComponentsStorage = {},
             queryObject = {},

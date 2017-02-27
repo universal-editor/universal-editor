@@ -5,8 +5,6 @@
         .module('universal.editor')
         .controller('DropdownItemsController',DropdownItemsController);
 
-    DropdownItemsController.$inject = ['$scope','YiiSoftApiService'];
-
-    function DropdownItemsController($scope,YiiSoftApiService) {
+    function DropdownItemsController() {
     }
 })();

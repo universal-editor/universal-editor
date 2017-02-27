@@ -3,10 +3,7 @@
   <head>
     <meta charset="UTF-8">    
     <link rel="stylesheet" href="../bower_components/jquery-minicolors/jquery.minicolors.css" />
-    <link rel="stylesheet" href="../bower_components/angular-datepicker/dist/angular-datepicker.css" />
     <link rel="stylesheet" href="../bower_components/angular-toastr/dist/angular-toastr.css" />
-    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="../bower_components/angular-bootstrap/ui-bootstrap-csp.css" />
     
     <script src="../bower_components/jquery/dist/jquery.js"></script>
     <script src="../bower_components/angular/angular.js"></script>
@@ -32,11 +29,12 @@
     <title><%= htmlWebpackPlugin.options.title %></title>   
   </head>
   <body>
-  <div ng-app="demoApp">
+  <div class="demoApp" ng-app="demoApp">
     <ul class="nav nav-tabs">
       <li role="presentation"><a class='edit_components' ui-sref="components" ui-sref-opts="{reload: true, inherit: false}">Components</a></li>
       <li role="presentation"><a class='edit_staff' ui-sref="staff" ui-sref-opts="{reload: true, inherit: false}">Staff</a></li>
       <li role="presentation"><a class='edit_news' ui-sref="news" ui-sref-opts="{reload: true, inherit: false}">News</a></li>
+      <li role="presentation"><a class='edit_articles' ui-sref="articles" ui-sref-opts="{reload: true, inherit: false}">Articles</a></li>
     </ul>
     <div ui-view=""></div>
   </div>
@@ -46,5 +44,8 @@
   <script type="text/javascript" src="staffGrid.controller.js"></script>
   <script type="text/javascript" src="newsForm.controller.js"></script>
   <script type="text/javascript" src="newsGrid.controller.js"></script>
+  
+  <script type="text/javascript" src="articlesGrid.controller.js"></script>  
+  <script type="text/javascript" src="articlesForm.controller.js"></script>
   </body>
 </html>

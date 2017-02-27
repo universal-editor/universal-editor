@@ -5,9 +5,8 @@
         .module('universal.editor')
         .controller('ComponentWrapperController',ComponentWrapperController);
 
-    ComponentWrapperController.$inject = ['$element', '$scope', 'ComponentBuilder'];
-
     function ComponentWrapperController($element, $scope, ComponentBuilder){
+        "ngInject";
         var vm = this;
 
         vm.$onInit = function() {
@@ -18,6 +17,17 @@
             $scope.options.getParentElement = function() {
                 return $element;
             }
+        };
+
+        $scope.__proto__.getParentDataSource = function() {
+            var scope = $scope;
+            while(scope) {
+                if(scope.setting && scope.setting.component && scope.setting.component.settings && scope.setting.component.settings.dataSource) {
+                    return scope.setting.component.settings.dataSource;
+                }
+                scope = scope.$parent;
+            }
+            return {};
         };
 
         this.$postLink = function() {

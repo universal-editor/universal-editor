@@ -5,11 +5,10 @@
         .module('universal.editor')
         .controller('UeGridController', UeGridController);
 
-    UeGridController.$inject = ['$scope', '$rootScope', 'YiiSoftApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', '$element', '$compile', 'EditEntityStorage'];
-
     function UeGridController($scope, $rootScope, YiiSoftApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage) {
-        $element.addClass('ue-grid');
         /* jshint validthis: true */
+        "ngInject";
+        $element.addClass('ue-grid');
         var vm = this,
             itemsKey,
             mixEntityObject,
@@ -40,7 +39,7 @@
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
             vm.prefixGrid = undefined;
 
-            if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix){
+            if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix) {
                 vm.prefixGrid = vm.setting.component.settings.routing.paramsPrefix;
             }
 
@@ -241,19 +240,19 @@
         });
 
         $scope.$on('editor:update_item', function(event, data) {
-            var eventComponentId = data.$gridComponentId || data.$parentComponentId ;
+            var eventComponentId = data.$gridComponentId || data.$parentComponentId;
             if (!eventComponentId || (vm.$parentComponentId === eventComponentId && data.value)) {
                 var changed = false;
                 vm.items.filter(function(item) {
-                    if(item[vm.idField] === data.value[vm.idField]) {
+                    if (item[vm.idField] === data.value[vm.idField]) {
                         angular.merge(item, data.value);
                         changed = true;
                     }
                 });
-                if(changed) {
+                if (changed) {
                     var list = {};
                     list[itemsKey] = vm.items;
-                $rootScope.$broadcast('editor:items_list', list);
+                    $rootScope.$broadcast('editor:items_list', list);
                 }
             }
         });
@@ -282,6 +281,7 @@
 
                 vm.parentButton = !!vm.parent;
                 vm.pageItemsArray = [];
+                debugger;
 
                 angular.forEach(vm.listFooterBar, function(control) {
                     control.paginationData = data;
@@ -290,6 +290,9 @@
         });
 
         $scope.$on('editor:server_error', function(event, data) {
+             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+                 vm.listLoaded = true;
+             }
             vm.errors.push(data);
         });
 
@@ -356,7 +359,7 @@
         }
 
         function toggleContextViewByEvent(id, event) {
-            var left = event.pageX - $element.find('table')[0].offsetLeft;
+            var left = event.pageX - $element.find('table')[0].getBoundingClientRect().left;
             if (event.which === 3) {
                 vm.styleContextMenu = {
                     'top': event.offsetY,

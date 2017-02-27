@@ -5,9 +5,8 @@
         .module('demoApp')
         .controller('StaffGridController', StaffGridController);
 
-    StaffGridController.$inject = [];
-
     function StaffGridController() {
+        "ngInject";
         var vm = this;
         var staffDataSource = {
             type: 'REST',
@@ -162,7 +161,6 @@
                     columns: ['name', 'email', 'gender', 'parent_id'],
                     contextMenu: [
                         {
-                            separator: true,
                             component: {
                                 name: 'ue-button',
                                 settings: {

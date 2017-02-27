@@ -5,9 +5,8 @@
         .module('universal.editor')
         .controller('UeTextareaController', UeTextareaController);
 
-    UeTextareaController.$inject = ['$scope', '$element', 'EditEntityStorage', 'FilterFieldsStorage', '$controller', '$templateCache'];
-
     function UeTextareaController($scope, $element, EditEntityStorage, FilterFieldsStorage, $controller, $templateCache) {
+        "ngInject";
         var vm = this,
             baseController,
             componentSettings;

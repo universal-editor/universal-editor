@@ -5,9 +5,8 @@
         .module('universal.editor')
         .directive('dropdownItems',dropdownItems);
 
-    dropdownItems.$inject = ['$templateCache', '$document', '$compile'];
-
     function dropdownItems($templateCache, $document, $compile) {
+        "ngInject";
         return {
             restrict : 'A',
             replace : true,

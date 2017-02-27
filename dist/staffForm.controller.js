@@ -1,148 +1,161 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('demoApp')
         .controller('StaffFormController', StaffFormController);
 
-    StaffFormController.$inject = ['$state', '$location'];
-
     function StaffFormController($state, $location) {
+        "ngInject";
+        var vm = this;
         var staffDataSource = {
             type: 'REST',
             url: '//universal-backend.dev/rest/v1/staff',
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',
-            keys:{
-                items: 'items',
-                meta: '_meta'
-            },
-            fields:[
+            fields: [
                 {
-                    name: "name",
+                    name: 'name',
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: "Имя"
+                            label: 'Name'
                         }
                     }
                 },
                 {
-                    name: "email",
+                    name: 'email',
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: "Эл. почта",
+                            label: 'E-mail',
                             contentType: 'email'
                         }
                     }
                 },
                 {
-                    name: "gender",
+                    name: 'gender',
                     component: {
                         name: 'ue-radiolist',
                         settings: {
-                            label: "Пол",
+                            label: 'Gender',
                             values: {
-                                "male": "Мужской",
-                                "female": "Женский"
+                                'male': 'Male',
+                                'female': 'Female'
                             }
                         }
                     }
                 },
                 {
-                    name: "country",
+                    name: 'country',
                     component: {
-                        name: "ue-dropdown",
+                        name: 'ue-dropdown',
                         settings: {
-                            label: 'Страна',
+                            label: 'Country',
                             valuesRemote: {
                                 fields: {
-                                    value: "id",
-                                    label: "name"
+                                    value: 'id',
+                                    label: 'name'
                                 },
-                                url: "http://universal-backend.dev/rest/v1/country"
+                                url: 'http://universal-backend.dev/rest/v1/country'
                             },
                             multiple: false,
-                            placeholder: "Выберете эелемент"
+                            placeholder: 'country of residence'
                         }
                     }
                 },
                 {
-                    name: "parent_id",
+                    name: 'parent_id',
                     component: {
-                        name: "ue-autocomplete",
+                        name: 'ue-autocomplete',
                         settings: {
-                            label: "Руководитель",
+                            label: 'Head',
                             valuesRemote: {
                                 fields: {
-                                    value: "id",
-                                    label: "name"
+                                    value: 'id',
+                                    label: 'name'
                                 },
-                                url: "http://universal-backend.dev/rest/v1/staff"
+                                url: 'http://universal-backend.dev/rest/v1/staff'
                             },
                             multiple: false
                         }
                     }
                 },
                 {
-                    name: "colors",
+                    name: 'colors',
                     component: {
-                        name: "ue-colorpicker",
+                        name: 'ue-colorpicker',
                         settings: {
-                            label: "Любимые цвета",
-                            multiname: "color",
-                            expandable: true
+                            label: 'Favorite colors',
+                            multiname: 'color',
+                            multiple: true,
+                            expandable: true,
+                            readonly: true
                         }
                     }
                 },
                 {
-                    name: "text",
+                    name: 'text',
                     component: {
                         name: 'ue-textarea',
                         settings: {
-                            label: "Дополнительные заметки"
+                            label: 'Notes'
                         }
                     }
                 },
                 {
-                    name: "fired",
+                    name: 'fired',
                     component: {
                         name: 'ue-checkbox',
                         settings: {
-                            label: "Уволен",
+                            label: 'Fired',
                             trueValue: 1,
                             falseValue: 0
                         }
                     }
                 },
                 {
-                    name: "created_at",
+                    name: 'created_at',
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: "Дата создания"
+                            label: 'Created',
+                            disabled: true
                         }
                     }
                 },
                 {
-                    name: "updated_at",
+                    name: 'updated_at',
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: "Дата обновления"
+                            label: 'Updated',
+                            disabled: true
                         }
                     }
                 }
             ]
         };
-        var vm = this;
+
         vm.ueConfig = {
             component: {
                 name: 'ue-form',
                 settings: {
                     dataSource: staffDataSource,
+                    header: {
+                        toolbar: [
+                            {
+                                component: {
+                                    name: 'ue-button',
+                                    settings: {
+                                        label: 'Back to staff list',
+                                        useBackUrl: true
+                                    }
+                                }
+                            }
+                        ]
+                    },
                     body: [
                         {
                             component: {
@@ -150,7 +163,7 @@
                                 settings: {
                                     tabs: [
                                         {
-                                            label: 'Карточка',
+                                            label: 'Bio',
                                             fields: [
                                                 'name',
                                                 'email',
@@ -162,7 +175,7 @@
                                             ]
                                         },
                                         {
-                                            label: 'Служебное',
+                                            label: 'System',
                                             fields: [
                                                 'fired',
                                                 'created_at',
@@ -175,34 +188,35 @@
                         }
                     ],
                     footer: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
-                                        label: 'Сохранить/обновить',
+                                        label: 'Save',
                                         action: 'save',
-                                        state: 'staff'
+                                        sref: 'staff',
+                                        useBackUrl: true
                                     }
                                 }
                             },
                             {
                                 component: {
-                                    name: 'ue-button-service',
+                                    name: 'ue-button',
                                     settings: {
-                                        label: 'Удалить',
+                                        label: 'Apply',
+                                        action: 'presave'
+                                    }
+                                }
+                            },
+                            {
+                                component: {
+                                    name: 'ue-button',
+                                    settings: {
+                                        label: 'Delete',
                                         action: 'delete',
-                                        state: 'staff'
-                                    }
-                                }
-                            },
-                            {
-                                component: {
-                                    name: 'ue-button-service',
-                                    settings: {
-                                        label: 'Сохранить',
-                                        action: 'presave',
-                                        state: 'staff'
+                                        sref: 'staff',
+                                        useBackUrl: true
                                     }
                                 }
                             }

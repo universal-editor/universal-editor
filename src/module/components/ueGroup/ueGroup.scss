@@ -1,17 +1,27 @@
-.universal-editor, .modal-dialog {
+.universal-editor,
+.modal-dialog {
     & .field-array-wrapper .add-more {
-        margin-top : 10px;
+        margin-top: 10px;
     }
-
-    & .editor-field-array {
+    & .editor-field-group {
         overflow: visible;
-    }
-
-    & .editor-group  {
-        & .item-array-wrapper .btn {
-            margin: 10px 15px 0 15px; 
-            float: right;
+        &>.field-name-label {
+            background-color: #d3dfe2;
+            text-align: center;
+            padding: 10px 0;
+            display: block;
         }
-        padding: 5px 0;
+    }
+    & .field-wrapper-ue-group {
+        & .editor-group {
+            & .clear-padding-left {
+                padding-left: 0;
+            }
+            & .item-array-wrapper .btn {
+                margin: 10px 15px 0 15px;
+                float: right;
+            }
+            padding: 5px 0;
+        }
     }
 }

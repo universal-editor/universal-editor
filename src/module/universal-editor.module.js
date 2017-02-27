@@ -22,9 +22,8 @@
         .module('universal.editor')
         .factory('EditorHttpInterceptor', EditorHttpInterceptor);
 
-    EditorHttpInterceptor.$inject = ['$q', '$rootScope', 'toastr', '$translate'];
-
     function EditorHttpInterceptor($q, $rootScope, toastr, $translate) {
+        "ngInject";
         return {
             'request': function(config) {
                 if (config.beforeSend) {
@@ -85,9 +84,8 @@
         .module('universal.editor')
         .config(universalEditorConfig);
 
-    universalEditorConfig.$inject = ['minicolorsProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', '$provide', '$injector', 'moment'];
-
     function universalEditorConfig(minicolorsProvider, $httpProvider, $stateProvider, $urlRouterProvider, $provide, $injector, moment) {
+        "ngInject";
         var dataResolver;
 
         angular.extend(minicolorsProvider.defaults, {
@@ -129,9 +127,8 @@
         .module('universal.editor')
         .run(universalEditorRun);
 
-    universalEditorRun.$inject = ['$rootScope', '$location', '$state', 'EditEntityStorage', 'ModalService', 'FilterFieldsStorage', 'RestApiService'];
-
-    function universalEditorRun($rootScope, $location, $state, EditEntityStorage, ModalService, FilterFieldsStorage, RestApiService) {
+    function universalEditorRun($rootScope, $location, $state, EditEntityStorage, ModalService, FilterFieldsStorage, YiiSoftApiService) {
+        "ngInject";
         var itemsSelector = document.querySelectorAll('.nav.nav-tabs .item');
 
         $rootScope.$on('$stateChangeStart',

@@ -1,0 +1,34 @@
+ .universal-editor,
+ .modal-dialog {
+     & .editor-body {
+         & .editor-toolbar {
+             & .header-action-button {}
+         }
+         .error-item.alert, .field-error-wrapper .error-item.alert  {
+                padding: 7px;
+                 margin-bottom: 10px;
+                 margin-top: 5px;
+             }
+         & .field-notify-bottom-wrapper {
+             & .notify-item {
+                 padding: 3px;
+                 border: 1px solid #02ae00;
+                 border-radius: 3px;
+                 font-size: 11px;
+                 margin: 5px;
+                 background: rgba(40, 255, 35, 0.19);
+             }
+         }
+         & .editor-footer {
+             background: #ebf1f3;
+             border-top: 1px solid #e1e9eb;
+             padding: 0 10px;
+             & .editor-action-button {
+                 margin: 10px;
+                 display: inline-block;
+                 outline: none;
+                 width: auto;
+             }
+         }
+     }
+ }

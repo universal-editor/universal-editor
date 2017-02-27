@@ -12,11 +12,6 @@
         controller: 'UeGridController',
         controllerAs : 'vm'
     };
-
-    /**
-     * @desc String-type field.
-     * @example <ue-grid></ue-grid>
-     */
     angular
         .module('universal.editor')
         .component('ueGrid',ueGrid);

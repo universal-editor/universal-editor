@@ -5,10 +5,9 @@
         .module('universal.editor')
         .controller('UeDateController', UeDateController);
 
-    UeDateController.$inject = ['$scope', '$element', 'EditEntityStorage', 'moment', 'FilterFieldsStorage', '$controller'];
-
     function UeDateController($scope, $element, EditEntityStorage, moment, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this,
             componentSettings,
             baseController;

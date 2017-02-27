@@ -5,111 +5,102 @@
         .module('demoApp')
         .controller('NewsGridController', NewsGridController);
 
-    NewsGridController.$inject = [];
-
     function NewsGridController() {
+        "ngInject";
         var vm = this;
         var newsDataSource = {
             type: 'REST',
-            url: '//universal-backend.dev/rest/v1/news',
+            url: '//universal-backend.dev/rest/v1/ne',
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',
-            keys: {
-                items: 'items',
-                meta: '_meta'
-            },
             fields: [
                 {
-                    name: "published",
+                    name: 'published',
                     component: {
                         name: 'ue-checkbox',
                         settings: {
-                            label: "Опубликовано",
+                            label: 'Published',
                             trueValue: 1,
                             falseValue: 0
                         }
                     }
                 },
                 {
-                    name: "published_at",
+                    name: 'published_at',
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: "Дата публикации"
+                            label: 'Publication date'
                         }
                     }
                 },
                 {
-                    name: "category_id",
+                    name: 'category_id',
                     component: {
-                        name: "ue-dropdown",
+                        name: 'ue-dropdown',
                         settings: {
-                            label: 'Категория',
+                            label: 'Category',
                             valuesRemote: {
                                 fields: {
-                                    value: "id",
-                                    label: "name",
-                                    "parent": "parent_id",
-                                    "childCount": "child_count"
+                                    value: 'id',
+                                    label: 'title'
                                 },
-                                url: "http://universal-backend.dev/rest/v1/staff"
+                                url: 'http://universal-backend.dev/rest/v1/news/categories'
                             },
-                            search: true,
-                            tree: true,
-                            selectBranches: true
+                            search: true
                         }
                     }
                 },
                 {
-                    name: "title",
+                    name: 'title',
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: "Заголовок"
+                            label: 'Title'
                         }
                     }
                 },
                 {
-                    name: "description",
+                    name: 'description',
                     component: {
                         name: 'ue-textarea',
                         settings: {
-                            label: "Краткое описание"
+                            label: 'Text'
                         }
                     }
                 },
                 {
-                    name: "authors",
+                    name: 'authors',
                     component: {
-                        name: "ue-autocomplete",
+                        name: 'ue-autocomplete',
                         settings: {
-                            label: "Авторы",
+                            label: 'Authors',
                             valuesRemote: {
                                 fields: {
-                                    value: "id",
-                                    label: "name"
+                                    value: 'id',
+                                    label: 'name'
                                 },
-                                url: "http://universal-backend.dev/rest/v1/staff"
+                                url: 'http://universal-backend.dev/rest/v1/staff'
                             },
                             multiple: false,
                             expandable: true,
-                            multiname: "staff_id"
+                            multiname: 'staff_id'
                         }
                     }
                 },
                 {
-                    name: "tags",
+                    name: 'tags',
                     component: {
-                        name: "ue-autocomplete",
+                        name: 'ue-autocomplete',
                         settings: {
-                            label: "Теги",
+                            label: 'Tags',
                             valuesRemote: {
                                 fields: {
-                                    value: "id",
-                                    label: "name"
+                                    value: 'id',
+                                    label: 'name'
                                 },
-                                url: "http://universal-backend.dev/rest/v1/tags"
+                                url: 'http://universal-backend.dev/rest/v1/tags'
                             },
                             multiple: false,
                             expandable: true
@@ -117,67 +108,73 @@
                     }
                 },
                 {
-                    name: "created_at",
+                    name: 'created_at',
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: "Дата создания"
+                            label: 'Created'
                         }
                     }
                 },
                 {
-                    name: "updated_at",
+                    name: 'updated_at',
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: "Дата обновления"
+                            label: 'Updated'
                         }
                     }
                 }
             ]
         };
+        
         vm.ueConfig = {
             component: {
                 name: 'ue-grid',
                 settings: {
                     dataSource: newsDataSource,
                     header: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-link',
+                                    name: 'ue-filter'
+                                }
+                            },
+                            {
+                                component: {
+                                    name: 'ue-button',
                                     settings: {
-                                        label: 'создать',
-                                        state: 'news_edit'
+                                        label: 'Add news',
+                                        sref: 'news_edit'
                                     }
                                 }
                             }
                         ]
                     },
-                    columns: ['title', 'authors', 'description'],
+                    columns: ['title', 'authors', 'published_at', 'published'],
                     contextMenu: [
                         {
                             component: {
-                                name: 'ue-button-link',
+                                name: 'ue-button',
                                 settings: {
-                                    label: 'редактировать',
-                                    state: 'news_edit'
+                                    label: 'Edit',
+                                    sref: 'news_edit'
                                 }
                             }
                         },
                         {
                             separator: true,
                             component: {
-                                name: 'ue-button-service',
+                                name: 'ue-button',
                                 settings: {
-                                    label: 'Удалить',
+                                    label: 'Delete',
                                     action: 'delete'
                                 }
                             }
                         }
                     ],
                     footer: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
                                     name: 'ue-pagination',

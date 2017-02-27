@@ -5,9 +5,8 @@
         .module('universal.editor')
         .service('EditEntityStorage', EditEntityStorage);
 
-    EditEntityStorage.$inject = ['$rootScope', '$timeout', 'configData', '$location', '$state', '$translate'];
-
     function EditEntityStorage($rootScope, $timeout, configData, $location, $state, $translate) {
+        "ngInject";
         var sourceEntity,
             configuredFields = {},
             fieldControllers = [],

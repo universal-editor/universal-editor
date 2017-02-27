@@ -5,11 +5,9 @@
         .module('universal.editor')
         .controller('UeFormController', UeFormController);
 
-    UeFormController.$inject = ['$scope', 'YiiSoftApiService', '$location', '$state', '$translate', 'EditEntityStorage', '$window', 'ModalService', '$timeout'];
-
     function UeFormController($scope, YiiSoftApiService, $location, $state, $translate, EditEntityStorage, $window, ModalService, $timeout) {
-
         /* jshint validthis: true */
+        "ngInject";
         var vm = this,
             mixEntityObject,
             pkKey,

@@ -1,196 +1,197 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('demoApp')
         .controller('StaffGridController', StaffGridController);
 
-    StaffGridController.$inject = [];
-
     function StaffGridController() {
+        "ngInject";
+        var vm = this;
         var staffDataSource = {
             type: 'REST',
             url: '//universal-backend.dev/rest/v1/staff',
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',
-            keys:{
+            keys: {
                 items: 'items',
                 meta: '_meta'
             },
             fields:[
                 {
-                    name: "name",
+                    name: 'name',
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: "Имя"
+                            label: 'Name'
                         }
                     }
                 },
                 {
-                    name: "email",
+                    name: 'email',
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: "Эл. почта",
+                            label: 'E-mail',
                             contentType: 'email'
                         }
                     }
                 },
                 {
-                    name: "gender",
+                    name: 'gender',
                     component: {
                         name: 'ue-radiolist',
                         settings: {
-                            label: "Пол",
+                            label: 'Gender',
                             values: {
-                                "male": "Мужской",
-                                "female": "Женский"
+                                'male': 'Male',
+                                'female': 'Female'
                             }
                         }
                     }
                 },
                 {
-                    name: "country",
+                    name: 'country',
                     component: {
-                        name: "ue-dropdown",
+                        name: 'ue-dropdown',
                         settings: {
-                            label: 'Страна',
+                            label: 'Country',
                             valuesRemote: {
                                 fields: {
-                                    value: "id",
-                                    label: "name"
+                                    value: 'id',
+                                    label: 'name'
                                 },
-                                url: "http://universal-backend.dev/rest/v1/country"
+                                url: 'http://universal-backend.dev/rest/v1/country'
                             },
                             multiple: false,
-                            placeholder: "Выберете эелемент"
+                            placeholder: 'country of residence'
                         }
                     }
                 },
                 {
-                    name: "parent_id",
+                    name: 'parent_id',
                     component: {
-                        name: "ue-autocomplete",
+                        name: 'ue-autocomplete',
                         settings: {
-                            label: "Руководитель",
+                            label: 'Head',
                             valuesRemote: {
                                 fields: {
-                                    value: "id",
-                                    label: "name"
+                                    value: 'id',
+                                    label: 'name'
                                 },
-                                url: "http://universal-backend.dev/rest/v1/staff"
+                                url: 'http://universal-backend.dev/rest/v1/staff'
                             },
                             multiple: false
                         }
                     }
                 },
                 {
-                    name: "colors",
+                    name: 'colors',
                     component: {
-                        name: "ue-colorpicker",
+                        name: 'ue-colorpicker',
                         settings: {
-                            label: "Любимые цвета",
-                            multiname: "color",
+                            label: 'Favorite colors',
+                            multiname: 'color',
                             expandable: true
                         }
                     }
                 },
                 {
-                    name: "text",
+                    name: 'text',
                     component: {
                         name: 'ue-textarea',
                         settings: {
-                            label: "Дополнительные заметки"
+                            label: 'Notes'
                         }
                     }
                 },
                 {
-                    name: "fired",
+                    name: 'fired',
                     component: {
                         name: 'ue-checkbox',
                         settings: {
-                            label: "Уволен",
+                            label: 'Fired',
                             trueValue: 1,
                             falseValue: 0
                         }
                     }
                 },
                 {
-                    name: "created_at",
+                    name: 'created_at',
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: "Дата создания"
+                            label: 'Created',
+                            disabled: true
                         }
                     }
                 },
                 {
-                    name: "updated_at",
+                    name: 'updated_at',
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: "Дата обновления"
+                            label: 'Updated',
+                            disabled: true
                         }
                     }
                 }
             ]
         };
-        var vm = this;
+        
         vm.ueConfig = {
             component: {
                 name: 'ue-grid',
                 settings: {
                     dataSource: staffDataSource,
-                    header:{
-                        controls: [
+                    header: {
+                        toolbar: [
                             {
                                 component: {
-                                    name: 'ue-button-link',
+                                    name: 'ue-button',
                                     settings: {
-                                        label: 'создать',
-                                        state: 'staff_edit'
+                                        label: 'Add',
+                                        sref: 'staff_edit'
                                     }
                                 }
                             }
                         ]
                     },
-                    columns: ['name', 'email'],
-                    contextMenu:[
+                    columns: ['name', 'email', 'gender', 'parent_id'],
+                    contextMenu: [
                         {
                             component: {
-                                name: 'ue-button-link',
+                                name: 'ue-button',
                                 settings: {
-                                    label: 'редактировать',
-                                    state: 'staff_edit'
-                                }
-                            }
-                        },
-                        {
-                            separator: true,
-                            component: {
-                                name: 'ue-button-service',
-                                settings: {
-                                    label: 'Удалить',
-                                    action: 'delete',
-                                    state: 'staff'
-                                }
-                            }
-                        },
-                        {
-                            separator: true,
-                            component: {
-                                name: 'ue-button-service',
-                                settings: {
-                                    label: 'Раскрыть',
+                                    label: 'Subordinate',
                                     action: 'open'
+                                }
+                            }
+                        },
+                        {
+                            component: {
+                                name: 'ue-button',
+                                settings: {
+                                    label: 'Edit',
+                                    sref: 'staff_edit'
+                                }
+                            }
+                        },
+                        {
+                            separator: true,
+                            component: {
+                                name: 'ue-button',
+                                settings: {
+                                    label: 'Delete',
+                                    action: 'delete',
+                                    sref: 'staff'
                                 }
                             }
                         }
                     ],
                     footer: {
-                        controls: [
+                        toolbar: [
                             {
                                 component: {
                                     name: 'ue-pagination',

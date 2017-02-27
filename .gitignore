@@ -4,3 +4,4 @@ tests
 .idea
 npm-debug.log
 /app
+/.vscode

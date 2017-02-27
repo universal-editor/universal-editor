@@ -1,0 +1,10 @@
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+.demoApp {
+    @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+    @import '../bower_components/angular-bootstrap/ui-bootstrap-csp.css';
+    .universal-editor {
+        @import '../bower_components/angular-datepicker/dist/angular-datepicker';
+        @import '../bower_components/jquery-minicolors/jquery.minicolors.css';
+        @import '../bower_components/angular-toastr/dist/angular-toastr.css';
+    }
+}

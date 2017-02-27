@@ -5,10 +5,9 @@
         .module('universal.editor')
         .controller('UeRadiolistController', UeRadiolistController);
 
-    UeRadiolistController.$inject = ['$scope', '$element', 'EditEntityStorage', 'YiiSoftApiService', 'FilterFieldsStorage', '$controller'];
-
     function UeRadiolistController($scope, $element, EditEntityStorage, YiiSoftApiService, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this,
             baseController,
             componentSettings;
@@ -42,18 +41,23 @@
                 vm.loadingData = true;
 
                 var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                var config = {
+                    method: 'GET',
+                    url: url
+                };                
+                config.standard = $scope.getParentDataSource().standard;
                 YiiSoftApiService
-                    .getUrlResource(url)
-                    .then(function (response) {
-                        angular.forEach(response.data.items, function (v) {
+                    .getUrlResource(config)
+                    .then(function(response) {
+                        angular.forEach(response.data.items, function(v) {
                             vm.optionValues.push(v);
                         });
-                    }, function (reject) {
-                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function (translation) {
+                    }, function(reject) {
+                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
                             console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
                         });
                     })
-                    .finally(function () {
+                    .finally(function() {
                         vm.loadingData = false;
                     });
             }

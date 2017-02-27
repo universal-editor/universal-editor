@@ -5,10 +5,9 @@
         .module('universal.editor')
         .controller('FieldsController', FieldsController);
 
-    FieldsController.$inject = ['$scope', '$rootScope', '$location', '$controller', '$timeout', 'FilterFieldsStorage', 'YiiSoftApiService', 'moment', 'EditEntityStorage', '$q', '$translate'];
-
     function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, YiiSoftApiService, moment, EditEntityStorage, $q, $translate) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this;
         var baseController = $controller('BaseController', { $scope: $scope });
         angular.extend(vm, baseController);
@@ -53,11 +52,17 @@
                     }
                     self.loadingData = true;
                     if (!componentSettings.$loadingPromise) {
+                        var config = {
+                            method: 'GET',
+                            url: remoteValues.url
+                        };
+                        var dataSource = $scope.getParentDataSource();
+                        config.standard = dataSource.standard;
                         componentSettings.$loadingPromise = YiiSoftApiService
-                            .getUrlResource(remoteValues.url)
+                            .getUrlResource(config)
                             .then(function(response) {
                                 if (!componentSettings.depend) {
-                                    angular.forEach(response.data.items, function (v) {
+                                    angular.forEach(response.data.items, function(v) {
                                         self.optionValues.push(v);
                                     });
                                 }
@@ -93,8 +98,6 @@
             self.fieldValue = null;
             self.cols = 12;
         }
-
-
 
         if (!!self.cols) {
             if (self.cols > 12) {
@@ -142,9 +145,12 @@
             });
         }
 
+
         self.clear = clear;
         self.getFieldValue = getFieldValue;
         self.equalPreviewValue = equalPreviewValue;
+
+        self.clearDefault = clear;
 
         function clear() {
             self.fieldValue = self.multiple ? [] : null;

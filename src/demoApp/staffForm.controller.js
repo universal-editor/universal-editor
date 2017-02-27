@@ -5,9 +5,8 @@
         .module('demoApp')
         .controller('StaffFormController', StaffFormController);
 
-    StaffFormController.$inject = ['$state', '$location'];
-
     function StaffFormController($state, $location) {
+        "ngInject";
         var vm = this;
         var staffDataSource = {
             type: 'REST',
@@ -90,7 +89,9 @@
                         settings: {
                             label: 'Favorite colors',
                             multiname: 'color',
-                            expandable: true
+                            multiple: true,
+                            expandable: true,
+                            readonly: true
                         }
                     }
                 },

@@ -5,10 +5,9 @@
         .module('universal.editor')
         .controller('ButtonsController', ButtonsController);
 
-    ButtonsController.$inject = ['$scope', '$controller'];
-
     function ButtonsController($scope, $controller) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this;
             var baseController = $controller('BaseController', { $scope: $scope });
             angular.extend(vm, baseController);

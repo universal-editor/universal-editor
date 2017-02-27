@@ -5,10 +5,9 @@
         .module('universal.editor')
         .controller('UeColorpickerController', UeColorpickerController);
 
-    UeColorpickerController.$inject = ['$scope', '$element', 'EditEntityStorage', 'FilterFieldsStorage', '$state', '$controller'];
-
     function UeColorpickerController($scope, $element, EditEntityStorage, FilterFieldsStorage, $state, $controller) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this,
             componentSettings,
             baseController;
