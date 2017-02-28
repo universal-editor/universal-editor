@@ -62,7 +62,6 @@
             }
         };
 
-
         function setTimeOutPromise(id, mode) {
             var def = $q.defer();
             cancelerPromises[id] = cancelerPromises[id] || {};
