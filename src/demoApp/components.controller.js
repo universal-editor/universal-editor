@@ -6,8 +6,6 @@
         .module('demoApp')
         .controller('ComponentsController', ComponentsController);
 
-    ComponentsController.$inject = [];
-
     function ComponentsController() {
         var demoDataSource = {
             type: 'REST',

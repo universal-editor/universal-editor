@@ -97,6 +97,7 @@
         self.listeners.push($scope.$on('editor:error_get_data', function(event, rejection) {
             if (self.isParentComponent(rejection.$parentComponentId) && !rejection.canceled) {
                 self.loaded = true;
+                self.loadingData = false;
                 var error = {};
                 if (rejection.status !== -1) {
                     error.status = rejection.status;
@@ -113,7 +114,7 @@
 
                 if (rejection.status === -1) {
                     self.dangers.push(error);
-                     $translate('RESPONSE_ERROR.UNDEFINED').then(function(translation) {
+                    $translate('RESPONSE_ERROR.UNDEFINED').then(function(translation) {
                         error.text = translation;
                     });
                 }
