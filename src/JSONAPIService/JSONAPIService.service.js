@@ -39,8 +39,22 @@
             var data;
 
             if (config.action == 'create' || config.action == 'update') {
+                var attributes = {};
+                var relationships = {};
+                debugger;
+                angular.forEach(config.data, function(value, key) {
+                    relationships[key] = relationships[key] || {};
+                    relationships[key].data = relationships[key].data || [];
+                    if(angular.isObject(value) && !angular.isArray(value)) {
+                        relationships[key].data.push({id: value.id, type: value.__type});
+                        delete config.data[key];
+                    } else {
+                        attributes[key] = value;
+                    }
+                });
                 data = {};
-                data.attributes = config.data;
+                data.attributes = attributes;
+                data.relationships = relationships;
                 data.type = config.__type;
                 data.id = config.id || null;
             }

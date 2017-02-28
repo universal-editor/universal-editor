@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeGroupController', UeGroupController);
 
-    function UeGroupController($scope, EditEntityStorage, $timeout,  YiiSoftApiService, $controller, $translate) {
+    function UeGroupController($scope, EditEntityStorage, $timeout, YiiSoftApiService, $controller, $translate) {
         /* jshint validthis: true */
         "ngInject";
         var vm = this,
@@ -67,6 +67,7 @@
         }
 
         function onLoadedHandler(event, data) {
+            debugger;
             if (!vm.$isOnlyChildsBroadcast) {
                 var group = data[vm.fieldName];
                 if (group) {
@@ -74,10 +75,11 @@
                         group.forEach(vm.addItem);
                         $timeout(function() {
                             vm.$isOnlyChildsBroadcast = true;
-                            $scope.$broadcast('editor:entity_loaded', data);
+                            $scope.$broadcast('editor:entity_loaded', group);
                             delete vm.$isOnlyChildsBroadcast;
                         }, 0);
                     }
+
                 }
             }
         }
