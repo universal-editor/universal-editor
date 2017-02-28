@@ -133,7 +133,7 @@
             var expandFields = [];
 
             angular.forEach(dataSource.fields, function(field) {
-                if (field.hasOwnProperty('expandable') && field.expandable === true) {
+                if (field.component && field.component.settings && field.component.settings.expandable === true) {
                     expandFields.push(field.name);
                 }
             });
@@ -442,7 +442,7 @@
 
             options.isLoading = true;
             angular.forEach(dataSource.fields, function(field) {
-                if (field.hasOwnProperty('expandable') && field.expandable === true) {
+                if (field.component && field.component.settings && field.component.settings.expandable === true) {
                     expandFields.push(field.name);
                 }
             });
