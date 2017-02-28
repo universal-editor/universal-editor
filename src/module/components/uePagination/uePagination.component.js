@@ -18,6 +18,6 @@
      * @example <ue-pagination></ue-pagination>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('uePagination',uePagination);
 })();

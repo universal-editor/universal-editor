@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
     function UeAutocompleteController($scope, $element, $document, EditEntityStorage, YiiSoftApiService, $timeout, FilterFieldsStorage, $controller, $translate) {
@@ -215,7 +215,8 @@
                 var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
                 var config = {
                     method: 'GET',
-                    url: componentSettings.valuesRemote.url
+                    url: componentSettings.valuesRemote.url,
+                    $id: vm.setting.component.$id
                 };
                 config.standard = $scope.getParentDataSource().standard;
                 YiiSoftApiService
@@ -284,7 +285,8 @@
                 };
                 config.filter[vm.fieldId] = [{
                     operator: 'value',
-                    value: vm.fieldValue
+                    value: vm.fieldValue,
+                    $id: vm.setting.component.$id
                 }];
                 config.standard = $scope.getParentDataSource().standard;
 
@@ -334,7 +336,7 @@
                     }
                 }
             }
-        };
+        }
 
         function deleteToAutocomplete(event) {
             if (event.which == 8 && !!vm.selectedValues && !!vm.selectedValues.length && !vm.inputValue &&
@@ -342,7 +344,7 @@
             ) {
                 vm.removeFromSelected(event, vm.selectedValues[vm.selectedValues.length - 1]);
             }
-        };
+        }
 
         this.$postLink = function() {
 

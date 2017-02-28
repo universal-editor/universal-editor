@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('ButtonsController', ButtonsController);
 
     function ButtonsController($scope, $controller) {

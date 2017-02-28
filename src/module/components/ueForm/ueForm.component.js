@@ -18,6 +18,6 @@
      * @example <ue-form></ue-for,>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueForm',ueForm);
 })();

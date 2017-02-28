@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .directive('dropdownItems',dropdownItems);
 
     function dropdownItems($templateCache, $document, $compile) {

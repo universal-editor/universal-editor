@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('FieldsController', FieldsController);
 
     function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, YiiSoftApiService, moment, EditEntityStorage, $q, $translate) {
@@ -16,6 +16,7 @@
         var regEmail = new RegExp('^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$', 'i');
         var regUrl = new RegExp('^(?:(?:ht|f)tps?://)?(?:[\\-\\w]+:[\\-\\w]+@)?(?:[0-9a-z][\\-0-9a-z]*[0-9a-z]\\.)+[a-z]{2,6}(?::\\d{1,5})?(?:[?/\\\\#][?!^$.(){}:|=[\\]+\\-/\\\\*;&~#@,%\\wА-Яа-я]*)?$', 'i');
 
+        self.unVisible = componentSettings.unVisible === true;
 
         self.readonly = componentSettings.readonly === true;
         self.multiname = componentSettings.multiname || null;
@@ -54,7 +55,8 @@
                     if (!componentSettings.$loadingPromise) {
                         var config = {
                             method: 'GET',
-                            url: remoteValues.url
+                            url: remoteValues.url,
+                            $id: self.setting.component.$id
                         };
                         var dataSource = $scope.getParentDataSource();
                         config.standard = dataSource.standard;
@@ -82,7 +84,6 @@
                         }
                         equalPreviewValue();
                     }
-
                 }
             }
         }
@@ -250,7 +251,7 @@
         $scope.onLoadDataHandler = onLoadDataHandler;
 
         function onLoadDataHandler(event, data, callback) {
-            if (!data.$parentComponentId || data.$parentComponentId === self.parentComponentId) {
+            if (!data.$parentComponentId || self.isParentComponent(data.$parentComponentId)) {
                 if (!self.options.filter) {
                     //-- functional for required fields
                     if (componentSettings.depend) {

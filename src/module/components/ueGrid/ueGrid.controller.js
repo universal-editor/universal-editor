@@ -2,10 +2,10 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeGridController', UeGridController);
 
-    function UeGridController($scope, $rootScope, YiiSoftApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage) {
+    function UeGridController($scope, $rootScope, YiiSoftApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, $translate, $element, $compile, EditEntityStorage, $controller) {
         /* jshint validthis: true */
         "ngInject";
         $element.addClass('ue-grid');
@@ -16,10 +16,13 @@
             parentField;
 
         vm.$onInit = function() {
+            //** Nested base controller */
+            angular.extend(vm, $controller('BaseController', { $scope: $scope }));
+
             url = vm.setting.component.settings.dataSource.url;
             parentField = vm.setting.component.settings.dataSource.parentField;
             vm.correctEntityType = true;
-            vm.listLoaded = false;
+            vm.loaded = false;
             vm.loadingData = true;
             vm.tableFields = [];
             vm.items = [];
@@ -199,7 +202,7 @@
 
         function changeSortField(field, sorted) {
             if (field && sorted) {
-                vm.listLoaded = false;
+                vm.loaded = false;
                 if (vm.sortField == field) {
                     vm.sortingDirection = !vm.sortingDirection;
                 } else {
@@ -224,7 +227,7 @@
         }
 
         $scope.$on('editor:parent_id', function(event, data) {
-            if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 vm.parent = data.parentId;
             }
         });
@@ -258,8 +261,8 @@
         });
 
         $scope.$on('editor:items_list', function(event, data) {
-            if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-                vm.listLoaded = true;
+            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
+                vm.loaded = true;
                 vm.items = data[itemsKey];
                 if (angular.isObject(vm.items)) {
                     angular.forEach(vm.items, function(item, index) {
@@ -281,7 +284,6 @@
 
                 vm.parentButton = !!vm.parent;
                 vm.pageItemsArray = [];
-                debugger;
 
                 angular.forEach(vm.listFooterBar, function(control) {
                     control.paginationData = data;

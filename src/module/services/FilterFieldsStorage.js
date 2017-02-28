@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .service('FilterFieldsStorage', FilterFieldsStorage);
 
     function FilterFieldsStorage($rootScope, $timeout, configData, $location) {

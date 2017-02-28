@@ -18,6 +18,6 @@
      * @example <ue-checkbox></ue-checkbox>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueCheckbox', ueCheckbox);
 })();

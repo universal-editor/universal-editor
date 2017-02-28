@@ -9,4 +9,3 @@ require('./module/localization.configFile.js');
 require('./JSONAPIService/JSONAPIService.service.js');
 var context = require.context('./module', true, /\.js$/);
 context.keys().forEach(context);
-;

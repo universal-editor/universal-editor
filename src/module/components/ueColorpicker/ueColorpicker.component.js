@@ -18,6 +18,6 @@
      * @example <ue-colorpicker></ue-colorpicker>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueColorpicker',ueColorpicker);
 })();

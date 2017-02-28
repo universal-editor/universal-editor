@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UePaginationController', UePaginationController);
 
     function UePaginationController($scope, YiiSoftApiService, $httpParamSerializer, $sce, $location, $element) {

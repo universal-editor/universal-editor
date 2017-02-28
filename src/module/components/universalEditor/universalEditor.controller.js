@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UniversalEditorController',UniversalEditorController);
 
     function UniversalEditorController($scope, $rootScope, $element, $compile, $translate, moment, $state, $location, YiiSoftApiService){

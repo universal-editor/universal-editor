@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .factory('ComponentBuilder',ComponentBuilder);
 
     function ComponentBuilder($compile){

@@ -1,7 +1,9 @@
 extends ../../template/layouts/layoutComponent
 block append content
     include ../../template/labelField/labelField
-    div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}", ng-style="{'overflow:auto':vm.multiple}", ng-if="!vm.disabled || vm.options.filter")
+    include ../../template/errorMessages/template
+    .components-body(ng-if="!vm.warnings.length && !vm.dangers.length")
+      div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}", ng-style="{'overflow:auto':vm.multiple}", ng-if="!vm.disabled || vm.options.filter")
         div(ng-class='vm.classComponent')
             .autocomplete-input-wrapper.form-control(data-ng-class='{"active" : vm.isActivePossible, "disabled-input": vm.readonly}', data-ng-click="inputFocus()"   )
                 .autocomplete-item(data-ng-repeat="acItem in vm.selectedValues", 
@@ -36,5 +38,5 @@ block append content
 
             .loader-search-wrapper(data-ng-show="vm.searching || !vm.preloadedData")
                 .loader-search {{'LOADING' | translate}}
-    .disabled-field(ng-if="vm.disabled && !vm.options.filter")
+      .disabled-field(ng-if="vm.disabled && !vm.options.filter")
         include ../../template/disabledField/default

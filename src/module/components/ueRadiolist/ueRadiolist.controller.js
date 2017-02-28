@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeRadiolistController', UeRadiolistController);
 
     function UeRadiolistController($scope, $element, EditEntityStorage, YiiSoftApiService, FilterFieldsStorage, $controller) {
@@ -24,7 +24,7 @@
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
                 $scope.onLoadDataHandler(e, data);
-                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId) && !vm.options.filter) {
                     componentSettings.$loadingPromise.then(function(optionValues) {
                         vm.optionValues = optionValues;
                         vm.equalPreviewValue();
@@ -43,8 +43,9 @@
                 var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                 var config = {
                     method: 'GET',
-                    url: url
-                };                
+                    url: url,
+                    $id: vm.setting.component.$id
+                };
                 config.standard = $scope.getParentDataSource().standard;
                 YiiSoftApiService
                     .getUrlResource(config)

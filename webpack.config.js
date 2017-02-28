@@ -12,8 +12,7 @@
         ngAnnotatePlugin = require('ng-annotate-webpack-plugin'),
         WebpackNotifierPlugin = require('webpack-notifier');
 
-    var localHost = null,
-        domain = 'universal-editor.dev',
+    var localHost = 'universal-editor.dev',
         defaultlocalHost = '127.0.0.1',
         NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development',
         RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]),

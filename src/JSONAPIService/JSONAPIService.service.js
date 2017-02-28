@@ -104,18 +104,27 @@
                                 errors.push({ field: error.path || '', message: error.message || '' });
                             }
                         });
+                    } else if (angular.isString(apiError.detail)) {
+                        errors = {
+                            status: apiError.status || -1,
+                            data:
+                            {
+                                message: apiError.detail
+                            }
+                        };
                     }
                 }
-                fail(errors);
+                fail(errors.length ? errors : responseServer);
                 return;
             }
             switch (config.action) {
                 case 'list':
+                    var metaPage = response.meta.page || { limit: 20, total: 0, offset: 0 };
                     output._meta = {
-                        perPage: response.meta.page.limit,
-                        totalCount: response.meta.page.total,
-                        pageCount: Math.ceil(response.meta.page.total / response.meta.page.limit),
-                        currentPage: Math.ceil((response.meta.page.offset + 1) / response.meta.page.limit)
+                        perPage: metaPage.limit,
+                        totalCount: metaPage.total,
+                        pageCount: Math.ceil(metaPage.total / metaPage.limit),
+                        currentPage: Math.ceil((metaPage.offset + 1) / metaPage.limit)
                     };
                     output.items = parse(response);
                     break;
@@ -131,9 +140,7 @@
                 case 'presave':
                     output = parse(response);
                     break;
-                case 'delete':
-                    success('');
-                    break;
+                case 'delete': output = ''; break;
                 default: break;
             }
             success(output);

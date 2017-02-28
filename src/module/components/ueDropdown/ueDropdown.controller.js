@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeDropdownController', UeDropdownController);
     function UeDropdownController($rootScope, $scope, EditEntityStorage, YiiSoftApiService, $timeout, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
         /* jshint validthis: true */
@@ -69,7 +69,8 @@
                     var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                     var config = {
                         method: 'GET',
-                        url: componentSettings.valuesRemote.url
+                        url: componentSettings.valuesRemote.url,
+                        $id: vm.setting.component.$id
                     };
 
                     config.standard = $scope.getParentDataSource().standard;
@@ -140,7 +141,7 @@
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             vm.data = data;
             $scope.onLoadDataHandler(event, data);
-            if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
+            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 componentSettings.$loadingPromise.then(function(items) {
                     allOptions = allOptions.length ? allOptions : items;
                     vm.optionValues = [];
@@ -185,7 +186,8 @@
                     };
                     config.filter[vm.treeParentField] = [{
                         operator: 'value',
-                        value: item[vm.fieldId]
+                        value: item[vm.fieldId],
+                        $id: vm.setting.component.$id
                     }];
 
                     config.standard = $scope.getParentDataSource().standard;
@@ -677,7 +679,7 @@
     }
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .filter('selectedValues', function() {
             return function(arr, fieldSearch) {
                 var titles = arr.map(function(item) {

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeCheckboxController', UeCheckboxController)
         .directive('ngIndeterminate', function() {
             return {
@@ -69,7 +69,7 @@
             }
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
-                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId) {
+                if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                     $scope.onLoadDataHandler(e, data);
                     if (!vm.singleValue) {
                         componentSettings.$loadingPromise.then(function(optionValues) {
@@ -123,7 +123,8 @@
                 var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                 var config = {
                     method: 'GET',
-                    url: url
+                    url: url,
+                    $id: vm.setting.component.$id
                 };
                 config.standard = $scope.getParentDataSource().standard;
                 YiiSoftApiService
@@ -165,7 +166,6 @@
 
             return field;
         }
-
 
         function newEntityLoaded() {
             vm.fieldValue = [];

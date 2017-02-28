@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeDateController', UeDateController);
 
     function UeDateController($scope, $element, EditEntityStorage, moment, FilterFieldsStorage, $controller) {
@@ -33,7 +33,7 @@
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
                 $scope.onLoadDataHandler(e, data);
                 vm.fieldValue = vm.fieldValue ? moment(vm.fieldValue, vm.format) : "";
-                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+                if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId) && !vm.options.filter) {
                     vm.equalPreviewValue();
                 }
                 vm.previewValue = moment(vm.previewValue).format(vm.format);

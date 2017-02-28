@@ -61,7 +61,7 @@
                                     key: 'id',
                                     label: 'title'
                                 },
-                                url: '/rest/photos'
+                                url: '/rest/photo'
                             }
                         }
                     }

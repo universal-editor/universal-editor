@@ -18,6 +18,6 @@
      * @example <ue-radiolist></ue-radiolist>
      */
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueRadiolist', ueRadiolist);
 })();

@@ -14,6 +14,6 @@
     };
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .component('ueButton', ueButton);
 })();

@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('demoApp', ['ui.router', 'universal.editor', 'JSONAPIService']);
+    angular.module('demoApp', ['ui.router', 'universal-editor', 'JSONAPIService']);
 
 
     angular

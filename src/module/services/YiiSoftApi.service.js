@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .service('YiiSoftApiService', YiiSoftApiService);
 
     function YiiSoftApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
@@ -181,7 +181,6 @@
             var objectBind = { action: 'list', parentComponentId: request.options.$parentComponentId };
 
             $http(options).then(function(response) {
-                debugger;
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
                     deferred.resolve(response.data);
@@ -190,6 +189,18 @@
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));
                     deferred.resolve(data);
+                }
+            }, function(reject) {
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    reject.$parentComponentId = request.options.$parentComponentId;
+                    $rootScope.$broadcast('editor:error_get_data', reject);
+                    deferred.reject(reject);
+                } else {
+                    debugger;
+                    var data = service.processResponse(config, reject,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind));
+                    deferred.reject(data);
                 }
             }).finally(function() {
                 request.options.isLoading = false;
@@ -395,7 +406,6 @@
                 idField: idField
             };
 
-
             $http(options).then(function(response) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     successAnswer.bind(objectBind)(response.data);
@@ -469,6 +479,17 @@
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
+                }
+            }, function(reject) {
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    reject.$parentComponentId = request.options.$parentComponentId;
+                    $rootScope.$broadcast('editor:error_get_data', reject);
+                    deferred.reject(reject);
+                } else {
+                    var data = service.processResponse(config, reject,
+                        successAnswer.bind(objectBind),
+                        failAnswer.bind(objectBind));
+                    deferred.reject(data);
                 }
             }).finally(function() {
                 options.isLoading = false;
@@ -582,6 +603,7 @@
             config.toP = config.toP || 0;
             var defaultStandard = !config.standard || config.standard === 'YiiSoft';
             var options = {};
+            config.action = 'list';
 
             if (defaultStandard && config.filter) {
                 var filter = null;
@@ -621,19 +643,19 @@
                     config.pagination.page = page || 1;
                     config.pagination.perPage = 50;
                 }
-                config.action = 'list';
                 options = getAjaxOptionsByTypeService(config, config.standard);
                 return $http(options);
             }
+
+            var service = getCustomService(config.standard);
 
             $q.all(promiseStack).then(function(allResp) {
                 var resp;
                 var countP;
                 for (var i = allResp.length; i--;) {
                     resp = allResp[i];
-                    var service = getCustomService(config.standard);
                     var list = [];
-                    if(defaultStandard) {
+                    if (defaultStandard) {
                         list = resp.data.items;
                     } else {
                         list = service.proccessApiElements.bind(config)(resp.data);
@@ -663,7 +685,18 @@
                     }
                     return getUrlResource(config);
                 }
-            }, function(reject) { });
+            }, function(reject) {
+                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                    reject.$parentComponentId = config.$id;
+                    $rootScope.$broadcast('editor:error_get_data', reject);
+                    config.defer.reject(reject);
+                } else {
+                    var data = service.processResponse(config, reject,
+                        successAnswer.bind(config),
+                        failAnswer.bind(config));
+                    config.defer.reject(data);
+                }
+            });
             return config.defer.promise;
         };
 
@@ -717,6 +750,9 @@
                 }
                 var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
                 $location.search(paramName, parent);
+            }, function(reject) {
+                reject.$parentComponentId = request.options.$parentComponentId;
+                $rootScope.$broadcast('editor:error_get_data', reject);
             });
         };
 
@@ -1023,7 +1059,7 @@
         }
 
         function failAnswer(data) {
-            var config = this, parentComponentId = config.parentComponentId;
+            var config = this, parentComponentId = config.parentComponentId || config.$id;
             if (config.action == 'update' || config.action == 'create' || config.action == 'presave') {
                 if (!!config.request.error) {
                     config.request.error(reject);
@@ -1048,6 +1084,10 @@
                     config.request.error(reject);
                 }
                 config.request.options.isLoading = false;
+            }
+            if (config.action == 'list' || config.action == 'one') {
+                data.$parentComponentId = parentComponentId;
+                $rootScope.$broadcast('editor:error_get_data', data);
             }
         }
     }

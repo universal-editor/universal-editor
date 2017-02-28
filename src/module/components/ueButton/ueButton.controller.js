@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeButtonController', UeButtonController);
 
     function UeButtonController($scope, $element, $state, $location, EditEntityStorage, ModalService, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, YiiSoftApiService, FilterFieldsStorage) {
@@ -48,7 +48,7 @@
                 request.useBackUrl = vm.back;
                 request.href = vm.url;
                 $scope.$on('editor:presave_entity_created', function(event, data) {
-                    if (!vm.options.isGrid && (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId)) {
+                    if (!vm.options.isGrid && (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId))) {
                         vm.entityId = data[componentSettings.dataSource.primaryKey];
                         vm.type = 'update';
                         if (vm.action === 'delete') {

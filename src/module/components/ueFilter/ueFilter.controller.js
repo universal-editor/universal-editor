@@ -2,10 +2,10 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .controller('UeFilterController', UeFilterController);
 
-    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $compile, $document, $templateCache) {
+    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, $timeout, FilterFieldsStorage, $compile, $document, $templateCache) {
         /* jshint validthis: true */
         "ngInject";
         var vm = this,

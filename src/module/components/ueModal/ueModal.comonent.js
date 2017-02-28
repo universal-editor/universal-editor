@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('universal.editor').component('ueModal', {
+    angular.module('universal-editor').component('ueModal', {
         template: ['$templateCache', function($templateCache) {
             return $templateCache.get('module/components/ueModal/ueModal.html');
         }],
