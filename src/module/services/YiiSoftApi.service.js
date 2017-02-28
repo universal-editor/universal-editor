@@ -196,7 +196,6 @@
                     $rootScope.$broadcast('editor:error_get_data', reject);
                     deferred.reject(reject);
                 } else {
-                    debugger;
                     var data = service.processResponse(config, reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));

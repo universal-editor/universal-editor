@@ -50,7 +50,6 @@
         self.getParams = function(config) {
             config.params = config.params || {};
             delete config.params.root;
-            //config.pagination.perPage = config.pagination.perPage
             if (config.action == 'list') {
                 config.params.page = {
                     offset: (config.pagination.page - 1) * config.pagination.perPage,
@@ -147,6 +146,7 @@
         };
 
         this.proccessApiElements = proccessJsonApiElements;
+
         function proccessJsonApiElements(response) {
             var config = this, expands = [], output;
             if (angular.isString(config.params.include)) {
@@ -206,5 +206,4 @@
             }
         }
     }
-
 })();

@@ -51,22 +51,6 @@
                     }
                 },
                 {
-                    name: 'photo',
-                    component: {
-                        name: 'ue-dropdown',
-                        settings: {
-                            label: 'Фото',
-                            valuesRemote: {
-                                fields: {
-                                    key: 'id',
-                                    label: 'title'
-                                },
-                                url: '/rest/photo'
-                            }
-                        }
-                    }
-                },
-                {
                     name: 'views',
                     component: {
                         name: 'ue-string',
@@ -139,7 +123,7 @@
                                     tabs: [
                                         {
                                             label: 'Основной таб',
-                                            fields: ['id', 'title', 'created', 'status', 'views', 'content', 'photo']
+                                            fields: ['id', 'title', 'created', 'status', 'views', 'content']
                                         }
                                     ]
                                 }
