@@ -16,7 +16,6 @@
             mixEntity,
             cancelerPromises = [];
 
-
         self.isProcessing = false;
         self.methodType = '';
         self.editedEntityId = null;
