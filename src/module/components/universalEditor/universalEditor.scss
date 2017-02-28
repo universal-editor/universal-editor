@@ -1,0 +1,197 @@
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    background-color: #E1E9EB;
+}
+
+.universal-editor,
+.modal-dialog {
+    .component-wrapper {
+        padding: 0 !important;
+        & .form-control[readonly],
+        .form-control[disabled] {
+            opacity: 0.4;
+        }
+    }
+    .component-wrapper .regim-preview.field-wrapper,
+    .filter-component .editor-filter-body {
+        .ue-component-errors {
+            .alert {
+                margin: 0px;
+                display: block;
+                min-width: auto;
+            }
+        }
+    }
+    .ue-component-errors {
+        .alert {
+            display: inline-block;
+            padding: 7px !important;
+            &.alert-warning,
+            &.alerts-danger {
+                margin: 10px 0;
+            }
+        }
+    }
+    & .component-edit,
+    & .component-preview {
+        display: inline-block;
+        width: 100%
+    }
+    & .btn[disabled] {
+        pointer-events: none;
+    }
+    .btn.btn-primary.add-array-item {
+        margin: 5px 0;
+    }
+    & .field-wrapper.row {
+        margin: 0 15px;
+        padding: 10px 0;
+    }
+    & .editor-body {
+        padding: 22px 20px;
+        position: relative;
+        background-color: #cbd6da;
+        .field-error-bottom-wrapper,
+        .field-notify-bottom-wrapper {
+            background-color: #ebf1f3;
+            padding: 1px;
+        }
+    }
+    & label.field-name-label {
+        font-weight: normal;
+        &.editor-required {
+            font-weight: bold;
+        }
+        & .field-hint {
+            position: relative;
+            display: inline-block;
+            margin-right: 5px;
+            width: 12px;
+            height: 12px;
+            margin-bottom: 5px;
+            & .hint-text {
+                display: none;
+                position: absolute;
+                top: 15px;
+                left: 0px;
+                width: 150px;
+                padding: 5px;
+                font-size: 12px;
+                background-color: #cbd6da;
+                color: #555;
+                border-radius: 3px;
+                border: 1px solid #949494;
+                z-index: 1000;
+                text-align: start;
+            }
+            &:hover .hint-text {
+                display: block;
+            }
+            &:before {
+                content: "?";
+                display: block;
+                width: 12px;
+                height: 12px;
+                border: 1px solid #949494;
+                text-align: center;
+                color: #949494;
+                font-size: 10px;
+                line-height: 13px;
+                border-radius: 2px;
+            }
+        }
+    }
+    .processing-status-wrapper {
+        display: block;
+        width: 30px;
+        position: relative;
+        height: 12px;
+        margin: 0px auto 10px auto;
+        .processing-status,
+        .processing-status:before,
+        .processing-status:after {
+            background: #3e565b;
+            -webkit-animation: load2 1s infinite ease-in-out;
+            animation: load2 1s infinite ease-in-out;
+            width: 2px;
+            height: 12px;
+        }
+        .processing-status:before,
+        .processing-status:after {
+            position: absolute;
+            top: 0;
+            content: '';
+        }
+        .processing-status:before {
+            left: -4px;
+            -webkit-animation-delay: -0.32s;
+            animation-delay: -0.32s;
+        }
+        .processing-status {
+            text-indent: -9999em;
+            position: absolute;
+            font-size: 11px;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-animation-delay: -0.16s;
+            animation-delay: -0.16s;
+            top: 0;
+        }
+        .processing-status:after {
+            left: 4px;
+        }
+    }
+    .field-wrapper-ue-radiolist,
+    .field-wrapper-ue-checkbox {
+        & .processing-status-wrapper {
+            margin: 0 0 0 30px;
+        }
+        .radio,
+        .checkbox {
+            margin-top: 0px;
+            margin-bottom: 0px;
+            input[type="radio"],
+            input[type="checkbox"] {
+                margin-top: 2px;
+            }
+        }
+    }
+    .close-editor {
+        display: block;
+        position: absolute;
+        top: 22px;
+        right: 22px;
+        width: 13px;
+        height: 13px;
+        cursor: pointer;
+        background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAgEASABIAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQECAgICAgICAgICAgMDAwMDAwMDAwP/2wBDAQEBAQEBAQEBAQECAgECAgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwP/wgARCAANAA0DAREAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwcI/8QAFwEAAwEAAAAAAAAAAAAAAAAAAQMFAv/aAAwDAQACEAMQAAAB1tZgqC41P2L/AP/EABkQAQADAQEAAAAAAAAAAAAAAAUBAgQGFP/aAAgBAQABBQJLbo4bVBa8GkwZDdamef8A/8QAHREAAQQCAwAAAAAAAAAAAAAAEQABAhIDIiEyYf/aAAgBAwEBPwGcnx7WLIOLHlQpaZ7LX2hX/8QAIhEAAAUDBAMAAAAAAAAAAAAAAAECERITIlEDITFhofDx/9oACAECAQE/AUILWJmZRB7oR2Cp00Q46yL8FUj59+j/xAAnEAABAgUCBQUAAAAAAAAAAAABAgMEBRESExUiAAYUFjIhJCUxkf/aAAgBAQAGPwJRac1CTzMvvQ8E/EDrICM8lUK6rXBrWRu/d3mvmfV2jO145nZn+JTL22XTpQOTBvbduLh9L00B+3OJt3KsOTux+zV2odmWplO8ESwKefZXWHqVk0WEVCR5kukvTrsjWYcpbMMbb/chxCHuq6rR89pUrHlraLcu7j//xAAZEAEBAAMBAAAAAAAAAAAAAAABEQAhQTH/2gAIAQEAAT8hg8ydFJ3lkYLwc0piwzWEMtBIFVbclGMNHaUrDCZuhiMNYZm/rLsX/9oADAMBAAIAAwAAABC+7//EAB4RAAEEAwEBAQAAAAAAAAAAABEBMUFRACFhoXGB/9oACAEDAQE/EFQCVraLU6Rj5kFmOuCb0R+ZAHuw4+xPmXNIR9JaQeZ//8QAHREAAgEFAQEAAAAAAAAAAAAAAREhADFBUWGhkf/aAAgBAgEBPxAfgO7gZcSde0qtgnyzS8fO0xVRuJOzgfLdpqB0XoJSTeGsbV//xAAXEAEBAQEAAAAAAAAAAAAAAAABACER/9oACAEBAAE/ED1Bj+w6IweZMg4hpKdeLwVyOZjO8ICdbyKecIBfRCbg5SQMLf/Z');
+    }
+}
+
+@-webkit-keyframes load2 {
+    0%,
+    80%,
+    100% {
+        top: 0px;
+        height: 12px;
+    }
+    40% {
+        top: 3px;
+        height: 6px;
+    }
+}
+
+@keyframes load2 {
+    0%,
+    80%,
+    100% {
+        top: 0px;
+        height: 12px;
+    }
+    40% {
+        top: 3px;
+        height: 6px;
+    }
+}

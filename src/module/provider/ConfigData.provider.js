@@ -1,20 +1,20 @@
-(function () {
+(function() {
     'use strict';
 
     angular
-        .module('universal.editor')
-        .provider('ConfigDataProvider', ConfigDataProvider);
+        .module('universal-editor')
+        .provider('configData', ConfigDataProvider);
 
-    ConfigDataProvider.$inject = ['configData'];
-    function ConfigDataProvider(configData){
+    ConfigDataProvider.$inject = ['$stateProvider', '$urlRouterProvider', '$injector', 'moment'];
+    function ConfigDataProvider($stateProvider, $urlRouterProvider, $injector, moment) {
+        var configData = {};
         return {
-            getDefaultEntity: function(){
-                return configData.entities[0].name;
+            setConfig: function(moduleName, config) {
+                configData = config;
             },
-            $get: ['$q',function($q) {
-                var deferred = $q.defer();
-                deferred.resolve(configData);
-                return deferred;
+
+            $get: ['$q', '$rootScope', function($q, $root) {
+                return configData;
             }]
         };
     }

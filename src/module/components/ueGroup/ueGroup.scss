@@ -1,0 +1,27 @@
+.universal-editor,
+.modal-dialog {
+    & .field-array-wrapper .add-more {
+        margin-top: 10px;
+    }
+    & .editor-field-group {
+        overflow: visible;
+        &>.field-name-label {
+            background-color: #d3dfe2;
+            text-align: center;
+            padding: 10px 0;
+            display: block;
+        }
+    }
+    & .field-wrapper-ue-group {
+        & .editor-group {
+            & .clear-padding-left {
+                padding-left: 0;
+            }
+            & .item-array-wrapper .btn {
+                margin: 10px 15px 0 15px;
+                float: right;
+            }
+            padding: 5px 0;
+        }
+    }
+}

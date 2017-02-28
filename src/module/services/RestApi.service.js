@@ -2,47 +2,39 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .service('RestApiService', RestApiService);
 
-    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document'];
+    RestApiService.$inject = ['$q', '$rootScope', '$http', 'configData', 'EditEntityStorage', '$location', '$timeout', '$state', '$httpParamSerializer', '$document', 'FilterFieldsStorage', 'ModalService', 'toastr', '$translate', '$httpParamSerializerJQLike', '$window'];
 
-    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document) {
-        var entityType,
-            self = this,
+    function RestApiService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window) {
+        var self = this,
             queryTempParams,
             filterParams,
             itemsKey,
             entityObject,
-            mixEntity;
+            mixEntity,
+            cancelerPromises = [];
 
         self.isProcessing = false;
-        self.methodType = "";
+        self.methodType = '';
         self.editedEntityId = null;
 
         $rootScope.$on('editor:set_entity_type', function(event, type) {
-            filterParams = undefined;
-            entityType = type;
-            itemsKey = "items";
-            entityObject = configData.entities.filter(function(item) {
-                return item.name === entityType;
-            })[0];
-            mixEntity = self.getMixModeByEntity();
-            if (angular.isDefined(entityObject.backend.keys)) {
-                itemsKey = entityObject.backend.keys.items || itemsKey;
-            }
+            entityObject = type;
+            itemsKey = 'items';
         });
 
-        $rootScope.$on('editor:create_entity', function(event, entity) {
-            self.addNewItem(entity);
+        $rootScope.$on('editor:create_entity', function(event, request) {
+            self.addNewItem(request);
         });
 
-        $rootScope.$on('editor:update_entity', function(event, entity) {
-            self.updateItem(entity);
+        $rootScope.$on('editor:update_entity', function(event, request) {
+            self.updateItem(request);
         });
 
-        $rootScope.$on('editor:presave_entity', function(event, entity) {
-            self.presaveItem(entity);
+        $rootScope.$on('editor:presave_entity', function(event, request) {
+            self.presaveItem(request);
         });
 
         this.getQueryParams = function() {
@@ -69,89 +61,81 @@
             }
         };
 
+        function setTimeOutPromise(id, mode) {
+            var def = $q.defer();
+            cancelerPromises[id] = cancelerPromises[id] || {};
+            if (cancelerPromises[id][mode]) {
+                cancelerPromises[id][mode].resolve();
+            }
+            cancelerPromises[id][mode] = def;
+            return def;
+        }
+
         this.getItemsList = function(request) {
+
+            //** cancel previouse request if request start again 
+            var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
+            request.options.isLoading = true;
+            var dataSource = request.options.$dataSource;
 
             var deferred = $q.defer();
 
-            if (queryTempParams && queryTempParams.hasOwnProperty("filter")) {
-                delete queryTempParams.filter;
-            }
-
-            var params = this.getQueryParams();
             var _method = 'GET';
-            var _url = entityObject.backend.url;
+            var _url = request.url;
 
-            if (typeof request !== 'undefined') {
-                params = typeof request.params !== 'undefined' ? request.params : params;
-                _method = typeof request.method !== 'undefined' ? request.method : _method;
-                _url = typeof request.url !== 'undefined' ? request.url : _url;
-                if (request.sort !== undefined) {
-                    params.sort = request.sort;
-                }
-            }
-            queryTempParams = params;
-
-            if (self.isProcessing) {
-                return;
+            var params = request.params || {};
+            _method = request.method || _method;
+            if (!!request.options && request.options.sort !== undefined) {
+                params.sort = request.options.sort;
             }
 
-            if ($location.search().hasOwnProperty("parent")) {
-                var filterObject = {};
-                filterObject[entityObject.backend.fields.parent] = $location.search().parent;
-                angular.extend(params, { filter: JSON.stringify(filterObject) });
+            var id = request.options.$parentComponentId;
+            var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
+            var beforeSend;
+            if (!!request.childId) {
+                filters = filters || {};
+                filters[request.parentField] = request.childId;
             }
 
-            if (filterParams) {
-                if (params.hasOwnProperty("filter")) {
-                    var tempFilter = JSON.parse(params.filter);
-                    angular.extend(tempFilter, filterParams);
-                    params.filter = JSON.stringify(tempFilter);
-                } else {
-                    params.filter = JSON.stringify(filterParams);
-                }
+
+            if (filters) {
+                angular.extend(params, { filter: JSON.stringify(filters) });
+            } else {
+                delete params.filter;
             }
 
-            if (mixEntity.existence) {
+            if (!!request.options.mixedMode) {
                 params = params || {};
                 angular.extend(params, {
-                    mixed: mixEntity.entity
+                    mixed: request.options.mixedMode.collectionType
                 });
             }
 
-            if (entityObject.backend.hasOwnProperty("parentField")) {
+            if (dataSource.hasOwnProperty('parentField')) {
                 params = params || {};
 
-                if (!params.hasOwnProperty("filter")) {
+                if (!params.hasOwnProperty('filter')) {
                     params.root = true;
                 }
             }
 
-            if (entityObject.backend.hasOwnProperty("sortBy")
-                && !params.hasOwnProperty(entityObject.backend.sortBy) && !params.sort) {
+            if (dataSource.hasOwnProperty('sortBy') && !params.hasOwnProperty(dataSource.sortBy) && !params.sort) {
                 params = params || {};
                 angular.extend(params, {
-                    sort: entityObject.backend.sortBy
+                    sort: dataSource.sortBy
                 });
             }
 
-            if (params.hasOwnProperty("filter")) {
+            if (params.hasOwnProperty('filter')) {
                 delete params.root;
             }
 
-            //if(Object.keys(params).length === 0){
-            //   params = undefined;
-            // }
-
-            self.isProcessing = true;
-
             var expandFields = [];
 
-            angular.forEach(entityObject.tabs, function(tab) {
-                angular.forEach(tab.fields, function(field) {
-                    if (field.hasOwnProperty("expandable") && field.expandable === true) {
-                        expandFields.push(field.name);
-                    }
-                });
+            angular.forEach(dataSource.fields, function(field) {
+                if (field.component && field.component.settings && field.component.settings.expandable === true) {
+                    expandFields.push(field.name);
+                }
             });
 
             if (expandFields.length > 0) {
@@ -161,77 +145,24 @@
             $http({
                 method: _method,
                 url: _url,
-                params: params
+                params: params,
+                timeout: canceler.promise,
+                beforeSend: beforeSend
             }).then(function(response) {
-                self.isProcessing = false;
-                //console.log("response list record:");
-                //console.log(response);
                 if (response.data[itemsKey].length === 0) {
-                    $rootScope.$broadcast("editor:parent_empty");
-                    $rootScope.$broadcast('editor:items_list', response.data);
-                    deferred.resolve();
-                } else {
-                    $rootScope.$broadcast('editor:items_list', response.data);
-                    deferred.resolve();
+                    $rootScope.$broadcast('editor:parent_empty');
                 }
+                response.data.$parentComponentId = request.options.$parentComponentId;
+                $rootScope.$broadcast('editor:items_list', response.data);
+                deferred.resolve(response.data);
             }, function(reject) {
-                self.isProcessing = false;
-                deferred.reject();
+                reject.$parentComponentId = request.options.$parentComponentId;
+                $rootScope.$broadcast('editor:error_get_data', reject);
+            }).finally(function() {
+                request.options.isLoading = false;
             });
 
             return deferred.promise;
-        };
-
-        this.getItemsListWithParams = function(params) {
-
-            if (self.isProcessing) {
-                return;
-            }
-
-            if (mixEntity.existence) {
-                params = params || {};
-                if (typeof params == 'object') {
-                    angular.extend(params, {
-                        mixed: mixEntity.entity
-                    });
-                } else {
-                    params = params + '&mixed=' + mixEntity.entity;
-                }
-            }
-
-            if (entityObject.backend.fields.parent) {
-                params = params || {};
-
-                if (!params.hasOwnProperty("filter")) {
-                    if (typeof params == 'object') {
-                        angular.extend(params, {
-                            root: true
-                        });
-                    } else {
-                        params = params + '&root=true';
-                    }
-
-                }
-            }
-
-            if (typeof params == 'object') {
-                params = $httpParamSerializer(params);
-            }
-
-            self.isProcessing = true;
-
-            $http({
-                method: 'GET',
-                url: entityObject.backend.url + '?' + params
-            }).then(function(response) {
-                self.isProcessing = false;
-                $rootScope.$broadcast('editor:items_list', response.data);
-                if ($location.search().hasOwnProperty("id")) {
-                    self.getItemById($location.search().id);
-                }
-            }, function(reject) {
-                self.isProcessing = false;
-            });
         };
 
         this.getData = function(api, params) {
@@ -242,115 +173,85 @@
             });
         };
 
-        this.addNewItem = function(arrItem) {
-            var item = arrItem[0];
-            var request = arrItem[1];
+        this.addNewItem = function(request) {
 
-            if (self.isProcessing) {
+            if (request.options.isLoading) {
                 return;
             }
+            var dataSource = request.options.$dataSource;
 
-            var parentField = entityObject.backend.fields.parent;
-            if (parentField && $location.search().parent) {
-                //-- проверяю редактируется ли поле parentField в форме. Если да, то его не нужно извлекать из адреса.
+            var parentField = dataSource.fields.parent;
+            var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+            if (parentField && $location.search()[paramName]) {
                 var isNotEditableParentField = !$document[0].querySelector(".field-wrapper [name='" + parentField + "']");
                 if (isNotEditableParentField) {
-                    item[parentField] = $location.search().parent;
+                    request.data[parentField] = $location.search()[paramName];
                 }
             }
 
-            self.isProcessing = true;
+            request.options.isLoading = true;
             var params = {};
             var _method = 'POST';
-            var _url = entityObject.backend.url;
+            var _url = dataSource.url;
             var idField = 'id';
+            var state;
 
-            if (entityObject.backend.hasOwnProperty('fields')) {
-                idField = entityObject.backend.fields.primaryKey || idField;
-            }
-
-            if (typeof request !== 'undefined') {
-                params = typeof request.params !== 'undefined' ? request.params : params;
-                _method = typeof request.method !== 'undefined' ? request.method : _method;
-                _url = typeof request.url !== 'undefined' ? request.url : _url;
+            if (dataSource.hasOwnProperty('fields')) {
+                idField = dataSource.fields.primaryKey || idField;
             }
             $http({
-                method: _method,
-                url: _url,
-                data: item,
-                params: params
+                method: request.method || _method,
+                url: request.method || _url,
+                data: request.data,
+                beforeSend: request.before
             }).then(function(response) {
-                $rootScope.$broadcast("editor:presave_entity_created", response.data[idField]);
-                self.isProcessing = false;
-                $rootScope.$broadcast("uploader:remove_session");
-                $rootScope.$broadcast("editor:entity_success");
-                var params = {};
-                if ($location.search().parent) {
-                    params.parent = $location.search().parent;
+                if (!!request.success) {
+                    request.success(response);
                 }
-                if ($state.params.back) {
-                    params.type = $state.params.back;
-                }
-                $state.go('editor.type.list', params, { reload: true });
-            }, function(reject) {
-                if (reject.data.error && reject.data.hasOwnProperty("data") && reject.data.data.length > 0) {
-                    angular.forEach(reject.data.data, function(err) {
-                        if (err.hasOwnProperty("field")) {
-                            $rootScope.$broadcast("editor:api_error_field_" + err.field, err.message);
-                            if (err.hasOwnProperty("fields")) {
-                                angular.forEach(err.fields, function(innerError, key) {
-                                    $rootScope.$broadcast("editor:api_error_field_" + err.field + "_" + key + "_" + innerError.field, innerError.message);
-                                });
-                            }
-                        }
-                    });
-                }
-                self.isProcessing = false;
-            });
-        };
-
-        this.updateItem = function(arrItem) {
-            var item = arrItem[0];
-            var request = arrItem[1];
-            var tmpUrl;
-
-
-            if (self.isProcessing) {
-                return;
-            }
-
-            self.isProcessing = true;
-
-            var params = {};
-            var _method = 'PUT';
-            var _url = entityObject.backend.url + '/' + self.editedEntityId;
-
-            if (typeof request !== 'undefined') {
-                params = typeof request.params !== 'undefined' ? request.params : params;
-                _method = typeof request.method !== 'undefined' ? request.method : _method;
-                _url = typeof request.url !== 'undefined' ? request.url : _url;
-            }
-
-            $http({
-                method: _method,
-                url: _url,
-                data: item,
-                params: params
-            }).then(function(response) {
-                self.isProcessing = false;
+                var data = {
+                    id: response.data[idField],
+                    $parentComponentId: request.options.$parentComponentId
+                };
+                $rootScope.$broadcast('editor:presave_entity_created', data);
+                request.options.isLoading = false;
                 $rootScope.$broadcast('uploader:remove_session');
                 $rootScope.$broadcast('editor:entity_success');
+                successCreateMessage();
+
                 var params = {};
-                if ($location.search().parent) {
-                    params.parent = $location.search().parent;
+                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                if ($location.search()[paramName]) {
+                    params.parent = $location.search()[paramName];
                 }
-                if ($state.params.back) {
-                    params.type = $state.params.back;
+                if ($location.search().back && request.useBackUrl) {
+                    params.state = $location.search().back;
+                    state = $location.search().back;
+                } else {
+                    state = request.state;
                 }
-                $state.go('editor.type.list', params, { reload: true });
+                if (!ModalService.isModalOpen()) {
+                    if (state) {
+                        $state.go(state, params).then(function() {
+                            if (params.back) {
+                                delete params.back;
+                            }
+                            $location.search(params);
+                            $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                        });
+                    } else {
+                        replaceToURL(request.href);
+                    }
+                } else {
+                    ModalService.close();
+                }
             }, function(reject) {
-                if (reject.data.error && reject.data.hasOwnProperty('data') && reject.data.data.length > 0) {
-                    angular.forEach(reject.data.data, function(err) {
+                if (!!request.error) {
+                    request.error(reject);
+                }
+                var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
+
+                if (wrongFields.length > 0) {
+                    angular.forEach(wrongFields, function(err) {
                         if (err.hasOwnProperty('field')) {
                             $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
                             if (err.hasOwnProperty('fields')) {
@@ -361,65 +262,156 @@
                         }
                     });
                 }
-                self.isProcessing = false;
+                proccessRejection(reject);
+                request.options.isLoading = false;
+            }).finally(function() {
+                if (!!request.complete) {
+                    request.complete();
+                }
             });
         };
 
-        this.presaveItem = function(arrItem) {
-            var item = arrItem[0];
-            var request = arrItem[1];
-            var tmpUrl;
-
-            if (self.isProcessing) {
+        this.updateItem = function(request) {
+            if (request.options.isLoading) {
                 return;
             }
+            var dataSource = request.options.$dataSource;
 
-            self.isProcessing = true;
-
-            if (self.editedEntityId !== '') {
-                tmpUrl = entityObject.backend.url + '/' + self.editedEntityId;
-            } else {
-                tmpUrl = entityObject.backend.url;
-            }
+            request.options.isLoading = true;
             var params = {};
-            var _method = 'POST';
-            var _url = tmpUrl;
+            var _method = 'PUT';
+
+            var _url = dataSource.url + '/' + self.editedEntityId;
+            var state;
             var idField = 'id';
 
-            if ($state.is('editor.type.entity')) {
+            $http({
+                method: request.method || _method,
+                url: request.url || _url,
+                data: request.data || {},
+                beforeSend: request.before
+            }).then(function(response) {
+                if (!!request.success) {
+                    request.success(response);
+                }
+                var data = {
+                    id: response.data[idField],
+                    $parentComponentId: request.options.$parentComponentId
+                };
+                $rootScope.$broadcast('editor:presave_entity_updated', data);
+                request.options.isLoading = false;
+                $rootScope.$broadcast('uploader:remove_session');
+                $rootScope.$broadcast('editor:entity_success');
+                successUpdateMessage();
+                var params = {};
+                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                if ($location.search()[paramName]) {
+                    params.parent = $location.search()[paramName];
+                }
+                if ($location.search().back && request.useBackUrl) {
+                    state = $location.search().back;
+                } else {
+                    state = request.state;
+                }
+                if (!ModalService.isModalOpen()) {
+                    if (state) {
+                        $state.go(state, params).then(function() {
+                            $location.search(params);
+                            $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                        });
+                    } else {
+                        replaceToURL(request.href);
+                    }
+                } else {
+                    ModalService.close();
+                }
+            }, function(reject) {
+                if (!!request.error) {
+                    request.error(reject);
+                }
+                var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
+
+                if (wrongFields.length > 0) {
+                    angular.forEach(wrongFields, function(err) {
+                        if (err.hasOwnProperty('field')) {
+                            $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
+                            if (err.hasOwnProperty('fields')) {
+                                angular.forEach(err.fields, function(innerError, key) {
+                                    $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
+                                });
+                            }
+                        }
+                    });
+                }
+                proccessRejection(reject);
+                request.options.isLoading = false;
+            }).finally(function() {
+                if (!!request.complete) {
+                    request.complete();
+                }
+            });
+        };
+
+        this.presaveItem = function(request) {
+            var _url;
+            var _method = 'POST';
+            var idField = 'id';
+            var isCreate = true;
+            if (request.options.isLoading) {
+                return;
+            }
+            var dataSource = request.options.$dataSource;
+
+            request.options.isLoading = true;
+
+            if (self.editedEntityId !== '') {
+                _url = dataSource.url + '/' + self.editedEntityId;
                 _method = 'PUT';
+                isCreate = false;
+            } else {
+                _url = dataSource.url;
             }
-            if (entityObject.backend.hasOwnProperty('fields')) {
-                idField = entityObject.backend.fields.primaryKey || idField;
-            }
-            if (typeof request !== 'undefined') {
-                params = typeof request.params !== 'undefined' ? request.params : params;
-                _method = typeof request.method !== 'undefined' ? request.method : _method;
-                _url = typeof request.url !== 'undefined' ? request.url : _url;
+
+            if (dataSource.hasOwnProperty('fields')) {
+                idField = dataSource.fields.primaryKey || idField;
             }
 
             $http({
-                method: _method,
-                url: _url,
-                data: item,
-                params: params
+                method: request.method || _method,
+                url: request.url || _url,
+                data: request.data || {},
+                beforeSend: request.before
             }).then(function(response) {
-                self.isProcessing = false;
-                switch (response.statusText) {
-                    case 'OK':
-                        $rootScope.$broadcast('editor:presave_entity_updated', '');
-                        break;
-                    case 'Created':
-                        $state.go('editor.type.entity', {
-                            uid: response.data[idField]
-                        }, {
-                                notify: false
-                            });
-                        $rootScope.$broadcast('editor:presave_entity_created', response.data[idField]);
-
-                        break;
+                if (!!request.success) {
+                    request.success(response);
                 }
+                var newId = response.data[idField];
+                var par = {};
+                par['pk'] = newId;
+                var searchString = $location.search();
+                $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
+                    $location.search(searchString);
+                    $rootScope.$broadcast('editor:update_item', {
+                        $gridComponentId: request.options.$gridComponentId,
+                        value: response.data
+                    });
+                });
+                var data = {
+                    id: newId,
+                    $parentComponentId: request.options.$parentComponentId
+                };
+                if (isCreate) {
+                    $rootScope.$broadcast('editor:presave_entity_created', data);
+                    successPresaveCreateMessage();
+                } else {
+                    successUpdateMessage();
+                    $rootScope.$broadcast('editor:presave_entity_updated', data);
+                }
+                proccessRejection(reject);
             }, function(reject) {
+                if (!!request.error) {
+                    request.error(reject);
+                }
                 if ((reject.status === 422 || reject.status === 400) && reject.data) {
                     var wrongFields = reject.data.hasOwnProperty('data') ? reject.data.data : reject.data;
 
@@ -434,109 +426,165 @@
                         }
                     });
                 }
-                self.isProcessing = false;
+            }).finally(function() {
+                if (!!request.complete) {
+                    request.complete();
+                }
+                request.options.isLoading = false;
             });
         };
 
-        this.getItemById = function(id, par) {
+        this.getItemById = function(id, par, options) {
+            var qParams = {},
+                expandFields = [],
+                expandParam = '',
+                dataSource = options.$dataSource || entityObject.dataSource;
 
-            var qParams = typeof par !== "undefined" ? par : {};
-            if (self.isProcessing) {
-                return;
-            }
-
-            self.isProcessing = true;
-
-            var expandFields = [];
-            var expandParam = "";
-
-            angular.forEach(entityObject.tabs, function(tab) {
-                angular.forEach(tab.fields, function(field) {
-                    if (field.hasOwnProperty("expandable") && field.expandable === true) {
-                        expandFields.push(field.name);
-                    }
-                });
+            options.isLoading = true;
+            angular.forEach(dataSource.fields, function(field) {
+                if (field.component && field.component.settings && field.component.settings.expandable === true) {
+                    expandFields.push(field.name);
+                }
             });
-
             if (expandFields.length > 0) {
                 qParams.expand = expandFields.join(',');
             }
 
             $http({
                 method: 'GET',
-                url: entityObject.backend.url + '/' + id,
+                url: dataSource.url + '/' + id,
                 params: qParams
             }).then(function(response) {
-                self.isProcessing = false;
-                EditEntityStorage.setSourceEntity(response.data);
+                var data = response.data;
+                data.$parentComponentId = options.$parentComponentId;
+                data.editorEntityType = 'exist';
+                $rootScope.$broadcast('editor:entity_loaded', data);
             }, function(reject) {
-                self.isProcessing = false;
+                reject.$parentComponentId = options.$parentComponentId;
+                $rootScope.$broadcast('editor:error_get_data', reject);
+            }).finally(function() {
+                options.isLoading = false;
             });
         };
 
-        this.deleteItemById = function(id, request, type) {
-
-            var par = {};
-
-            if (self.isProcessing) {
+        this.deleteItemById = function(request) {
+            var state;
+            if (request.options.isLoading) {
                 return;
             }
+            var dataSource = request.options.$dataSource;
+            var url;
 
-            self.isProcessing = true;
-            var _method = 'DELETE';
-            var _url = entityObject.backend.url + '/' + id;
-
-            if (type === 'mix') {
-                var config = configData.entities.filter(function(item) {
-                    return item.name === mixEntity.entity;
-                })[0];
-                _url = config.backend.url + '/' + id;
+            if (request.options.isMix) {
+                url = request.options.mixedMode.dataSource.url;
+            } else {
+                url = dataSource.url;
             }
+            request.options.isLoading = true;
 
-            if (typeof request !== 'undefined') {
-                par = typeof request.params !== 'undefined' ? request.params : par;
-                _method = typeof request.method !== 'undefined' ? request.method : _method;
-                _url = typeof request.url !== 'undefined' ? request.url : _url;
+            var _url = url + '/' + request.entityId;
+
+            if (request.setting.buttonClass === 'edit') {
+                _url = url.replace(':pk', request.entityId);
             }
-
-            $http({
-                method: _method,
-                url: _url,
-                params: par
+            return $http({
+                method: request.method || 'DELETE',
+                url: request.url || _url,
+                params: request.params || {},
+                beforeSend: request.before
             }).then(function(response) {
-                self.isProcessing = false;
+                if (!!request.success) {
+                    request.success(response);
+                }
+                request.options.isLoading = false;
                 self.setQueryParams({});
                 self.setFilterParams({});
-                $rootScope.$broadcast("editor:entity_success_deleted");
+                $rootScope.$broadcast('editor:entity_success_deleted');
+                successDeleteMessage();
                 var params = {};
-                if ($location.search().parent) {
-                    params.parent = $location.search().parent;
+                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                if ($location.search()[paramName]) {
+                    params[paramName] = $location.search()[paramName];
                 }
-                if ($state.params.back) {
-                    params.type = $state.params.back;
+                if ($location.search().back && request.useBackUrl) {
+                    state = $location.search().back;
+                } else {
+                    state = request.state;
                 }
-                $state.go('editor.type.list', params, { reload: true });
+
+                state = state || $state.current.name;
+
+                if (!ModalService.isModalOpen()) {
+                    if (state) {
+                        $state.go(state, params).then(function() {
+                            $location.search(params);
+                            $rootScope.$broadcast('editor:read_entity', request.options.$parentComponentId);
+                        });
+                    } else {
+                        replaceToURL(request.href);
+                    }
+                } else {
+                    ModalService.close();
+                }
             }, function(reject) {
-                self.isProcessing = false;
+                if (!!request.error) {
+                    request.error(reject);
+                }
+                proccessRejection(reject);
+                request.options.isLoading = false;
+            }).finally(function() {
+                if (!!request.complete) {
+                    request.complete();
+                }
             });
         };
 
-        //-- read all pages
-        this.getUrlResource = function getUrlResource(url, res, def, fromP, toP) {
-            var defer = def || $q.defer();
-            var result = res || [];
-            var promiseStack = [];
-            fromP = fromP || 1;
-            toP = toP || 0;
+        function successDeleteMessage() {
+            $translate('CHANGE_RECORDS.DELETE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
 
-            if (fromP === 12) {
-                fromP = 11;
+        function successUpdateMessage() {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successPresaveUpdateMessage() {
+            $translate('CHANGE_RECORDS.UPDATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successPresaveCreateMessage() {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        function successCreateMessage() {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
+                toastr.success(translation);
+            });
+        }
+
+        //-- read all pages
+        this.getUrlResource = function getUrlResource(request) {
+            request.defer = request.defer || $q.defer();
+            request.res = request.res || [];
+            var promiseStack = [];
+            request.fromP = request.fromP || 1;
+            request.toP = request.toP || 0;
+
+            if (request.fromP === 12) {
+                request.fromP = 11;
             }
-            if (!toP) {
-                promiseStack.push(getPromise(url));
+            if (!request.toP) {
+                promiseStack.push(getPromise(request.url));
             } else {
-                for (var i = fromP; i <= toP; i++) {
-                    promiseStack.push(getPromise(url, i));
+                for (var i = request.fromP; i <= request.toP; i++) {
+                    promiseStack.push(getPromise(request.url, i));
                 }
             }
 
@@ -547,7 +595,7 @@
                     url: url,
                     params: {
                         page: page || 1,
-                        "per-page": 50
+                        'per-page': 50
                     }
                 });
             }
@@ -557,120 +605,228 @@
                 var countP;
                 for (var i = allResp.length; i--;) {
                     resp = allResp[i];
-                    result = result.concat(resp.data.items);
+                    request.res = request.res.concat(resp.data.items);
+                    if (angular.isFunction(request.callback)) {
+                        request.callback(resp.data.items);
+                    }
                 }
-                if (resp.data._meta) {
+                if (resp && resp.data._meta) {
                     countP = resp.data._meta.pageCount;
                 }
 
-                if (!countP || countP === toP || countP === 1) {
-                    defer.resolve({ data: { items: result } });
+                if (!countP || countP === request.toP || countP === 1) {
+                    request.defer.resolve({ data: { items: request.res } });
                 } else {
-                    fromP = (fromP === 1 ? 2 : (fromP + 10));
-                    toP += 10;
-                    if (toP > countP) {
-                        toP = countP;
+                    if (request.fromP === 1) {
+                        request.fromP = 2;
+                    } else if (request.fromP === 2) {
+                        request.fromP += 4;
+                    } else {
+                        request.fromP += 5;
                     }
-                    return getUrlResource(url, result, defer, fromP, toP);
+                    request.toP += 5;
+                    if (request.toP > countP) {
+                        request.toP = countP;
+                    }
+                    return getrequest.urlResource(request);
                 }
-            }, function(reject) { });
-            return defer.promise;
+            }, function(reject) {
+                reject.$parentComponentId = request.$id;
+                $rootScope.$broadcast('editor:error_get_data', reject);
+            });
+            return request.defer.promise;
         };
 
-        this.contextMenuAction = function(contextItem, id) {
-            var reqParams = contextItem.request.params || {};
-            var data = contextItem.request.data;
-            var url = contextItem.request.url.replace(":id", id);
+        this.actionRequest = function(request) {
+            var deferred = $q.defer();
 
+            var reqParams = request.params || {};
+            var url = request.url;
+            if (request.id) {
+                url = request.url.replace(':id', id);
+            }
             self.isProcessing = true;
 
             $http({
-                method: contextItem.request.method,
+                method: request.method,
                 url: url,
                 params: reqParams,
-                data: data
+                beforeSend: request.before
             }).then(function(response) {
-                self.isProcessing = false;
-                self.getItemsList();
+                if (!!request.success) {
+                    request.success(response);
+                }
+                deferred.resolve(response);
             }, function(reject) {
+                if (!!request.error) {
+                    request.error(reject);
+                }
+                proccessRejection(reject);
+                deferred.reject(reject);
+            }).finally(function() {
+                if (!!request.complete) {
+                    request.complete();
+                }
                 self.isProcessing = false;
             });
+
+            return deferred.promise;
         };
 
-
-        this.loadChilds = function(entityId, request) {
-            $location.search("parent", entityId);
-
-            self.getItemsList(request).then(function(response) {
-                $timeout(function() {
-                    $location.search("parent", entityId);
-                }, 0);
+        this.loadChilds = function(request) {
+            var data = {
+                parentId: request.id,
+                $parentComponentId: request.options.$parentComponentId
+            };
+            var parent;
+            $rootScope.$broadcast('editor:parent_id', data);
+            request.childId = request.id;
+            self.getItemsList(request).then(function() {
+                parent = null;
+                if (request.childId) {
+                    parent = request.childId;
+                }
+                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                $location.search(paramName, parent);
             });
-
         };
 
-        this.loadParent = function(entityId) {
-            entityId = typeof entityId !== 'undefined' ? entityId : undefined;
-
+        this.loadParent = function(request) {
+            var data = {
+                $parentComponentId: request.options.$parentComponentId
+            };
+            var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
+            var parent;
             if (entityId) {
-                self.isProcessing = true;
-
+                request.options.isLoading = true;
                 $http({
                     method: 'GET',
-                    url: entityObject.backend.url + "/" + entityId
+                    url: request.url + '/' + entityId
                 }).then(function(response) {
-                    var parentId;
-                    if (response.data[entityObject.backend.fields.parent] !== null) {
-                        self.isProcessing = false;
-                        parentId = response.data[entityObject.backend.fields.parent];
-                        $location.search("parent", parentId);
-                        self.getItemsList();
-                    } else {
-                        self.isProcessing = false;
-                        $location.search("parent", null);
-                        self.getItemsList();
+                    var parentId = response.data[request.parentField];
+
+                    parent = null;
+                    if (parentId) {
+                        parent = parentId;
                     }
+                    var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                    $location.search(paramName, parent);
+                    request.options.isLoading = false;
+                    data.parentId = parentId;
+                    $rootScope.$broadcast('editor:parent_id', data);
+                    request.childId = parentId;
+                    self.getItemsList(request);
+
                 }, function(reject) {
-                    self.isProcessing = false;
+                    reject.$parentComponentId = request.options.$parentComponentId;
+                    $rootScope.$broadcast('editor:error_get_data', reject);
+                    request.options.isLoading = false;
                 });
             } else {
-                self.isProcessing = true;
-
-                $location.search("parent", null);
-                self.getItemsList();
+                reset();
             }
-        };
-
-        this.setEntityType = function(type) {
-            entityType = type;
-            entityObject = configData.entities.filter(function(item) {
-                return item.name === entityType;
-            })[0];
-            mixEntity = self.getMixModeByEntity();
-        };
-
-        this.getEntityType = function() {
-            return entityType;
+            function reset() {
+                request.options.isLoading = false;
+                request.parentField = null;
+                $rootScope.$broadcast('editor:parent_id', data);
+                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
+                $location.search(paramName, null);
+                request.childId = null;
+                self.getItemsList(request);
+            }
         };
 
         this.getEntityObject = function() {
             return entityObject;
         };
 
-        this.getMixModeByEntity = function() {
-            var mixMode = {};
-            mixMode.existence = false;
-            if (configData.hasOwnProperty("mixedMode")) {
-                angular.forEach(configData.mixedMode, function(item) {
-                    if (item.entities[0] == entityType) {
-                        mixMode.existence = true;
-                        mixMode.entity = item.entities[1];
-                        mixMode.entityTypeName = item.fields.type;
-                        mixMode.prependIcon = item.fields.prependIcon;
-                    }
-                });
+        function replaceToURL(url, entityId) {
+            if (entityId) {
+                url = url.replace(':pk', entityId);
             }
-            return mixMode;
+            var params = $location.search();
+            if (params.back) {
+                delete params.back;
+            }
+            var isReload = !~url.indexOf($location.path());
+            var searchParams = $httpParamSerializerJQLike(params);
+            if (searchParams) {
+                searchParams = '?' + searchParams;
+            }
+            $window.location.href = url + searchParams;
+            if (isReload) {
+                $window.location.reload();
+            }
+        }
+
+        this.getUrlDepend = function(url, queryParams, dependField, dependValue) {
+            if (angular.isString(dependValue)) {
+                dependValue = '"' + dependValue + '"';
+            }
+            if (angular.isArray(dependValue)) {
+                dependValue = dependValue.filter(function(item) {
+                    return !!item;
+                });
+                dependValue = '"' + dependValue.join(',') + '"';
+            }
+            url = url.replace(':dependField', dependField).replace(':dependValue', dependValue);
+            return this.getUrlWithParams(url, queryParams);
         };
+
+        this.getUrlWithParams = function(url, queryParams) {
+            url = decodeURI(url);
+            var urlArray = url.split('?'),
+                search = [],
+                searchObject = {},
+                split;
+
+            if (!!urlArray[1]) {
+                search = urlArray[1].split('&');
+            }
+
+            for (var i = 0; i < search.length; i++) {
+                split = search[i].split('=');
+                searchObject[split[0]] = eval('(' + split[1] + ')');
+            }
+            if (queryParams) {
+                searchObject = angular.merge(searchObject, queryParams);
+            }
+            var params = $httpParamSerializer(searchObject);
+            return urlArray[0] + (params ? ('?' + params) : '');
+        };
+
+
+        function proccessRejection(rejection) {
+            if (rejection.status !== -1) {
+                try {
+                    var json = JSON.parse(JSON.stringify(rejection));
+
+                    if (rejection.data !== null && rejection.data.hasOwnProperty('message') && rejection.data.message.length > 0) {
+                        toastr.error(rejection.data.message);
+                    } else if (rejection.status === 422 || rejection.status === 400) {
+                        $translate('RESPONSE_ERROR.INVALID_DATA').then(function(translation) {
+                            toastr.warning(translation);
+                        });
+                    } else if (rejection.status === 401) {
+                        $translate('RESPONSE_ERROR.UNAUTHORIZED').then(function(translation) {
+                            toastr.warning(translation);
+                        });
+                    } else if (rejection.status === 403) {
+                        $translate('RESPONSE_ERROR.FORBIDDEN').then(function(translation) {
+                            toastr.error(translation);
+                        });
+                    } else {
+                        $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function(translation) {
+                            toastr.error(translation);
+                        });
+                    }
+                } catch (e) {
+                    console.error(e);
+                    $translate('RESPONSE_ERROR.UNEXPECTED_RESPONSE').then(function(translation) {
+                        toastr.error(translation);
+                    });
+                }
+            }
+        }
     }
 })();

@@ -1,0 +1,12 @@
+.ue-tab-wrapper
+    .nav.nav-tabs
+        li(data-ng-repeat="tab in vm.tabs", data-ng-class="{'active': vm.indexTab === $index}", data-ng-click="vm.activateTab($index)" ng-if="!tab.unVisible")
+            a(href="" ng-bind="::tab.label")
+    .tab-content-wrapper
+        .tab-item-content(data-ng-repeat="tab in ::vm.tabs" data-ng-show="vm.indexTab === $index")
+            component-wrapper(
+                data-ng-repeat="field in tab.fields",
+                data-setting="field",
+                data-options="vm.options",
+                data-button-class="footer"
+                )

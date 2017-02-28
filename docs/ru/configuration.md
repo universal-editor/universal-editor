@@ -2,15 +2,20 @@
 
 ## Способы подключения
 
-Инициализация редактора происходит посредствам создания объекта класса.
+Инициализация редактора происходит посредствам создания объекта редактора.
 
 ```javascript
-    var editor = new UniversalEditor('universal-editor', config);
+    var editor = new UniversalEditor('universal-editor', config [, callback]);
+    /** module – angular-модуль редактора, который можно расширять. */
+    function(module) {
+      // логика расширения редактора
+    }
 ```
 
 Где:
 * __'universal-editor'__ — идентификатор html-элемента, на месте которого развернется редактор,
 * __config__ — javascript-объект с конфигурацией.
+* __callback__ — функция с подключением новых модулей.
 
 Конфигурация может быть получен несколькими способами:
 * Формированием javascript-объекта,
@@ -85,7 +90,7 @@
     config.entities = [];
     config.entities.push(news);
 
-    var editor = new UniversalEditor('universal-editor', config);
+    var editor = new UniversalEditor.constructor('universal-editor', config);
 ```
 
 ### Получение json-файла с конфигурацией от бекенда
@@ -98,17 +103,13 @@
             url: '/path/to/config.json',
             type: 'GET'
         }).done(function(data) {
-            var editor = new UniversalEditor('universal-editor', data);
+            var editor = new UniversalEditor.constructor('universal-editor', data);
         });
     })(jQuery);
 ```
 
 __Важно!__ Инициализация редактора должна находиться ниже создания модуля приложения. Генерация конфигурации и
 инициализация редактора должна находиться либо в index.html, либо в папке src в config.js.
-
-```javascript
-    angular.module('unEditor', ['universal.editor']);
-```
 
 ## Формат
 

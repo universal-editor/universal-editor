@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('universal.editor')
+        .module('universal-editor')
         .config(LocalizationMessage);
 
     LocalizationMessage.$inject = ['$translateProvider'];
@@ -17,7 +17,16 @@
                 'UNAUTHORIZED': 'Требуется авторизация',
                 'RELOAD_PAGE': 'Требуется повторная авторизация, перезагрузите страницу',
                 'FORBIDDEN': 'Нет доступа',
-                'NOT_FOUND': 'Запись не найдена'
+                'NOT_FOUND': 'Запись не найдена',
+                'UNDEFINED': 'Сервер временно недоступен',
+                'N400': 'Неправильно заполнена форма.',
+                'N401': 'Требуется авторизация.',
+                'N403': 'Нет доступа.',
+                'N404': 'Данные не найдены.',                
+                'N422': 'Ошибочный запрос.',
+                'N500': 'Внутренняя ошибка сервера.',
+                'N502': 'Сервис вернул неожиданный ответ.',
+                'N504': 'Истекло время ожидания.'
             },
             'CHANGE_RECORDS': {
                 'CREATE': 'Запись создана',
@@ -39,10 +48,27 @@
             'ELEMENT_NO': 'Нет элементов для отображения',
             'ELEMENTS': 'Элементы',
             'FROM': 'из',
-            'SEARCH_ELEMENTS': 'Поиск по элементам'
+            'SEARCH_ELEMENTS': 'Поиск по элементам',
+            'ERROR': {
+                'EditEntityStorage': 'EditEntityStorage: Сущность не доступна для проверки так как она не указана или не указан её тип',
+                'FIELD': {
+                    'MAX_SIZE': 'Значение длины для поля "%label_field" превышает максимальное значение сетки (12).',
+                    'MIN_SIZE':'Значение длины для поля "%label_field" ниже минимального значения сетки (1).',
+                    'VALUES_REMOTE' : ': Не удалось получить значения для поля "%name_field" с удаленного ресурса',
+                    'TEMPLATE': 'Файл %template не найден!',
+                    'NOT_TYPE_VALUE': 'Для поля не указан ни один тип получения значений ( локальный или удаленный )'
+                },
+                'MULTIPLE_NAME': ' в режиме multiple обязательно должен быть указан параметр name.',
+                'NOT_FOUND_STATE': 'Стейт %state не найден в конфигурационном файле.'
+            },
+            'WARNING': {
+                'DELETE_RECORD': 'Удалить запись «%id»?'
+            }
         };
+
         $translateProvider.translations('ru', constantLang);
 
+        $translateProvider.useSanitizeValueStrategy(null);
 
         $translateProvider.useStaticFilesLoader({
             prefix: '',

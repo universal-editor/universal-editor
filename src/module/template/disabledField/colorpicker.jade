@@ -1,0 +1,3 @@
+div
+   .disabled-colorpicker(ng-if = "!vm.multiple", ng-style="{ 'background-color': vm.fieldValue}")
+   .disabled-colorpicker(ng-if = "vm.multiple", ng-repeat="value in vm.fieldValue track by $index", ng-style="{ 'background-color': value}")

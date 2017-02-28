@@ -1,0 +1,11 @@
+div(style="background: #ebf1f3;")
+    .close-editor(data-ng-click="vm.cancel()"
+                  style="display: block; position: absolute; top: 22px; right: 22px; width: 13px; height: 13px; cursor: pointer;")
+    .ue-modal-header(ng-show="vm.header")
+        label(ng-bind="vm.header.label")
+    .ue-modal-body(ng-show="vm.body")
+        .text(ng-bind="vm.body.text" ng-show="vm.body.text")
+        .field-content-wrapper(data-ng-if="vm.body && vm.body.component")
+            component-wrapper(data-setting="vm.body", data-options="vm.options")
+    .ue-modal-footer(data-ng-show="vm.footer")
+        component-wrapper.editor-modal-button(data-ng-repeat="button in vm.footer track by $index", data-setting="button", data-options="vm.options", data-button-class="header")

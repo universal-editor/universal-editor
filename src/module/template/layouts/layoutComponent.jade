@@ -1,0 +1,25 @@
+div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter, 'regim-preview': vm.regim === 'preview'}" 
+    ng-if="!vm.unVisible")
+    .ue-component-body
+        //-- with templates
+        .component-template(
+            on-render-template,
+            ng-class="{'component-filter': vm.templates.filter && vm.regim === 'filter',\
+                    'component-edit': vm.templates.edit  && vm.regim === 'edit',\
+                    'component-preview': vm.templates.preview && vm.regim === 'preview'}")
+        //-- without templates
+        //-- filter or edit default template
+        .component-edit(
+            ng-if="(!vm.templates.edit && vm.regim === 'edit') || (!vm.templates.filter && vm.regim === 'filter')",
+            ng-class="{'component-filter': vm.regim === 'filter'}"
+            )
+            block content
+        //-- preview default template
+        .component-preview(ng-if="!vm.templates.preview && vm.regim === 'preview'") 
+            .loader-search-wrapper(data-ng-show="vm.loadingData")
+                        .loader-search {{'LOADING' | translate}}
+            span(ng-bind="::vm.previewValue", data-ng-show="!vm.loadingData", ng-if = "!vm.multiple")
+            div(ng-repeat="value in vm.previewValue track by $index", data-ng-show="!vm.loadingData", ng-if = "vm.multiple")
+                span(ng-bind="value")
+        include ../../template/errorField/errorField
+    

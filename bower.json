@@ -3,8 +3,7 @@
   "description": "Universal editor to edit the entities from RESTful service",
   "version": "1.0.0-alpha",
   "main": [
-    "./dist/js/universal-editor.min.js",
-    "./dist/css/universal-editor.min.css"
+    "./dist/ue.min.js"
   ],
   "moduleType": [],
   "keywords": [
@@ -20,27 +19,28 @@
     "tests"
   ],
   "dependencies": {
-    "raven-js": "1.3.0",
     "jquery": "~2.1.4",
-    "angular": "~1.5.x",
-    "angular-raven": "~0.6.2",
+    "angular": "~1.6.x",
     "jquery-minicolors": "~2.1.7",
     "angular-minicolors": "~0.0.7",
     "angular-moment": "~0.10.3",
-    "moment": "~2.10.6",
+    "moment": "^2.17.1",
     "angular-datepicker": "~2.0.3",
     "checklist-model": "~0.6.0",
     "ng-file-upload-shim": "~10.0.2",
     "ng-file-upload": "~10.0.2",
     "angular-cookies": "~1.4.8",
-    "angular-ui-router": "~0.2.18",
+    "angular-ui-router": "~0.3.2",
     "angular-ui-mask": "~1.6.7",
     "angular-toastr": "~1.7.0",
     "angular-translate": "^2.11.0",
     "angular-translate-loader-static-files": "^2.11.0",
-    "bootstrap": "~3.1.1"
+    "bootstrap": "~3.1.1",
+    "angular-bootstrap": "^2.1.4",
+    "bootstrap-sass": "^3.3.7"
   },
   "resolutions": {
-    "angular": "~1.5.7"
+    "angular": "~1.6.1",
+    "moment": "^2.17.1"
   }
 }
