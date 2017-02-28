@@ -60,16 +60,6 @@
                     }
                 },
                 {
-                    name: 'author',
-                    component: {
-                        name: 'ue-string',
-                        settings: {
-                            label: 'Автор',
-                            expandable: true
-                        }
-                    }
-                },
-                {
                     name: 'created',
                     component: {
                         name: 'ue-date',

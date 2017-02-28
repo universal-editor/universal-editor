@@ -125,6 +125,7 @@
                                             fields: ['id', 'title', 'created', 'status', 'views', 'content',
                                                 {
                                                     name: 'author',
+                                                    type: 'people',
                                                     component: {
                                                         name: 'ue-group',
                                                         settings: {

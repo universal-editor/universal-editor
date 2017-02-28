@@ -20,6 +20,7 @@
             vm.fieldName = componentSettings.name;
 
             baseController = $controller('BaseController', { $scope: $scope });
+            vm.parentFieldType = vm.setting.type;
             angular.extend(vm, baseController);
 
             vm.innerFields = [];
@@ -50,6 +51,7 @@
                     checkReadonlyEmpty(field);
                     if (vm.fieldName) {
                         field.parentField = vm.fieldName;
+                        field.parentFieldType = vm.parentFieldType; //for JSONAPI
                     }
                     vm.innerFields.push(field);
                 }

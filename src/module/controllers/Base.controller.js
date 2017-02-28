@@ -23,9 +23,10 @@
         }
 
         if (!self.fieldName) {
-            self.fieldName = self.setting.name;
+            self.fieldName = self.setting.name; 
         }
         self.parentField = self.setting.parentField;
+        self.parentFieldType = self.setting.parentFieldType;
         self.parentFieldIndex = angular.isNumber(self.setting.parentFieldIndex) ? self.setting.parentFieldIndex : false;
 
         self.label = componentSettings.label || null;
