@@ -11,7 +11,7 @@
 * Change routing and states. Removed list and from constant states. Added setting routing and states in the config file.
 * The editor has been split into components.
 * Form's fields and filters united and extracted into separate components and renamed base on template `ue-<field>`.
-* Button's united and extracted into separate components and renamed base on template `ue-button-<type>`.
+* Button's united into one component `ue-button`.
 
 ### Removed
 * Removed the ability to describe in a config several entities (one substance - one editor).
