@@ -51,21 +51,20 @@
                     }
                 },
                 {
+                    name: 'author',
+                    component: {
+                        name: 'ue-component',
+                        settings: {
+                            expandable: true
+                        }
+                    }
+                },
+                {
                     name: 'views',
                     component: {
                         name: 'ue-string',
                         settings: {
                             label: 'Показы'
-                        }
-                    }
-                },
-                {
-                    name: 'author',
-                    component: {
-                        name: 'ue-string',
-                        settings: {
-                            label: 'Автор',
-                            expandable: true
                         }
                     }
                 },
@@ -123,7 +122,32 @@
                                     tabs: [
                                         {
                                             label: 'Основной таб',
-                                            fields: ['id', 'title', 'created', 'status', 'views', 'content']
+                                            fields: ['id', 'title', 'created', 'status', 'views', 'content',
+                                                {
+                                                    name: 'author',
+                                                    component: {
+                                                        name: 'ue-group',
+                                                        settings: {
+                                                            fields: [{
+                                                                name: 'id',
+                                                                component: {
+                                                                    name: 'ue-dropdown',
+                                                                    settings: {
+                                                                        label: 'Автор',
+                                                                        valuesRemote: {
+                                                                            fields: {
+                                                                                key: 'id',
+                                                                                label: 'firstname'
+                                                                            },
+                                                                            url: 'http://localhost:16006/rest/people'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }]
+                                                        }
+                                                    }
+                                                }
+                                            ]
                                         }
                                     ]
                                 }

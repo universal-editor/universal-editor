@@ -191,6 +191,7 @@
                     deferred.resolve(data);
                 }
             }, function(reject) {
+                reject.canceled = canceler.promise.$$state.status === 1;
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     reject.$parentComponentId = request.options.$parentComponentId;
                     $rootScope.$broadcast('editor:error_get_data', reject);

@@ -37,16 +37,21 @@
 
         self.getData = function(config) {
             var data;
-
             if (config.action == 'create' || config.action == 'update') {
                 var attributes = {};
                 var relationships = {};
-                debugger;
                 angular.forEach(config.data, function(value, key) {
-                    relationships[key] = relationships[key] || {};
-                    relationships[key].data = relationships[key].data || [];
-                    if(angular.isObject(value) && !angular.isArray(value)) {
-                        relationships[key].data.push({id: value.id, type: value.__type});
+                    if (angular.isObject(value) && !angular.isArray(value)) {
+                        relationships[key] = relationships[key] || {};
+                        relationships[key].data = relationships[key].data || {};
+                        if (value.id) {
+                            relationships[key].data = {
+                                id: value.id,
+                                type: value.__type
+                            };
+                        } else {
+                            relationships[key] = null;
+                        }
                         delete config.data[key];
                     } else {
                         attributes[key] = value;

@@ -67,7 +67,6 @@
         }
 
         function onLoadedHandler(event, data) {
-            debugger;
             if (!vm.$isOnlyChildsBroadcast) {
                 var group = data[vm.fieldName];
                 if (group) {

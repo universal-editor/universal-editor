@@ -241,6 +241,9 @@
             if (self.parentField) {
                 field[self.parentField] = {};
                 field[self.parentField][self.fieldName] = wrappedFieldValue;
+                if (self.parentFieldType) {
+                    field[self.parentField].__type = self.parentFieldType;
+                }
             } else {
                 field[self.fieldName] = wrappedFieldValue;
             }
@@ -296,6 +299,13 @@
                                 self.readonly = componentSettings.readonly || false;
                             }
                         }, true);
+                    }
+
+                    if (angular.isString(data.__type)) {
+                        self.parentFieldType = data.__type;
+                        if (self.parentField && data[self.parentField] && data[self.parentField].__type) {
+                            self.parentFieldType = data[self.parentField].__type;
+                        }
                     }
 
                     if (data.editorEntityType === 'new' && self.regim !== 'preview') {

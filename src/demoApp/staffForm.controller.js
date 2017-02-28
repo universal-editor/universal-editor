@@ -90,8 +90,7 @@
                             label: 'Favorite colors',
                             multiname: 'color',
                             multiple: true,
-                            expandable: true,
-                            readonly: true
+                            expandable: true
                         }
                     }
                 },
