@@ -5,8 +5,8 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
         .component-template(
             on-render-template,
             ng-class="{'component-filter': vm.templates.filter && vm.regim === 'filter',\
-                    'component-edit': vm.templates.edit  && vm.regim === 'edit',\
-                    'component-preview': vm.templates.preview && vm.regim === 'preview'}")
+                'component-edit': vm.templates.edit  && vm.regim === 'edit',\
+                'component-preview': vm.templates.preview && vm.regim === 'preview'}")
         //-- without templates
         //-- filter or edit default template
         .component-edit(
@@ -17,9 +17,10 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
         //-- preview default template
         .component-preview(ng-if="!vm.templates.preview && vm.regim === 'preview'") 
             .loader-search-wrapper(data-ng-show="vm.loadingData")
-                        .loader-search {{'LOADING' | translate}}
-            span(ng-bind="::vm.previewValue", data-ng-show="!vm.loadingData", ng-if = "!vm.multiple")
-            div(ng-repeat="value in vm.previewValue track by $index", data-ng-show="!vm.loadingData", ng-if = "vm.multiple")
-                span(ng-bind="value")
+                .loader-search {{'LOADING' | translate}}
+            include ../../template/errorMessages/template
+            div(ng-if="vm.warning.length === 0 && vm.dangers.length === 0")
+                span(ng-bind="::vm.previewValue", data-ng-show="!vm.loadingData", ng-if = "!vm.multiple")
+                div(ng-repeat="value in vm.previewValue track by $index", data-ng-show="!vm.loadingData", ng-if = "vm.multiple")
+                    span(ng-bind="value")
         include ../../template/errorField/errorField
-    
