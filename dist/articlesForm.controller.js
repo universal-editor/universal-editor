@@ -10,7 +10,7 @@
         var articlesDataSource = {
             standard: 'JSONAPI',
             type: 'articles',
-            url: '/rest/articles',
+            url: 'http://localhost:16006/rest/articles',
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',

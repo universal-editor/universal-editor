@@ -134,10 +134,7 @@
             hot: true,
             port: freePort,
             inline: true,
-            open: true,
-            proxy: {
-            "/rest": "http://localhost:16006"
-            }
+            open: true
         };
     }
 

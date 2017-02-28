@@ -10,7 +10,7 @@
         var vm = this;
         var newsDataSource = {
             type: 'REST',
-            url: '//universal-backend.dev/rest/v1/ne',
+            url: '//universal-backend.dev/rest/v1/news',
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',

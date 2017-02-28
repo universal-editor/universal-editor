@@ -9,7 +9,8 @@
         var vm = this;
         var articlesDataSource = {
             standard: 'JSONAPI',
-            url: '/rest/articless',
+            type: 'articles',
+            url: 'http://localhost:16006/rest/articles',
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',
