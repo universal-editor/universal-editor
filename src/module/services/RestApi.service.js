@@ -156,6 +156,9 @@
                 $rootScope.$broadcast('editor:items_list', response.data);
                 deferred.resolve(response.data);
             }, function(reject) {
+                if (canceler.promise.$$state.status === 1) {
+                    reject.canceled = true;
+                }
                 reject.$parentComponentId = request.options.$parentComponentId;
                 $rootScope.$broadcast('editor:error_get_data', reject);
             }).finally(function() {

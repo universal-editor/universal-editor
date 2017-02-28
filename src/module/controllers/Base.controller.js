@@ -95,7 +95,7 @@
         };
 
         self.listeners.push($scope.$on('editor:error_get_data', function(event, rejection) {
-            if (self.isParentComponent(rejection.$parentComponentId)) {
+            if (self.isParentComponent(rejection.$parentComponentId) && !rejection.canceled) {
                 self.loaded = true;
                 var error = {};
                 if (rejection.status !== -1) {
