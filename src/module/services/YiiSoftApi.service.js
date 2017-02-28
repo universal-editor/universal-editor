@@ -658,7 +658,8 @@
                     if (defaultStandard) {
                         list = resp.data.items;
                     } else {
-                        list = service.proccessApiElements.bind(config)(resp.data);
+                        var serviceResponce = service.processResponse(config, resp);
+                        list = serviceResponce.items || [];
                     }
                     config.result = config.result.concat(list);
                     if (angular.isFunction(config.callback)) {

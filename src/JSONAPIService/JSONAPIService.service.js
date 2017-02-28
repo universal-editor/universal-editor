@@ -132,7 +132,9 @@
                         };
                     }
                 }
-                fail(errors.length ? errors : responseServer);
+                if (angular.isFunction(fail)) {
+                    fail(errors.length ? errors : responseServer);
+                }
                 return;
             }
             switch (config.action) {
@@ -161,7 +163,10 @@
                 case 'delete': output = ''; break;
                 default: break;
             }
-            success(output);
+            if (angular.isFunction(success)) {
+                success(output);
+            }
+            return output;
         };
 
         this.proccessApiElements = proccessJsonApiElements;
