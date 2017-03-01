@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+## 1.0.0-alpha4 - 2017-03-01
 ### Added
 * Allocated several basic controllers that are inherited controllers components.
 * Added validators for fields components.
