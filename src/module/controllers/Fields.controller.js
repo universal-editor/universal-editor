@@ -17,7 +17,7 @@
         var regEmail = new RegExp('^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$', 'i');
         var regUrl = new RegExp('^(?:(?:ht|f)tps?://)?(?:[\\-\\w]+:[\\-\\w]+@)?(?:[0-9a-z][\\-0-9a-z]*[0-9a-z]\\.)+[a-z]{2,6}(?::\\d{1,5})?(?:[?/\\\\#][?!^$.(){}:|=[\\]+\\-/\\\\*;&~#@,%\\wА-Яа-я]*)?$', 'i');
 
-        self.unVisible = componentSettings.unVisible === true;
+        self.isVisible = true;
 
         self.readonly = componentSettings.readonly === true;
         self.multiname = componentSettings.multiname || null;
@@ -31,6 +31,7 @@
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
         var timeUpdateDepend;
+
         if (values || remoteValues) {
             self.fieldId = "id";
             self.fieldSearch = "title";
@@ -45,7 +46,6 @@
                         }
                         self.optionValues.push(obj);
                     });
-                    equalPreviewValue();
                     componentSettings.$loadingPromise = $q.when(self.optionValues);
                 } else if (remoteValues) {
                     if (remoteValues.fields) {
@@ -55,10 +55,10 @@
                     self.loadingData = true;
                     if (!componentSettings.$loadingPromise) {
                         componentSettings.$loadingPromise = RestApiService
-                            .getUrlResource({url: remoteValues.url, $id: self.setting.component.$id})
+                            .getUrlResource({ url: remoteValues.url, $id: self.setting.component.$id })
                             .then(function(response) {
                                 if (!componentSettings.depend) {
-                                    angular.forEach(response.data.items, function (v) {
+                                    angular.forEach(response.data.items, function(v) {
                                         self.optionValues.push(v);
                                     });
                                 }
@@ -76,7 +76,6 @@
                             self.loadingData = false;
                             self.optionValues = componentSettings.$optionValues;
                         }
-                        equalPreviewValue();
                     }
 
                 }
@@ -84,7 +83,7 @@
         }
 
         self.fieldValue = transformToValue(self.defaultValue);
-
+        equalPreviewValue();
         self.cols = self.width;
 
         if (self.options.filter) {
@@ -94,8 +93,6 @@
             self.fieldValue = null;
             self.cols = 12;
         }
-
-
 
         if (!!self.cols) {
             if (self.cols > 12) {
@@ -126,8 +123,11 @@
             function() {
                 return self.fieldValue;
             },
-            function() {
+            function(value) {
                 self.error = [];
+                if (self.disabled === true) {
+                    self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : !!value;
+                }
             }, true)
         );
 
@@ -148,7 +148,7 @@
         self.getFieldValue = getFieldValue;
         self.equalPreviewValue = equalPreviewValue;
 
-        self.clearDefault = clear;        
+        self.clearDefault = clear;
 
         function clear() {
             self.fieldValue = self.multiple ? [] : null;
@@ -157,7 +157,9 @@
         function transformToValue(object) {
             var value;
             if (componentSettings.$fieldType === 'date') {
-                value = moment(object);
+                if (!object) {
+                    value = moment(object);
+                }
                 return self.multiple ? [value] : value;
             }
             if (angular.isObject(object) && !angular.isArray(object) && self.fieldId) {
@@ -247,6 +249,26 @@
 
         $scope.onLoadDataHandler = onLoadDataHandler;
 
+        function checkForEmptyValue(value) {
+            var result = false;
+            if (value !== false) {
+                (function check(value) {
+                    var keys = Object.keys(value);
+                    for (var i = keys.length; i--;) {
+                        var propValue = value[keys[i]];
+                        if (propValue !== null && propValue !== undefined && propValue !== '') {
+                            if (angular.isObject(propValue) && !result) {
+                                check(propValue);
+                            } else {
+                                result = true;
+                            }
+                        }
+                    }
+                })(value);
+            }
+            return result;
+        }
+
         function onLoadDataHandler(event, data, callback) {
             if (!data.$parentComponentId || self.isParentComponent(data.$parentComponentId)) {
                 if (!self.options.filter) {
@@ -254,24 +276,9 @@
                     if (componentSettings.depend) {
                         $scope.$watch(function() {
                             var f_value = EditEntityStorage.getValueField(self.parentComponentId, componentSettings.depend);
-                            var result = false;
+                            var result = checkForEmptyValue(f_value);
                             var oldValue = self.dependValue;
                             self.dependValue = undefined;
-                            if (f_value !== false) {
-                                (function check(value) {
-                                    var keys = Object.keys(value);
-                                    for (var i = keys.length; i--;) {
-                                        var propValue = value[keys[i]];
-                                        if (propValue !== null && propValue !== undefined && propValue !== '') {
-                                            if (angular.isObject(propValue) && !result) {
-                                                check(propValue);
-                                            } else {
-                                                result = true;
-                                            }
-                                        }
-                                    }
-                                })(f_value);
-                            }
                             if (result) {
                                 self.dependValue = f_value[componentSettings.depend];
                             }

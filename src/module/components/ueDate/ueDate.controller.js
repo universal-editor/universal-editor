@@ -37,7 +37,9 @@
                 if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId) && !vm.options.filter) {
                     vm.equalPreviewValue();
                 }
-                vm.previewValue = moment(vm.previewValue).format(vm.format);
+                if (vm.previewValue) {
+                    vm.previewValue = moment(vm.previewValue).format(vm.format);
+                }
             }));
         };
 
@@ -48,7 +50,7 @@
                 vm.fieldValue.forEach(function(value, key) {
                     if (key == index) {
                         vm.fieldValue.splice(index, 1);
-                    }                    
+                    }
                 });
             }
         }
@@ -64,7 +66,7 @@
 
             if (vm.multiname) {
                 wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
+                angular.forEach(vm.fieldValue, function(valueItem) {
                     if (!valueItem || valueItem === '' || !moment.isMoment(valueItem)) {
                         return;
                     }
@@ -74,7 +76,7 @@
                 });
             } else if (vm.multiple) {
                 wrappedFieldValue = [];
-                angular.forEach(vm.fieldValue, function (valueItem) {
+                angular.forEach(vm.fieldValue, function(valueItem) {
                     wrappedFieldValue.push(moment(valueItem).format(vm.format));
                 });
             } else {

@@ -410,7 +410,6 @@
                     successUpdateMessage();
                     $rootScope.$broadcast('editor:presave_entity_updated', data);
                 }
-                proccessRejection(reject);
             }, function(reject) {
                 if (!!request.error) {
                     request.error(reject);
@@ -631,7 +630,7 @@
                     if (request.toP > countP) {
                         request.toP = countP;
                     }
-                    return getrequest.urlResource(request);
+                    return getUrlResource(request);
                 }
             }, function(reject) {
                 reject.$parentComponentId = request.$id;

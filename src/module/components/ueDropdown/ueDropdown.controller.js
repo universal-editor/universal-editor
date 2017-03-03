@@ -119,7 +119,7 @@
                                 break;
                             }
                         }
-                    } else if (v_id === vm.fieldValue) {
+                    } else if (v_id == vm.fieldValue) {
                         vm.fieldValue = v;
                         vm.isSpanSelectDelete = true;
                     }
@@ -138,6 +138,7 @@
 
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             vm.data = data;
+
             $scope.onLoadDataHandler(event, data);
             if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 componentSettings.$loadingPromise.then(function(items) {

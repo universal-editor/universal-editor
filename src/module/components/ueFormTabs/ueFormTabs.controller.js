@@ -30,7 +30,7 @@
                     var newTab = {};
                     newTab.label = tab.label;
                     newTab.fields = [];
-                    var isAllReadonly = true;
+                    var isAllDisabled = true;
                     if (angular.isArray(tab.fields)) {
                         angular.forEach(tab.fields, function(field) {
                             if (angular.isString(field)) {
@@ -39,34 +39,27 @@
                                 })[0];
                                 if (newField) {
                                     newTab.fields.push(newField);
-                                    if (newField.component && newField.component.settings && newField.component.settings.readonly !== true) {
-                                        isAllReadonly = false;
+                                    if (newField.component && newField.component.settings && newField.component.settings.disabled !== true) {
+                                        isAllDisabled = false;
                                     }
-                                    checkReadonlyEmpty(newField);
                                 }
                             } else {
-                                if (field.component && field.component.settings && field.component.settings.readonly !== true) {
-                                    isAllReadonly = false;
+                                if (field.component && field.component.settings && field.component.settings.disabled !== true) {
+                                    isAllDisabled = false;
                                 }
                                 if (field.component.settings.dataSource === undefined) {
                                     field.component.settings.dataSource = componentSettings.dataSource;
                                 }
-                                checkReadonlyEmpty(field);
                                 newTab.fields.push(field);
 
                             }
                         });
                     }
-                    newTab.unVisible = isAllReadonly;
+                    newTab.unVisible = isAllDisabled;
                     vm.tabs.push(newTab);
                 });
             }
         };
-        function checkReadonlyEmpty(control) {
-            if (control.component && control.component.settings && control.component.settings.readonly === true && vm.options.isNewRecord) {
-                control.component.settings.unVisible = true;
-            }
-        }
 
         function activateTab(indexTab) {
             vm.indexTab = indexTab;

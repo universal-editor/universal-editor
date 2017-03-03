@@ -11,7 +11,7 @@ block append content
                                     data-ng-if="vm.multiple") {{acItem[vm.fieldSearch]}}
                     span.remove-from-selected(data-ng-click="vm.removeFromSelected($event, acItem)", data-ng-if="!vm.readonly") ×
                 input.autocomplete-field-search( 
-                    ng-show="vm.preloadedData"
+                    ng-show="!vm.loadingData"
                     type="text",
                     ng-disabled="vm.readonly",
                     data-ng-model="vm.inputValue",
@@ -36,7 +36,7 @@ block append content
                                             data-ng-mousedown="vm.addToSelected($event, possible)",
                                             data-ng-class="vm.activeElement == $index ? 'active' : ''") {{::possible[vm.fieldSearch]}}
 
-            .loader-search-wrapper(data-ng-show="vm.searching || !vm.preloadedData")
+            .loader-search-wrapper(data-ng-show="vm.searching || vm.loadingData")
                 .loader-search {{'LOADING' | translate}}
       .disabled-field(ng-if="vm.disabled && !vm.options.filter")
         include ../../template/disabledField/default

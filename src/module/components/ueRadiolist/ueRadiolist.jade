@@ -5,7 +5,7 @@ block append content
     include ../../template/errorMessages/template
     .components-body(ng-if="!vm.warnings.length && !vm.dangers.length")
         div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}", ng-if="!vm.disabled || vm.options.filter")
-            div(data-ng-repeat="item in vm.optionValues", data-ng-class="{'radiodisabled': vm.readonly}")
+            div(data-ng-repeat="item in vm.optionValues", data-ng-class="{'radiodisabled': vm.readonly, 'inline-component': vm.inline}")
                 label.radio
                     input(type="radio", data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue", value="{{::item[vm.fieldId]}}")
                     span(ng-bind = "::item[vm.fieldSearch]")

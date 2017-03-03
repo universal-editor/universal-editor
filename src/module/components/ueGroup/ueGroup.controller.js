@@ -48,7 +48,6 @@
                     field = value;
                 }
                 if (field) {
-                    checkReadonlyEmpty(field);
                     if (vm.fieldName) {
                         field.parentField = vm.fieldName;
                     }
@@ -61,11 +60,6 @@
             vm.option = angular.merge({}, vm.options);
             vm.option.isGroup = true;
         };
-        function checkReadonlyEmpty(control) {
-            if (control.component && control.component.settings && control.component.settings.readonly === true && vm.options.isNewRecord) {
-                control.component.settings.unVisible = true;
-            }
-        }
 
         function onLoadedHandler(event, data) {
             if (!vm.$isOnlyChildsBroadcast) {

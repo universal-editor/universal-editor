@@ -50,6 +50,7 @@
                     $scope.onLoadDataHandler(event, data);
                     componentSettings.$loadingPromise.then(function(optionValues) {
                         vm.optionValues = optionValues;
+                        fillControl(vm.optionValues);
                         vm.equalPreviewValue();
                     }).finally(function() {
                         vm.loadingData = false;
@@ -246,6 +247,20 @@
             return false;
         }
 
+        function fillControl(options) {
+            angular.forEach(options, function(v) {
+                if (Array.isArray(vm.fieldValue) &&
+                    (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
+                    vm.multiple && !alreadyIn(v, vm.selectedValues)
+                ) {
+                    vm.selectedValues.push(v);
+                } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
+                    vm.selectedValues.push(v);
+                    vm.placeholder = v[vm.fieldSearch];
+                }
+            });
+        }
+
         function loadValues() {
             vm.preloadedData = false;
             if (componentSettings.hasOwnProperty('values')) {
@@ -294,18 +309,7 @@
                 RestApiService
                     .getUrlResource(request)
                     .then(function(response) {
-                        angular.forEach(response.data.items, function(v) {
-                            if (Array.isArray(vm.fieldValue) &&
-                                (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
-                                vm.multiple && !alreadyIn(v, vm.selectedValues)
-                            ) {
-                                vm.selectedValues.push(v);
-                            } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
-                                vm.selectedValues.push(v);
-                                vm.placeholder = v[vm.fieldSearch];
-                            }
-
-                        });
+                        fillControl(response.data.items);
                         vm.preloadedData = true;
                     }, function(reject) {
                         vm.preloadedData = true;

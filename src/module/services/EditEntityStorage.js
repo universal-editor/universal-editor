@@ -96,7 +96,7 @@
                 }
 
                 isError = (fCtrl.error.length === 0) && isError;
-                if (!fCtrl.hasOwnProperty('readonly') || fCtrl.readonly === false) {
+                if (fCtrl.readonly !== true && fCtrl.disabled !== true) {
                     if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
                         entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
                         entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
@@ -140,7 +140,7 @@
                     });
                 }
                 isError = (fCtrl.error.length === 0) && isError;
-                if (!fCtrl.hasOwnProperty('readonly') || fCtrl.readonly === false) {
+                if (fCtrl.readonly !== true && fCtrl.disabled !== true) {
                     if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
                         entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
                         entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
@@ -148,9 +148,6 @@
                     } else {
                         angular.merge(entityObject, value);
                     }
-                }
-                if (!fCtrl.hasOwnProperty('readonly') || fCtrl.readonly === false) {
-                    angular.merge(entityObject, fCtrl.getFieldValue());
                 }
             });
 
@@ -176,7 +173,7 @@
                     }
                 }
             });
-            if(!stateName) {
+            if (!stateName) {
                 return configData.states[0];
             }
             return result;

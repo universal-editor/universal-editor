@@ -82,9 +82,6 @@
                         });
                     } else {
                         var value = data[vm.fieldName];
-                        if (vm.falseValue == value) {
-                            vm.fieldValue = [vm.falseValue];
-                        }
                         if (vm.trueValue == value) {
                             vm.fieldValue = [vm.trueValue];
                         }
@@ -150,7 +147,7 @@
             wrappedFieldValue = vm.fieldValue;
 
             if (vm.singleValue && !vm.options.filter) {
-                wrappedFieldValue = (!vm.fieldValue || vm.fieldValue.length === 0) ? componentSettings.falseValue : componentSettings.trueValue;
+                wrappedFieldValue = (angular.isArray(vm.fieldValue) && vm.fieldValue[0] === componentSettings.trueValue) ? componentSettings.trueValue : componentSettings.falseValue;
             }
 
             if (vm.options.filter && vm.fieldValue === null) {
