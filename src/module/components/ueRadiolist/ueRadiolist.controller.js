@@ -55,7 +55,8 @@
 
                 var request = {
                     url: url,
-                    $id: vm.setting.component.$id
+                    $id: vm.setting.component.$id,
+                    serverPagination: vm.serverPagination
                 };
                 RestApiService
                     .getUrlResource(request)

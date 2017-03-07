@@ -616,7 +616,7 @@
                     countP = resp.data._meta.pageCount;
                 }
 
-                if (!countP || countP === request.toP || countP === 1) {
+                if (!countP || countP === request.toP || countP === 1 || !request.serverPagination) {
                     request.defer.resolve({ data: { items: request.res } });
                 } else {
                     if (request.fromP === 1) {

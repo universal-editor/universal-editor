@@ -1,0 +1,4 @@
+.client-error-wrapper.col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left(ng-if='vm.multiple && vm.clientErrors[$index]' ng-init="i = $index")
+   .error-item.alert.alert-danger(data-ng-repeat="err in vm.clientErrors[i] track by $index") {{err}}
+.client-error-wrapper.col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left(ng-if='!vm.multiple && vm.clientErrors')
+   .error-item.alert.alert-danger(data-ng-repeat="err in vm.clientErrors track by $index") {{err}}

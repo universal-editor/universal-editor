@@ -57,14 +57,14 @@
                                 name: 'ue-group',
                                 settings: {
                                     label: 'String',
+                                    countInLine: 2,
                                     fields: [
                                         {
                                             component: {
-                                                name: 'ue-custom-component',
+                                                name: 'ue-string',
                                                 settings: {
-                                                    readonly: false,
-                                                    colorText: '#445866',
-                                                    widthField: '400px'
+                                                    label: 'Заголовок',
+                                                    defaultValue: 'Example'
                                                 }
                                             }
                                         },
@@ -72,7 +72,9 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'Простое поле string'
+                                                    label: 'Заголовок',
+                                                    multiple: true,
+                                                    defaultValue: ['Example1', 'Example2']
                                                 }
                                             }
                                         },
@@ -80,11 +82,73 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'string c trim->true',
+                                                    label: 'Заголовок',
+                                                    readonly: true,
+                                                    defaultValue: 'Example'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'Заголовок',
+                                                    readonly: true,
+                                                    multiple: true,
+                                                    defaultValue: ['Example1', 'Example2']
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'Заголовок',
+                                                    disabled: true,
+                                                    hint: 'Текст подсказки',
+                                                    defaultValue: 'Example'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'Заголовок',
+                                                    disabled: true,
+                                                    multiple: true,
+                                                    hint: 'Текст подсказки',
+                                                    defaultValue: ['Example1', 'Example2']
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'string c ограничением по длинне minLength = 4, maxLength = 25',
                                                     validators: [
                                                         {
                                                             type: 'string',
-                                                            trim: true
+                                                            minLength: 4,
+                                                            maxLength: 10
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'string c ограничением по длинне minLength = 2, maxLength = 25',
+                                                    multiple: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            minLength: 4,
+                                                            maxLength: 10
                                                         }
                                                     ]
                                                 }
@@ -94,11 +158,39 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'string c ограничеме по длинне minLength = 2, maxLength = 25',
+                                                    label: 'string c ограничением по длинне minLength = 2',
                                                     validators: [
                                                         {
                                                             type: 'string',
-                                                            minLength: 2,
+                                                            minLength: 2
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'string c ограничением по длинне minLength = 2',
+                                                    multiple: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            minLength: 2
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'string c ограничением по длинне maxLength = 25',
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
                                                             maxLength: 25
                                                         }
                                                     ]
@@ -109,13 +201,12 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'string c ограничеме по длинне minLength = 2, maxLength = 25, trim',
+                                                    label: 'string c ограничением по длинне maxLength = 25',
+                                                    multiple: true,
                                                     validators: [
                                                         {
                                                             type: 'string',
-                                                            minLength: 2,
-                                                            maxLength: 25,
-                                                            trim: true
+                                                            maxLength: 25
                                                         }
                                                     ]
                                                 }
@@ -126,6 +217,56 @@
                                                 name: 'ue-string',
                                                 settings: {
                                                     label: 'string contentType = url',
+                                                    defaultValue: 'http://yandex.ru',
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'url'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'string contentType = url',
+                                                    multiple: true,
+                                                    defaultValue: ['http://yandex.ru', 'http://yandex.ru'],
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'url'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'string contentType = url',
+                                                    disabled: true,
+                                                    defaultValue: 'http://yandex.ru',
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'url'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'string contentType = url',
+                                                    disabled: true,
+                                                    multiple: true,
+                                                    defaultValue: ['http://yandex.ru', 'http://yandex.ru'],
                                                     validators: [
                                                         {
                                                             type: 'string',
@@ -153,7 +294,39 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
+                                                    label: 'string contentType = email',
+                                                    multiple: true,
+                                                    defaultValue: ['email@mail.ru', 'email@mail.ru'],
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'email'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
                                                     label: 'string contentType = password',
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'password'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'string contentType = password',
+                                                    multiple: true,
+                                                    defaultValue: ['password1', 'password2'],
                                                     validators: [
                                                         {
                                                             type: 'string',
@@ -176,6 +349,22 @@
                                                     ]
                                                 }
                                             }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'string pattern = [0-9][a-z]',
+                                                    multiple: true,
+                                                    defaultValue: ['', ''],
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            pattern: '[0-9][a-z]'
+                                                        }
+                                                    ]
+                                                }
+                                            }
                                         }
                                     ]
                                 }
@@ -186,12 +375,14 @@
                                 name: 'ue-group',
                                 settings: {
                                     label: 'Textareas',
+                                    countInLine: 2,
                                     fields: [
                                         {
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'Простое поле textarea'
+                                                    label: 'Заголовок',
+                                                    defaultValue: 'Example'
                                                 }
                                             }
                                         },
@@ -199,11 +390,83 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'textarea c trim->true',
+                                                    label: 'Заголовок',
+                                                    multiple: true,
+                                                    defaultValue: ['Example1', 'Example2']
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'Заголовок',
+                                                    readonly: true,
+                                                    defaultValue: 'Example'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'Заголовок',
+                                                    readonly: true,
+                                                    multiple: true,
+                                                    defaultValue: ['Example1', 'Example2']
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'Заголовок',
+                                                    disabled: true,
+                                                    hint: 'Текст подсказки',
+                                                    defaultValue: 'Example'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'Заголовок',
+                                                    disabled: true,
+                                                    multiple: true,
+                                                    hint: 'Текст подсказки',
+                                                    defaultValue: ['Example1', 'Example2']
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string c ограничением по длинне minLength = 2, maxLength = 25',
                                                     validators: [
                                                         {
                                                             type: 'string',
-                                                            trim: true
+                                                            minLength: 4,
+                                                            maxLength: 10
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string c ограничением по длинне minLength = 2, maxLength = 25',
+                                                    multiple: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            minLength: 4,
+                                                            maxLength: 10
                                                         }
                                                     ]
                                                 }
@@ -213,11 +476,39 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'textarea c ограничеме по длинне minLength = 2, maxLength = 25',
+                                                    label: 'string c ограничением по длинне minLength = 2',
                                                     validators: [
                                                         {
                                                             type: 'string',
-                                                            minLength: 2,
+                                                            minLength: 2
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string c ограничением по длинне minLength = 2',
+                                                    multiple: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            minLength: 2
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string c ограничением по длинне maxLength = 25',
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
                                                             maxLength: 25
                                                         }
                                                     ]
@@ -228,13 +519,12 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'textarea c ограничеме по длинне minLength = 2, maxLength = 25, trim',
+                                                    label: 'string c ограничением по длинне maxLength = 25',
+                                                    multiple: true,
                                                     validators: [
                                                         {
                                                             type: 'string',
-                                                            minLength: 2,
-                                                            maxLength: 25,
-                                                            trim: true
+                                                            maxLength: 25
                                                         }
                                                     ]
                                                 }
@@ -244,7 +534,131 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'textarea pattern = [0-9][a-z]',
+                                                    label: 'string contentType = url',
+                                                    defaultValue: 'http://yandex.ru',
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'url'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string contentType = url',
+                                                    multiple: true,
+                                                    defaultValue: ['http://yandex.ru', 'http://yandex.ru'],
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'url'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string contentType = url',
+                                                    disabled: true,
+                                                    defaultValue: 'http://yandex.ru',
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'url'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string contentType = url',
+                                                    disabled: true,
+                                                    multiple: true,
+                                                    defaultValue: ['http://yandex.ru', 'http://yandex.ru'],
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'url'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string contentType = email',
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'email'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string contentType = email',
+                                                    multiple: true,
+                                                    defaultValue: ['email@mail.ru', 'email@mail.ru'],
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'email'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string contentType = password',
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'password'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string contentType = password',
+                                                    multiple: true,
+                                                    defaultValue: ['password1', 'password2'],
+                                                    validators: [
+                                                        {
+                                                            type: 'string',
+                                                            contentType: 'password'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-textarea',
+                                                settings: {
+                                                    label: 'string pattern = [0-9][a-z]',
                                                     validators: [
                                                         {
                                                             type: 'string',
@@ -258,13 +672,15 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'textarea multiple',
+                                                    label: 'string pattern = [0-9][a-z]',
+                                                    multiple: true,
+                                                    defaultValue: ['', ''],
                                                     validators: [
                                                         {
-                                                            type: 'string'
+                                                            type: 'string',
+                                                            pattern: '[0-9][a-z]'
                                                         }
-                                                    ],
-                                                    multiple: true
+                                                    ]
                                                 }
                                             }
                                         }
@@ -277,6 +693,7 @@
                                 name: 'ue-group',
                                 settings: {
                                     label: 'Numbers',
+                                    countInLine: 2,
                                     fields: [
                                         {
                                             component: {
@@ -295,7 +712,36 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
+                                                    label: 'просто number',
+                                                    multiple: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'number'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
                                                     label: 'number c шагом(step) 10',
+                                                    validators: [
+                                                        {
+                                                            type: 'number',
+                                                            step: 10
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'number c шагом(step) 10',
+                                                    multiple: true,
                                                     validators: [
                                                         {
                                                             type: 'number',
@@ -324,7 +770,40 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
+                                                    label: 'number c ограничением min = 0 и max = 100',
+                                                    multiple: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'number',
+                                                            min: 0,
+                                                            max: 100
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
                                                     label: 'number c ограничением min = 0 и max = 100 и шагом 10',
+                                                    validators: [
+                                                        {
+                                                            type: 'number',
+                                                            min: 0,
+                                                            max: 100,
+                                                            step: 10
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-string',
+                                                settings: {
+                                                    label: 'number c ограничением min = 0 и max = 100 и шагом 10',
+                                                    multiple: true,
                                                     validators: [
                                                         {
                                                             type: 'number',
@@ -345,12 +824,23 @@
                                 name: 'ue-group',
                                 settings: {
                                     label: 'Dates',
+                                    countInLine: 2,
                                     fields: [
                                         {
                                             component: {
                                                 name: 'ue-date',
                                                 settings: {
-                                                    label: 'date'
+                                                    label: 'date',
+                                                    defaultValue: '01.10.2014 23:22:00'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-date',
+                                                settings: {
+                                                    label: 'date',
+                                                    multiple: true
                                                 }
                                             }
                                         },
@@ -372,7 +862,37 @@
                                             component: {
                                                 name: 'ue-date',
                                                 settings: {
+                                                    label: 'date max = 10.12.2016',
+                                                    multiple: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'date',
+                                                            maxDate: '10.12.2016'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-date',
+                                                settings: {
                                                     label: 'date min = 10.11.2016',
+                                                    validators: [
+                                                        {
+                                                            type: 'date',
+                                                            minDate: '10.11.2016'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-date',
+                                                settings: {
+                                                    label: 'date min = 10.11.2016',
+                                                    multiple: true,
                                                     validators: [
                                                         {
                                                             type: 'date',
@@ -402,6 +922,37 @@
                                                 name: 'ue-date',
                                                 settings: {
                                                     label: 'date min = 10.11.2016, max = 10.12.2016',
+                                                    multiple: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'date',
+                                                            minDate: '10.11.2016',
+                                                            maxDate: '10.12.2016'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-date',
+                                                settings: {
+                                                    label: 'date min = 10.11.2016, max = 10.12.2016',
+                                                    validators: [
+                                                        {
+                                                            type: 'date',
+                                                            format: 'YYYY-DD-MM'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-date',
+                                                settings: {
+                                                    label: 'date min = 10.11.2016, max = 10.12.2016',
+                                                    multiple: true,
                                                     validators: [
                                                         {
                                                             type: 'date',
@@ -431,6 +982,23 @@
                                             component: {
                                                 name: 'ue-date',
                                                 settings: {
+                                                    label: 'date min = 10.11.2016, max = 10.12.2016',
+                                                    multiple: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'date',
+                                                            format: 'YYYY-DD-MM',
+                                                            minDate: '2016-10-12',
+                                                            maxDate: '2016-10-11'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-date',
+                                                settings: {
                                                     label: 'time format = HH:mm',
                                                     validators: [
                                                         {
@@ -438,6 +1006,54 @@
                                                             format: 'HH:mm'
                                                         }
                                                     ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-date',
+                                                settings: {
+                                                    label: 'time format = HH:mm',
+                                                    multiple: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'date',
+                                                            format: 'HH:mm'
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-date',
+                                                settings: {
+                                                    label: 'time format = HH:mm disabled',
+                                                    disabled: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'date',
+                                                            format: 'HH:mm'
+                                                        }
+                                                    ],
+                                                    defaultValue: '20:40'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-date',
+                                                settings: {
+                                                    label: 'time format = HH:mm disabled',
+                                                    multiple: true,
+                                                    disabled: true,
+                                                    validators: [
+                                                        {
+                                                            type: 'date',
+                                                            format: 'HH:mm'
+                                                        }
+                                                    ],
+                                                    defaultValue: ['20:40', '21:10']
                                                 }
                                             }
                                         }
@@ -636,10 +1252,20 @@
                                 name: 'ue-group',
                                 settings: {
                                     label: 'Colorpicker',
+                                    countInLine: 2,
                                     fields: [
                                         {
                                             component: {
                                                 name: 'ue-colorpicker',
+                                                settings: {
+                                                    label: 'colorpicker'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-colorpicker',
+                                                multiple: true,
                                                 settings: {
                                                     label: 'colorpicker'
                                                 }
@@ -657,19 +1283,10 @@
                                         {
                                             component: {
                                                 name: 'ue-colorpicker',
+                                                multiple: true,
                                                 settings: {
-                                                    label: 'colorpicker c defaultValue, multiple',
-                                                    defaultValue: ['#9C2525'],
-                                                    multiple: true
-                                                }
-                                            }
-                                        },
-                                        {
-                                            component: {
-                                                name: 'ue-colorpicker',
-                                                settings: {
-                                                    label: 'colorpicker c multiple',
-                                                    multiple: true
+                                                    label: 'colorpicker c defaultValue',
+                                                    defaultValue: ['#9C2525']
                                                 }
                                             }
                                         }

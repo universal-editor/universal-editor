@@ -94,40 +94,47 @@
             return isParentComponent(id, scope.$parent);
         };
 
+
         self.listeners.push($scope.$on('editor:error_get_data', function(event, rejection) {
             if (self.isParentComponent(rejection.$parentComponentId) && !rejection.canceled) {
                 self.loaded = true;
                 self.loadingData = false;
-                var error = {};
-                if (rejection.status !== -1) {
-                    error.status = rejection.status;
+                function compareStatus(stack) {
+                    return stack.filter(function(w) { return w.status === rejection.status; }).length > 0;
                 }
+                var isExist = compareStatus(self.warnings) || compareStatus(self.dangers);
+                if (!isExist) {
+                    var error = {};
+                    if (rejection.status !== -1) {
+                        error.status = rejection.status;
+                    }
 
-                if (rejection.data && rejection.data.message) {
-                    error.text = rejection.data.message;
-                } else {
-                    var messageCode = error.status ? ('N' + error.status) : 'UNDEFINED';
-                    $translate('RESPONSE_ERROR.' + messageCode).then(function(translation) {
-                        error.text = translation.substr(0, 1).toLowerCase() + translation.substr(1);
-                    });
-                }
+                    if (rejection.data && rejection.data.message) {
+                        error.text = rejection.data.message;
+                    } else {
+                        var messageCode = error.status ? ('N' + error.status) : 'UNDEFINED';
+                        $translate('RESPONSE_ERROR.' + messageCode).then(function(translation) {
+                            error.text = translation.substr(0, 1).toLowerCase() + translation.substr(1);
+                        });
+                    }
 
-                if (rejection.status === -1) {
-                    self.dangers.push(error);
-                    $translate('RESPONSE_ERROR.UNDEFINED').then(function(translation) {
-                        error.text = translation;
-                    });
-                }
+                    if (rejection.status === -1) {
+                        self.dangers.push(error);
+                        $translate('RESPONSE_ERROR.UNDEFINED').then(function(translation) {
+                            error.text = translation;
+                        });
+                    }
 
-                if (/^4/.test(rejection.status)) {
-                    error.label = rejection.status + ': ';
-                    self.warnings.push(error);
+                    if (/^4/.test(rejection.status)) {
+                        error.label = rejection.status + ': ';
+                        self.warnings.push(error);
+                    }
+                    if (/^5/.test(rejection.status)) {
+                        error.label = rejection.status + ': ';
+                        self.dangers.push(error);
+                    }
+                    event.preventDefault();
                 }
-                if (/^5/.test(rejection.status)) {
-                    error.label = rejection.status + ': ';
-                    self.dangers.push(error);
-                }
-                event.preventDefault();
             }
         }));
 

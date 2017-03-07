@@ -34,6 +34,7 @@
             vm.removeFromSelected = removeFromSelected;
             vm.focusPossible = focusPossible;
             vm.deleteToAutocomplete = deleteToAutocomplete;
+            vm.loadDataById = loadDataById;
 
             if (!vm.multiple) {
                 vm.classInput.width = '99%';
@@ -48,13 +49,15 @@
                 if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId) && !vm.options.filter) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
-                    componentSettings.$loadingPromise.then(function(optionValues) {
-                        vm.optionValues = optionValues;
-                        fillControl(vm.optionValues);
-                        vm.equalPreviewValue();
-                    }).finally(function() {
+                    if (vm.fieldValue) {
+                        loadDataById(vm.fieldValue).then(function() {
+                            vm.equalPreviewValue();
+                        }).finally(function() {
+                            vm.loadingData = false;
+                        });
+                    } else {
                         vm.loadingData = false;
-                    });
+                    }
                 }
             }));
 
@@ -217,7 +220,8 @@
                 var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
                 var request = {
                     url: url,
-                    $id: vm.setting.component.$id
+                    $id: vm.setting.component.$id,
+                    serverPagination: vm.serverPagination
                 };
                 RestApiService
                     .getUrlResource(request)
@@ -303,7 +307,8 @@
 
                 var request = {
                     url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
-                    $id: vm.setting.component.$id
+                    $id: vm.setting.component.$id,
+                    serverPagination: vm.serverPagination
                 };
 
                 RestApiService
@@ -323,6 +328,41 @@
                     console.error('EditorFieldAutocompleteController: ' + translation);
                 });
             }
+        }
+
+        function loadDataById(ids) {
+            var urlParam = {};
+            if (angular.isArray(ids)) {
+                urlParam[vm.fieldId] = ids;
+            } else {
+                urlParam[vm.fieldId] = [];
+                urlParam[vm.fieldId].push(ids);
+            }
+
+            var request = {
+                url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
+                $id: vm.setting.component.$id,
+                serverPagination: vm.serverPagination
+            };
+
+            return RestApiService
+                .getUrlResource(request)
+                .then(function(response) {
+                    angular.forEach(response.data.items, function(v) {
+                        if (angular.isArray(vm.fieldValue) &&
+                            (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
+                            vm.multiple && !alreadyIn(v, vm.selectedValues)
+                        ) {
+                            vm.selectedValues.push(v);
+                        } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
+                            vm.selectedValues.push(v);
+                            vm.placeholder = v[vm.fieldSearch];
+                        }
+                    });
+                    if (!vm.optionValues.length) {
+                        vm.optionValues = angular.copy(vm.selectedValues);
+                    }
+                }).finally(function() { vm.preloadedData = true; });
         }
 
         function focusPossible(isActive) {

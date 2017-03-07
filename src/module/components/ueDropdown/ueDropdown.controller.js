@@ -18,9 +18,13 @@
 
         vm.$onInit = function() {
             vm.optionValues = [];
+            vm.initDataSource = true;            
+            componentSettings = vm.setting.component.settings;
+            if (typeof componentSettings.serverPagination !== 'boolean') {
+                vm.serverPagination = true;
+            }
             baseController = $controller('FieldsController', { $scope: $scope });
             angular.extend(vm, baseController);
-            componentSettings = vm.setting.component.settings;
 
             possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
@@ -71,7 +75,8 @@
                     var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                     var request = {
                         url: url,
-                        $id: vm.setting.component.$id
+                        $id: vm.setting.component.$id,
+                        serverPagination: vm.serverPagination
                     };
                     RestApiService
                         .getUrlResource(request)
@@ -181,7 +186,8 @@
                     item.loadingData = true;
                     var request = {
                         url: componentSettings.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.fieldId] + '"}',
-                        $id: vm.setting.component.$id
+                        $id: vm.setting.component.$id,
+                        serverPagination: vm.serverPagination
                     };
                     RestApiService
                         .getUrlResource(request)

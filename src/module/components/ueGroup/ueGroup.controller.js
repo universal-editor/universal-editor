@@ -54,6 +54,16 @@
                     vm.innerFields.push(field);
                 }
             });
+            vm.fields = [];
+            var i = -1;
+
+            vm.innerFields.forEach(function(field, index) {
+                if (index % vm.countInLine === 0) {
+                    i++;
+                }
+                vm.fields[i] = vm.fields[i] || [];
+                vm.fields[i].push(field);
+            });
 
             vm.$isOnlyChildsBroadcast = false;
             vm.listeners.push($scope.$on('editor:entity_loaded', onLoadedHandler));

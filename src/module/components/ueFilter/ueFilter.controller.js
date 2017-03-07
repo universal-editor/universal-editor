@@ -119,6 +119,9 @@
                                 model.fieldValue = {};
                                 model.fieldValue[model.fieldId] = value;
                                 model.addToSelected(null, model.fieldValue);
+                                if(angular.isFunction(model.loadDataById)) {
+                                    model.loadDataById(value);
+                                }
                             }
                         }
                         $timeout(function() {

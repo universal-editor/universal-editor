@@ -30,18 +30,43 @@
 
             $scope.minDate = !vm.minDate ? vm.minDate : moment(vm.minDate, vm.format);
             $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);
+            fillPreviewValue();
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
                 $scope.onLoadDataHandler(e, data);
-                vm.fieldValue = vm.fieldValue ? moment(vm.fieldValue, vm.format) : "";
                 if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId) && !vm.options.filter) {
-                    vm.equalPreviewValue();
-                }
-                if (vm.previewValue) {
-                    vm.previewValue = moment(vm.previewValue).format(vm.format);
+                    if (vm.multiple) {
+                        if (angular.isArray(vm.fieldValue)) {
+                            vm.previewValue = [];
+                            vm.fieldValue.forEach(function(date, index) {
+                                vm.fieldValue[index] = angular.isString(vm.format) ? moment(date, vm.format) : moment(date);
+                                vm.previewValue[index] = angular.isString(vm.format) ? vm.fieldValue[index].format(vm.format) : vm.fieldValue[index].toString();
+                            });
+                        }
+                    } else {
+                        if (vm.fieldValue) {
+                            vm.fieldValue = angular.isString(vm.format) ? moment(vm.fieldValue, vm.format) : moment(vm.fieldValue);
+                            vm.previewValue = angular.isString(vm.format) ? vm.fieldValue.format(vm.format) : vm.fieldValue.toString();
+                        }
+                    }
                 }
             }));
         };
+
+        function fillPreviewValue() {
+            if (vm.multiple) {
+                if (angular.isArray(vm.fieldValue)) {
+                    vm.previewValue = [];
+                    vm.fieldValue.forEach(function(date, index) {
+                        vm.previewValue[index] = angular.isString(vm.format) ? date.format(vm.format) : date.toString();
+                    });
+                }
+            } else {
+                if (vm.fieldValue) {
+                    vm.previewValue = angular.isString(vm.format) ? vm.fieldValue.format(vm.format) : vm.fieldValue.toString();
+                }
+            }
+        }
 
 
         //-- private functions

@@ -12,6 +12,30 @@ body {
         .form-control[disabled] {
             opacity: 0.4;
         }
+        .ue-component-body {
+            .clear-padding-left {
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .input-group {
+                .input-group-btn {
+                    vertical-align: top;
+                }
+            }
+        }
+    }
+    .component-edit {
+        label.field-name-label {
+            margin-right: 10px;
+            vertical-align: top;
+            &:after {
+                content: ':'
+            }
+        }
+        .disabled-field {
+            margin-right: 10px;
+            display: inline-block;
+        }
     }
     .component-wrapper .regim-preview.field-wrapper,
     .filter-component .editor-filter-body {
@@ -23,10 +47,14 @@ body {
             }
         }
     }
-    .ue-component-errors {
+    .ue-component-errors,
+    .field-error-wrapper,
+    .client-error-wrapper,
+    {
         .alert {
             display: inline-block;
             padding: 7px !important;
+            margin: 5px 0;
             &.alert-warning,
             &.alerts-danger {
                 margin: 10px 0;

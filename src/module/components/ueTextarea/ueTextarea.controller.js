@@ -12,14 +12,16 @@
             baseController,
             componentSettings;
 
-        vm.$onInit = function() {
+        vm.$onInit = function() {            
+            componentSettings = vm.setting.component.settings;
+            if(!componentSettings.width) {
+                componentSettings.width = 12;
+            }
             baseController = $controller('FieldsController', { $scope: $scope });
             angular.extend(vm, baseController);
-            componentSettings = vm.setting.component.settings;
             vm.rows = componentSettings.height || 7;
             vm.addItem = addItem;
             vm.removeItem = removeItem;
-            vm.classComponent = (!vm.cols) ? '' : vm.classComponent;
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
                 $scope.onLoadDataHandler(e, data);

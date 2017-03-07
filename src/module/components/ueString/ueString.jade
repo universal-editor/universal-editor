@@ -3,34 +3,45 @@ extends ../../template/layouts/layoutComponent
 block append content
     include ../../template/labelField/labelField
     div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}", ng-if="!vm.disabled || vm.options.filter")
-        div(data-ng-if="vm.multiple", data-ng-class="vm.classComponent")
-            .item-string-wrapper.input-group(data-ng-repeat="field_item in vm.fieldValue track by $index")
-                input.form-control.input-sm(
-                    type="{{vm.typeInput}}",
-                    data-ui-mask="{{vm.mask}}",
-                    data-ui-options="{maskDefinitions : vm.maskDefinitions}",
-                    data-ng-disabled="vm.readonly",
-                    name="{{vm.fieldName}}",
-                    data-ng-model="vm.fieldValue[$index]",
-                    step="{{vm.stepNumber}}",
-                    data-ng-blur="vm.inputLeave(vm.fieldValue[$index], $index)",
-                    ng-trim="false"
-                )
-                span.input-group-btn
-                    button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
+        div(data-ng-if="vm.multiple")
+            .item-string-wrapper(data-ng-repeat="field_item in vm.fieldValue track by $index")
+                .input-group(data-ng-class="vm.classComponent")
+                    input.form-control.input-sm(
+                        type="{{vm.typeInput}}",
+                        data-ui-mask="{{vm.mask}}",
+                        data-ui-options="{maskDefinitions : vm.maskDefinitions}",
+                        data-ng-disabled="vm.readonly",
+                        name="{{vm.fieldName}}",
+                        data-ng-model="vm.fieldValue[$index]",
+                        step="{{vm.stepNumber}}",
+                        data-ng-blur="vm.inputLeave(vm.fieldValue[$index], $index)",
+                        ng-trim="false"
+                    )
+                    span.input-group-btn
+                        button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x   
+                include ../../template/errorField/errorClient         
             .btn.btn-primary.btn-sm.add-array-item(data-ng-click="vm.addItem()", data-ng-disabled="vm.readonly") {{'BUTTON.ADD' | translate}}
-        div(data-ng-if="!vm.multiple", data-ng-class="vm.classComponent")
-            input.form-control.input-sm(
-                    type="{{vm.typeInput}}",
-                    data-ui-mask="{{vm.mask}}",
-                    data-ui-options="{maskDefinitions : vm.maskDefinitions}",
-                    data-ng-disabled="vm.readonly",
-                    name="{{vm.fieldName}}",
-                    data-ng-model="vm.fieldValue",
-                    step="{{vm.stepNumber}}",
-                    data-ng-blur="vm.inputLeave(vm.fieldValue)",
-                    size="{{vm.size}}",
-                    ng-trim="false"
-                )
+        div(data-ng-if="!vm.multiple")
+            div(data-ng-class="vm.classComponent")
+                input.form-control.input-sm(
+                        type="{{vm.typeInput}}",
+                        data-ui-mask="{{vm.mask}}",
+                        data-ui-options="{maskDefinitions : vm.maskDefinitions}",
+                        data-ng-disabled="vm.readonly",
+                        name="{{vm.fieldName}}",
+                        data-ng-model="vm.fieldValue",
+                        step="{{vm.stepNumber}}",
+                        data-ng-blur="vm.inputLeave(vm.fieldValue)",
+                        size="{{vm.size}}",
+                        ng-trim="false"
+                    )
+            include ../../template/errorField/errorClient
     .disabled-field(ng-if="vm.disabled && !vm.options.filter")
-        include ../../template/disabledField/default
+        div(data-ng-show="!vm.loadingData")
+            span(ng-bind="::vm.previewValue", ng-if = "!vm.multiple && vm.contentType !== 'url'")
+            a(ng-href="{{::vm.previewValue}}", ng-if = "!vm.multiple && vm.contentType === 'url'", target="_blank")
+                {{::vm.previewValue}}
+            div(ng-repeat="value in vm.previewValue track by $index", ng-if = "vm.multiple")
+                span(ng-bind="value", ng-if="vm.contentType !== 'url'")
+                a(ng-href="{{::value}}", ng-if = "vm.contentType === 'url'", target="_blank")
+                    {{::value}}
