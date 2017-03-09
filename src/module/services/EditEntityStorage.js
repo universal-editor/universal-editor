@@ -12,7 +12,8 @@
             fieldControllers = [],
             entityObject,
             self = this,
-            storage = {};
+            storage = {},
+            groups = {};
 
         /* PUBLIC METHODS */
 
@@ -47,11 +48,16 @@
             $rootScope.$broadcast('editor:entity_loaded', data);
         };
 
-        this.addFieldController = function(ctrl) {
+        this.addFieldController = function(ctrl, isGroup) {
             var id = ctrl.parentComponentId;
             if (id) {
-                storage[id] = storage[id] || [];
-                storage[id].push(ctrl);
+                if (isGroup === true) {
+                    groups[id] = groups[id] || [];
+                    groups[id].push(ctrl);
+                } else {
+                    storage[id] = storage[id] || [];
+                    storage[id].push(ctrl);
+                }
                 ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
             }
         };
@@ -75,7 +81,8 @@
         this.editEntityUpdate = function(type, request) {
             this.setActionType(request.collectionType);
             var entityObject = {};
-            var controllers = storage[request.options.$parentComponentId] || [];
+            var controllers = storage[request.options.$parentComponentId] || [],
+                groupControllers = groups[request.options.$parentComponentId] || [];
             var isError = true;
 
             angular.forEach(controllers, function(fCtrl) {
@@ -95,7 +102,7 @@
                 }
 
                 isError = (fCtrl.error.length === 0) && isError;
-                if (!fCtrl.hasOwnProperty('readonly') || fCtrl.readonly === false) {
+                if (fCtrl.readonly !== true && fCtrl.disabled !== true) {
                     if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
                         entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
                         entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
@@ -103,6 +110,12 @@
                     } else {
                         angular.merge(entityObject, value);
                     }
+                }
+
+            });
+            angular.forEach(groupControllers, function(val, index) {
+                if (val.fieldName && entityObject[val.fieldName] === undefined) {
+                    entityObject[val.fieldName] = val.multiple ? [] : null;
                 }
             });
             if (isError) {
@@ -121,7 +134,8 @@
         this.editEntityPresave = function(request) {
             var entityObject = {};
             var isError = true;
-            var controllers = storage[request.options.$parentComponentId] || [];
+            var controllers = storage[request.options.$parentComponentId] || [],
+                groupControllers = groups[request.options.$parentComponentId] || [];
 
             angular.forEach(controllers, function(fCtrl) {
                 var value = fCtrl.getFieldValue();
@@ -139,7 +153,7 @@
                     });
                 }
                 isError = (fCtrl.error.length === 0) && isError;
-                if (!fCtrl.hasOwnProperty('readonly') || fCtrl.readonly === false) {
+                if (fCtrl.readonly !== true && fCtrl.disabled !== true) {
                     if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
                         entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
                         entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
@@ -148,8 +162,10 @@
                         angular.merge(entityObject, value);
                     }
                 }
-                if (!fCtrl.hasOwnProperty('readonly') || fCtrl.readonly === false) {
-                    angular.merge(entityObject, fCtrl.getFieldValue());
+            });
+            angular.forEach(groupControllers, function(val, index) {
+                if (val.fieldName && entityObject[val.fieldName] === undefined) {
+                    entityObject[val.fieldName] = val.multiple ? [] : null;
                 }
             });
 
@@ -175,7 +191,7 @@
                     }
                 }
             });
-            if(!stateName) {
+            if (!stateName) {
                 return configData.states[0];
             }
             return result;

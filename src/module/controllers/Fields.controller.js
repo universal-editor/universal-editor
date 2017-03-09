@@ -16,20 +16,26 @@
         var regEmail = new RegExp('^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$', 'i');
         var regUrl = new RegExp('^(?:(?:ht|f)tps?://)?(?:[\\-\\w]+:[\\-\\w]+@)?(?:[0-9a-z][\\-0-9a-z]*[0-9a-z]\\.)+[a-z]{2,6}(?::\\d{1,5})?(?:[?/\\\\#][?!^$.(){}:|=[\\]+\\-/\\\\*;&~#@,%\\wА-Яа-я]*)?$', 'i');
 
-        self.unVisible = componentSettings.unVisible === true;
+        if (typeof componentSettings.serverPagination !== 'boolean') {
+            self.serverPagination = componentSettings.serverPagination === true;
+        }
+        self.isVisible = true;
 
         self.readonly = componentSettings.readonly === true;
         self.multiname = componentSettings.multiname || null;
         self.depend = componentSettings.depend || null;
         self.width = !isNaN(+componentSettings.width) ? componentSettings.width : null;
-        self.defaultValue = transformToValue(componentSettings.defaultValue);
+        self.defaultValue = componentSettings.defaultValue;
         self.placeholder = componentSettings.placeholder || null;
         self.classComponent = 'col-lg-4 col-md-4 col-sm-4 col-xs-4 clear-padding-left';
         self.inputLeave = inputLeave;
         self.disabled = componentSettings.disabled;
+        self.clientErrors = [];
+
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
         var timeUpdateDepend;
+
         if (values || remoteValues) {
             self.fieldId = "id";
             self.fieldSearch = "title";
@@ -44,51 +50,50 @@
                         }
                         self.optionValues.push(obj);
                     });
-                    equalPreviewValue();
                     componentSettings.$loadingPromise = $q.when(self.optionValues);
                 } else if (remoteValues) {
                     if (remoteValues.fields) {
                         self.fieldId = remoteValues.fields.value || self.fieldId;
                         self.fieldSearch = remoteValues.fields.label || self.fieldId;
                     }
-                    self.loadingData = true;
-                    if (!componentSettings.$loadingPromise) {
-                        var config = {
-                            method: 'GET',
-                            url: remoteValues.url,
-                            $id: self.setting.component.$id
-                        };
-                        var dataSource = $scope.getParentDataSource();
-                        config.standard = dataSource.standard;
-                        componentSettings.$loadingPromise = YiiSoftApiService
-                            .getUrlResource(config)
-                            .then(function(response) {
-                                if (!componentSettings.depend) {
-                                    angular.forEach(response.data.items, function(v) {
-                                        self.optionValues.push(v);
+                    if (self.initDataSource) {
+                        self.loadingData = true;
+                        if (!componentSettings.$loadingPromise) {
+                            var config = {
+                                method: 'GET',
+                                url: remoteValues.url,
+                                $id: self.setting.component.$id,
+                                serverPagination: self.serverPagination
+                            };
+                            var dataSource = $scope.getParentDataSource();
+                            config.standard = dataSource.standard;
+                            componentSettings.$loadingPromise = YiiSoftApiService
+                                .getUrlResource(config)
+                                .then(function(response) {
+                                    if (!componentSettings.depend) {
+                                        angular.forEach(response.data.items, function(v) {
+                                            self.optionValues.push(v);
+                                        });
+                                    }
+                                    componentSettings.$optionValues = self.optionValues;
+                                    return self.optionValues;
+                                }, function(reject) {
+                                    $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                                        console.error(self.constructor.name + translation.replace('%name_field', self.fieldName));
                                     });
-                                }
-                                componentSettings.$optionValues = self.optionValues;
-                                return self.optionValues;
-                            }, function(reject) {
-                                $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
-                                    console.error(self.constructor.name + translation.replace('%name_field', self.fieldName));
+                                }).finally(function() {
+                                    self.loadingData = false;
                                 });
-                            }).finally(function() {
+                        } else {
+                            if (componentSettings.$optionValues && componentSettings.$optionValues.length) {
                                 self.loadingData = false;
-                            });
-                    } else {
-                        if (componentSettings.$optionValues && componentSettings.$optionValues.length) {
-                            self.loadingData = false;
-                            self.optionValues = componentSettings.$optionValues;
+                                self.optionValues = componentSettings.$optionValues;
+                            }
                         }
-                        equalPreviewValue();
                     }
                 }
             }
         }
-
-        self.fieldValue = transformToValue(self.defaultValue);
 
         self.cols = self.width;
 
@@ -129,8 +134,11 @@
             function() {
                 return self.fieldValue;
             },
-            function() {
+            function(value) {
                 self.error = [];
+                if (self.disabled === true) {
+                    self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : !!value;
+                }
             }, true)
         );
 
@@ -160,8 +168,22 @@
         function transformToValue(object) {
             var value;
             if (componentSettings.$fieldType === 'date') {
-                value = moment(object);
-                return self.multiple ? [value] : value;
+                if (object) {
+                    if (self.multiple) {
+                        if (angular.isArray(object)) {
+                            value = [];
+                            object.forEach(function(date, index) {
+                                value[index] = angular.isString(self.format) ? moment(date, self.format) : moment(date);
+                            });
+                        }
+                    } else {
+                        if (object) {
+                            value = angular.isString(self.format) ? moment(object, self.format) : moment(object);
+                        }
+                    }
+                    return value;
+                }
+                return self.multiple ? [] : null;
             }
             if (angular.isObject(object) && !angular.isArray(object) && self.fieldId) {
                 value = object[self.fieldId];
@@ -237,7 +259,7 @@
             } else {
                 wrappedFieldValue = transformToValue(self.fieldValue);
             }
-            
+
 
             if (self.parentField) {
                 field[self.parentField] = {};
@@ -254,6 +276,26 @@
 
         $scope.onLoadDataHandler = onLoadDataHandler;
 
+        function checkForEmptyValue(value) {
+            var result = false;
+            if (value !== false) {
+                (function check(value) {
+                    var keys = Object.keys(value);
+                    for (var i = keys.length; i--;) {
+                        var propValue = value[keys[i]];
+                        if (propValue !== null && propValue !== undefined && propValue !== '') {
+                            if (angular.isObject(propValue) && !result) {
+                                check(propValue);
+                            } else {
+                                result = true;
+                            }
+                        }
+                    }
+                })(value);
+            }
+            return result;
+        }
+
         function onLoadDataHandler(event, data, callback) {
             if (!data.$parentComponentId || self.isParentComponent(data.$parentComponentId)) {
                 if (!self.options.filter) {
@@ -261,24 +303,9 @@
                     if (componentSettings.depend) {
                         $scope.$watch(function() {
                             var f_value = EditEntityStorage.getValueField(self.parentComponentId, componentSettings.depend);
-                            var result = false;
+                            var result = checkForEmptyValue(f_value);
                             var oldValue = self.dependValue;
                             self.dependValue = undefined;
-                            if (f_value !== false) {
-                                (function check(value) {
-                                    var keys = Object.keys(value);
-                                    for (var i = keys.length; i--;) {
-                                        var propValue = value[keys[i]];
-                                        if (propValue !== null && propValue !== undefined && propValue !== '') {
-                                            if (angular.isObject(propValue) && !result) {
-                                                check(propValue);
-                                            } else {
-                                                result = true;
-                                            }
-                                        }
-                                    }
-                                })(f_value);
-                            }
                             if (result) {
                                 self.dependValue = f_value[componentSettings.depend];
                             }
@@ -341,7 +368,9 @@
                         if (angular.isArray(self.data[self.parentField]) && angular.isNumber(self.parentFieldIndex)) {
                             apiValue = apiValue[self.parentFieldIndex];
                         }
-                        apiValue = apiValue[self.fieldName];
+                        if (apiValue) {
+                            apiValue = apiValue[self.fieldName];
+                        }
                     }
 
                     if (!self.multiple) {
@@ -386,7 +415,7 @@
                     self.minView = validator.minView;
                     self.maxView = validator.maxView;
                     self.view = validator.view;
-                    self.format = validator.format;
+                    self.format = validator.format || 'DD.MM.YYYY HH:mm:ss';
                     break;
                 case 'mask':
                     self.isMask = true;
@@ -395,10 +424,16 @@
                     break;
             }
         });
+        self.fieldValue = transformToValue(self.defaultValue);
+        equalPreviewValue();
 
         /* Слушатель события на покидание инпута. Необходим для валидации*/
         function inputLeave(val, index) {
-            self.error = [];
+            if (angular.isNumber(index)) {
+                self.clientErrors[index] = [];
+            } else {
+                self.clientErrors = [];
+            }
 
             if (!val) {
                 return;
@@ -413,53 +448,60 @@
                 val = val.trim();
             }
 
-            if (self.hasOwnProperty('maxLength') && val.length > self.maxLength) {
-                var maxError = 'Для поля превышено максимальное допустимое значение в ' + self.maxLength + ' символов. Сейчас введено ' + val.length + ' символов.';
-                if (self.error.indexOf(maxError) < 0) {
-                    self.error.push(maxError);
+            function setClientError(error) {
+                if (angular.isNumber(index)) {
+                    self.clientErrors[index] = self.clientErrors[index] || [];
+                    if (self.clientErrors[index].indexOf(error) < 0) {
+                        self.clientErrors[index].push(error);
+                    }
+                } else {
+                    if (self.clientErrors.indexOf(error) < 0) {
+                        self.clientErrors.push(error);
+                    }
                 }
+            }
+
+            if (self.hasOwnProperty('maxLength') && val.length > self.maxLength) {
+                $translate('VALIDATION.STRING_MAX').then(function(translation) {
+                    setClientError(translation.replace('%maxLength', self.maxLength).replace('%val', val.length));
+                });
             }
 
             if (self.hasOwnProperty('minLength') && val.length < self.minLength) {
-                var minError = 'Минимальное значение поля не может быть меньше ' + self.minLength + ' символов. Сейчас введено ' + val.length + ' символов.';
-                if (self.error.indexOf(minError) < 0) {
-                    self.error.push(minError);
-                }
+                $translate('VALIDATION.STRING_MIN').then(function(translation) {
+                    setClientError(translation.replace('%minLength', self.minLength).replace('%val', val.length));
+                });
             }
 
             if (self.hasOwnProperty('pattern') && !val.match(new RegExp(self.pattern))) {
-                var patternError = 'Введенное значение не соответствует паттерну ' + self.pattern.toString();
-                if (self.error.indexOf(patternError) < 0) {
-                    self.error.push(patternError);
-                }
+                $translate('VALIDATION.INVALID_PATTERN').then(function(translation) {
+                    setClientError(translation.replace('%pattern', self.pattern.toString()));
+                });
             }
 
             if (self.hasOwnProperty('maxNumber') && val > self.maxNumber) {
-                var maxNumberError = 'Для поля превышено максимальное допустимое значение ' + self.maxNumber + '. Сейчас введено ' + val + '.';
-                if (self.error.indexOf(maxNumberError) < 0) {
-                    self.error.push(maxNumberError);
-                }
+                $translate('VALIDATION.NUMBER_MAX').then(function(translation) {
+                    setClientError(translation.replace('%max', self.maxNumber).replace('%val', val));
+                });
             }
 
             if (self.hasOwnProperty('minNumber') && val < self.minNumber) {
-                var minNumberError = 'Минимальное значение поля не может быть меньше ' + self.minNumber + '. Сейчас введено ' + val + '.';
-                if (self.error.indexOf(minNumberError) < 0) {
-                    self.error.push(minNumberError);
-                }
+                $translate('VALIDATION.NUMBER_MIN').then(function(translation) {
+                    setClientError(translation.replace('%min', self.minNumber).replace('%val', val));
+                });
             }
 
             if ((self.contentType == 'email') && !val.match(regEmail)) {
-                var emailError = 'Введен некорректный email.';
-                if (self.error.indexOf(emailError) < 0) {
-                    self.error.push(emailError);
-                }
+                $translate('VALIDATION.INVALID_IMAIL').then(function(translation) {
+                    setClientError(translation);
+                });
+                setClientError('Введен некорректный email.');
             }
 
             if ((self.contentType == 'url') && !val.match(regUrl)) {
-                var urlError = 'Введен некорректный url.';
-                if (self.error.indexOf(urlError) < 0) {
-                    self.error.push(urlError);
-                }
+                $translate('VALIDATION.INVALID_URL').then(function(translation) {
+                    setClientError(translation);
+                });
             }
         }
     }

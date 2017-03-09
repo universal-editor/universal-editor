@@ -89,7 +89,6 @@
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = dataSource;
                     }
-                    checkReadonlyEmpty(newControl);
                     newControl.paginationData = {};
                     vm.editFooterBar.push(newControl);
                 });
@@ -101,18 +100,12 @@
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = dataSource;
                     }
-                    checkReadonlyEmpty(newControl);
                     newControl.paginationData = {};
                     vm.editFooterBar.push(newControl);
                 });
             }
             updateButton();
 
-            function checkReadonlyEmpty(control) {
-                if (control.component && control.component.settings && control.component.settings.readonly === true && isNewRecord) {
-                    control.component.settings.unVisible = true;
-                }
-            }
 
             vm.components = [];
 
@@ -122,7 +115,6 @@
                     if (componentObject.component.settings.dataSource === undefined) {
                         componentObject.component.settings.dataSource = dataSource;
                     }
-                    checkReadonlyEmpty(componentObject);
                 }
                 if (angular.isString(componentObject)) {
                     var dataSourceComponent = dataSource.fields.filter(function(k) {
@@ -130,7 +122,6 @@
                     })[0];
                     if (dataSourceComponent) {
                         vm.components.push(dataSourceComponent);
-                        checkReadonlyEmpty(dataSourceComponent);
                     }
                 }
             });

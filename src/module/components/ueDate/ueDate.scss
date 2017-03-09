@@ -1,6 +1,21 @@
 .universal-editor,
 .modal-dialog {
     .field-date {
-        width: 135px;
+        width: 200px;
+    }
+    .editor-filter-body {
+        .field-date {
+            width: 135px;
+        }
+    }
+
+    .field-wrapper-ue-date {
+        .ue-component-body {
+            .field-element {
+                .item-datepicker-wrapper {
+                    margin-bottom: 5px;
+                }
+            }
+        }
     }
 }

@@ -41,7 +41,22 @@
                 var attributes = {};
                 var relationships = {};
                 angular.forEach(config.data, function(value, key) {
-                    if (angular.isObject(value) && !angular.isArray(value)) {
+                    if (angular.isArray(value)) {
+                        relationships[key] = relationships[key] || {};
+                        relationships[key].data = relationships[key].data || [];
+                        value.forEach(function(value) {
+                            if (value.id) {
+                                relationships[key].data.push({
+                                    id: value.id,
+                                    type: value.__type
+                                });
+                            }
+                        });
+                        if (value.length === 0) {
+                            relationships[key] = null;
+                        }
+                        delete config.data[key];
+                    } else if (angular.isObject(value) && !angular.isArray(value)) {
                         relationships[key] = relationships[key] || {};
                         relationships[key].data = relationships[key].data || {};
                         if (value.id) {
@@ -112,9 +127,9 @@
             var response = responseServer.data;
             var output = {};
             var parse = proccessJsonApiElements.bind(config);
-            if (response.errors) {
+            if (response && response.errors || responseServer.status === -1) {
                 var errors = [];
-                if (response.errors[0]) {
+                if (response && response.errors[0]) {
                     var apiError = response.errors[0];
                     if (angular.isArray(apiError.detail)) {
                         apiError.detail.forEach(function(error) {

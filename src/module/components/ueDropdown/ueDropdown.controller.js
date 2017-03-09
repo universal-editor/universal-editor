@@ -16,9 +16,13 @@
 
         vm.$onInit = function() {
             vm.optionValues = [];
+            vm.initDataSource = true;            
+            componentSettings = vm.setting.component.settings;
+            if (typeof componentSettings.serverPagination !== 'boolean') {
+                vm.serverPagination = true;
+            }
             baseController = $controller('FieldsController', { $scope: $scope });
             angular.extend(vm, baseController);
-            componentSettings = vm.setting.component.settings;
 
             possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
@@ -67,10 +71,11 @@
                     vm.optionValues = [];
 
                     var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
-                    var config = {
+                    var request = {
+                        url: url,
                         method: 'GET',
-                        url: componentSettings.valuesRemote.url,
-                        $id: vm.setting.component.$id
+                        $id: vm.setting.component.$id,
+                        serverPagination: vm.serverPagination
                     };
 
                     config.standard = $scope.getParentDataSource().standard;
@@ -121,7 +126,7 @@
                                 break;
                             }
                         }
-                    } else if (v_id === vm.fieldValue) {
+                    } else if (v_id == vm.fieldValue) {
                         vm.fieldValue = v;
                         vm.isSpanSelectDelete = true;
                     }
@@ -140,6 +145,7 @@
 
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             vm.data = data;
+
             $scope.onLoadDataHandler(event, data);
             if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 componentSettings.$loadingPromise.then(function(items) {
@@ -181,8 +187,9 @@
                 if (item[vm.treeChildCountField] && !item.childOpts) {
                     item.loadingData = true;
                     var config = {
-                        method: 'GET',
-                        url: componentSettings.valuesRemote.url
+                        url: componentSettings.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.fieldId] + '"}',
+                        $id: vm.setting.component.$id,
+                        serverPagination: vm.serverPagination
                     };
                     config.filter[vm.treeParentField] = [{
                         operator: 'value',

@@ -194,14 +194,13 @@
                 reject.canceled = canceler.promise.$$state.status === 1;
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     reject.$parentComponentId = request.options.$parentComponentId;
-                    $rootScope.$broadcast('editor:error_get_data', reject);
-                    deferred.reject(reject);
                 } else {
                     var data = service.processResponse(config, reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));
-                    deferred.reject(data);
+                    reject.data = data;
                 }
+                deferred.reject(reject);
             }).finally(function() {
                 request.options.isLoading = false;
             });
@@ -483,14 +482,13 @@
             }, function(reject) {
                 if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
                     reject.$parentComponentId = request.options.$parentComponentId;
-                    $rootScope.$broadcast('editor:error_get_data', reject);
-                    deferred.reject(reject);
                 } else {
                     var data = service.processResponse(config, reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));
-                    deferred.reject(data);
+                    reject.data = data;
                 }
+                deferred.reject(reject);
             }).finally(function() {
                 options.isLoading = false;
             });
@@ -670,7 +668,7 @@
                     countP = resp.data._meta.pageCount;
                 }
 
-                if (!countP || countP === config.toP || countP === 1) {
+                if (!countP || countP === config.toP || countP === 1 || !config.serverPagination) {
                     config.defer.resolve({ data: { items: config.result } });
                 } else {
                     if (config.fromP === 1) {
@@ -687,16 +685,14 @@
                     return getUrlResource(config);
                 }
             }, function(reject) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    reject.$parentComponentId = config.$id;
-                    $rootScope.$broadcast('editor:error_get_data', reject);
-                    config.defer.reject(reject);
-                } else {
+                reject.$parentComponentId = config.$id;
+                if (!angular.isUndefined(service) && angular.isFunction(service.processResponse)) {
                     var data = service.processResponse(config, reject,
                         successAnswer.bind(config),
                         failAnswer.bind(config));
-                    config.defer.reject(data);
+                    reject.data = data;
                 }
+                config.defer.reject(reject);
             });
             return config.defer.promise;
         };
@@ -751,10 +747,7 @@
                 }
                 var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
                 $location.search(paramName, parent);
-            }, function(reject) {
-                reject.$parentComponentId = request.options.$parentComponentId;
-                $rootScope.$broadcast('editor:error_get_data', reject);
-            });
+            }, function(reject) { });
         };
 
         this.loadParent = function(request) {

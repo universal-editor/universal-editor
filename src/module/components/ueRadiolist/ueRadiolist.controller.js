@@ -16,11 +16,20 @@
             vm.optionValues = [];
             vm.inputValue = '';
             vm.newEntityLoaded = newEntityLoaded;
-            vm.dependUpdate = dependUpdate;
+            vm.dependUpdate = dependUpdate;            
 
             baseController = $controller('FieldsController', { $scope: $scope });
             angular.extend(vm, baseController);
             componentSettings = vm.setting.component.settings;
+            vm.inline = componentSettings.inline === true;
+
+            vm.listeners.push($scope.$watch('vm.fieldValue',
+                function(value) {
+                    if(angular.isNumber(value) && !isNaN(value)) {
+                        vm.fieldValue = value.toString();
+                    }
+                }, true)
+            );
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
                 $scope.onLoadDataHandler(e, data);
@@ -35,6 +44,7 @@
             }));
         };
 
+
         function dependUpdate(dependField, dependValue) {
             vm.optionValues = [];
             if (dependValue && dependValue !== '') {
@@ -44,7 +54,8 @@
                 var config = {
                     method: 'GET',
                     url: url,
-                    $id: vm.setting.component.$id
+                    $id: vm.setting.component.$id,
+                    serverPagination: vm.serverPagination
                 };
                 config.standard = $scope.getParentDataSource().standard;
                 YiiSoftApiService

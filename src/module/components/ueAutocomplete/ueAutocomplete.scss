@@ -1,6 +1,12 @@
 .universal-editor,
 .modal-dialog {
-    .field-wrapper-ue-dropdown, .field-wrapper-ue-autocomplete {
+    .field-wrapper-ue-autocomplete {
+        .possible-values {
+            box-sizing: content-box;
+        }
+    }
+    .field-wrapper-ue-dropdown,
+    .field-wrapper-ue-autocomplete {
         .autocomplete-item {
             background: #CBD6DA;
             border: 1px solid #959EA9;
@@ -33,7 +39,7 @@
             position: relative;
             height: 100%;
             min-height: 34px;
-            padding: 2px;
+            padding: 2px 8px;
             &.disabled-input,
             &.disabled-input input {
                 color: #c8cbcd;
@@ -60,6 +66,8 @@
                 position: relative;
                 padding: 0;
                 margin-left: 3px;
+                box-shadow: none;
+                font-size: 14px;
                 background-color: #fff;
                 border: none;
                 height: 28px;
@@ -134,7 +142,6 @@
                 }
             }
             &.possible-autocomplete {
-                box-sizing: content-box;
                 margin-left: -3px;
             }
         }
@@ -205,7 +212,7 @@
     .loader-search-wrapper {
         position: absolute;
         top: 11px;
-        right: 0;
+        right: -15px;
     }
     .ue-grid .loader-search-wrapper {
         position: relative;

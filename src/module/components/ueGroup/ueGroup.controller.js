@@ -22,6 +22,7 @@
             baseController = $controller('BaseController', { $scope: $scope });
             vm.parentFieldType = vm.setting.type;
             angular.extend(vm, baseController);
+            EditEntityStorage.addFieldController(vm, true);
 
             vm.innerFields = [];
             vm.fieldsArray = [];
@@ -48,7 +49,6 @@
                     field = value;
                 }
                 if (field) {
-                    checkReadonlyEmpty(field);
                     if (vm.fieldName) {
                         field.parentField = vm.fieldName;
                         field.parentFieldType = vm.parentFieldType; //for JSONAPI
@@ -56,17 +56,22 @@
                     vm.innerFields.push(field);
                 }
             });
+            vm.fields = [];
+            var i = -1;
+
+            vm.innerFields.forEach(function(field, index) {
+                if (index % vm.countInLine === 0) {
+                    i++;
+                }
+                vm.fields[i] = vm.fields[i] || [];
+                vm.fields[i].push(field);
+            });
 
             vm.$isOnlyChildsBroadcast = false;
             vm.listeners.push($scope.$on('editor:entity_loaded', onLoadedHandler));
             vm.option = angular.merge({}, vm.options);
             vm.option.isGroup = true;
         };
-        function checkReadonlyEmpty(control) {
-            if (control.component && control.component.settings && control.component.settings.readonly === true && vm.options.isNewRecord) {
-                control.component.settings.unVisible = true;
-            }
-        }
 
         function onLoadedHandler(event, data) {
             if (!vm.$isOnlyChildsBroadcast) {
@@ -76,7 +81,7 @@
                         group.forEach(vm.addItem);
                         $timeout(function() {
                             vm.$isOnlyChildsBroadcast = true;
-                            $scope.$broadcast('editor:entity_loaded', group);
+                            $scope.$broadcast('editor:entity_loaded', data);
                             delete vm.$isOnlyChildsBroadcast;
                         }, 0);
                     }

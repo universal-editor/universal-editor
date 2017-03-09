@@ -80,9 +80,6 @@
                         });
                     } else {
                         var value = data[vm.fieldName];
-                        if (vm.falseValue == value) {
-                            vm.fieldValue = [vm.falseValue];
-                        }
                         if (vm.trueValue == value) {
                             vm.fieldValue = [vm.trueValue];
                         }
@@ -124,7 +121,8 @@
                 var config = {
                     method: 'GET',
                     url: url,
-                    $id: vm.setting.component.$id
+                    $id: vm.setting.component.$id,
+                    serverPagination: vm.serverPagination
                 };
                 config.standard = $scope.getParentDataSource().standard;
                 YiiSoftApiService
@@ -150,7 +148,7 @@
             wrappedFieldValue = vm.fieldValue;
 
             if (vm.singleValue && !vm.options.filter) {
-                wrappedFieldValue = (!vm.fieldValue || vm.fieldValue.length === 0) ? componentSettings.falseValue : componentSettings.trueValue;
+                wrappedFieldValue = (angular.isArray(vm.fieldValue) && vm.fieldValue[0] === componentSettings.trueValue) ? componentSettings.trueValue : componentSettings.falseValue;
             }
 
             if (vm.options.filter && vm.fieldValue === null) {

@@ -1,4 +1,17 @@
-.editor-textarea {
-  width: 100%;
-  resize: vertical;
+.universal-editor,
+.modal-dialog {
+    .editor-textarea {
+        width: 100%;
+        resize: vertical;
+    }
+    .field-wrapper-ue-textarea {
+        .ue-component-body {
+            .field-element {
+                .item-string-wrapper,
+                .item-textarea-wrapper {
+                    margin-bottom: 5px;
+                }
+            }
+        }
+    }
 }

@@ -1,7 +1,7 @@
 {
   "name": "universal-editor",
   "description": "Universal editor to edit the entities from RESTful service",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0-alpha4",
   "scripts": {
     "dev": "webpack-dev-server --display-modules --progress --colors",
     "dist": "cp -r bower_components dist/bower_components & http-server ./dist/ -a universal-editor.dev -c-1 -o",
