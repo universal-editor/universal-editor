@@ -830,5 +830,66 @@
                 }
             }
         }
+
+        this.extendData = function extendData(data, components) {
+            var remoteComponents = components.filter(function(component) {
+                return angular.isObject(component.component.settings.valuesRemote);
+            });
+            var promiseStack = [];
+            remoteComponents.forEach(function(component) {
+                var fields = [];
+                var filter = [];
+                var options = component.component.settings.valuesRemote;
+                if (angular.isObject(options.fields)) {
+                    angular.forEach(options.fields, function(value, key) {
+                        if (angular.isString(value)) {
+                            fields.push(value);
+                        }
+                    });
+                }
+                fields = fields.join(',');
+                if (angular.isString(options.url)) {
+                    data.forEach(function(item) {
+                        if(item[component.name] !== undefined && item[component.name] !== null) {
+                            filter.push(item[component.name]);
+                        }
+                    });
+                    var keyValue = component.component.settings.valuesRemote.fields.value;
+                    promiseStack.push($http({
+                        url: options.url,
+                        method: 'GET',
+                        headers: {
+                            $id: component.component.$id
+                        },
+                        params: {
+                            fields: fields,
+                            filter: '{"' + keyValue + '": [' + filter.toString() + ']}'
+                        }
+                    }));
+                }
+            });
+
+            return $q.all(promiseStack).then(function(allResp) {
+                allResp.forEach(function(response) {
+                    var component = remoteComponents.filter(function(component) {
+                        return component.component.$id === response.config.headers.$id;
+                    })[0];
+                    if (component) { 
+                        var name = component.component.settings.valuesRemote.fields.value;                                               
+                        data.forEach(function(item) {
+                            angular.forEach(item, function(value, key) {
+                                if(key === component.name) {
+                                    item['$' + component.name] = response.data.items.filter(function(i) {
+                                        return i[name] == value;
+                                    })[0];
+                                }
+                            });
+                        });
+                    }
+                });
+
+                return data;
+            });
+        }
     }
 })();

@@ -18,8 +18,9 @@
 
         vm.$onInit = function() {
             vm.optionValues = [];
-            vm.initDataSource = true;            
-            componentSettings = vm.setting.component.settings;
+            vm.initDataSource = true;
+            componentSettings = vm.setting.component.settings;            
+            vm.search = componentSettings.search === true;
             if (typeof componentSettings.serverPagination !== 'boolean') {
                 vm.serverPagination = true;
             }
@@ -29,7 +30,6 @@
             possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
             vm.parentValue = !vm.depend;
-            vm.search = componentSettings.search;
             vm.showPossible = false;
             vm.activeElement = 0;
             vm.isSelection = false;
@@ -143,19 +143,57 @@
 
         var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
             vm.data = data;
-
-            $scope.onLoadDataHandler(event, data);
             if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
-                componentSettings.$loadingPromise.then(function(items) {
-                    allOptions = allOptions.length ? allOptions : items;
-                    vm.optionValues = [];
-                    fillControl(allOptions);
-                    vm.equalPreviewValue(items);
-                }).finally(function() {
+                $scope.onLoadDataHandler(event, data);
+                 componentSettings.$loadingPromise.then(function(items) {
+                        allOptions = allOptions.length ? allOptions : items;
+                        vm.optionValues = [];
+                        fillControl(allOptions);
+                        vm.equalPreviewValue();
+                    }).finally(function() {
+                        vm.loadingData = false;
+                    });
+                if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
+                    loadDataById(vm.fieldValue).finally(function() {
+                        vm.loadingData = false;
+                    });
+                } else {
                     vm.loadingData = false;
-                });
+                }
             }
         });
+
+        function loadDataById(ids) {
+            var defer = $q.defer();
+            if (componentSettings.valuesRemote) {
+                var urlParam = {};
+                if (angular.isArray(ids)) {
+                    urlParam[vm.fieldId] = ids;
+                } else {
+                    urlParam[vm.fieldId] = [];
+                    urlParam[vm.fieldId].push(ids);
+                }
+
+                var request = {
+                    url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
+                    $id: vm.setting.component.$id,
+                    serverPagination: vm.serverPagination
+                };
+
+                return RestApiService
+                    .getUrlResource(request)
+                    .then(function(response) {
+                        fillControl(response.data.items);
+                        vm.equalPreviewValue();
+                        defer.resolve(response.data.items);
+                    }, function(reject) {
+                        defer.reject(reject);
+                    });
+            } else {
+                defer.resolve();
+            }
+            return defer.promise;
+        }
 
         var destroyWatchFieldValue = $scope.$watch(function() {
             return vm.fieldValue;
