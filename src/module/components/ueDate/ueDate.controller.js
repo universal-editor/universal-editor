@@ -31,7 +31,7 @@
             $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);
             fillPreviewValue();
 
-            vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
                 $scope.onLoadDataHandler(e, data);
                 if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId) && !vm.options.filter) {
                     if (vm.multiple) {

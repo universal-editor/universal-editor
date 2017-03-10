@@ -65,7 +65,7 @@
                 if (settings.fromState) {
                     $state.go(settings.fromState.name, settings.fromParams, { reload: false }).then(function() {
                         if (!isUpdateParentComponent) {
-                            $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                            $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         }
                     });
                 }

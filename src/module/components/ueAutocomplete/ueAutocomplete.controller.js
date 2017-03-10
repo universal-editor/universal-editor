@@ -44,11 +44,11 @@
                 loadValues();
             }
 
-            vm.listeners.push($scope.$on('editor:entity_loaded', function(event, data) {
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(event, data) {
                 if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
-                    if (vm.fieldValue) {
+                    if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
                         loadDataById(vm.fieldValue).then(function() {
                             vm.equalPreviewValue();
                         }).finally(function() {
@@ -74,7 +74,7 @@
                         if (vm.sizeInput === 1 && (newValue.length != 1)) {
                             vm.classInput.width = '1px';
                         } else {
-                            vm.classInput.width = 'initial';
+                            vm.classInput.width = '100%';
                         }
                     }
                     inputTimeout = $timeout(function() {

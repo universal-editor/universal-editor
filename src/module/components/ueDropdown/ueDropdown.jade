@@ -36,10 +36,12 @@ block append content
                                     ) {{vm.placeholder}}
                             span.select-delete(data-ng-if="vm.isSpanSelectDelete && !vm.readonly", data-ng-click="vm.deleteToSelected($event, false)") ×
                             .possible-values.active(
-                                data-ng-if="!vm.readonly && (vm.optionValues.length > 0) && vm.showPossible",
+                                data-ng-if="!vm.readonly && vm.showPossible",
                                 data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'
                                 )
-                                .possible-scroll
+                                .processing-status-wrapper(data-ng-show="vm.loadingPossibleData")
+                                    .processing-status {{'PERFORMS_ACTIONS' | translate}}
+                                .possible-scroll(data-ng-hide="vm.loadingPossibleData")
                                     .possible-value-item(data-ng-repeat="option in vm.optionValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.fieldSearch]}}
 
                     .dropdown(data-ng-if="vm.isTree")

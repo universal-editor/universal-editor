@@ -8,57 +8,10 @@
     function YiiSoftApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
         "ngInject";
         var self = this,
-            queryTempParams,
-            filterParams,
-            itemsKey,
-            entityObject,
-            mixEntity,
+            itemsKey = 'items',
             cancelerPromises = [];
 
         self.isProcessing = false;
-        self.methodType = '';
-        self.editedEntityId = null;
-
-        $rootScope.$on('editor:set_entity_type', function(event, type) {
-            entityObject = type;
-            itemsKey = 'items';
-        });
-
-        $rootScope.$on('editor:create_entity', function(event, request) {
-            self.addNewItem(request);
-        });
-
-        $rootScope.$on('editor:update_entity', function(event, request) {
-            self.updateItem(request);
-        });
-
-        $rootScope.$on('editor:presave_entity', function(event, request) {
-            self.presaveItem(request);
-        });
-
-        this.getQueryParams = function() {
-            try {
-                return JSON.parse(JSON.stringify(queryTempParams));
-            } catch (e) {
-                return {};
-            }
-        };
-
-        this.setQueryParams = function(params) {
-            if (Object.keys(params).length > 0) {
-                queryTempParams = params;
-            } else {
-                queryTempParams = undefined;
-            }
-        };
-
-        this.setFilterParams = function(params) {
-            if (Object.keys(params).length > 0) {
-                filterParams = params;
-            } else {
-                filterParams = undefined;
-            }
-        };
 
         function setTimeOutPromise(id, mode) {
             var def = $q.defer();
@@ -301,9 +254,9 @@
             var service = getCustomService(dataSource.standard);
             request.options.isLoading = true;
 
-            var _url = dataSource.url + '/' + self.editedEntityId;
+            var _url = dataSource.url + '/' + request.entityId;
             var idField = 'id';
-            request.data.id = self.editedEntityId;
+            request.data.id = request.entityId;
             var config = {
                 action: 'update',
                 url: request.url || _url,
@@ -312,7 +265,7 @@
                 params: request.params || {}
             };
 
-            config.id = self.editedEntityId;
+            config.id = request.entityId;
 
             if (dataSource.type) {
                 config.__type = dataSource.type;
@@ -373,15 +326,15 @@
                 data: request.data,
                 params: request.params || {}
             };
-            config.id = self.editedEntityId;
+            config.id = request.entityId;
 
             if (dataSource.type) {
                 config.__type = dataSource.type;
             }
 
 
-            if (self.editedEntityId !== '') {
-                config.url = dataSource.url + '/' + self.editedEntityId;
+            if (request.entityId !== '') {
+                config.url = dataSource.url + '/' + request.entityId;
                 config.method = 'PUT';
                 config.action = 'update';
                 isCreate = false;
@@ -438,7 +391,7 @@
         this.getItemById = function(id, par, options) {
             var qParams = {},
                 expandFields = [],
-                dataSource = options.$dataSource || entityObject.dataSource;
+                dataSource = options.$dataSource;
             var service = getCustomService(dataSource.standard);
             options.isLoading = true;
             angular.forEach(dataSource.fields, function(field) {
@@ -793,10 +746,6 @@
             }
         };
 
-        this.getEntityObject = function() {
-            return entityObject;
-        };
-
         function replaceToURL(url, entityId) {
             if (entityId) {
                 url = url.replace(':pk', entityId);
@@ -901,12 +850,12 @@
                         $rootScope.$broadcast('editor:parent_empty');
                     }
                     data.$parentComponentId = parentComponentId;
-                    $rootScope.$broadcast('editor:items_list', data);
+                    $rootScope.$broadcast('ue:collectionLoaded', data);
                     break;
                 case 'one':
                     data.$parentComponentId = parentComponentId;
                     data.editorEntityType = 'exist';
-                    $rootScope.$broadcast('editor:entity_loaded', data);
+                    $rootScope.$broadcast('ue:componentDataLoaded', data);
                     break;
                 case 'update':
                     var state;
@@ -935,7 +884,7 @@
                         if (state) {
                             $state.go(state, params).then(function() {
                                 $location.search(params);
-                                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                             });
                         } else {
                             replaceToURL(config.request.href);
@@ -975,7 +924,7 @@
                                     delete params.back;
                                 }
                                 $location.search(params);
-                                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                             });
                         } else {
                             replaceToURL(config.request.href);
@@ -1019,8 +968,6 @@
                         config.request.success(response);
                     }
                     config.request.options.isLoading = false;
-                    self.setQueryParams({});
-                    self.setFilterParams({});
                     $rootScope.$broadcast('editor:entity_success_deleted');
                     successDeleteMessage();
                     params = {};
@@ -1040,7 +987,7 @@
                         if (state) {
                             $state.go(state, params).then(function() {
                                 $location.search(params);
-                                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                             });
                         } else {
                             replaceToURL(config.request.href);
@@ -1084,5 +1031,72 @@
                 $rootScope.$broadcast('editor:error_get_data', data);
             }
         }
+
+        this.extendData = function extendData(options) {
+            var data = options.data,
+                components = options.components,
+                $id = options.$id;
+            var remoteComponents = components.filter(function(component) {
+                return angular.isObject(component.component.settings.valuesRemote);
+            });
+            var promiseStack = [];
+            remoteComponents.forEach(function(component) {
+                var fields = [];
+                var filter = [];
+                var options = component.component.settings.valuesRemote;
+                if (angular.isObject(options.fields)) {
+                    angular.forEach(options.fields, function(value, key) {
+                        if (angular.isString(value)) {
+                            fields.push(value);
+                        }
+                    });
+                }
+                fields = fields.join(',');
+                if (angular.isString(options.url)) {
+                    data.forEach(function(item) {
+                        if (item[component.name] !== undefined && item[component.name] !== null) {
+                            filter.push(item[component.name]);
+                        }
+                    });
+                    var keyValue = component.component.settings.valuesRemote.fields.value;
+                    promiseStack.push($http({
+                        url: options.url,
+                        method: 'GET',
+                        headers: {
+                            $id: component.component.$id
+                        },
+                        params: {
+                            fields: fields,
+                            filter: '{"' + keyValue + '": [' + filter.toString() + ']}'
+                        }
+                    }));
+                }
+            });
+
+            return $q.all(promiseStack).then(function(allResp) {
+                allResp.forEach(function(response) {
+                    var component = remoteComponents.filter(function(component) {
+                        return component.component.$id === response.config.headers.$id;
+                    })[0];
+                    if (component) {
+                        var name = component.component.settings.valuesRemote.fields.value;
+                        data.forEach(function(item) {
+                            angular.forEach(item, function(value, key) {
+                                if (key === component.name) {
+                                    item['$' + component.name] = response.data.items.filter(function(i) {
+                                        return i[name] == value;
+                                    })[0];
+                                }
+                            });
+                        });
+                    }
+                });
+
+                return data;
+            }, function(reject) {
+                reject.$parentComponentId = $id;
+                $rootScope.$broadcast('editor:error_get_data', reject);
+            });
+        };
     }
 })();

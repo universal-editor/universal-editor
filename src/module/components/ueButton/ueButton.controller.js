@@ -130,7 +130,7 @@
                     if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate('create', request);
                     } else if (vm.type == 'update') {
-                        YiiSoftApiService.editedEntityId = vm.entityId;
+                        request.entityId = vm.entityId;
                         EditEntityStorage.editEntityUpdate('update', request);
                     }
                     break;
@@ -144,7 +144,7 @@
                     });
                     break;
                 case 'presave':
-                    YiiSoftApiService.editedEntityId = vm.entityId;
+                    request.entityId = vm.entityId;
                     EditEntityStorage.editEntityPresave(request);
                     break;
                 case 'open':

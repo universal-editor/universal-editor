@@ -155,7 +155,7 @@
                     filters = null;
                 }
                 $location.search(filterName, filters);
-                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
             }
         }
 
@@ -172,7 +172,7 @@
                 }
                 clearFiltersValue(parentComponentId, filterName);
                 $location.search(filterName, null);
-                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
             }
         }
 

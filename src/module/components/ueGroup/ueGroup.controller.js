@@ -10,13 +10,11 @@
         "ngInject";
         var vm = this,
             componentSettings,
-            entityObject,
             baseController,
             widthBootstrap = 12;
 
         vm.$onInit = function() {
             componentSettings = vm.setting.component.settings;
-            entityObject = YiiSoftApiService.getEntityObject();
             vm.fieldName = componentSettings.name;
 
             baseController = $controller('BaseController', { $scope: $scope });
@@ -40,11 +38,14 @@
             vm.removeItem = removeItem;
 
             angular.forEach(componentSettings.fields, function(value, index) {
-                var field;
+                var field, dataSource;
                 if (angular.isString(value)) {
-                    field = entityObject.dataSource.fields.filter(function(k) {
-                        return k.name == value;
-                    })[0];
+                    dataSource = $scope.getParentDataSource();
+                    if (dataSource && angular.isArray(dataSource.fields)) {
+                        field = dataSource.fields.filter(function(k) {
+                            return k.name == value;
+                        })[0];
+                    }
                 } else if (value && value.component) {
                     field = value;
                 }
@@ -68,7 +69,7 @@
             });
 
             vm.$isOnlyChildsBroadcast = false;
-            vm.listeners.push($scope.$on('editor:entity_loaded', onLoadedHandler));
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', onLoadedHandler));
             vm.option = angular.merge({}, vm.options);
             vm.option.isGroup = true;
         };
@@ -81,7 +82,7 @@
                         group.forEach(vm.addItem);
                         $timeout(function() {
                             vm.$isOnlyChildsBroadcast = true;
-                            $scope.$broadcast('editor:entity_loaded', data);
+                            $scope.$broadcast('ue:componentDataLoaded', data);
                             delete vm.$isOnlyChildsBroadcast;
                         }, 0);
                     }

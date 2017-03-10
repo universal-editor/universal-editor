@@ -132,13 +132,6 @@
                 });
             }
 
-
-            angular.forEach(vm.setting.component.settings.dataSource.fields, function(field) {
-                if (field.component.hasOwnProperty('settings') && (vm.setting.component.settings.columns.indexOf(field.name) != -1)) {
-
-                }
-            });
-
             angular.forEach(vm.setting.component.settings.contextMenu, function(value) {
                 var newValue = angular.merge({}, value);
                 newValue.url = url;
@@ -184,7 +177,6 @@
             vm.setTabVisible = setTabVisible;
             vm.changeSortField = changeSortField;
 
-            YiiSoftApiService.setFilterParams({});
             vm.request.childId = vm.parent;
             vm.request.options = vm.options;
             vm.request.parentField = parentField;
@@ -233,7 +225,7 @@
         });
 
 
-        $scope.$on('editor:read_entity', function(event, data) {
+        $scope.$on('ue:collectionRefresh', function(event, data) {
             var eventComponentId = data.$gridComponentId || data.$parentComponentId || data;
             if (vm.$parentComponentId === eventComponentId) {
                 vm.parent = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'] || null;
@@ -255,15 +247,17 @@
                 if (changed) {
                     var list = {};
                     list[itemsKey] = vm.items;
-                    $rootScope.$broadcast('editor:items_list', list);
+                    $rootScope.$broadcast('ue:collectionLoaded', list);
                 }
             }
         });
 
-        $scope.$on('editor:items_list', function(event, data) {
+        $scope.$on('ue:collectionLoaded', function(event, data) {
             if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 vm.loaded = true;
                 vm.items = data[itemsKey];
+
+                var components = vm.tableFields.map(function(f) { return f.component; });
                 if (angular.isObject(vm.items)) {
                     angular.forEach(vm.items, function(item, index) {
                         item.$options = {
@@ -273,13 +267,20 @@
                         };
                     });
                 }
-                var eventObject = {
-                    editorEntityType: 'exist',
-                    $parentComponentId: vm.$parentComponentId,
-                    $items: vm.items
+                var options = {
+                    data: vm.items,
+                    components: components,
+                    $id: vm.$parentComponentId
                 };
-                $timeout(function() {
-                    $rootScope.$broadcast('editor:entity_loaded', eventObject);
+                YiiSoftApiService.extendData(options).then(function(data) {
+                    var eventObject = {
+                        editorEntityType: 'exist',
+                        $parentComponentId: vm.$parentComponentId,
+                        $items: data
+                    };
+                    $timeout(function() {
+                        $rootScope.$broadcast('ue:componentDataLoaded', eventObject);
+                    });
                 });
 
                 vm.parentButton = !!vm.parent;

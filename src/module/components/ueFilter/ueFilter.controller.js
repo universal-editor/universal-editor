@@ -127,7 +127,7 @@
                             var paramName = vm.options.prefixGrid ? vm.options.prefixGrid + '-filter' : 'filter';
                             if (!FilterFieldsStorage.getFilterQueryObject(paramName)) {
                                 FilterFieldsStorage.calculate(parentComponentId, paramName);
-                                $rootScope.$broadcast('editor:read_entity', model.options);
+                                $rootScope.$broadcast('ue:collectionRefresh', model.options);
                                 vm.visiable = true;
                             }
                         }, 0);

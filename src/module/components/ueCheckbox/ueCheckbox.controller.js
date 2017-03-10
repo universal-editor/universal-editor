@@ -68,7 +68,7 @@
                 vm.optionValues.push(obj);
             }
 
-            vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
                 if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                     $scope.onLoadDataHandler(e, data);
                     if (!vm.singleValue) {
