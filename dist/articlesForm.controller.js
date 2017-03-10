@@ -60,6 +60,15 @@
                     }
                 },
                 {
+                    name: 'comments',
+                    component: {
+                        name: 'ue-component',
+                        settings: {
+                            expandable: true
+                        }
+                    }
+                },
+                {
                     name: 'views',
                     component: {
                         name: 'ue-string',
@@ -141,6 +150,33 @@
                                                                                 label: 'firstname'
                                                                             },
                                                                             url: 'http://localhost:16006/rest/people'
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }]
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    name: 'comments',
+                                                    type: 'comments',
+                                                    component: {
+                                                        name: 'ue-group',
+                                                        settings: {
+                                                            multiple: true,
+                                                            label: 'Комментарии',
+                                                            fields: [
+                                                            {
+                                                                name: 'id',
+                                                                component: {
+                                                                    name: 'ue-dropdown',
+                                                                    settings: {
+                                                                        valuesRemote: {
+                                                                            fields: {
+                                                                                key: 'id',
+                                                                                label: 'body'
+                                                                            },
+                                                                            url: 'http://localhost:16006/rest/comments'
                                                                         }
                                                                     }
                                                                 }

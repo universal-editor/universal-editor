@@ -218,7 +218,7 @@
 
                 var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
                 var config = {
-                    url: url,                    
+                    url: url,
                     method: 'GET',
                     $id: vm.setting.component.$id,
                     serverPagination: vm.serverPagination
@@ -347,14 +347,17 @@
                 urlParam[vm.fieldId].push(ids);
             }
 
-            var request = {
+            var config = {
+                method: 'GET',
                 url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
                 $id: vm.setting.component.$id,
                 serverPagination: vm.serverPagination
             };
 
-            return RestApiService
-                .getUrlResource(request)
+            config.standard = $scope.getParentDataSource().standard;
+
+            return YiiSoftApiService
+                .getUrlResource(config)
                 .then(function(response) {
                     angular.forEach(response.data.items, function(v) {
                         if (angular.isArray(vm.fieldValue) &&
