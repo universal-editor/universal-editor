@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -27,7 +27,8 @@
             unRegisterFilterController: unRegisterFilterController,
             apply: apply,
             clear: clear,
-            getFilterObject: getFilterObject
+            getFilterObject: getFilterObject,
+            convertFilterToString: convertFilterToString
         });
 
         function addFilterFieldController(ctrl) {
@@ -86,7 +87,7 @@
             if (id) {
                 var filterControllers = storage[id];
                 if (filterControllers) {
-                    angular.forEach(filterControllers, function (fc, ind) {
+                    angular.forEach(filterControllers, function(fc, ind) {
                         if (fc.$fieldHash === ctrl.$fieldHash) {
                             filterControllers.splice(ind, 1);
                         }
@@ -97,7 +98,7 @@
 
         function clearFiltersValue(id, paramName) {
             if (storage[id]) {
-                angular.forEach(storage[id], function (ctrl) {
+                angular.forEach(storage[id], function(ctrl) {
                     ctrl.clear();
                 });
                 calculate(id, paramName);
@@ -108,7 +109,7 @@
             var ctrls = storage[id];
             var filters = {};
             //-- get list of filter fields
-            angular.forEach(ctrls, function (ctrl) {
+            angular.forEach(ctrls, function(ctrl) {
                 //--get settings of the field
                 var settings = ctrl.setting.component.settings;
                 //--get operator from settings of the field
@@ -180,7 +181,7 @@
             var filters = {};
             var filterCtrl = getFilterFieldController(parentComponentId);
             if (filterCtrl) {
-                angular.forEach(filterCtrl, function (item) {
+                angular.forEach(filterCtrl, function(item) {
                     filters[item.fieldName] = filters[item.fieldName] || [];
                     var operator = item.options.filterParameters.operator;
                     var value = item.getFieldValue();
@@ -194,7 +195,7 @@
                         case '>=':
                             operator = '>=:key';
                             break;
-                        default :
+                        default:
                             operator = ':value';
                     }
                     for (var key in value) {
@@ -213,6 +214,27 @@
                 }
             }
             return filters;
+        }
+
+        function convertFilterToString(filters) {
+            var filter = '';
+            angular.forEach(filters, function(value, key) {
+                value.forEach(function(f) {
+                    if (filter) {
+                        filter += ',';
+                    }
+                    var k = ~f.operator.indexOf(':key') ? f.operator.replace(':key', key) : key;
+                    var v = f.value;
+                    if (angular.isString(v)) {
+                        v = '"' + (~f.operator.indexOf(':value') ? f.operator.replace(':value', f.value) : f.value) + '"';
+                    }
+                    filter += '"' + k + '": ' + (angular.isArray(v) ? ('[' + v.toString() + ']') : v) ;
+                });
+            });
+            if (filter) {
+                return '{' + filter + '}';
+            }
+            return '';
         }
     }
 })();

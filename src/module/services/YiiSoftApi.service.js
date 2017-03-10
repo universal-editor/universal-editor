@@ -181,24 +181,25 @@
             var objectBind = { action: 'list', parentComponentId: request.options.$parentComponentId };
 
             $http(options).then(function(response) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind(objectBind)(response.data);
-                    deferred.resolve(response.data);
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     var data = service.processResponse(config, response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));
                     deferred.resolve(data);
+                } else {
+                    successAnswer.bind(objectBind)(response.data);
+                    deferred.resolve(response.data);
                 }
             }, function(reject) {
                 reject.canceled = canceler.promise.$$state.status === 1;
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    reject.$parentComponentId = request.options.$parentComponentId;
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     var data = service.processResponse(config, reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));
                     reject.data = data;
+                } else {
+                    reject.$parentComponentId = request.options.$parentComponentId;
+                    failAnswer.bind(objectBind)(reject);
                 }
                 deferred.reject(reject);
             }).finally(function() {
@@ -264,26 +265,26 @@
             };
 
             $http(options).then(function(response) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind(objectBind)(response.data);
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
                         config,
                         response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
+                } else {
+                    successAnswer.bind(objectBind)(response.data);
                 }
             }, function(reject) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    failAnswer.bind(objectBind)(reject.data);
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
                         config,
                         reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
+                } else {
+                    failAnswer.bind(objectBind)(reject.data);
                 }
                 request.options.isLoading = false;
             }).finally(function() {
@@ -327,26 +328,26 @@
                 idField: idField
             };
             $http(options).then(function(response) {
-                if (angular.isDefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind(objectBind)(response.data);
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
                         config,
                         response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
+                } else {
+                    successAnswer.bind(objectBind)(response.data);
                 }
             }, function(reject) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    failAnswer.bind(objectBind)(reject.data);
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
                         config,
                         reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
+                } else {
+                    failAnswer.bind(objectBind)(reject.data);
                 }
                 request.options.isLoading = false;
             }).finally(function() {
@@ -406,26 +407,26 @@
             };
 
             $http(options).then(function(response) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind(objectBind)(response.data);
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
                         config,
                         response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
+                } else {
+                    successAnswer.bind(objectBind)(response.data);
                 }
             }, function(reject) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    failAnswer.bind(objectBind)(reject.data);
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
                         config,
                         reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
+                } else {
+                    failAnswer.bind(objectBind)(reject.data);
                 }
             }).finally(function() {
                 if (!!request.complete) {
@@ -469,19 +470,20 @@
             };
 
             $http(optionsHttp).then(function(response) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind(objectBind)(response.data);
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
                         config,
                         response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
+                } else {
+                    successAnswer.bind(objectBind)(response.data);
                 }
             }, function(reject) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     reject.$parentComponentId = request.options.$parentComponentId;
+                    failAnswer.bind(objectBind)(reject);
                 } else {
                     var data = service.processResponse(config, reject,
                         successAnswer.bind(objectBind),
@@ -538,22 +540,22 @@
             };
 
             return $http(options).then(function(response) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    successAnswer.bind(objectBind)(response.data);
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(config, response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
+                } else {
+                    successAnswer.bind(objectBind)(response.data);
                 }
             }, function(reject) {
-                if (angular.isUndefined(service) || !angular.isFunction(service.processResponse)) {
-                    failAnswer.bind(objectBind)(reject.data);
-                } else {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(config, reject,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind)
                     );
+                } else {
+                    failAnswer.bind(objectBind)(reject.data);
                 }
             }).finally(function() {
                 if (!!request.complete) {
@@ -599,24 +601,13 @@
             var promiseStack = [];
             config.fromP = config.fromP || 1;
             config.toP = config.toP || 0;
+            config.params = config.params || {};
             var defaultStandard = !config.standard || config.standard === 'YiiSoft';
             var options = {};
             config.action = 'list';
 
             if (defaultStandard && config.filter) {
-                var filter = null;
-                angular.forEach(config.filter, function(value, key) {
-                    value.forEach(function(f) {
-                        if (filter) {
-                            filter += ',';
-                        }
-                        filter += '"' + key + '" : "' + f.value.toString() + '"';
-                    });
-                });
-                if (filter) {
-                    config.params.filter = '{' + filter + '}';
-                }
-            } else {
+                config.params.filter = FilterFieldsStorage.convertFilterToString(config.filter);
             }
 
             if (config.fromP === 12) {
@@ -641,7 +632,7 @@
                     config.pagination.page = page || 1;
                     config.pagination.perPage = 50;
                 }
-                options = getAjaxOptionsByTypeService(config, config.standard);
+                options = getAjaxOptionsByTypeService(config);
                 return $http(options);
             }
 
@@ -686,7 +677,7 @@
                 }
             }, function(reject) {
                 reject.$parentComponentId = config.$id;
-                if (!angular.isUndefined(service) && angular.isFunction(service.processResponse)) {
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     var data = service.processResponse(config, reject,
                         successAnswer.bind(config),
                         failAnswer.bind(config));
@@ -695,6 +686,99 @@
                 config.defer.reject(reject);
             });
             return config.defer.promise;
+        };
+
+        this.extendData = function extendData(options) {
+            var data = options.data,
+                components = options.components,
+                $id = options.$id;
+            var remoteComponents = components.filter(function(component) {
+                return angular.isObject(component.component.settings.valuesRemote);
+            });
+            var defaultStandard = !options.standard || options.standard === 'YiiSoft';
+            var promiseStack = [];
+            remoteComponents.forEach(function(component) {
+                var fields = [];
+                var filter = [];
+                var options = component.component.settings.valuesRemote;
+                if (angular.isObject(options.fields)) {
+                    angular.forEach(options.fields, function(value, key) {
+                        if (angular.isString(value)) {
+                            fields.push(value);
+                        }
+                    });
+                }
+                fields = fields.join(',');
+                if (angular.isString(options.url)) {
+                    data.forEach(function(item) {
+                        if (item[component.name] !== undefined && item[component.name] !== null && filter.indexOf(item[component.name]) === -1) {
+                            filter.push(item[component.name]);
+                        }
+                    });
+                    var keyValue = component.component.settings.valuesRemote.fields.value;
+                    var filterObject = {};
+                    filterObject[keyValue] = [];
+                    filterObject[keyValue].push({
+                        operator: ':value',
+                        value: filter
+                    });
+                    var config = {
+                        action: 'list',
+                        url: options.url,
+                        method: 'GET',
+                        headers: {
+                            $id: component.component.$id
+                        },
+                        params: {
+                            fields: fields,
+                            filter: FilterFieldsStorage.convertFilterToString(filterObject),
+                            page: 1,
+                            'per-page': 50
+                        },
+                        pagination: {
+                            page: 1,
+                            perPage: 50
+                        }
+                    };
+                    promiseStack.push($http(getAjaxOptionsByTypeService(config)));
+                }
+            });
+
+            return $q.all(promiseStack).then(function(allResp) {
+                allResp.forEach(function(response) {
+                    var list = [];
+                    if (defaultStandard) {
+                        list = response.data.items;
+                    } else {
+                        list = service.processResponse(config, resp).items || [];
+                    }
+                    var component = remoteComponents.filter(function(component) {
+                        return component.component.$id === response.config.headers.$id;
+                    })[0];
+                    if (component) {
+                        var name = component.component.settings.valuesRemote.fields.value;
+                        data.forEach(function(item) {
+                            angular.forEach(item, function(value, key) {
+                                if (key === component.name) {
+                                    item['$' + component.name] = list.filter(function(i) {
+                                        return i[name] == value;
+                                    })[0];
+                                }
+                            });
+                        });
+                    }
+                });
+
+                return data;
+            }, function(reject) {
+                reject.$parentComponentId = $id;
+                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
+                    var data = service.processResponse({}, reject,
+                        successAnswer.bind(config),
+                        failAnswer.bind(config));
+                    reject.data = data;
+                }
+            });
         };
 
         this.actionRequest = function(request) {
@@ -860,6 +944,8 @@
         }
 
         function getAjaxOptionsByTypeService(config, standard) {
+
+            standard = standard || config.standard;
 
             var serviceApi = getCustomService(standard);
 

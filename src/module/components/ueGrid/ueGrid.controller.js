@@ -19,8 +19,11 @@
             //** Nested base controller */
             angular.extend(vm, $controller('BaseController', { $scope: $scope }));
 
-            url = vm.setting.component.settings.dataSource.url;
-            parentField = vm.setting.component.settings.dataSource.parentField;
+            vm.dataSource = vm.setting.component.settings.dataSource;
+
+            url = vm.dataSource.url;
+            parentField = vm.dataSource.parentField;
+            
             vm.correctEntityType = true;
             vm.loaded = false;
             vm.loadingData = true;
@@ -131,13 +134,6 @@
                     }
                 });
             }
-
-
-            angular.forEach(vm.setting.component.settings.dataSource.fields, function(field) {
-                if (field.component.hasOwnProperty('settings') && (vm.setting.component.settings.columns.indexOf(field.name) != -1)) {
-
-                }
-            });
 
             angular.forEach(vm.setting.component.settings.contextMenu, function(value) {
                 var newValue = angular.merge({}, value);
@@ -264,6 +260,8 @@
             if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 vm.loaded = true;
                 vm.items = data[itemsKey];
+
+                var components = vm.tableFields.map(function(f) { return f.component; });
                 if (angular.isObject(vm.items)) {
                     angular.forEach(vm.items, function(item, index) {
                         item.$options = {
@@ -273,13 +271,21 @@
                         };
                     });
                 }
-                var eventObject = {
-                    editorEntityType: 'exist',
-                    $parentComponentId: vm.$parentComponentId,
-                    $items: vm.items
+                var options = {
+                    data: vm.items,
+                    components: components,
+                    $id: vm.$parentComponentId,
+                    standart: vm.dataSource.standart
                 };
-                $timeout(function() {
-                    $rootScope.$broadcast('editor:entity_loaded', eventObject);
+                YiiSoftApiService.extendData(options).then(function(data) {
+                    var eventObject = {
+                        editorEntityType: 'exist',
+                        $parentComponentId: vm.$parentComponentId,
+                        $items: data
+                    };
+                    $timeout(function() {
+                        $rootScope.$broadcast('editor:entity_loaded', eventObject);
+                    });
                 });
 
                 vm.parentButton = !!vm.parent;

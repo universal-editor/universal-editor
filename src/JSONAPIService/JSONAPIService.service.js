@@ -9,13 +9,13 @@
         var self = this;
 
         self.getHeaders = function(config) {
-            var headers = {};
+            var headers = config.headers || {};
             headers['Content-Type'] = 'application/x-www-form-urlencoded';
             return headers;
         };
 
         self.getMethod = function(config) {
-            var method;
+            var method = config.method || 'GET';
             if (config.action == 'create') {
                 method = 'POST';
             }
@@ -126,7 +126,6 @@
         self.processResponse = function(config, responseServer, success, fail) {
             var response = responseServer.data;
             var output = {};
-            var parse = proccessJsonApiElements.bind(config);
             if (response && response.errors || responseServer.status === -1) {
                 var errors = [];
                 if (response && response.errors[0]) {
@@ -152,6 +151,7 @@
                 }
                 return;
             }
+            var parse = proccessJsonApiElements.bind(config);
             switch (config.action) {
                 case 'list':
                     var metaPage = response.meta.page || { limit: 20, total: 0, offset: 0 };

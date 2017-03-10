@@ -48,7 +48,7 @@
                 if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
-                    if (vm.fieldValue) {
+                    if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
                         loadDataById(vm.fieldValue).then(function() {
                             vm.equalPreviewValue();
                         }).finally(function() {
@@ -74,7 +74,7 @@
                         if (vm.sizeInput === 1 && (newValue.length != 1)) {
                             vm.classInput.width = '1px';
                         } else {
-                            vm.classInput.width = 'initial';
+                            vm.classInput.width = '100%';
                         }
                     }
                     inputTimeout = $timeout(function() {
@@ -298,24 +298,15 @@
                     return;
                 }
 
-                var urlParam = {};
-                if (angular.isArray(vm.fieldValue)) {
-                    urlParam[vm.fieldId] = vm.fieldValue;
-                } else {
-                    urlParam[vm.fieldId] = [];
-                    urlParam[vm.fieldId].push(vm.fieldValue);
-                }
-
                 var config = {
                     method: 'GET',
-                    url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
+                    url: componentSettings.valuesRemote.url,
                     $id: vm.setting.component.$id,
                     serverPagination: vm.serverPagination
                 };
                 config.filter[vm.fieldId] = [{
                     operator: 'value',
-                    value: vm.fieldValue,
-                    $id: vm.setting.component.$id
+                    value: vm.fieldValue
                 }];
                 config.standard = $scope.getParentDataSource().standard;
 
@@ -339,20 +330,18 @@
         }
 
         function loadDataById(ids) {
-            var urlParam = {};
-            if (angular.isArray(ids)) {
-                urlParam[vm.fieldId] = ids;
-            } else {
-                urlParam[vm.fieldId] = [];
-                urlParam[vm.fieldId].push(ids);
-            }
-
             var config = {
                 method: 'GET',
-                url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
+                url: componentSettings.valuesRemote.url,
                 $id: vm.setting.component.$id,
                 serverPagination: vm.serverPagination
             };
+            
+            config.filter = config.filter || {};
+            config.filter[vm.fieldId] = [{
+                operator: 'value',
+                value: ids
+            }];
 
             config.standard = $scope.getParentDataSource().standard;
 
