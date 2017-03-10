@@ -7,32 +7,48 @@
     }
     .field-wrapper-ue-dropdown,
     .field-wrapper-ue-autocomplete {
-        .autocomplete-item {
-            background: #CBD6DA;
-            border: 1px solid #959EA9;
-            -webkit-border-radius: 4px;
-            border-radius: 4px;
-            color: #444;
-            margin: 2px;
-            padding: 0 5px;
+        .autocomplete-selected {
+            position: relative;
             display: inline-block;
-            height: 24px;
-            line-height: 22px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
             max-width: 100%;
-            &.opacity-item {
-                opacity: 0.2;
+            .autocomplete-item {
+                background: #CBD6DA;
+                border: 1px solid #959EA9;
+                -webkit-border-radius: 4px;
+                border-radius: 4px;
+                color: #444;
+                margin: 2px;
+                padding: 0 5px;
+                display: inline-block;
+                height: 24px;
+                line-height: 22px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100%;
+                overflow: hidden;
+                padding-right: 15px;
+                &.opacity-item {
+                    opacity: 0.2;
+                }
+                .remove-from-selected {
+                    margin: 0 0 0 5px;
+                    padding: 0;
+                    border: none;
+                    background: 0 0;
+                    cursor: pointer;
+                    vertical-align: middle;
+                    font: 700 16px Arial, sans-serif;
+                    color: #585858;
+                }
             }
             .remove-from-selected {
-                margin: 0 0 0 5px;
-                padding: 0;
-                border: none;
-                background: 0 0;
-                cursor: pointer;
-                vertical-align: middle;
+                position: absolute;
+                top: 0;
+                right: 0;
                 font: 700 16px Arial, sans-serif;
                 color: #585858;
+                margin: 6px 4px;
+                cursor: pointer;
             }
         }
         .autocomplete-input-wrapper.form-control {
@@ -62,7 +78,7 @@
                 display: inline-block;
             }
             .autocomplete-field-search {
-                display: inline-block;
+                display: block;
                 position: relative;
                 padding: 0;
                 margin-left: 3px;
@@ -142,7 +158,7 @@
                 }
             }
             &.possible-autocomplete {
-                margin-left: -3px;
+                margin-left: -9px;
             }
         }
         .field-preloaded-data {

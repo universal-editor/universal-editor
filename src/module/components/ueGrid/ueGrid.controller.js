@@ -133,13 +133,6 @@
                 });
             }
 
-
-            angular.forEach(vm.setting.component.settings.dataSource.fields, function(field) {
-                if (field.component.hasOwnProperty('settings') && (vm.setting.component.settings.columns.indexOf(field.name) != -1)) {
-
-                }
-            });
-
             angular.forEach(vm.setting.component.settings.contextMenu, function(value) {
                 var newValue = angular.merge({}, value);
                 newValue.url = url;
@@ -265,6 +258,8 @@
             if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 vm.loaded = true;
                 vm.items = data[itemsKey];
+
+                var components = vm.tableFields.map(function(f) { return f.component; });
                 if (angular.isObject(vm.items)) {
                     angular.forEach(vm.items, function(item, index) {
                         item.$options = {
@@ -274,13 +269,20 @@
                         };
                     });
                 }
-                var eventObject = {
-                    editorEntityType: 'exist',
-                    $parentComponentId: vm.$parentComponentId,
-                    $items: vm.items
+                var options = {
+                    data: vm.items,
+                    components: components,
+                    $id: vm.$parentComponentId
                 };
-                $timeout(function() {
-                    $rootScope.$broadcast('editor:entity_loaded', eventObject);
+                RestApiService.extendData(options).then(function(data) {
+                    var eventObject = {
+                        editorEntityType: 'exist',
+                        $parentComponentId: vm.$parentComponentId,
+                        $items: data
+                    };
+                    $timeout(function() {
+                        $rootScope.$broadcast('editor:entity_loaded', eventObject);
+                    });
                 });
 
                 vm.parentButton = !!vm.parent;
@@ -291,6 +293,8 @@
                 });
             }
         });
+
+
 
         $scope.$on('editor:parent_childs', function(event, data) {
             angular.forEach(vm.items, function(item, ind) {

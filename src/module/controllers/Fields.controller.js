@@ -17,7 +17,7 @@
         var regEmail = new RegExp('^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$', 'i');
         var regUrl = new RegExp('^(?:(?:ht|f)tps?://)?(?:[\\-\\w]+:[\\-\\w]+@)?(?:[0-9a-z][\\-0-9a-z]*[0-9a-z]\\.)+[a-z]{2,6}(?::\\d{1,5})?(?:[?/\\\\#][?!^$.(){}:|=[\\]+\\-/\\\\*;&~#@,%\\wА-Яа-я]*)?$', 'i');
 
-        if (typeof componentSettings.serverPagination !== 'boolean') {
+        if (typeof self.serverPagination !== 'boolean') {
             self.serverPagination = componentSettings.serverPagination === true;
         }
         self.isVisible = true;
@@ -59,6 +59,7 @@
                     }
                     if (self.initDataSource) {
                         self.loadingData = true;
+                        self.loadingPossibleData = true;
                         if (!componentSettings.$loadingPromise) {
                             componentSettings.$loadingPromise = RestApiService
                                 .getUrlResource({ url: remoteValues.url, $id: self.setting.component.$id, serverPagination: self.serverPagination })
@@ -75,6 +76,7 @@
                                         console.error(self.constructor.name + translation.replace('%name_field', self.fieldName));
                                     });
                                 }).finally(function() {
+                                    self.loadingPossibleData = false;
                                     self.loadingData = false;
                                 });
                         } else {
@@ -223,7 +225,7 @@
             }
 
             function compareId(id, option, multiple) {
-                if (id == option[self.fieldId]) {
+                if (option && id == option[self.fieldId]) {
                     if (multiple) {
                         self.previewValue = self.previewValue || [];
                         self.previewValue.push(option[self.fieldSearch]);
@@ -374,7 +376,7 @@
                     if (angular.isFunction(callback)) {
                         callback();
                     }
-                    equalPreviewValue();
+                    equalPreviewValue([$scope.data['$' + self.fieldName]]);
                 }
             }
         }
@@ -474,7 +476,7 @@
             }
 
             if (self.hasOwnProperty('minNumber') && val < self.minNumber) {
-                 $translate('VALIDATION.NUMBER_MIN').then(function(translation) {
+                $translate('VALIDATION.NUMBER_MIN').then(function(translation) {
                     setClientError(translation.replace('%min', self.minNumber).replace('%val', val));
                 });
             }

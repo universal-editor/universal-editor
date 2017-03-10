@@ -35,6 +35,13 @@
             right: -45px;
             position: absolute;
         }
+        .possible-values.active {
+            .processing-status-wrapper {
+                right: 0;
+                position: relative;
+                margin: 0px auto 10px auto;
+            }
+        }
         .dropdown {
             position: relative;
             border-radius: 2px;
@@ -121,6 +128,9 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
+                    label {
+                        font-weight: normal;
+                    }
                     &__btn_delete {
                         margin: 0 0 0 5px;
                         padding: 0;
@@ -359,6 +369,8 @@
         .select-input {
             padding-right: 35px;
             min-height: 28px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .dropdown__selected-items {
             white-space: nowrap;
