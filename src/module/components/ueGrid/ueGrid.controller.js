@@ -23,7 +23,7 @@
 
             url = vm.dataSource.url;
             parentField = vm.dataSource.parentField;
-            
+
             vm.correctEntityType = true;
             vm.loaded = false;
             vm.loadingData = true;
@@ -48,7 +48,6 @@
             if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix) {
                 vm.prefixGrid = vm.setting.component.settings.routing.paramsPrefix;
             }
-
 
             vm.options = {
                 $parentComponentId: vm.$parentComponentId,
