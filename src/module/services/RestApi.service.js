@@ -831,7 +831,10 @@
             }
         }
 
-        this.extendData = function extendData(data, components) {
+        this.extendData = function extendData(options) {
+            var data = options.data,
+                components = options.components,
+                $id = options.$id;
             var remoteComponents = components.filter(function(component) {
                 return angular.isObject(component.component.settings.valuesRemote);
             });
@@ -889,7 +892,10 @@
                 });
 
                 return data;
+            }, function(reject) {                
+                reject.$parentComponentId = $id;
+                $rootScope.$broadcast('editor:error_get_data', reject);
             });
-        }
+        };
     }
 })();

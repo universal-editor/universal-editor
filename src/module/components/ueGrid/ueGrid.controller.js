@@ -269,7 +269,12 @@
                         };
                     });
                 }
-                RestApiService.extendData(vm.items, components).then(function(data) {
+                var options = {
+                    data: vm.items,
+                    components: components,
+                    $id: vm.$parentComponentId
+                };
+                RestApiService.extendData(options).then(function(data) {
                     var eventObject = {
                         editorEntityType: 'exist',
                         $parentComponentId: vm.$parentComponentId,
