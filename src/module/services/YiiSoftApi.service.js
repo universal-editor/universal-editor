@@ -726,9 +726,6 @@
                         action: 'list',
                         url: options.url,
                         method: 'GET',
-                        headers: {
-                            $id: component.component.$id
-                        },
                         params: {
                             fields: fields,
                             filter: FilterFieldsStorage.convertFilterToString(filterObject),
@@ -743,7 +740,7 @@
                     promiseStack.push($http(getAjaxOptionsByTypeService(config)));
                 }
             });
-
+            var service = getCustomService(options.standard);
             return $q.all(promiseStack).then(function(allResp) {
                 allResp.forEach(function(response) {
                     var list = [];
@@ -753,7 +750,7 @@
                         list = service.processResponse(config, resp).items || [];
                     }
                     var component = remoteComponents.filter(function(component) {
-                        return component.component.$id === response.config.headers.$id;
+                        return component.component.settings.valuesRemote.url === response.config.url;
                     })[0];
                     if (component) {
                         var name = component.component.settings.valuesRemote.fields.value;
