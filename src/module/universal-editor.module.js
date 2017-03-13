@@ -29,9 +29,6 @@
                 if (config.beforeSend) {
                     config.beforeSend(config);
                 }
-
-                $rootScope.$broadcast('editor:request_start', '');
-
                 // Заменяем пустые массивы на null так как при отправке такие массивы игнорируются
                 if (config.data && typeof config.data === 'object') {
                     angular.forEach(config.data, function(value, key) {
@@ -113,7 +110,7 @@
                 $location.search(FilterFieldsStorage.filterSearchString);
             }
 
-            var toStateConfig = EditEntityStorage.getStateConfig(toState.name);
+            var toStateConfig;
             if (toStateConfig && toStateConfig.component.name === 'ue-modal') {
 
                 /** if fromstate is empty, try get parent state */

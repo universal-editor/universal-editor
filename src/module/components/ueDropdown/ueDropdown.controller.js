@@ -17,7 +17,7 @@
         vm.$onInit = function() {
             vm.optionValues = [];
             vm.initDataSource = true;
-            componentSettings = vm.setting.component.settings;            
+            componentSettings = vm.setting.component.settings;
             vm.search = componentSettings.search === true;
             if (typeof componentSettings.serverPagination !== 'boolean') {
                 vm.serverPagination = true;
@@ -147,14 +147,14 @@
             vm.data = data;
             if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 $scope.onLoadDataHandler(event, data);
-                 componentSettings.$loadingPromise.then(function(items) {
-                        allOptions = allOptions.length ? allOptions : items;
-                        vm.optionValues = [];
-                        fillControl(allOptions);
-                        vm.equalPreviewValue();
-                    }).finally(function() {
-                        vm.loadingData = false;
-                    });
+                componentSettings.$loadingPromise.then(function(items) {
+                    allOptions = allOptions.length ? allOptions : items;
+                    vm.optionValues = [];
+                    fillControl(allOptions);
+                    vm.equalPreviewValue();
+                }).finally(function() {
+                    vm.loadingData = false;
+                });
                 if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
                     loadDataById(vm.fieldValue).finally(function() {
                         vm.loadingData = false;
@@ -168,22 +168,22 @@
         function loadDataById(ids) {
             var defer = $q.defer();
             if (componentSettings.valuesRemote) {
-                var urlParam = {};
-                if (angular.isArray(ids)) {
-                    urlParam[vm.fieldId] = ids;
-                } else {
-                    urlParam[vm.fieldId] = [];
-                    urlParam[vm.fieldId].push(ids);
-                }
-
-                var request = {
-                    url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
+                var config = {
+                    method: 'GET',
+                    url: componentSettings.valuesRemote.url,
                     $id: vm.setting.component.$id,
                     serverPagination: vm.serverPagination
                 };
+                config.filter = config.filter || {};
+                config.filter[vm.fieldId] = [{
+                    operator: 'value',
+                    value: ids
+                }];
 
-                return RestApiService
-                    .getUrlResource(request)
+                config.standard = $scope.getParentDataSource().standard;
+
+                return YiiSoftApiService
+                    .getUrlResource(config)
                     .then(function(response) {
                         fillControl(response.data.items);
                         vm.equalPreviewValue();
@@ -215,7 +215,6 @@
                 vm.placeholder = (!!newVal && !!newVal.length && !!newVal[0][vm.fieldSearch]) ? newVal[0][vm.fieldSearch] : componentSettings.placeholder;
             }
             vm.setColorPlaceholder();
-            $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
         }, true);
 
 
@@ -225,14 +224,13 @@
                 if (item[vm.treeChildCountField] && !item.childOpts) {
                     item.loadingData = true;
                     var config = {
-                        url: componentSettings.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.fieldId] + '"}',
+                        url: componentSettings.valuesRemote.url,
                         $id: vm.setting.component.$id,
                         serverPagination: vm.serverPagination
                     };
                     config.filter[vm.treeParentField] = [{
                         operator: 'value',
-                        value: item[vm.fieldId],
-                        $id: vm.setting.component.$id
+                        value: item[vm.fieldId]
                     }];
 
                     config.standard = $scope.getParentDataSource().standard;
@@ -488,7 +486,9 @@
                 vm.showPossible = false;
                 vm.setColorPlaceholder();
             }, 0);
-            event.stopPropagation();
+            if (event) {
+                event.stopPropagation();
+            }
         }
 
         function convertToObject(items) {

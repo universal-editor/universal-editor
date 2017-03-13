@@ -19,8 +19,11 @@
             //** Nested base controller */
             angular.extend(vm, $controller('BaseController', { $scope: $scope }));
 
-            url = vm.setting.component.settings.dataSource.url;
-            parentField = vm.setting.component.settings.dataSource.parentField;
+            vm.dataSource = vm.setting.component.settings.dataSource;
+
+            url = vm.dataSource.url;
+            parentField = vm.dataSource.parentField;
+
             vm.correctEntityType = true;
             vm.loaded = false;
             vm.loadingData = true;
@@ -28,7 +31,6 @@
             vm.items = [];
             vm.links = [];
             vm.errors = [];
-            vm.notifys = [];
             vm.tabsVisibility = [];
             vm.entityId = '';
             vm.editorEntityType = 'new';
@@ -45,7 +47,6 @@
             if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix) {
                 vm.prefixGrid = vm.setting.component.settings.routing.paramsPrefix;
             }
-
 
             vm.options = {
                 $parentComponentId: vm.$parentComponentId,
@@ -182,6 +183,9 @@
             vm.request.parentField = parentField;
             vm.request.url = url;
             YiiSoftApiService.getItemsList(vm.request);
+            $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
+            $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
+            $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
         };
 
         function getScope() {
@@ -218,7 +222,7 @@
             YiiSoftApiService.loadParent(vm.request);
         }
 
-        $scope.$on('editor:parent_id', function(event, data) {
+        $scope.$on('ue:beforeParentEntitySet', function(event, data) {
             if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 vm.parent = data.parentId;
             }
@@ -234,7 +238,7 @@
             }
         });
 
-        $scope.$on('editor:update_item', function(event, data) {
+        $scope.$on('ue:afterEntityUpdate', function(event, data) {
             var eventComponentId = data.$gridComponentId || data.$parentComponentId;
             if (!eventComponentId || (vm.$parentComponentId === eventComponentId && data.value)) {
                 var changed = false;
@@ -270,7 +274,8 @@
                 var options = {
                     data: vm.items,
                     components: components,
-                    $id: vm.$parentComponentId
+                    $id: vm.$parentComponentId,
+                    standart: vm.dataSource.standart
                 };
                 YiiSoftApiService.extendData(options).then(function(data) {
                     var eventObject = {
@@ -292,47 +297,8 @@
             }
         });
 
-        $scope.$on('editor:server_error', function(event, data) {
-             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-                 vm.listLoaded = true;
-             }
-            vm.errors.push(data);
-        });
-
-        $scope.$on('editor:parent_childs', function(event, data) {
-            angular.forEach(vm.items, function(item, ind) {
-
-                var startInd = 1;
-                if (item[vm.idField] === data.id) {
-                    if (item.isExpand === true) {
-                        item.isExpand = false;
-                        vm.items.splice(ind + 1, data.childs.length);
-                    } else {
-                        item.isExpand = true;
-                        angular.forEach(data.childs, function(newItem) {
-                            if (vm.items[ind].hasOwnProperty.parentPadding) {
-                                newItem.parentPadding = vm.items[ind].parentPadding + 1;
-                            } else {
-                                newItem.parentPadding = 1;
-                            }
-                            vm.items.splice(ind + startInd, 0, newItem);
-                        });
-                    }
-
-                }
-            });
-        });
-
-        $scope.$on('editor:entity_success_deleted', function(event, data) {
-        });
-
         $scope.$on('editor:field_error', function(event, data) {
             vm.errors.push(data);
-        });
-
-        $scope.$on('editor:request_start', function(event, data) {
-            vm.errors = [];
-            vm.notifys = [];
         });
 
         $document.on('click', function(evt) {
@@ -342,7 +308,6 @@
                 }, 0);
             }
         });
-
 
         function isInTableFields(name) {
             var index = vm.tableFields.findIndex(function(field) {

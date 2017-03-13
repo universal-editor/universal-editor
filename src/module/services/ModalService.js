@@ -5,7 +5,7 @@
         .module('universal-editor')
         .service('ModalService', ModalService);
         
-    function ModalService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, $uibModal) {
+    function ModalService($q, $rootScope, $http, configData, $location, $timeout, $state, $httpParamSerializer, $document, $uibModal) {
         "ngInject";
         var self = this,
             modalInstance,
@@ -39,9 +39,9 @@
             modalInstance.rendered.then(function() {
                 isOpen = true;
                 var pk = $state.params['pk'];
-                if (pk === 'new') {
+               /* if (pk === 'new') {
                    EditEntityStorage.newSourceEntity(self.options.$parentComponentId);
-                }
+                }*/
                 self.fromState = settings.fromState || null;                
             });
 

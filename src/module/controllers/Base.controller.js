@@ -13,6 +13,8 @@
         var componentSettings = self.setting.component.settings;
         var fieldErrorName;
 
+        self.resetErrors = resetErrors;
+
         if (self.options) {
             self.parentComponentId = self.options.$parentComponentId || '';
             self.regim = self.options.regim || 'edit';
@@ -95,7 +97,7 @@
         };
 
 
-        self.listeners.push($scope.$on('editor:error_get_data', function(event, rejection) {
+        self.listeners.push($scope.$on('ue:errorComponentDataLoading', function(event, rejection) {
             if (self.isParentComponent(rejection.$parentComponentId) && !rejection.canceled) {
                 self.loaded = true;
                 self.loadingData = false;
@@ -152,6 +154,10 @@
             self.dangers = [];
             EditEntityStorage.deleteFieldController(self);
             FilterFieldsStorage.deleteFilterFieldController(self);
+        }
+
+        function resetErrors() {
+            vm.errors = [];
         }
 
         function onErrorApiHandler(event, data) {

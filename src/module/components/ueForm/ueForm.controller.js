@@ -59,7 +59,6 @@
             vm.entityLoaded = false;
             vm.loaded = false;
             vm.errors = [];
-            vm.notifys = [];
             vm.entityId = '';
             vm.editorEntityType = 'new';
             vm.editFooterBar = [];
@@ -106,7 +105,6 @@
             }
             updateButton();
 
-
             vm.components = [];
 
             angular.forEach(vm.componentSettings.body, function(componentObject) {
@@ -145,6 +143,10 @@
                     });
                 }
             }
+
+            $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
+            $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
+            $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
         };
 
         function updateButton() {
@@ -173,23 +175,16 @@
                 vm.entityLoaded = true;
             }
         });
-
-        $scope.$on('editor:server_error', function(event, data) {
-            vm.errors.push(data);
-        });
-
-        $scope.$on('editor:presave_entity_created', function(event, data) {
-            vm.entityId = data;
-            vm.editorEntityType = 'exist';
+        
+        $scope.$on('ue:afterEntityUpdate', function(event, data) {
+            if (data.$action === 'presave') {
+                vm.entityId = data;
+                vm.editorEntityType = 'exist';
+            }
         });
 
         $scope.$on('editor:field_error', function(event, data) {
             vm.errors.push(data);
-        });
-
-        $scope.$on('editor:request_start', function(event, data) {
-            vm.errors = [];
-            vm.notifys = [];
         });
     }
 })();

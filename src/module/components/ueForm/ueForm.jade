@@ -5,8 +5,6 @@
         component-wrapper(ng-repeat="component in ::vm.components" data-setting="::component" data-options="::vm.options")
         .field-error-bottom-wrapper
             .error-item.alert.alert-danger(data-ng-repeat="err in vm.errors") {{err}}
-        .field-notify-bottom-wrapper
-            .notify-item(data-ng-repeat="notify in vm.notifys") {{notify}}
         .editor-footer(data-ng-if="vm.entityLoaded")
             component-wrapper.editor-action-button(data-ng-repeat="button in vm.editFooterBar track by $index", data-entity-id="{{vm.entityId}}", data-setting="button", data-options="vm.options", data-button-class="footer")
     include ../../template/errorMessages/template
