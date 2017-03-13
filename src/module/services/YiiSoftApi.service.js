@@ -956,7 +956,6 @@
                         config.request.success(data);
                     }
                     config.request.options.isLoading = false;
-                    $rootScope.$broadcast('uploader:remove_session');
                     $rootScope.$broadcast('ue:afterEntityUpdate', {
                         id: data[config.idField],
                         $parentComponentId: parentComponentId
@@ -990,7 +989,6 @@
                         config.request.success(data);
                     }
                     config.request.options.isLoading = false;
-                    $rootScope.$broadcast('uploader:remove_session');
                     $rootScope.$broadcast('ue:afterEntityCreate', {
                         id: data[config.idField],
                         $parentComponentId: parentComponentId
