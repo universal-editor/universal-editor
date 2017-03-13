@@ -16,25 +16,27 @@
         var defaultEditFooterBar = [
             {
                 component: {
-                    name: 'ue-button-service',
+                    name: 'ue-button',
                     settings: {
                         label: 'Сохранить',
-                        action: 'save'
+                        action: 'save',
+                        useBackUrl: true,
                     }
                 }
             },
             {
                 component: {
-                    name: 'ue-button-service',
+                    name: 'ue-button',
                     settings: {
                         label: 'Удалить',
-                        action: 'delete'
+                        action: 'delete',
+                        useBackUrl: true,
                     }
                 }
             },
             {
                 component: {
-                    name: 'ue-button-service',
+                    name: 'ue-button',
                     settings: {
                         label: 'Сохранить',
                         action: 'presave'
@@ -153,6 +155,7 @@
             pkKey = 'pk';
             pk = $state.params[pkKey];
             angular.forEach(vm.editFooterBar, function(button, index) {
+                button.entityId = pk;
                 if (pk === 'new') {
                     button.type = 'create';
                 } else {
@@ -175,16 +178,12 @@
                 vm.entityLoaded = true;
             }
         });
-        
+
         $scope.$on('ue:afterEntityUpdate', function(event, data) {
             if (data.$action === 'presave') {
                 vm.entityId = data;
                 vm.editorEntityType = 'exist';
             }
-        });
-
-        $scope.$on('editor:field_error', function(event, data) {
-            vm.errors.push(data);
         });
     }
 })();

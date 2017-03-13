@@ -228,7 +228,6 @@
             }
         });
 
-
         $scope.$on('ue:collectionRefresh', function(event, data) {
             var eventComponentId = data.$gridComponentId || data.$parentComponentId || data;
             if (vm.$parentComponentId === eventComponentId) {
@@ -253,6 +252,22 @@
                     list[itemsKey] = vm.items;
                     $rootScope.$broadcast('ue:collectionLoaded', list);
                 }
+            }
+        });
+        $scope.$on('ue:afterEntityDelete', function(event, data) {
+            if (vm.$parentComponentId === data.$parentComponentId) {
+                vm.items.forEach(function(item, i, arr) {
+                    if (item[vm.idField] == data.entityId) {
+                        arr.splice(i, 1);
+                    }
+                });
+                vm.parent = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'] || null;
+                vm.request.childId = vm.parent;
+                YiiSoftApiService.getItemsList(vm.request, true).then(function(data) {
+                    if (data.items) {
+                        vm.items = data.items;
+                    }
+                });
             }
         });
 
@@ -295,10 +310,6 @@
                     control.paginationData = data;
                 });
             }
-        });
-
-        $scope.$on('editor:field_error', function(event, data) {
-            vm.errors.push(data);
         });
 
         $document.on('click', function(evt) {

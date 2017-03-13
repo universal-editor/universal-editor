@@ -23,8 +23,9 @@
             return def;
         }
 
-        this.getItemsList = function(request) {
+        this.getItemsList = function(request, notGoToState) {
             var dataSource = request.options.$dataSource;
+            notGoToState = notGoToState === true;
             //** cancel previouse request if request start again 
             var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
             var service = getCustomService(dataSource.standard);
@@ -131,7 +132,7 @@
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
-            var objectBind = { action: 'list', parentComponentId: request.options.$parentComponentId };
+            var objectBind = { action: 'list', parentComponentId: request.options.$parentComponentId, notGoToState: notGoToState };
 
             $http(options).then(function(response) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
@@ -237,7 +238,7 @@
                         failAnswer.bind(objectBind)
                     );
                 } else {
-                    failAnswer.bind(objectBind)(reject.data);
+                    failAnswer.bind(objectBind)(reject);
                 }
                 request.options.isLoading = false;
             }).finally(function() {
@@ -300,7 +301,7 @@
                         failAnswer.bind(objectBind)
                     );
                 } else {
-                    failAnswer.bind(objectBind)(reject.data);
+                    failAnswer.bind(objectBind)(reject);
                 }
                 request.options.isLoading = false;
             }).finally(function() {
@@ -379,7 +380,7 @@
                         failAnswer.bind(objectBind)
                     );
                 } else {
-                    failAnswer.bind(objectBind)(reject.data);
+                    failAnswer.bind(objectBind)(reject);
                 }
             }).finally(function() {
                 if (!!request.complete) {
@@ -449,8 +450,9 @@
             });
         };
 
-        this.deleteItemById = function(request) {
+        this.deleteItemById = function(request, notGoToState) {
             var state;
+            notGoToState = notGoToState === true;
             if (request.options.isLoading) {
                 return;
             }
@@ -489,7 +491,8 @@
             var objectBind = {
                 parentComponentId: request.options.$parentComponentId,
                 action: 'delete',
-                request: request
+                request: request,
+                notGoToState: notGoToState
             };
 
             return $http(options).then(function(response) {
@@ -508,7 +511,7 @@
                         failAnswer.bind(objectBind)
                     );
                 } else {
-                    failAnswer.bind(objectBind)(reject.data);
+                    failAnswer.bind(objectBind)(reject);
                 }
             }).finally(function() {
                 if (!!request.complete) {
@@ -635,6 +638,8 @@
                         successAnswer.bind(config),
                         failAnswer.bind(config));
                     reject.data = data;
+                } else {
+                    failAnswer.bind(config)(reject);
                 }
                 config.defer.reject(reject);
             });
@@ -668,29 +673,31 @@
                             filter.push(item[component.name]);
                         }
                     });
-                    var keyValue = component.component.settings.valuesRemote.fields.value;
-                    var filterObject = {};
-                    filterObject[keyValue] = [];
-                    filterObject[keyValue].push({
-                        operator: ':value',
-                        value: filter
-                    });
-                    var config = {
-                        action: 'list',
-                        url: options.url,
-                        method: 'GET',
-                        params: {
-                            fields: fields,
-                            filter: FilterFieldsStorage.convertFilterToString(filterObject),
-                            page: 1,
-                            'per-page': 50
-                        },
-                        pagination: {
-                            page: 1,
-                            perPage: 50
-                        }
-                    };
-                    promiseStack.push($http(getAjaxOptionsByTypeService(config)));
+                    if (filter.length > 0) {
+                        var keyValue = component.component.settings.valuesRemote.fields.value;
+                        var filterObject = {};
+                        filterObject[keyValue] = [];
+                        filterObject[keyValue].push({
+                            operator: ':value',
+                            value: filter
+                        });
+                        var config = {
+                            action: 'list',
+                            url: options.url,
+                            method: 'GET',
+                            params: {
+                                fields: fields,
+                                filter: FilterFieldsStorage.convertFilterToString(filterObject),
+                                page: 1,
+                                'per-page': 50
+                            },
+                            pagination: {
+                                page: 1,
+                                perPage: 50
+                            }
+                        };
+                        promiseStack.push($http(getAjaxOptionsByTypeService(config)));
+                    }
                 }
             });
             var service = getCustomService(options.standard);
@@ -722,11 +729,17 @@
                 return data;
             }, function(reject) {
                 reject.$parentComponentId = $id;
+                var config = {
+                    action: 'list',
+                    parentComponentId: $id
+                };
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    var data = service.processResponse({}, reject,
+                    var data = service.processResponse(config, reject,
                         successAnswer.bind(config),
                         failAnswer.bind(config));
                     reject.data = data;
+                } else {
+                    failAnswer.bind(config)(reject);
                 }
             });
         };
@@ -1025,7 +1038,8 @@
                         $rootScope.$broadcast('ue:afterEntityUpdate', {
                             $gridComponentId: gridComponentId,
                             $action: 'presave',
-                            value: data
+                            value: data,
+                            id: newId
                         });
                     });
                     $rootScope.$broadcast('ue:afterEntityUpdate', {
@@ -1044,7 +1058,10 @@
                         config.request.success(response);
                     }
                     config.request.options.isLoading = false;
-                    $rootScope.$broadcast('ue:afterEntityDelete');
+                    $rootScope.$broadcast('ue:afterEntityDelete', {
+                        $parentComponentId: config.parentComponentId,
+                        entityId: config.request.entityId
+                    });
                     successDeleteMessage();
                     params = {};
                     paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
@@ -1060,13 +1077,15 @@
                     state = state || $state.current.name;
 
                     if (!ModalService.isModalOpen()) {
-                        if (state) {
-                            $state.go(state, params).then(function() {
-                                $location.search(params);
-                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
-                            });
-                        } else {
-                            replaceToURL(config.request.href);
+                        if (!config.notGoToState) {
+                            if (state) {
+                                $state.go(state, params).then(function() {
+                                    $location.search(params);
+                                    $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                                });
+                            } else {
+                                replaceToURL(config.request.href);
+                            }
                         }
                     } else {
                         ModalService.close();
@@ -1075,25 +1094,21 @@
             }
         }
 
-        function failAnswer(data) {
+        function failAnswer(reject) {
             var config = this, parentComponentId = config.parentComponentId || config.$id;
             if (config.action == 'update' || config.action == 'create' || config.action == 'presave') {
                 if (!!config.request.error) {
                     config.request.error(reject);
                 }
-                var wrongFields = data.hasOwnProperty('data') ? data.data : data;
-
-                if (wrongFields.length > 0) {
-                    angular.forEach(wrongFields, function(err) {
-                        if (err.hasOwnProperty('field')) {
-                            $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
-                            if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function(innerError, key) {
-                                    $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
-                                });
-                            }
-                        }
-                    });
+                if(reject.data.error) {
+                var wrongFields = reject.data.data,
+                    eventObject = {
+                        $parentComponentId: parentComponentId,
+                        data: wrongFields
+                    };
+                if (angular.isArray(wrongFields) && wrongFields.length > 0) {
+                    $rootScope.$broadcast('ue:componentError', eventObject);
+                }
                 }
             }
             if (config.action == 'delete') {
@@ -1103,8 +1118,8 @@
                 config.request.options.isLoading = false;
             }
             if (config.action == 'list' || config.action == 'one') {
-                data.$parentComponentId = parentComponentId;
-                $rootScope.$broadcast('ue:errorComponentDataLoading', data);
+                reject.$parentComponentId = parentComponentId;
+                $rootScope.$broadcast('ue:errorComponentDataLoading', reject);
             }
         }
     }

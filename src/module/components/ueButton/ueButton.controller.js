@@ -123,14 +123,14 @@
             }
             angular.merge(request, handlers);
             switch (vm.action) {
-                case 'save':                
+                case 'save':   
+                    request.entityId = vm.entityId;             
                     if (vm.entityId && vm.entityId !== 'new') {
                         vm.type = 'update';
                     }
                     if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate('create', request);
-                    } else if (vm.type == 'update') {
-                        request.entityId = vm.entityId;
+                    } else if (vm.type == 'update') {                        
                         EditEntityStorage.editEntityUpdate('update', request);
                     }
                     break;
@@ -139,7 +139,7 @@
                         if (confirm(translation.replace('%id', vm.entityId))) {
                             request.entityId = vm.entityId;
                             request.setting = vm.setting;
-                            YiiSoftApiService.deleteItemById(request);
+                            YiiSoftApiService.deleteItemById(request, vm.setting.buttonClass === 'context');
                         }
                     });
                     break;
