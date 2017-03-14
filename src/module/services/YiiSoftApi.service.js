@@ -218,6 +218,7 @@
                 idField: idField
             };
 
+            $rootScope.$broadcast('ue:beforeEntityCreate', objectBind);
             $http(options).then(function(response) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
@@ -281,6 +282,7 @@
                 request: request,
                 idField: idField
             };
+            $rootScope.$broadcast('ue:beforeEntityUpdate', objectBind);
             $http(options).then(function(response) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
@@ -359,6 +361,7 @@
                 request: request,
                 idField: idField
             };
+            $rootScope.$broadcast('ue:beforeEntityUpdate', objectBind);
 
             $http(options).then(function(response) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
@@ -494,6 +497,8 @@
                 request: request,
                 notGoToState: notGoToState
             };
+
+            $rootScope.$broadcast('ue:beforeEntityDelete', objectBind);
 
             return $http(options).then(function(response) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
@@ -1098,15 +1103,23 @@
                 if (!!config.request.error) {
                     config.request.error(reject);
                 }
-                if(reject.data.error) {
-                var wrongFields = reject.data.data,
-                    eventObject = {
-                        $parentComponentId: parentComponentId,
-                        data: wrongFields
-                    };
+                var wrongFields = [];
+                if (angular.isArray(reject)) {
+                    wrongFields = reject;
+                } else if (angular.isObject(reject)) {
+                    if (angular.isArray(reject.data)) {
+                        wrongFields = reject.data;
+                    } else if (angular.isObject(reject.data) && angular.isArray(reject.data.data)) {
+                        wrongFields = reject.data.data;
+                    }
+                }
+
+                var eventObject = {
+                    $parentComponentId: parentComponentId,
+                    data: wrongFields
+                };
                 if (angular.isArray(wrongFields) && wrongFields.length > 0) {
                     $rootScope.$broadcast('ue:componentError', eventObject);
-                }
                 }
             }
             if (config.action == 'delete') {

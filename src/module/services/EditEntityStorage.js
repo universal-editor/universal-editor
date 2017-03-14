@@ -71,12 +71,10 @@
             if (request.isError) {
                 request.data = entityObject;
                 switch (type) {
-                    case 'create':
-                        $rootScope.$broadcast('ue:beforeEntityCreate', request);
+                    case 'create':                        
                         YiiSoftApiService.addNewItem(request);
                         break;
                     case 'update':
-                        $rootScope.$broadcast('ue:beforeEntityUpdate', request);
                         YiiSoftApiService.updateItem(request);
                         break;
                 }
@@ -89,7 +87,6 @@
             if (request.isError) {
                 request.data = entityObject;
                 request.$action = 'presave';
-                $rootScope.$broadcast('ue:beforeEntityUpdate', request);
                 YiiSoftApiService.presaveItem(request);
             }
         };
