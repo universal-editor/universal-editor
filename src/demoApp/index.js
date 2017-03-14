@@ -1,11 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('demoApp', ['ui.router', 'universal-editor', 'JSONAPIService']);
-
-
-    angular
-        .module('demoApp')
+    angular.module('demoApp', ['ui.router', 'universal-editor'])
         .config(routerConfig);
 
     function routerConfig($stateProvider, $urlRouterProvider) {
@@ -53,7 +49,6 @@
                 controllerAs: 'vm',
                 controller: 'ArticlesFormController'
             });
-
         $urlRouterProvider.otherwise('/components');
     }
 })();
