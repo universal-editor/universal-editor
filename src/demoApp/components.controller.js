@@ -63,7 +63,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     defaultValue: 'Example'
                                                 }
                                             }
@@ -72,7 +72,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     multiple: true,
                                                     defaultValue: ['Example1', 'Example2']
                                                 }
@@ -82,7 +82,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     readonly: true,
                                                     defaultValue: 'Example'
                                                 }
@@ -92,7 +92,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     readonly: true,
                                                     multiple: true,
                                                     defaultValue: ['Example1', 'Example2']
@@ -103,9 +103,9 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     disabled: true,
-                                                    hint: 'Текст подсказки',
+                                                    hint: 'Text',
                                                     defaultValue: 'Example'
                                                 }
                                             }
@@ -114,10 +114,10 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     disabled: true,
                                                     multiple: true,
-                                                    hint: 'Текст подсказки',
+                                                    hint: 'Text',
                                                     defaultValue: ['Example1', 'Example2']
                                                 }
                                             }
@@ -126,7 +126,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне minLength = 4, maxLength = 25',
+                                                    label: 'string with limit by the length minLength = 4, maxLength = 25',
                                                     validators: [
                                                         {
                                                             type: 'string',
@@ -142,7 +142,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне minLength = 2, maxLength = 25',
+                                                    label: 'string with limit by the length minLength = 2, maxLength = 25',
                                                     multiple: true,
                                                     validators: [
                                                         {
@@ -158,7 +158,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне minLength = 2',
+                                                    label: 'string with limit by the length minLength = 2',
                                                     validators: [
                                                         {
                                                             type: 'string',
@@ -172,7 +172,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне minLength = 2',
+                                                    label: 'string with limit by the length minLength = 2',
                                                     multiple: true,
                                                     validators: [
                                                         {
@@ -187,7 +187,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне maxLength = 25',
+                                                    label: 'string with limit by the length maxLength = 25',
                                                     validators: [
                                                         {
                                                             type: 'string',
@@ -201,7 +201,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне maxLength = 25',
+                                                    label: 'string with limit by the length maxLength = 25',
                                                     multiple: true,
                                                     validators: [
                                                         {
@@ -381,7 +381,7 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     defaultValue: 'Example'
                                                 }
                                             }
@@ -390,7 +390,7 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     multiple: true,
                                                     defaultValue: ['Example1', 'Example2']
                                                 }
@@ -400,7 +400,7 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     readonly: true,
                                                     defaultValue: 'Example'
                                                 }
@@ -410,7 +410,7 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     readonly: true,
                                                     multiple: true,
                                                     defaultValue: ['Example1', 'Example2']
@@ -421,9 +421,9 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     disabled: true,
-                                                    hint: 'Текст подсказки',
+                                                    hint: 'Text',
                                                     defaultValue: 'Example'
                                                 }
                                             }
@@ -432,10 +432,10 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'Заголовок',
+                                                    label: 'Title',
                                                     disabled: true,
                                                     multiple: true,
-                                                    hint: 'Текст подсказки',
+                                                    hint: 'Text',
                                                     defaultValue: ['Example1', 'Example2']
                                                 }
                                             }
@@ -444,7 +444,7 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне minLength = 2, maxLength = 25',
+                                                    label: 'textarea with the limits minLength = 2, maxLength = 25',
                                                     validators: [
                                                         {
                                                             type: 'string',
@@ -460,7 +460,7 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне minLength = 2, maxLength = 25',
+                                                    label: 'textarea with the limits minLength = 2, maxLength = 25',
                                                     multiple: true,
                                                     validators: [
                                                         {
@@ -476,7 +476,7 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне minLength = 2',
+                                                    label: 'textarea with the limits minLength = 2',
                                                     validators: [
                                                         {
                                                             type: 'string',
@@ -490,7 +490,7 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне minLength = 2',
+                                                    label: 'textarea with the limits minLength = 2',
                                                     multiple: true,
                                                     validators: [
                                                         {
@@ -505,7 +505,7 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне maxLength = 25',
+                                                    label: 'textarea with the limits maxLength = 25',
                                                     validators: [
                                                         {
                                                             type: 'string',
@@ -519,7 +519,7 @@
                                             component: {
                                                 name: 'ue-textarea',
                                                 settings: {
-                                                    label: 'string c ограничением по длинне maxLength = 25',
+                                                    label: 'textarea with the limits maxLength = 25',
                                                     multiple: true,
                                                     validators: [
                                                         {
@@ -699,7 +699,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'просто number',
+                                                    label: 'Easy number',
                                                     validators: [
                                                         {
                                                             type: 'number'
@@ -712,7 +712,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'просто number',
+                                                    label: 'Easy number',
                                                     multiple: true,
                                                     validators: [
                                                         {
@@ -726,7 +726,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'number c шагом(step) 10',
+                                                    label: 'number with step 10',
                                                     validators: [
                                                         {
                                                             type: 'number',
@@ -740,7 +740,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'number c шагом(step) 10',
+                                                    label: 'number with step 10',
                                                     multiple: true,
                                                     validators: [
                                                         {
@@ -755,7 +755,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'number c ограничением min = 0 и max = 100',
+                                                    label: 'number with limits min = 0 и max = 100',
                                                     validators: [
                                                         {
                                                             type: 'number',
@@ -770,7 +770,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'number c ограничением min = 0 и max = 100',
+                                                    label: 'number with limits min = 0 и max = 100',
                                                     multiple: true,
                                                     validators: [
                                                         {
@@ -786,7 +786,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'number c ограничением min = 0 и max = 100 и шагом 10',
+                                                    label: 'number with limits min = 0 и max = 100 и шагом 10',
                                                     validators: [
                                                         {
                                                             type: 'number',
@@ -802,7 +802,7 @@
                                             component: {
                                                 name: 'ue-string',
                                                 settings: {
-                                                    label: 'number c ограничением min = 0 и max = 100 и шагом 10',
+                                                    label: 'number with limits min = 0 и max = 100 и шагом 10',
                                                     multiple: true,
                                                     validators: [
                                                         {
@@ -1071,11 +1071,11 @@
                                             component: {
                                                 name: 'ue-checkbox',
                                                 settings: {
-                                                    label: 'checkbox с данными в конфиге',
+                                                    label: 'checkbox with local data',
                                                     values: {
-                                                        "a": "Variable 1",
-                                                        "b": "Variable 2",
-                                                        "c": "Variable 3"
+                                                        'a': 'Variable 1',
+                                                        'b': 'Variable 2',
+                                                        'c': 'Variable 3'
                                                     }
                                                 }
                                             }
@@ -1084,11 +1084,11 @@
                                             component: {
                                                 name: 'ue-checkbox',
                                                 settings: {
-                                                    label: 'checkbox с данными в конфиге value=array',
+                                                    label: 'checkbox with local data value=array',
                                                     values: [
-                                                        "Variable 1",
-                                                        "Variable 2",
-                                                        "Variable 3"
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
                                                     ]
                                                 }
                                             }
@@ -1097,13 +1097,13 @@
                                             component: {
                                                 name: 'ue-checkbox',
                                                 settings: {
-                                                    label: 'checkbox с данными в конфиге value=array, defaultValue = "Variable 1"',
+                                                    label: 'checkbox with local data value=array, defaultValue = "Variable 1"',
                                                     values: [
-                                                        "Variable 1",
-                                                        "Variable 2",
-                                                        "Variable 3"
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
                                                     ],
-                                                    defaultValue: ["Variable 1"]
+                                                    defaultValue: ['Variable 1']
                                                 }
                                             }
                                         },
@@ -1111,13 +1111,13 @@
                                             component: {
                                                 name: 'ue-checkbox',
                                                 settings: {
-                                                    label: 'checkbox с данными в конфиге,  defaultValue = ["a", "b"]',
+                                                    label: 'checkbox with local data,  defaultValue = ["a", "b"]',
                                                     values: {
-                                                        "a": "Variable 1",
-                                                        "b": "Variable 2",
-                                                        "c": "Variable 3"
+                                                        'a': 'Variable 1',
+                                                        'b': 'Variable 2',
+                                                        'c': 'Variable 3'
                                                     },
-                                                    defaultValue: ["a", "b"]
+                                                    defaultValue: ['a', 'b']
                                                 }
                                             }
                                         },
@@ -1128,10 +1128,10 @@
                                                     label: 'checkbox с valuesRemote',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "name"
+                                                            value: 'id',
+                                                            label: 'name'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/country"
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
                                                     }
                                                 }
                                             }
@@ -1140,12 +1140,12 @@
                                             component: {
                                                 name: 'ue-checkbox',
                                                 settings: {
-                                                    label: 'checkbox с valuesRemote без value',
+                                                    label: 'checkbox с valuesRemote without value',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id"
+                                                            value: 'id'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/country"
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
                                                     }
                                                 }
                                             }
@@ -1164,11 +1164,11 @@
                                             component: {
                                                 name: 'ue-radiolist',
                                                 settings: {
-                                                    label: 'radiolist с данными в конфиге',
+                                                    label: 'radiolist with local data ',
                                                     values: {
-                                                        "a": "Variable 1",
-                                                        "b": "Variable 2",
-                                                        "c": "Variable 3"
+                                                        'a': 'Variable 1',
+                                                        'b': 'Variable 2',
+                                                        'c': 'Variable 3'
                                                     }
                                                 }
                                             }
@@ -1177,11 +1177,11 @@
                                             component: {
                                                 name: 'ue-radiolist',
                                                 settings: {
-                                                    label: 'radiolist с данными в конфиге value=array',
+                                                    label: 'radiolist with local data  value=array',
                                                     values: [
-                                                        "Variable 1",
-                                                        "Variable 2",
-                                                        "Variable 3"
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
                                                     ]
                                                 }
                                             }
@@ -1190,13 +1190,13 @@
                                             component: {
                                                 name: 'ue-radiolist',
                                                 settings: {
-                                                    label: 'radiolist с данными в конфиге value=array, defaultValue = "Variable 1"',
+                                                    label: 'radiolist with local data  value=array, defaultValue = "Variable 1"',
                                                     values: [
-                                                        "Variable 1",
-                                                        "Variable 2",
-                                                        "Variable 3"
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
                                                     ],
-                                                    defaultValue: "Variable 1"
+                                                    defaultValue: 'Variable 1'
                                                 }
                                             }
                                         },
@@ -1204,13 +1204,13 @@
                                             component: {
                                                 name: 'ue-radiolist',
                                                 settings: {
-                                                    label: 'radiolist с данными в конфиге,  defaultValue = "b"',
+                                                    label: 'radiolist with local data ,  defaultValue = "b"',
                                                     values: {
-                                                        "a": "Variable 1",
-                                                        "b": "Variable 2",
-                                                        "c": "Variable 3"
+                                                        'a': 'Variable 1',
+                                                        'b': 'Variable 2',
+                                                        'c': 'Variable 3'
                                                     },
-                                                    defaultValue: "b"
+                                                    defaultValue: 'b'
                                                 }
                                             }
                                         },
@@ -1221,10 +1221,10 @@
                                                     label: 'radiolist с valuesRemote',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "name"
+                                                            value: 'id',
+                                                            label: 'name'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/country"
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
                                                     }
                                                 }
                                             }
@@ -1233,12 +1233,12 @@
                                             component: {
                                                 name: 'ue-radiolist',
                                                 settings: {
-                                                    label: 'radiolist с valuesRemote без value',
+                                                    label: 'radiolist с valuesRemote without value',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id"
+                                                            value: 'id'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/country"
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
                                                     }
                                                 }
                                             }
@@ -1275,8 +1275,8 @@
                                             component: {
                                                 name: 'ue-colorpicker',
                                                 settings: {
-                                                    label: 'colorpicker c defaultValue',
-                                                    defaultValue: "#9C2525"
+                                                    label: 'colorpicker with defaultValue',
+                                                    defaultValue: '#9C2525'
                                                 }
                                             }
                                         },
@@ -1285,7 +1285,7 @@
                                                 name: 'ue-colorpicker',
                                                 multiple: true,
                                                 settings: {
-                                                    label: 'colorpicker c defaultValue',
+                                                    label: 'colorpicker with defaultValue',
                                                     defaultValue: ['#9C2525']
                                                 }
                                             }
@@ -1304,13 +1304,13 @@
                                             component: {
                                                 name: 'ue-dropdown',
                                                 settings: {
-                                                    label: 'Значения для списка прописаны в конфигурации поля.',
+                                                    label: 'ue-dropdown with local data.',
                                                     values: {
-                                                        "1": "Яблоко",
-                                                        "2": "Апельсин",
-                                                        "3": "Груша",
-                                                        "4": "Дыня",
-                                                        "5": "Арбуз"
+                                                        '1': 'Apple',
+                                                        '2': 'Orage',
+                                                        '3': 'Pear',
+                                                        '4': 'Melon',
+                                                        '5': 'Watermelon'
                                                     }
                                                 }
                                             }
@@ -1319,11 +1319,11 @@
                                             component: {
                                                 name: 'ue-dropdown',
                                                 settings: {
-                                                    label: 'select с данными в конфиге value=array',
+                                                    label: 'ue-dropdown with local data value=array',
                                                     values: [
-                                                        "Variable 1",
-                                                        "Variable 2",
-                                                        "Variable 3"
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
                                                     ]
                                                 }
                                             }
@@ -1332,13 +1332,13 @@
                                             component: {
                                                 name: 'ue-dropdown',
                                                 settings: {
-                                                    label: 'select с данными в конфиге value=array, defaultValue = "Variable 1"',
+                                                    label: 'ue-dropdown with local data value=array, defaultValue = "Variable 1"',
                                                     values: [
-                                                        "Variable 1",
-                                                        "Variable 2",
-                                                        "Variable 3"
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
                                                     ],
-                                                    defaultValue: ["Variable 1"]
+                                                    defaultValue: ['Variable 1']
                                                 }
                                             }
                                         },
@@ -1346,15 +1346,15 @@
                                             component: {
                                                 name: 'ue-dropdown',
                                                 settings: {
-                                                    label: 'select с данными в конфиге,  defaultValue = "Variable 1"',
+                                                    label: 'ue-dropdown with local data  defaultValue = "Variable 1"',
                                                     values: {
-                                                        "1": "Яблоко",
-                                                        "2": "Апельсин",
-                                                        "3": "Груша",
-                                                        "4": "Дыня",
-                                                        "5": "Арбуз"
+                                                        '1': 'Apple',
+                                                        '2': 'Orage',
+                                                        '3': 'Pear',
+                                                        '4': 'Melon',
+                                                        '5': 'Watermelon'
                                                     },
-                                                    defaultValue: ["1", "2"]
+                                                    defaultValue: ['1', '2']
                                                 }
                                             }
                                         },
@@ -1365,60 +1365,60 @@
                                                     label: 'select с valuesRemote',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "name"
+                                                            value: 'id',
+                                                            label: 'name'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/country"
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
                                                     }
                                                 }
                                             }
                                         },
                                         {
                                             component: {
-                                                name: "ue-dropdown",
+                                                name: 'ue-dropdown',
                                                 settings: {
-                                                    "label": "Множественный режим",
-                                                    "filterable": true,
-                                                    "values": {
-                                                        "1": "Яблоко",
-                                                        "2": "Апельсин",
-                                                        "3": "Груша",
-                                                        "4": "Дыня",
-                                                        "5": "Арбуз"
+                                                    label: 'Multiple regim',
+                                                    filterable: true,
+                                                    values: {
+                                                        '1': 'Apple',
+                                                        '2': 'Orage',
+                                                        '3': 'Pear',
+                                                        '4': 'Melon',
+                                                        '5': 'Watermelon'
                                                     },
-                                                    "multiple": true
+                                                    multiple: true
                                                 }
                                             }
                                         },
                                         {
                                             component: {
-                                                name: "ue-dropdown",
+                                                name: 'ue-dropdown',
                                                 settings: {
-                                                    label: "Поиск",
+                                                    label: 'Поиск',
                                                     filterable: true,
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "name"
+                                                            value: 'id',
+                                                            label: 'name'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/country"
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
                                                     },
-                                                    placeholder: "Найти",
+                                                    placeholder: 'Найти',
                                                     search: true
                                                 }
                                             }
                                         },
                                         {
                                             component: {
-                                                name: "ue-dropdown",
+                                                name: 'ue-dropdown',
                                                 settings: {
-                                                    label: "Дерево",
+                                                    label: 'Дерево',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "title"
+                                                            value: 'id',
+                                                            label: 'title'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+                                                        url: 'http://universal-backend.dev/rest/v1/news/categories?expand=child_count'
                                                     },
                                                     tree: {
                                                         selectBranches: false
@@ -1428,19 +1428,19 @@
                                         },
                                         {
                                             component: {
-                                                name: "ue-dropdown",
+                                                name: 'ue-dropdown',
                                                 settings: {
-                                                    label: "Дерево с ветвями",
+                                                    label: 'Tree with branches',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "title"
+                                                            value: 'id',
+                                                            label: 'title'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+                                                        url: 'http://universal-backend.dev/rest/v1/news/categories?expand=child_count'
                                                     },
                                                     tree: {
-                                                        parentField: "parent_id",
-                                                        childCountField: "child_count",
+                                                        parentField: 'parent_id',
+                                                        childCountField: 'child_count',
                                                         selectBranches: true
                                                     }
                                                 }
@@ -1448,20 +1448,20 @@
                                         },
                                         {
                                             component: {
-                                                name: "ue-dropdown",
+                                                name: 'ue-dropdown',
                                                 settings: {
-                                                    label: "Множественное дерево",
+                                                    label: 'Tree without branches',
                                                     multiple: true,
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "title"
+                                                            value: 'id',
+                                                            label: 'title'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+                                                        url: 'http://universal-backend.dev/rest/v1/news/categories?expand=child_count'
                                                     },
                                                     tree: {
-                                                        parentField: "parent_id",
-                                                        childCountField: "child_count",
+                                                        parentField: 'parent_id',
+                                                        childCountField: 'child_count',
                                                         selectBranches: false
                                                     }
                                                 }
@@ -1469,21 +1469,21 @@
                                         },
                                         {
                                             component: {
-                                                name: "ue-dropdown",
+                                                name: 'ue-dropdown',
                                                 settings: {
-                                                    label: "Дерево с поиском",
+                                                    label: 'Tree with search',
                                                     search: true,
-                                                    placeholder: "Найти",
+                                                    placeholder: 'Search',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "title"
+                                                            value: 'id',
+                                                            label: 'title'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+                                                        url: 'http://universal-backend.dev/rest/v1/news/categories?expand=child_count'
                                                     },
                                                     tree: {
-                                                        parentField: "parent_id",
-                                                        childCountField: "child_count",
+                                                        parentField: 'parent_id',
+                                                        childCountField: 'child_count',
                                                         selectBranches: false
                                                     }
                                                 }
@@ -1491,22 +1491,22 @@
                                         },
                                         {
                                             component: {
-                                                name: "ue-dropdown",
+                                                name: 'ue-dropdown',
                                                 settings: {
-                                                    label: "Множественное дерево с поиском и ветвями",
+                                                    label: 'Tree with search and branches',
                                                     multiple: true,
                                                     search: true,
-                                                    placeholder: "Найти",
+                                                    placeholder: 'Search',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "title"
+                                                            value: 'id',
+                                                            label: 'title'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/news/categories?expand=child_count"
+                                                        url: 'http://universal-backend.dev/rest/v1/news/categories?expand=child_count'
                                                     },
                                                     tree: {
-                                                        parentField: "parent_id",
-                                                        childCountField: "child_count",
+                                                        parentField: 'parent_id',
+                                                        childCountField: 'child_count',
                                                         selectBranches: true
                                                     }
                                                 }
@@ -1524,24 +1524,24 @@
                                     fields: [
                                         {
                                             component: {
-                                                name: "ue-autocomplete",
+                                                name: 'ue-autocomplete',
                                                 settings: {
-                                                    label: "Поле autocomplete",
+                                                    label: 'Component autocomplete',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "name"
+                                                            value: 'id',
+                                                            label: 'name'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/staff"
+                                                        url: 'http://universal-backend.dev/rest/v1/staff'
                                                     }
                                                 }
                                             }
                                         },
                                         {
                                             component: {
-                                                name: "ue-autocomplete",
+                                                name: 'ue-autocomplete',
                                                 settings: {
-                                                    label: "Поле autocomplete",
+                                                    label: 'ue-autocomplete',
                                                     values: {
                                                         'key1': 'value1',
                                                         'key2': 'value2',
@@ -1553,15 +1553,15 @@
                                         },
                                         {
                                             component: {
-                                                name: "ue-autocomplete",
+                                                name: 'ue-autocomplete',
                                                 settings: {
-                                                    label: "Поле autocomplete в режиме multiple",
+                                                    label: 'Ue-autocomplete with multiple',
                                                     valuesRemote: {
                                                         fields: {
-                                                            value: "id",
-                                                            label: "name"
+                                                            value: 'id',
+                                                            label: 'name'
                                                         },
-                                                        url: "http://universal-backend.dev/rest/v1/staff"
+                                                        url: 'http://universal-backend.dev/rest/v1/staff'
                                                     },
                                                     multiple: true
                                                 }
@@ -1569,37 +1569,36 @@
                                         },
                                         {
                                             component: {
-                                                name: "ue-autocomplete",
+                                                name: 'ue-autocomplete',
                                                 settings: {
-                                                    label: "Поле autocomplete с константными данными в виде объекта",
+                                                    label: 'ue-autocomplete with local data',
                                                     values: {
-                                                        "1": "Яблоко",
-                                                        "2": "Апельсин",
-                                                        "3": "Груша",
-                                                        "4": "Дыня",
-                                                        "5": "Арбуз"
+                                                        '1': 'Apple',
+                                                        '2': 'Orage',
+                                                        '3': 'Pear',
+                                                        '4': 'Melon',
+                                                        '5': 'Watermelon'
                                                     }
                                                 }
                                             }
                                         },
                                         {
                                             component: {
-                                                name: "ue-autocomplete",
+                                                name: 'ue-autocomplete',
                                                 settings: {
-                                                    label: "Поле autocomplete с константными данными в виде массива в multiple",
+                                                    label: 'ue-autocomplete with local data in array (multiple)',
                                                     values: [
-                                                        "Яблоко",
-                                                        "Апельсин",
-                                                        "Груша",
-                                                        "Дыня",
-                                                        "Арбуз",
-                                                        "Мандарин",
-                                                        "Помидор",
-                                                        "Огурец",
-                                                        "Морковь",
-                                                        "Картошка",
-                                                        "Тыква",
-                                                        "Банан"
+                                                        'Apple',
+                                                        'Orange',
+                                                        'Pear',
+                                                        'Melon',
+                                                        'Watermelon',
+                                                        'Mandarin',
+                                                        'Tomatoes',
+                                                        'Cucumber',
+                                                        'Carrot',
+                                                        'Pumpkin',
+                                                        'Banana'
                                                     ],
                                                     multiple: true
                                                 }
@@ -1607,22 +1606,22 @@
                                         },
                                         {
                                             component: {
-                                                name: "ue-autocomplete",
+                                                name: 'ue-autocomplete',
                                                 settings: {
-                                                    label: "Поле autocomplete с константными данными в виде объекта в multiple",
+                                                    label: 'ueautocomplete with local data in object (multiple)',
                                                     values: {
-                                                        'a': 'Яблоко',
-                                                        'b': 'Апельсин',
-                                                        'c': 'Груша',
-                                                        'd': 'Дыня',
-                                                        'e': 'Арбуз',
-                                                        'f': 'Мандарин',
-                                                        'g': 'Помидор',
-                                                        'q': 'Огурец',
-                                                        'w': 'Морковь',
-                                                        'r': 'Картошка',
-                                                        't': 'Тыква',
-                                                        'z': 'Банан'
+                                                        'a': 'Apple',
+                                                        'b': 'Orange',
+                                                        'c': 'Pear',
+                                                        'd': 'Melon',
+                                                        'e': 'Watermelon',
+                                                        'f': 'Mandarin',
+                                                        'g': 'Tomatoes',
+                                                        'q': 'Cucumber',
+                                                        'w': 'Carrot',
+                                                        'r': 'potatoes ',
+                                                        't': 'Pumpkin',
+                                                        'z': 'Banana'
                                                     },
                                                     multiple: true
                                                 }

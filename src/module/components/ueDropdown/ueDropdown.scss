@@ -36,6 +36,7 @@
             position: absolute;
         }
         .possible-values.active {
+            min-height: 4px;
             .processing-status-wrapper {
                 right: 0;
                 position: relative;

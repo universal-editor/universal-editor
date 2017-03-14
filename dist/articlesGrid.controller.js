@@ -33,7 +33,7 @@
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: 'Заголовок'
+                            label: 'Title'
                         }
                     }
                 },
@@ -44,8 +44,8 @@
                         settings: {
                             label: 'Статус',
                             values: {
-                                "published": "Опубликовано",
-                                "draft": "Черновик"
+                                "published": "Published",
+                                "draft": "Draft"
                             }
                         }
                     }
@@ -55,7 +55,7 @@
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: 'Показы'
+                            label: 'Views'
                         }
                     }
                 },

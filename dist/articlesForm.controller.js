@@ -33,7 +33,7 @@
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: 'Заголовок'
+                            label: 'Title'
                         }
                     }
                 },
@@ -44,8 +44,8 @@
                         settings: {
                             label: 'Статус.',
                             values: {
-                                "published": "Опубликовано",
-                                "draft": "Черновик"
+                                "published": "Published",
+                                "draft": "Draft"
                             }
                         }
                     }
@@ -73,7 +73,7 @@
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: 'Показы'
+                            label: 'Views'
                         }
                     }
                 },
@@ -82,7 +82,7 @@
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: 'Текст'
+                            label: 'Text'
                         }
                     }
                 },
@@ -130,7 +130,7 @@
                                 settings: {
                                     tabs: [
                                         {
-                                            label: 'Основной таб',
+                                            label: 'Main tab',
                                             fields: ['id', 'title', 'created', 'status', 'views', 'content',
                                                 {
                                                     name: 'author',
@@ -164,7 +164,7 @@
                                                         name: 'ue-group',
                                                         settings: {
                                                             multiple: true,
-                                                            label: 'Комментарии',
+                                                            label: 'Comments',
                                                             fields: [
                                                             {
                                                                 name: 'id',
