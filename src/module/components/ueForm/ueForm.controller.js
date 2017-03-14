@@ -170,7 +170,6 @@
             updateButton();
         });
 
-
         $scope.$on('ue:componentDataLoaded', function(event, data) {
             if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 vm.editorEntityType = data.editorEntityType;

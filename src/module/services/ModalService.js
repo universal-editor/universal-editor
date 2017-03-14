@@ -39,9 +39,6 @@
             modalInstance.rendered.then(function() {
                 isOpen = true;
                 var pk = $state.params['pk'];
-               /* if (pk === 'new') {
-                   EditEntityStorage.newSourceEntity(self.options.$parentComponentId);
-                }*/
                 self.fromState = settings.fromState || null;                
             });
 

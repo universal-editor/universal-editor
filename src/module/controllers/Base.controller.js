@@ -73,6 +73,9 @@
 
         self.isParentComponent = function isParentComponent(id, scope) {
             scope = scope || $scope;
+            if (angular.isObject(id)) {
+                id = id.$parentComponentId || id.$id;
+            }
             if (!scope.$parent) {
                 return false;
             }
@@ -80,6 +83,13 @@
                 return true;
             }
             return isParentComponent(id, scope.$parent);
+        };
+        self.isComponent = function isComponent(id, scope) {
+            scope = scope || $scope;
+            if (angular.isObject(id)) {
+                id = id.$parentComponentId || id.$id;
+            }
+            return scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.$id === id;
         };
 
 
