@@ -143,7 +143,7 @@
                                                                 component: {
                                                                     name: 'ue-dropdown',
                                                                     settings: {
-                                                                        label: 'Автор',
+                                                                        label: 'Author',
                                                                         valuesRemote: {
                                                                             fields: {
                                                                                 key: 'id',
