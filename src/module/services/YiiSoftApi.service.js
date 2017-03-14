@@ -948,7 +948,7 @@
             switch (config.action) {
                 case 'list':
                     data.$parentComponentId = parentComponentId;
-                    $rootScope.$broadcast('ue:collectionLoaded', data);
+                    $rootScope.$broadcast('ue:componentDataLoaded', data);
                     break;
                 case 'one':
                     data.$parentComponentId = parentComponentId;

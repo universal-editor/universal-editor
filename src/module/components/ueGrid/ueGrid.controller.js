@@ -271,8 +271,9 @@
             }
         });
 
-        $scope.$on('ue:collectionLoaded', function(event, data) {
-            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
+        $scope.$on('ue:componentDataLoaded', function(event, data) {
+            if (vm.$parentComponentId === data.$parentComponentId && !data.hasOwnProperty('$items')) {
+                event.preventDefault();
                 vm.loaded = true;
                 vm.items = data[itemsKey];
 
