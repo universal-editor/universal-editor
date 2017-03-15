@@ -64,7 +64,7 @@
         this.getItemsList = function(request) {
 
             //** cancel previouse request if request start again 
-            var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
+            var canceler = setTimeOutPromise(request.options.$componentId, 'read');
             request.options.isLoading = true;
             var dataSource = request.options.$dataSource;
 
@@ -79,7 +79,7 @@
                 params.sort = request.options.sort;
             }
 
-            var id = request.options.$parentComponentId;
+            var id = request.options.$componentId;
             var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
             var beforeSend;
             if (!!request.childId) {
@@ -142,14 +142,14 @@
                 if (response.data[itemsKey].length === 0) {
                     $rootScope.$broadcast('editor:parent_empty');
                 }
-                response.data.$parentComponentId = request.options.$parentComponentId;
+                response.data.$componentId = request.options.$componentId;
                 $rootScope.$broadcast('ue:collectionLoaded', response.data);
                 deferred.resolve(response.data);
             }, function(reject) {
                 if (canceler.promise.$$state.status === 1) {
                     reject.canceled = true;
                 }
-                reject.$parentComponentId = request.options.$parentComponentId;
+                reject.$componentId = request.options.$componentId;
                 $rootScope.$broadcast('editor:error_get_data', reject);
             }).finally(function() {
                 request.options.isLoading = false;
@@ -203,7 +203,7 @@
                 }
                 var data = {
                     id: response.data[idField],
-                    $parentComponentId: request.options.$parentComponentId
+                    $componentId: request.options.$componentId
                 };
                 $rootScope.$broadcast('editor:presave_entity_created', data);
                 request.options.isLoading = false;
@@ -229,7 +229,7 @@
                                 delete params.back;
                             }
                             $location.search(params);
-                            $rootScope.$broadcast('ue:collectionRefresh', request.options.$parentComponentId);
+                            $rootScope.$broadcast('ue:collectionRefresh', request.options.$componentId);
                         });
                     } else {
                         replaceToURL(request.href);
@@ -289,7 +289,7 @@
                 }
                 var data = {
                     id: response.data[idField],
-                    $parentComponentId: request.options.$parentComponentId
+                    $componentId: request.options.$componentId
                 };
                 $rootScope.$broadcast('editor:presave_entity_updated', data);
                 request.options.isLoading = false;
@@ -310,7 +310,7 @@
                     if (state) {
                         $state.go(state, params).then(function() {
                             $location.search(params);
-                            $rootScope.$broadcast('ue:collectionRefresh', request.options.$parentComponentId);
+                            $rootScope.$broadcast('ue:collectionRefresh', request.options.$componentId);
                         });
                     } else {
                         replaceToURL(request.href);
@@ -385,13 +385,12 @@
                 $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                     $location.search(searchString);
                     $rootScope.$broadcast('editor:update_item', {
-                        $gridComponentId: request.options.$gridComponentId,
                         value: response.data
                     });
                 });
                 var data = {
                     id: newId,
-                    $parentComponentId: request.options.$parentComponentId
+                    $componentId: request.options.$componentId
                 };
                 if (isCreate) {
                     $rootScope.$broadcast('editor:presave_entity_created', data);
@@ -448,11 +447,11 @@
                 params: qParams
             }).then(function(response) {
                 var data = response.data;
-                data.$parentComponentId = options.$parentComponentId;
+                data.$componentId = options.$componentId;
                 data.editorEntityType = 'exist';
                 $rootScope.$broadcast('ue:componentDataLoaded', data);
             }, function(reject) {
-                reject.$parentComponentId = options.$parentComponentId;
+                reject.$componentId = options.$componentId;
                 $rootScope.$broadcast('editor:error_get_data', reject);
             }).finally(function() {
                 options.isLoading = false;
@@ -510,7 +509,7 @@
                     if (state) {
                         $state.go(state, params).then(function() {
                             $location.search(params);
-                            $rootScope.$broadcast('ue:collectionRefresh', request.options.$parentComponentId);
+                            $rootScope.$broadcast('ue:collectionRefresh', request.options.$componentId);
                         });
                     } else {
                         replaceToURL(request.href);
@@ -623,7 +622,7 @@
                     return getUrlResource(request);
                 }
             }, function(reject) {
-                reject.$parentComponentId = request.$id;
+                reject.$componentId = request.$id;
                 $rootScope.$broadcast('editor:error_get_data', reject);
             });
             return request.defer.promise;
@@ -668,7 +667,7 @@
         this.loadChilds = function(request) {
             var data = {
                 parentId: request.id,
-                $parentComponentId: request.options.$parentComponentId
+                $componentId: request.options.$componentId
             };
             var parent;
             $rootScope.$broadcast('editor:parent_id', data);
@@ -685,7 +684,7 @@
 
         this.loadParent = function(request) {
             var data = {
-                $parentComponentId: request.options.$parentComponentId
+                $componentId: request.options.$componentId
             };
             var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
             var parent;
@@ -710,7 +709,7 @@
                     self.getItemsList(request);
 
                 }, function(reject) {
-                    reject.$parentComponentId = request.options.$parentComponentId;
+                    reject.$componentId = request.options.$componentId;
                     $rootScope.$broadcast('editor:error_get_data', reject);
                     request.options.isLoading = false;
                 });
@@ -883,7 +882,7 @@
 
                 return data;
             }, function(reject) {                
-                reject.$parentComponentId = $id;
+                reject.$componentId = $id;
                 $rootScope.$broadcast('editor:error_get_data', reject);
             });
         };

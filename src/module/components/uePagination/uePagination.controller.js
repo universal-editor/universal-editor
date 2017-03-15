@@ -13,7 +13,7 @@
 
         vm.$onInit = function() {
             vm.metaKey = true;
-            vm.parentComponentId = vm.options.$parentComponentId;
+            vm.parentComponentId = vm.options.$componentId;
             vm.changePage = changePage;
         };
 

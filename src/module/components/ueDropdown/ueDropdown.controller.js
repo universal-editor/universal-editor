@@ -143,9 +143,9 @@
             });
         }
 
-        var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {
-            vm.data = data;
-            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
+        var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {            
+            if (vm.isParentComponent(data)) {
+                vm.data = data;
                 $scope.onLoadDataHandler(event, data);
                 componentSettings.$loadingPromise.then(function(items) {
                     allOptions = allOptions.length ? allOptions : items;

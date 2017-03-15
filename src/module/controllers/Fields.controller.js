@@ -144,18 +144,6 @@
             }, true)
         );
 
-        if (self.options.filter) {
-            $scope.$watch(function() {
-                return $location.search();
-            }, function(newVal) {
-                var filterName = self.options.paramsPefix ? self.options.paramsPefix + '-filter' : 'filter';
-                if (newVal && newVal[filterName]) {
-                    var filter = JSON.parse(newVal[filterName]);
-                    componentSettings.$parseFilter($scope.vm, filter);
-                }
-            });
-        }
-
 
         self.clear = clear;
         self.getFieldValue = getFieldValue;
@@ -299,97 +287,96 @@
         }
 
         function onLoadDataHandler(event, data, callback) {
-            if (!data.$parentComponentId || self.isParentComponent(data.$parentComponentId)) {
-                if (!self.options.filter) {
-                    //-- functional for required fields
-                    if (componentSettings.depend) {
-                        $scope.$watch(function() {
-                            var f_value = EditEntityStorage.getValueField(self.parentComponentId, componentSettings.depend);
-                            var result = checkForEmptyValue(f_value);
-                            var oldValue = self.dependValue;
-                            self.dependValue = undefined;
-                            if (result) {
-                                self.dependValue = f_value[componentSettings.depend];
-                            }
-                            if (!angular.equals(oldValue, self.dependValue) && angular.isFunction(self.dependUpdate)) {
-                                self.loadingData = true;
+            if (self.isParentComponent(data.$componentId) && !self.options.filter) {
+                //-- functional for required fields
+                if (componentSettings.depend) {
+                    $scope.$watch(function() {
+                        var f_value = EditEntityStorage.getValueField(self.parentComponentId, componentSettings.depend);
+                        var result = checkForEmptyValue(f_value);
+                        var oldValue = self.dependValue;
+                        self.dependValue = undefined;
+                        if (result) {
+                            self.dependValue = f_value[componentSettings.depend];
+                        }
+                        if (!angular.equals(oldValue, self.dependValue) && angular.isFunction(self.dependUpdate)) {
+                            self.loadingData = true;
+                            $timeout.cancel(timeUpdateDepend);
+                            timeUpdateDepend = $timeout(function() {
+                                self.dependUpdate(componentSettings.depend, self.dependValue);
                                 $timeout.cancel(timeUpdateDepend);
-                                timeUpdateDepend = $timeout(function() {
-                                    self.dependUpdate(componentSettings.depend, self.dependValue);
-                                    $timeout.cancel(timeUpdateDepend);
-                                }, 500);
-                            }
-                            return result;
-                        }, function(value) {
-                            if (!value) {
-                                self.clear();
-                                self.readonly = true;
-                                self.loadingData = false;
-                            } else {
-                                self.readonly = componentSettings.readonly || false;
-                            }
-                        }, true);
-                    }
-
-                    if (data.editorEntityType === 'new' && self.regim !== 'preview') {
-
-                        if (!!self.newEntityLoaded) {
-                            self.newEntityLoaded();
-                            return;
+                            }, 500);
                         }
-
-                        var obj = {};
-                        self.fieldValue = transformToValue(componentSettings.defaultValue);
-                        if (self.fieldId) {
-                            if (self.isTree) {
-                                self.fieldValue = [];
-                            }
-
-                            if (!!componentSettings.defaultValue && !self.isTree) {
-                                obj = {};
-                                obj[self.fieldId] = componentSettings.defaultValue;
-                                self.fieldValue = obj;
-                            }
-                            if (data.hasOwnProperty(self.fieldName)) {
-                                self.fieldValue = data[self.fieldName];
-                            }
+                        return result;
+                    }, function(value) {
+                        if (!value) {
+                            self.clear();
+                            self.readonly = true;
+                            self.loadingData = false;
+                        } else {
+                            self.readonly = componentSettings.readonly || false;
                         }
-                        if (angular.isFunction(callback)) {
-                            callback();
-                        }
+                    }, true);
+                }
+
+                if (data.editorEntityType === 'new' && self.regim !== 'preview') {
+
+                    if (!!self.newEntityLoaded) {
+                        self.newEntityLoaded();
                         return;
                     }
 
-                    $scope.data = self.data = ((self.options.$dataIndex >= 0) && angular.isObject(data.$items)) ? data.$items[self.options.$dataIndex] : data;
-
-                    var apiValue;
-                    if (!self.parentField) {
-                        apiValue = self.data[self.fieldName];
-                    } else {
-                        apiValue = self.data[self.parentField];
-                        if (angular.isArray(self.data[self.parentField]) && angular.isNumber(self.parentFieldIndex)) {
-                            apiValue = apiValue[self.parentFieldIndex];
-                        }
-                        if (apiValue) {
-                            apiValue = apiValue[self.fieldName];
-                        }
-                    }
-
-                    if (!self.multiple) {
-                        self.fieldValue = apiValue;
-                    } else {
-                        if (angular.isArray(apiValue)) {
+                    var obj = {};
+                    self.fieldValue = transformToValue(componentSettings.defaultValue);
+                    if (self.fieldId) {
+                        if (self.isTree) {
                             self.fieldValue = [];
-                            apiValue.forEach(function(item) {
-                                self.fieldValue.push(self.multiname ? item[self.multiname] : item);
-                            });
+                        }
+
+                        if (!!componentSettings.defaultValue && !self.isTree) {
+                            obj = {};
+                            obj[self.fieldId] = componentSettings.defaultValue;
+                            self.fieldValue = obj;
+                        }
+                        if (data.hasOwnProperty(self.fieldName)) {
+                            self.fieldValue = data[self.fieldName];
                         }
                     }
                     if (angular.isFunction(callback)) {
                         callback();
                     }
-                    equalPreviewValue([$scope.data['$' + self.fieldName]]);
+                    return;
                 }
+
+
+                $scope.data = self.data = ((self.options.$dataIndex >= 0) && angular.isObject(data.$items)) ? data.$items[self.options.$dataIndex] : data;
+
+                var apiValue;
+                if (!self.parentField) {
+                    apiValue = self.data[self.fieldName];
+                } else {
+                    apiValue = self.data[self.parentField];
+                    if (angular.isArray(self.data[self.parentField]) && angular.isNumber(self.parentFieldIndex)) {
+                        apiValue = apiValue[self.parentFieldIndex];
+                    }
+                    if (apiValue) {
+                        apiValue = apiValue[self.fieldName];
+                    }
+                }
+
+                if (!self.multiple) {
+                    self.fieldValue = apiValue;
+                } else {
+                    if (angular.isArray(apiValue)) {
+                        self.fieldValue = [];
+                        apiValue.forEach(function(item) {
+                            self.fieldValue.push(self.multiname ? item[self.multiname] : item);
+                        });
+                    }
+                }
+                if (angular.isFunction(callback)) {
+                    callback();
+                }
+                equalPreviewValue([$scope.data['$' + self.fieldName]]);
             }
         }
 
@@ -505,6 +492,9 @@
                     setClientError(translation);
                 });
             }
+        }
+        if (self.options.filter) {
+            self.options.isReady = true;
         }
     }
 })();

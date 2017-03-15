@@ -40,7 +40,7 @@
             vm.contextLinks = [];
             vm.mixContextLinks = [];
             vm.listHeaderBar = [];
-            vm.$parentComponentId = vm.setting.component.$id;
+            vm.$componentId = vm.setting.component.$id;
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
             vm.prefixGrid = undefined;
 
@@ -49,8 +49,7 @@
             }
 
             vm.options = {
-                $parentComponentId: vm.$parentComponentId,
-                $gridComponentId: vm.$parentComponentId,
+                $componentId: vm.$componentId,
                 prefixGrid: vm.prefixGrid,
                 mixedMode: vm.setting.component.settings.mixedMode,
                 sort: vm.setting.component.settings.dataSource.sortBy,
@@ -121,7 +120,7 @@
                             displayName: col.component.settings.label || col.name,
                             component: col,
                             options: {
-                                $parentComponentId: vm.$parentComponentId,
+                                $componentId: vm.$componentId,
                                 regim: 'preview'
                             }
                         };
@@ -182,7 +181,30 @@
             vm.request.options = vm.options;
             vm.request.parentField = parentField;
             vm.request.url = url;
-            YiiSoftApiService.getItemsList(vm.request);
+
+            if (FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
+                YiiSoftApiService.getItemsList(vm.request);
+            }
+
+            $scope.$watch(function() {
+                return FilterFieldsStorage.getFilterController(vm.$componentId).isReady;
+            }, function(filterReady) {
+                if (filterReady) {
+                    var newVal = $location.search();
+                    if (!FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
+                        var filterName = vm.paramsPefix ? vm.paramsPefix + '-filter' : 'filter',
+                            filter = JSON.parse(newVal[filterName]);
+                        if (!$.isEmptyObject(filter)) {
+                            FilterFieldsStorage.fillFilterComponent(vm.$componentId, filter);
+                            $timeout(function() {
+                                FilterFieldsStorage.calculate(vm.$componentId, filterName);
+                                refresh();
+                            }, 0);
+                        }
+                    }
+                }
+            });
+
             $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
             $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
             $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
@@ -222,24 +244,26 @@
             YiiSoftApiService.loadParent(vm.request);
         }
 
+        function refresh() {
+            vm.parent = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'] || null;
+            vm.request.childId = vm.parent;
+            YiiSoftApiService.getItemsList(vm.request);
+        }
+
         $scope.$on('ue:beforeParentEntitySet', function(event, data) {
-            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
+            if (vm.isParentComponent(data)) {
                 vm.parent = data.parentId;
             }
         });
 
         $scope.$on('ue:collectionRefresh', function(event, data) {
-            var eventComponentId = data.$gridComponentId || data.$parentComponentId || data;
-            if (vm.$parentComponentId === eventComponentId) {
-                vm.parent = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'] || null;
-                vm.request.childId = vm.parent;
-                YiiSoftApiService.getItemsList(vm.request);
+            if (vm.isComponent(data)) {
+                refresh();
             }
         });
 
         $scope.$on('ue:afterEntityUpdate', function(event, data) {
-            var eventComponentId = data.$gridComponentId || data.$parentComponentId;
-            if (!eventComponentId || (vm.$parentComponentId === eventComponentId && data.value)) {
+            if (vm.isComponent(data) && data.value) {
                 var changed = false;
                 vm.items.filter(function(item) {
                     if (item[vm.idField] === data.value[vm.idField]) {
@@ -255,7 +279,7 @@
             }
         });
         $scope.$on('ue:afterEntityDelete', function(event, data) {
-            if (vm.$parentComponentId === data.$parentComponentId) {
+            if (vm.isComponent(data)) {
                 vm.items.forEach(function(item, i, arr) {
                     if (item[vm.idField] == data.entityId) {
                         arr.splice(i, 1);
@@ -272,7 +296,7 @@
         });
 
         $scope.$on('ue:componentDataLoaded', function(event, data) {
-            if (vm.$parentComponentId === data.$parentComponentId && !data.hasOwnProperty('$items')) {
+            if (vm.isComponent(data) && !data.hasOwnProperty('$items')) {
                 event.preventDefault();
                 vm.loaded = true;
                 vm.items = data[itemsKey];
@@ -281,7 +305,7 @@
                 if (angular.isObject(vm.items)) {
                     angular.forEach(vm.items, function(item, index) {
                         item.$options = {
-                            $parentComponentId: vm.$parentComponentId,
+                            $componentId: vm.$componentId,
                             regim: 'preview',
                             $dataIndex: index
                         };
@@ -290,13 +314,13 @@
                 var options = {
                     data: vm.items,
                     components: components,
-                    $id: vm.$parentComponentId,
+                    $id: vm.$componentId,
                     standart: vm.dataSource.standart
                 };
                 YiiSoftApiService.extendData(options).then(function(data) {
                     var eventObject = {
                         editorEntityType: 'exist',
-                        $parentComponentId: vm.$parentComponentId,
+                        $componentId: vm.$componentId,
                         $items: data
                     };
                     $timeout(function() {

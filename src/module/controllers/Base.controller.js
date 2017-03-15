@@ -15,7 +15,7 @@
         self.resetErrors = resetErrors;
 
         if (self.options) {
-            self.parentComponentId = self.options.$parentComponentId || '';
+            self.parentComponentId = self.options.$componentId || '';
             self.regim = self.options.regim || 'edit';
         }
 
@@ -74,7 +74,7 @@
         self.isParentComponent = function isParentComponent(id, scope) {
             scope = scope || $scope;
             if (angular.isObject(id)) {
-                id = id.$parentComponentId || id.$id;
+                id = id.$componentId || id.$id;
             }
             if (!scope.$parent) {
                 return false;
@@ -87,14 +87,14 @@
         self.isComponent = function isComponent(id, scope) {
             scope = scope || $scope;
             if (angular.isObject(id)) {
-                id = id.$parentComponentId || id.$id;
+                id = id.$componentId || id.$id;
             }
             return scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.$id === id;
         };
 
 
         self.listeners.push($scope.$on('ue:errorComponentDataLoading', function(event, rejection) {
-            if (self.isParentComponent(rejection.$parentComponentId) && !rejection.canceled) {
+            if (self.isParentComponent(rejection.$componentId) && !rejection.canceled) {
                 self.loaded = true;
                 self.loadingData = false;
                 function compareStatus(stack) {
@@ -158,7 +158,7 @@
 
         function onErrorApiHandler(event, eventObject) {
             // for location component related errors
-            if (eventObject.$parentComponentId === $scope.vm.setting.component.$id) {
+            if (eventObject.$componentId === $scope.vm.setting.component.$id) {
                 event.preventDefault();
                 var fields = eventObject.data;
                 $scope.$broadcast('ue:componentError', {

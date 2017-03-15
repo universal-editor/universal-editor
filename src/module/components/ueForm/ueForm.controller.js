@@ -71,7 +71,7 @@
             vm.options = angular.copy(vm.options);
             angular.merge(vm.options, {
                 isLoading: false,
-                $parentComponentId: vm.setting.component.$id,
+                $componentId: vm.setting.component.$id,
                 $dataSource: dataSource
             });
 
@@ -140,7 +140,7 @@
                 if (pk === 'new' && !ModalService.isModalOpen()) {
                     $timeout(function() {
                         if (pk === 'new' && !ModalService.isModalOpen()) {
-                            EditEntityStorage.newSourceEntity(vm.options.$parentComponentId, vm.setting.component.settings.dataSource.parentField);
+                            EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.setting.component.settings.dataSource.parentField);
                         }
                     });
                 }
@@ -171,7 +171,7 @@
         });
 
         $scope.$on('ue:componentDataLoaded', function(event, data) {
-            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
+            if (vm.isParentComponent(data)) {
                 vm.editorEntityType = data.editorEntityType;
                 vm.entityId = data[vm.idField];
                 vm.entityLoaded = true;
@@ -179,7 +179,7 @@
         });
 
         $scope.$on('ue:afterEntityUpdate', function(event, data) {
-            if (data.$action === 'presave') {
+            if (data.action === 'presave') {
                 vm.entityId = data;
                 vm.editorEntityType = 'exist';
             }

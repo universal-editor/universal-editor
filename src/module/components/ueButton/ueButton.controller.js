@@ -22,7 +22,7 @@
             var componentSettings = vm.setting.component.settings;
             handlers = componentSettings.handlers;
             angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
-            vm.parentComponentId = vm.options.$parentComponentId;
+            vm.parentComponentId = vm.options.$componentId;
             vm.back = componentSettings.useBackUrl === true;
             vm.state = componentSettings.sref;
             vm.url = componentSettings.href;
@@ -48,7 +48,7 @@
                 request.useBackUrl = vm.back;
                 request.href = vm.url;
                 $scope.$on('ue:afterEntityUpdate', function(event, data) {
-                    if (data.$action === 'presave' && !vm.options.isGrid && (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId))) {
+                    if (data.action === 'presave' && !vm.options.isGrid && vm.isParentComponent(data)) {
                         vm.entityId = data[componentSettings.dataSource.primaryKey];
                         vm.type = 'update';
                         if (vm.action === 'delete') {
@@ -76,7 +76,7 @@
             }
 
             if (angular.isFunction(vm.action) && vm.options) {
-                vm.action(vm.options.$parentComponentId);
+                vm.action(vm.options.$componentId);
             }
 
             if (state) {
@@ -90,7 +90,7 @@
                     $timeout(function() {
                         var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
                         if (pk === 'new' && !ModalService.isModalOpen()) {
-                            EditEntityStorage.newSourceEntity(vm.options.$parentComponentId, componentSettings.dataSource.parentField);
+                            EditEntityStorage.newSourceEntity(vm.options.$componentId, componentSettings.dataSource.parentField);
                         }
                     }, 0);
                 });

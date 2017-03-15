@@ -69,7 +69,7 @@
             }
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
-                if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
+                if (vm.isParentComponent(data)) {
                     $scope.onLoadDataHandler(e, data);
                     if (!vm.singleValue) {
                         componentSettings.$loadingPromise.then(function(optionValues) {

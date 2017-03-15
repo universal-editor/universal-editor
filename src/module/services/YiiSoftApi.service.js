@@ -27,7 +27,7 @@
             var dataSource = request.options.$dataSource;
             notGoToState = notGoToState === true;
             //** cancel previouse request if request start again 
-            var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
+            var canceler = setTimeOutPromise(request.options.$componentId, 'read');
             var service = getCustomService(dataSource.standard);
             request.options.isLoading = true;
 
@@ -35,7 +35,7 @@
 
             var _url = request.url;
             var _method = request.method || 'GET';
-            var id = request.options.$parentComponentId;
+            var id = request.options.$componentId;
 
             var params = request.params || {};
             var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
@@ -132,7 +132,7 @@
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
-            var objectBind = { action: 'list', parentComponentId: request.options.$parentComponentId, notGoToState: notGoToState };
+            var objectBind = { action: 'list', parentComponentId: request.options.$componentId, notGoToState: notGoToState };
 
             $http(options).then(function(response) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
@@ -152,7 +152,7 @@
                         failAnswer.bind(objectBind));
                     reject.data = data;
                 } else {
-                    reject.$parentComponentId = request.options.$parentComponentId;
+                    reject.$componentId = request.options.$componentId;
                     failAnswer.bind(objectBind)(reject);
                 }
                 deferred.reject(reject);
@@ -213,7 +213,7 @@
 
             var objectBind = {
                 action: 'create',
-                parentComponentId: request.options.$parentComponentId,
+                parentComponentId: request.options.$componentId,
                 request: request,
                 idField: idField
             };
@@ -278,7 +278,7 @@
             options.beforeSend = request.before;
             var objectBind = {
                 action: 'update',
-                parentComponentId: request.options.$parentComponentId,
+                parentComponentId: request.options.$componentId,
                 request: request,
                 idField: idField
             };
@@ -354,8 +354,7 @@
             options.beforeSend = request.before;
 
             var objectBind = {
-                parentComponentId: request.options.$parentComponentId,
-                gridComponentId: request.options.$gridComponentId,
+                parentComponentId: request.options.$componentId,
                 action: 'presave',
                 isCreate: isCreate,
                 request: request,
@@ -423,7 +422,7 @@
 
             var objectBind = {
                 action: 'one',
-                parentComponentId: options.$parentComponentId
+                parentComponentId: options.$componentId
             };
 
             $http(optionsHttp).then(function(response) {
@@ -439,7 +438,7 @@
                 }
             }, function(reject) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    reject.$parentComponentId = request.options.$parentComponentId;
+                    reject.$componentId = request.options.$componentId;
                     failAnswer.bind(objectBind)(reject);
                 } else {
                     var data = service.processResponse(config, reject,
@@ -492,7 +491,7 @@
             options.beforeSend = request.before;
 
             var objectBind = {
-                parentComponentId: request.options.$parentComponentId,
+                parentComponentId: request.options.$componentId,
                 action: 'delete',
                 request: request,
                 notGoToState: notGoToState
@@ -637,7 +636,7 @@
                     return getUrlResource(config);
                 }
             }, function(reject) {
-                reject.$parentComponentId = config.$id;
+                reject.$componentId = config.$id;
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     var data = service.processResponse(config, reject,
                         successAnswer.bind(config),
@@ -733,7 +732,7 @@
 
                 return data;
             }, function(reject) {
-                reject.$parentComponentId = $id;
+                reject.$componentId = $id;
                 var config = {
                     action: 'list',
                     parentComponentId: $id
@@ -787,7 +786,7 @@
         this.loadChilds = function(request) {
             var data = {
                 parentId: request.id,
-                $parentComponentId: request.options.$parentComponentId
+                $componentId: request.options.$componentId
             };
             var parent;
             $rootScope.$broadcast('ue:beforeParentEntitySet', data);
@@ -804,7 +803,7 @@
 
         this.loadParent = function(request) {
             var data = {
-                $parentComponentId: request.options.$parentComponentId
+                $componentId: request.options.$componentId
             };
             var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
             var parent;
@@ -947,11 +946,11 @@
             var parentComponentId = config.parentComponentId;
             switch (config.action) {
                 case 'list':
-                    data.$parentComponentId = parentComponentId;
+                    data.$componentId = parentComponentId;
                     $rootScope.$broadcast('ue:componentDataLoaded', data);
                     break;
                 case 'one':
-                    data.$parentComponentId = parentComponentId;
+                    data.$componentId = parentComponentId;
                     data.editorEntityType = 'exist';
                     $rootScope.$broadcast('ue:componentDataLoaded', data);
                     break;
@@ -963,7 +962,7 @@
                     config.request.options.isLoading = false;
                     $rootScope.$broadcast('ue:afterEntityUpdate', {
                         id: data[config.idField],
-                        $parentComponentId: parentComponentId
+                        $componentId: parentComponentId
                     });
                     successUpdateMessage();
                     params = {};
@@ -996,7 +995,7 @@
                     config.request.options.isLoading = false;
                     $rootScope.$broadcast('ue:afterEntityCreate', {
                         id: data[config.idField],
-                        $parentComponentId: parentComponentId
+                        $componentId: parentComponentId
                     });
                     successCreateMessage();
 
@@ -1028,7 +1027,6 @@
                     }
                     break;
                 case 'presave':
-                    var gridComponentId = config.request.options.$gridComponentId;
                     if (!!config.request.success) {
                         config.request.success(data);
                     }
@@ -1039,16 +1037,16 @@
                     $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                         $location.search(searchString);
                         $rootScope.$broadcast('ue:afterEntityUpdate', {
-                            $gridComponentId: gridComponentId,
-                            $action: 'presave',
+                            $componentId: parentComponentId,
+                            action: 'presave',
                             value: data,
                             id: newId
                         });
                     });
                     $rootScope.$broadcast('ue:afterEntityUpdate', {
                         id: newId,
-                        $action: 'presave',
-                        $parentComponentId: parentComponentId
+                        action: 'presave',
+                        $componentId: parentComponentId
                     });
                     if (config.isCreate) {
                         successPresaveCreateMessage();
@@ -1062,7 +1060,7 @@
                     }
                     config.request.options.isLoading = false;
                     $rootScope.$broadcast('ue:afterEntityDelete', {
-                        $parentComponentId: config.parentComponentId,
+                        $componentId: config.parentComponentId,
                         entityId: config.request.entityId
                     });
                     successDeleteMessage();
@@ -1115,7 +1113,7 @@
                 }
 
                 var eventObject = {
-                    $parentComponentId: parentComponentId,
+                    $componentId: parentComponentId,
                     data: wrongFields
                 };
                 if (angular.isArray(wrongFields) && wrongFields.length > 0) {
@@ -1129,7 +1127,7 @@
                 config.request.options.isLoading = false;
             }
             if (config.action == 'list' || config.action == 'one') {
-                reject.$parentComponentId = parentComponentId;
+                reject.$componentId = parentComponentId;
                 $rootScope.$broadcast('ue:errorComponentDataLoading', reject);
             }
         }

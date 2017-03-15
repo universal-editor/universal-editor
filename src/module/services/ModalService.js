@@ -21,8 +21,8 @@
         function openWindow(component) { /** send fromState и _pk */
             settings = component.settings;
 
-            if(self.options.$parentComponentId) {
-                $location.search('relativeEntityId', self.options.$parentComponentId);
+            if(self.options.$componentId) {
+                $location.search('relativeEntityId', self.options.$componentId);
             }
             modalInstance = $uibModal.open({
                 component: 'ueModal',
@@ -30,8 +30,8 @@
                     settings: function() {
                         return settings;
                     },
-                    $parentComponentId: function() {
-                        return self.options.$parentComponentId || $location.search().relativeEntityId;
+                    $componentId: function() {
+                        return self.options.$componentId || $location.search().relativeEntityId;
                     }
                 }
             });
@@ -51,7 +51,7 @@
 
         function closeWindow(isUpdateParentComponent) {
             if (isOpen) {
-                var parentComponentId = self.options.$parentComponentId;
+                var parentComponentId = self.options.$componentId;
                 isOpen = false;
                 if (modalInstance) {
                     modalInstance.close();

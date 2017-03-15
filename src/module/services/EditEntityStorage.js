@@ -34,7 +34,7 @@
                 parentEntity = JSON.parse(parentEntity);
                 parent = parentEntity[id] || null;
             }
-            var data = { editorEntityType: 'new', $parentComponentId: (!!parentField ? undefined : id) };
+            var data = { editorEntityType: 'new', $componentId: (!!parentField ? undefined : id) };
             if (!!parent && !!parentField) {
                 data[parentField] = parent;
             }
@@ -86,15 +86,15 @@
 
             if (request.isError) {
                 request.data = entityObject;
-                request.$action = 'presave';
+                request.action = 'presave';
                 YiiSoftApiService.presaveItem(request);
             }
         };
 
         function constructOutputValue(request) {
             var entityObject = {};
-            var controllers = storage[request.options.$parentComponentId] || [],
-                groupControllers = groups[request.options.$parentComponentId] || [];
+            var controllers = storage[request.options.$componentId] || [],
+                groupControllers = groups[request.options.$componentId] || [];
             request.isError = true;
 
             angular.forEach(controllers, function(fCtrl) {
