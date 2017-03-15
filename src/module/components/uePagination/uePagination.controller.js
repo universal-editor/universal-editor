@@ -158,7 +158,7 @@
             var parentEntity = $location.search()[vm.options.prefixGrid  ? vm.options.prefixGrid + '-parent' : 'parent'];
             vm.parent = parentEntity || null;
             vm.request.childId = vm.parent;
-            YiiSoftApiService.getItemsList(vm.request);
+            YiiSoftApiService.getItemsList(vm.request, true);
         }
 
         vm.$onDestroy = function() {

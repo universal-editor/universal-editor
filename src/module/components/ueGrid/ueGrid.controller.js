@@ -296,9 +296,10 @@
         });
 
         $scope.$on('ue:componentDataLoaded', function(event, data) {
+            vm.loaded = false;
             if (vm.isComponent(data) && !data.hasOwnProperty('$items')) {
                 event.preventDefault();
-                vm.loaded = true;
+                
                 vm.items = data[itemsKey];
 
                 var components = vm.tableFields.map(function(f) { return f.component; });
@@ -326,6 +327,8 @@
                     $timeout(function() {
                         $rootScope.$broadcast('ue:componentDataLoaded', eventObject);
                     });
+                }).finally(function() {
+                    vm.loaded = true;
                 });
 
                 vm.parentButton = !!vm.parent;
@@ -334,6 +337,8 @@
                 angular.forEach(vm.listFooterBar, function(control) {
                     control.paginationData = data;
                 });
+            } else {
+                vm.loaded = true;
             }
         });
 

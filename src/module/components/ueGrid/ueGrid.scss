@@ -137,6 +137,9 @@
                           margin: 0;
                           padding: 0;
                       }
+                      &.td-loading {
+                          padding: 12px
+                      }
                   }
               }
               & tfoot {
@@ -150,15 +153,13 @@
           & .loader-search-wrapper {
               display: inline-block;
               width: 30px;
-              margin-left: 10px;              
+              margin-left: 10px;
               height: 12px;
           }
-
           .filter-component .loader-search-wrapper {
               position: absolute;
               right: -45px;
               top: 11px;
-          }          
+          }
       }
   }
-  

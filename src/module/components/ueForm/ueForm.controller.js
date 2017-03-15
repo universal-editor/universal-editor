@@ -128,7 +128,7 @@
 
 
             if (pk !== 'new') {
-               YiiSoftApiService.getItemById(pk || vm.setting.pk || null, dataSource, vm.options);
+               YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options);
             }
 
             if (pk === 'new') {
