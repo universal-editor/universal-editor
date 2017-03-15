@@ -94,7 +94,7 @@
 
 
         self.listeners.push($scope.$on('ue:errorComponentDataLoading', function(event, rejection) {
-            if (self.isParentComponent(rejection.$componentId) && !rejection.canceled) {
+            if (self.isComponent(rejection) && !rejection.canceled) {
                 self.loaded = true;
                 self.loadingData = false;
                 function compareStatus(stack) {
