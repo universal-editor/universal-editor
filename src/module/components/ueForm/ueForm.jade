@@ -1,4 +1,4 @@
-.ue-form
+.ue-form(ng-class="vm.classFormComponent")
     .editor-body.ue-component-body(ng-if="!vm.warnings.length && !vm.dangers.length")
         .editor-toolbar
             component-wrapper.header-action-button(ng-repeat="control in vm.toolbar track by $index", data-setting="control", data-button-class="header", data-options="vm.options")

@@ -68,6 +68,19 @@
             vm.editFooterBarExist = [];
             vm.idField = 'id';
 
+            vm.width = !isNaN(+vm.componentSettings.width) ? vm.componentSettings.width : null;
+            vm.classFormComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
+
+            if (!!vm.width) {
+                if (vm.width > 12) {
+                    vm.width = 12;
+                }
+                if (vm.width < 1) {
+                    vm.width = 1;
+                }
+                vm.classFormComponent = 'col-lg-' + vm.width + ' col-md-' + vm.width + ' col-sm-' + vm.width + ' col-xs-' + vm.width + ' clear-padding-left';
+            }
+
             vm.options = angular.copy(vm.options);
             angular.merge(vm.options, {
                 isLoading: false,
@@ -105,6 +118,7 @@
                     vm.editFooterBar.push(newControl);
                 });
             }
+
             updateButton();
 
             vm.components = [];
@@ -128,7 +142,7 @@
 
 
             if (pk !== 'new') {
-               YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options);
+                YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options);
             }
 
             if (pk === 'new') {

@@ -6,6 +6,10 @@ body {
 
 .universal-editor,
 .modal-dialog {
+    .clear-padding-left {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
     .component-wrapper {
         padding: 0 !important;
         & .form-control[readonly],

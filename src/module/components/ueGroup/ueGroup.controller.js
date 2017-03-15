@@ -22,6 +22,19 @@
             angular.extend(vm, baseController);
             EditEntityStorage.addFieldController(vm, true);
 
+            vm.width = !isNaN(+componentSettings.width) ? componentSettings.width : null;
+            vm.classGroupComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
+
+            if (!!vm.width) {
+                if (vm.width > 12) {
+                    vm.width = 12;
+                }
+                if (vm.width < 1) {
+                    vm.width = 1;
+                }
+                vm.classGroupComponent = 'col-lg-' + vm.width + ' col-md-' + vm.width + ' col-sm-' + vm.width + ' col-xs-' + vm.width + ' clear-padding-left';
+            }
+
             vm.innerFields = [];
             vm.fieldsArray = [];
             vm.countInLine = componentSettings.countInLine || 1;
