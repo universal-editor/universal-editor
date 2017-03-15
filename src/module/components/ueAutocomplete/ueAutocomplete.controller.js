@@ -337,6 +337,12 @@
                 value: ids
             }];
 
+            config.filter = config.filter || {};
+            config.filter[vm.fieldId] = [{
+                operator: 'value',
+                value: ids
+            }];
+
             config.standard = $scope.getParentDataSource().standard;
 
             return YiiSoftApiService

@@ -344,7 +344,7 @@
                     if (angular.isFunction(callback)) {
                         callback();
                     }
-                    return;
+                    equalPreviewValue([$scope.data['$' + self.fieldName]]);
                 }
 
 
