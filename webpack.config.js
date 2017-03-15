@@ -13,6 +13,8 @@
         WebpackNotifierPlugin = require('webpack-notifier');
 
     var localHost = 'universal-editor.dev',
+        isTrySetHost = false,
+        domain = localHost,
         defaultlocalHost = '127.0.0.1',
         NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development',
         RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]),
@@ -21,15 +23,13 @@
         publicPath = path.resolve(__dirname, isProd ? 'dist' : 'app'),
         freePort = null;
 
-
     require('portscanner').findAPortNotInUse(8080, 8100, defaultlocalHost, (error, port) => freePort = error ? 5555 : port);
     deasync.loopWhile(function() { return !freePort; });
 
 
     if (RUNNING_SERVER) {
         try {
-            var hostile = require('hostile');
-            hostile.set(defaultlocalHost, domain, function(err) {
+            require('hostile').set(defaultlocalHost, domain, function(err) {
                 if (err) {
                     gutil.log(gutil.colors.red('Can\'t set hosts file change. Please, try run this as Administrator.'), err.toString());
                     localHost = 'localhost';
@@ -37,9 +37,14 @@
                     gutil.log(gutil.colors.green('Set \'/etc/hosts\' successfully!'));
                     localHost = domain;
                 }
+                isTrySetHost = true;
             });
-        } catch (e) { localHost = 'localhost'; }
-        deasync.loopWhile(function() { return !localHost; });
+        } catch (e) {
+            gutil.log(gutil.colors.yellow(e));
+            isTrySetHost = true;
+            localHost = 'localhost';
+        }
+        deasync.loopWhile(function() { return !isTrySetHost; });
     }
 
     //** TEMPLATE CONFIGURATION */
