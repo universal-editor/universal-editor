@@ -24,14 +24,13 @@
         }
 
         this.getItemsList = function(request, notGoToState) {
+            var deferred = $q.defer();
             var dataSource = request.options.$dataSource;
             notGoToState = notGoToState === true;
             //** cancel previouse request if request start again 
             var canceler = setTimeOutPromise(request.options.$componentId, 'read');
             var service = getCustomService(dataSource.standard);
             request.options.isLoading = true;
-
-            var deferred = $q.defer();
 
             var _url = request.url;
             var _method = request.method || 'GET';
@@ -135,15 +134,18 @@
             var objectBind = { action: 'list', parentComponentId: request.options.$componentId, notGoToState: notGoToState };
 
             $http(options).then(function(response) {
+                var data;
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    var data = service.processResponse(config, response,
+                    data = service.processResponse(
+                        config, 
+                        response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));
-                    deferred.resolve(data);
                 } else {
                     successAnswer.bind(objectBind)(response.data);
-                    deferred.resolve(response.data);
+                    data = response.data;
                 }
+                deferred.resolve(data);
             }, function(reject) {
                 reject.canceled = canceler.promise.$$state.status === 1;
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
@@ -159,7 +161,6 @@
             }).finally(function() {
                 request.options.isLoading = false;
             });
-
             return deferred.promise;
         };
 
@@ -172,6 +173,7 @@
         };
 
         this.addNewItem = function(request) {
+            var deferred = $q.defer();
             var dataSource = request.options.$dataSource;
             var service = getCustomService(dataSource.standard);
 
@@ -230,6 +232,7 @@
                 } else {
                     successAnswer.bind(objectBind)(response.data);
                 }
+                deferred.resolve(response.data);
             }, function(reject) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
@@ -240,13 +243,15 @@
                     );
                 } else {
                     failAnswer.bind(objectBind)(reject);
-                }
-                request.options.isLoading = false;
+                }                
+                deferred.reject(reject);
             }).finally(function() {
+                request.options.isLoading = false;
                 if (!!request.complete) {
                     request.complete();
                 }
             });
+            return deferred.promise;
         };
 
         this.updateItem = function(request) {
@@ -392,64 +397,67 @@
             });
         };
 
-        this.getItemById = function(id, par, options) {
+        this.getItemById = function(id, options) {
             var qParams = {},
                 expandFields = [],
                 dataSource = options.$dataSource;
-            var service = getCustomService(dataSource.standard);
-            options.isLoading = true;
-            angular.forEach(dataSource.fields, function(field) {
-                if (field.component && field.component.settings && field.component.settings.expandable === true) {
-                    expandFields.push(field.name);
+            if (angular.isObject(dataSource)) {
+                var service = getCustomService(dataSource.standard);
+                options.isLoading = true;
+                angular.forEach(dataSource.fields, function(field) {
+                    if (field.component && field.component.settings && field.component.settings.expandable === true) {
+                        expandFields.push(field.name);
+                    }
+                });
+                if (expandFields.length > 0) {
+                    qParams.expand = expandFields.join(',');
                 }
-            });
-            if (expandFields.length > 0) {
-                qParams.expand = expandFields.join(',');
+                var url = id ? (dataSource.url + '/' + id) : dataSource.url;
+
+                var config = {
+                    action: 'one',
+                    url: url,
+                    method: 'GET',
+                    params: qParams
+                };
+
+                if (dataSource.type) {
+                    config.__type = dataSource.type;
+                }
+
+                var optionsHttp = getAjaxOptionsByTypeService(config, dataSource.standard);
+
+                var objectBind = {
+                    action: 'one',
+                    parentComponentId: options.$componentId
+                };
+
+                $http(optionsHttp).then(function(response) {
+                    if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
+                        service.processResponse(
+                            config,
+                            response,
+                            successAnswer.bind(objectBind),
+                            failAnswer.bind(objectBind)
+                        );
+                    } else {
+                        successAnswer.bind(objectBind)(response.data);
+                    }
+                }, function(reject) {
+                    if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
+                        reject.$componentId = request.options.$componentId;
+                        failAnswer.bind(objectBind)(reject);
+                    } else {
+                        var data = service.processResponse(config, reject,
+                            successAnswer.bind(objectBind),
+                            failAnswer.bind(objectBind));
+                        reject.data = data;
+                    }
+                    deferred.reject(reject);
+                }).finally(function() {
+                    options.isLoading = false;
+                });
             }
-
-            var config = {
-                action: 'one',
-                url: dataSource.url + '/' + id,
-                method: 'GET',
-                params: qParams
-            };
-
-            if (dataSource.type) {
-                config.__type = dataSource.type;
-            }
-
-            var optionsHttp = getAjaxOptionsByTypeService(config, dataSource.standard);
-
-            var objectBind = {
-                action: 'one',
-                parentComponentId: options.$componentId
-            };
-
-            $http(optionsHttp).then(function(response) {
-                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    service.processResponse(
-                        config,
-                        response,
-                        successAnswer.bind(objectBind),
-                        failAnswer.bind(objectBind)
-                    );
-                } else {
-                    successAnswer.bind(objectBind)(response.data);
-                }
-            }, function(reject) {
-                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    reject.$componentId = request.options.$componentId;
-                    failAnswer.bind(objectBind)(reject);
-                } else {
-                    var data = service.processResponse(config, reject,
-                        successAnswer.bind(objectBind),
-                        failAnswer.bind(objectBind));
-                    reject.data = data;
-                }
-                deferred.reject(reject);
-            }).finally(function() {
-                options.isLoading = false;
-            });
         };
 
         this.deleteItemById = function(request, notGoToState) {
