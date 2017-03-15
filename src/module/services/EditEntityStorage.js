@@ -27,6 +27,14 @@
             return false;
         };
 
+        this.getChildFieldComponents = function(componentId) {
+            return storage[componentId] || [];
+        };
+
+        this.getChildGroupComponents = function(componentId) {
+            return groups[componentId] || [];
+        };
+
         this.newSourceEntity = function(id, parentField) {
             var parentEntity = $location.search().parent;
             var parent;
