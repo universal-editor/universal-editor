@@ -22,15 +22,12 @@
 
             var field = {};
 
-            if(
-                vm.filterValueStartTime === "" &&
-                vm.filterValueEndTime === ""
-            ){
+            if(!vm.filterValueStartTime && !vm.filterValueEndTime){
                 return false;
             } else {
-                if(vm.filterValueStartTime !== "" && vm.filterValueEndTime === ""){
+                if(vm.filterValueStartTime && !vm.filterValueEndTime){
                     field[">=" + vm.filterName] = moment(vm.filterValueStartTime).format("HH:mm:ss");
-                } else if (vm.filterValueStartTime === "" && vm.filterValueEndTime !== ""){
+                } else if (!vm.filterValueStartTime && vm.filterValueEndTime){
                     field["<=" + vm.filterName] = moment(vm.filterValueEndTime).format("HH:mm:ss");
                 } else {
                     field[">=" + vm.filterName] = moment(vm.filterValueStartTime).format("HH:mm:ss");

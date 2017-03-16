@@ -22,12 +22,12 @@
 
             var field = {};
 
-            if(vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime === ""){
+            if(!vm.filterValueStartDateTime && !vm.filterValueEndDateTime){
                 return false;
             } else {
-                if(vm.filterValueStartDateTime !== "" && vm.filterValueEndDateTime === ""){
+                if(vm.filterValueStartDateTime && !vm.filterValueEndDateTime){
                     field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
-                } else if (vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime !== ""){
+                } else if (!vm.filterValueStartDateTime && vm.filterValueEndDateTime){
                     field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
                 } else {
                     field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");

@@ -25,10 +25,10 @@
             var field = {};
 
             if(
-                vm.filterValueStartDate === "" &&
-                vm.filterValueEndDate === "" &&
-                vm.filterValueStartTime === "" &&
-                vm.filterValueEndTime === ""
+                !vm.filterValueStartDate &&
+                !vm.filterValueEndDate &&
+                !vm.filterValueStartTime &&
+                !vm.filterValueEndTime
             ){
                 return false;
             } else {
@@ -36,9 +36,9 @@
                 var st = moment.isMoment(vm.filterValueStartTime) ? " " + moment(vm.filterValueStartTime).format("HH:mm:ss") : "";
                 var et = moment.isMoment(vm.filterValueEndTime) ? " " + moment(vm.filterValueEndTime).format("HH:mm:ss") : "";
 
-                if(vm.filterValueStartDate !== "" && vm.filterValueEndDate === ""){
+                if(vm.filterValueStartDate && !vm.filterValueEndDate){
                     field[">=" + vm.filterName] = moment(vm.filterValueStartDate).format("YYYY-MM-DD") + st;
-                } else if (vm.filterValueStartDate === "" && vm.filterValueEndDate !== ""){
+                } else if (!vm.filterValueStartDate && vm.filterValueEndDate){
                     field["<=" + vm.filterName] = moment(vm.filterValueEndDate).format("YYYY-MM-DD") + et;
                 } else {
                     field[">=" + vm.filterName] = moment(vm.filterValueStartDate).format("YYYY-MM-DD") + st;
