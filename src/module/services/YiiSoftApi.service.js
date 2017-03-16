@@ -73,9 +73,6 @@
 
                 filtersParams = angular.merge(filtersParams, filters);
 
-                if (!!request.options && request.options.sort !== undefined) {
-                    params.sort = request.options.sort;
-                }
 
                 if (filtersParams && !$.isEmptyObject(filtersParams)) {
                     angular.extend(params, { filter: JSON.stringify(filtersParams) });
@@ -98,8 +95,7 @@
                     }
                 }
 
-                if (dataSource.hasOwnProperty('sortBy') && !params.hasOwnProperty(dataSource.sortBy) && !params.sort) {
-                    params = params || {};
+                if (angular.isString(dataSource.sortBy) && !params.sort) {
                     angular.extend(params, {
                         sort: dataSource.sortBy
                     });
@@ -110,7 +106,7 @@
                 }
             } else {
                 config.filter = FilterFieldsStorage.getFilterObject(id, filters);
-                config.sortFieldName = (!!request.options && request.options.sort !== undefined) ? request.options.sort : '';
+                config.sortFieldName = params.sort || null;
                 config.pagination = {
                     perPage: 20,
                     page: 1
@@ -137,7 +133,7 @@
                 var data;
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     data = service.processResponse(
-                        config, 
+                        config,
                         response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));
@@ -243,7 +239,7 @@
                     );
                 } else {
                     failAnswer.bind(objectBind)(reject);
-                }                
+                }
                 deferred.reject(reject);
             }).finally(function() {
                 request.options.isLoading = false;

@@ -183,7 +183,7 @@
             vm.request.url = url;
 
             if (FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
-                YiiSoftApiService.getItemsList(vm.request);
+                refreshTableRecords();
             }
 
             $scope.$watch(function() {
@@ -198,7 +198,7 @@
                             FilterFieldsStorage.fillFilterComponent(vm.$componentId, filter);
                             $timeout(function() {
                                 FilterFieldsStorage.calculate(vm.$componentId, filterName);
-                                refresh();
+                                refreshTableRecords();
                             }, 0);
                         }
                     }
@@ -209,6 +209,34 @@
             $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
             $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
         };
+
+        function setInitialQueryParams() {
+            var locationObject = $location.search();
+            var page = locationObject[getKeyPrefix('page')] || 1;
+            var parent = locationObject[getKeyPrefix('parent')];
+            var sortParameter = locationObject[getKeyPrefix('sort')];
+            vm.request.childId = vm.parent;
+            vm.request.params = vm.request.params || {};
+            vm.request.params.page = page;
+
+            if (sortParameter) {
+                vm.sortingDirection = sortParameter[0] !== '-';
+                vm.sortField = sortParameter.replace('-', '');
+            }
+            vm.request.params.sort = sortParameter || getSortParameter();
+        }
+
+        function getSortParameter(name) {
+            name = name || vm.sortField;
+            return vm.sortingDirection ? name : ('-' + name);
+        }
+
+        function getKeyPrefix(key) {
+            if (!key && vm.options.prefixGrid) {
+                return vm.options.prefixGrid;
+            }
+            return vm.options.prefixGrid ? (vm.options.prefixGrid + '-' + key) : key;
+        }
 
         function getScope() {
             return $scope;
@@ -226,12 +254,18 @@
                 } else {
                     vm.sortField = field;
                 }
-                vm.options.sort = vm.sortingDirection ? field : '-' + field;
+                var sort = getSortParameter(field);
+                $location.search(getKeyPrefix('sort'), sort);
+                $location.search(getKeyPrefix('page'), null);
                 YiiSoftApiService.getItemsList({
                     url: url,
                     options: vm.options,
                     parentField: parentField,
-                    childId: vm.parent
+                    childId: vm.parent,
+                    params: {
+                        sort: sort,
+                        page: 1
+                    }
                 });
             }
         }
@@ -244,9 +278,8 @@
             YiiSoftApiService.loadParent(vm.request);
         }
 
-        function refresh() {
-            vm.parent = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'] || null;
-            vm.request.childId = vm.parent;
+        function refreshTableRecords() {
+            setInitialQueryParams();
             YiiSoftApiService.getItemsList(vm.request);
         }
 
@@ -258,7 +291,7 @@
 
         $scope.$on('ue:collectionRefresh', function(event, data) {
             if (vm.isComponent(data)) {
-                refresh();
+                refreshTableRecords();
             }
         });
 
@@ -285,7 +318,7 @@
                         arr.splice(i, 1);
                     }
                 });
-                vm.parent = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'] || null;
+                vm.parent = $location.search()[getKeyPrefix('parent')] || null;
                 vm.request.childId = vm.parent;
                 YiiSoftApiService.getItemsList(vm.request, true).then(function(data) {
                     if (data.items) {
@@ -299,7 +332,7 @@
             vm.loaded = false;
             if (vm.isComponent(data) && !data.hasOwnProperty('$items')) {
                 event.preventDefault();
-                
+
                 vm.items = data[itemsKey];
 
                 var components = vm.tableFields.map(function(f) { return f.component; });
