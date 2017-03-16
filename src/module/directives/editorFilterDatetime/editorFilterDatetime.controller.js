@@ -26,11 +26,11 @@
                 return false;
             } else {
                 if(vm.filterValueStartDateTime !== "" && vm.filterValueEndDateTime === ""){
-                    field["=>" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
+                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
                 } else if (vm.filterValueStartDateTime === "" && vm.filterValueEndDateTime !== ""){
                     field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
                 } else {
-                    field["=>" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
+                    field[">=" + vm.filterName] = moment.utc(vm.filterValueStartDateTime).format("YYYY-MM-DD HH:mm:ss");
                     field["<=" + vm.filterName] = moment.utc(vm.filterValueEndDateTime).format("YYYY-MM-DD HH:mm:ss");
                 }
                 return field;
