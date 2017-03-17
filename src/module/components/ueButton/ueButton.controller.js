@@ -154,14 +154,15 @@
                     EditEntityStorage.editEntityPresave(request);
                     break;
                 case 'open':
-                    var newRequest = {};
-                    newRequest.id = vm.entityId;
-                    newRequest.options = vm.options;
-                    newRequest.url = vm.setting.url;
-                    newRequest.parentField = vm.setting.parentField;
-                    newRequest.headComponent = vm.setting.headComponent;
+                    var newRequest = {
+                        id: vm.entityId,
+                        options: vm.options,
+                        url: vm.setting.url,
+                        parentField: vm.setting.parentField,
+                        $componentId: vm.options.$componentId
+                    };
                     angular.merge(newRequest, handlers);
-                    YiiSoftApiService.loadChilds(newRequest);
+                    $rootScope.$broadcast('ue:parentEntitySet', newRequest);
                     break;
             }
         }

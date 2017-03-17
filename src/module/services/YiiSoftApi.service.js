@@ -394,7 +394,8 @@
         };
 
         this.getItemById = function(id, options) {
-            var qParams = {},
+            var deferred = $q.defer(),
+                qParams = {},
                 expandFields = [],
                 dataSource = options.$dataSource;
             if (angular.isObject(dataSource)) {
@@ -429,16 +430,18 @@
                 };
 
                 $http(optionsHttp).then(function(response) {
+                    var data = response.data;
                     if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                        service.processResponse(
+                        data = service.processResponse(
                             config,
                             response,
                             successAnswer.bind(objectBind),
                             failAnswer.bind(objectBind)
                         );
                     } else {
-                        successAnswer.bind(objectBind)(response.data);
+                        successAnswer.bind(objectBind)(data);
                     }
+                    deferred.resolve(data);
                 }, function(reject) {
                     if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                         reject.$componentId = request.options.$componentId;
@@ -450,10 +453,9 @@
                         reject.data = data;
                     }
                     deferred.reject(reject);
-                }).finally(function() {
-                    options.isLoading = false;
                 });
             }
+            return deferred.promise;
         };
 
         this.deleteItemById = function(request, notGoToState) {
@@ -785,67 +787,6 @@
             });
 
             return deferred.promise;
-        };
-
-        this.loadChilds = function(request) {
-            var data = {
-                parentId: request.id,
-                $componentId: request.options.$componentId
-            };
-            var parent;
-            $rootScope.$broadcast('ue:beforeParentEntitySet', data);
-            request.childId = request.id;
-            self.getItemsList(request).then(function() {
-                parent = null;
-                if (request.childId) {
-                    parent = request.childId;
-                }
-                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
-                $location.search(paramName, parent);
-            }, function(reject) { });
-        };
-
-        this.loadParent = function(request) {
-            var data = {
-                $componentId: request.options.$componentId
-            };
-            var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
-            var parent;
-            if (entityId) {
-                request.options.isLoading = true;
-                $http({
-                    method: 'GET',
-                    url: request.url + '/' + entityId
-                }).then(function(response) {
-                    var parentId = response.data[request.parentField];
-
-                    parent = null;
-                    if (parentId) {
-                        parent = parentId;
-                    }
-                    var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
-                    $location.search(paramName, parent);
-                    request.options.isLoading = false;
-                    data.parentId = parentId;
-                    $rootScope.$broadcast('ue:beforeParentEntitySet', data);
-                    request.childId = parentId;
-                    self.getItemsList(request);
-
-                }, function(reject) {
-                    request.options.isLoading = false;
-                });
-            } else {
-                reset();
-            }
-            function reset() {
-                request.options.isLoading = false;
-                request.parentField = null;
-                $rootScope.$broadcast('ue:beforeParentEntitySet', data);
-                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
-                $location.search(paramName, null);
-                request.childId = null;
-                self.getItemsList(request);
-            }
         };
 
         function replaceToURL(url, entityId) {
