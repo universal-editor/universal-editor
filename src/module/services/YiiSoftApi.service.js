@@ -64,10 +64,9 @@
                 data: {}
             };
 
-            if (dataSource.type) {
-                config.__type = dataSource.type;
+            if (dataSource.resourceType) {
+                config.__type = dataSource.resourceType;
             }
-
 
             if (angular.isUndefined(service) || !angular.isFunction(service.getParams)) {
 
@@ -202,8 +201,8 @@
                 params: request.params || {}
             };
 
-            if (dataSource.type) {
-                config.__type = dataSource.type;
+            if (dataSource.resourceType) {
+                config.__type = dataSource.resourceType;
             }
 
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
@@ -271,8 +270,8 @@
 
             config.id = request.entityId;
 
-            if (dataSource.type) {
-                config.__type = dataSource.type;
+            if (dataSource.resourceType) {
+                config.__type = dataSource.resourceType;
             }
 
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
@@ -333,8 +332,8 @@
             };
             config.id = request.entityId;
 
-            if (dataSource.type) {
-                config.__type = dataSource.type;
+            if (dataSource.resourceType) {
+                config.__type = dataSource.resourceType;
             }
 
 
@@ -418,8 +417,8 @@
                     params: qParams
                 };
 
-                if (dataSource.type) {
-                    config.__type = dataSource.type;
+                if (dataSource.resourceType) {
+                    config.__type = dataSource.resourceType;
                 }
 
                 var optionsHttp = getAjaxOptionsByTypeService(config, dataSource.standard);
@@ -489,8 +488,8 @@
                 params: request.params || {}
             };
 
-            if (dataSource.type) {
-                config.__type = dataSource.type;
+            if (dataSource.resourceType) {
+                config.__type = dataSource.resourceType;
             }
 
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
