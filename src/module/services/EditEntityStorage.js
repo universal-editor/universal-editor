@@ -5,15 +5,15 @@
         .module('universal-editor')
         .service('EditEntityStorage', EditEntityStorage);
 
-    EditEntityStorage.$inject = ['$rootScope', '$timeout', 'configData', '$location', '$state', '$translate'];
-
     function EditEntityStorage($rootScope, $timeout, configData, $location, $state, $translate) {
+        "ngInject";
         var sourceEntity,
             configuredFields = {},
             fieldControllers = [],
             entityObject,
             self = this,
-            storage = {};
+            storage = {},
+            groups = {};
 
         /* PUBLIC METHODS */
 
@@ -48,11 +48,16 @@
             $rootScope.$broadcast('editor:entity_loaded', data);
         };
 
-        this.addFieldController = function(ctrl) {
+        this.addFieldController = function(ctrl, isGroup) {
             var id = ctrl.parentComponentId;
             if (id) {
-                storage[id] = storage[id] || [];
-                storage[id].push(ctrl);
+                if (isGroup === true) {
+                    groups[id] = groups[id] || [];
+                    groups[id].push(ctrl);
+                } else {
+                    storage[id] = storage[id] || [];
+                    storage[id].push(ctrl);
+                }
                 ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
             }
         };
@@ -76,7 +81,8 @@
         this.editEntityUpdate = function(type, request) {
             this.setActionType(request.collectionType);
             var entityObject = {};
-            var controllers = storage[request.options.$parentComponentId] || [];
+            var controllers = storage[request.options.$parentComponentId] || [],
+                groupControllers = groups[request.options.$parentComponentId] || [];
             var isError = true;
 
             angular.forEach(controllers, function(fCtrl) {
@@ -104,6 +110,12 @@
                     } else {
                         angular.merge(entityObject, value);
                     }
+                }
+
+            });
+            angular.forEach(groupControllers, function(val, index) {
+                if (val.fieldName && entityObject[val.fieldName] === undefined) {
+                    entityObject[val.fieldName] = val.multiple ? [] : null;
                 }
             });
             if (isError) {
@@ -122,7 +134,8 @@
         this.editEntityPresave = function(request) {
             var entityObject = {};
             var isError = true;
-            var controllers = storage[request.options.$parentComponentId] || [];
+            var controllers = storage[request.options.$parentComponentId] || [],
+                groupControllers = groups[request.options.$parentComponentId] || [];
 
             angular.forEach(controllers, function(fCtrl) {
                 var value = fCtrl.getFieldValue();
@@ -148,6 +161,11 @@
                     } else {
                         angular.merge(entityObject, value);
                     }
+                }
+            });
+            angular.forEach(groupControllers, function(val, index) {
+                if (val.fieldName && entityObject[val.fieldName] === undefined) {
+                    entityObject[val.fieldName] = val.multiple ? [] : null;
                 }
             });
 

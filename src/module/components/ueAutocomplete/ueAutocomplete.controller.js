@@ -5,9 +5,8 @@
         .module('universal-editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
-    UeAutocompleteController.$inject = ['$scope', '$element', '$document', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$controller', '$translate'];
-
-    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $controller, $translate) {
+    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, YiiSoftApiService, $timeout, FilterFieldsStorage, $controller, $translate) {
+        "ngInject";
         /* jshint validthis: true */
         var vm = this,
             inputTimeout,
@@ -46,7 +45,7 @@
             }
 
             vm.listeners.push($scope.$on('editor:entity_loaded', function(event, data) {
-                if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId) && !vm.options.filter) {
+                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
                     if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
@@ -217,14 +216,16 @@
                 urlParam.filter = {};
                 urlParam.filter[vm.fieldSearch] = "%" + searchString + "%";
 
-                var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
-                var request = {
+                var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
+                var config = {
                     url: url,
+                    method: 'GET',
                     $id: vm.setting.component.$id,
                     serverPagination: vm.serverPagination
                 };
-                RestApiService
-                    .getUrlResource(request)
+                config.standard = $scope.getParentDataSource().standard;
+                YiiSoftApiService
+                    .getUrlResource(config)
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {
                             if (!alreadyIn(v, vm.selectedValues) && !alreadyIn(v, vm.possibleValues)) {
@@ -297,22 +298,20 @@
                     return;
                 }
 
-                var urlParam = {};
-                if (angular.isArray(vm.fieldValue)) {
-                    urlParam[vm.fieldId] = vm.fieldValue;
-                } else {
-                    urlParam[vm.fieldId] = [];
-                    urlParam[vm.fieldId].push(vm.fieldValue);
-                }
-
-                var request = {
-                    url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
+                var config = {
+                    method: 'GET',
+                    url: componentSettings.valuesRemote.url,
                     $id: vm.setting.component.$id,
                     serverPagination: vm.serverPagination
                 };
+                config.filter[vm.fieldId] = [{
+                    operator: 'value',
+                    value: vm.fieldValue
+                }];
+                config.standard = $scope.getParentDataSource().standard;
 
-                RestApiService
-                    .getUrlResource(request)
+                YiiSoftApiService
+                    .getUrlResource(config)
                     .then(function(response) {
                         fillControl(response.data.items);
                         vm.preloadedData = true;
@@ -331,22 +330,23 @@
         }
 
         function loadDataById(ids) {
-            var urlParam = {};
-            if (angular.isArray(ids)) {
-                urlParam[vm.fieldId] = ids;
-            } else {
-                urlParam[vm.fieldId] = [];
-                urlParam[vm.fieldId].push(ids);
-            }
-
-            var request = {
-                url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
+            var config = {
+                method: 'GET',
+                url: componentSettings.valuesRemote.url,
                 $id: vm.setting.component.$id,
                 serverPagination: vm.serverPagination
             };
+            
+            config.filter = config.filter || {};
+            config.filter[vm.fieldId] = [{
+                operator: 'value',
+                value: ids
+            }];
 
-            return RestApiService
-                .getUrlResource(request)
+            config.standard = $scope.getParentDataSource().standard;
+
+            return YiiSoftApiService
+                .getUrlResource(config)
                 .then(function(response) {
                     angular.forEach(response.data.items, function(v) {
                         if (angular.isArray(vm.fieldValue) &&
@@ -381,7 +381,7 @@
                     }
                 }
             }
-        };
+        }
 
         function deleteToAutocomplete(event) {
             if (event.which == 8 && !!vm.selectedValues && !!vm.selectedValues.length && !vm.inputValue &&
@@ -389,7 +389,7 @@
             ) {
                 vm.removeFromSelected(event, vm.selectedValues[vm.selectedValues.length - 1]);
             }
-        };
+        }
 
         this.$postLink = function() {
 

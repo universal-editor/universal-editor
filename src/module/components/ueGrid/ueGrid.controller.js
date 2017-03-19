@@ -5,10 +5,10 @@
         .module('universal-editor')
         .controller('UeGridController', UeGridController);
 
-    UeGridController.$inject = ['$scope', '$rootScope', 'RestApiService', 'FilterFieldsStorage', '$location', '$document', '$timeout', '$httpParamSerializer', '$state', 'toastr', '$translate', '$element', '$compile', 'EditEntityStorage', '$controller'];
-
-    function UeGridController($scope, $rootScope, RestApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, toastr, $translate, $element, $compile, EditEntityStorage, $controller) {
+    function UeGridController($scope, $rootScope, YiiSoftApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, $translate, $element, $compile, EditEntityStorage, $controller) {
         /* jshint validthis: true */
+        "ngInject";
+        $element.addClass('ue-grid');
         var vm = this,
             itemsKey,
             mixEntityObject,
@@ -16,12 +16,14 @@
             parentField;
 
         vm.$onInit = function() {
-
             //** Nested base controller */
             angular.extend(vm, $controller('BaseController', { $scope: $scope }));
 
-            url = vm.setting.component.settings.dataSource.url;
-            parentField = vm.setting.component.settings.dataSource.parentField;
+            vm.dataSource = vm.setting.component.settings.dataSource;
+
+            url = vm.dataSource.url;
+            parentField = vm.dataSource.parentField;
+
             vm.correctEntityType = true;
             vm.loaded = false;
             vm.loadingData = true;
@@ -46,7 +48,6 @@
             if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix) {
                 vm.prefixGrid = vm.setting.component.settings.routing.paramsPrefix;
             }
-
 
             vm.options = {
                 $parentComponentId: vm.$parentComponentId,
@@ -178,12 +179,12 @@
             vm.setTabVisible = setTabVisible;
             vm.changeSortField = changeSortField;
 
-            RestApiService.setFilterParams({});
+            YiiSoftApiService.setFilterParams({});
             vm.request.childId = vm.parent;
             vm.request.options = vm.options;
             vm.request.parentField = parentField;
             vm.request.url = url;
-            RestApiService.getItemsList(vm.request);
+            YiiSoftApiService.getItemsList(vm.request);
         };
 
         function getScope() {
@@ -203,7 +204,7 @@
                     vm.sortField = field;
                 }
                 vm.options.sort = vm.sortingDirection ? field : '-' + field;
-                RestApiService.getItemsList({
+                YiiSoftApiService.getItemsList({
                     url: url,
                     options: vm.options,
                     parentField: parentField,
@@ -217,7 +218,7 @@
             vm.request.parentField = parentField;
             vm.request.prefixGrid = vm.prefixGrid;
             vm.request.headComponent = vm.setting.headComponent;
-            RestApiService.loadParent(vm.request);
+            YiiSoftApiService.loadParent(vm.request);
         }
 
         $scope.$on('editor:parent_id', function(event, data) {
@@ -232,7 +233,7 @@
             if (vm.$parentComponentId === eventComponentId) {
                 vm.parent = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'] || null;
                 vm.request.childId = vm.parent;
-                RestApiService.getItemsList(vm.request);
+                YiiSoftApiService.getItemsList(vm.request);
             }
         });
 
@@ -272,9 +273,10 @@
                 var options = {
                     data: vm.items,
                     components: components,
-                    $id: vm.$parentComponentId
+                    $id: vm.$parentComponentId,
+                    standart: vm.dataSource.standart
                 };
-                RestApiService.extendData(options).then(function(data) {
+                YiiSoftApiService.extendData(options).then(function(data) {
                     var eventObject = {
                         editorEntityType: 'exist',
                         $parentComponentId: vm.$parentComponentId,
@@ -294,7 +296,12 @@
             }
         });
 
-
+        $scope.$on('editor:server_error', function(event, data) {
+             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
+                 vm.listLoaded = true;
+             }
+            vm.errors.push(data);
+        });
 
         $scope.$on('editor:parent_childs', function(event, data) {
             angular.forEach(vm.items, function(item, ind) {

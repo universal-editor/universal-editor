@@ -5,9 +5,8 @@
         .module('demoApp')
         .controller('StaffGridController', StaffGridController);
 
-    StaffGridController.$inject = [];
-
     function StaffGridController() {
+        "ngInject";
         var vm = this;
         var staffDataSource = {
             type: 'REST',

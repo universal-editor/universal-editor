@@ -5,10 +5,9 @@
         .module('universal-editor')
         .controller('UeFilterController', UeFilterController);
 
-    UeFilterController.$inject = ['$scope', '$rootScope', '$element', 'EditEntityStorage', 'RestApiService', '$timeout', 'FilterFieldsStorage', '$compile', '$document', '$templateCache'];
-
-    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, RestApiService, $timeout, FilterFieldsStorage, $compile, $document, $templateCache) {
+    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, $timeout, FilterFieldsStorage, $compile, $document, $templateCache) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this,
             settings;
 
@@ -104,7 +103,7 @@
                                     model.indeterminate = false;
                                 }
                                 if (model.trueValue == value) {
-                                    model.fieldValue = [model.trueValue];                                    
+                                    model.fieldValue = [model.trueValue];
                                     model.indeterminate = false;
                                 }
                             } else {
@@ -141,7 +140,7 @@
                         group.filters[0].options.filterParameters.operator = ':text';
                     }
 
-                    if (~['ue-date', 'ue-time', 'ue-datetime'].indexOf(field.component.name)) {
+                    if (~['ue-date'].indexOf(field.component.name)) {
                         group.filters[0].ngStyle = 'display: inline-block; width: 25%; margin-left: 5px;';
                         group.filters[0].options.filterParameters.operator = '>=';
                         var cloneField = angular.copy(field);

@@ -1,41 +1,51 @@
 ; (function(require) {
     'use strict';
+    'esversion: 6';
 
-     var webpack = require('webpack'),
+    var webpack = require('webpack'),
+        deasync = require('deasync'),
         gutil = require('gulp-util'),
         path = require('path'),
         HtmlWebpackPlugin = require('html-webpack-plugin'),
         copyWebpackPlugin = require('copy-webpack-plugin'),
-        cleanWebpackPlugin = require('clean-webpack-plugin');
+        cleanWebpackPlugin = require('clean-webpack-plugin'),
+        ngAnnotatePlugin = require('ng-annotate-webpack-plugin'),
+        WebpackNotifierPlugin = require('webpack-notifier');
 
     var localHost = 'universal-editor.dev',
+        isTrySetHost = false,
+        domain = localHost,
         defaultlocalHost = '127.0.0.1',
         NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development',
         RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]),
         isProd = NODE_ENV == 'production',
         isDev = NODE_ENV == 'development',
         publicPath = path.resolve(__dirname, isProd ? 'dist' : 'app'),
-        copyOptions = [{
-            from: 'src/demoApp/index.js'
-        }, {
-            from: 'src/demoApp/components.controller.js'
-        }];
+        freePort = null;
+
+    require('portscanner').findAPortNotInUse(8080, 8100, defaultlocalHost, (error, port) => freePort = error ? 5555 : port);
+    deasync.loopWhile(function() { return !freePort; });
 
 
     if (RUNNING_SERVER) {
         try {
-            var hostile = require('hostile');
-            hostile.set(defaultlocalHost, localHost, function(err) {
+            require('hostile').set(defaultlocalHost, domain, function(err) {
                 if (err) {
                     gutil.log(gutil.colors.red('Can\'t set hosts file change. Please, try run this as Administrator.'), err.toString());
                     localHost = 'localhost';
                 } else {
                     gutil.log(gutil.colors.green('Set \'/etc/hosts\' successfully!'));
+                    localHost = domain;
                 }
+                isTrySetHost = true;
             });
-        } catch (e) { localHost = 'localhost'; }
+        } catch (e) {
+            gutil.log(gutil.colors.yellow(e));
+            isTrySetHost = true;
+            localHost = 'localhost';
+        }
+        deasync.loopWhile(function() { return !isTrySetHost; });
     }
-
 
     //** TEMPLATE CONFIGURATION */
     var webpackConfigTemplate = {
@@ -69,24 +79,31 @@
             loaders: [
                 {
                     test: /\.js$/,
-                    loader: 'babel',
+                    loader: 'babel-loader',
                     include: [
                         path.resolve(__dirname, 'src')
                     ]
                 },
                 {
                     test: /\.scss$/,
-                    loader: 'style-loader!css-loader!sass-loader?sourceMap=0',
+                    loader: 'style!css-loader!sass-loader',
                     include: [
                         path.resolve(__dirname, 'src')
                     ]
                 },
                 {
                     test: /\.css$/,
-                    loader: 'style-loader!css-loader',
+                    loader: 'style!css-loader',
                     include: [
                         path.resolve(__dirname, 'src')
-                    ]
+                    ],
+                    options: {
+                        plugins: function() {
+                            return [
+                                require('autoprefixer')
+                            ];
+                        }
+                    }
                 },
                 {
                     test: /\.jade$/,
@@ -107,7 +124,11 @@
                 'RUNNING_SERVER': RUNNING_SERVER
             }),
             new webpack.HotModuleReplacementPlugin(),
-            new cleanWebpackPlugin([publicPath], { verbose: true })
+            new cleanWebpackPlugin([publicPath], { verbose: true }),
+            new ngAnnotatePlugin({
+                add: true
+            }),
+            new WebpackNotifierPlugin({ alwaysNotify: true })
         ]
     };
 
@@ -115,8 +136,8 @@
         //-- SETTING FOR LOCAL SERVER
         webpackConfigTemplate.devServer = {
             host: localHost,
-            port: 8080,
             hot: true,
+            port: freePort,
             inline: true,
             open: true
         };
@@ -135,22 +156,12 @@
     }
 
     webpackConfigTemplate.entry = {
-        'ue': [path.resolve(__dirname, 'src/main.js') ]
+        'ue': ['webpack-dev-server/client?http://' + localHost + ':' + freePort + '/', 'webpack/hot/dev-server', path.resolve(__dirname, 'src/main.js')]
     };
 
     webpackConfigTemplate.plugins.push(
         new copyWebpackPlugin([{
-            from: 'src/demoApp/index.js'
-        }, {
-            from: 'src/demoApp/components.controller.js'
-        }, {
-            from: 'src/demoApp/staffForm.controller.js'
-        }, {
-            from: 'src/demoApp/staffGrid.controller.js'
-        }, {
-            from: 'src/demoApp/newsForm.controller.js'
-        }, {
-            from: 'src/demoApp/newsGrid.controller.js'
+            from: 'src/demoApp'
         }]),
         new webpack.DefinePlugin({
             'IS_DEV': isDev
@@ -163,7 +174,5 @@
         })
     );
 
-    /** Running webpack in multicompilation */
     module.exports = [webpackConfigTemplate];
-
 })(require);

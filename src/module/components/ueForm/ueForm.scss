@@ -2,14 +2,21 @@
  .modal-dialog {
      & .editor-body {
          & .editor-toolbar {
-             & .header-action-button {}
+             & .header-action-button { }
          }
+         .error-item.alert, .field-error-wrapper .error-item.alert  {
+                padding: 7px;
+                 margin-bottom: 10px;
+                 margin-top: 5px;
+             }
+
          & .field-error-bottom-wrapper {
              & .error-item {
                  padding: 3px;
                  margin: 5px 0;
              }
          }
+
          & .field-notify-bottom-wrapper {
              & .notify-item {
                  padding: 3px;

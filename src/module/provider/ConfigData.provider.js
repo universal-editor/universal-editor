@@ -5,8 +5,8 @@
         .module('universal-editor')
         .provider('configData', ConfigDataProvider);
 
-    ConfigDataProvider.$inject = ['$stateProvider', '$urlRouterProvider', '$injector', 'moment'];
-    function ConfigDataProvider($stateProvider, $urlRouterProvider, $injector, moment) {
+    function ConfigDataProvider() {
+        "ngInject";
         var configData = {};
         return {
             setConfig: function(moduleName, config) {

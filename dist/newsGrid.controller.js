@@ -5,9 +5,8 @@
         .module('demoApp')
         .controller('NewsGridController', NewsGridController);
 
-    NewsGridController.$inject = [];
-
     function NewsGridController() {
+        "ngInject";
         var vm = this;
         var newsDataSource = {
             type: 'REST',

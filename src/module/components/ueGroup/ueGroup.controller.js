@@ -5,10 +5,9 @@
         .module('universal-editor')
         .controller('UeGroupController', UeGroupController);
 
-    UeGroupController.$inject = ['$scope', 'EditEntityStorage', '$timeout', 'RestApiService', '$controller', '$translate'];
-
-    function UeGroupController($scope, EditEntityStorage, $timeout, RestApiService, $controller, $translate) {
+    function UeGroupController($scope, EditEntityStorage, $timeout, YiiSoftApiService, $controller, $translate) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this,
             componentSettings,
             entityObject,
@@ -17,11 +16,13 @@
 
         vm.$onInit = function() {
             componentSettings = vm.setting.component.settings;
-            entityObject = RestApiService.getEntityObject();
+            entityObject = YiiSoftApiService.getEntityObject();
             vm.fieldName = componentSettings.name;
 
             baseController = $controller('BaseController', { $scope: $scope });
+            vm.parentFieldType = vm.setting.resourceType;
             angular.extend(vm, baseController);
+            EditEntityStorage.addFieldController(vm, true);
 
             vm.innerFields = [];
             vm.fieldsArray = [];
@@ -50,6 +51,7 @@
                 if (field) {
                     if (vm.fieldName) {
                         field.parentField = vm.fieldName;
+                        field.parentFieldType = vm.parentFieldType; //for JSONAPI
                     }
                     vm.innerFields.push(field);
                 }
@@ -83,6 +85,7 @@
                             delete vm.$isOnlyChildsBroadcast;
                         }, 0);
                     }
+
                 }
             }
         }

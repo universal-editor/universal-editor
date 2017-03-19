@@ -5,10 +5,9 @@
         .module('universal-editor')
         .controller('UeComponentController', UeComponentController);
 
-    UeComponentController.$inject = ['$scope', '$element', 'EditEntityStorage', 'FilterFieldsStorage', '$location', '$controller', '$timeout'];
-
     function UeComponentController($scope, $element, EditEntityStorage, FilterFieldsStorage, $location, $controller, $timeout) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this,
             baseController;
 

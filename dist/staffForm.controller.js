@@ -5,9 +5,8 @@
         .module('demoApp')
         .controller('StaffFormController', StaffFormController);
 
-    StaffFormController.$inject = ['$state', '$location'];
-
     function StaffFormController($state, $location) {
+        "ngInject";
         var vm = this;
         var staffDataSource = {
             type: 'REST',

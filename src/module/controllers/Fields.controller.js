@@ -5,10 +5,9 @@
         .module('universal-editor')
         .controller('FieldsController', FieldsController);
 
-    FieldsController.$inject = ['$scope', '$rootScope', '$location', '$controller', '$timeout', 'FilterFieldsStorage', 'RestApiService', 'moment', 'EditEntityStorage', '$q', '$translate'];
-
-    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, RestApiService, moment, EditEntityStorage, $q, $translate) {
+    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, YiiSoftApiService, moment, EditEntityStorage, $q, $translate) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this;
         var baseController = $controller('BaseController', { $scope: $scope });
         angular.extend(vm, baseController);
@@ -61,8 +60,16 @@
                         self.loadingData = true;
                         self.loadingPossibleData = true;
                         if (!componentSettings.$loadingPromise) {
-                            componentSettings.$loadingPromise = RestApiService
-                                .getUrlResource({ url: remoteValues.url, $id: self.setting.component.$id, serverPagination: self.serverPagination })
+                            var config = {
+                                method: 'GET',
+                                url: remoteValues.url,
+                                $id: self.setting.component.$id,
+                                serverPagination: self.serverPagination
+                            };
+                            var dataSource = $scope.getParentDataSource();
+                            config.standard = dataSource.standard;
+                            componentSettings.$loadingPromise = YiiSoftApiService
+                                .getUrlResource(config)
                                 .then(function(response) {
                                     if (!componentSettings.depend) {
                                         angular.forEach(response.data.items, function(v) {
@@ -86,7 +93,6 @@
                             }
                         }
                     }
-
                 }
             }
         }
@@ -256,9 +262,13 @@
                 wrappedFieldValue = transformToValue(self.fieldValue);
             }
 
+
             if (self.parentField) {
                 field[self.parentField] = {};
                 field[self.parentField][self.fieldName] = wrappedFieldValue;
+                if (self.parentFieldType) {
+                    field[self.parentField].__type = self.parentFieldType;
+                }
             } else {
                 field[self.fieldName] = wrappedFieldValue;
             }
@@ -360,7 +370,9 @@
                         if (angular.isArray(self.data[self.parentField]) && angular.isNumber(self.parentFieldIndex)) {
                             apiValue = apiValue[self.parentFieldIndex];
                         }
-                        apiValue = apiValue[self.fieldName];
+                        if (apiValue) {
+                            apiValue = apiValue[self.fieldName];
+                        }
                     }
 
                     if (!self.multiple) {

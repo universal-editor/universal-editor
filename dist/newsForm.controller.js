@@ -5,9 +5,8 @@
         .module('demoApp')
         .controller('NewsFormController', NewsFormController);
 
-    NewsFormController.$inject = [];
-
     function NewsFormController() {
+        "ngInject";
         var vm = this;
         var newsDataSource = {
             type: 'REST',

@@ -4,11 +4,9 @@
     angular
         .module('universal-editor')
         .controller('UeDropdownController', UeDropdownController);
-
-    UeDropdownController.$inject = ['$rootScope', '$scope', 'EditEntityStorage', 'RestApiService', '$timeout', '$document', '$element', '$window', 'FilterFieldsStorage', '$controller', '$q', '$translate'];
-
-    function UeDropdownController($rootScope, $scope, EditEntityStorage, RestApiService, $timeout, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
+    function UeDropdownController($rootScope, $scope, EditEntityStorage, YiiSoftApiService, $timeout, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this,
             possibleValues,
             componentSettings,
@@ -19,7 +17,7 @@
         vm.$onInit = function() {
             vm.optionValues = [];
             vm.initDataSource = true;
-            componentSettings = vm.setting.component.settings;            
+            componentSettings = vm.setting.component.settings;
             vm.search = componentSettings.search === true;
             if (typeof componentSettings.serverPagination !== 'boolean') {
                 vm.serverPagination = true;
@@ -72,14 +70,18 @@
                     vm.parentValue = false;
                     vm.optionValues = [];
 
-                    var url = RestApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                    var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                     var request = {
                         url: url,
+                        method: 'GET',
                         $id: vm.setting.component.$id,
                         serverPagination: vm.serverPagination
                     };
-                    RestApiService
-                        .getUrlResource(request)
+
+                    config.standard = $scope.getParentDataSource().standard;
+
+                    YiiSoftApiService
+                        .getUrlResource(config)
                         .then(function(response) {
                             angular.forEach(response.data.items, function(v) {
                                 vm.optionValues.push(v);
@@ -145,14 +147,14 @@
             vm.data = data;
             if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
                 $scope.onLoadDataHandler(event, data);
-                 componentSettings.$loadingPromise.then(function(items) {
-                        allOptions = allOptions.length ? allOptions : items;
-                        vm.optionValues = [];
-                        fillControl(allOptions);
-                        vm.equalPreviewValue();
-                    }).finally(function() {
-                        vm.loadingData = false;
-                    });
+                componentSettings.$loadingPromise.then(function(items) {
+                    allOptions = allOptions.length ? allOptions : items;
+                    vm.optionValues = [];
+                    fillControl(allOptions);
+                    vm.equalPreviewValue();
+                }).finally(function() {
+                    vm.loadingData = false;
+                });
                 if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
                     loadDataById(vm.fieldValue).finally(function() {
                         vm.loadingData = false;
@@ -166,22 +168,22 @@
         function loadDataById(ids) {
             var defer = $q.defer();
             if (componentSettings.valuesRemote) {
-                var urlParam = {};
-                if (angular.isArray(ids)) {
-                    urlParam[vm.fieldId] = ids;
-                } else {
-                    urlParam[vm.fieldId] = [];
-                    urlParam[vm.fieldId].push(ids);
-                }
-
-                var request = {
-                    url: componentSettings.valuesRemote.url + '?filter=' + JSON.stringify(urlParam),
+                var config = {
+                    method: 'GET',
+                    url: componentSettings.valuesRemote.url,
                     $id: vm.setting.component.$id,
                     serverPagination: vm.serverPagination
                 };
+                config.filter = config.filter || {};
+                config.filter[vm.fieldId] = [{
+                    operator: 'value',
+                    value: ids
+                }];
 
-                return RestApiService
-                    .getUrlResource(request)
+                config.standard = $scope.getParentDataSource().standard;
+
+                return YiiSoftApiService
+                    .getUrlResource(config)
                     .then(function(response) {
                         fillControl(response.data.items);
                         vm.equalPreviewValue();
@@ -222,13 +224,21 @@
                 item.isOpen = !item.isOpen;
                 if (item[vm.treeChildCountField] && !item.childOpts) {
                     item.loadingData = true;
-                    var request = {
+                    var config = {
                         url: componentSettings.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.fieldId] + '"}',
                         $id: vm.setting.component.$id,
                         serverPagination: vm.serverPagination
                     };
-                    RestApiService
-                        .getUrlResource(request)
+                    config.filter[vm.treeParentField] = [{
+                        operator: 'value',
+                        value: item[vm.fieldId],
+                        $id: vm.setting.component.$id
+                    }];
+
+                    config.standard = $scope.getParentDataSource().standard;
+
+                    YiiSoftApiService
+                        .getUrlResource(config)
                         .then(function(response) {
                             if (!item.childOpts) {
                                 item.childOpts = [];
@@ -478,7 +488,9 @@
                 vm.showPossible = false;
                 vm.setColorPlaceholder();
             }, 0);
-            event.stopPropagation();
+            if (event) {
+                event.stopPropagation();
+            }
         }
 
         function convertToObject(items) {

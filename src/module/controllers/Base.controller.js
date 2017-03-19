@@ -5,10 +5,9 @@
         .module('universal-editor')
         .controller('BaseController', BaseController);
 
-    BaseController.$inject = ['$scope', 'EditEntityStorage', 'FilterFieldsStorage', '$templateCache', '$compile', '$translate'];
-
     function BaseController($scope, EditEntityStorage, FilterFieldsStorage, $templateCache, $compile, $translate) {
         /* jshint validthis: true */
+        "ngInject";
         var vm = this;
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
@@ -24,9 +23,10 @@
         }
 
         if (!self.fieldName) {
-            self.fieldName = self.setting.name;
+            self.fieldName = self.setting.name; 
         }
         self.parentField = self.setting.parentField;
+        self.parentFieldType = self.setting.parentFieldType;
         self.parentFieldIndex = angular.isNumber(self.setting.parentFieldIndex) ? self.setting.parentFieldIndex : false;
 
         self.label = componentSettings.label || null;
@@ -105,9 +105,7 @@
                 var isExist = compareStatus(self.warnings) || compareStatus(self.dangers);
                 if (!isExist) {
                     var error = {};
-                    if (rejection.status !== -1) {
                         error.status = rejection.status;
-                    }
 
                     if (rejection.data && rejection.data.message) {
                         error.text = rejection.data.message;

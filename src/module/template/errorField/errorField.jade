@@ -1,3 +1,3 @@
-.field-error-wrapper(ng-if="!vm.options.filter")
+.field-error-wrapper(ng-if="!vm.options.filter" , data-ng-class="vm.classComponent")
    .error-item.alert.alert-danger(data-ng-repeat="err in vm.error track by $index") {{err}}
 

@@ -5,9 +5,8 @@
         .module('universal-editor')
         .service('FilterFieldsStorage', FilterFieldsStorage);
 
-    FilterFieldsStorage.$inject = ['$rootScope', '$timeout', 'configData', '$location'];
-
     function FilterFieldsStorage($rootScope, $timeout, configData, $location) {
+        "ngInject";
         var storage = {},
             filterComponentsStorage = {},
             queryObject = {},
@@ -27,7 +26,9 @@
             registerFilterController: registerFilterController,
             unRegisterFilterController: unRegisterFilterController,
             apply: apply,
-            clear: clear
+            clear: clear,
+            getFilterObject: getFilterObject,
+            convertFilterToString: convertFilterToString
         });
 
         function addFilterFieldController(ctrl) {
@@ -53,6 +54,7 @@
                 delete filterComponentsStorage[id];
             }
         }
+
         function getFilterController(id) {
             if (id) {
                 return filterComponentsStorage[id];
@@ -173,6 +175,66 @@
                 $location.search(filterName, null);
                 $rootScope.$broadcast('editor:read_entity', parentComponentId);
             }
+        }
+
+        function getFilterObject(parentComponentId) {
+            var filters = {};
+            var filterCtrl = getFilterFieldController(parentComponentId);
+            if (filterCtrl) {
+                angular.forEach(filterCtrl, function(item) {
+                    filters[item.fieldName] = filters[item.fieldName] || [];
+                    var operator = item.options.filterParameters.operator;
+                    var value = item.getFieldValue();
+                    switch (operator) {
+                        case '%:text%':
+                            operator = '%:value%';
+                            break;
+                        case '<=':
+                            operator = '<=:key';
+                            break;
+                        case '>=':
+                            operator = '>=:key';
+                            break;
+                        default:
+                            operator = ':value';
+                    }
+                    for (var key in value) {
+                        if (!!value[key]) {
+                            filters[item.fieldName].push({
+                                operator: operator,
+                                value: value[key]
+                            });
+                        }
+                    }
+                });
+            }
+            for (var key in filters) {
+                if (filters[key].length == 0) {
+                    delete filters[key];
+                }
+            }
+            return filters;
+        }
+
+        function convertFilterToString(filters) {
+            var filter = '';
+            angular.forEach(filters, function(value, key) {
+                value.forEach(function(f) {
+                    if (filter) {
+                        filter += ',';
+                    }
+                    var k = ~f.operator.indexOf(':key') ? f.operator.replace(':key', key) : key;
+                    var v = f.value;
+                    if (angular.isString(v)) {
+                        v = '"' + (~f.operator.indexOf(':value') ? f.operator.replace(':value', f.value) : f.value) + '"';
+                    }
+                    filter += '"' + k + '": ' + (angular.isArray(v) ? ('[' + v.toString() + ']') : v) ;
+                });
+            });
+            if (filter) {
+                return '{' + filter + '}';
+            }
+            return '';
         }
     }
 })();

@@ -44,7 +44,6 @@ block append content
                                 .possible-scroll(data-ng-hide="vm.loadingPossibleData")
                                     .possible-value-item(data-ng-repeat="option in vm.optionValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.fieldSearch]}}
 
-
                     .dropdown(data-ng-if="vm.isTree")
                         .dropdown__host
                             .dropdown__title.form-control.select-input(

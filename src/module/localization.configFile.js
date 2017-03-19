@@ -5,9 +5,8 @@
         .module('universal-editor')
         .config(LocalizationMessage);
 
-    LocalizationMessage.$inject = ['$translateProvider'];
-
     function LocalizationMessage($translateProvider) {
+        "ngInject";
 
         var constantLang = {
             'RESPONSE_ERROR': {

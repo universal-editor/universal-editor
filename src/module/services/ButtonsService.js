@@ -5,11 +5,10 @@
         .module('universal-editor')
         .service('ButtonsService', ButtonsService);
 
-    ButtonsService.$inject = ['$window'];
-
     function ButtonsService($window) {
+        "ngInject";
         var self = this;
-
+;
         self.getCallback = getCallback;
 
         function getCallback(name) {
