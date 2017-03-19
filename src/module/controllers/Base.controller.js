@@ -169,19 +169,21 @@
 
             // broadcast event for child components
             if (eventObject.isChildComponent) {
-                var data = eventObject.fields.filter(function(f) {
-                    return f.field === self.fieldName;
-                });
-                if (data.length > 0) {
-                    event.preventDefault();
-                    if (data[0].message) {
-                        self.error.push(data[0].message);
-                    }
-                    if (angular.isArray(data.fields)) {
-                        $scope.$broadcast('ue:componentError', {
-                            isChildComponent: true,
-                            fields: data.fields
-                        });
+                if (angular.isObject(eventObject) && angular.isArray(eventObject.fields)) {
+                    var data = eventObject.fields.filter(function(f) {
+                        return f.field === self.fieldName;
+                    });
+                    if (data.length > 0) {
+                        event.preventDefault();
+                        if (data[0].message) {
+                            self.error.push(data[0].message);
+                        }
+                        if (angular.isArray(data.fields)) {
+                            $scope.$broadcast('ue:componentError', {
+                                isChildComponent: true,
+                                fields: data.fields
+                            });
+                        }
                     }
                 }
             }
