@@ -42,10 +42,10 @@
                     component: {
                         name: 'ue-dropdown',
                         settings: {
-                            label: 'Статус',
+                            label: 'Status',
                             values: {
-                                "published": "Published",
-                                "draft": "Draft"
+                                published: 'Published',
+                                draft: 'Draft'
                             }
                         }
                     }

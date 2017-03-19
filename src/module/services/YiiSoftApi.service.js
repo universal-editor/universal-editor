@@ -416,7 +416,6 @@
                     method: 'GET',
                     params: qParams
                 };
-
                 if (dataSource.resourceType) {
                     config.__type = dataSource.resourceType;
                 }

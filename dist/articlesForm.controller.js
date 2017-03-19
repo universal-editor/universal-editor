@@ -42,10 +42,10 @@
                     component: {
                         name: 'ue-dropdown',
                         settings: {
-                            label: 'Статус.',
+                            label: 'Status',
                             values: {
-                                "published": "Published",
-                                "draft": "Draft"
+                                published: 'Published',
+                                draft: 'Draft'
                             }
                         }
                     }
@@ -166,21 +166,21 @@
                                                             multiple: true,
                                                             label: 'Comments',
                                                             fields: [
-                                                            {
-                                                                name: 'id',
-                                                                component: {
-                                                                    name: 'ue-dropdown',
-                                                                    settings: {
-                                                                        valuesRemote: {
-                                                                            fields: {
-                                                                                key: 'id',
-                                                                                label: 'body'
-                                                                            },
-                                                                            url: 'http://localhost:16006/rest/comments'
+                                                                {
+                                                                    name: 'id',
+                                                                    component: {
+                                                                        name: 'ue-dropdown',
+                                                                        settings: {
+                                                                            valuesRemote: {
+                                                                                fields: {
+                                                                                    key: 'id',
+                                                                                    label: 'body'
+                                                                                },
+                                                                                url: 'http://localhost:16006/rest/comments'
+                                                                            }
                                                                         }
                                                                     }
-                                                                }
-                                                            }]
+                                                                }]
                                                         }
                                                     }
                                                 }
@@ -190,40 +190,7 @@
                                 }
                             }
                         }
-                    ],
-                    footer: {
-                        toolbar: [
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Save',
-                                        action: 'save',
-                                        sref: 'articles'
-                                    }
-                                }
-                            },
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Apply',
-                                        action: 'presave'
-                                    }
-                                }
-                            },
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Delete',
-                                        action: 'delete',
-                                        sref: 'articles'
-                                    }
-                                }
-                            }
-                        ]
-                    }
+                    ]
                 }
             }
         };
