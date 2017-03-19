@@ -30,6 +30,12 @@
             vm.target = componentSettings.target;
             vm.action = componentSettings.action;
 
+            if (!vm.label && angular.isString(vm.action)) {
+                $translate('BUTTON.ACTIONS.' + vm.action.toUpperCase()).then(function(translation) {
+                    vm.label = translation;
+                });
+            }
+
             vm.setting.buttonClass = vm.setting.buttonClass || 'default';
             vm.click = clickLink;
 
@@ -123,14 +129,14 @@
             }
             angular.merge(request, handlers);
             switch (vm.action) {
-                case 'save':   
-                    request.entityId = vm.entityId;             
+                case 'save':
+                    request.entityId = vm.entityId;
                     if (vm.entityId && vm.entityId !== 'new') {
                         vm.type = 'update';
                     }
                     if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate('create', request);
-                    } else if (vm.type == 'update') {                        
+                    } else if (vm.type == 'update') {
                         EditEntityStorage.editEntityUpdate('update', request);
                     }
                     break;
@@ -148,14 +154,15 @@
                     EditEntityStorage.editEntityPresave(request);
                     break;
                 case 'open':
-                    var newRequest = {};
-                    newRequest.id = vm.entityId;
-                    newRequest.options = vm.options;
-                    newRequest.url = vm.setting.url;
-                    newRequest.parentField = vm.setting.parentField;
-                    newRequest.headComponent = vm.setting.headComponent;
+                    var newRequest = {
+                        id: vm.entityId,
+                        options: vm.options,
+                        url: vm.setting.url,
+                        parentField: vm.setting.parentField,
+                        $componentId: vm.options.$componentId
+                    };
                     angular.merge(newRequest, handlers);
-                    YiiSoftApiService.loadChilds(newRequest);
+                    $rootScope.$broadcast('ue:parentEntitySet', newRequest);
                     break;
             }
         }

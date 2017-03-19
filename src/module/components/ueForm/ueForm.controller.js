@@ -18,7 +18,7 @@
                 component: {
                     name: 'ue-button',
                     settings: {
-                        label: 'Сохранить',
+                        label: $translate.instant('BUTTON.ACTIONS.SAVE'),
                         action: 'save',
                         useBackUrl: true,
                     }
@@ -28,7 +28,7 @@
                 component: {
                     name: 'ue-button',
                     settings: {
-                        label: 'Удалить',
+                        label: $translate.instant('BUTTON.ACTIONS.DELETE'),
                         action: 'delete',
                         useBackUrl: true,
                     }
@@ -38,7 +38,7 @@
                 component: {
                     name: 'ue-button',
                     settings: {
-                        label: 'Сохранить',
+                        label: $translate.instant('BUTTON.ACTIONS.PRESAVE'),
                         action: 'presave'
                     }
                 }
@@ -142,7 +142,9 @@
 
 
             if (pk !== 'new') {
-                YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options);
+                YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
+                    vm.options.isLoading = false;
+                });
             }
 
             if (pk === 'new') {
