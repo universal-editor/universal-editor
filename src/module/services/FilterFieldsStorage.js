@@ -28,14 +28,25 @@
             apply: apply,
             clear: clear,
             getFilterObject: getFilterObject,
-            convertFilterToString: convertFilterToString
+            convertFilterToString: convertFilterToString,
+            isFilterSearchParamEmpty: isFilterSearchParamEmpty,
+            fillFilterComponent: fillFilterComponent
         });
 
         function addFilterFieldController(ctrl) {
             var id = ctrl.parentComponentId;
             if (id) {
                 storage[id] = storage[id] || [];
-                storage[id].push(ctrl);
+                var stackFields = storage[id];
+                stackFields.push(ctrl);
+                var filterCtrl = getFilterController(id);
+                var readyCount = 0;
+                angular.forEach(filterCtrl.body, function(group) {
+                    if (angular.isArray(group.filters)) {
+                        readyCount += group.filters.length;
+                    }
+                });
+                filterCtrl.isReady = filterCtrl.body.length === 0 || stackFields.length === readyCount;
                 ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
             }
         }
@@ -55,15 +66,35 @@
             }
         }
 
+        function isFilterSearchParamEmpty(prefix) {
+            var searchParameters = $location.search(),
+                filterName = prefix ? prefix + '-filter' : 'filter',
+                isEmpty = true;
+            if (searchParameters && searchParameters[filterName] && !$.isEmptyObject(JSON.parse(searchParameters[filterName]))) {
+                isEmpty = false;
+            }
+            return isEmpty;
+        }
+
         function getFilterController(id) {
             if (id) {
-                return filterComponentsStorage[id];
+                var filterCtrl = filterComponentsStorage[id];
+                if (!filterCtrl) {
+                    angular.forEach(filterComponentsStorage, function(ctrl, id) {
+                        if (ctrl.isParentComponent(id)) {
+                            filterCtrl = ctrl;
+                        }
+                    });
+                }
+                if (filterCtrl) {
+                    return filterCtrl;
+                }
             }
             return false;
         }
 
         function getFilterApi(options) {
-            var id = options.$parentComponentId;
+            var id = options.$componentId;
             if (id) {
                 var fCtrl = filterComponentsStorage[id];
                 if (fCtrl) {
@@ -75,11 +106,23 @@
             }
         }
 
+
         function getFilterFieldController(id) {
             if (id && storage[id]) {
                 return storage[id];
             }
             return false;
+        }
+
+        function fillFilterComponent(id, filter) {
+            var ctrls = getFilterFieldController(id);
+            if (angular.isArray(ctrls)) {
+                ctrls.forEach(function(ctrl) {
+                    if (ctrl.setting && angular.isFunction(ctrl.setting.component.settings.$parseFilter)) {
+                        ctrl.setting.component.settings.$parseFilter(ctrl, filter);
+                    }
+                });
+            }
         }
 
         function deleteFilterFieldController(ctrl) {
@@ -151,12 +194,12 @@
 
                 if (filterEntity) {
                     filters = filters || {};
-                    filters = JSON.stringify(angular.merge(filters, filterEntity));
+                    filters = JSON.stringify(filterEntity);
                 } else {
                     filters = null;
                 }
                 $location.search(filterName, filters);
-                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
             }
         }
 
@@ -173,7 +216,7 @@
                 }
                 clearFiltersValue(parentComponentId, filterName);
                 $location.search(filterName, null);
-                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
             }
         }
 
@@ -228,7 +271,7 @@
                     if (angular.isString(v)) {
                         v = '"' + (~f.operator.indexOf(':value') ? f.operator.replace(':value', f.value) : f.value) + '"';
                     }
-                    filter += '"' + k + '": ' + (angular.isArray(v) ? ('[' + v.toString() + ']') : v) ;
+                    filter += '"' + k + '": ' + (angular.isArray(v) ? ('[' + v.toString() + ']') : v);
                 });
             });
             if (filter) {

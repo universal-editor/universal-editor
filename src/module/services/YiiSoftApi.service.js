@@ -8,57 +8,10 @@
     function YiiSoftApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
         "ngInject";
         var self = this,
-            queryTempParams,
-            filterParams,
-            itemsKey,
-            entityObject,
-            mixEntity,
+            itemsKey = 'items',
             cancelerPromises = [];
 
         self.isProcessing = false;
-        self.methodType = '';
-        self.editedEntityId = null;
-
-        $rootScope.$on('editor:set_entity_type', function(event, type) {
-            entityObject = type;
-            itemsKey = 'items';
-        });
-
-        $rootScope.$on('editor:create_entity', function(event, request) {
-            self.addNewItem(request);
-        });
-
-        $rootScope.$on('editor:update_entity', function(event, request) {
-            self.updateItem(request);
-        });
-
-        $rootScope.$on('editor:presave_entity', function(event, request) {
-            self.presaveItem(request);
-        });
-
-        this.getQueryParams = function() {
-            try {
-                return JSON.parse(JSON.stringify(queryTempParams));
-            } catch (e) {
-                return {};
-            }
-        };
-
-        this.setQueryParams = function(params) {
-            if (Object.keys(params).length > 0) {
-                queryTempParams = params;
-            } else {
-                queryTempParams = undefined;
-            }
-        };
-
-        this.setFilterParams = function(params) {
-            if (Object.keys(params).length > 0) {
-                filterParams = params;
-            } else {
-                filterParams = undefined;
-            }
-        };
 
         function setTimeOutPromise(id, mode) {
             var def = $q.defer();
@@ -70,18 +23,18 @@
             return def;
         }
 
-        this.getItemsList = function(request) {
+        this.getItemsList = function(request, notGoToState) {
+            var deferred = $q.defer();
             var dataSource = request.options.$dataSource;
+            notGoToState = notGoToState === true;
             //** cancel previouse request if request start again 
-            var canceler = setTimeOutPromise(request.options.$parentComponentId, 'read');
+            var canceler = setTimeOutPromise(request.options.$componentId, 'read');
             var service = getCustomService(dataSource.standard);
             request.options.isLoading = true;
 
-            var deferred = $q.defer();
-
             var _url = request.url;
             var _method = request.method || 'GET';
-            var id = request.options.$parentComponentId;
+            var id = request.options.$componentId;
 
             var params = request.params || {};
             var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
@@ -119,9 +72,6 @@
 
                 filtersParams = angular.merge(filtersParams, filters);
 
-                if (!!request.options && request.options.sort !== undefined) {
-                    params.sort = request.options.sort;
-                }
 
                 if (filtersParams && !$.isEmptyObject(filtersParams)) {
                     angular.extend(params, { filter: JSON.stringify(filtersParams) });
@@ -144,8 +94,7 @@
                     }
                 }
 
-                if (dataSource.hasOwnProperty('sortBy') && !params.hasOwnProperty(dataSource.sortBy) && !params.sort) {
-                    params = params || {};
+                if (angular.isString(dataSource.sortBy) && !params.sort) {
                     angular.extend(params, {
                         sort: dataSource.sortBy
                     });
@@ -156,7 +105,7 @@
                 }
             } else {
                 config.filter = FilterFieldsStorage.getFilterObject(id, filters);
-                config.sortFieldName = (!!request.options && request.options.sort !== undefined) ? request.options.sort : '';
+                config.sortFieldName = params.sort || null;
                 config.pagination = {
                     perPage: 20,
                     page: 1
@@ -177,18 +126,21 @@
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
-            var objectBind = { action: 'list', parentComponentId: request.options.$parentComponentId };
+            var objectBind = { action: 'list', parentComponentId: request.options.$componentId, notGoToState: notGoToState };
 
             $http(options).then(function(response) {
+                var data;
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    var data = service.processResponse(config, response,
+                    data = service.processResponse(
+                        config,
+                        response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));
-                    deferred.resolve(data);
                 } else {
                     successAnswer.bind(objectBind)(response.data);
-                    deferred.resolve(response.data);
+                    data = response.data;
                 }
+                deferred.resolve(data);
             }, function(reject) {
                 reject.canceled = canceler.promise.$$state.status === 1;
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
@@ -197,14 +149,13 @@
                         failAnswer.bind(objectBind));
                     reject.data = data;
                 } else {
-                    reject.$parentComponentId = request.options.$parentComponentId;
+                    reject.$componentId = request.options.$componentId;
                     failAnswer.bind(objectBind)(reject);
                 }
                 deferred.reject(reject);
             }).finally(function() {
                 request.options.isLoading = false;
             });
-
             return deferred.promise;
         };
 
@@ -217,6 +168,7 @@
         };
 
         this.addNewItem = function(request) {
+            var deferred = $q.defer();
             var dataSource = request.options.$dataSource;
             var service = getCustomService(dataSource.standard);
 
@@ -258,11 +210,12 @@
 
             var objectBind = {
                 action: 'create',
-                parentComponentId: request.options.$parentComponentId,
+                parentComponentId: request.options.$componentId,
                 request: request,
                 idField: idField
             };
 
+            $rootScope.$broadcast('ue:beforeEntityCreate', objectBind);
             $http(options).then(function(response) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
@@ -274,6 +227,7 @@
                 } else {
                     successAnswer.bind(objectBind)(response.data);
                 }
+                deferred.resolve(response.data);
             }, function(reject) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
@@ -283,14 +237,16 @@
                         failAnswer.bind(objectBind)
                     );
                 } else {
-                    failAnswer.bind(objectBind)(reject.data);
+                    failAnswer.bind(objectBind)(reject);
                 }
-                request.options.isLoading = false;
+                deferred.reject(reject);
             }).finally(function() {
+                request.options.isLoading = false;
                 if (!!request.complete) {
                     request.complete();
                 }
             });
+            return deferred.promise;
         };
 
         this.updateItem = function(request) {
@@ -301,9 +257,9 @@
             var service = getCustomService(dataSource.standard);
             request.options.isLoading = true;
 
-            var _url = dataSource.url + '/' + self.editedEntityId;
+            var _url = dataSource.url + '/' + request.entityId;
             var idField = 'id';
-            request.data.id = self.editedEntityId;
+            request.data.id = request.entityId;
             var config = {
                 action: 'update',
                 url: request.url || _url,
@@ -312,7 +268,7 @@
                 params: request.params || {}
             };
 
-            config.id = self.editedEntityId;
+            config.id = request.entityId;
 
             if (dataSource.resourceType) {
                 config.__type = dataSource.resourceType;
@@ -322,10 +278,11 @@
             options.beforeSend = request.before;
             var objectBind = {
                 action: 'update',
-                parentComponentId: request.options.$parentComponentId,
+                parentComponentId: request.options.$componentId,
                 request: request,
                 idField: idField
             };
+            $rootScope.$broadcast('ue:beforeEntityUpdate', objectBind);
             $http(options).then(function(response) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     service.processResponse(
@@ -346,7 +303,7 @@
                         failAnswer.bind(objectBind)
                     );
                 } else {
-                    failAnswer.bind(objectBind)(reject.data);
+                    failAnswer.bind(objectBind)(reject);
                 }
                 request.options.isLoading = false;
             }).finally(function() {
@@ -373,15 +330,15 @@
                 data: request.data,
                 params: request.params || {}
             };
-            config.id = self.editedEntityId;
+            config.id = request.entityId;
 
             if (dataSource.resourceType) {
                 config.__type = dataSource.resourceType;
             }
 
 
-            if (self.editedEntityId !== '') {
-                config.url = dataSource.url + '/' + self.editedEntityId;
+            if (request.entityId !== '') {
+                config.url = dataSource.url + '/' + request.entityId;
                 config.method = 'PUT';
                 config.action = 'update';
                 isCreate = false;
@@ -397,13 +354,13 @@
             options.beforeSend = request.before;
 
             var objectBind = {
-                parentComponentId: request.options.$parentComponentId,
-                gridComponentId: request.options.$gridComponentId,
+                parentComponentId: request.options.$componentId,
                 action: 'presave',
                 isCreate: isCreate,
                 request: request,
                 idField: idField
             };
+            $rootScope.$broadcast('ue:beforeEntityUpdate', objectBind);
 
             $http(options).then(function(response) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
@@ -425,7 +382,7 @@
                         failAnswer.bind(objectBind)
                     );
                 } else {
-                    failAnswer.bind(objectBind)(reject.data);
+                    failAnswer.bind(objectBind)(reject);
                 }
             }).finally(function() {
                 if (!!request.complete) {
@@ -435,68 +392,74 @@
             });
         };
 
-        this.getItemById = function(id, par, options) {
-            var qParams = {},
+        this.getItemById = function(id, options) {
+            var deferred = $q.defer(),
+                qParams = {},
                 expandFields = [],
-                dataSource = options.$dataSource || entityObject.dataSource;
-            var service = getCustomService(dataSource.standard);
-            options.isLoading = true;
-            angular.forEach(dataSource.fields, function(field) {
-                if (field.component && field.component.settings && field.component.settings.expandable === true) {
-                    expandFields.push(field.name);
+                dataSource = options.$dataSource;
+            if (angular.isObject(dataSource)) {
+                var service = getCustomService(dataSource.standard);
+                options.isLoading = true;
+                angular.forEach(dataSource.fields, function(field) {
+                    if (field.component && field.component.settings && field.component.settings.expandable === true) {
+                        expandFields.push(field.name);
+                    }
+                });
+                if (expandFields.length > 0) {
+                    qParams.expand = expandFields.join(',');
                 }
-            });
-            if (expandFields.length > 0) {
-                qParams.expand = expandFields.join(',');
+                var url = id ? (dataSource.url + '/' + id) : dataSource.url;
+
+                var config = {
+                    action: 'one',
+                    url: url,
+                    method: 'GET',
+                    params: qParams
+                };
+
+                if (dataSource.resourceType) {
+                    config.__type = dataSource.resourceType;
+                }
+
+                var optionsHttp = getAjaxOptionsByTypeService(config, dataSource.standard);
+
+                var objectBind = {
+                    action: 'one',
+                    parentComponentId: options.$componentId
+                };
+
+                $http(optionsHttp).then(function(response) {
+                    var data = response.data;
+                    if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
+                        data = service.processResponse(
+                            config,
+                            response,
+                            successAnswer.bind(objectBind),
+                            failAnswer.bind(objectBind)
+                        );
+                    } else {
+                        successAnswer.bind(objectBind)(data);
+                    }
+                    deferred.resolve(data);
+                }, function(reject) {
+                    if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
+                        reject.$componentId = request.options.$componentId;
+                        failAnswer.bind(objectBind)(reject);
+                    } else {
+                        var data = service.processResponse(config, reject,
+                            successAnswer.bind(objectBind),
+                            failAnswer.bind(objectBind));
+                        reject.data = data;
+                    }
+                    deferred.reject(reject);
+                });
             }
-
-            var config = {
-                action: 'one',
-                url: dataSource.url + '/' + id,
-                method: 'GET',
-                params: qParams
-            };
-
-            if (dataSource.resourceType) {
-                config.__type = dataSource.resourceType;
-            }
-
-            var optionsHttp = getAjaxOptionsByTypeService(config, dataSource.standard);
-
-            var objectBind = {
-                action: 'one',
-                parentComponentId: options.$parentComponentId
-            };
-
-            $http(optionsHttp).then(function(response) {
-                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    service.processResponse(
-                        config,
-                        response,
-                        successAnswer.bind(objectBind),
-                        failAnswer.bind(objectBind)
-                    );
-                } else {
-                    successAnswer.bind(objectBind)(response.data);
-                }
-            }, function(reject) {
-                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    reject.$parentComponentId = request.options.$parentComponentId;
-                    failAnswer.bind(objectBind)(reject);
-                } else {
-                    var data = service.processResponse(config, reject,
-                        successAnswer.bind(objectBind),
-                        failAnswer.bind(objectBind));
-                    reject.data = data;
-                }
-                deferred.reject(reject);
-            }).finally(function() {
-                options.isLoading = false;
-            });
+            return deferred.promise;
         };
 
-        this.deleteItemById = function(request) {
+        this.deleteItemById = function(request, notGoToState) {
             var state;
+            notGoToState = notGoToState === true;
             if (request.options.isLoading) {
                 return;
             }
@@ -533,10 +496,13 @@
             options.beforeSend = request.before;
 
             var objectBind = {
-                parentComponentId: request.options.$parentComponentId,
+                parentComponentId: request.options.$componentId,
                 action: 'delete',
-                request: request
+                request: request,
+                notGoToState: notGoToState
             };
+
+            $rootScope.$broadcast('ue:beforeEntityDelete', objectBind);
 
             return $http(options).then(function(response) {
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
@@ -554,7 +520,7 @@
                         failAnswer.bind(objectBind)
                     );
                 } else {
-                    failAnswer.bind(objectBind)(reject.data);
+                    failAnswer.bind(objectBind)(reject);
                 }
             }).finally(function() {
                 if (!!request.complete) {
@@ -675,12 +641,14 @@
                     return getUrlResource(config);
                 }
             }, function(reject) {
-                reject.$parentComponentId = config.$id;
+                reject.$componentId = config.$id;
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
                     var data = service.processResponse(config, reject,
                         successAnswer.bind(config),
                         failAnswer.bind(config));
                     reject.data = data;
+                } else {
+                    failAnswer.bind(config)(reject);
                 }
                 config.defer.reject(reject);
             });
@@ -714,29 +682,31 @@
                             filter.push(item[component.name]);
                         }
                     });
-                    var keyValue = component.component.settings.valuesRemote.fields.value;
-                    var filterObject = {};
-                    filterObject[keyValue] = [];
-                    filterObject[keyValue].push({
-                        operator: ':value',
-                        value: filter
-                    });
-                    var config = {
-                        action: 'list',
-                        url: options.url,
-                        method: 'GET',
-                        params: {
-                            fields: fields,
-                            filter: FilterFieldsStorage.convertFilterToString(filterObject),
-                            page: 1,
-                            'per-page': 50
-                        },
-                        pagination: {
-                            page: 1,
-                            perPage: 50
-                        }
-                    };
-                    promiseStack.push($http(getAjaxOptionsByTypeService(config)));
+                    if (filter.length > 0) {
+                        var keyValue = component.component.settings.valuesRemote.fields.value;
+                        var filterObject = {};
+                        filterObject[keyValue] = [];
+                        filterObject[keyValue].push({
+                            operator: ':value',
+                            value: filter
+                        });
+                        var config = {
+                            action: 'list',
+                            url: options.url,
+                            method: 'GET',
+                            params: {
+                                fields: fields,
+                                filter: FilterFieldsStorage.convertFilterToString(filterObject),
+                                page: 1,
+                                'per-page': 50
+                            },
+                            pagination: {
+                                page: 1,
+                                perPage: 50
+                            }
+                        };
+                        promiseStack.push($http(getAjaxOptionsByTypeService(config)));
+                    }
                 }
             });
             var service = getCustomService(options.standard);
@@ -767,12 +737,18 @@
 
                 return data;
             }, function(reject) {
-                reject.$parentComponentId = $id;
+                reject.$componentId = $id;
+                var config = {
+                    action: 'list',
+                    parentComponentId: $id
+                };
                 if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    var data = service.processResponse({}, reject,
+                    var data = service.processResponse(config, reject,
                         successAnswer.bind(config),
                         failAnswer.bind(config));
                     reject.data = data;
+                } else {
+                    failAnswer.bind(config)(reject);
                 }
             });
         };
@@ -810,71 +786,6 @@
             });
 
             return deferred.promise;
-        };
-
-        this.loadChilds = function(request) {
-            var data = {
-                parentId: request.id,
-                $parentComponentId: request.options.$parentComponentId
-            };
-            var parent;
-            $rootScope.$broadcast('editor:parent_id', data);
-            request.childId = request.id;
-            self.getItemsList(request).then(function() {
-                parent = null;
-                if (request.childId) {
-                    parent = request.childId;
-                }
-                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
-                $location.search(paramName, parent);
-            }, function(reject) { });
-        };
-
-        this.loadParent = function(request) {
-            var data = {
-                $parentComponentId: request.options.$parentComponentId
-            };
-            var entityId = typeof request.childId !== 'undefined' ? request.childId : undefined;
-            var parent;
-            if (entityId) {
-                request.options.isLoading = true;
-                $http({
-                    method: 'GET',
-                    url: request.url + '/' + entityId
-                }).then(function(response) {
-                    var parentId = response.data[request.parentField];
-
-                    parent = null;
-                    if (parentId) {
-                        parent = parentId;
-                    }
-                    var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
-                    $location.search(paramName, parent);
-                    request.options.isLoading = false;
-                    data.parentId = parentId;
-                    $rootScope.$broadcast('editor:parent_id', data);
-                    request.childId = parentId;
-                    self.getItemsList(request);
-
-                }, function(reject) {
-                    request.options.isLoading = false;
-                });
-            } else {
-                reset();
-            }
-            function reset() {
-                request.options.isLoading = false;
-                request.parentField = null;
-                $rootScope.$broadcast('editor:parent_id', data);
-                var paramName = request.options.prefixGrid ? request.options.prefixGrid + '-parent' : 'parent';
-                $location.search(paramName, null);
-                request.childId = null;
-                self.getItemsList(request);
-            }
-        };
-
-        this.getEntityObject = function() {
-            return entityObject;
         };
 
         function replaceToURL(url, entityId) {
@@ -979,29 +890,24 @@
             var parentComponentId = config.parentComponentId;
             switch (config.action) {
                 case 'list':
-                    if (data[itemsKey].length === 0) {
-                        $rootScope.$broadcast('editor:parent_empty');
-                    }
-                    data.$parentComponentId = parentComponentId;
-                    $rootScope.$broadcast('editor:items_list', data);
+                    data.$componentId = parentComponentId;
+                    $rootScope.$broadcast('ue:componentDataLoaded', data);
                     break;
                 case 'one':
-                    data.$parentComponentId = parentComponentId;
+                    data.$componentId = parentComponentId;
                     data.editorEntityType = 'exist';
-                    $rootScope.$broadcast('editor:entity_loaded', data);
+                    $rootScope.$broadcast('ue:componentDataLoaded', data);
                     break;
                 case 'update':
                     var state;
                     if (!!config.request.success) {
                         config.request.success(data);
                     }
-                    $rootScope.$broadcast('editor:presave_entity_updated', {
-                        id: data[config.idField],
-                        $parentComponentId: parentComponentId
-                    });
                     config.request.options.isLoading = false;
-                    $rootScope.$broadcast('uploader:remove_session');
-                    $rootScope.$broadcast('editor:entity_success');
+                    $rootScope.$broadcast('ue:afterEntityUpdate', {
+                        id: data[config.idField],
+                        $componentId: parentComponentId
+                    });
                     successUpdateMessage();
                     params = {};
                     paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
@@ -1017,7 +923,7 @@
                         if (state) {
                             $state.go(state, params).then(function() {
                                 $location.search(params);
-                                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                             });
                         } else {
                             replaceToURL(config.request.href);
@@ -1030,13 +936,11 @@
                     if (!!config.request.success) {
                         config.request.success(data);
                     }
-                    $rootScope.$broadcast('editor:presave_entity_created', {
-                        id: data[config.idField],
-                        $parentComponentId: parentComponentId
-                    });
                     config.request.options.isLoading = false;
-                    $rootScope.$broadcast('uploader:remove_session');
-                    $rootScope.$broadcast('editor:entity_success');
+                    $rootScope.$broadcast('ue:afterEntityCreate', {
+                        id: data[config.idField],
+                        $componentId: parentComponentId
+                    });
                     successCreateMessage();
 
                     params = {};
@@ -1057,7 +961,7 @@
                                     delete params.back;
                                 }
                                 $location.search(params);
-                                $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                             });
                         } else {
                             replaceToURL(config.request.href);
@@ -1067,7 +971,6 @@
                     }
                     break;
                 case 'presave':
-                    var gridComponentId = config.request.options.$gridComponentId;
                     if (!!config.request.success) {
                         config.request.success(data);
                     }
@@ -1077,23 +980,22 @@
                     var searchString = $location.search();
                     $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                         $location.search(searchString);
-                        $rootScope.$broadcast('editor:update_item', {
-                            $gridComponentId: gridComponentId,
-                            value: data
+                        $rootScope.$broadcast('ue:afterEntityUpdate', {
+                            $componentId: parentComponentId,
+                            action: 'presave',
+                            value: data,
+                            id: newId
                         });
                     });
+                    $rootScope.$broadcast('ue:afterEntityUpdate', {
+                        id: newId,
+                        action: 'presave',
+                        $componentId: parentComponentId
+                    });
                     if (config.isCreate) {
-                        $rootScope.$broadcast('editor:presave_entity_created', {
-                            id: newId,
-                            $parentComponentId: parentComponentId
-                        });
                         successPresaveCreateMessage();
                     } else {
                         successUpdateMessage();
-                        $rootScope.$broadcast('editor:presave_entity_updated', {
-                            id: newId,
-                            $parentComponentId: parentComponentId
-                        });
                     }
                     break;
                 case 'delete':
@@ -1101,9 +1003,10 @@
                         config.request.success(response);
                     }
                     config.request.options.isLoading = false;
-                    self.setQueryParams({});
-                    self.setFilterParams({});
-                    $rootScope.$broadcast('editor:entity_success_deleted');
+                    $rootScope.$broadcast('ue:afterEntityDelete', {
+                        $componentId: config.parentComponentId,
+                        entityId: config.request.entityId
+                    });
                     successDeleteMessage();
                     params = {};
                     paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
@@ -1119,13 +1022,15 @@
                     state = state || $state.current.name;
 
                     if (!ModalService.isModalOpen()) {
-                        if (state) {
-                            $state.go(state, params).then(function() {
-                                $location.search(params);
-                                $rootScope.$broadcast('editor:read_entity', parentComponentId);
-                            });
-                        } else {
-                            replaceToURL(config.request.href);
+                        if (!config.notGoToState) {
+                            if (state) {
+                                $state.go(state, params).then(function() {
+                                    $location.search(params);
+                                    $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                                });
+                            } else {
+                                replaceToURL(config.request.href);
+                            }
                         }
                     } else {
                         ModalService.close();
@@ -1134,25 +1039,29 @@
             }
         }
 
-        function failAnswer(data) {
+        function failAnswer(reject) {
             var config = this, parentComponentId = config.parentComponentId || config.$id;
             if (config.action == 'update' || config.action == 'create' || config.action == 'presave') {
                 if (!!config.request.error) {
                     config.request.error(reject);
                 }
-                var wrongFields = data.hasOwnProperty('data') ? data.data : data;
+                var wrongFields = [];
+                if (angular.isArray(reject)) {
+                    wrongFields = reject;
+                } else if (angular.isObject(reject)) {
+                    if (angular.isArray(reject.data)) {
+                        wrongFields = reject.data;
+                    } else if (angular.isObject(reject.data) && angular.isArray(reject.data.data)) {
+                        wrongFields = reject.data.data;
+                    }
+                }
 
-                if (wrongFields.length > 0) {
-                    angular.forEach(wrongFields, function(err) {
-                        if (err.hasOwnProperty('field')) {
-                            $rootScope.$broadcast('editor:api_error_field_' + err.field, err.message);
-                            if (err.hasOwnProperty('fields')) {
-                                angular.forEach(err.fields, function(innerError, key) {
-                                    $rootScope.$broadcast('editor:api_error_field_' + err.field + '_' + key + '_' + innerError.field, innerError.message);
-                                });
-                            }
-                        }
-                    });
+                var eventObject = {
+                    $componentId: parentComponentId,
+                    data: wrongFields
+                };
+                if (angular.isArray(wrongFields) && wrongFields.length > 0) {
+                    $rootScope.$broadcast('ue:componentError', eventObject);
                 }
             }
             if (config.action == 'delete') {
@@ -1162,8 +1071,8 @@
                 config.request.options.isLoading = false;
             }
             if (config.action == 'list' || config.action == 'one') {
-                data.$parentComponentId = parentComponentId;
-                $rootScope.$broadcast('editor:error_get_data', data);
+                reject.$componentId = parentComponentId;
+                $rootScope.$broadcast('ue:errorComponentDataLoading', reject);
             }
         }
     }

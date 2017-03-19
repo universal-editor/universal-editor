@@ -11,10 +11,11 @@
         var vm = this;
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
-        var fieldErrorName;
+
+        self.resetErrors = resetErrors;
 
         if (self.options) {
-            self.parentComponentId = self.options.$parentComponentId || '';
+            self.parentComponentId = self.options.$componentId || '';
             self.regim = self.options.regim || 'edit';
         }
 
@@ -23,7 +24,7 @@
         }
 
         if (!self.fieldName) {
-            self.fieldName = self.setting.name; 
+            self.fieldName = self.setting.name;
         }
         self.parentField = self.setting.parentField;
         self.parentFieldType = self.setting.parentFieldType;
@@ -65,26 +66,16 @@
         }
 
         self.error = [];
-        if (self.fieldName) {
-            if (self.parentField) {
-                if (self.parentFieldIndex) {
-                    fieldErrorName = self.parentField + '_' + self.parentFieldIndex + '_' + self.fieldName;
-                } else {
-                    fieldErrorName = self.parentField + '_' + self.fieldName;
-                }
-            } else {
-                fieldErrorName = self.fieldName;
-            }
-        }
 
         //-- listener storage for handlers
         self.listeners = [];
-        if (fieldErrorName) {
-            self.listeners.push($scope.$on('editor:api_error_field_' + fieldErrorName, onErrorApiHandler));
-        }
+        self.listeners.push($scope.$on('ue:componentError', onErrorApiHandler));
 
         self.isParentComponent = function isParentComponent(id, scope) {
             scope = scope || $scope;
+            if (angular.isObject(id)) {
+                id = id.$componentId || id.$id;
+            }
             if (!scope.$parent) {
                 return false;
             }
@@ -93,10 +84,17 @@
             }
             return isParentComponent(id, scope.$parent);
         };
+        self.isComponent = function isComponent(id, scope) {
+            scope = scope || $scope;
+            if (angular.isObject(id)) {
+                id = id.$componentId || id.$id;
+            }
+            return scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.$id === id;
+        };
 
 
-        self.listeners.push($scope.$on('editor:error_get_data', function(event, rejection) {
-            if (self.isParentComponent(rejection.$parentComponentId) && !rejection.canceled) {
+        self.listeners.push($scope.$on('ue:errorComponentDataLoading', function(event, rejection) {
+            if (self.isComponent(rejection) && !rejection.canceled) {
                 self.loaded = true;
                 self.loadingData = false;
                 function compareStatus(stack) {
@@ -105,7 +103,7 @@
                 var isExist = compareStatus(self.warnings) || compareStatus(self.dangers);
                 if (!isExist) {
                     var error = {};
-                        error.status = rejection.status;
+                    error.status = rejection.status;
 
                     if (rejection.data && rejection.data.message) {
                         error.text = rejection.data.message;
@@ -154,16 +152,37 @@
             FilterFieldsStorage.deleteFilterFieldController(self);
         }
 
-        function onErrorApiHandler(event, data) {
-            if (angular.isArray(data)) {
-                angular.forEach(data, function(error) {
-                    if (self.error.indexOf(error) < 0) {
-                        self.error.push(error);
-                    }
+        function resetErrors() {
+            vm.errors = [];
+        }
+
+        function onErrorApiHandler(event, eventObject) {
+            // for location component related errors
+            if (eventObject.$componentId === $scope.vm.setting.component.$id) {
+                event.preventDefault();
+                var fields = eventObject.data;
+                $scope.$broadcast('ue:componentError', {
+                    isChildComponent: true,
+                    fields: fields
                 });
-            } else {
-                if (self.error.indexOf(data) < 0) {
-                    self.error.push(data);
+            }
+
+            // broadcast event for child components
+            if (eventObject.isChildComponent) {
+                var data = eventObject.fields.filter(function(f) {
+                    return f.field === self.fieldName;
+                });
+                if (data.length > 0) {
+                    event.preventDefault();
+                    if (data[0].message) {
+                        self.error.push(data[0].message);
+                    }
+                    if (angular.isArray(data.fields)) {
+                        $scope.$broadcast('ue:componentError', {
+                            isChildComponent: true,
+                            fields: data.fields
+                        });
+                    }
                 }
             }
         }

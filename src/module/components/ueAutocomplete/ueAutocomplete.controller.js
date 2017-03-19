@@ -34,22 +34,19 @@
             vm.focusPossible = focusPossible;
             vm.deleteToAutocomplete = deleteToAutocomplete;
             vm.loadDataById = loadDataById;
+            vm.clear = clear;
 
             if (!vm.multiple) {
                 vm.classInput.width = '99%';
                 vm.classInput['padding-right'] = '25px';
             }
 
-            if (vm.options.filter) {
-                loadValues();
-            }
-
-            vm.listeners.push($scope.$on('editor:entity_loaded', function(event, data) {
-                if (!data.$parentComponentId || data.$parentComponentId === vm.parentComponentId && !vm.options.filter) {
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(event, data) {
+                if (vm.isParentComponent(data) && !vm.options.filter) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
                     if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
-                        loadDataById(vm.fieldValue).then(function() {
+                        vm.loadDataById(vm.fieldValue).then(function() {
                             vm.equalPreviewValue();
                         }).finally(function() {
                             vm.loadingData = false;
@@ -174,18 +171,15 @@
 
         function removeFromSelected(event, obj) {
             if (!vm.multiple) {
-                vm.fieldValue = null;
-            }
-            angular.forEach(vm.selectedValues, function(val, key) {
-                if (val[vm.fieldId] == obj[vm.fieldId]) {
-                    vm.selectedValues.splice(key, 1);
-                    if (!vm.multiple) {
-                        vm.placeholder = '';
-                    } else {
+                clear();
+            } else {
+                angular.forEach(vm.selectedValues, function(val, key) {
+                    if (val[vm.fieldId] == obj[vm.fieldId]) {
+                        vm.selectedValues.splice(key, 1);
                         vm.fieldValue.splice(key, 1);
                     }
-                }
-            });
+                });
+            }
         }
 
         /* PRIVATE METHODS */
@@ -336,7 +330,13 @@
                 $id: vm.setting.component.$id,
                 serverPagination: vm.serverPagination
             };
-            
+
+            config.filter = config.filter || {};
+            config.filter[vm.fieldId] = [{
+                operator: 'value',
+                value: ids
+            }];
+
             config.filter = config.filter || {};
             config.filter[vm.fieldId] = [{
                 operator: 'value',
@@ -407,7 +407,6 @@
             });
         };
 
-        vm.clear = clear;
         function clear() {
             vm.fieldValue = vm.multiple ? [] : null;
             $element.find('.autocomplete-field-search').removeClass('hidden');

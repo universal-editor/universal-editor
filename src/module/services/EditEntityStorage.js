@@ -5,19 +5,12 @@
         .module('universal-editor')
         .service('EditEntityStorage', EditEntityStorage);
 
-    function EditEntityStorage($rootScope, $timeout, configData, $location, $state, $translate) {
+    function EditEntityStorage($rootScope, $timeout, configData, $location, $state, $translate, YiiSoftApiService) {
         "ngInject";
-        var sourceEntity,
-            configuredFields = {},
-            fieldControllers = [],
-            entityObject,
+        var fieldControllers = [],
             self = this,
             storage = {},
             groups = {};
-
-        /* PUBLIC METHODS */
-
-        this.actionType = 'create';
 
         this.getLevelChild = function(stateName) {
             return stateName.split('.').length;
@@ -34,6 +27,14 @@
             return false;
         };
 
+        this.getChildFieldComponents = function(componentId) {
+            return storage[componentId] || [];
+        };
+
+        this.getChildGroupComponents = function(componentId) {
+            return groups[componentId] || [];
+        };
+
         this.newSourceEntity = function(id, parentField) {
             var parentEntity = $location.search().parent;
             var parent;
@@ -41,11 +42,11 @@
                 parentEntity = JSON.parse(parentEntity);
                 parent = parentEntity[id] || null;
             }
-            var data = { editorEntityType: 'new', $parentComponentId: (!!parentField ? undefined : id) };
+            var data = { editorEntityType: 'new', $componentId: (!!parentField ? undefined : id) };
             if (!!parent && !!parentField) {
                 data[parentField] = parent;
             }
-            $rootScope.$broadcast('editor:entity_loaded', data);
+            $rootScope.$broadcast('ue:componentDataLoaded', data);
         };
 
         this.addFieldController = function(ctrl, isGroup) {
@@ -73,69 +74,36 @@
             }
         };
 
-        this.setActionType = function(type) {
-            this.actionType = type;
-        };
-
-
         this.editEntityUpdate = function(type, request) {
-            this.setActionType(request.collectionType);
-            var entityObject = {};
-            var controllers = storage[request.options.$parentComponentId] || [],
-                groupControllers = groups[request.options.$parentComponentId] || [];
-            var isError = true;
-
-            angular.forEach(controllers, function(fCtrl) {
-                var value = fCtrl.getFieldValue();
-                if (!fCtrl.multiple) {
-                    fCtrl.inputLeave(fCtrl.fieldValue);
-                } else {
-                    var flagError = true;
-                    angular.forEach(fCtrl.fieldValue, function(val, index) {
-                        if (flagError) {
-                            fCtrl.inputLeave(val, index);
-                            if (fCtrl.error.length !== 0) {
-                                flagError = false;
-                            }
-                        }
-                    });
-                }
-
-                isError = (fCtrl.error.length === 0) && isError;
-                if (fCtrl.readonly !== true && fCtrl.disabled !== true) {
-                    if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
-                        entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
-                        entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
-                        angular.merge(entityObject[fCtrl.parentField][fCtrl.parentFieldIndex], value[fCtrl.parentField]);
-                    } else {
-                        angular.merge(entityObject, value);
-                    }
-                }
-
-            });
-            angular.forEach(groupControllers, function(val, index) {
-                if (val.fieldName && entityObject[val.fieldName] === undefined) {
-                    entityObject[val.fieldName] = val.multiple ? [] : null;
-                }
-            });
-            if (isError) {
+            var entityObject = constructOutputValue(request);
+            if (request.isError) {
                 request.data = entityObject;
                 switch (type) {
-                    case 'create':
-                        $rootScope.$emit('editor:create_entity', request);
+                    case 'create':                        
+                        YiiSoftApiService.addNewItem(request);
                         break;
                     case 'update':
-                        $rootScope.$emit('editor:update_entity', request);
+                        YiiSoftApiService.updateItem(request);
                         break;
                 }
             }
         };
 
         this.editEntityPresave = function(request) {
+            var entityObject = constructOutputValue(request);
+
+            if (request.isError) {
+                request.data = entityObject;
+                request.action = 'presave';
+                YiiSoftApiService.presaveItem(request);
+            }
+        };
+
+        function constructOutputValue(request) {
             var entityObject = {};
-            var isError = true;
-            var controllers = storage[request.options.$parentComponentId] || [],
-                groupControllers = groups[request.options.$parentComponentId] || [];
+            var controllers = storage[request.options.$componentId] || [],
+                groupControllers = groups[request.options.$componentId] || [];
+            request.isError = true;
 
             angular.forEach(controllers, function(fCtrl) {
                 var value = fCtrl.getFieldValue();
@@ -152,7 +120,8 @@
                         }
                     });
                 }
-                isError = (fCtrl.error.length === 0) && isError;
+
+                request.isError = (fCtrl.error.length === 0) && request.isError;
                 if (fCtrl.readonly !== true && fCtrl.disabled !== true) {
                     if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
                         entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
@@ -162,72 +131,14 @@
                         angular.merge(entityObject, value);
                     }
                 }
+
             });
             angular.forEach(groupControllers, function(val, index) {
                 if (val.fieldName && entityObject[val.fieldName] === undefined) {
                     entityObject[val.fieldName] = val.multiple ? [] : null;
                 }
             });
-
-            if (isError) {
-                request.data = entityObject;
-                $rootScope.$emit('editor:presave_entity', request);
-            }
-        };
-
-        this.getEntity = function(stateName) {
-            return configData;
-        };
-
-        this.getStateConfig = function(stateName) {
-
-            var result = null;
-            var entity = configData;
-
-            angular.forEach(configData.states, function(state) {
-                if (state.name) {
-                    if (state.name === stateName) {
-                        result = state;
-                    }
-                }
-            });
-            if (!stateName) {
-                return configData.states[0];
-            }
-            return result;
-        };
-
-        /* !PUBLIC METHODS */
-
-        /* EVENTS LISTENING */
-
-        $rootScope.$on('editor:add_entity', function(event, data) {
-            self.actionType = data;
-        });
-
-        $rootScope.$on('editor:set_entity_type', function(event, type) {
-            entityObject = type;
-            fieldControllers = [];
-        });
-
-        /* !EVENTS LISTENING */
-
-        /* PRIVATE METHODS */
-
-        function validateEntityFields() {
-
-            var valid = true;
-
-            if (sourceEntity === undefined || entityType === undefined) {
-                $translate('ERROR.EditEntityStorage').then(function(translation) {
-                    console.log(translation);
-                });
-                valid = false;
-            }
-
-            return valid;
+            return entityObject;
         }
-
-        /* !PRIVATE METHODS */
     }
 })();

@@ -85,7 +85,11 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-filter'
+                                    name: 'ue-filter',
+                                    settings: {
+                                        fields: ['id', 'title', 'status', 'views']
+                                    }
+
                                 }
                             },
                             {

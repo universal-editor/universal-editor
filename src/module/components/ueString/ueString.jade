@@ -39,9 +39,8 @@ block append content
     .disabled-field(ng-if="vm.disabled && !vm.options.filter")
         div(data-ng-show="!vm.loadingData")
             span(ng-bind="::vm.previewValue", ng-if = "!vm.multiple && vm.contentType !== 'url'")
-            a(ng-href="{{::vm.previewValue}}", ng-if = "!vm.multiple && vm.contentType === 'url'", target="_blank")
-                {{::vm.previewValue}}
+            a(ng-href="{{::vm.previewValue}}", ng-if = "!vm.multiple && vm.contentType === 'url'", target="_blank") {{::vm.previewValue}}
             div(ng-repeat="value in vm.previewValue track by $index", ng-if = "vm.multiple")
                 span(ng-bind="value", ng-if="vm.contentType !== 'url'")
-                a(ng-href="{{::value}}", ng-if = "vm.contentType === 'url'", target="_blank")
-                    {{::value}}
+                a(ng-href="{{::value}}", ng-if = "vm.contentType === 'url'", target="_blank") {{::value}}
+                

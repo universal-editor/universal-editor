@@ -143,9 +143,9 @@
             });
         }
 
-        var destroyEntityLoaded = $scope.$on('editor:entity_loaded', function(event, data) {
-            vm.data = data;
-            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
+        var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {            
+            if (vm.isParentComponent(data)) {
+                vm.data = data;
                 $scope.onLoadDataHandler(event, data);
                 componentSettings.$loadingPromise.then(function(items) {
                     allOptions = allOptions.length ? allOptions : items;
@@ -215,7 +215,6 @@
                 vm.placeholder = (!!newVal && !!newVal.length && !!newVal[0][vm.fieldSearch]) ? newVal[0][vm.fieldSearch] : componentSettings.placeholder;
             }
             vm.setColorPlaceholder();
-            $rootScope.$broadcast('select_field:select_name_' + vm.fieldName, newVal);
         }, true);
 
 
@@ -225,14 +224,13 @@
                 if (item[vm.treeChildCountField] && !item.childOpts) {
                     item.loadingData = true;
                     var config = {
-                        url: componentSettings.valuesRemote.url + '?filter={"' + vm.treeParentField + '":"' + item[vm.fieldId] + '"}',
+                        url: componentSettings.valuesRemote.url,
                         $id: vm.setting.component.$id,
                         serverPagination: vm.serverPagination
                     };
                     config.filter[vm.treeParentField] = [{
                         operator: 'value',
-                        value: item[vm.fieldId],
-                        $id: vm.setting.component.$id
+                        value: item[vm.fieldId]
                     }];
 
                     config.standard = $scope.getParentDataSource().standard;

@@ -30,8 +30,6 @@
 
             component = angular.merge({}, ueConfig.component);
 
-            $rootScope.$broadcast('editor:set_entity_type', component.settings);
-
             var locale = 'ru';
             if (vm.ueConfig.hasOwnProperty('ui') && vm.ueConfig.ui.hasOwnProperty('language')) {
                 if (vm.ueConfig.ui.language.hasOwnProperty('path')) {

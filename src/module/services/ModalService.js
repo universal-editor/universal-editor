@@ -5,7 +5,7 @@
         .module('universal-editor')
         .service('ModalService', ModalService);
         
-    function ModalService($q, $rootScope, $http, configData, EditEntityStorage, $location, $timeout, $state, $httpParamSerializer, $document, $uibModal) {
+    function ModalService($q, $rootScope, $http, configData, $location, $timeout, $state, $httpParamSerializer, $document, $uibModal) {
         "ngInject";
         var self = this,
             modalInstance,
@@ -21,8 +21,8 @@
         function openWindow(component) { /** send fromState и _pk */
             settings = component.settings;
 
-            if(self.options.$parentComponentId) {
-                $location.search('relativeEntityId', self.options.$parentComponentId);
+            if(self.options.$componentId) {
+                $location.search('relativeEntityId', self.options.$componentId);
             }
             modalInstance = $uibModal.open({
                 component: 'ueModal',
@@ -30,8 +30,8 @@
                     settings: function() {
                         return settings;
                     },
-                    $parentComponentId: function() {
-                        return self.options.$parentComponentId || $location.search().relativeEntityId;
+                    $componentId: function() {
+                        return self.options.$componentId || $location.search().relativeEntityId;
                     }
                 }
             });
@@ -39,9 +39,6 @@
             modalInstance.rendered.then(function() {
                 isOpen = true;
                 var pk = $state.params['pk'];
-                if (pk === 'new') {
-                   EditEntityStorage.newSourceEntity(self.options.$parentComponentId);
-                }
                 self.fromState = settings.fromState || null;                
             });
 
@@ -54,7 +51,7 @@
 
         function closeWindow(isUpdateParentComponent) {
             if (isOpen) {
-                var parentComponentId = self.options.$parentComponentId;
+                var parentComponentId = self.options.$componentId;
                 isOpen = false;
                 if (modalInstance) {
                     modalInstance.close();
@@ -65,7 +62,7 @@
                 if (settings.fromState) {
                     $state.go(settings.fromState.name, settings.fromParams, { reload: false }).then(function() {
                         if (!isUpdateParentComponent) {
-                            $rootScope.$broadcast('editor:read_entity', parentComponentId);
+                            $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         }
                     });
                 }

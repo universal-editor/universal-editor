@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeButtonController', UeButtonController);
 
-    function UeButtonController($scope, $element, $state, $location, EditEntityStorage, ModalService, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, YiiSoftApiService, FilterFieldsStorage) {
+    function UeButtonController($scope, $rootScope, $element, $state, $location, EditEntityStorage, ModalService, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, YiiSoftApiService, FilterFieldsStorage) {
         "ngInject";
         $element.addClass('ue-button');
 
@@ -22,13 +22,19 @@
             var componentSettings = vm.setting.component.settings;
             handlers = componentSettings.handlers;
             angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
-            vm.parentComponentId = vm.options.$parentComponentId;
+            vm.parentComponentId = vm.options.$componentId;
             vm.back = componentSettings.useBackUrl === true;
             vm.state = componentSettings.sref;
             vm.url = componentSettings.href;
             vm.method = componentSettings.method;
             vm.target = componentSettings.target;
             vm.action = componentSettings.action;
+
+            if (!vm.label && angular.isString(vm.action)) {
+                $translate('BUTTON.ACTIONS.' + vm.action.toUpperCase()).then(function(translation) {
+                    vm.label = translation;
+                });
+            }
 
             vm.setting.buttonClass = vm.setting.buttonClass || 'default';
             vm.click = clickLink;
@@ -47,8 +53,8 @@
                 request.state = vm.state;
                 request.useBackUrl = vm.back;
                 request.href = vm.url;
-                $scope.$on('editor:presave_entity_created', function(event, data) {
-                    if (!vm.options.isGrid && (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId))) {
+                $scope.$on('ue:afterEntityUpdate', function(event, data) {
+                    if (data.action === 'presave' && !vm.options.isGrid && vm.isParentComponent(data)) {
                         vm.entityId = data[componentSettings.dataSource.primaryKey];
                         vm.type = 'update';
                         if (vm.action === 'delete') {
@@ -76,7 +82,7 @@
             }
 
             if (angular.isFunction(vm.action) && vm.options) {
-                vm.action(vm.options.$parentComponentId);
+                vm.action(vm.options.$componentId);
             }
 
             if (state) {
@@ -90,7 +96,7 @@
                     $timeout(function() {
                         var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
                         if (pk === 'new' && !ModalService.isModalOpen()) {
-                            EditEntityStorage.newSourceEntity(vm.options.$parentComponentId, componentSettings.dataSource.parentField);
+                            EditEntityStorage.newSourceEntity(vm.options.$componentId, componentSettings.dataSource.parentField);
                         }
                     }, 0);
                 });
@@ -124,13 +130,13 @@
             angular.merge(request, handlers);
             switch (vm.action) {
                 case 'save':
+                    request.entityId = vm.entityId;
                     if (vm.entityId && vm.entityId !== 'new') {
                         vm.type = 'update';
                     }
                     if (vm.type == 'create') {
                         EditEntityStorage.editEntityUpdate('create', request);
                     } else if (vm.type == 'update') {
-                        YiiSoftApiService.editedEntityId = vm.entityId;
                         EditEntityStorage.editEntityUpdate('update', request);
                     }
                     break;
@@ -139,23 +145,24 @@
                         if (confirm(translation.replace('%id', vm.entityId))) {
                             request.entityId = vm.entityId;
                             request.setting = vm.setting;
-                            YiiSoftApiService.deleteItemById(request);
+                            YiiSoftApiService.deleteItemById(request, vm.setting.buttonClass === 'context');
                         }
                     });
                     break;
                 case 'presave':
-                    YiiSoftApiService.editedEntityId = vm.entityId;
+                    request.entityId = vm.entityId;
                     EditEntityStorage.editEntityPresave(request);
                     break;
                 case 'open':
-                    var newRequest = {};
-                    newRequest.id = vm.entityId;
-                    newRequest.options = vm.options;
-                    newRequest.url = vm.setting.url;
-                    newRequest.parentField = vm.setting.parentField;
-                    newRequest.headComponent = vm.setting.headComponent;
+                    var newRequest = {
+                        id: vm.entityId,
+                        options: vm.options,
+                        url: vm.setting.url,
+                        parentField: vm.setting.parentField,
+                        $componentId: vm.options.$componentId
+                    };
                     angular.merge(newRequest, handlers);
-                    YiiSoftApiService.loadChilds(newRequest);
+                    $rootScope.$broadcast('ue:parentEntitySet', newRequest);
                     break;
             }
         }

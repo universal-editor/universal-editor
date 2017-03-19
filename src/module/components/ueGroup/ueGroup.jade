@@ -1,12 +1,12 @@
-.editor-field-group
+.editor-field-group(ng-class="vm.classGroupComponent")
     include ../../template/labelField/labelField
-    .field-array-wrapper.editor-group.col-md-12.col-xs-12.col-sm-12.col-lg-12
-        .col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left(data-ng-if="vm.multiple")
-            .item-array-wrapper(data-ng-repeat="fields in vm.fieldsArray track by $index" data-ng-init="outerIndex = $index")
+    .field-array-wrapper.editor-group.col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left
+        div(data-ng-if="vm.multiple")
+            .col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left.item-array-wrapper(data-ng-repeat="fields in vm.fieldsArray track by $index" data-ng-init="outerIndex = $index")
                 data-component-wrapper(ng-class="vm.className" data-ng-repeat="field in fields" data-setting="field" data-options="vm.options")
-                .col-md-12.col-xs-12.col-lg-12.col-sm-12
+                div
                     .btn.btn-primary.btn-xs(data-ng-click="vm.removeItem(outerIndex)", data-ng-if="!vm.readonly") {{'BUTTON.DELETE' | translate}}
-            .col-md-12.col-xs-12.col-lg-12.col-sm-12
+            div
                 .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-if="!vm.readonly") {{'BUTTON.ADD' | translate}}
         .col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left(data-ng-if="!vm.multiple" data-ng-repeat="row in vm.fields")
             data-component-wrapper(

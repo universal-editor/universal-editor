@@ -16,25 +16,27 @@
         var defaultEditFooterBar = [
             {
                 component: {
-                    name: 'ue-button-service',
+                    name: 'ue-button',
                     settings: {
                         label: 'Сохранить',
-                        action: 'save'
+                        action: 'save',
+                        useBackUrl: true,
                     }
                 }
             },
             {
                 component: {
-                    name: 'ue-button-service',
+                    name: 'ue-button',
                     settings: {
                         label: 'Удалить',
-                        action: 'delete'
+                        action: 'delete',
+                        useBackUrl: true,
                     }
                 }
             },
             {
                 component: {
-                    name: 'ue-button-service',
+                    name: 'ue-button',
                     settings: {
                         label: 'Сохранить',
                         action: 'presave'
@@ -59,7 +61,6 @@
             vm.entityLoaded = false;
             vm.loaded = false;
             vm.errors = [];
-            vm.notifys = [];
             vm.entityId = '';
             vm.editorEntityType = 'new';
             vm.editFooterBar = [];
@@ -67,10 +68,23 @@
             vm.editFooterBarExist = [];
             vm.idField = 'id';
 
+            vm.width = !isNaN(+vm.componentSettings.width) ? vm.componentSettings.width : null;
+            vm.classFormComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
+
+            if (!!vm.width) {
+                if (vm.width > 12) {
+                    vm.width = 12;
+                }
+                if (vm.width < 1) {
+                    vm.width = 1;
+                }
+                vm.classFormComponent = 'col-lg-' + vm.width + ' col-md-' + vm.width + ' col-sm-' + vm.width + ' col-xs-' + vm.width + ' clear-padding-left';
+            }
+
             vm.options = angular.copy(vm.options);
             angular.merge(vm.options, {
                 isLoading: false,
-                $parentComponentId: vm.setting.component.$id,
+                $componentId: vm.setting.component.$id,
                 $dataSource: dataSource
             });
 
@@ -104,8 +118,8 @@
                     vm.editFooterBar.push(newControl);
                 });
             }
-            updateButton();
 
+            updateButton();
 
             vm.components = [];
 
@@ -128,11 +142,9 @@
 
 
             if (pk !== 'new') {
-                if (pk) {
-                    YiiSoftApiService.getItemById(pk, dataSource, vm.options);
-                } else if (vm.setting.pk) {
-                    YiiSoftApiService.getItemById(vm.setting.pk, dataSource, vm.options);
-                }
+                YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
+                    vm.options.isLoading = false;
+                });
             }
 
             if (pk === 'new') {
@@ -140,17 +152,22 @@
                 if (pk === 'new' && !ModalService.isModalOpen()) {
                     $timeout(function() {
                         if (pk === 'new' && !ModalService.isModalOpen()) {
-                            EditEntityStorage.newSourceEntity(vm.options.$parentComponentId, vm.setting.component.settings.dataSource.parentField);
+                            EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.setting.component.settings.dataSource.parentField);
                         }
                     });
                 }
             }
+
+            $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
+            $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
+            $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
         };
 
         function updateButton() {
             pkKey = 'pk';
             pk = $state.params[pkKey];
             angular.forEach(vm.editFooterBar, function(button, index) {
+                button.entityId = pk;
                 if (pk === 'new') {
                     button.type = 'create';
                 } else {
@@ -165,31 +182,19 @@
             updateButton();
         });
 
-
-        $scope.$on('editor:entity_loaded', function(event, data) {
-            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
+        $scope.$on('ue:componentDataLoaded', function(event, data) {
+            if (vm.isParentComponent(data)) {
                 vm.editorEntityType = data.editorEntityType;
                 vm.entityId = data[vm.idField];
                 vm.entityLoaded = true;
             }
         });
 
-        $scope.$on('editor:server_error', function(event, data) {
-            vm.errors.push(data);
-        });
-
-        $scope.$on('editor:presave_entity_created', function(event, data) {
-            vm.entityId = data;
-            vm.editorEntityType = 'exist';
-        });
-
-        $scope.$on('editor:field_error', function(event, data) {
-            vm.errors.push(data);
-        });
-
-        $scope.$on('editor:request_start', function(event, data) {
-            vm.errors = [];
-            vm.notifys = [];
+        $scope.$on('ue:afterEntityUpdate', function(event, data) {
+            if (data.action === 'presave') {
+                vm.entityId = data;
+                vm.editorEntityType = 'exist';
+            }
         });
     }
 })();

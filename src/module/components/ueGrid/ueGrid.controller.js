@@ -31,7 +31,6 @@
             vm.items = [];
             vm.links = [];
             vm.errors = [];
-            vm.notifys = [];
             vm.tabsVisibility = [];
             vm.entityId = '';
             vm.editorEntityType = 'new';
@@ -41,7 +40,7 @@
             vm.contextLinks = [];
             vm.mixContextLinks = [];
             vm.listHeaderBar = [];
-            vm.$parentComponentId = vm.setting.component.$id;
+            vm.$componentId = vm.setting.component.$id;
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
             vm.prefixGrid = undefined;
 
@@ -50,12 +49,12 @@
             }
 
             vm.options = {
-                $parentComponentId: vm.$parentComponentId,
-                $gridComponentId: vm.$parentComponentId,
+                $componentId: vm.$componentId,
                 prefixGrid: vm.prefixGrid,
                 mixedMode: vm.setting.component.settings.mixedMode,
                 sort: vm.setting.component.settings.dataSource.sortBy,
-                isGrid: true
+                isGrid: true,
+                $dataSource: vm.dataSource
             };
 
             vm.mixOption = angular.merge({}, vm.options);
@@ -96,8 +95,7 @@
             };
             vm.request.options.$dataSource = vm.setting.component.settings.dataSource;
 
-            var parentEntity = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'];
-            vm.parent = parentEntity || null;
+            vm.parent = $location.search()[getKeyPrefix('parent')];
 
             if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
                 vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
@@ -122,7 +120,7 @@
                             displayName: col.component.settings.label || col.name,
                             component: col,
                             options: {
-                                $parentComponentId: vm.$parentComponentId,
+                                $componentId: vm.$componentId,
                                 regim: 'preview'
                             }
                         };
@@ -179,13 +177,66 @@
             vm.setTabVisible = setTabVisible;
             vm.changeSortField = changeSortField;
 
-            YiiSoftApiService.setFilterParams({});
             vm.request.childId = vm.parent;
             vm.request.options = vm.options;
             vm.request.parentField = parentField;
             vm.request.url = url;
-            YiiSoftApiService.getItemsList(vm.request);
+
+            if (FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
+                refreshTableRecords();
+            }
+
+            $scope.$watch(function() {
+                return FilterFieldsStorage.getFilterController(vm.$componentId).isReady;
+            }, function(filterReady) {
+                if (filterReady) {
+                    var newVal = $location.search();
+                    if (!FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
+                        var filterName = vm.paramsPefix ? vm.paramsPefix + '-filter' : 'filter',
+                            filter = JSON.parse(newVal[filterName]);
+                        if (!$.isEmptyObject(filter)) {
+                            FilterFieldsStorage.fillFilterComponent(vm.$componentId, filter);
+                            $timeout(function() {
+                                FilterFieldsStorage.calculate(vm.$componentId, filterName);
+                                refreshTableRecords();
+                            }, 0);
+                        }
+                    }
+                }
+            });
+
+            $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
+            $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
+            $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
         };
+
+        function setInitialQueryParams() {
+            var locationObject = $location.search();
+            var page = locationObject[getKeyPrefix('page')] || 1;
+            var parent = locationObject[getKeyPrefix('parent')];
+            var sortParameter = locationObject[getKeyPrefix('sort')];
+            vm.request.childId = vm.parent;
+            vm.request.params = vm.request.params || {};
+            vm.request.params.page = page;
+
+            if (sortParameter) {
+                vm.sortingDirection = sortParameter[0] !== '-';
+                vm.sortField = sortParameter.replace('-', '');
+            }
+            vm.request.params.sort = sortParameter || getSortParameter();
+        }
+
+        function getSortParameter(name) {
+            name = name || vm.sortField;
+            return vm.sortingDirection ? name : ('-' + name);
+        }
+
+        function getKeyPrefix(key) {
+            if (!key && vm.options.prefixGrid) {
+                return vm.options.prefixGrid;
+            }
+            return vm.options.prefixGrid ? (vm.options.prefixGrid + '-' + key) : key;
+        }
 
         function getScope() {
             return $scope;
@@ -203,43 +254,86 @@
                 } else {
                     vm.sortField = field;
                 }
-                vm.options.sort = vm.sortingDirection ? field : '-' + field;
-                YiiSoftApiService.getItemsList({
-                    url: url,
-                    options: vm.options,
-                    parentField: parentField,
-                    childId: vm.parent
-                });
+                var sort = getSortParameter(field);
+                $location.search(getKeyPrefix('sort'), sort);
+                $location.search(getKeyPrefix('page'), null);
+                vm.request.params = {
+                    sort: sort,
+                    page: 1
+                };
+                refreshTableRecords(true);
             }
         }
 
         function getParent() {
+            vm.loaded = false;
+            var data = {
+                $componentId: vm.request.options.$componentId
+            }, prefixParentKey = getKeyPrefix('parent');
+            $location.search(getKeyPrefix('page'), null);
             vm.request.childId = vm.parent;
-            vm.request.parentField = parentField;
-            vm.request.prefixGrid = vm.prefixGrid;
-            vm.request.headComponent = vm.setting.headComponent;
-            YiiSoftApiService.loadParent(vm.request);
+            if (vm.request.childId) {
+                vm.options.isLoading = true;
+                YiiSoftApiService.getItemById(vm.request.childId, vm.options)
+                    .then(function(item) {
+                        var parentId = item[vm.request.parentField] || null;
+                        $location.search(prefixParentKey, parentId);
+                        data.parentId = parentId;
+                        $rootScope.$broadcast('ue:beforeParentEntitySet', data);
+
+                        vm.request.childId = parentId;
+                        refreshTableRecords(true);
+                    }, function(reject) {
+                        vm.options.isLoading = false;
+                    });
+            } else {
+                $rootScope.$broadcast('ue:beforeParentEntitySet', data);
+                $location.search(prefixParentKey, null);
+                vm.request.parentField = null;
+                vm.request.childId = null;
+                refreshTableRecords(true);
+            }
         }
 
-        $scope.$on('editor:parent_id', function(event, data) {
-            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
+        function switchLoaderOff() {
+            vm.loaded = true;
+        }
+
+        $scope.$on('ue:parentEntitySet', function(event, request) {
+            if (vm.isParentComponent(request)) {
+                vm.loaded = false;
+                var data = {
+                    parentId: request.id,
+                    $componentId: request.$componentId
+                };
+                $rootScope.$broadcast('ue:beforeParentEntitySet', data);
+                request.childId = request.id;
+                refreshTableRecords(true, request).then(function() {
+                    $location.search(getKeyPrefix('parent'), request.childId);
+                });
+            }
+        });
+
+        function refreshTableRecords(notGoToState, request) {
+            setInitialQueryParams();
+            return YiiSoftApiService.getItemsList(request || vm.request, notGoToState);
+        }
+
+
+        $scope.$on('ue:beforeParentEntitySet', function(event, data) {
+            if (vm.isParentComponent(data)) {
                 vm.parent = data.parentId;
             }
         });
 
-
-        $scope.$on('editor:read_entity', function(event, data) {
-            var eventComponentId = data.$gridComponentId || data.$parentComponentId || data;
-            if (vm.$parentComponentId === eventComponentId) {
-                vm.parent = $location.search()[vm.prefixGrid ? vm.prefixGrid + '-parent' : 'parent'] || null;
-                vm.request.childId = vm.parent;
-                YiiSoftApiService.getItemsList(vm.request);
+        $scope.$on('ue:collectionRefresh', function(event, data) {
+            if (vm.isComponent(data)) {
+                refreshTableRecords();
             }
         });
 
-        $scope.$on('editor:update_item', function(event, data) {
-            var eventComponentId = data.$gridComponentId || data.$parentComponentId;
-            if (!eventComponentId || (vm.$parentComponentId === eventComponentId && data.value)) {
+        $scope.$on('ue:afterEntityUpdate', function(event, data) {
+            if (vm.isComponent(data) && data.value) {
                 var changed = false;
                 vm.items.filter(function(item) {
                     if (item[vm.idField] === data.value[vm.idField]) {
@@ -250,93 +344,68 @@
                 if (changed) {
                     var list = {};
                     list[itemsKey] = vm.items;
-                    $rootScope.$broadcast('editor:items_list', list);
+                    $rootScope.$broadcast('ue:collectionLoaded', list);
                 }
             }
         });
+        $scope.$on('ue:afterEntityDelete', function(event, data) {
+            if (vm.isComponent(data)) {
+                vm.items.forEach(function(item, i, arr) {
+                    if (item[vm.idField] == data.entityId) {
+                        arr.splice(i, 1);
+                    }
+                });
+                vm.parent = $location.search()[getKeyPrefix('parent')] || null;
+                vm.request.childId = vm.parent;
+                refreshTableRecords(true).then(function(data) {
+                    if (data.items) {
+                        vm.items = data.items;
+                    }
+                });
+            }
+        });
 
-        $scope.$on('editor:items_list', function(event, data) {
-            if (!data.$parentComponentId || vm.isParentComponent(data.$parentComponentId)) {
-                vm.loaded = true;
+        $scope.$on('ue:componentDataLoaded', function(event, data) {            
+            if (vm.isComponent(data) && !data.hasOwnProperty('$items')) {
+                vm.loaded = false;
+                event.preventDefault();
                 vm.items = data[itemsKey];
-
-                var components = vm.tableFields.map(function(f) { return f.component; });
-                if (angular.isObject(vm.items)) {
-                    angular.forEach(vm.items, function(item, index) {
-                        item.$options = {
-                            $parentComponentId: vm.$parentComponentId,
-                            regim: 'preview',
-                            $dataIndex: index
-                        };
-                    });
-                }
-                var options = {
-                    data: vm.items,
-                    components: components,
-                    $id: vm.$parentComponentId,
-                    standart: vm.dataSource.standart
-                };
-                YiiSoftApiService.extendData(options).then(function(data) {
-                    var eventObject = {
-                        editorEntityType: 'exist',
-                        $parentComponentId: vm.$parentComponentId,
-                        $items: data
-                    };
-                    $timeout(function() {
-                        $rootScope.$broadcast('editor:entity_loaded', eventObject);
-                    });
-                });
-
-                vm.parentButton = !!vm.parent;
-                vm.pageItemsArray = [];
-
-                angular.forEach(vm.listFooterBar, function(control) {
-                    control.paginationData = data;
-                });
-            }
-        });
-
-        $scope.$on('editor:server_error', function(event, data) {
-             if (!data.$parentComponentId || data.$parentComponentId === vm.options.$parentComponentId) {
-                 vm.listLoaded = true;
-             }
-            vm.errors.push(data);
-        });
-
-        $scope.$on('editor:parent_childs', function(event, data) {
-            angular.forEach(vm.items, function(item, ind) {
-
-                var startInd = 1;
-                if (item[vm.idField] === data.id) {
-                    if (item.isExpand === true) {
-                        item.isExpand = false;
-                        vm.items.splice(ind + 1, data.childs.length);
-                    } else {
-                        item.isExpand = true;
-                        angular.forEach(data.childs, function(newItem) {
-                            if (vm.items[ind].hasOwnProperty.parentPadding) {
-                                newItem.parentPadding = vm.items[ind].parentPadding + 1;
-                            } else {
-                                newItem.parentPadding = 1;
-                            }
-                            vm.items.splice(ind + startInd, 0, newItem);
+                if (vm.items) {
+                    var components = vm.tableFields.map(function(f) { return f.component; });
+                    if (angular.isObject(vm.items)) {
+                        angular.forEach(vm.items, function(item, index) {
+                            item.$options = {
+                                $componentId: vm.$componentId,
+                                regim: 'preview',
+                                $dataIndex: index
+                            };
                         });
                     }
+                    var options = {
+                        data: vm.items,
+                        components: components,
+                        $id: vm.$componentId,
+                        standart: vm.dataSource.standart
+                    };
+                    YiiSoftApiService.extendData(options).then(function(data) {
+                        var eventObject = {
+                            editorEntityType: 'exist',
+                            $componentId: vm.$componentId,
+                            $items: data
+                        };
+                        $timeout(function() {
+                            $rootScope.$broadcast('ue:componentDataLoaded', eventObject);
+                        });
+                    }).finally(switchLoaderOff);
 
+                    vm.parentButton = !!vm.parent;
+                    vm.pageItemsArray = [];
+
+                    angular.forEach(vm.listFooterBar, function(control) {
+                        control.paginationData = data;
+                    });
                 }
-            });
-        });
-
-        $scope.$on('editor:entity_success_deleted', function(event, data) {
-        });
-
-        $scope.$on('editor:field_error', function(event, data) {
-            vm.errors.push(data);
-        });
-
-        $scope.$on('editor:request_start', function(event, data) {
-            vm.errors = [];
-            vm.notifys = [];
+            }
         });
 
         $document.on('click', function(evt) {
@@ -346,7 +415,6 @@
                 }, 0);
             }
         });
-
 
         function isInTableFields(name) {
             var index = vm.tableFields.findIndex(function(field) {

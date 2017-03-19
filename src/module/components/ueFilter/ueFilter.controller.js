@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeFilterController', UeFilterController);
 
-    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, $timeout, FilterFieldsStorage, $compile, $document, $templateCache) {
+    function UeFilterController($scope, $rootScope, $element, EditEntityStorage, $timeout, FilterFieldsStorage, $compile, $document, $templateCache, $controller) {
         /* jshint validthis: true */
         "ngInject";
         var vm = this,
@@ -21,9 +21,10 @@
             } else {
                 $element.find('.filter-component').append(templateEditorFilter);
             }
+            angular.extend(vm, $controller('BaseController', { $scope: $scope }));
 
             settings = vm.setting.component.settings;
-            vm.parentComponentId = vm.options.$parentComponentId;
+            vm.parentComponentId = vm.options.$componentId;
             vm.visiable = false;
             vm.filterName = vm.options.prefixGrid ? vm.options.prefixGrid + '-filter' : 'filter';
             FilterFieldsStorage.registerFilterController(vm);
@@ -43,7 +44,7 @@
                                     index: 0
                                 },
                                 filter: true,
-                                $parentComponentId: vm.options.$parentComponentId,
+                                $componentId: vm.options.$componentId,
                                 paramsPefix: vm.options.prefixGrid,
                                 regim: 'filter'
                             }
@@ -118,19 +119,12 @@
                                 model.fieldValue = {};
                                 model.fieldValue[model.fieldId] = value;
                                 model.addToSelected(null, model.fieldValue);
-                                if(angular.isFunction(model.loadDataById)) {
+                                if (angular.isFunction(model.loadDataById)) {
                                     model.loadDataById(value);
                                 }
                             }
                         }
-                        $timeout(function() {
-                            var paramName = vm.options.prefixGrid ? vm.options.prefixGrid + '-filter' : 'filter';
-                            if (!FilterFieldsStorage.getFilterQueryObject(paramName)) {
-                                FilterFieldsStorage.calculate(parentComponentId, paramName);
-                                $rootScope.$broadcast('editor:read_entity', model.options);
-                                vm.visiable = true;
-                            }
-                        }, 0);
+                        vm.visiable = true;
                         return output;
                     };
 
@@ -152,7 +146,7 @@
                                     index: 1
                                 },
                                 filter: true,
-                                $parentComponentId: vm.options.$parentComponentId
+                                $componentId: vm.options.$componentId
                             },
                             ngStyle: 'display: inline-block; width: 25%; margin-left: 20px;'
                         });
@@ -160,6 +154,7 @@
                     vm.body.push(group);
                 }
             });
+
 
             vm.footer = [];
             if (!settings.footer || !settings.footer.toolbar) {
@@ -200,14 +195,14 @@
             vm.toggleFilterVisibility = toggleFilterVisibility;
 
             vm.apply = function() {
-                if (vm.options.$parentComponentId) {
-                    FilterFieldsStorage.apply(vm.options.$parentComponentId);
+                if (vm.options.$componentId) {
+                    FilterFieldsStorage.apply(vm.options.$componentId);
                 }
             };
 
             vm.clear = function() {
-                if (vm.options.$parentComponentId) {
-                    FilterFieldsStorage.clear(vm.options.$parentComponentId);
+                if (vm.options.$componentId) {
+                    FilterFieldsStorage.clear(vm.options.$componentId);
                 }
             };
         };

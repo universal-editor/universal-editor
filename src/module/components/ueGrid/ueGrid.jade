@@ -3,16 +3,14 @@
         .grid-toolbar
             component-wrapper.header-action-button(ng-repeat="button in vm.listHeaderBar track by $index", data-setting="button", data-button-class="header", data-options="vm.options")
         .grid-filter-edit
-        .groups-action(data-ng-if="vm.parentButton && !vm.options.isLoading")
-            button.btn.btn-sm.btn-default(data-ng-click="vm.getParent()") {{'BUTTON.HIGHER_LEVEL' | translate}}
-        .processing-status-wrapper(data-ng-show="!vm.loaded")
-            .processing-status {{'PERFORMS_ACTIONS' | translate}}    
-        table.table.table-bordered(data-ng-hide="vm.options.isLoading", class="items-list")
+        .groups-action(data-ng-if="vm.parentButton")
+            button.btn.btn-sm.btn-default(data-ng-click="vm.getParent()" ng-disabled="vm.options.isLoading") {{'BUTTON.HIGHER_LEVEL' | translate}}            
+        table.table.table-bordered(class="items-list")
             thead
                 tr
                     td.actions-header.context-column(ng-if="vm.isContextMenu")
                     td( data-ng-repeat="fieldItem in vm.tableFields",
-                    data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'asc' : vm.sortingDirection, 'desc' : !vm.sortingDirection}",
+                    data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection}",
                     data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)") {{fieldItem.displayName}}
             tbody(data-ng-if="vm.loaded")
                 tr(data-ng-repeat="item in vm.items", data-ng-class="{'zhs-item' : item[vm.subType] && item[vm.subType] !== undefined}", data-ng-mousedown="vm.toggleContextViewByEvent(item[vm.idField], $event)", oncontextmenu='return false;')
@@ -39,6 +37,11 @@
                 tr(data-ng-if="vm.items.length == 0")
                     td(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
                         | {{'ELEMENT_NO' | translate}}
+            tbody(data-ng-show="!vm.loaded")
+                tr
+                    td.td-loading(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
+                        .processing-status-wrapper
+                            .processing-status {{'PERFORMS_ACTIONS' | translate}}
             tfoot
                 tr
                     td(colspan="{{vm.tableFields.length + vm.isContextMenu}}")

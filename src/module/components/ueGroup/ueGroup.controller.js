@@ -10,19 +10,30 @@
         "ngInject";
         var vm = this,
             componentSettings,
-            entityObject,
             baseController,
             widthBootstrap = 12;
 
         vm.$onInit = function() {
             componentSettings = vm.setting.component.settings;
-            entityObject = YiiSoftApiService.getEntityObject();
             vm.fieldName = componentSettings.name;
 
             baseController = $controller('BaseController', { $scope: $scope });
             vm.parentFieldType = vm.setting.resourceType;
             angular.extend(vm, baseController);
             EditEntityStorage.addFieldController(vm, true);
+
+            vm.width = !isNaN(+componentSettings.width) ? componentSettings.width : null;
+            vm.classGroupComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
+
+            if (!!vm.width) {
+                if (vm.width > 12) {
+                    vm.width = 12;
+                }
+                if (vm.width < 1) {
+                    vm.width = 1;
+                }
+                vm.classGroupComponent = 'col-lg-' + vm.width + ' col-md-' + vm.width + ' col-sm-' + vm.width + ' col-xs-' + vm.width + ' clear-padding-left';
+            }
 
             vm.innerFields = [];
             vm.fieldsArray = [];
@@ -40,11 +51,14 @@
             vm.removeItem = removeItem;
 
             angular.forEach(componentSettings.fields, function(value, index) {
-                var field;
+                var field, dataSource;
                 if (angular.isString(value)) {
-                    field = entityObject.dataSource.fields.filter(function(k) {
-                        return k.name == value;
-                    })[0];
+                    dataSource = $scope.getParentDataSource();
+                    if (dataSource && angular.isArray(dataSource.fields)) {
+                        field = dataSource.fields.filter(function(k) {
+                            return k.name == value;
+                        })[0];
+                    }
                 } else if (value && value.component) {
                     field = value;
                 }
@@ -68,7 +82,7 @@
             });
 
             vm.$isOnlyChildsBroadcast = false;
-            vm.listeners.push($scope.$on('editor:entity_loaded', onLoadedHandler));
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', onLoadedHandler));
             vm.option = angular.merge({}, vm.options);
             vm.option.isGroup = true;
         };
@@ -81,7 +95,7 @@
                         group.forEach(vm.addItem);
                         $timeout(function() {
                             vm.$isOnlyChildsBroadcast = true;
-                            $scope.$broadcast('editor:entity_loaded', data);
+                            $scope.$broadcast('ue:componentDataLoaded', data);
                             delete vm.$isOnlyChildsBroadcast;
                         }, 0);
                     }
