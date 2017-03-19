@@ -9,7 +9,7 @@
         var vm = this;
         var articlesDataSource = {
             standard: 'JSONAPI',
-            type: 'articles',
+            resourceType: 'articles',
             url: 'http://localhost:16006/rest/articles',
             sortBy: '-id',
             primaryKey: 'id',
@@ -134,7 +134,7 @@
                                             fields: ['id', 'title', 'created', 'status', 'views', 'content',
                                                 {
                                                     name: 'author',
-                                                    type: 'people',
+                                                    resourceType: 'people',
                                                     component: {
                                                         name: 'ue-group',
                                                         settings: {
@@ -159,7 +159,7 @@
                                                 },
                                                 {
                                                     name: 'comments',
-                                                    type: 'comments',
+                                                    resourceType: 'comments',
                                                     component: {
                                                         name: 'ue-group',
                                                         settings: {
