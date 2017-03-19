@@ -9,7 +9,7 @@
         var vm = this;
         var articlesDataSource = {
             standard: 'JSONAPI',
-            type: 'articles',
+            resourceType: 'articles',
             url: 'http://localhost:16006/rest/articles',
             sortBy: '-id',
             primaryKey: 'id',
@@ -42,10 +42,10 @@
                     component: {
                         name: 'ue-dropdown',
                         settings: {
-                            label: 'Статус',
+                            label: 'Status',
                             values: {
-                                "published": "Published",
-                                "draft": "Draft"
+                                published: 'Published',
+                                draft: 'Draft'
                             }
                         }
                     }

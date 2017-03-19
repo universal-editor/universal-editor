@@ -9,7 +9,7 @@
         var vm = this;
         var articlesDataSource = {
             standard: 'JSONAPI',
-            type: 'articles',
+            resourceType: 'articles',
             url: 'http://localhost:16006/rest/articles',
             sortBy: '-id',
             primaryKey: 'id',
@@ -42,10 +42,10 @@
                     component: {
                         name: 'ue-dropdown',
                         settings: {
-                            label: 'Статус.',
+                            label: 'Status',
                             values: {
-                                "published": "Published",
-                                "draft": "Draft"
+                                published: 'Published',
+                                draft: 'Draft'
                             }
                         }
                     }
@@ -134,7 +134,7 @@
                                             fields: ['id', 'title', 'created', 'status', 'views', 'content',
                                                 {
                                                     name: 'author',
-                                                    type: 'people',
+                                                    resourceType: 'people',
                                                     component: {
                                                         name: 'ue-group',
                                                         settings: {
@@ -159,28 +159,28 @@
                                                 },
                                                 {
                                                     name: 'comments',
-                                                    type: 'comments',
+                                                    resourceType: 'comments',
                                                     component: {
                                                         name: 'ue-group',
                                                         settings: {
                                                             multiple: true,
                                                             label: 'Comments',
                                                             fields: [
-                                                            {
-                                                                name: 'id',
-                                                                component: {
-                                                                    name: 'ue-dropdown',
-                                                                    settings: {
-                                                                        valuesRemote: {
-                                                                            fields: {
-                                                                                key: 'id',
-                                                                                label: 'body'
-                                                                            },
-                                                                            url: 'http://localhost:16006/rest/comments'
+                                                                {
+                                                                    name: 'id',
+                                                                    component: {
+                                                                        name: 'ue-dropdown',
+                                                                        settings: {
+                                                                            valuesRemote: {
+                                                                                fields: {
+                                                                                    key: 'id',
+                                                                                    label: 'body'
+                                                                                },
+                                                                                url: 'http://localhost:16006/rest/comments'
+                                                                            }
                                                                         }
                                                                     }
-                                                                }
-                                                            }]
+                                                                }]
                                                         }
                                                     }
                                                 }

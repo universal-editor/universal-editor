@@ -18,7 +18,7 @@
             vm.fieldName = componentSettings.name;
 
             baseController = $controller('BaseController', { $scope: $scope });
-            vm.parentFieldType = vm.setting.type;
+            vm.parentFieldType = vm.setting.resourceType;
             angular.extend(vm, baseController);
             EditEntityStorage.addFieldController(vm, true);
 
