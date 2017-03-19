@@ -161,7 +161,7 @@
                 var fieldValue = ctrl.getFieldValue();
 
                 //-- genarate filter objects with prepared filters
-                var filterValue = settings.$toFilter(operator, ctrl.getFieldValue());
+                var filterValue = settings.$toFilter(operator, ctrl.getFieldValue(), ctrl);
                 angular.extend(filters, filterValue);
             });
 

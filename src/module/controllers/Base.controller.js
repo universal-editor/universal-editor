@@ -12,6 +12,11 @@
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
 
+        self.isNumber = false;
+        if (angular.isArray(componentSettings.validators)) {
+            self.isNumber = componentSettings.validators.some(function(f) { return f.type === 'number'; });
+        }
+
         self.resetErrors = resetErrors;
 
         if (self.options) {
