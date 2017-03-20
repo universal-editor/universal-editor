@@ -160,8 +160,13 @@
     }
 
     webpackConfigTemplate.entry = {
-        'ue': ['webpack-dev-server/client?http://' + localHost + ':' + freePort + '/', 'webpack/hot/dev-server', path.resolve(__dirname, 'src/main.js')]
+        'ue': [path.resolve(__dirname, 'src/main.js')]
     };
+
+    if (RUNNING_SERVER) {
+        webpackConfigTemplate.entry.ue.unshift('webpack-dev-server/client?http://' + localHost + ':' + freePort + '/');
+        webpackConfigTemplate.entry.ue.unshift('webpack/hot/dev-server');
+    }
 
     webpackConfigTemplate.plugins.push(
         new copyWebpackPlugin([{
