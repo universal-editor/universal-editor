@@ -49,7 +49,10 @@
 
             angular.forEach(dataSource.fields, function(field) {
                 if (field.component && field.component.settings && field.component.settings.expandable === true) {
-                    expandFields.push(field.parentField || field.name);
+                    var name = field.parentField || field.name;
+                    if (name && expandFields.indexOf(name) === -1) {
+                        expandFields.push(name);
+                    }
                 }
             });
 
@@ -402,7 +405,10 @@
                 options.isLoading = true;
                 angular.forEach(dataSource.fields, function(field) {
                     if (field.component && field.component.settings && field.component.settings.expandable === true) {
-                        expandFields.push(field.parentField || field.name);
+                        var name = field.parentField || field.name;
+                        if (name && expandFields.indexOf(name) === -1) {
+                            expandFields.push(name);
+                        }
                     }
                 });
                 if (expandFields.length > 0) {
