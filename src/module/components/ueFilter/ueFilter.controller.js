@@ -41,7 +41,7 @@
                 }
             });
             function proccessField(field) {
-                var fieldSettings = field.component.settings;                
+                var fieldSettings = field.component.settings;
                 var group = {
                     label: fieldSettings.label,
                     operators: [],
@@ -63,21 +63,26 @@
                 /** convert to filter object from fields*/
                 fieldSettings.$toFilter = fieldSettings.$toFilter || function(operator, fieldValue, ctrl) {
                     var groupName = ctrl.parentField;
-                    if(groupName) {
+                    if (groupName) {
                         fieldValue = fieldValue[groupName];
                     }
-                    if(ctrl.isNumber === true) {
+                    if (ctrl.isNumber === true) {
                         operator = ':text';
                     }
                     angular.forEach(fieldValue, function(value, key) {
                         if (operator && operator.indexOf(':text') !== -1) {
                             if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
+                                var consistKey = key;
                                 if (groupName) {
                                     if (fieldValue[key]) {
-                                        fieldValue[groupName + '.' + key] = operator.replace(':text', fieldValue[key]);
+                                        consistKey = groupName + '.' + key;
+                                        fieldValue[consistKey] = operator.replace(':text', fieldValue[key]);
                                     }
                                 } else {
                                     fieldValue[key] = operator.replace(':text', value);
+                                }
+                                if (ctrl.isNumber === true && !isNaN(+fieldValue[consistKey])) {
+                                    fieldValue[consistKey] = +fieldValue[consistKey];
                                 }
                             }
                             if (value === undefined || value === null || value === '' || (angular.isObject(value) && $.isEmptyObject(value)) || groupName) {
@@ -116,7 +121,7 @@
                         }
                     });
                     var value = model.parentField ? output[model.parentField + '.' + model.fieldName] : output[model.fieldName];
-                    if(model.isNumber === true) {
+                    if (model.isNumber === true) {
                         value = +value;
                     }
                     if (angular.isArray(value)) {
