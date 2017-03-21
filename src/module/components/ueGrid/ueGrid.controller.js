@@ -365,7 +365,7 @@
             }
         });
 
-        $scope.$on('ue:componentDataLoaded', function(event, data) {            
+        $scope.$on('ue:componentDataLoaded', function(event, data) {
             if (vm.isComponent(data) && !data.hasOwnProperty('$items')) {
                 vm.loaded = false;
                 event.preventDefault();

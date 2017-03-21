@@ -68,7 +68,10 @@ body {
     & .component-edit,
     & .component-preview {
         display: inline-block;
-        width: 100%
+        width: 100%;
+        span {
+            margin-right: 3px;
+        }
     }
     & .btn[disabled] {
         pointer-events: none;
