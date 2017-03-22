@@ -448,13 +448,13 @@
                     deferred.resolve(data);
                 }, function(reject) {
                     if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                        reject.$componentId = request.options.$componentId;
-                        failAnswer.bind(objectBind)(reject);
-                    } else {
                         var data = service.processResponse(config, reject,
                             successAnswer.bind(objectBind),
                             failAnswer.bind(objectBind));
                         reject.data = data;
+                    } else {
+                        reject.$componentId = request.options.$componentId;
+                        failAnswer.bind(objectBind)(reject);
                     }
                     deferred.reject(reject);
                 });
