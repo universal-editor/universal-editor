@@ -6,6 +6,9 @@ body {
 
 .universal-editor,
 .modal-dialog {
+    .clear {
+        clear: both;
+    }
     .clear-padding-left {
         padding-left: 0 !important;
         padding-right: 0 !important;
