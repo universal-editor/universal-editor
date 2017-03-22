@@ -453,7 +453,7 @@
                             failAnswer.bind(objectBind));
                         reject.data = data;
                     } else {
-                        reject.$componentId = request.options.$componentId;
+                        reject.$componentId = options.$componentId;
                         failAnswer.bind(objectBind)(reject);
                     }
                     deferred.reject(reject);
