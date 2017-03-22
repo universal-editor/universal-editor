@@ -22,7 +22,7 @@
         $scope.__proto__.getParentDataSource = function() {
             var scope = $scope;
             while(scope) {
-                if(scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.settings && scope.vm.setting.component.settings.dataSource) {
+                if(scope.vm && scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.settings && scope.vm.setting.component.settings.dataSource) {
                     return scope.vm.setting.component.settings.dataSource;
                 }
                 scope = scope.$parent;

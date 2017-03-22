@@ -158,12 +158,12 @@
         }
 
         function resetErrors() {
-            vm.errors = [];
+            vm.error = [];
         }
 
         function onErrorApiHandler(event, eventObject) {
             // for location component related errors
-            if (eventObject.$componentId === $scope.vm.setting.component.$id) {
+            if (eventObject.$componentId && $scope.vm.setting.component.$id && eventObject.$componentId === $scope.vm.setting.component.$id) {
                 event.preventDefault();
                 var fields = eventObject.data;
                 $scope.$broadcast('ue:componentError', {

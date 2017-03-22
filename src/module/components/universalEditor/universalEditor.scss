@@ -59,6 +59,7 @@ body {
             display: inline-block;
             padding: 7px !important;
             margin: 5px 0;
+            margin-left: 15px;
             &.alert-warning,
             &.alerts-danger {
                 margin: 10px 0;
@@ -180,6 +181,7 @@ body {
             left: 4px;
         }
     }
+    
     .field-wrapper-ue-radiolist,
     .field-wrapper-ue-checkbox {
         & .processing-status-wrapper {
