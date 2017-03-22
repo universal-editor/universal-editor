@@ -158,7 +158,7 @@
         }
 
         function resetErrors() {
-            vm.error = [];
+            self.error = [];
         }
 
         function onErrorApiHandler(event, eventObject) {
