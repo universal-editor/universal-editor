@@ -35,7 +35,7 @@ body {
         label.field-name-label {
             margin-right: 10px;
             vertical-align: top;
-            &:after {
+            &.inline-component:after {
                 content: ':'
             }
         }

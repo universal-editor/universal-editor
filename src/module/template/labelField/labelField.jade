@@ -1,4 +1,4 @@
-label.field-name-label(ng-if="!vm.options.filter && !!vm.label")
+label.field-name-label(ng-if="!vm.options.filter && !!vm.label", ng-class="{'inline-component': vm.inline}")
     .field-hint(data-ng-if="!!vm.hint")
         .hint-text(ng-bind="::vm.hint")
     span(data-ng-class="{'editor-required': vm.required}" ng-bind="::vm.label")
