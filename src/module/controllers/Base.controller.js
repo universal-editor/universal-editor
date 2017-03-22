@@ -161,6 +161,10 @@
             self.error = [];
         }
 
+        $scope.$on('ue:beforeEntityCreate', resetErrors);
+        $scope.$on('ue:beforeEntityUpdate', resetErrors);
+        $scope.$on('ue:beforeEntityDelete', resetErrors);
+
         function onErrorApiHandler(event, eventObject) {
             // for location component related errors
             if (eventObject.$componentId && $scope.vm.setting.component.$id && eventObject.$componentId === $scope.vm.setting.component.$id) {
