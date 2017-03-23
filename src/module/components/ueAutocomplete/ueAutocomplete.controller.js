@@ -75,7 +75,7 @@
                         }
                     }
                     inputTimeout = $timeout(function() {
-                        autocompleteSearch(newValue);
+                        vm.autocompleteSearch(newValue);
                     }, 300);
                 }
             }, true));
@@ -183,6 +183,8 @@
         }
 
         /* PRIVATE METHODS */
+        vm.autocompleteSearch = autocompleteSearch;
+        vm.alreadyIn = alreadyIn;
 
         function autocompleteSearch(searchString) {
             vm.error = [];
