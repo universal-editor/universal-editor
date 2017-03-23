@@ -680,13 +680,12 @@
                         }
                     });
                 }
-                fields = field.map(function(field) {
+                fields = fields.map(function(field) {
                     if(angular.isString(field)) {
                         return '"' + field + '"';
                     }
                     return field;
-                });
-                fields = fields.join(',');
+                }).join(',');
                 if (angular.isString(options.url)) {
                     data.forEach(function(item) {
                         if (item[component.name] !== undefined && item[component.name] !== null && filter.indexOf(item[component.name]) === -1) {
