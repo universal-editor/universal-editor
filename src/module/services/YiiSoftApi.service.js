@@ -680,6 +680,12 @@
                         }
                     });
                 }
+                fields = field.map(function(field) {
+                    if(angular.isString(field)) {
+                        return '"' + field + '"';
+                    }
+                    return field;
+                });
                 fields = fields.join(',');
                 if (angular.isString(options.url)) {
                     data.forEach(function(item) {

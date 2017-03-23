@@ -364,7 +364,6 @@
         $scope.$on('ue:componentDataLoaded', function(event, data) {
             if (vm.isComponent(data) && !data.hasOwnProperty('$items') && !event.defaultPrevented) {
                 vm.loaded = false;
-                event.preventDefault();
                 vm.items = data[itemsKey];
                 if (vm.items) {
                     var components = vm.tableFields.map(function(f) { return f.component; });
