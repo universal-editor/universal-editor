@@ -362,7 +362,7 @@
         });
 
         $scope.$on('ue:componentDataLoaded', function(event, data) {
-            if (vm.isComponent(data) && !data.hasOwnProperty('$items')) {
+            if (vm.isComponent(data) && !data.hasOwnProperty('$items') && !event.defaultPrevented) {
                 vm.loaded = false;
                 event.preventDefault();
                 vm.items = data[itemsKey];

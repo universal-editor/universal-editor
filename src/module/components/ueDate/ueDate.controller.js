@@ -32,7 +32,7 @@
             fillPreviewValue();
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {                
-                if (vm.isParentComponent(data) && !vm.options.filter) {
+                if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
                     if (vm.multiple) {
                         if (angular.isArray(vm.fieldValue)) {

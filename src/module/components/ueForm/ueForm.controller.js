@@ -183,7 +183,7 @@
         });
 
         $scope.$on('ue:componentDataLoaded', function(event, data) {
-            if (vm.isParentComponent(data)) {
+            if (vm.isParentComponent(data) && !event.defaultPrevented) {
                 vm.editorEntityType = data.editorEntityType;
                 vm.entityId = data[vm.idField];
                 vm.entityLoaded = true;

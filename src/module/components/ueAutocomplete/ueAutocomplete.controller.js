@@ -42,7 +42,7 @@
             }
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(event, data) {
-                if (vm.isParentComponent(data) && !vm.options.filter) {
+                if (vm.isParentComponent(data) && !vm.options.filter && !event.defaultPrevented) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
                     if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {

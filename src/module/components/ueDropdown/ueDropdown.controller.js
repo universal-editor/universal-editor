@@ -144,7 +144,7 @@
         }
 
         var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {            
-            if (vm.isParentComponent(data)) {
+            if (vm.isParentComponent(data) && !event.defaultPrevented) {
                 vm.data = data;
                 $scope.onLoadDataHandler(event, data);
                 componentSettings.$loadingPromise.then(function(items) {
