@@ -13,6 +13,12 @@
         angular.extend(vm, baseController);
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
+        self.setting.component.$selectedStorage = self.setting.component.$selectedStorage || [];
+        if (componentSettings.valuesRemote) {
+            componentSettings.valuesRemote.$selectedStorage = componentSettings.valuesRemote.$selectedStorage || [];
+        } else if (componentSettings.values) {
+            componentSettings.values.$selectedStorage = componentSettings.values.$selectedStorage || [];
+        }
         var regEmail = new RegExp('^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$', 'i');
         var regUrl = new RegExp('^(?:(?:ht|f)tps?://)?(?:[\\-\\w]+:[\\-\\w]+@)?(?:[0-9a-z][\\-0-9a-z]*[0-9a-z]\\.)+[a-z]{2,6}(?::\\d{1,5})?(?:[?/\\\\#][?!^$.(){}:|=[\\]+\\-/\\\\*;&~#@,%\\wА-Яа-я]*)?$', 'i');
 
@@ -42,13 +48,15 @@
             if (self.optionValues) {
                 if (values) {
                     angular.forEach(componentSettings.values, function(v, key) {
-                        var obj = {};
-                        obj[self.fieldId] = key;
-                        obj[self.fieldSearch] = v;
-                        if (angular.isArray(componentSettings.values)) {
-                            obj[self.fieldId] = v;
+                        if (angular.isString(v)) {
+                            var obj = {};
+                            obj[self.fieldId] = key;
+                            obj[self.fieldSearch] = v;
+                            if (angular.isArray(componentSettings.values)) {
+                                obj[self.fieldId] = v;
+                            }
+                            self.optionValues.push(obj);
                         }
-                        self.optionValues.push(obj);
                     });
                     componentSettings.$loadingPromise = $q.when(self.optionValues);
                 } else if (remoteValues) {
@@ -70,23 +78,9 @@
                             config.standard = dataSource.standard;
                             componentSettings.$loadingPromise = YiiSoftApiService
                                 .getUrlResource(config)
-                                .then(function(response) {
-                                    if (!componentSettings.depend) {
-                                        angular.forEach(response.data.items, function(v) {
-                                            self.optionValues.push(v);
-                                        });
-                                    }
-                                    componentSettings.$optionValues = self.optionValues;
-                                    return self.optionValues;
-                                }, function(reject) {
-                                    $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
-                                        console.error(self.constructor.name + translation.replace('%name_field', self.fieldName));
-                                    });
-                                }).finally(function() {
-                                    self.loadingPossibleData = false;
-                                    self.loadingData = false;
-                                });
+                                .then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
                         } else {
+                            componentSettings.$loadingPromise.then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
                             if (componentSettings.$optionValues && componentSettings.$optionValues.length) {
                                 self.loadingData = false;
                                 self.optionValues = componentSettings.$optionValues;
@@ -95,6 +89,32 @@
                     }
                 }
             }
+        }
+
+        function onLoadedItemFinally() {
+            self.loadingPossibleData = false;
+            self.loadingData = false;
+        }
+
+        function onErrorLoadedItem(reject) {
+            $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                console.error(self.constructor.name + translation.replace('%name_field', self.fieldName));
+            });
+        }
+
+        function onLoadedItems(response) {
+            var items = response.hasOwnProperty('data') ? response.data.items : response
+            if (response.hasOwnProperty('data')) {
+                if (!componentSettings.depend) {
+                    angular.forEach(response.data.items, function(v) {
+                        self.optionValues.push(v);
+                    });
+                }                
+            } else {
+                self.optionValues = response;
+            }
+            componentSettings.$optionValues = self.optionValues;
+            return self.optionValues;
         }
 
         self.cols = self.width;
@@ -136,10 +156,55 @@
             function() {
                 return self.fieldValue;
             },
-            function(value) {
+            function(value, oldValue) {
                 self.error = [];
                 if (self.disabled === true) {
                     self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : !!value;
+                }
+                var parameters = componentSettings.valuesRemote || componentSettings.values;
+                if (angular.isObject(parameters)) {
+                    var selected = parameters.$selectedStorage;
+                    if (angular.isArray(oldValue)) {
+                        oldValue.forEach(function(value) {
+                            var v = value;
+                            if (angular.isObject(value)) {
+                                v = value[self.fieldId];
+                            }
+                            var iOldValue = selected.indexOf(v);
+                            if (iOldValue !== -1) {
+                                selected.splice(iOldValue, 1);
+                            }
+                        });
+                    } else if (oldValue) {
+                        var v = oldValue;
+                        if (angular.isObject(oldValue)) {
+                            v = oldValue[self.fieldId];
+                        }
+                        var iOldValue = selected.indexOf(v);
+                        if (iOldValue !== -1) {
+                            selected.splice(iOldValue, 1);
+                        }
+                    }
+
+                    if (angular.isArray(value)) {
+                        value.forEach(function(value) {
+                            var v = value;
+                            if (angular.isObject(value)) {
+                                v = value[self.fieldId];
+                            }
+                            if (selected.indexOf(value) === -1) {
+                                selected.push(v);
+                            }
+                        });
+                    } else if (value) {
+                        var v = value;
+                        if (angular.isObject(value)) {
+                            v = value[self.fieldId];
+                        }
+                        if (selected.indexOf(v) === -1) {
+                            selected.push(v);
+                        }
+                    }
                 }
             }, true)
         );

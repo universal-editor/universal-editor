@@ -12,18 +12,26 @@
             componentSettings,
             baseController,
             allOptions = [],
-            destroyWatchEntityLoaded;
+            destroyWatchEntityLoaded,
+            selectedStorageComponent = [];
 
         vm.$onInit = function() {
             vm.optionValues = [];
+            vm.possibleValues = [];
             vm.initDataSource = true;
             componentSettings = vm.setting.component.settings;
+            baseController = $controller('FieldsController', { $scope: $scope });
+            angular.extend(vm, baseController);
+
+            if (componentSettings.valuesRemote) {
+                selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
+            } else if (componentSettings.values) {
+                selectedStorageComponent = componentSettings.values.$selectedStorage;
+            }
             vm.search = componentSettings.search === true;
             if (typeof componentSettings.serverPagination !== 'boolean') {
                 vm.serverPagination = true;
             }
-            baseController = $controller('FieldsController', { $scope: $scope });
-            angular.extend(vm, baseController);
 
             possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
@@ -84,7 +92,9 @@
                         .getUrlResource(config)
                         .then(function(response) {
                             angular.forEach(response.data.items, function(v) {
-                                vm.optionValues.push(v);
+                                if (selectedStorageComponent.indexOf(v[vm.fieldId]) === -1) {
+                                    vm.optionValues.push(v);
+                                }
                             });
                             $timeout(function() {
                                 setSizeSelect();
@@ -118,32 +128,34 @@
         function fillControl(allOptions) {
             angular.forEach(allOptions, function(v) {
                 var v_id = v[vm.fieldId];
-                if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
-                    if (angular.isArray(vm.fieldValue)) {
-                        for (var i = vm.fieldValue.length; i--;) {
-                            if (vm.fieldValue[i] == v_id) {
-                                vm.fieldValue[i] = v;
-                                break;
+                if (selectedStorageComponent.indexOf(v_id) === -1) {
+                    if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
+                        if (angular.isArray(vm.fieldValue)) {
+                            for (var i = vm.fieldValue.length; i--;) {
+                                if (vm.fieldValue[i] == v_id) {
+                                    vm.fieldValue[i] = v;
+                                    break;
+                                }
                             }
+                        } else if (v_id == vm.fieldValue) {
+                            vm.fieldValue = v;
+                            vm.isSpanSelectDelete = true;
                         }
-                    } else if (v_id == vm.fieldValue) {
-                        vm.fieldValue = v;
-                        vm.isSpanSelectDelete = true;
                     }
-                }
-                if (vm.optionValues !== allOptions) {
-                    if (vm.isTree) {
-                        if (!v[vm.treeParentField]) {
+                    if (vm.optionValues !== allOptions) {
+                        if (vm.isTree) {
+                            if (!v[vm.treeParentField]) {
+                                vm.optionValues.push(angular.copy(v));
+                            }
+                        } else {
                             vm.optionValues.push(angular.copy(v));
                         }
-                    } else {
-                        vm.optionValues.push(angular.copy(v));
                     }
                 }
             });
         }
 
-        var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {            
+        var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {
             if (vm.isParentComponent(data)) {
                 vm.data = data;
                 $scope.onLoadDataHandler(event, data);
@@ -152,6 +164,7 @@
                     vm.optionValues = [];
                     fillControl(allOptions);
                     vm.equalPreviewValue();
+                    return items;
                 }).finally(function() {
                     vm.loadingData = false;
                 });
@@ -407,7 +420,7 @@
                 if (opt.childOpts && opt.childOpts.length) {
                     opt.childOpts = filter(opt.childOpts, filterText);
                 }
-                return (opt[vm.fieldSearch].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length);
+                return ((opt[vm.fieldSearch].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length)) && selectedStorageComponent.indexOf(opt[vm.fieldId]) === -1;
             });
 
             return result;
@@ -510,11 +523,16 @@
             var dropdownHost = $element.find('.select-input-wrapper');
             var dropdownHeight = dropdownHost.height();
             var dropdownOffset = dropdownHost.offset();
-            var dropdownBottom = dropdownOffset.top + dropdownHeight;
-            $scope.$evalAsync(function() {
-                vm.possibleLocation = !(dHeight - dropdownBottom < 162);
+            if (dropdownOffset && dropdownHeight) {
+                var dropdownBottom = dropdownOffset.top + dropdownHeight;
+                $scope.$evalAsync(function() {
+                    vm.possibleLocation = !(dHeight - dropdownBottom < 162);
+                });
+                vm.setColorPlaceholder();
+            }
+            vm.possibleValues = vm.optionValues.filter(function(v) {
+                return selectedStorageComponent.indexOf(v[vm.fieldId]) === -1;
             });
-            vm.setColorPlaceholder();
         }
 
 

@@ -45,6 +45,135 @@
                 }
             ]
         };
+        var autocompleteSettingConnectedSingle = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected (single)',
+                    values: {
+                        'key1': 'value1',
+                        'key2': 'value2',
+                        'key3': 'value3',
+                        'key4': 'value4',
+                        'key5': 'value5',
+                        'key6': 'value6'
+                    }
+                }
+            }
+        };
+        var autocompleteSettingConnectedMultiple = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected (multiple)',
+                    values: {
+                        'key1': 'value1',
+                        'key2': 'value2',
+                        'key3': 'value3',
+                        'key4': 'value4',
+                        'key5': 'value5',
+                        'key6': 'value6'
+                    },
+                    multiple: true
+                }
+            }
+        };
+        var autocompleteSettingRemotedConnectedSingle = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected (single)',
+                    valuesRemote: {
+                        fields: {
+                            value: 'id',
+                            label: 'name'
+                        },
+                        url: 'http://universal-backend.dev/rest/v1/country'
+                    }
+                }
+            }
+        };
+        var autocompleteSettingRemotedConnectedMultiple = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected (multiple)',
+                    valuesRemote: {
+                        fields: {
+                            value: 'id',
+                            label: 'name'
+                        },
+                        url: 'http://universal-backend.dev/rest/v1/country'
+                    },
+                    multiple: true
+                }
+            }
+        };
+
+        var dropdownSettingConnectedSingle = {
+            component: {
+                name: 'ue-dropdown',
+                settings: {
+                    label: 'ue-dropdown connected (single)',
+                    values: {
+                        'key1': 'value1',
+                        'key2': 'value2',
+                        'key3': 'value3',
+                        'key4': 'value4',
+                        'key5': 'value5',
+                        'key6': 'value6'
+                    }
+                }
+            }
+        };
+        var dropdownSettingConnectedMultiple = {
+            component: {
+                name: 'ue-dropdown',
+                settings: {
+                    label: 'ue-dropdown connected (multiple)',
+                    values: {
+                        'key1': 'value1',
+                        'key2': 'value2',
+                        'key3': 'value3',
+                        'key4': 'value4',
+                        'key5': 'value5',
+                        'key6': 'value6'
+                    },
+                    multiple: true
+                }
+            }
+        };
+        var dropdownSettingRemotedConnectedSingle = {
+            component: {
+                name: 'ue-dropdown',
+                settings: {
+                    label: 'ue-dropdown connected (single)',
+                    valuesRemote: {
+                        fields: {
+                            value: 'id',
+                            label: 'name'
+                        },
+                        url: 'http://universal-backend.dev/rest/v1/country'
+                    }
+                }
+            }
+        };
+        var dropdownSettingRemotedConnectedMultiple = {
+            component: {
+                name: 'ue-dropdown',
+                settings: {
+                    label: 'ue-dropdown connected (multiple)',
+                    valuesRemote: {
+                        fields: {
+                            value: 'id',
+                            label: 'name'
+                        },
+                        url: 'http://universal-backend.dev/rest/v1/country'
+                    },
+                    multiple: true
+                }
+            }
+        };
         var vm = this;
         vm.ueConfig = {
             component: {
@@ -1522,6 +1651,22 @@
                                 settings: {
                                     label: 'Autocomplete',
                                     fields: [
+                                        autocompleteSettingConnectedMultiple,
+                                        autocompleteSettingConnectedMultiple,
+                                        autocompleteSettingConnectedSingle,
+                                        autocompleteSettingConnectedSingle,
+                                        autocompleteSettingRemotedConnectedSingle,
+                                        autocompleteSettingRemotedConnectedSingle,
+                                        autocompleteSettingRemotedConnectedMultiple,
+                                        autocompleteSettingRemotedConnectedMultiple,
+                                        dropdownSettingConnectedMultiple,
+                                        dropdownSettingConnectedMultiple,
+                                        dropdownSettingConnectedSingle,
+                                        dropdownSettingConnectedSingle,
+                                        dropdownSettingRemotedConnectedSingle,
+                                        dropdownSettingRemotedConnectedSingle,
+                                        dropdownSettingRemotedConnectedMultiple,
+                                        dropdownSettingRemotedConnectedMultiple,
                                         {
                                             component: {
                                                 name: 'ue-autocomplete',
