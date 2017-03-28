@@ -70,6 +70,7 @@
                 },
                 {
                     name: 'comments[].id',
+                    resourceType: 'comments',
                     component: {
                         name: 'ue-dropdown',
                         settings: {
@@ -151,7 +152,6 @@
                                             fields: ['id', 'title', 'created', 'status', 'views', 'content', 'author.id',
                                                 {
                                                     name: 'comments[]',
-                                                    resourceType: 'comments',
                                                     component: {
                                                         name: 'ue-group',
                                                         settings: {

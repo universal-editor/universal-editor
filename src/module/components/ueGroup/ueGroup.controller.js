@@ -63,7 +63,7 @@
                     field = value;
                 }
                 if (field) {
-                    if (vm.fieldName) {
+                    if (vm.fieldName && vm.resourceType) {
                         field.resourceType = vm.resourceType; //for JSONAPI
                     }
                     vm.innerFields.push(field);
