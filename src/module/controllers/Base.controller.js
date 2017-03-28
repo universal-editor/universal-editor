@@ -32,7 +32,7 @@
             self.fieldName = self.setting.name;
         }
         self.parentField = self.setting.parentField;
-        self.parentFieldType = self.setting.parentFieldType;
+        self.resourceType = self.setting.resourceType;
         self.parentFieldIndex = angular.isNumber(self.setting.parentFieldIndex) ? self.setting.parentFieldIndex : false;
 
         self.label = componentSettings.label || null;
@@ -76,6 +76,8 @@
         self.listeners = [];
         self.listeners.push($scope.$on('ue:componentError', onErrorApiHandler));
 
+
+
         self.isParentComponent = function isParentComponent(id, scope) {
             scope = scope || $scope;
             if (angular.isObject(id)) {
@@ -89,6 +91,7 @@
             }
             return isParentComponent(id, scope.$parent);
         };
+
         self.isComponent = function isComponent(id, scope) {
             scope = scope || $scope;
             if (angular.isObject(id)) {
@@ -97,6 +100,33 @@
             return scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.$id === id;
         };
 
+        self.getParentSetting = function getParentSetting(scope) {
+            scope = scope || $scope;
+            if (!scope.$parent) {
+                return null;
+            }
+            if (scope.vm.setting && scope.vm.setting.component) {
+                return scope.vm.setting;
+            }
+            return getParentSetting(scope);
+        };
+
+        self.getParentComponent = function getParentComponent(name, scope) {
+            scope = scope || $scope;
+            if (!scope.$parent) {
+                return null;
+            }
+            if (name) {
+                if (scope.vm.setting && scope.vm.setting.name && (scope.vm.setting.name === name)) {
+                    return scope.vm;
+                }
+            } else {
+                if (scope.vm.setting && scope.vm.setting.component) {
+                    return scope.vm;
+                }
+            }
+            return getParentComponent(name, scope.$parent);
+        };
 
         self.listeners.push($scope.$on('ue:errorComponentDataLoading', function(event, rejection) {
             if (self.isComponent(rejection) && !rejection.canceled) {

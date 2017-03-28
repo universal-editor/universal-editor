@@ -249,18 +249,7 @@
             } else {
                 wrappedFieldValue = transformToValue(self.fieldValue);
             }
-
-
-            if (self.parentField) {
-                field[self.parentField] = {};
-                field[self.parentField][self.fieldName] = wrappedFieldValue;
-                if (self.parentFieldType) {
-                    field[self.parentField].__type = self.parentFieldType;
-                }
-            } else {
-                field[self.fieldName] = wrappedFieldValue;
-            }
-
+            field[self.fieldName] = wrappedFieldValue;
             return field;
         }
 
@@ -351,17 +340,31 @@
                 $scope.data = self.data = ((self.options.$dataIndex >= 0) && angular.isObject(data.$items)) ? data.$items[self.options.$dataIndex] : data;
 
                 var apiValue;
-                if (!self.parentField) {
-                    apiValue = self.data[self.fieldName];
-                } else {
-                    apiValue = self.data[self.parentField];
-                    if (angular.isArray(self.data[self.parentField]) && angular.isNumber(self.parentFieldIndex)) {
-                        apiValue = apiValue[self.parentFieldIndex];
+                var names = self.fieldName.split('.');
+                var tempObject = self.data;
+                var partName = '';
+                angular.forEach(names, function(name, i) {
+                    if (angular.isObject(tempObject)) {
+                        var empty = {};
+                        partName = partName ? (partName + '.' + name) : name;
+                        if (name.lastIndexOf('[]') === (name.length - 2)) {
+                            name = name.substr(0, name.length - 2);
+                        }
+                        if (angular.isArray(tempObject)) {
+                            let component = self.getParentComponent(partName);
+                            if (component) {
+                                var parentIndex = component.parentFieldIndex || 0;
+                                tempObject = tempObject[parentIndex];
+                            }
+                        }
+
+                        if (i !== (names.length - 1)) {
+                            tempObject = tempObject[name];
+                        } else {
+                            apiValue = tempObject[name];
+                        }
                     }
-                    if (apiValue) {
-                        apiValue = apiValue[self.fieldName];
-                    }
-                }
+                });
 
                 if (!self.multiple) {
                     self.fieldValue = apiValue;

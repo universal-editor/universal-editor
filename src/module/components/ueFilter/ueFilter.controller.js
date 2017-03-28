@@ -62,30 +62,18 @@
 
                 /** convert to filter object from fields*/
                 fieldSettings.$toFilter = fieldSettings.$toFilter || function(operator, fieldValue, ctrl) {
-                    var groupName = ctrl.parentField;
-                    if (groupName) {
-                        fieldValue = fieldValue[groupName];
-                    }
                     if (ctrl.isNumber === true) {
                         operator = ':text';
                     }
                     angular.forEach(fieldValue, function(value, key) {
                         if (operator && operator.indexOf(':text') !== -1) {
                             if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
-                                var consistKey = key;
-                                if (groupName) {
-                                    if (fieldValue[key]) {
-                                        consistKey = groupName + '.' + key;
-                                        fieldValue[consistKey] = operator.replace(':text', fieldValue[key]);
-                                    }
-                                } else {
-                                    fieldValue[key] = operator.replace(':text', value);
-                                }
-                                if (ctrl.isNumber === true && !isNaN(+fieldValue[consistKey])) {
-                                    fieldValue[consistKey] = +fieldValue[consistKey];
+                                fieldValue[key] = operator.replace(':text', value);
+                                if (ctrl.isNumber === true && !isNaN(+fieldValue[key])) {
+                                    fieldValue[key] = +fieldValue[key];
                                 }
                             }
-                            if (value === undefined || value === null || value === '' || (angular.isObject(value) && $.isEmptyObject(value)) || groupName) {
+                            if (value === undefined || value === null || value === '' || (angular.isObject(value) && $.isEmptyObject(value))) {
                                 delete fieldValue[key];
                             }
                         } else {

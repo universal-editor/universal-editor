@@ -94,9 +94,11 @@
                       display: none;
                       &.icon-mix-mode {
                           display: inline-block;
+                          position: absolute;
+                          padding: 8px 0;
                           &+.component-wrapper {
                               display: inline-block;
-                              padding-left: 7px !important;
+                              padding-left: 20px !important;
                           }
                       }
                   }

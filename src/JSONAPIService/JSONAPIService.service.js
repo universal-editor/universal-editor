@@ -45,7 +45,7 @@
                         relationships[key] = relationships[key] || {};
                         relationships[key].data = relationships[key].data || [];
                         value.forEach(function(value) {
-                            if (value.id) {
+                            if (value.id || value.id === null) {
                                 relationships[key].data.push({
                                     id: value.id,
                                     type: value.__type

@@ -49,9 +49,11 @@
 
             angular.forEach(dataSource.fields, function(field) {
                 if (field.component && field.component.settings && field.component.settings.expandable === true) {
-                    var name = field.parentField || field.name;
-                    if (name && expandFields.indexOf(name) === -1) {
-                        expandFields.push(name);
+                    if (field.name) {
+                        var name = field.name.split('.')[0].replace('[]', '');
+                        if (name && expandFields.indexOf(name) === -1) {
+                            expandFields.push(name);
+                        }
                     }
                 }
             });
@@ -405,9 +407,11 @@
                 options.isLoading = true;
                 angular.forEach(dataSource.fields, function(field) {
                     if (field.component && field.component.settings && field.component.settings.expandable === true) {
-                        var name = field.parentField || field.name;
-                        if (name && expandFields.indexOf(name) === -1) {
-                            expandFields.push(name);
+                        if (field.name) {
+                            var name = field.name.split('.')[0].replace('[]', '');
+                            if (name && expandFields.indexOf(name) === -1) {
+                                expandFields.push(name);
+                            }
                         }
                     }
                 });
@@ -432,7 +436,6 @@
                     action: 'one',
                     parentComponentId: options.$componentId
                 };
-
                 $http(optionsHttp).then(function(response) {
                     var data = response.data;
                     if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {

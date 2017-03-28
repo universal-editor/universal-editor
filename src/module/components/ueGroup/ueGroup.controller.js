@@ -18,7 +18,7 @@
             vm.fieldName = componentSettings.name;
 
             baseController = $controller('BaseController', { $scope: $scope });
-            vm.parentFieldType = vm.setting.resourceType;
+            vm.resourceType = vm.setting.resourceType;
             angular.extend(vm, baseController);
             EditEntityStorage.addFieldController(vm, true);
 
@@ -64,8 +64,7 @@
                 }
                 if (field) {
                     if (vm.fieldName) {
-                        field.parentField = vm.fieldName;
-                        field.parentFieldType = vm.parentFieldType; //for JSONAPI
+                        field.resourceType = vm.resourceType; //for JSONAPI
                     }
                     vm.innerFields.push(field);
                 }
@@ -88,19 +87,36 @@
         };
 
         function onLoadedHandler(event, data) {
-            if (!vm.$isOnlyChildsBroadcast) {
-                var group = data[vm.fieldName];
-                if (group) {
-                    if (vm.multiple && angular.isArray(group)) {
-                        group.forEach(vm.addItem);
-                        $timeout(function() {
-                            vm.$isOnlyChildsBroadcast = true;
-                            $scope.$broadcast('ue:componentDataLoaded', data);
-                            delete vm.$isOnlyChildsBroadcast;
-                        }, 0);
+            if (!vm.$isOnlyChildsBroadcast && vm.setting.name) {
+                var names = vm.setting.name.split('.');
+                var tempObject = data;
+                var partName = '';
+                angular.forEach(names, function(name, i) {
+                    var empty = {};
+                    partName = partName ? (partName + '.' + name) : name;
+                    if (name.lastIndexOf('[]') === (name.length - 2)) {
+                        name = name.substr(0, name.length - 2);
                     }
-
-                }
+                    if (angular.isArray(tempObject)) {
+                        let component = vm.getParentComponent(partName);
+                        if (component) {
+                            var parentIndex = component.parentFieldIndex || 0;
+                            tempObject = tempObject[parentIndex];
+                        }
+                    }
+                    if (i !== (names.length - 1)) {
+                        tempObject = tempObject[name];
+                    } else {
+                        if (angular.isArray(tempObject[name]) && tempObject[name].length) {
+                            tempObject[name].forEach(vm.addItem);
+                            $timeout(function() {
+                                vm.$isOnlyChildsBroadcast = true;
+                                $scope.$broadcast('ue:componentDataLoaded', data);
+                                delete vm.$isOnlyChildsBroadcast;
+                            }, 0);
+                        }
+                    }
+                });
             }
         }
 
