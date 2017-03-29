@@ -93,7 +93,7 @@
 
             vm.options.isNewRecord = pk === 'new';
 
-            if (dataSource.hasOwnProperty('primaryKey')) {
+            if (dataSource && dataSource.hasOwnProperty('primaryKey')) {
                 vm.idField = dataSource.primaryKey || vm.idField;
             }
 
@@ -141,21 +141,25 @@
             });
 
 
-            if (pk !== 'new') {
-                YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
-                    vm.options.isLoading = false;
-                });
-            }
-
-            if (pk === 'new') {
-                vm.entityLoaded = true;
-                if (pk === 'new' && !ModalService.isModalOpen()) {
-                    $timeout(function() {
-                        if (pk === 'new' && !ModalService.isModalOpen()) {
-                            EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.setting.component.settings.dataSource.parentField);
-                        }
+            if (dataSource && dataSource.new !== true) {
+                if (pk !== 'new') {
+                    YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
+                        vm.options.isLoading = false;
                     });
                 }
+
+                if (pk === 'new') {
+                    vm.entityLoaded = true;
+                    if (pk === 'new' && !ModalService.isModalOpen()) {
+                        $timeout(function() {
+                            if (pk === 'new' && !ModalService.isModalOpen()) {
+                                EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.setting.component.settings.dataSource.parentField);
+                            }
+                        });
+                    }
+                }
+            } else {
+                vm.entityLoaded = true;
             }
 
             $scope.$on('ue:beforeEntityCreate', vm.resetErrors);

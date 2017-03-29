@@ -129,40 +129,42 @@
                         });
                     }
 
-                    var names = fCtrl.fieldName.split('.');
-                    var tempObject = entityObject;
-                    var isArray = false;
-                    var partName = '';
-                    angular.forEach(names, function(name, i) {
-                        var empty = {};
-                        partName = partName ? (partName + '.' + name) : name;
-                        if (name.lastIndexOf('[]') === (name.length - 2)) {
-                            name = name.substr(0, name.length - 2);
-                            empty = [];
-                        }
-                        let component = fCtrl.getParentComponent(partName);
-                        if (angular.isArray(tempObject)) {
-                            if (component) {
-                                var parentIndex = component.parentFieldIndex || 0;
-                                tempObject[parentIndex] = tempObject[parentIndex] || {};
-                                tempObject = tempObject[parentIndex];
+                    if (angular.isString(fCtrl.fieldName)) {
+                        var names = fCtrl.fieldName.split('.');
+                        var tempObject = entityObject;
+                        var isArray = false;
+                        var partName = '';
+                        angular.forEach(names, function(name, i) {
+                            var empty = {};
+                            partName = partName ? (partName + '.' + name) : name;
+                            if (name.lastIndexOf('[]') === (name.length - 2)) {
+                                name = name.substr(0, name.length - 2);
+                                empty = [];
                             }
-                        }
-                        if (i !== (names.length - 1)) {
-                            tempObject[name] = tempObject[name] || empty;
-                            tempObject = tempObject[name];
-                        } else {
-                            tempObject[name] = value;
-                        }
-                        if (component && component.resourceType && angular.isObject(tempObject) && !angular.isArray(tempObject)) {
-                            tempObject.__type = component.resourceType;
-                        }
-                    });
+                            let component = fCtrl.getParentComponent(partName);
+                            if (angular.isArray(tempObject)) {
+                                if (component) {
+                                    var parentIndex = component.parentFieldIndex || 0;
+                                    tempObject[parentIndex] = tempObject[parentIndex] || {};
+                                    tempObject = tempObject[parentIndex];
+                                }
+                            }
+                            if (i !== (names.length - 1)) {
+                                tempObject[name] = tempObject[name] || empty;
+                                tempObject = tempObject[name];
+                            } else {
+                                tempObject[name] = value;
+                            }
+                            if (component && component.resourceType && angular.isObject(tempObject) && !angular.isArray(tempObject)) {
+                                tempObject.__type = component.resourceType;
+                            }
+                        });
+                    }
                 }
             });
 
             angular.forEach(groupControllers, function(fGroup) {
-                if (fGroup.setting.name && fGroup.multiple === true) {
+                if (angular.isString(fGroup.setting.name) && fGroup.multiple === true) {
                     var names = fGroup.setting.name.split('.');
                     var tempObject = entityObject;
                     var partName = '';

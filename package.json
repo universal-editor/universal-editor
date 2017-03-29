@@ -4,7 +4,7 @@
   "version": "1.0.0-alpha4",
   "scripts": {
     "dev": "webpack-dev-server --display-modules --progress --colors",
-    "dist": "cp -r bower_components dist/bower_components & http-server ./dist/ -a universal-editor.dev -c-1 -o",
+    "dist": "webpack-dev-server -p",
     "build": "webpack -p --progress --colors"
   },
   "keywords": [
@@ -26,8 +26,6 @@
     "gulp-util": "^3.0.8",
     "hostile": "^1.2.0",
     "html-loader": "^0.4.4",
-    "html-webpack-plugin": "^2.7.1",
-    "http-server": "^0.9.0",
     "jade": "^1.11.0",
     "jade-loader": "^0.8.0",
     "ng-annotate-webpack-plugin": "^0.2.1-pre",

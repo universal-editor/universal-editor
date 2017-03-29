@@ -49,7 +49,7 @@
 
             angular.forEach(dataSource.fields, function(field) {
                 if (field.component && field.component.settings && field.component.settings.expandable === true) {
-                    if (field.name) {
+                    if (angular.isString(field.name)) {
                         var name = field.name.split('.')[0].replace('[]', '');
                         if (name && expandFields.indexOf(name) === -1) {
                             expandFields.push(name);
@@ -402,12 +402,12 @@
                 qParams = {},
                 expandFields = [],
                 dataSource = options.$dataSource;
-            if (angular.isObject(dataSource)) {
+            if (angular.isObject(dataSource) && dataSource.url) {
                 var service = getCustomService(dataSource.standard);
                 options.isLoading = true;
                 angular.forEach(dataSource.fields, function(field) {
                     if (field.component && field.component.settings && field.component.settings.expandable === true) {
-                        if (field.name) {
+                        if (angular.isString(field.name)) {
                             var name = field.name.split('.')[0].replace('[]', '');
                             if (name && expandFields.indexOf(name) === -1) {
                                 expandFields.push(name);

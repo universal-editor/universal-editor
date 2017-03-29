@@ -6,11 +6,10 @@
         deasync = require('deasync'),
         gutil = require('gulp-util'),
         path = require('path'),
-        HtmlWebpackPlugin = require('html-webpack-plugin'),
-        copyWebpackPlugin = require('copy-webpack-plugin'),
         cleanWebpackPlugin = require('clean-webpack-plugin'),
         ngAnnotatePlugin = require('ng-annotate-webpack-plugin'),
-        WebpackNotifierPlugin = require('webpack-notifier');
+        WebpackNotifierPlugin = require('webpack-notifier'),
+        InjectHtmlPlugin = require('inject-html-webpack-plugin');
 
     var localHost = 'universal-editor.dev',
         isTrySetHost = false,
@@ -20,12 +19,13 @@
         RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]),
         isProd = NODE_ENV == 'production',
         isDev = NODE_ENV == 'development',
-        publicPath = path.resolve(__dirname, isProd ? 'dist' : 'app'),
-        freePort = null;
+        mainCatalog = isProd ? 'dist' : 'app',
+        publicPath = path.resolve(__dirname, mainCatalog),
+        freePort = null,
+        outputFile = isProd ? 'ue.min.js' : 'ue.js';
 
     require('portscanner').findAPortNotInUse(8080, 8100, defaultlocalHost, (error, port) => freePort = error ? 5555 : port);
     deasync.loopWhile(function() { return !freePort; });
-
 
     if (RUNNING_SERVER) {
         try {
@@ -50,8 +50,9 @@
     //** TEMPLATE CONFIGURATION */
     var webpackConfigTemplate = {
         context: __dirname,
+        entry: {},
         output: {
-            filename: isProd ? '[name].min.js' : '[name].js',
+            filename: outputFile,
             path: publicPath
         },
         resolve: {
@@ -124,11 +125,11 @@
         },
         plugins: [
             new webpack.DefinePlugin({
+                'IS_DEV': isDev,
                 'NODE_ENV': JSON.stringify(NODE_ENV),
                 'RUNNING_SERVER': RUNNING_SERVER
             }),
             new webpack.HotModuleReplacementPlugin(),
-            new cleanWebpackPlugin([publicPath], { verbose: true }),
             new ngAnnotatePlugin({
                 add: true
             }),
@@ -139,6 +140,8 @@
     if (RUNNING_SERVER) {
         //-- SETTING FOR LOCAL SERVER
         webpackConfigTemplate.devServer = {
+            outputPath: './',
+            contentBase: ['./demo', './bower_components', './' + mainCatalog],
             host: localHost,
             hot: true,
             port: freePort,
@@ -159,29 +162,23 @@
         );
     }
 
-    webpackConfigTemplate.entry = {
-        'ue': [path.resolve(__dirname, 'src/main.js')]
-    };
+    if (!RUNNING_SERVER || !isProd) {
+        webpackConfigTemplate.entry.ue = [path.resolve(__dirname, 'src/main.js')];
+    }
 
-    if (RUNNING_SERVER) {
+    if (!RUNNING_SERVER || (RUNNING_SERVER && !isProd)) {
+        webpackConfigTemplate.plugins.push(new InjectHtmlPlugin({
+            filename: path.resolve(__dirname, 'demo/index.html'),
+            startInjectJS: '<!-- start:bundle -->',
+            endInjectJS: '<!-- end:bundle -->',
+            chunks: ['ue']
+        }));
+        webpackConfigTemplate.plugins.push(new cleanWebpackPlugin([publicPath], { verbose: true }));
+    }
+
+    if (RUNNING_SERVER && webpackConfigTemplate.entry.ue) {
         webpackConfigTemplate.entry.ue.unshift('webpack-dev-server/client?http://' + localHost + ':' + freePort + '/');
         webpackConfigTemplate.entry.ue.unshift('webpack/hot/dev-server');
     }
-
-    webpackConfigTemplate.plugins.push(
-        new copyWebpackPlugin([{
-            from: 'src/demoApp'
-        }]),
-        new webpack.DefinePlugin({
-            'IS_DEV': isDev
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'index.html',
-            title: 'Example Components Universal Editor',
-            template: path.resolve(__dirname, 'src/index.ejs'),
-            inject: 'head'
-        })
-    );
-
     module.exports = [webpackConfigTemplate];
 })(require);

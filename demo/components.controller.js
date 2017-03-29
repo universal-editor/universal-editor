@@ -1709,7 +1709,11 @@
                                                             component: {
                                                                 name: 'ue-form',
                                                                 settings: {
-                                                                    dataSource: demoDataSource,
+                                                                    dataSource: {
+                                                                        url: '//universal-backend.dev/rest/v1/staff/new',
+                                                                        new: true,
+                                                                        fields: []
+                                                                    },
                                                                     body: [
                                                                         {
                                                                             component: {
@@ -1717,22 +1721,10 @@
                                                                                 settings: {
                                                                                     tabs: [
                                                                                         {
-                                                                                            label: 'Article',
+                                                                                            label: 'Groups',
                                                                                             fields: [
                                                                                                 {
-                                                                                                    component: {
-                                                                                                        name: 'ue-radio',
-                                                                                                        settings: {
-                                                                                                            label: 'Status',
-                                                                                                            values: {
-                                                                                                                0: 'Draft',
-                                                                                                                10: 'Archived',
-                                                                                                                100: 'Published',
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                },
-                                                                                                {
+                                                                                                    name: 'group.title',
                                                                                                     component: {
                                                                                                         name: 'ue-string',
                                                                                                         settings: {
@@ -1741,39 +1733,67 @@
                                                                                                     }
                                                                                                 },
                                                                                                 {
+                                                                                                    name: 'multipleRoot',
                                                                                                     component: {
-                                                                                                        name: 'ue-date',
+                                                                                                        name: 'ue-group',
                                                                                                         settings: {
-                                                                                                            label: 'Date of publication'
+                                                                                                            label: 'Contacts',
+                                                                                                            multiple: true,
+                                                                                                            fields: [
+                                                                                                                {
+                                                                                                                    name: 'multipleRoot[].title',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-string',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Title'
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'type',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-dropdown',
+                                                                                                                        settings: {
+                                                                                                                            values: {
+                                                                                                                                phone: 'Телефон',
+                                                                                                                                email: 'Эл. почта'
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            ]
                                                                                                         }
                                                                                                     }
                                                                                                 },
                                                                                                 {
+                                                                                                    name: 'rootSingle',
                                                                                                     component: {
-                                                                                                        name: 'ue-textarea',
+                                                                                                        name: 'ue-group',
                                                                                                         settings: {
-                                                                                                            label: 'Text'
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            ]
-                                                                                        },
-                                                                                        {
-                                                                                            label: 'SEO',
-                                                                                            fields: [
-                                                                                                {
-                                                                                                    component: {
-                                                                                                        name: 'ue-string',
-                                                                                                        settings: {
-                                                                                                            label: 'Meta description'
-                                                                                                        }
-                                                                                                    }
-                                                                                                },
-                                                                                                {
-                                                                                                    component: {
-                                                                                                        name: 'ue-string',
-                                                                                                        settings: {
-                                                                                                            label: 'Meta keywords'
+                                                                                                            label: 'Contacts',
+                                                                                                            fields: [
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.title',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-string',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Title'
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'type',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-dropdown',
+                                                                                                                        settings: {
+                                                                                                                            values: {
+                                                                                                                                phone: 'Телефон',
+                                                                                                                                email: 'Эл. почта'
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            ]
                                                                                                         }
                                                                                                     }
                                                                                                 }
@@ -1783,7 +1803,20 @@
                                                                                 }
                                                                             }
                                                                         }
-                                                                    ]
+                                                                    ],
+                                                                    footer: {
+                                                                        toolbar: [
+                                                                            {
+                                                                                component: {
+                                                                                    name: 'ue-button',
+                                                                                    settings: {
+                                                                                        label: 'Apply',
+                                                                                        action: 'presave'
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
                                                                 }
                                                             }
                                                         }

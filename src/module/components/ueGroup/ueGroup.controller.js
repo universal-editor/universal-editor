@@ -22,6 +22,10 @@
             angular.extend(vm, baseController);
             EditEntityStorage.addFieldController(vm, true);
 
+            if(vm.multiple && vm.setting.name) {
+                vm.setting.name = vm.setting.name + '[]';
+            }
+
             vm.width = !isNaN(+componentSettings.width) ? componentSettings.width : null;
             vm.classGroupComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
 
@@ -41,7 +45,7 @@
             widthBootstrap = Math.ceil(12 / vm.countInLine);
             vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
 
-            if (vm.multiple === true && !vm.fieldName) {
+            if (vm.multiple === true && !vm.setting.name) {
                 $translate('ERROR.MULTIPLE_NAME').then(function(translation) {
                     console.log('UeFormGroup:' + translation);
                 });
@@ -63,6 +67,9 @@
                     field = value;
                 }
                 if (field) {
+                    if(vm.setting.name && field.name.indexOf(vm.setting.name) === -1) {
+                        field.name = vm.setting.name + '.' + field.name;
+                    }
                     if (vm.fieldName && vm.resourceType) {
                         field.resourceType = vm.resourceType; //for JSONAPI
                     }
@@ -87,7 +94,7 @@
         };
 
         function onLoadedHandler(event, data) {
-            if (!vm.$isOnlyChildsBroadcast && vm.setting.name) {
+            if (!vm.$isOnlyChildsBroadcast && angular.isString(vm.setting.name)) {
                 var names = vm.setting.name.split('.');
                 var tempObject = data;
                 var partName = '';
