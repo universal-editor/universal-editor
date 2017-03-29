@@ -142,7 +142,7 @@
             });
 
 
-            if (dataSource && vm.empty !== true) {
+            if (dataSource) {
                 if (pk !== 'new') {
                     YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
                         vm.options.isLoading = false;

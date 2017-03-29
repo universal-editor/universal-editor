@@ -1852,7 +1852,6 @@
                                                                         url: '//universal-backend.dev/rest/v1/staff/new',
                                                                         fields: []
                                                                     },
-                                                                    empty: true,
                                                                     body: [
                                                                         {
                                                                             component: {
