@@ -164,7 +164,7 @@
                 }).finally(function() {
                     vm.loadingData = false;
                 });
-                if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
+                if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0) && (!angular.isArray(vm.fieldValue) || vm.fieldValue.length > 0)) {
                     loadDataById(vm.fieldValue).finally(function() {
                         vm.loadingData = false;
                     });

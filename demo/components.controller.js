@@ -1849,7 +1849,7 @@
                                                                 name: 'ue-form',
                                                                 settings: {
                                                                     dataSource: {
-                                                                        url: '//universal-backend.dev/rest/v1/staff/new',
+                                                                        url: '//universal-backend.dev/rest/v1/staff',
                                                                         fields: []
                                                                     },
                                                                     body: [

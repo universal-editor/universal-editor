@@ -686,7 +686,11 @@
                 fields = fields.join(',');
                 if (angular.isString(options.url)) {
                     data.forEach(function(item) {
-                        if (item[component.name] !== undefined && item[component.name] !== null && filter.indexOf(item[component.name]) === -1) {
+                        var v = item[component.name];
+                        if (v !== undefined && 
+                            v !== null && 
+                            filter.indexOf(v) === -1 && 
+                            (!angular.isArray(v) || v.length > 0)) {
                             filter.push(item[component.name]);
                         }
                     });

@@ -83,7 +83,7 @@
                                 },
                                 url: 'http://universal-backend.dev/rest/v1/staff'
                             },
-                            multiple: false,
+                            multiple: true,
                             expandable: true,
                             multiname: 'staff_id'
                         }
