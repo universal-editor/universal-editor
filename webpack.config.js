@@ -85,7 +85,7 @@
                         path.resolve(__dirname, 'src')
                     ],
                     query: {
-                        plugins: ["transform-runtime"],
+                        plugins: ['transform-runtime'],
                         presets: ['es2015']
                     }
                 },
