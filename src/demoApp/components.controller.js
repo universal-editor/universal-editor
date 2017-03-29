@@ -45,6 +45,102 @@
                 }
             ]
         };
+        var autocompleteSettingConnectedSingle = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected (single)',
+                    values: {
+                        'key1': 'value1',
+                        'key2': 'value2',
+                        'key3': 'value3',
+                        'key4': 'value4',
+                        'key5': 'value5',
+                        'key6': 'value6'
+                    }
+                }
+            }
+        };
+        var autocompleteSettingConnectedMultiple = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected (multiple)',
+                    values: {
+                        'key1': 'value1',
+                        'key2': 'value2',
+                        'key3': 'value3',
+                        'key4': 'value4',
+                        'key5': 'value5',
+                        'key6': 'value6'
+                    },
+                    multiple: true
+                }
+            }
+        };
+        var autocompleteSettingRemotedConnectedSingle = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected  with remoted data (single)',
+                    valuesRemote: {
+                        fields: {
+                            value: 'id',
+                            label: 'name'
+                        },
+                        url: 'http://universal-backend.dev/rest/v1/country'
+                    }
+                }
+            }
+        };
+        var autocompleteSettingRemotedConnectedMultiple = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected  with remoted data (multiple)',
+                    valuesRemote: {
+                        fields: {
+                            value: 'id',
+                            label: 'name'
+                        },
+                        url: 'http://universal-backend.dev/rest/v1/country'
+                    },
+                    multiple: true
+                }
+            }
+        };
+
+        var dropdownSettingConnectedSingle = {
+            component: {
+                name: 'ue-dropdown',
+                settings: {
+                    label: 'ue-dropdown connected (single)',
+                    values: {
+                        'key1': 'value1',
+                        'key2': 'value2',
+                        'key3': 'value3',
+                        'key4': 'value4',
+                        'key5': 'value5',
+                        'key6': 'value6'
+                    }
+                }
+            }
+        };
+        var dropdownSettingRemotedConnectedSingle = {
+            component: {
+                name: 'ue-dropdown',
+                settings: {
+                    label: 'ue-dropdown connected with remoted data (single)',
+                    valuesRemote: {
+                        fields: {
+                            value: 'id',
+                            label: 'name'
+                        },
+                        url: 'http://universal-backend.dev/rest/v1/country'
+                    }
+                }
+            }
+        };
         var vm = this;
         vm.ueConfig = {
             component: {
@@ -1630,6 +1726,49 @@
                                     ]
                                 }
                             }
+                        },
+                        {
+                            component: {
+                                name: 'ue-group',
+                                settings: {
+                                    label: 'Relations of components',
+                                    fields: [
+                                        {
+                                            component: {
+                                                name: 'ue-group',
+                                                settings: {
+                                                    label: 'Related autocomplete',
+                                                    fields: [
+                                                        autocompleteSettingConnectedMultiple,
+                                                        autocompleteSettingConnectedMultiple,
+                                                        autocompleteSettingConnectedSingle,
+                                                        autocompleteSettingConnectedSingle,
+                                                        autocompleteSettingRemotedConnectedSingle,
+                                                        autocompleteSettingRemotedConnectedSingle,
+                                                        autocompleteSettingRemotedConnectedMultiple,
+                                                        autocompleteSettingRemotedConnectedMultiple
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-group',
+                                                settings: {
+                                                    label: 'Related dropdown',
+                                                    fields: [
+                                                        dropdownSettingConnectedSingle,
+                                                        dropdownSettingConnectedSingle,
+                                                        dropdownSettingRemotedConnectedSingle,
+                                                        dropdownSettingRemotedConnectedSingle
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+
                         },
                         {
                             component: {

@@ -42,7 +42,7 @@ block append content
                                 .processing-status-wrapper(data-ng-show="vm.loadingPossibleData")
                                     .processing-status {{'PERFORMS_ACTIONS' | translate}}
                                 .possible-scroll(data-ng-hide="vm.loadingPossibleData")
-                                    .possible-value-item(data-ng-repeat="option in vm.optionValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.fieldSearch]}}
+                                    .possible-value-item(data-ng-repeat="option in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.fieldSearch]}}
 
                     .dropdown(data-ng-if="vm.isTree")
                         .dropdown__host
