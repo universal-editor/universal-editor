@@ -129,12 +129,12 @@
         };
 
         self.listeners.push($scope.$on('ue:errorComponentDataLoading', function(event, rejection) {
+            function compareStatus(stack) {
+                return stack.filter(function(w) { return w.status === rejection.status; }).length > 0;
+            }
             if (self.isComponent(rejection) && !rejection.canceled) {
                 self.loaded = true;
                 self.loadingData = false;
-                function compareStatus(stack) {
-                    return stack.filter(function(w) { return w.status === rejection.status; }).length > 0;
-                }
                 var isExist = compareStatus(self.warnings) || compareStatus(self.dangers);
                 if (!isExist) {
                     var error = {};

@@ -12,7 +12,7 @@
 
         vm.$onInit = function() {
 
-            var ueConfig = angular.merge({}, vm.ueConfig);
+            var ueConfig = vm.ueConfig;
 
             var id = 0;
             (function check(value) {
@@ -28,7 +28,7 @@
                 }
             })(ueConfig);
 
-            component = angular.merge({}, ueConfig.component);
+            component = ueConfig.component;
 
             var locale = 'ru';
             if (vm.ueConfig.hasOwnProperty('ui') && vm.ueConfig.ui.hasOwnProperty('language')) {
