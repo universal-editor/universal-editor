@@ -98,22 +98,24 @@
 
         function onErrorLoadedItem(reject) {
             $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
-                console.error(self.constructor.name + translation.replace('%name_field', self.fieldName));
+                console.error(self.fieldName ? (translation.replace('%name_field', 'для поля "' + self.fieldName + '"')) : (translation.replace('%name_field','')));
             });
         }
 
         function onLoadedItems(response) {
-            var items = response.hasOwnProperty('data') ? response.data.items : response
-            if (response.hasOwnProperty('data')) {
-                if (!componentSettings.depend) {
-                    angular.forEach(response.data.items, function(v) {
-                        self.optionValues.push(v);
-                    });
-                }                
-            } else {
-                self.optionValues = response;
+            if (response) {
+                var items = response.hasOwnProperty('data') ? response.data.items : response
+                if (response.hasOwnProperty('data')) {
+                    if (!componentSettings.depend) {
+                        angular.forEach(response.data.items, function(v) {
+                            self.optionValues.push(v);
+                        });
+                    }
+                } else {
+                    self.optionValues = response;
+                }
+                componentSettings.$optionValues = self.optionValues;
             }
-            componentSettings.$optionValues = self.optionValues;
             return self.optionValues;
         }
 

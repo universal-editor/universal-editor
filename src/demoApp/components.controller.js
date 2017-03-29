@@ -82,7 +82,7 @@
             component: {
                 name: 'ue-autocomplete',
                 settings: {
-                    label: 'ue-autocomplete connected (single)',
+                    label: 'ue-autocomplete connected  with remoted data (single)',
                     valuesRemote: {
                         fields: {
                             value: 'id',
@@ -97,7 +97,7 @@
             component: {
                 name: 'ue-autocomplete',
                 settings: {
-                    label: 'ue-autocomplete connected (multiple)',
+                    label: 'ue-autocomplete connected  with remoted data (multiple)',
                     valuesRemote: {
                         fields: {
                             value: 'id',
@@ -126,28 +126,11 @@
                 }
             }
         };
-        var dropdownSettingConnectedMultiple = {
-            component: {
-                name: 'ue-dropdown',
-                settings: {
-                    label: 'ue-dropdown connected (multiple)',
-                    values: {
-                        'key1': 'value1',
-                        'key2': 'value2',
-                        'key3': 'value3',
-                        'key4': 'value4',
-                        'key5': 'value5',
-                        'key6': 'value6'
-                    },
-                    multiple: true
-                }
-            }
-        };
         var dropdownSettingRemotedConnectedSingle = {
             component: {
                 name: 'ue-dropdown',
                 settings: {
-                    label: 'ue-dropdown connected (single)',
+                    label: 'ue-dropdown connected with remoted data (single)',
                     valuesRemote: {
                         fields: {
                             value: 'id',
@@ -155,22 +138,6 @@
                         },
                         url: 'http://universal-backend.dev/rest/v1/country'
                     }
-                }
-            }
-        };
-        var dropdownSettingRemotedConnectedMultiple = {
-            component: {
-                name: 'ue-dropdown',
-                settings: {
-                    label: 'ue-dropdown connected (multiple)',
-                    valuesRemote: {
-                        fields: {
-                            value: 'id',
-                            label: 'name'
-                        },
-                        url: 'http://universal-backend.dev/rest/v1/country'
-                    },
-                    multiple: true
                 }
             }
         };
@@ -1651,22 +1618,6 @@
                                 settings: {
                                     label: 'Autocomplete',
                                     fields: [
-                                        autocompleteSettingConnectedMultiple,
-                                        autocompleteSettingConnectedMultiple,
-                                        autocompleteSettingConnectedSingle,
-                                        autocompleteSettingConnectedSingle,
-                                        autocompleteSettingRemotedConnectedSingle,
-                                        autocompleteSettingRemotedConnectedSingle,
-                                        autocompleteSettingRemotedConnectedMultiple,
-                                        autocompleteSettingRemotedConnectedMultiple,
-                                        dropdownSettingConnectedMultiple,
-                                        dropdownSettingConnectedMultiple,
-                                        dropdownSettingConnectedSingle,
-                                        dropdownSettingConnectedSingle,
-                                        dropdownSettingRemotedConnectedSingle,
-                                        dropdownSettingRemotedConnectedSingle,
-                                        dropdownSettingRemotedConnectedMultiple,
-                                        dropdownSettingRemotedConnectedMultiple,
                                         {
                                             component: {
                                                 name: 'ue-autocomplete',
@@ -1775,6 +1726,49 @@
                                     ]
                                 }
                             }
+                        },
+                        {
+                            component: {
+                                name: 'ue-group',
+                                settings: {
+                                    label: 'Relations of components',
+                                    fields: [
+                                        {
+                                            component: {
+                                                name: 'ue-group',
+                                                settings: {
+                                                    label: 'Related autocomplete',
+                                                    fields: [
+                                                        autocompleteSettingConnectedMultiple,
+                                                        autocompleteSettingConnectedMultiple,
+                                                        autocompleteSettingConnectedSingle,
+                                                        autocompleteSettingConnectedSingle,
+                                                        autocompleteSettingRemotedConnectedSingle,
+                                                        autocompleteSettingRemotedConnectedSingle,
+                                                        autocompleteSettingRemotedConnectedMultiple,
+                                                        autocompleteSettingRemotedConnectedMultiple
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-group',
+                                                settings: {
+                                                    label: 'Related dropdown',
+                                                    fields: [
+                                                        dropdownSettingConnectedSingle,
+                                                        dropdownSettingConnectedSingle,
+                                                        dropdownSettingRemotedConnectedSingle,
+                                                        dropdownSettingRemotedConnectedSingle
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+
                         },
                         {
                             component: {
