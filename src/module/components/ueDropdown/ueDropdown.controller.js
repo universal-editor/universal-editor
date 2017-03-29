@@ -92,9 +92,7 @@
                         .getUrlResource(config)
                         .then(function(response) {
                             angular.forEach(response.data.items, function(v) {
-                                if (selectedStorageComponent.indexOf(v[vm.fieldId]) === -1) {
-                                    vm.optionValues.push(v);
-                                }
+                                vm.optionValues.push(v);
                             });
                             $timeout(function() {
                                 setSizeSelect();
@@ -128,36 +126,35 @@
         function fillControl(allOptions) {
             angular.forEach(allOptions, function(v) {
                 var v_id = v[vm.fieldId];
-                if (selectedStorageComponent.indexOf(v_id) === -1) {
-                    if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
-                        if (angular.isArray(vm.fieldValue)) {
-                            for (var i = vm.fieldValue.length; i--;) {
-                                if (vm.fieldValue[i] == v_id) {
-                                    vm.fieldValue[i] = v;
-                                    break;
-                                }
+                if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
+                    if (angular.isArray(vm.fieldValue)) {
+                        for (var i = vm.fieldValue.length; i--;) {
+                            if (vm.fieldValue[i] == v_id) {
+                                vm.fieldValue[i] = v;
+                                break;
                             }
-                        } else if (v_id == vm.fieldValue) {
-                            vm.fieldValue = v;
-                            vm.isSpanSelectDelete = true;
                         }
+                    } else if (v_id == vm.fieldValue) {
+                        vm.fieldValue = v;
+                        vm.isSpanSelectDelete = true;
                     }
-                    if (vm.optionValues !== allOptions) {
-                        if (vm.isTree) {
-                            if (!v[vm.treeParentField]) {
-                                vm.optionValues.push(angular.copy(v));
-                            }
-                        } else {
+                }
+                if (vm.optionValues !== allOptions) {
+                    if (vm.isTree) {
+                        if (!v[vm.treeParentField]) {
                             vm.optionValues.push(angular.copy(v));
                         }
+                    } else {
+                        vm.optionValues.push(angular.copy(v));
                     }
                 }
             });
         }
 
-        var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {            
+        var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {
             if (vm.isParentComponent(data) && !event.defaultPrevented) {
                 vm.data = data;
+                debugger;
                 $scope.onLoadDataHandler(event, data);
                 componentSettings.$loadingPromise.then(function(items) {
                     allOptions = allOptions.length ? allOptions : items;
@@ -420,7 +417,7 @@
                 if (opt.childOpts && opt.childOpts.length) {
                     opt.childOpts = filter(opt.childOpts, filterText);
                 }
-                return ((opt[vm.fieldSearch].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length)) && selectedStorageComponent.indexOf(opt[vm.fieldId]) === -1;
+                return ((opt[vm.fieldSearch].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length));
             });
 
             return result;
@@ -502,6 +499,7 @@
             if (event) {
                 event.stopPropagation();
             }
+            vm.equalPreviewValue();
         }
 
         function convertToObject(items) {
@@ -673,6 +671,7 @@
                 remove(null, vm.fieldValue[0]);
                 event.stopPropagation();
             }
+            vm.equalPreviewValue();
         }
 
         function clear() {

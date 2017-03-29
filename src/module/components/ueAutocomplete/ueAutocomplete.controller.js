@@ -173,6 +173,7 @@
             if (event && !vm.multiple) {
                 event.stopPropagation();
             }
+            vm.equalPreviewValue();
         }
 
         function removeFromSelected(event, obj) {
@@ -186,6 +187,7 @@
                     }
                 });
             }
+            vm.equalPreviewValue();
         }
 
         /* PRIVATE METHODS */
