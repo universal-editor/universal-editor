@@ -1850,9 +1850,9 @@
                                                                 settings: {
                                                                     dataSource: {
                                                                         url: '//universal-backend.dev/rest/v1/staff/new',
-                                                                        new: true,
                                                                         fields: []
                                                                     },
+                                                                    empty: true,
                                                                     body: [
                                                                         {
                                                                             component: {
@@ -1863,11 +1863,11 @@
                                                                                             label: 'Groups',
                                                                                             fields: [
                                                                                                 {
-                                                                                                    name: 'group.title',
+                                                                                                    name: 'group.name',
                                                                                                     component: {
                                                                                                         name: 'ue-string',
                                                                                                         settings: {
-                                                                                                            label: 'Title'
+                                                                                                            label: 'Name'
                                                                                                         }
                                                                                                     }
                                                                                                 },
@@ -1880,11 +1880,11 @@
                                                                                                             multiple: true,
                                                                                                             fields: [
                                                                                                                 {
-                                                                                                                    name: 'multipleRoot[].title',
+                                                                                                                    name: 'multipleRoot[].phone',
                                                                                                                     component: {
                                                                                                                         name: 'ue-string',
                                                                                                                         settings: {
-                                                                                                                            label: 'Title'
+                                                                                                                            label: 'phone'
                                                                                                                         }
                                                                                                                     }
                                                                                                                 },
@@ -1912,11 +1912,11 @@
                                                                                                             label: 'Contacts',
                                                                                                             fields: [
                                                                                                                 {
-                                                                                                                    name: 'rootSingle.title',
+                                                                                                                    name: 'rootSingle.phone',
                                                                                                                     component: {
                                                                                                                         name: 'ue-string',
                                                                                                                         settings: {
-                                                                                                                            label: 'Title'
+                                                                                                                            label: 'Phone'
                                                                                                                         }
                                                                                                                     }
                                                                                                                 },

@@ -67,6 +67,7 @@
             vm.editFooterBarNew = [];
             vm.editFooterBarExist = [];
             vm.idField = 'id';
+            vm.empty = vm.componentSettings === true;
 
             vm.width = !isNaN(+vm.componentSettings.width) ? vm.componentSettings.width : null;
             vm.classFormComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
@@ -141,7 +142,7 @@
             });
 
 
-            if (dataSource && dataSource.new !== true) {
+            if (dataSource && vm.empty !== true) {
                 if (pk !== 'new') {
                     YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
                         vm.options.isLoading = false;
