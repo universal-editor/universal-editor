@@ -5,6 +5,14 @@
         outline: none;
         width: 100%;
         & .ue-button-body {
+            .button-loading {
+                .processing-status-wrapper {
+                    display: inline-block;
+                }
+            }
+            .processing-status-wrapper {
+                display: none;
+            }
             & .btn-header {
                 margin: 5px 5px 5px 0;
             }
