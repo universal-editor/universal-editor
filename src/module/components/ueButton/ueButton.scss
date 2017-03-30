@@ -6,8 +6,23 @@
         width: 100%;
         & .ue-button-body {
             .button-loading {
+                position: relative;
+                button {
+                    opacity: 0.7;
+                }
                 .processing-status-wrapper {
-                    display: inline-block;
+                    margin-top: 15%;
+                    z-index: 100;
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                    left: 0;
+                    right: 0;
+                    position: absolute;
+                    .processing-status {
+                        margin-left: 15px;
+                        opacity: 1;
+                    }
                 }
             }
             .processing-status-wrapper {
