@@ -12,18 +12,26 @@
             componentSettings,
             baseController,
             allOptions = [],
-            destroyWatchEntityLoaded;
+            destroyWatchEntityLoaded,
+            selectedStorageComponent = [];
 
         vm.$onInit = function() {
             vm.optionValues = [];
+            vm.possibleValues = [];
             vm.initDataSource = true;
             componentSettings = vm.setting.component.settings;
+            baseController = $controller('FieldsController', { $scope: $scope });
+            angular.extend(vm, baseController);
+
+            if (componentSettings.valuesRemote) {
+                selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
+            } else if (componentSettings.values) {
+                selectedStorageComponent = componentSettings.values.$selectedStorage;
+            }
             vm.search = componentSettings.search === true;
             if (typeof componentSettings.serverPagination !== 'boolean') {
                 vm.serverPagination = true;
             }
-            baseController = $controller('FieldsController', { $scope: $scope });
-            angular.extend(vm, baseController);
 
             possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
@@ -84,7 +92,7 @@
                         .getUrlResource(config)
                         .then(function(response) {
                             angular.forEach(response.data.items, function(v) {
-                                vm.optionValues.push(v);
+                                vm.category(v);
                             });
                             $timeout(function() {
                                 setSizeSelect();
@@ -116,6 +124,7 @@
         };
 
         function fillControl(allOptions) {
+            vm.optionValues = [];
             angular.forEach(allOptions, function(v) {
                 var v_id = v[vm.fieldId];
                 if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
@@ -143,8 +152,8 @@
             });
         }
 
-        var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {            
-            if (vm.isParentComponent(data)) {
+        var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {
+            if (vm.isParentComponent(data) && !event.defaultPrevented) {
                 vm.data = data;
                 $scope.onLoadDataHandler(event, data);
                 componentSettings.$loadingPromise.then(function(items) {
@@ -152,10 +161,11 @@
                     vm.optionValues = [];
                     fillControl(allOptions);
                     vm.equalPreviewValue();
+                    return items;
                 }).finally(function() {
                     vm.loadingData = false;
                 });
-                if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
+                if (!vm.options.isSendRequest) {
                     loadDataById(vm.fieldValue).finally(function() {
                         vm.loadingData = false;
                     });
@@ -167,7 +177,7 @@
 
         function loadDataById(ids) {
             var defer = $q.defer();
-            if (componentSettings.valuesRemote) {
+            if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
                 var config = {
                     method: 'GET',
                     url: componentSettings.valuesRemote.url,
@@ -355,7 +365,7 @@
                 vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
 
-            if (!vm.filterText) {
+            if (vm.filterText) {
                 if (!vm.multiple && !vm.isTree) {
                     if (vm.optionValues && vm.optionValues.length && vm.fieldValue) {
                         var finded = vm.optionValues.filter(function(record) {
@@ -382,7 +392,7 @@
                 if (!allOptions) {
                     allOptions = angular.copy(vm.optionValues);
                 }
-                vm.optionValues = filter(angular.copy(allOptions), vm.filterText);
+                vm.possibleValues = filter(angular.copy(allOptions), vm.filterText);
                 return;
             }
             vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
@@ -407,7 +417,7 @@
                 if (opt.childOpts && opt.childOpts.length) {
                     opt.childOpts = filter(opt.childOpts, filterText);
                 }
-                return (opt[vm.fieldSearch].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length);
+                return ((opt[vm.fieldSearch].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length));
             });
 
             return result;
@@ -489,6 +499,7 @@
             if (event) {
                 event.stopPropagation();
             }
+            vm.equalPreviewValue();
         }
 
         function convertToObject(items) {
@@ -510,11 +521,16 @@
             var dropdownHost = $element.find('.select-input-wrapper');
             var dropdownHeight = dropdownHost.height();
             var dropdownOffset = dropdownHost.offset();
-            var dropdownBottom = dropdownOffset.top + dropdownHeight;
-            $scope.$evalAsync(function() {
-                vm.possibleLocation = !(dHeight - dropdownBottom < 162);
+            if (dropdownOffset && dropdownHeight) {
+                var dropdownBottom = dropdownOffset.top + dropdownHeight;
+                $scope.$evalAsync(function() {
+                    vm.possibleLocation = !(dHeight - dropdownBottom < 162);
+                });
+                vm.setColorPlaceholder();
+            }
+            vm.possibleValues = vm.optionValues.filter(function(v) {
+                return selectedStorageComponent.indexOf(v[vm.fieldId]) === -1;
             });
-            vm.setColorPlaceholder();
         }
 
 
@@ -655,6 +671,7 @@
                 remove(null, vm.fieldValue[0]);
                 event.stopPropagation();
             }
+            vm.equalPreviewValue();
         }
 
         function clear() {

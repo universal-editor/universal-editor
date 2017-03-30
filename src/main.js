@@ -1,8 +1,5 @@
 require('./index.scss');
-
-if(IS_DEV) {
-    require('./bootstrap-inject.scss');
-}
+require('./bootstrap-inject.scss');
 require('./module/templates.module.js');
 require('./module/universal-editor.module.js');
 require('./module/localization.configFile.js');

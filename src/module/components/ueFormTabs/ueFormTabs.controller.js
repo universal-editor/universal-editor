@@ -36,7 +36,7 @@
                                     return k.name == field;
                                 })[0];
                                 if (newField) {
-                                    newTab.fields.push(newField);
+                                    newTab.fields.push(angular.merge({}, newField));
                                     if (newField.component && newField.component.settings && newField.component.settings.disabled !== true) {
                                         isAllDisabled = false;
                                     }

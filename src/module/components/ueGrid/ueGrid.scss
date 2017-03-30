@@ -18,6 +18,14 @@
               background-color: #FFFFFF;
               border-spacing: 0;
               & td {
+                  .field-name-label {
+                      display: none;
+                  }
+                  .field-array-wrapper.editor-group {
+                      .clear-padding-left {
+                          width: auto;
+                      }
+                  }
                   &.context-column {
                       width: 15px;
                       min-width: 32px;
@@ -86,9 +94,11 @@
                       display: none;
                       &.icon-mix-mode {
                           display: inline-block;
+                          position: absolute;
+                          padding: 8px 0;
                           &+.component-wrapper {
                               display: inline-block;
-                              padding-left: 7px !important;
+                              padding-left: 20px !important;
                           }
                       }
                   }

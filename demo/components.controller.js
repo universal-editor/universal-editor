@@ -8,7 +8,6 @@
 
     function ComponentsController() {
         var demoDataSource = {
-            type: 'REST',
             url: '//universal-backend.dev/rest/v1/staff',
             fields: [
                 {
@@ -44,6 +43,102 @@
                     }
                 }
             ]
+        };
+        var autocompleteSettingConnectedSingle = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected (single)',
+                    values: {
+                        'key1': 'value1',
+                        'key2': 'value2',
+                        'key3': 'value3',
+                        'key4': 'value4',
+                        'key5': 'value5',
+                        'key6': 'value6'
+                    }
+                }
+            }
+        };
+        var autocompleteSettingConnectedMultiple = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected (multiple)',
+                    values: {
+                        'key1': 'value1',
+                        'key2': 'value2',
+                        'key3': 'value3',
+                        'key4': 'value4',
+                        'key5': 'value5',
+                        'key6': 'value6'
+                    },
+                    multiple: true
+                }
+            }
+        };
+        var autocompleteSettingRemotedConnectedSingle = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected  with remoted data (single)',
+                    valuesRemote: {
+                        fields: {
+                            value: 'id',
+                            label: 'name'
+                        },
+                        url: 'http://universal-backend.dev/rest/v1/country'
+                    }
+                }
+            }
+        };
+        var autocompleteSettingRemotedConnectedMultiple = {
+            component: {
+                name: 'ue-autocomplete',
+                settings: {
+                    label: 'ue-autocomplete connected  with remoted data (multiple)',
+                    valuesRemote: {
+                        fields: {
+                            value: 'id',
+                            label: 'name'
+                        },
+                        url: 'http://universal-backend.dev/rest/v1/country'
+                    },
+                    multiple: true
+                }
+            }
+        };
+
+        var dropdownSettingConnectedSingle = {
+            component: {
+                name: 'ue-dropdown',
+                settings: {
+                    label: 'ue-dropdown connected (single)',
+                    values: {
+                        'key1': 'value1',
+                        'key2': 'value2',
+                        'key3': 'value3',
+                        'key4': 'value4',
+                        'key5': 'value5',
+                        'key6': 'value6'
+                    }
+                }
+            }
+        };
+        var dropdownSettingRemotedConnectedSingle = {
+            component: {
+                name: 'ue-dropdown',
+                settings: {
+                    label: 'ue-dropdown connected with remoted data (single)',
+                    valuesRemote: {
+                        fields: {
+                            value: 'id',
+                            label: 'name'
+                        },
+                        url: 'http://universal-backend.dev/rest/v1/country'
+                    }
+                }
+            }
         };
         var vm = this;
         vm.ueConfig = {
@@ -1635,6 +1730,49 @@
                             component: {
                                 name: 'ue-group',
                                 settings: {
+                                    label: 'Relations of components',
+                                    fields: [
+                                        {
+                                            component: {
+                                                name: 'ue-group',
+                                                settings: {
+                                                    label: 'Related autocomplete',
+                                                    fields: [
+                                                        autocompleteSettingConnectedMultiple,
+                                                        autocompleteSettingConnectedMultiple,
+                                                        autocompleteSettingConnectedSingle,
+                                                        autocompleteSettingConnectedSingle,
+                                                        autocompleteSettingRemotedConnectedSingle,
+                                                        autocompleteSettingRemotedConnectedSingle,
+                                                        autocompleteSettingRemotedConnectedMultiple,
+                                                        autocompleteSettingRemotedConnectedMultiple
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-group',
+                                                settings: {
+                                                    label: 'Related dropdown',
+                                                    fields: [
+                                                        dropdownSettingConnectedSingle,
+                                                        dropdownSettingConnectedSingle,
+                                                        dropdownSettingRemotedConnectedSingle,
+                                                        dropdownSettingRemotedConnectedSingle
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+
+                        },
+                        {
+                            component: {
+                                name: 'ue-group',
+                                settings: {
                                     label: 'Buttons',
                                     countInLine: 3,
                                     fields: [
@@ -1709,7 +1847,10 @@
                                                             component: {
                                                                 name: 'ue-form',
                                                                 settings: {
-                                                                    dataSource: demoDataSource,
+                                                                    dataSource: {
+                                                                        url: '//universal-backend.dev/rest/v1/staff',
+                                                                        fields: []
+                                                                    },
                                                                     body: [
                                                                         {
                                                                             component: {
@@ -1717,63 +1858,79 @@
                                                                                 settings: {
                                                                                     tabs: [
                                                                                         {
-                                                                                            label: 'Article',
+                                                                                            label: 'Groups',
                                                                                             fields: [
                                                                                                 {
-                                                                                                    component: {
-                                                                                                        name: 'ue-radio',
-                                                                                                        settings: {
-                                                                                                            label: 'Status',
-                                                                                                            values: {
-                                                                                                                0: 'Draft',
-                                                                                                                10: 'Archived',
-                                                                                                                100: 'Published',
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                },
-                                                                                                {
+                                                                                                    name: 'group.name',
                                                                                                     component: {
                                                                                                         name: 'ue-string',
                                                                                                         settings: {
-                                                                                                            label: 'Title'
+                                                                                                            label: 'Name'
                                                                                                         }
                                                                                                     }
                                                                                                 },
                                                                                                 {
+                                                                                                    name: 'multipleRoot',
                                                                                                     component: {
-                                                                                                        name: 'ue-date',
+                                                                                                        name: 'ue-group',
                                                                                                         settings: {
-                                                                                                            label: 'Date of publication'
+                                                                                                            label: 'Contacts',
+                                                                                                            multiple: true,
+                                                                                                            fields: [
+                                                                                                                {
+                                                                                                                    name: 'multipleRoot[].phone',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-string',
+                                                                                                                        settings: {
+                                                                                                                            label: 'phone'
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'type',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-dropdown',
+                                                                                                                        settings: {
+                                                                                                                            values: {
+                                                                                                                                phone: 'Телефон',
+                                                                                                                                email: 'Эл. почта'
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            ]
                                                                                                         }
                                                                                                     }
                                                                                                 },
                                                                                                 {
+                                                                                                    name: 'rootSingle',
                                                                                                     component: {
-                                                                                                        name: 'ue-textarea',
+                                                                                                        name: 'ue-group',
                                                                                                         settings: {
-                                                                                                            label: 'Text'
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            ]
-                                                                                        },
-                                                                                        {
-                                                                                            label: 'SEO',
-                                                                                            fields: [
-                                                                                                {
-                                                                                                    component: {
-                                                                                                        name: 'ue-string',
-                                                                                                        settings: {
-                                                                                                            label: 'Meta description'
-                                                                                                        }
-                                                                                                    }
-                                                                                                },
-                                                                                                {
-                                                                                                    component: {
-                                                                                                        name: 'ue-string',
-                                                                                                        settings: {
-                                                                                                            label: 'Meta keywords'
+                                                                                                            label: 'Contacts',
+                                                                                                            fields: [
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.phone',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-string',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Phone'
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'type',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-dropdown',
+                                                                                                                        settings: {
+                                                                                                                            values: {
+                                                                                                                                phone: 'Телефон',
+                                                                                                                                email: 'Эл. почта'
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            ]
                                                                                                         }
                                                                                                     }
                                                                                                 }
@@ -1783,7 +1940,20 @@
                                                                                 }
                                                                             }
                                                                         }
-                                                                    ]
+                                                                    ],
+                                                                    footer: {
+                                                                        toolbar: [
+                                                                            {
+                                                                                component: {
+                                                                                    name: 'ue-button',
+                                                                                    settings: {
+                                                                                        label: 'Apply',
+                                                                                        action: 'presave'
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
                                                                 }
                                                             }
                                                         }

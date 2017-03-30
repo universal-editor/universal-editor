@@ -10,12 +10,18 @@
         /* jshint validthis: true */
         var vm = this,
             inputTimeout,
-            componentSettings;
+            componentSettings,
+            selectedStorageComponent = [];
 
         vm.$onInit = function() {
             vm.optionValues = [];
             angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
             componentSettings = vm.setting.component.settings;
+            if (componentSettings.valuesRemote) {
+                selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
+            } else if (componentSettings.values) {
+                selectedStorageComponent = componentSettings.values.$selectedStorage;
+            }
 
             vm.selectedValues = [];
             vm.inputValue = '';
@@ -42,10 +48,10 @@
             }
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(event, data) {
-                if (vm.isParentComponent(data) && !vm.options.filter) {
-                    vm.loadingData = true;
+                if (vm.isParentComponent(data) && !vm.options.filter && !event.defaultPrevented) {
+                    vm.loadingData = true;                    
                     $scope.onLoadDataHandler(event, data);
-                    if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
+                    if (!vm.options.isSendRequest) {
                         vm.loadDataById(vm.fieldValue).then(function() {
                             vm.equalPreviewValue();
                         }).finally(function() {
@@ -75,7 +81,7 @@
                         }
                     }
                     inputTimeout = $timeout(function() {
-                        autocompleteSearch(newValue);
+                        vm.autocompleteSearch(newValue);
                     }, 300);
                 }
             }, true));
@@ -167,6 +173,7 @@
             if (event && !vm.multiple) {
                 event.stopPropagation();
             }
+            vm.equalPreviewValue();
         }
 
         function removeFromSelected(event, obj) {
@@ -180,9 +187,12 @@
                     }
                 });
             }
+            vm.equalPreviewValue();
         }
 
         /* PRIVATE METHODS */
+        vm.autocompleteSearch = autocompleteSearch;
+        vm.alreadyIn = alreadyIn;
 
         function autocompleteSearch(searchString) {
             vm.error = [];
@@ -199,8 +209,10 @@
                         obj[vm.fieldId] = key;
                     }
                     obj[vm.fieldSearch] = v;
-                    if (v.toLowerCase().indexOf(searchString.toLowerCase()) >= 0 && !alreadyIn(obj, vm.selectedValues)) {
-                        vm.possibleValues.push(obj);
+                    if (angular.isString(v)) {
+                        if (v.toLowerCase().indexOf(searchString.toLowerCase()) >= 0 && !alreadyIn(obj, vm.selectedValues) && selectedStorageComponent.indexOf(obj[vm.fieldId]) === -1) {
+                            vm.possibleValues.push(obj);
+                        }
                     }
                 });
                 vm.activeElement = 0;
@@ -222,7 +234,7 @@
                     .getUrlResource(config)
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {
-                            if (!alreadyIn(v, vm.selectedValues) && !alreadyIn(v, vm.possibleValues)) {
+                            if (!alreadyIn(v, vm.selectedValues) && !alreadyIn(v, vm.possibleValues) && selectedStorageComponent.indexOf(v[vm.fieldId]) === -1) {
                                 vm.possibleValues.push(v);
                             }
                         });
@@ -264,24 +276,26 @@
             vm.preloadedData = false;
             if (componentSettings.hasOwnProperty('values')) {
                 angular.forEach(componentSettings.values, function(v, key) {
-                    var obj = {};
-                    if (Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple) {
-                        if (angular.isArray(componentSettings.values)) {
-                            obj[vm.fieldId] = v;
-                        } else {
-                            obj[vm.fieldId] = key;
+                    if (angular.isString(v)) {
+                        var obj = {};
+                        if (Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple) {
+                            if (angular.isArray(componentSettings.values)) {
+                                obj[vm.fieldId] = v;
+                            } else {
+                                obj[vm.fieldId] = key;
+                            }
+                            obj[vm.fieldSearch] = v;
+                            vm.selectedValues.push(obj);
+                        } else if ((vm.fieldValue == key || vm.fieldValue == v) && !vm.multiple) {
+                            if (angular.isArray(componentSettings.values)) {
+                                obj[vm.fieldId] = v;
+                            } else {
+                                obj[vm.fieldId] = key;
+                            }
+                            obj[vm.fieldSearch] = v;
+                            vm.selectedValues.push(obj);
+                            vm.placeholder = obj[vm.fieldSearch];
                         }
-                        obj[vm.fieldSearch] = v;
-                        vm.selectedValues.push(obj);
-                    } else if ((vm.fieldValue == key || vm.fieldValue == v) && !vm.multiple) {
-                        if (angular.isArray(componentSettings.values)) {
-                            obj[vm.fieldId] = v;
-                        } else {
-                            obj[vm.fieldId] = key;
-                        }
-                        obj[vm.fieldSearch] = v;
-                        vm.selectedValues.push(obj);
-                        vm.placeholder = obj[vm.fieldSearch];
                     }
                 });
                 vm.preloadedData = true;

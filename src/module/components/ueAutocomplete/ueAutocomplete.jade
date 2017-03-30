@@ -5,7 +5,7 @@ block append content
     .components-body(ng-if="!vm.warnings.length && !vm.dangers.length" ng-class="{'disabled-field': vm.disabled}")
       div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}", ng-style="{'overflow:auto':vm.multiple}", ng-if="!vm.disabled || vm.options.filter")
         div(ng-class='vm.classComponent')
-            .autocomplete-input-wrapper.form-control(data-ng-class='{"active" : vm.isActivePossible, "disabled-input": vm.readonly}', data-ng-click="inputFocus()")
+            .autocomplete-input-wrapper.form-control(data-ng-class='{"active" : vm.isActivePossible, "disabled-input": vm.readonly, "multiple": vm.multiple}', data-ng-click="inputFocus()")
                 .autocomplete-selected(data-ng-repeat="acItem in vm.selectedValues", 
                                     data-ng-show="acItem[vm.fieldSearch]",
                                     data-ng-if="vm.multiple") 

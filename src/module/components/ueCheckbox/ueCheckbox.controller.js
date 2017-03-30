@@ -69,7 +69,7 @@
             }
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
-                if (vm.isParentComponent(data)) {
+                if (vm.isParentComponent(data) && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
                     if (!vm.singleValue) {
                         componentSettings.$loadingPromise.then(function(optionValues) {
@@ -146,7 +146,6 @@
             var field = {},
                 wrappedFieldValue;
             wrappedFieldValue = vm.fieldValue;
-
             if (vm.singleValue && !vm.options.filter) {
                 wrappedFieldValue = (angular.isArray(vm.fieldValue) && vm.fieldValue[0] === componentSettings.trueValue) ? componentSettings.trueValue : componentSettings.falseValue;
             }
@@ -154,13 +153,7 @@
             if (vm.options.filter && vm.fieldValue === null) {
                 wrappedFieldValue = vm.fieldValue;
             }
-
-            if (vm.parentField) {
-                field[vm.parentField] = {};
-                field[vm.parentField][vm.fieldName] = wrappedFieldValue;
-            } else {
-                field[vm.fieldName] = wrappedFieldValue;
-            }
+            field[vm.fieldName] = wrappedFieldValue;
 
             return field;
         }

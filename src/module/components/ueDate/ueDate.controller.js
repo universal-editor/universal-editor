@@ -31,8 +31,8 @@
             $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);
             fillPreviewValue();
 
-            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {                
-                if (vm.isParentComponent(data) && !vm.options.filter) {
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
+                if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
                     if (vm.multiple) {
                         if (angular.isArray(vm.fieldValue)) {
@@ -111,12 +111,7 @@
                 }
             }
 
-            if (vm.parentField) {
-                field[vm.parentField] = {};
-                field[vm.parentField][vm.fieldName] = wrappedFieldValue;
-            } else {
-                field[vm.fieldName] = wrappedFieldValue;
-            }
+            field[vm.fieldName] = wrappedFieldValue;
 
             return field;
         }

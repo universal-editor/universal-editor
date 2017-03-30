@@ -8,9 +8,8 @@ block append content
                 div(ng-class='vm.classComponent')
                     div(data-ng-if="vm.multiple && !vm.isTree")
                         div.select-border
-                            select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple, size="3")
-                                option(data-ng-repeat="option in vm.optionValues", value="{{option[vm.fieldId]}}") {{option[vm.fieldSearch]}}
-
+                            select.form-control(name="{{vm.fieldName}}", data-ng-disabled="vm.readonly || !vm.parentValue", data-ng-model="vm.fieldValue", multiple, size="3",
+                                                ng-options="option[vm.fieldSearch] for option in vm.optionValues track by option[vm.fieldId]")
                     div(data-ng-if="!vm.multiple && !vm.isTree" )
                         div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='{"but-for-search": !vm.search, "disabled-input": vm.readonly}' )
                             //--span {{vm.optionValues}}
@@ -42,7 +41,7 @@ block append content
                                 .processing-status-wrapper(data-ng-show="vm.loadingPossibleData")
                                     .processing-status {{'PERFORMS_ACTIONS' | translate}}
                                 .possible-scroll(data-ng-hide="vm.loadingPossibleData")
-                                    .possible-value-item(data-ng-repeat="option in vm.optionValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.fieldSearch]}}
+                                    .possible-value-item(data-ng-repeat="option in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.fieldSearch]}}
 
                     .dropdown(data-ng-if="vm.isTree")
                         .dropdown__host

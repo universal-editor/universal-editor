@@ -55,7 +55,7 @@
                 request.href = vm.url;
                 $scope.$on('ue:afterEntityUpdate', function(event, data) {
                     if (data.action === 'presave' && !vm.options.isGrid && vm.isParentComponent(data)) {
-                        vm.entityId = data[componentSettings.dataSource.primaryKey];
+                        vm.entityId = data[vm.options.$dataSource ? vm.options.$dataSource.primaryKey : 'id'];
                         vm.type = 'update';
                         if (vm.action === 'delete') {
                             vm.disabled = false;
@@ -96,7 +96,7 @@
                     $timeout(function() {
                         var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
                         if (pk === 'new' && !ModalService.isModalOpen()) {
-                            EditEntityStorage.newSourceEntity(vm.options.$componentId, componentSettings.dataSource.parentField);
+                            EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.options.$dataSource.parentField);
                         }
                     }, 0);
                 });

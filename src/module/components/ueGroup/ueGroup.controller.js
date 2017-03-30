@@ -18,9 +18,13 @@
             vm.fieldName = componentSettings.name;
 
             baseController = $controller('BaseController', { $scope: $scope });
-            vm.parentFieldType = vm.setting.resourceType;
+            vm.resourceType = vm.setting.resourceType;
             angular.extend(vm, baseController);
             EditEntityStorage.addFieldController(vm, true);
+
+            if(vm.multiple && vm.setting.name) {
+                vm.setting.name = vm.setting.name + '[]';
+            }
 
             vm.width = !isNaN(+componentSettings.width) ? componentSettings.width : null;
             vm.classGroupComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
@@ -41,7 +45,7 @@
             widthBootstrap = Math.ceil(12 / vm.countInLine);
             vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
 
-            if (vm.multiple === true && !vm.fieldName) {
+            if (vm.multiple === true && !vm.setting.name) {
                 $translate('ERROR.MULTIPLE_NAME').then(function(translation) {
                     console.log('UeFormGroup:' + translation);
                 });
@@ -59,13 +63,18 @@
                             return k.name == value;
                         })[0];
                     }
+                    if(field) {
+                        field = angular.merge({}, field);
+                    }
                 } else if (value && value.component) {
                     field = value;
                 }
                 if (field) {
-                    if (vm.fieldName) {
-                        field.parentField = vm.fieldName;
-                        field.parentFieldType = vm.parentFieldType; //for JSONAPI
+                    if(vm.setting.name && field.name.indexOf(vm.setting.name) === -1) {
+                        field.name = vm.setting.name + '.' + field.name;
+                    }
+                    if (vm.fieldName && vm.resourceType) {
+                        field.resourceType = vm.resourceType; //for JSONAPI
                     }
                     vm.innerFields.push(field);
                 }
@@ -88,19 +97,36 @@
         };
 
         function onLoadedHandler(event, data) {
-            if (!vm.$isOnlyChildsBroadcast) {
-                var group = data[vm.fieldName];
-                if (group) {
-                    if (vm.multiple && angular.isArray(group)) {
-                        group.forEach(vm.addItem);
-                        $timeout(function() {
-                            vm.$isOnlyChildsBroadcast = true;
-                            $scope.$broadcast('ue:componentDataLoaded', data);
-                            delete vm.$isOnlyChildsBroadcast;
-                        }, 0);
+            if (!vm.$isOnlyChildsBroadcast && angular.isString(vm.setting.name)) {
+                var names = vm.setting.name.split('.');
+                var tempObject = data;
+                var partName = '';
+                angular.forEach(names, function(name, i) {
+                    var empty = {};
+                    partName = partName ? (partName + '.' + name) : name;
+                    if (name.lastIndexOf('[]') === (name.length - 2)) {
+                        name = name.substr(0, name.length - 2);
                     }
-
-                }
+                    if (angular.isArray(tempObject)) {
+                        let component = vm.getParentComponent(partName);
+                        if (component) {
+                            var parentIndex = component.parentFieldIndex || 0;
+                            tempObject = tempObject[parentIndex];
+                        }
+                    }
+                    if (i !== (names.length - 1)) {
+                        tempObject = tempObject[name];
+                    } else {
+                        if (angular.isArray(tempObject[name]) && tempObject[name].length) {
+                            tempObject[name].forEach(vm.addItem);
+                            $timeout(function() {
+                                vm.$isOnlyChildsBroadcast = true;
+                                $scope.$broadcast('ue:componentDataLoaded', data);
+                                delete vm.$isOnlyChildsBroadcast;
+                            }, 0);
+                        }
+                    }
+                });
             }
         }
 

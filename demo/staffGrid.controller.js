@@ -3,79 +3,78 @@
 
     angular
         .module('demoApp')
-        .controller('NewsGridController', NewsGridController);
+        .controller('StaffGridController', StaffGridController);
 
-    function NewsGridController() {
+    function StaffGridController() {
         "ngInject";
         var vm = this;
-        var newsDataSource = {
+        var staffDataSource = {
             type: 'REST',
-            url: '//universal-backend.dev/rest/v1/news',
+            url: '//universal-backend.dev/rest/v1/staff',
             sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',
-            fields: [
+            keys: {
+                items: 'items',
+                meta: '_meta'
+            },
+            fields:[
                 {
-                    name: 'published',
-                    component: {
-                        name: 'ue-checkbox',
-                        settings: {
-                            label: 'Published',
-                            trueValue: 1,
-                            falseValue: 0
-                        }
-                    }
-                },
-                {
-                    name: 'published_at',
-                    component: {
-                        name: 'ue-date',
-                        settings: {
-                            label: 'Publication date'
-                        }
-                    }
-                },
-                {
-                    name: 'category_id',
-                    component: {
-                        name: 'ue-dropdown',
-                        settings: {
-                            label: 'Category',
-                            valuesRemote: {
-                                fields: {
-                                    value: 'id',
-                                    label: 'title'
-                                },
-                                url: 'http://universal-backend.dev/rest/v1/news/categories'
-                            },
-                            search: true
-                        }
-                    }
-                },
-                {
-                    name: 'title',
+                    name: 'name',
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: 'Title'
+                            label: 'Name'
                         }
                     }
                 },
                 {
-                    name: 'description',
+                    name: 'email',
                     component: {
-                        name: 'ue-textarea',
+                        name: 'ue-string',
                         settings: {
-                            label: 'Text'
+                            label: 'E-mail',
+                            contentType: 'email'
                         }
                     }
                 },
                 {
-                    name: 'authors',
+                    name: 'gender',
+                    component: {
+                        name: 'ue-radiolist',
+                        settings: {
+                            label: 'Gender',
+                            values: {
+                                'male': 'Male',
+                                'female': 'Female'
+                            }
+                        }
+                    }
+                },
+                {
+                    name: 'country',
+                    component: {
+                        name: 'ue-dropdown',
+                        settings: {
+                            label: 'Country',
+                            valuesRemote: {
+                                fields: {
+                                    value: 'id',
+                                    label: 'name'
+                                },
+                                url: 'http://universal-backend.dev/rest/v1/country'
+                            },
+                            multiple: false,
+                            placeholder: 'country of residence'
+                        }
+                    }
+                },
+                {
+                    name: 'parent_id',
                     component: {
                         name: 'ue-autocomplete',
                         settings: {
-                            label: 'Authors',
+                            label: 'Head',
                             valuesRemote: {
                                 fields: {
                                     value: 'id',
@@ -83,27 +82,29 @@
                                 },
                                 url: 'http://universal-backend.dev/rest/v1/staff'
                             },
-                            multiple: false,
-                            expandable: true,
-                            multiname: 'staff_id'
+                            multiple: false
                         }
                     }
                 },
                 {
-                    name: 'tags',
+                    name: 'colors',
                     component: {
-                        name: 'ue-autocomplete',
+                        name: 'ue-colorpicker',
                         settings: {
-                            label: 'Tags',
-                            valuesRemote: {
-                                fields: {
-                                    value: 'id',
-                                    label: 'name'
-                                },
-                                url: 'http://universal-backend.dev/rest/v1/tags'
-                            },
-                            multiple: false,
+                            label: 'Favorite colors',
+                            multiname: 'color',
                             expandable: true
+                        }
+                    }
+                },
+                {
+                    name: 'fired',
+                    component: {
+                        name: 'ue-checkbox',
+                        settings: {
+                            label: 'Fired',
+                            trueValue: 1,
+                            falseValue: 0
                         }
                     }
                 },
@@ -112,7 +113,8 @@
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: 'Created'
+                            label: 'Created',
+                            disabled: true
                         }
                     }
                 },
@@ -121,7 +123,8 @@
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: 'Updated'
+                            label: 'Updated',
+                            disabled: true
                         }
                     }
                 }
@@ -132,33 +135,37 @@
             component: {
                 name: 'ue-grid',
                 settings: {
-                    dataSource: newsDataSource,
+                    dataSource: staffDataSource,
                     header: {
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-filter'
-                                }
-                            },
-                            {
-                                component: {
                                     name: 'ue-button',
                                     settings: {
-                                        label: 'Add news',
-                                        sref: 'news_edit'
+                                        label: 'Add',
+                                        sref: 'staff_edit'
                                     }
                                 }
                             }
                         ]
                     },
-                    columns: ['title', 'authors', 'published_at', 'published'],
+                    columns: ['name', 'email', 'gender', 'parent_id'],
                     contextMenu: [
                         {
                             component: {
                                 name: 'ue-button',
                                 settings: {
+                                    label: 'Subordinate',
+                                    action: 'open'
+                                }
+                            }
+                        },
+                        {
+                            component: {
+                                name: 'ue-button',
+                                settings: {
                                     label: 'Edit',
-                                    sref: 'news_edit'
+                                    sref: 'staff_edit'
                                 }
                             }
                         },
@@ -168,7 +175,8 @@
                                 name: 'ue-button',
                                 settings: {
                                     label: 'Delete',
-                                    action: 'delete'
+                                    action: 'delete',
+                                    sref: 'staff'
                                 }
                             }
                         }
