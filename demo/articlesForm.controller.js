@@ -13,7 +13,6 @@
             url: 'http://localhost:16006/rest/articles',
             sortBy: '-id',
             primaryKey: 'id',
-            parentField: 'parent_id',
             keys: {
                 meta: 'meta'
             },

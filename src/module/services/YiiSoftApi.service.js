@@ -684,18 +684,30 @@
                     });
                 }
                 fields = fields.join(',');
-                if (angular.isString(options.url)) {
+                if (angular.isString(options.url)) {                    
+                        var keyValue = component.component.settings.valuesRemote.fields.value;
                     data.forEach(function(item) {
-                        var v = item[component.name];
-                        if (v !== undefined && 
-                            v !== null && 
-                            filter.indexOf(v) === -1 && 
-                            (!angular.isArray(v) || v.length > 0)) {
-                            filter.push(item[component.name]);
+                        var value = item[component.name];
+                        if (angular.isArray(value)) {
+                            value.forEach(function(valueItem) {
+                                if (angular.isString(component.component.settings.multiname)) {
+                                    valueItem = valueItem[component.component.settings.multiname];
+                                } else {
+                                    if(angular.isObject(valueItem) && keyValue) {
+                                        valueItem = valueItem[keyValue];
+                                    }
+                                }
+                                if (valueItem !== undefined && valueItem !== null && filter.indexOf(valueItem) === -1) {
+                                    filter.push(valueItem);
+                                }
+                            });
+                        } else {
+                            if (value !== undefined && value !== null && filter.indexOf(value) === -1) {
+                                filter.push(value);
+                            }
                         }
                     });
                     if (filter.length > 0) {
-                        var keyValue = component.component.settings.valuesRemote.fields.value;
                         var filterObject = {};
                         filterObject[keyValue] = [];
                         filterObject[keyValue].push({
@@ -736,13 +748,20 @@
                     if (component) {
                         var name = component.component.settings.valuesRemote.fields.value;
                         data.forEach(function(item) {
-                            angular.forEach(item, function(value, key) {
-                                if (key === component.name) {
+                            var value = item[component.name];
+                            if(value) {
+                                if (angular.isArray(value)) {
+                                        value = value.map(function(valueItem) {
+                                            if (angular.isString(component.component.settings.multiname)) {
+                                                valueItem = valueItem[component.component.settings.multiname];
+                                            }
+                                            return valueItem;
+                                        });
+                                    }
                                     item['$' + component.name] = list.filter(function(i) {
-                                        return i[name] == value;
-                                    })[0];
-                                }
-                            });
+                                        return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
+                                    });
+                            }       
                         });
                     }
                 });

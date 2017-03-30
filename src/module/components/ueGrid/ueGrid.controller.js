@@ -376,7 +376,8 @@
                             item.$options = {
                                 $componentId: vm.$componentId,
                                 regim: 'preview',
-                                $dataIndex: index
+                                $dataIndex: index,
+                                isSendRequest: true
                             };
                         });
                     }

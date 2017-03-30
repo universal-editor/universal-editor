@@ -49,10 +49,9 @@
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(event, data) {
                 if (vm.isParentComponent(data) && !vm.options.filter && !event.defaultPrevented) {
-                    vm.loadingData = true;
+                    vm.loadingData = true;                    
                     $scope.onLoadDataHandler(event, data);
-                    
-                    if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0) && (!angular.isArray(vm.fieldValue) || vm.fieldValue.length > 0)) {
+                    if (!vm.options.isSendRequest) {
                         vm.loadDataById(vm.fieldValue).then(function() {
                             vm.equalPreviewValue();
                         }).finally(function() {

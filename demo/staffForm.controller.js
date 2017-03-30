@@ -9,7 +9,6 @@
         "ngInject";
         var vm = this;
         var staffDataSource = {
-            type: 'REST',
             url: '//universal-backend.dev/rest/v1/staff',
             sortBy: '-id',
             primaryKey: 'id',
@@ -95,15 +94,6 @@
                     }
                 },
                 {
-                    name: 'text',
-                    component: {
-                        name: 'ue-textarea',
-                        settings: {
-                            label: 'Notes'
-                        }
-                    }
-                },
-                {
                     name: 'fired',
                     component: {
                         name: 'ue-checkbox',
@@ -169,8 +159,7 @@
                                                 'gender',
                                                 'country',
                                                 'parent_id',
-                                                'colors',
-                                                'text'
+                                                'colors'
                                             ]
                                         },
                                         {

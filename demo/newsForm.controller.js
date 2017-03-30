@@ -9,20 +9,22 @@
         "ngInject";
         var vm = this;
         var newsDataSource = {
-            type: 'REST',
             url: '//universal-backend.dev/rest/v1/news',
             sortBy: '-id',
             primaryKey: 'id',
-            parentField: 'parent_id',
             fields: [
-                {
-                    name: 'published',
+                 {
+                    name: 'id',
                     component: {
-                        name: 'ue-checkbox',
+                        name: 'ue-string',
                         settings: {
-                            label: 'Published',
-                            trueValue: 1,
-                            falseValue: 0
+                            label: 'ID',
+                            validators: [
+                                {
+                                    type: 'number'
+                                }
+                            ],
+                            disabled: true
                         }
                     }
                 },
@@ -92,7 +94,7 @@
                 {
                     name: 'tags',
                     component: {
-                        name: 'ue-autocomplete',
+                        name: 'ue-dropdown',
                         settings: {
                             label: 'Tags',
                             valuesRemote: {
@@ -102,7 +104,7 @@
                                 },
                                 url: 'http://universal-backend.dev/rest/v1/tags'
                             },
-                            multiple: false,
+                            multiple: true,
                             expandable: true
                         }
                     }
@@ -112,7 +114,8 @@
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: 'Created'
+                            label: 'Created',
+                            disabled: true
                         }
                     }
                 },
@@ -121,7 +124,8 @@
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: 'Updated'
+                            label: 'Updated',
+                            disabled: true
                         }
                     }
                 }
@@ -159,7 +163,7 @@
                                         {
                                             label: 'Description',
                                             fields: [
-                                                'published',
+                                                'id',
                                                 'published_at',
                                                 'category_id',
                                                 'title',

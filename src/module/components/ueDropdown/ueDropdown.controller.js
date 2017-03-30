@@ -92,7 +92,7 @@
                         .getUrlResource(config)
                         .then(function(response) {
                             angular.forEach(response.data.items, function(v) {
-                                vm.optionValues.push(v);
+                                vm.category(v);
                             });
                             $timeout(function() {
                                 setSizeSelect();
@@ -124,6 +124,7 @@
         };
 
         function fillControl(allOptions) {
+            vm.optionValues = [];
             angular.forEach(allOptions, function(v) {
                 var v_id = v[vm.fieldId];
                 if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
@@ -164,7 +165,7 @@
                 }).finally(function() {
                     vm.loadingData = false;
                 });
-                if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0) && (!angular.isArray(vm.fieldValue) || vm.fieldValue.length > 0)) {
+                if (!vm.options.isSendRequest) {
                     loadDataById(vm.fieldValue).finally(function() {
                         vm.loadingData = false;
                     });
@@ -176,7 +177,7 @@
 
         function loadDataById(ids) {
             var defer = $q.defer();
-            if (componentSettings.valuesRemote) {
+            if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
                 var config = {
                     method: 'GET',
                     url: componentSettings.valuesRemote.url,
@@ -364,7 +365,7 @@
                 vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
 
-            if (!vm.filterText) {
+            if (vm.filterText) {
                 if (!vm.multiple && !vm.isTree) {
                     if (vm.optionValues && vm.optionValues.length && vm.fieldValue) {
                         var finded = vm.optionValues.filter(function(record) {
@@ -391,7 +392,7 @@
                 if (!allOptions) {
                     allOptions = angular.copy(vm.optionValues);
                 }
-                vm.optionValues = filter(angular.copy(allOptions), vm.filterText);
+                vm.possibleValues = filter(angular.copy(allOptions), vm.filterText);
                 return;
             }
             vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;

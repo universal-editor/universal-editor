@@ -3,19 +3,14 @@
 
     angular
         .module('demoApp')
-        .controller('ArticlesGridController', ArticlesGridController);
+        .controller('TagsGridController', TagsGridController);
 
-    function ArticlesGridController() {
+    function TagsGridController() {
+        "ngInject";
         var vm = this;
-        var articlesDataSource = {
-            standard: 'JSONAPI',
-            resourceType: 'articles',
-            url: 'http://localhost:16006/rest/articles',
+        var tagsDataSource = {
+            url: '//universal-backend.dev/rest/v1/tags',
             sortBy: '-id',
-            primaryKey: 'id',
-            keys: {
-                meta: '_meta'
-            },
             fields: [
                 {
                     name: 'id',
@@ -23,52 +18,20 @@
                         name: 'ue-string',
                         settings: {
                             label: 'ID',
-                            readonly: true
+                            validators: [
+                                {
+                                    type: 'number'
+                                }
+                            ]
                         }
                     }
                 },
                 {
-                    name: 'title',
+                    name: 'name',
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: 'Title'
-                        }
-                    }
-                },
-                {
-                    name: 'status',
-                    component: {
-                        name: 'ue-dropdown',
-                        settings: {
-                            label: 'Status',
-                            values: {
-                                published: 'Published',
-                                draft: 'Draft'
-                            }
-                        }
-                    }
-                },
-                {
-                    name: 'views',
-                    component: {
-                        name: 'ue-string',
-                        settings: {
-                            label: 'Views'
-                        }
-                    }
-                },
-                {
-                    name: 'created',
-                    component: {
-                        name: 'ue-date',
-                        settings: {
-                            label: 'Created',
-                            disabled: true,
-                            validators: [{
-                                type: 'date',
-                                format: 'YYYY-MM-DD'
-                            }]
+                            label: 'Name'
                         }
                     }
                 }
@@ -79,37 +42,28 @@
             component: {
                 name: 'ue-grid',
                 settings: {
-                    dataSource: articlesDataSource,
+                    dataSource: tagsDataSource,
                     header: {
                         toolbar: [
-                            {
-                                component: {
-                                    name: 'ue-filter',
-                                    settings: {
-                                        fields: ['id', 'title', 'status', 'views']
-                                    }
-
-                                }
-                            },
                             {
                                 component: {
                                     name: 'ue-button',
                                     settings: {
                                         label: 'Add',
-                                        sref: 'articles_edit'
+                                        sref: 'tags_edit'
                                     }
                                 }
                             }
                         ]
                     },
-                    columns: ['id', 'title', 'created', 'status', 'views'],
+                    columns: ['id','name'],
                     contextMenu: [
                         {
                             component: {
                                 name: 'ue-button',
                                 settings: {
                                     label: 'Edit',
-                                    sref: 'articles_edit'
+                                    sref: 'tags_edit'
                                 }
                             }
                         },
@@ -120,7 +74,7 @@
                                 settings: {
                                     label: 'Delete',
                                     action: 'delete',
-                                    sref: 'articles'
+                                    sref: 'staff'
                                 }
                             }
                         }

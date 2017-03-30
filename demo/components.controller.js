@@ -8,7 +8,6 @@
 
     function ComponentsController() {
         var demoDataSource = {
-            type: 'REST',
             url: '//universal-backend.dev/rest/v1/staff',
             fields: [
                 {

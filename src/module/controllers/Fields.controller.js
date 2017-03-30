@@ -98,7 +98,7 @@
 
         function onErrorLoadedItem(reject) {
             $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
-                console.error(self.fieldName ? (translation.replace('%name_field', 'для поля "' + self.fieldName + '"')) : (translation.replace('%name_field','')));
+                console.error(self.fieldName ? (translation.replace('%name_field', 'для поля "' + self.fieldName + '"')) : (translation.replace('%name_field', '')));
             });
         }
 
@@ -254,12 +254,15 @@
         }
 
         function equalPreviewValue(source) {
-            source = source || self.optionValues || [];
             if (angular.isArray(self.fieldValue)) {
                 self.previewValue = [];
             }
             if (self.fieldValue !== null && !angular.isUndefined(self.fieldValue)) {
                 if ((componentSettings.values || componentSettings.valuesRemote)) {
+                    source = source || self.optionValues || [];
+                    if (source !== undefined && source !== null && !angular.isArray(source)) {
+                        source = [source];
+                    }
                     if (angular.isArray(source)) {
                         source.forEach(function(option) {
                             if (angular.isObject(self.fieldValue) && !angular.isArray(self.fieldValue)) {
@@ -447,7 +450,8 @@
                 if (angular.isFunction(callback)) {
                     callback();
                 }
-                equalPreviewValue([$scope.data['$' + self.fieldName]]);
+
+                equalPreviewValue($scope.data['$' + self.fieldName]);
             }
         }
 
