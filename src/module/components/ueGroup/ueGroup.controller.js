@@ -63,6 +63,9 @@
                             return k.name == value;
                         })[0];
                     }
+                    if(field) {
+                        field = angular.merge({}, field);
+                    }
                 } else if (value && value.component) {
                     field = value;
                 }

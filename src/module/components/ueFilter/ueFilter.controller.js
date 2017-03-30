@@ -32,6 +32,7 @@
             vm.body = [];
             angular.forEach(settings.dataSource.fields, function(field) {
                 if (field.component.hasOwnProperty('settings') && (!settings.fields || ~settings.fields.indexOf(field.name)) && field.component.settings.filterable !== false) {
+                    field = angular.merge({}, field);
                     proccessField(field);
                 }
             });

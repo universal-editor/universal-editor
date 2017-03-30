@@ -111,7 +111,7 @@
                         return field.name === col;
                     });
                     if (component.length) {
-                        col = component[0];
+                        col = angular.merge({}, component[0]);
                     }
                     if (angular.isObject(col)) {
                         tableField = {

@@ -98,15 +98,6 @@
                     }
                 },
                 {
-                    name: 'text',
-                    component: {
-                        name: 'ue-textarea',
-                        settings: {
-                            label: 'Notes'
-                        }
-                    }
-                },
-                {
                     name: 'fired',
                     component: {
                         name: 'ue-checkbox',

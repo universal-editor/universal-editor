@@ -136,7 +136,7 @@
                         return k.name == componentObject;
                     })[0];
                     if (dataSourceComponent) {
-                        vm.components.push(dataSourceComponent);
+                        vm.components.push(angular.merge({}, dataSourceComponent));
                     }
                 }
             });

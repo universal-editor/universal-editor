@@ -86,7 +86,9 @@
                 font-size: 14px;
                 background-color: #fff;
                 border: none;
-                height: 28px;
+                &.multiple {
+                    height: 28px;
+                }
                 max-width: 100%;
                 box-sizing: border-box;
                 overflow: hidden;
@@ -158,7 +160,7 @@
                 }
             }
             &.possible-autocomplete {
-                margin-left: -9px;
+                margin-left: -6px;
             }
         }
         .field-preloaded-data {

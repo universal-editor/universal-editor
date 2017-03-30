@@ -230,12 +230,12 @@
                         if (angular.isArray(object)) {
                             value = [];
                             object.forEach(function(date, index) {
-                                value[index] = angular.isString(self.format) ? moment(date, self.format) : moment(date);
+                                value[index] = moment(date, angular.isString(self.format) ? self.format : 'DD.MM.YYYY HH:mm:ss');
                             });
                         }
                     } else {
                         if (object) {
-                            value = angular.isString(self.format) ? moment(object, self.format) : moment(object);
+                            value = moment(object, angular.isString(self.format) ? self.format : 'DD.MM.YYYY HH:mm:ss');
                         }
                     }
                     return value;
