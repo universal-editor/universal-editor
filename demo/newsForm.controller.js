@@ -143,7 +143,7 @@
                                 component: {
                                     name: 'ue-button',
                                     settings: {
-                                        label: 'Back to news list',
+                                        label: 'Back',
                                         sref: 'news',
                                         useBackUrl: true,
                                         template: function($scope) {
