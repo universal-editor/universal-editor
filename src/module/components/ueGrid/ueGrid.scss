@@ -14,6 +14,16 @@
       }
       & .ue-grid {
           padding: 10px 0;
+          .field-wrapper-ue-button {
+              & .ue-button-body {
+                  .button-loading {
+                      position: relative;
+                      .processing-status-wrapper {
+                          display: none;
+                      }
+                  }
+              }
+          }
           & table.items-list {
               background-color: #FFFFFF;
               border-spacing: 0;
