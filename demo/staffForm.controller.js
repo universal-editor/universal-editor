@@ -138,7 +138,7 @@
                                 component: {
                                     name: 'ue-button',
                                     settings: {
-                                        label: 'Back to staff list',
+                                        label: 'Back',
                                         useBackUrl: true
                                     }
                                 }

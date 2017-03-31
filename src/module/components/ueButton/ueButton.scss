@@ -5,6 +5,31 @@
         outline: none;
         width: 100%;
         & .ue-button-body {
+            .button-loading {
+                position: relative;
+                button {
+                    opacity: 0.5;
+                }
+                &.button-loading-preloader {
+                    .processing-status-wrapper {
+                        z-index: 100;
+                        display: block;
+                        margin: auto;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        top: 0;
+                        position: absolute;
+                        .processing-status {
+                            margin-left: 15px;
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+            .processing-status-wrapper {
+                display: none;
+            }
             & .btn-header {
                 margin: 5px 5px 5px 0;
             }

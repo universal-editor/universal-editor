@@ -29,6 +29,9 @@
             vm.method = componentSettings.method;
             vm.target = componentSettings.target;
             vm.action = componentSettings.action;
+            vm.switchLoader = switchLoader;
+
+            vm.isLoader = false;
 
             if (!vm.label && angular.isString(vm.action)) {
                 $translate('BUTTON.ACTIONS.' + vm.action.toUpperCase()).then(function(translation) {
@@ -123,10 +126,21 @@
             }
         }
 
+        function switchLoader() {
+            vm.isLoader = true;
+            var loaderWatcher = $scope.$watch('vm.options.isLoading', function(value) {
+                if (!value) {
+                    vm.isLoader = false;
+                    loaderWatcher();
+                }
+            });
+        }
+
         function clickService() {
             if (vm.options.isLoading || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;
             }
+            switchLoader();
             angular.merge(request, handlers);
             switch (vm.action) {
                 case 'save':

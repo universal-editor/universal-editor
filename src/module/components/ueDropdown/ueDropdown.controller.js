@@ -178,6 +178,14 @@
         function loadDataById(ids) {
             var defer = $q.defer();
             if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
+                if(angular.isArray(ids)) {
+                    ids = ids.map(function(id) {
+                        if(angular.isObject(id) && id[vm.fieldId]) {
+                            return id[vm.fieldId];
+                        }
+                        return id;
+                    });
+                }                
                 var config = {
                     method: 'GET',
                     url: componentSettings.valuesRemote.url,

@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
-    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, YiiSoftApiService, $timeout, FilterFieldsStorage, $controller, $translate) {
+    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, YiiSoftApiService, $timeout, FilterFieldsStorage, $controller, $translate, $q) {
         "ngInject";
         /* jshint validthis: true */
         var vm = this,
@@ -49,7 +49,7 @@
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(event, data) {
                 if (vm.isParentComponent(data) && !vm.options.filter && !event.defaultPrevented) {
-                    vm.loadingData = true;                    
+                    vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
                     if (!vm.options.isSendRequest) {
                         vm.loadDataById(vm.fieldValue).then(function() {
@@ -338,45 +338,59 @@
         }
 
         function loadDataById(ids) {
-            var config = {
-                method: 'GET',
-                url: componentSettings.valuesRemote.url,
-                $id: vm.setting.component.$id,
-                serverPagination: vm.serverPagination
-            };
-
-            config.filter = config.filter || {};
-            config.filter[vm.fieldId] = [{
-                operator: 'value',
-                value: ids
-            }];
-
-            config.filter = config.filter || {};
-            config.filter[vm.fieldId] = [{
-                operator: 'value',
-                value: ids
-            }];
-
-            config.standard = $scope.getParentDataSource().standard;
-
-            return YiiSoftApiService
-                .getUrlResource(config)
-                .then(function(response) {
-                    angular.forEach(response.data.items, function(v) {
-                        if (angular.isArray(vm.fieldValue) &&
-                            (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
-                            vm.multiple && !alreadyIn(v, vm.selectedValues)
-                        ) {
-                            vm.selectedValues.push(v);
-                        } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
-                            vm.selectedValues.push(v);
-                            vm.placeholder = v[vm.fieldSearch];
+            var defer = $q.defer();
+            if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
+                if (angular.isArray(ids)) {
+                    ids = ids.map(function(id) {
+                        if (angular.isObject(id) && id[vm.fieldId]) {
+                            return id[vm.fieldId];
                         }
+                        return id;
                     });
-                    if (!vm.optionValues.length) {
-                        vm.optionValues = angular.copy(vm.selectedValues);
-                    }
-                }).finally(function() { vm.preloadedData = true; });
+                }
+                var config = {
+                    method: 'GET',
+                    url: componentSettings.valuesRemote.url,
+                    $id: vm.setting.component.$id,
+                    serverPagination: vm.serverPagination
+                };
+
+                config.filter = config.filter || {};
+                config.filter[vm.fieldId] = [{
+                    operator: 'value',
+                    value: ids
+                }];
+
+                config.filter = config.filter || {};
+                config.filter[vm.fieldId] = [{
+                    operator: 'value',
+                    value: ids
+                }];
+
+                config.standard = $scope.getParentDataSource().standard;
+
+                return YiiSoftApiService
+                    .getUrlResource(config)
+                    .then(function(response) {
+                        angular.forEach(response.data.items, function(v) {
+                            if (angular.isArray(vm.fieldValue) &&
+                                (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
+                                vm.multiple && !alreadyIn(v, vm.selectedValues)
+                            ) {
+                                vm.selectedValues.push(v);
+                            } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
+                                vm.selectedValues.push(v);
+                                vm.placeholder = v[vm.fieldSearch];
+                            }
+                        });
+                        if (!vm.optionValues.length) {
+                            vm.optionValues = angular.copy(vm.selectedValues);
+                        }
+                    }).finally(function() { vm.preloadedData = true; });
+            } else {
+                defer.resolve();
+            }
+            return defer.promise;
         }
 
         function focusPossible(isActive) {
