@@ -49,7 +49,12 @@
 
             angular.forEach(dataSource.fields, function(field) {
                 if (field.component && field.component.settings && field.component.settings.expandable === true) {
-                    expandFields.push(field.name);
+                    if (angular.isString(field.name)) {
+                        var name = field.name.split('.')[0].replace('[]', '');
+                        if (name && expandFields.indexOf(name) === -1) {
+                            expandFields.push(name);
+                        }
+                    }
                 }
             });
 
@@ -397,12 +402,17 @@
                 qParams = {},
                 expandFields = [],
                 dataSource = options.$dataSource;
-            if (angular.isObject(dataSource)) {
+            if (angular.isObject(dataSource) && dataSource.url) {
                 var service = getCustomService(dataSource.standard);
                 options.isLoading = true;
                 angular.forEach(dataSource.fields, function(field) {
                     if (field.component && field.component.settings && field.component.settings.expandable === true) {
-                        expandFields.push(field.name);
+                        if (angular.isString(field.name)) {
+                            var name = field.name.split('.')[0].replace('[]', '');
+                            if (name && expandFields.indexOf(name) === -1) {
+                                expandFields.push(name);
+                            }
+                        }
                     }
                 });
                 if (expandFields.length > 0) {
@@ -426,7 +436,6 @@
                     action: 'one',
                     parentComponentId: options.$componentId
                 };
-
                 $http(optionsHttp).then(function(response) {
                     var data = response.data;
                     if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
@@ -675,14 +684,30 @@
                     });
                 }
                 fields = fields.join(',');
-                if (angular.isString(options.url)) {
+                if (angular.isString(options.url)) {                    
+                        var keyValue = component.component.settings.valuesRemote.fields.value;
                     data.forEach(function(item) {
-                        if (item[component.name] !== undefined && item[component.name] !== null && filter.indexOf(item[component.name]) === -1) {
-                            filter.push(item[component.name]);
+                        var value = item[component.name];
+                        if (angular.isArray(value)) {
+                            value.forEach(function(valueItem) {
+                                if (angular.isString(component.component.settings.multiname)) {
+                                    valueItem = valueItem[component.component.settings.multiname];
+                                } else {
+                                    if(angular.isObject(valueItem) && keyValue) {
+                                        valueItem = valueItem[keyValue];
+                                    }
+                                }
+                                if (valueItem !== undefined && valueItem !== null && filter.indexOf(valueItem) === -1) {
+                                    filter.push(valueItem);
+                                }
+                            });
+                        } else {
+                            if (value !== undefined && value !== null && filter.indexOf(value) === -1) {
+                                filter.push(value);
+                            }
                         }
                     });
                     if (filter.length > 0) {
-                        var keyValue = component.component.settings.valuesRemote.fields.value;
                         var filterObject = {};
                         filterObject[keyValue] = [];
                         filterObject[keyValue].push({
@@ -723,13 +748,20 @@
                     if (component) {
                         var name = component.component.settings.valuesRemote.fields.value;
                         data.forEach(function(item) {
-                            angular.forEach(item, function(value, key) {
-                                if (key === component.name) {
+                            var value = item[component.name];
+                            if(value) {
+                                if (angular.isArray(value)) {
+                                        value = value.map(function(valueItem) {
+                                            if (angular.isString(component.component.settings.multiname)) {
+                                                valueItem = valueItem[component.component.settings.multiname];
+                                            }
+                                            return valueItem;
+                                        });
+                                    }
                                     item['$' + component.name] = list.filter(function(i) {
-                                        return i[name] == value;
-                                    })[0];
-                                }
-                            });
+                                        return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
+                                    });
+                            }       
                         });
                     }
                 });
@@ -1041,6 +1073,7 @@
         function failAnswer(reject) {
             var config = this, parentComponentId = config.parentComponentId || config.$id;
             if (config.action == 'update' || config.action == 'create' || config.action == 'presave') {
+                toastrUp(reject);
                 if (!!config.request.error) {
                     config.request.error(reject);
                 }
@@ -1062,16 +1095,46 @@
                 if (angular.isArray(wrongFields) && wrongFields.length > 0) {
                     $rootScope.$broadcast('ue:componentError', eventObject);
                 }
-            }
-            if (config.action == 'delete') {
+            } else if (config.action == 'delete') {
+                toastrUp(reject);
                 if (!!config.request.error) {
                     config.request.error(reject);
                 }
                 config.request.options.isLoading = false;
-            }
-            if (config.action == 'list' || config.action == 'one') {
+            } else if (config.action == 'list' || config.action == 'one') {
                 reject.$componentId = parentComponentId;
                 $rootScope.$broadcast('ue:errorComponentDataLoading', reject);
+            }
+        }
+
+        function toastrUp(rejection) {
+            if (rejection.status !== -1) {
+                try {
+                    var json = JSON.parse(JSON.stringify(rejection));
+
+                    if (rejection.status === 422 || rejection.status === 400) {
+                        $translate('RESPONSE_ERROR.INVALID_DATA').then(function(translation) {
+                            toastr.warning(translation);
+                        });
+                    } else if (rejection.status === 401) {
+                        $translate('RESPONSE_ERROR.UNAUTHORIZED').then(function(translation) {
+                            toastr.warning(translation);
+                        });
+                    } else if (rejection.status === 403) {
+                        $translate('RESPONSE_ERROR.FORBIDDEN').then(function(translation) {
+                            toastr.error(translation);
+                        });
+                    } else {
+                        $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function(translation) {
+                            toastr.error(translation);
+                        });
+                    }
+                } catch (e) {
+                    console.error(e);
+                    $translate('RESPONSE_ERROR.UNEXPECTED_RESPONSE').then(function(translation) {
+                        toastr.error(translation);
+                    });
+                }
             }
         }
     }

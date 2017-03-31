@@ -376,6 +376,7 @@
         .dropdown__selected-items {
             white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
     .select-delete {

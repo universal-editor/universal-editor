@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="jquery-minicolors/jquery.minicolors.css" />
+  <link rel="stylesheet" href="angular-toastr/dist/angular-toastr.css" />
+
+  <script src="jquery/dist/jquery.js"></script>
+  <script src="angular/angular.js"></script>
+  <script src="jquery-minicolors/jquery.minicolors.js"></script>
+  <script src="angular-minicolors/angular-minicolors.js"></script>
+  <script src="moment/moment.js"></script>
+  <script src="moment/locale/ru.js"></script>
+  <script src="angular-moment/angular-moment.js"></script>
+  <script src="moment-timezone/builds/moment-timezone-with-data-2010-2020.js"></script>
+  <script src="angular-datepicker/dist/angular-datepicker.js"></script>
+  <script src="checklist-model/checklist-model.js"></script>
+  <script src="ng-file-upload/ng-file-upload.js"></script>
+  <script src="ng-file-upload-shim/ng-file-upload-shim.js"></script>
+  <script src="angular-cookies/angular-cookies.js"></script>
+  <script src="angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="angular-ui-mask/dist/mask.js"></script>
+  <script src="angular-toastr/dist/angular-toastr.tpls.js"></script>
+  <script src="angular-translate/angular-translate.js"></script>
+  <script src="angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+  <script src="bootstrap/dist/js/bootstrap.js"></script>
+  <script src="angular-bootstrap/ui-bootstrap.min.js"></script>
+  <script src="angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <!-- start:bundle -->
+  <script src="ue.js"></script>
+  <!-- end:bundle -->
+</head>
+
+<body>
+  <div class="demoApp" id="demoApp" ng-app="demoApp">
+    <ul class="nav nav-tabs">
+      <li role="presentation"><a class='edit_components' ui-sref="components" ui-sref-opts="{reload: true, inherit: false}">Components</a></li>
+      <li role="presentation"><a class='edit_staff' ui-sref="staff" ui-sref-opts="{reload: true, inherit: false}">Staff</a></li>
+      <li role="presentation"><a class='edit_news' ui-sref="news" ui-sref-opts="{reload: true, inherit: false}">News</a></li>
+      <li role="presentation"><a class='edit_articles' ui-sref="articles" ui-sref-opts="{reload: true, inherit: false}">Articles</a></li>
+      <li role="presentation"><a class='edit_country' ui-sref="country" ui-sref-opts="{reload: true, inherit: false}">Country</a></li>
+      <li role="presentation"><a class='edit_tags' ui-sref="tags" ui-sref-opts="{reload: true, inherit: false}">Tags</a></li>
+      <li role="presentation"><a class='edit_category' ui-sref="category" ui-sref-opts="{reload: true, inherit: false}">Category</a></li>
+    </ul>
+    <div ui-view=""></div>
+  </div>
+
+  <script type="text/javascript" src="index.js"></script>
+  <script type="text/javascript" src="components.controller.js"></script>
+  <script type="text/javascript" src="staffForm.controller.js"></script>
+  <script type="text/javascript" src="staffGrid.controller.js"></script>
+  <script type="text/javascript" src="newsForm.controller.js"></script>
+  <script type="text/javascript" src="newsGrid.controller.js"></script>
+  <script type="text/javascript" src="countriesForm.controller.js"></script>
+  <script type="text/javascript" src="countriesGrid.controller.js"></script>
+  <script type="text/javascript" src="tagsForm.controller.js"></script>
+  <script type="text/javascript" src="tagsGrid.controller.js"></script>
+  <script type="text/javascript" src="categoryForm.controller.js"></script>
+  <script type="text/javascript" src="categoryGrid.controller.js"></script>
+
+  <script type="text/javascript" src="articlesGrid.controller.js"></script>
+  <script type="text/javascript" src="articlesForm.controller.js"></script>
+</body>
+
+</html>

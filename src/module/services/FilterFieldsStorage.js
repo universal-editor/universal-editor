@@ -161,7 +161,7 @@
                 var fieldValue = ctrl.getFieldValue();
 
                 //-- genarate filter objects with prepared filters
-                var filterValue = settings.$toFilter(operator, ctrl.getFieldValue());
+                var filterValue = settings.$toFilter(operator, ctrl.getFieldValue(), ctrl);
                 angular.extend(filters, filterValue);
             });
 
@@ -270,6 +270,14 @@
                     var v = f.value;
                     if (angular.isString(v)) {
                         v = '"' + (~f.operator.indexOf(':value') ? f.operator.replace(':value', f.value) : f.value) + '"';
+                    }
+                    if (angular.isArray(v)) {
+                        v = v.map(function(field) {
+                            if (angular.isString(field)) {
+                                return '"' + field + '"';
+                            }
+                            return field;
+                        });
                     }
                     filter += '"' + k + '": ' + (angular.isArray(v) ? ('[' + v.toString() + ']') : v);
                 });

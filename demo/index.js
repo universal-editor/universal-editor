@@ -48,6 +48,42 @@
                 template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
                 controllerAs: 'vm',
                 controller: 'ArticlesFormController'
+            })
+            .state('country', {
+                url: '/country',
+                template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
+                controllerAs: 'vm',
+                controller: 'CountryGridController'
+            })
+            .state('country_edit', {
+                url: '/country/:pk',
+                template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
+                controllerAs: 'vm',
+                controller: 'CountryFormController'
+            })
+            .state('tags', {
+                url: '/tags',
+                template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
+                controllerAs: 'vm',
+                controller: 'TagsGridController'
+            })
+            .state('tags_edit', {
+                url: '/tags/:pk',
+                template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
+                controllerAs: 'vm',
+                controller: 'TagsFormController'
+            })
+            .state('category', {
+                url: '/category',
+                template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
+                controllerAs: 'vm',
+                controller: 'CategoryGridController'
+            })
+            .state('category_edit', {
+                url: '/category/:pk',
+                template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
+                controllerAs: 'vm',
+                controller: 'CategoryFormController'
             });
         $urlRouterProvider.otherwise('/components');
     }

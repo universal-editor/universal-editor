@@ -79,7 +79,7 @@
             if (request.isError) {
                 request.data = entityObject;
                 switch (type) {
-                    case 'create':                        
+                    case 'create':
                         YiiSoftApiService.addNewItem(request);
                         break;
                     case 'update':
@@ -106,36 +106,79 @@
             request.isError = true;
 
             angular.forEach(controllers, function(fCtrl) {
-                var value = fCtrl.getFieldValue();
-                if (!fCtrl.multiple) {
-                    fCtrl.inputLeave(fCtrl.fieldValue);
-                } else {
-                    var flagError = true;
-                    angular.forEach(fCtrl.fieldValue, function(val, index) {
-                        if (flagError) {
-                            fCtrl.inputLeave(val, index);
-                            if (fCtrl.error.length !== 0) {
-                                flagError = false;
-                            }
-                        }
-                    });
-                }
-
                 request.isError = (fCtrl.error.length === 0) && request.isError;
                 if (fCtrl.readonly !== true && fCtrl.disabled !== true) {
-                    if (fCtrl.parentField && fCtrl.parentFieldIndex !== false) {
-                        entityObject[fCtrl.parentField] = entityObject[fCtrl.parentField] || [];
-                        entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] = entityObject[fCtrl.parentField][fCtrl.parentFieldIndex] || {};
-                        angular.merge(entityObject[fCtrl.parentField][fCtrl.parentFieldIndex], value[fCtrl.parentField]);
+                    var value = fCtrl.getFieldValue();
+                    if (fCtrl.fieldName && typeof (value[fCtrl.fieldName]) !== 'undefined' && value[fCtrl.fieldName] !== null) {
+                        value = value[fCtrl.fieldName];
                     } else {
-                        angular.merge(entityObject, value);
+                        value = null;
+                    }
+
+                    if (!fCtrl.multiple) {
+                        fCtrl.inputLeave(fCtrl.fieldValue);
+                    } else {
+                        var flagError = true;
+                        angular.forEach(fCtrl.fieldValue, function(val, index) {
+                            if (flagError) {
+                                fCtrl.inputLeave(val, index);
+                                if (fCtrl.error.length !== 0) {
+                                    flagError = false;
+                                }
+                            }
+                        });
+                    }
+
+                    if (angular.isString(fCtrl.fieldName)) {
+                        var names = fCtrl.fieldName.split('.');
+                        var tempObject = entityObject;
+                        var isArray = false;
+                        var partName = '';
+                        angular.forEach(names, function(name, i) {
+                            var empty = {};
+                            partName = partName ? (partName + '.' + name) : name;
+                            if (name.lastIndexOf('[]') === (name.length - 2)) {
+                                name = name.substr(0, name.length - 2);
+                                empty = [];
+                            }
+                            let component = fCtrl.getParentComponent(partName);
+                            if (angular.isArray(tempObject)) {
+                                if (component) {
+                                    var parentIndex = component.parentFieldIndex || 0;
+                                    tempObject[parentIndex] = tempObject[parentIndex] || {};
+                                    tempObject = tempObject[parentIndex];
+                                }
+                            }
+                            if (i !== (names.length - 1)) {
+                                tempObject[name] = tempObject[name] || empty;
+                                tempObject = tempObject[name];
+                            } else {
+                                tempObject[name] = value;
+                            }
+                            if (component && component.resourceType && angular.isObject(tempObject) && !angular.isArray(tempObject)) {
+                                tempObject.__type = component.resourceType;
+                            }
+                        });
                     }
                 }
-
             });
-            angular.forEach(groupControllers, function(val, index) {
-                if (val.fieldName && entityObject[val.fieldName] === undefined) {
-                    entityObject[val.fieldName] = val.multiple ? [] : null;
+
+            angular.forEach(groupControllers, function(fGroup) {
+                if (angular.isString(fGroup.setting.name) && fGroup.multiple === true) {
+                    var names = fGroup.setting.name.split('.');
+                    var tempObject = entityObject;
+                    var partName = '';
+                    angular.forEach(names, function(name, i) {
+                        partName = partName ? (partName + '.' + name) : name;
+                        if (name.lastIndexOf('[]') === (name.length - 2)) {
+                            name = name.substr(0, name.length - 2);
+                        }
+                        if (angular.isObject(tempObject[name])) {
+                            tempObject = tempObject[name];
+                        } else {
+                            tempObject[name] = [];
+                        }
+                    });
                 }
             });
             return entityObject;

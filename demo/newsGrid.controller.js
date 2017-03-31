@@ -9,20 +9,21 @@
         "ngInject";
         var vm = this;
         var newsDataSource = {
-            type: 'REST',
             url: '//universal-backend.dev/rest/v1/news',
             sortBy: '-id',
             primaryKey: 'id',
-            parentField: 'parent_id',
             fields: [
-                {
-                    name: 'published',
+                 {
+                    name: 'id',
                     component: {
-                        name: 'ue-checkbox',
+                        name: 'ue-string',
                         settings: {
-                            label: 'Published',
-                            trueValue: 1,
-                            falseValue: 0
+                            label: 'ID',
+                            validators: [
+                                {
+                                    type: 'number'
+                                }
+                            ]
                         }
                     }
                 },
@@ -83,7 +84,7 @@
                                 },
                                 url: 'http://universal-backend.dev/rest/v1/staff'
                             },
-                            multiple: false,
+                            multiple: true,
                             expandable: true,
                             multiname: 'staff_id'
                         }
@@ -92,7 +93,7 @@
                 {
                     name: 'tags',
                     component: {
-                        name: 'ue-autocomplete',
+                        name: 'ue-dropdown',
                         settings: {
                             label: 'Tags',
                             valuesRemote: {
@@ -102,7 +103,7 @@
                                 },
                                 url: 'http://universal-backend.dev/rest/v1/tags'
                             },
-                            multiple: false,
+                            multiple: true,
                             expandable: true
                         }
                     }
@@ -151,7 +152,7 @@
                             }
                         ]
                     },
-                    columns: ['title', 'authors', 'published_at', 'published'],
+                    columns: ['id', 'title', 'authors', 'category_id'],
                     contextMenu: [
                         {
                             component: {

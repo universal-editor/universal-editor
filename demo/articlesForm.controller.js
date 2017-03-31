@@ -13,7 +13,6 @@
             url: 'http://localhost:16006/rest/articles',
             sortBy: '-id',
             primaryKey: 'id',
-            parentField: 'parent_id',
             keys: {
                 meta: 'meta'
             },
@@ -51,20 +50,38 @@
                     }
                 },
                 {
-                    name: 'author',
+                    name: 'author.id',
+                    resourceType: 'people',
                     component: {
-                        name: 'ue-component',
+                        name: 'ue-dropdown',
                         settings: {
-                            expandable: true
+                            expandable: true,
+                            label: 'Author',
+                            valuesRemote: {
+                                fields: {
+                                    key: 'id',
+                                    label: 'firstname'
+                                },
+                                url: 'http://localhost:16006/rest/people'
+                            }
                         }
                     }
                 },
                 {
-                    name: 'comments',
+                    name: 'comments[].id',
+                    resourceType: 'comments',
                     component: {
-                        name: 'ue-component',
+                        name: 'ue-dropdown',
                         settings: {
-                            expandable: true
+                            expandable: true,
+                            valuesRemote: {
+                                fields: {
+                                    key: 'id',
+                                    label: 'body'
+                                },
+                                url: 'http://localhost:16006/rest/comments'
+                            }
+
                         }
                     }
                 },
@@ -131,56 +148,15 @@
                                     tabs: [
                                         {
                                             label: 'Main tab',
-                                            fields: ['id', 'title', 'created', 'status', 'views', 'content',
+                                            fields: ['id', 'title', 'created', 'status', 'views', 'content', 'author.id',
                                                 {
-                                                    name: 'author',
-                                                    resourceType: 'people',
-                                                    component: {
-                                                        name: 'ue-group',
-                                                        settings: {
-                                                            fields: [{
-                                                                name: 'id',
-                                                                component: {
-                                                                    name: 'ue-dropdown',
-                                                                    settings: {
-                                                                        label: 'Author',
-                                                                        valuesRemote: {
-                                                                            fields: {
-                                                                                key: 'id',
-                                                                                label: 'firstname'
-                                                                            },
-                                                                            url: 'http://localhost:16006/rest/people'
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }]
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    name: 'comments',
-                                                    resourceType: 'comments',
+                                                    name: 'comments[]',
                                                     component: {
                                                         name: 'ue-group',
                                                         settings: {
                                                             multiple: true,
                                                             label: 'Comments',
-                                                            fields: [
-                                                                {
-                                                                    name: 'id',
-                                                                    component: {
-                                                                        name: 'ue-dropdown',
-                                                                        settings: {
-                                                                            valuesRemote: {
-                                                                                fields: {
-                                                                                    key: 'id',
-                                                                                    label: 'body'
-                                                                                },
-                                                                                url: 'http://localhost:16006/rest/comments'
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }]
+                                                            fields: ['comments[].id']
                                                         }
                                                     }
                                                 }

@@ -48,10 +48,10 @@
             }
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(event, data) {
-                if (vm.isParentComponent(data) && !vm.options.filter) {
-                    vm.loadingData = true;
+                if (vm.isParentComponent(data) && !vm.options.filter && !event.defaultPrevented) {
+                    vm.loadingData = true;                    
                     $scope.onLoadDataHandler(event, data);
-                    if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
+                    if (!vm.options.isSendRequest) {
                         vm.loadDataById(vm.fieldValue).then(function() {
                             vm.equalPreviewValue();
                         }).finally(function() {
@@ -81,7 +81,7 @@
                         }
                     }
                     inputTimeout = $timeout(function() {
-                        autocompleteSearch(newValue);
+                        vm.autocompleteSearch(newValue);
                     }, 300);
                 }
             }, true));
@@ -173,6 +173,7 @@
             if (event && !vm.multiple) {
                 event.stopPropagation();
             }
+            vm.equalPreviewValue();
         }
 
         function removeFromSelected(event, obj) {
@@ -186,9 +187,12 @@
                     }
                 });
             }
+            vm.equalPreviewValue();
         }
 
         /* PRIVATE METHODS */
+        vm.autocompleteSearch = autocompleteSearch;
+        vm.alreadyIn = alreadyIn;
 
         function autocompleteSearch(searchString) {
             vm.error = [];

@@ -45,7 +45,7 @@
                         relationships[key] = relationships[key] || {};
                         relationships[key].data = relationships[key].data || [];
                         value.forEach(function(value) {
-                            if (value.id) {
+                            if (value.id || value.id === null) {
                                 relationships[key].data.push({
                                     id: value.id,
                                     type: value.__type
@@ -81,21 +81,7 @@
             return { data: data };
         };
 
-        self.getParams = function(config) {
-            config.params = config.params || {};
-            delete config.params.root;
-            if (config.action == 'list') {
-                config.params.page = {
-                    offset: (config.pagination.page - 1) * config.pagination.perPage,
-                    limit: config.pagination.perPage
-                };
-            }
-            if (config.action == 'list' || config.action == 'one') {
-                if (config.params.expand) {
-                    config.params.include = config.params.expand;
-                    delete config.params.expand;
-                }
-            }
+        self.setFiltering = function(config) {
             if (config.filter) {
                 var filter = {};
                 angular.forEach(config.filter, function(value, key) {
@@ -113,7 +99,28 @@
                 });
                 config.params.filter = filter;
             }
+        };
 
+        self.setPagination = function(config) {
+            config.params.page = {
+                offset: (config.pagination.page - 1) * config.pagination.perPage,
+                limit: config.pagination.perPage
+            };
+        };
+
+        self.getParams = function(config) {
+            config.params = config.params || {};
+            delete config.params.root;
+            if (config.action == 'list') {
+                self.setPagination(config);
+            }
+            if (config.action == 'list' || config.action == 'one') {
+                if (config.params.expand) {
+                    config.params.include = config.params.expand;
+                    delete config.params.expand;
+                }
+            }
+            self.setFiltering(config);
             config.params.sort = config.sortFieldName;
 
             return config.params;

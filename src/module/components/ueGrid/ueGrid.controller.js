@@ -111,7 +111,7 @@
                         return field.name === col;
                     });
                     if (component.length) {
-                        col = component[0];
+                        col = angular.merge({}, component[0]);
                     }
                     if (angular.isObject(col)) {
                         tableField = {
@@ -204,10 +204,6 @@
                     }
                 }
             });
-
-            $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
-            $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
-            $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
         };
 
         function setInitialQueryParams() {
@@ -308,6 +304,10 @@
                 };
                 $rootScope.$broadcast('ue:beforeParentEntitySet', data);
                 request.childId = request.id;
+                if(request.id && !isNaN(+request.id)) {
+                    request.id = +request.id;
+                    request.childId = request.id;
+                }
                 refreshTableRecords(true, request).then(function() {
                     $location.search(getKeyPrefix('parent'), request.childId);
                 });
@@ -365,10 +365,9 @@
             }
         });
 
-        $scope.$on('ue:componentDataLoaded', function(event, data) {            
-            if (vm.isComponent(data) && !data.hasOwnProperty('$items')) {
+        $scope.$on('ue:componentDataLoaded', function(event, data) {
+            if (vm.isComponent(data) && !data.hasOwnProperty('$items') && !event.defaultPrevented) {
                 vm.loaded = false;
-                event.preventDefault();
                 vm.items = data[itemsKey];
                 if (vm.items) {
                     var components = vm.tableFields.map(function(f) { return f.component; });
@@ -377,7 +376,8 @@
                             item.$options = {
                                 $componentId: vm.$componentId,
                                 regim: 'preview',
-                                $dataIndex: index
+                                $dataIndex: index,
+                                isSendRequest: true
                             };
                         });
                     }

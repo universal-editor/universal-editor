@@ -92,9 +92,7 @@
                         .getUrlResource(config)
                         .then(function(response) {
                             angular.forEach(response.data.items, function(v) {
-                                if (selectedStorageComponent.indexOf(v[vm.fieldId]) === -1) {
-                                    vm.optionValues.push(v);
-                                }
+                                vm.category(v);
                             });
                             $timeout(function() {
                                 setSizeSelect();
@@ -126,37 +124,36 @@
         };
 
         function fillControl(allOptions) {
+            vm.optionValues = [];
             angular.forEach(allOptions, function(v) {
                 var v_id = v[vm.fieldId];
-                if (selectedStorageComponent.indexOf(v_id) === -1) {
-                    if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
-                        if (angular.isArray(vm.fieldValue)) {
-                            for (var i = vm.fieldValue.length; i--;) {
-                                if (vm.fieldValue[i] == v_id) {
-                                    vm.fieldValue[i] = v;
-                                    break;
-                                }
+                if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
+                    if (angular.isArray(vm.fieldValue)) {
+                        for (var i = vm.fieldValue.length; i--;) {
+                            if (vm.fieldValue[i] == v_id) {
+                                vm.fieldValue[i] = v;
+                                break;
                             }
-                        } else if (v_id == vm.fieldValue) {
-                            vm.fieldValue = v;
-                            vm.isSpanSelectDelete = true;
                         }
+                    } else if (v_id == vm.fieldValue) {
+                        vm.fieldValue = v;
+                        vm.isSpanSelectDelete = true;
                     }
-                    if (vm.optionValues !== allOptions) {
-                        if (vm.isTree) {
-                            if (!v[vm.treeParentField]) {
-                                vm.optionValues.push(angular.copy(v));
-                            }
-                        } else {
+                }
+                if (vm.optionValues !== allOptions) {
+                    if (vm.isTree) {
+                        if (!v[vm.treeParentField]) {
                             vm.optionValues.push(angular.copy(v));
                         }
+                    } else {
+                        vm.optionValues.push(angular.copy(v));
                     }
                 }
             });
         }
 
         var destroyEntityLoaded = $scope.$on('ue:componentDataLoaded', function(event, data) {
-            if (vm.isParentComponent(data)) {
+            if (vm.isParentComponent(data) && !event.defaultPrevented) {
                 vm.data = data;
                 $scope.onLoadDataHandler(event, data);
                 componentSettings.$loadingPromise.then(function(items) {
@@ -168,7 +165,7 @@
                 }).finally(function() {
                     vm.loadingData = false;
                 });
-                if (vm.fieldValue && (!vm.previewValue || vm.previewValue && vm.previewValue.length === 0)) {
+                if (!vm.options.isSendRequest) {
                     loadDataById(vm.fieldValue).finally(function() {
                         vm.loadingData = false;
                     });
@@ -180,7 +177,7 @@
 
         function loadDataById(ids) {
             var defer = $q.defer();
-            if (componentSettings.valuesRemote) {
+            if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
                 var config = {
                     method: 'GET',
                     url: componentSettings.valuesRemote.url,
@@ -368,7 +365,7 @@
                 vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
             }
 
-            if (!vm.filterText) {
+            if (vm.filterText) {
                 if (!vm.multiple && !vm.isTree) {
                     if (vm.optionValues && vm.optionValues.length && vm.fieldValue) {
                         var finded = vm.optionValues.filter(function(record) {
@@ -395,7 +392,7 @@
                 if (!allOptions) {
                     allOptions = angular.copy(vm.optionValues);
                 }
-                vm.optionValues = filter(angular.copy(allOptions), vm.filterText);
+                vm.possibleValues = filter(angular.copy(allOptions), vm.filterText);
                 return;
             }
             vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
@@ -420,7 +417,7 @@
                 if (opt.childOpts && opt.childOpts.length) {
                     opt.childOpts = filter(opt.childOpts, filterText);
                 }
-                return ((opt[vm.fieldSearch].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length)) && selectedStorageComponent.indexOf(opt[vm.fieldId]) === -1;
+                return ((opt[vm.fieldSearch].toLowerCase()).indexOf(filterText.toLowerCase()) > -1 || (opt.childOpts && opt.childOpts.length));
             });
 
             return result;
@@ -502,6 +499,7 @@
             if (event) {
                 event.stopPropagation();
             }
+            vm.equalPreviewValue();
         }
 
         function convertToObject(items) {
@@ -673,6 +671,7 @@
                 remove(null, vm.fieldValue[0]);
                 event.stopPropagation();
             }
+            vm.equalPreviewValue();
         }
 
         function clear() {

@@ -8,7 +8,6 @@
     function ButtonsService($window) {
         "ngInject";
         var self = this;
-;
         self.getCallback = getCallback;
 
         function getCallback(name) {
