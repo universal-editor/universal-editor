@@ -8,16 +8,16 @@
             .button-loading {
                 position: relative;
                 button {
-                    opacity: 0.7;
+                    opacity: 0.5;
                 }
                 .processing-status-wrapper {
-                    margin-top: 15%;
                     z-index: 100;
                     display: block;
-                    margin-left: auto;
-                    margin-right: auto;
+                    margin: auto;
                     left: 0;
                     right: 0;
+                    bottom: 0; 
+                    top: 0;
                     position: absolute;
                     .processing-status {
                         margin-left: 15px;
