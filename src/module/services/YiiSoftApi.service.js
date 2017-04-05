@@ -5,7 +5,7 @@
         .module('universal-editor')
         .service('YiiSoftApiService', YiiSoftApiService);
 
-    function YiiSoftApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
+    function YiiSoftApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
         "ngInject";
         var self = this,
             itemsKey = 'items',
@@ -39,7 +39,6 @@
             var params = request.params || {};
             var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
             var filtersParams = {};
-            var beforeSend;
 
             if (!!request.childId) {
                 filtersParams[request.parentField] = request.childId;
@@ -684,8 +683,8 @@
                     });
                 }
                 fields = fields.join(',');
-                if (angular.isString(options.url)) {                    
-                        var keyValue = component.component.settings.valuesRemote.fields.value;
+                if (angular.isString(options.url)) {
+                    var keyValue = component.component.settings.valuesRemote.fields.value;
                     data.forEach(function(item) {
                         var value = item[component.name];
                         if (angular.isArray(value)) {
@@ -693,7 +692,7 @@
                                 if (angular.isString(component.component.settings.multiname)) {
                                     valueItem = valueItem[component.component.settings.multiname];
                                 } else {
-                                    if(angular.isObject(valueItem) && keyValue) {
+                                    if (angular.isObject(valueItem) && keyValue) {
                                         valueItem = valueItem[keyValue];
                                     }
                                 }
@@ -749,19 +748,19 @@
                         var name = component.component.settings.valuesRemote.fields.value;
                         data.forEach(function(item) {
                             var value = item[component.name];
-                            if(value) {
+                            if (value) {
                                 if (angular.isArray(value)) {
-                                        value = value.map(function(valueItem) {
-                                            if (angular.isString(component.component.settings.multiname)) {
-                                                valueItem = valueItem[component.component.settings.multiname];
-                                            }
-                                            return valueItem;
-                                        });
-                                    }
-                                    item['$' + component.name] = list.filter(function(i) {
-                                        return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
+                                    value = value.map(function(valueItem) {
+                                        if (angular.isString(component.component.settings.multiname)) {
+                                            valueItem = valueItem[component.component.settings.multiname];
+                                        }
+                                        return valueItem;
                                     });
-                            }       
+                                }
+                                item['$' + component.name] = list.filter(function(i) {
+                                    return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
+                                });
+                            }
                         });
                     }
                 });
@@ -950,17 +949,13 @@
                     } else {
                         state = config.request.state;
                     }
-                    if (!ModalService.isModalOpen()) {
-                        if (state) {
-                            $state.go(state, params).then(function() {
-                                $location.search(params);
-                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
-                            });
-                        } else {
-                            replaceToURL(config.request.href);
-                        }
+                    if (state) {
+                        $state.go(state, params).then(function() {
+                            $location.search(params);
+                            $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                        });
                     } else {
-                        ModalService.close();
+                        replaceToURL(config.request.href);
                     }
                     break;
                 case 'create':
@@ -985,20 +980,16 @@
                     } else {
                         state = config.request.state;
                     }
-                    if (!ModalService.isModalOpen()) {
-                        if (state) {
-                            $state.go(state, params).then(function() {
-                                if (params.back) {
-                                    delete params.back;
-                                }
-                                $location.search(params);
-                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
-                            });
-                        } else {
-                            replaceToURL(config.request.href);
-                        }
+                    if (state) {
+                        $state.go(state, params).then(function() {
+                            if (params.back) {
+                                delete params.back;
+                            }
+                            $location.search(params);
+                            $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                        });
                     } else {
-                        ModalService.close();
+                        replaceToURL(config.request.href);
                     }
                     break;
                 case 'presave':
@@ -1052,19 +1043,15 @@
 
                     state = state || $state.current.name;
 
-                    if (!ModalService.isModalOpen()) {
-                        if (!config.notGoToState) {
-                            if (state) {
-                                $state.go(state, params).then(function() {
-                                    $location.search(params);
-                                    $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
-                                });
-                            } else {
-                                replaceToURL(config.request.href);
-                            }
+                    if (!config.notGoToState) {
+                        if (state) {
+                            $state.go(state, params).then(function() {
+                                $location.search(params);
+                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                            });
+                        } else {
+                            replaceToURL(config.request.href);
                         }
-                    } else {
-                        ModalService.close();
                     }
                     break;
             }

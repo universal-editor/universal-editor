@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('JSONAPIService', [])
+        .module('universal-editor')
         .service('JSONAPIApiTypeService', JSONAPITypeService);
 
     function JSONAPITypeService() {

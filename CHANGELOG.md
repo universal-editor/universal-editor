@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+## 1.0.0-alpha5
+### Added
+* Added an opportunity `ue-dropdown` and `ue-autocomplete` components to be connected with the same reference on configuration;
+* Added add preloader icon on button for ue-form component;
+* Changed naming of components for composite fields with points;
+* Changed filter format for composite fields;
+* Added validators for fields components;
+* Made code refactoring of events model;
+* Moved sort and page parameter to address string;
+* Added serice for work with `JSONAPI`;
+* Sending one request for `ue-grid` component during rendering the table.
+* Made parameter `serverPagination` for ue-dropdown and ue-autocomplete components.
+* Made parameter `type` for `datasource`-object required.
+
 ## 1.0.0-alpha4 - 2017-03-01
 ### Added
 * Allocated several basic controllers that are inherited controllers components.

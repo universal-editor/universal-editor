@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeButtonController', UeButtonController);
 
-    function UeButtonController($scope, $rootScope, $element, $state, $location, EditEntityStorage, ModalService, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, YiiSoftApiService, FilterFieldsStorage) {
+    function UeButtonController($scope, $rootScope, $element, $state, $location, EditEntityStorage, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, YiiSoftApiService, FilterFieldsStorage) {
         "ngInject";
         $element.addClass('ue-button');
 
@@ -98,7 +98,7 @@
                     $location.search(searchString);
                     $timeout(function() {
                         var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
-                        if (pk === 'new' && !ModalService.isModalOpen()) {
+                        if (pk === 'new') {
                             EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.options.$dataSource.parentField);
                         }
                     }, 0);
@@ -109,7 +109,6 @@
                 } else if (handlers && !angular.isFunction(vm.action)) {
                     sendRequest();
                 } else {
-                    ModalService.options = vm.options;
                     url = url.replace(':pk', vm.entityId);
                     var isReload = !~url.indexOf($location.path());
                     params = $location.search();

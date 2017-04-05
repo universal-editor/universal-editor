@@ -150,13 +150,13 @@
                                             label: 'Main tab',
                                             fields: ['id', 'title', 'created', 'status', 'views', 'content', 'author.id',
                                                 {
-                                                    name: 'comments[]',
+                                                    name: 'comments',
                                                     component: {
                                                         name: 'ue-group',
                                                         settings: {
                                                             multiple: true,
                                                             label: 'Comments',
-                                                            fields: ['comments[].id']
+                                                            fields: ['id']
                                                         }
                                                     }
                                                 }

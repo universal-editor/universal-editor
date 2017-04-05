@@ -57,6 +57,9 @@
             angular.forEach(componentSettings.fields, function(value, index) {
                 var field, dataSource;
                 if (angular.isString(value)) {
+                    if(vm.setting.name && value.indexOf(vm.setting.name) === -1) {
+                        value = vm.setting.name + '.' + value;
+                    }
                     dataSource = $scope.getParentDataSource();
                     if (dataSource && angular.isArray(dataSource.fields)) {
                         field = dataSource.fields.filter(function(k) {
