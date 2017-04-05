@@ -5,9 +5,9 @@
         .module('universal-editor')
         .controller('UeGroupController', UeGroupController);
 
-    function UeGroupController($scope, EditEntityStorage, $timeout, YiiSoftApiService, $controller, $translate) {
+    function UeGroupController($scope, EditEntityStorage, $timeout, $controller, $translate) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this,
             componentSettings,
             baseController,
@@ -57,6 +57,9 @@
             angular.forEach(componentSettings.fields, function(value, index) {
                 var field, dataSource;
                 if (angular.isString(value)) {
+                    if(vm.setting.name && value.indexOf(vm.setting.name) === -1) {
+                        value = vm.setting.name + '.' + value;
+                    }
                     dataSource = $scope.getParentDataSource();
                     if (dataSource && angular.isArray(dataSource.fields)) {
                         field = dataSource.fields.filter(function(k) {

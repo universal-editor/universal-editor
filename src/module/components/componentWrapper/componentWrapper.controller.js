@@ -6,7 +6,7 @@
         .controller('ComponentWrapperController',ComponentWrapperController);
 
     function ComponentWrapperController($element, $scope, ComponentBuilder){
-        "ngInject";
+        'ngInject';
         var vm = this;
 
         vm.$onInit = function() {

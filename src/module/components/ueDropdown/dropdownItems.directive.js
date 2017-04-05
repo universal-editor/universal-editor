@@ -6,7 +6,7 @@
         .directive('dropdownItems',dropdownItems);
 
     function dropdownItems($templateCache, $document, $compile) {
-        "ngInject";
+        'ngInject';
         return {
             restrict : 'A',
             replace : true,

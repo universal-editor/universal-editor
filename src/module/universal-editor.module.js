@@ -15,8 +15,7 @@
             'ui.mask',
             'toastr',
             'pascalprecht.translate',
-            'ui.bootstrap',
-            'JSONAPIService'
+            'ui.bootstrap'
         ]);
 
     angular
@@ -24,7 +23,7 @@
         .factory('EditorHttpInterceptor', EditorHttpInterceptor);
 
     function EditorHttpInterceptor($q, $rootScope, toastr, $translate) {
-        "ngInject";
+        'ngInject';
         return {
             'request': function(config) {
                 if (config.beforeSend) {
@@ -49,7 +48,7 @@
         .config(universalEditorConfig);
 
     function universalEditorConfig(minicolorsProvider, $httpProvider, $stateProvider, $urlRouterProvider, $provide, $injector, moment) {
-        "ngInject";
+        'ngInject';
         var dataResolver;
 
         angular.extend(minicolorsProvider.defaults, {
@@ -90,8 +89,8 @@
         .module('universal-editor')
         .run(universalEditorRun);
 
-    function universalEditorRun($rootScope, $location, $state, EditEntityStorage, ModalService, FilterFieldsStorage, YiiSoftApiService) {
-        "ngInject";
+    function universalEditorRun($rootScope, $location, $state, EditEntityStorage, FilterFieldsStorage) {
+        'ngInject';
         var itemsSelector = document.querySelectorAll('.nav.nav-tabs .item');
 
         $rootScope.$on('$stateChangeStart',
@@ -109,26 +108,6 @@
 
             if (FilterFieldsStorage.filterSearchString) {
                 $location.search(FilterFieldsStorage.filterSearchString);
-            }
-
-            var toStateConfig;
-            if (toStateConfig && toStateConfig.component.name === 'ue-modal') {
-
-                /** if fromstate is empty, try get parent state */
-                if (!fromState.name) {
-                    var temp = toState.name.split('.');
-                    if (temp.length) {
-                        temp.splice(temp.length - 1, 1);
-                        fromState = {
-                            name: temp.join('.')
-                        };
-                    }
-                }
-                angular.extend(toStateConfig.component.settings, {
-                    fromState: fromState,
-                    fromParams: fromParams
-                });
-                ModalService.open(toStateConfig.component);
             }
         });
         if (itemsSelector.length == 1) {

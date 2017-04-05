@@ -6,7 +6,7 @@
         .service('FilterFieldsStorage', FilterFieldsStorage);
 
     function FilterFieldsStorage($rootScope, $timeout, configData, $location) {
-        "ngInject";
+        'ngInject';
         var storage = {},
             filterComponentsStorage = {},
             queryObject = {},
@@ -220,7 +220,7 @@
             }
         }
 
-        function getFilterObject(parentComponentId) {
+        function getFilterObject(parentComponentId, originFilters) {
             var filters = {};
             var filterCtrl = getFilterFieldController(parentComponentId);
             if (filterCtrl) {
@@ -242,7 +242,10 @@
                             operator = ':value';
                     }
                     for (var key in value) {
-                        if (!!value[key]) {
+                        if (!!value[key] && (!angular.isArray(value[key]) || value[key].length > 0)) {
+                            if(originFilters && originFilters[key]) {
+                                value[key] = originFilters[key];
+                            }
                             filters[item.fieldName].push({
                                 operator: operator,
                                 value: value[key]

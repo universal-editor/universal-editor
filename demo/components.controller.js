@@ -8,6 +8,7 @@
 
     function ComponentsController() {
         var demoDataSource = {
+            standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/staff',
             fields: [
                 {
@@ -1848,6 +1849,7 @@
                                                                 name: 'ue-form',
                                                                 settings: {
                                                                     dataSource: {
+                                                                        standard: 'YiiSoft',
                                                                         url: '//universal-backend.dev/rest/v1/staff',
                                                                         fields: []
                                                                     },

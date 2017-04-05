@@ -5,9 +5,9 @@
         .module('universal-editor')
         .controller('UeFormController', UeFormController);
 
-    function UeFormController($scope, YiiSoftApiService, $location, $state, $translate, EditEntityStorage, $window, ModalService, $timeout, $controller) {
+    function UeFormController($scope, ApiService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this,
             mixEntityObject,
             pkKey,
@@ -144,20 +144,16 @@
 
             if (dataSource) {
                 if (pk !== 'new') {
-                    YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
+                    ApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
                         vm.options.isLoading = false;
                     });
                 }
 
                 if (pk === 'new') {
                     vm.entityLoaded = true;
-                    if (pk === 'new' && !ModalService.isModalOpen()) {
-                        $timeout(function() {
-                            if (pk === 'new' && !ModalService.isModalOpen()) {
-                                EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.setting.component.settings.dataSource.parentField);
-                            }
-                        });
-                    }
+                    $timeout(function() {
+                        EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.setting.component.settings.dataSource.parentField);
+                    });
                 }
             } else {
                 vm.entityLoaded = true;

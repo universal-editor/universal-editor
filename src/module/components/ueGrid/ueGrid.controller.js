@@ -5,9 +5,9 @@
         .module('universal-editor')
         .controller('UeGridController', UeGridController);
 
-    function UeGridController($scope, $rootScope, YiiSoftApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, $translate, $element, $compile, EditEntityStorage, $controller) {
+    function UeGridController($scope, $rootScope, ApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, $translate, $element, $compile, EditEntityStorage, $controller) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         $element.addClass('ue-grid');
         var vm = this,
             itemsKey,
@@ -270,7 +270,7 @@
             vm.request.childId = vm.parent;
             if (vm.request.childId) {
                 vm.options.isLoading = true;
-                YiiSoftApiService.getItemById(vm.request.childId, vm.options)
+                ApiService.getItemById(vm.request.childId, vm.options)
                     .then(function(item) {
                         var parentId = item[vm.request.parentField] || null;
                         $location.search(prefixParentKey, parentId);
@@ -304,7 +304,7 @@
                 };
                 $rootScope.$broadcast('ue:beforeParentEntitySet', data);
                 request.childId = request.id;
-                if(request.id && !isNaN(+request.id)) {
+                if (request.id && !isNaN(+request.id)) {
                     request.id = +request.id;
                     request.childId = request.id;
                 }
@@ -316,7 +316,7 @@
 
         function refreshTableRecords(notGoToState, request) {
             setInitialQueryParams();
-            return YiiSoftApiService.getItemsList(request || vm.request, notGoToState);
+            return ApiService.getItemsList(request || vm.request, notGoToState);
         }
 
 
@@ -327,9 +327,7 @@
         });
 
         $scope.$on('ue:collectionRefresh', function(event, data) {
-            if (vm.isComponent(data)) {
-                refreshTableRecords();
-            }
+            refreshTableRecords();
         });
 
         $scope.$on('ue:afterEntityUpdate', function(event, data) {
@@ -387,7 +385,7 @@
                         $id: vm.$componentId,
                         standart: vm.dataSource.standart
                     };
-                    YiiSoftApiService.extendData(options).then(function(data) {
+                    ApiService.extendData(options).then(function(data) {
                         var eventObject = {
                             editorEntityType: 'exist',
                             $componentId: vm.$componentId,

@@ -5,8 +5,8 @@
         .module('universal-editor')
         .service('EditEntityStorage', EditEntityStorage);
 
-    function EditEntityStorage($rootScope, $timeout, configData, $location, $state, $translate, YiiSoftApiService) {
-        "ngInject";
+    function EditEntityStorage($rootScope, $timeout, configData, $location, $state, $translate, ApiService) {
+        'ngInject';
         var fieldControllers = [],
             self = this,
             storage = {},
@@ -80,10 +80,10 @@
                 request.data = entityObject;
                 switch (type) {
                     case 'create':
-                        YiiSoftApiService.addNewItem(request);
+                        ApiService.addNewItem(request);
                         break;
                     case 'update':
-                        YiiSoftApiService.updateItem(request);
+                        ApiService.updateItem(request);
                         break;
                 }
             }
@@ -95,7 +95,7 @@
             if (request.isError) {
                 request.data = entityObject;
                 request.action = 'presave';
-                YiiSoftApiService.presaveItem(request);
+                ApiService.presaveItem(request);
             }
         };
 

@@ -6,9 +6,10 @@
         .controller('StaffFormController', StaffFormController);
 
     function StaffFormController($state, $location) {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var staffDataSource = {
+            standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/staff',
             sortBy: '-id',
             primaryKey: 'id',

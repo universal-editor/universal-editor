@@ -6,7 +6,7 @@
         .provider('configData', ConfigDataProvider);
 
     function ConfigDataProvider() {
-        "ngInject";
+        'ngInject';
         var configData = {};
         return {
             setConfig: function(moduleName, config) {

@@ -7,7 +7,7 @@
 
     function UeStringController($scope, $element, EditEntityStorage, FilterFieldsStorage, $location, $controller, $timeout) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this;
         var baseController;
 

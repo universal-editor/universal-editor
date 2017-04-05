@@ -7,7 +7,7 @@
 
     function BaseController($scope, EditEntityStorage, FilterFieldsStorage, $templateCache, $compile, $translate) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this;
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;

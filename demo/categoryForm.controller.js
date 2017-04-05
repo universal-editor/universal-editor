@@ -6,9 +6,10 @@
         .controller('CategoryFormController', CategoryFormController);
 
     function CategoryFormController($state, $location) {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var categoryDataSource = {
+            standard: 'YiiSoft',
             url: 'http://universal-backend.dev/rest/v1/news/categories',
             sortBy: '-id',
             primaryKey: 'id',

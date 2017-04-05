@@ -3,10 +3,10 @@
 
     angular
         .module('universal-editor')
-        .service('YiiSoftApiService', YiiSoftApiService);
+        .service('ApiService', ApiService);
 
-    function YiiSoftApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, ModalService, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
-        "ngInject";
+    function ApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
+        'ngInject';
         var self = this,
             itemsKey = 'items',
             cancelerPromises = [];
@@ -30,6 +30,7 @@
             //** cancel previouse request if request start again 
             var canceler = setTimeOutPromise(request.options.$componentId, 'read');
             var service = getCustomService(dataSource.standard);
+            checkStandardParameter(dataSource.standard, service);
             request.options.isLoading = true;
 
             var _url = request.url;
@@ -38,11 +39,9 @@
 
             var params = request.params || {};
             var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
-            var filtersParams = {};
-            var beforeSend;
 
             if (!!request.childId) {
-                filtersParams[request.parentField] = request.childId;
+                filters[request.parentField] = request.childId;
             }
 
             var expandFields = [];
@@ -73,57 +72,20 @@
                 config.__type = dataSource.resourceType;
             }
 
-            if (angular.isUndefined(service) || !angular.isFunction(service.getParams)) {
+            config.filter = FilterFieldsStorage.getFilterObject(id, filters);
+            config.sortFieldName = params.sort || null;
+            config.pagination = {
+                perPage: 20,
+                page: 1
+            };
 
-                filtersParams = angular.merge(filtersParams, filters);
+            if (params.page) {
+                config.pagination.page = params.page;
+                delete params.page;
+            }
 
-
-                if (filtersParams && !$.isEmptyObject(filtersParams)) {
-                    angular.extend(params, { filter: JSON.stringify(filtersParams) });
-                } else {
-                    delete params.filter;
-                }
-
-                if (!!request.options.mixedMode) {
-                    params = params || {};
-                    angular.extend(params, {
-                        mixed: request.options.mixedMode.collectionType
-                    });
-                }
-
-                if (dataSource.hasOwnProperty('parentField')) {
-                    params = params || {};
-
-                    if (!params.hasOwnProperty('filter')) {
-                        params.root = true;
-                    }
-                }
-
-                if (angular.isString(dataSource.sortBy) && !params.sort) {
-                    angular.extend(params, {
-                        sort: dataSource.sortBy
-                    });
-                }
-
-                if (params.hasOwnProperty('filter')) {
-                    delete params.root;
-                }
-            } else {
-                config.filter = FilterFieldsStorage.getFilterObject(id, filters);
-                config.sortFieldName = params.sort || null;
-                config.pagination = {
-                    perPage: 20,
-                    page: 1
-                };
-
-                if (params.page) {
-                    config.pagination.page = params.page;
-                    delete params.page;
-                }
-
-                if (!!request.options.mixedMode) {
-                    config.mixMode = request.options.mixedMode.collectionType;
-                }
+            if (!!request.options.mixedMode) {
+                config.mixMode = request.options.mixedMode.collectionType;
             }
 
             config.params = params || {};
@@ -141,9 +103,6 @@
                         response,
                         successAnswer.bind(objectBind),
                         failAnswer.bind(objectBind));
-                } else {
-                    successAnswer.bind(objectBind)(response.data);
-                    data = response.data;
                 }
                 deferred.resolve(data);
             }, function(reject) {
@@ -164,18 +123,11 @@
             return deferred.promise;
         };
 
-        this.getData = function(api, params) {
-            return $http({
-                method: 'GET',
-                url: api,
-                params: params
-            });
-        };
-
         this.addNewItem = function(request) {
             var deferred = $q.defer();
             var dataSource = request.options.$dataSource;
             var service = getCustomService(dataSource.standard);
+            checkStandardParameter(dataSource.standard, service);
 
             if (request.options.isLoading) {
                 return;
@@ -260,6 +212,7 @@
             }
             var dataSource = request.options.$dataSource;
             var service = getCustomService(dataSource.standard);
+            checkStandardParameter(dataSource.standard, service);
             request.options.isLoading = true;
 
             var _url = dataSource.url + '/' + request.entityId;
@@ -326,7 +279,7 @@
             }
             var dataSource = request.options.$dataSource;
             var service = getCustomService(dataSource.standard);
-
+            checkStandardParameter(dataSource.standard, service);
             request.options.isLoading = true;
 
             var config = {
@@ -404,6 +357,7 @@
                 dataSource = options.$dataSource;
             if (angular.isObject(dataSource) && dataSource.url) {
                 var service = getCustomService(dataSource.standard);
+                checkStandardParameter(dataSource.standard, service);
                 options.isLoading = true;
                 angular.forEach(dataSource.fields, function(field) {
                     if (field.component && field.component.settings && field.component.settings.expandable === true) {
@@ -473,6 +427,7 @@
             }
             var dataSource = request.options.$dataSource;
             var service = getCustomService(dataSource.standard);
+            checkStandardParameter(dataSource.standard, service);
             var url;
 
             if (request.options.isMix) {
@@ -684,8 +639,8 @@
                     });
                 }
                 fields = fields.join(',');
-                if (angular.isString(options.url)) {                    
-                        var keyValue = component.component.settings.valuesRemote.fields.value;
+                if (angular.isString(options.url)) {
+                    var keyValue = component.component.settings.valuesRemote.fields.value;
                     data.forEach(function(item) {
                         var value = item[component.name];
                         if (angular.isArray(value)) {
@@ -693,7 +648,7 @@
                                 if (angular.isString(component.component.settings.multiname)) {
                                     valueItem = valueItem[component.component.settings.multiname];
                                 } else {
-                                    if(angular.isObject(valueItem) && keyValue) {
+                                    if (angular.isObject(valueItem) && keyValue) {
                                         valueItem = valueItem[keyValue];
                                     }
                                 }
@@ -749,19 +704,19 @@
                         var name = component.component.settings.valuesRemote.fields.value;
                         data.forEach(function(item) {
                             var value = item[component.name];
-                            if(value) {
+                            if (value) {
                                 if (angular.isArray(value)) {
-                                        value = value.map(function(valueItem) {
-                                            if (angular.isString(component.component.settings.multiname)) {
-                                                valueItem = valueItem[component.component.settings.multiname];
-                                            }
-                                            return valueItem;
-                                        });
-                                    }
-                                    item['$' + component.name] = list.filter(function(i) {
-                                        return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
+                                    value = value.map(function(valueItem) {
+                                        if (angular.isString(component.component.settings.multiname)) {
+                                            valueItem = valueItem[component.component.settings.multiname];
+                                        }
+                                        return valueItem;
                                     });
-                            }       
+                                }
+                                item['$' + component.name] = list.filter(function(i) {
+                                    return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
+                                });
+                            }
                         });
                     }
                 });
@@ -875,8 +830,8 @@
         };
 
         function getCustomService(standard) {
-            if ($injector.has(standard + 'ApiTypeService')) {
-                return $injector.get(standard + 'ApiTypeService');
+            if ($injector.has(standard + 'ApiService')) {
+                return $injector.get(standard + 'ApiService');
             }
             return undefined;
         }
@@ -916,6 +871,20 @@
             return options;
         }
 
+        function checkStandardParameter(standard, serviceApi) {
+            if (angular.isUndefined(standard)) {
+                $translate('ERROR.FIELD.EMPTY').then(function(translation) {
+                    console.error(translation.replace('%field', 'standard'));
+                });
+            }
+
+            if (angular.isUndefined(serviceApi)) {
+                $translate('ERROR.UNDEFINED_API_SERVICE').then(function(translation) {
+                    console.error(translation);
+                });
+            }
+        }
+
         function successAnswer(data) {
             var config = this, params, paramName;
             var parentComponentId = config.parentComponentId;
@@ -950,17 +919,13 @@
                     } else {
                         state = config.request.state;
                     }
-                    if (!ModalService.isModalOpen()) {
-                        if (state) {
-                            $state.go(state, params).then(function() {
-                                $location.search(params);
-                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
-                            });
-                        } else {
-                            replaceToURL(config.request.href);
-                        }
+                    if (state) {
+                        $state.go(state, params).then(function() {
+                            $location.search(params);
+                            $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                        });
                     } else {
-                        ModalService.close();
+                        replaceToURL(config.request.href);
                     }
                     break;
                 case 'create':
@@ -985,20 +950,16 @@
                     } else {
                         state = config.request.state;
                     }
-                    if (!ModalService.isModalOpen()) {
-                        if (state) {
-                            $state.go(state, params).then(function() {
-                                if (params.back) {
-                                    delete params.back;
-                                }
-                                $location.search(params);
-                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
-                            });
-                        } else {
-                            replaceToURL(config.request.href);
-                        }
+                    if (state) {
+                        $state.go(state, params).then(function() {
+                            if (params.back) {
+                                delete params.back;
+                            }
+                            $location.search(params);
+                            $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                        });
                     } else {
-                        ModalService.close();
+                        replaceToURL(config.request.href);
                     }
                     break;
                 case 'presave':
@@ -1052,19 +1013,15 @@
 
                     state = state || $state.current.name;
 
-                    if (!ModalService.isModalOpen()) {
-                        if (!config.notGoToState) {
-                            if (state) {
-                                $state.go(state, params).then(function() {
-                                    $location.search(params);
-                                    $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
-                                });
-                            } else {
-                                replaceToURL(config.request.href);
-                            }
+                    if (!config.notGoToState) {
+                        if (state) {
+                            $state.go(state, params).then(function() {
+                                $location.search(params);
+                                $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                            });
+                        } else {
+                            replaceToURL(config.request.href);
                         }
-                    } else {
-                        ModalService.close();
                     }
                     break;
             }

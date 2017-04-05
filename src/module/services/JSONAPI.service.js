@@ -2,10 +2,10 @@
     'use strict';
 
     angular
-        .module('JSONAPIService', [])
-        .service('JSONAPIApiTypeService', JSONAPITypeService);
+        .module('universal-editor')
+        .service('JSONAPIApiService', JSONAPIApiService);
 
-    function JSONAPITypeService() {
+    function JSONAPIApiService() {
         var self = this;
 
         self.getHeaders = function(config) {

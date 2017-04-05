@@ -6,10 +6,10 @@
         .controller('StaffGridController', StaffGridController);
 
     function StaffGridController() {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var staffDataSource = {
-            type: 'REST',
+            standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/staff',
             sortBy: '-id',
             primaryKey: 'id',

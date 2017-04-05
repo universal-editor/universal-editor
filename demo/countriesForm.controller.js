@@ -6,9 +6,10 @@
         .controller('CountryFormController', CountryFormController);
 
     function CountryFormController($state, $location) {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var countryDataSource = {
+            standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/country',
             sortBy: '-id',
             primaryKey: 'id',

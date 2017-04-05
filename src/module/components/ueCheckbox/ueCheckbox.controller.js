@@ -19,8 +19,8 @@
             };
         });
 
-    function UeCheckboxController($scope, $element, EditEntityStorage, YiiSoftApiService, FilterFieldsStorage, $controller) {
-        "ngInject";
+    function UeCheckboxController($scope, $element, EditEntityStorage, ApiService, FilterFieldsStorage, $controller) {
+        'ngInject';
         /* jshint validthis: true */
         var vm = this,
             componentSettings,
@@ -79,8 +79,7 @@
                             vm.loadingData = false;
                         });
                     } else {
-                        var value = data[vm.fieldName];
-                        if (vm.trueValue == value) {
+                        if (vm.trueValue == vm.fieldValue) {
                             vm.fieldValue = [vm.trueValue];
                         }
                     }
@@ -117,7 +116,7 @@
             if (dependValue && dependValue !== '') {
                 vm.loadingData = true;
 
-                var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                 var config = {
                     method: 'GET',
                     url: url,
@@ -125,7 +124,7 @@
                     serverPagination: vm.serverPagination
                 };
                 config.standard = $scope.getParentDataSource().standard;
-                YiiSoftApiService
+                ApiService
                     .getUrlResource(config)
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {

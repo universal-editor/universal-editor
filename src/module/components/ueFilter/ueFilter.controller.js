@@ -7,7 +7,7 @@
 
     function UeFilterController($scope, $rootScope, $element, EditEntityStorage, $timeout, FilterFieldsStorage, $compile, $document, $templateCache, $controller) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this,
             settings;
 

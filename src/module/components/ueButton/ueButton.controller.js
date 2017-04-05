@@ -5,8 +5,8 @@
         .module('universal-editor')
         .controller('UeButtonController', UeButtonController);
 
-    function UeButtonController($scope, $rootScope, $element, $state, $location, EditEntityStorage, ModalService, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, YiiSoftApiService, FilterFieldsStorage) {
-        "ngInject";
+    function UeButtonController($scope, $rootScope, $element, $state, $location, EditEntityStorage, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, ApiService, FilterFieldsStorage) {
+        'ngInject';
         $element.addClass('ue-button');
 
         var vm = this,
@@ -98,7 +98,7 @@
                     $location.search(searchString);
                     $timeout(function() {
                         var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
-                        if (pk === 'new' && !ModalService.isModalOpen()) {
+                        if (pk === 'new') {
                             EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.options.$dataSource.parentField);
                         }
                     }, 0);
@@ -109,7 +109,6 @@
                 } else if (handlers && !angular.isFunction(vm.action)) {
                     sendRequest();
                 } else {
-                    ModalService.options = vm.options;
                     url = url.replace(':pk', vm.entityId);
                     var isReload = !~url.indexOf($location.path());
                     params = $location.search();
@@ -159,7 +158,7 @@
                         if (confirm(translation.replace('%id', vm.entityId))) {
                             request.entityId = vm.entityId;
                             request.setting = vm.setting;
-                            YiiSoftApiService.deleteItemById(request, vm.setting.buttonClass === 'context');
+                            ApiService.deleteItemById(request, vm.setting.buttonClass === 'context');
                         }
                     });
                     break;
@@ -187,7 +186,7 @@
                 method: vm.method
             };
             angular.merge(request, handlers);
-            YiiSoftApiService.actionRequest(request);
+            ApiService.actionRequest(request);
         }
 
         vm.$postLink = function() {
