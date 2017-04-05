@@ -14,7 +14,7 @@
 * Added serice for work with `JSONAPI`;
 * Sending one request for `ue-grid` component during rendering the table.
 * Made parameter `serverPagination` for ue-dropdown and ue-autocomplete components.
-* Made parameter `type` for `datasource`-object required.
+* Made parameter `standard` for `datasource`-object required.
 
 ## 1.0.0-alpha4 - 2017-03-01
 ### Added
