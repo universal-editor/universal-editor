@@ -6,7 +6,7 @@
         .controller('TagsGridController', TagsGridController);
 
     function TagsGridController() {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var tagsDataSource = {
             standard: 'YiiSoft',

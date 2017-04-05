@@ -6,7 +6,7 @@
         .controller('NewsFormController', NewsFormController);
 
     function NewsFormController() {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var newsDataSource = {            
             standard: 'YiiSoft',

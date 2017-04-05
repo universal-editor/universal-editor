@@ -6,7 +6,7 @@
         .controller('NewsGridController', NewsGridController);
 
     function NewsGridController() {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var newsDataSource = {            
             standard: 'YiiSoft',

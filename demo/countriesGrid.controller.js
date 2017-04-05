@@ -6,7 +6,7 @@
         .controller('CountryGridController', CountryGridController);
 
     function CountryGridController() {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var countryDataSource = {
             standard: 'YiiSoft',

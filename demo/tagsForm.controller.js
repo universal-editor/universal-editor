@@ -6,7 +6,7 @@
         .controller('TagsFormController', TagsFormController);
 
     function TagsFormController($state, $location) {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var tagsDataSource = {
             standard: 'YiiSoft',

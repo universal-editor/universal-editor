@@ -6,7 +6,7 @@
         .controller('CategoryGridController', CategoryGridController);
 
     function CategoryGridController() {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var categoryDataSource = {
             standard: 'YiiSoft',

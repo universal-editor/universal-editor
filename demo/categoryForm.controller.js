@@ -6,7 +6,7 @@
         .controller('CategoryFormController', CategoryFormController);
 
     function CategoryFormController($state, $location) {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var categoryDataSource = {
             standard: 'YiiSoft',

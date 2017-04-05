@@ -6,7 +6,7 @@
         .controller('CountryFormController', CountryFormController);
 
     function CountryFormController($state, $location) {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var countryDataSource = {
             standard: 'YiiSoft',

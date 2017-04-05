@@ -6,7 +6,7 @@
         .controller('StaffFormController', StaffFormController);
 
     function StaffFormController($state, $location) {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var staffDataSource = {
             standard: 'YiiSoft',

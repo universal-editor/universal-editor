@@ -6,7 +6,7 @@
         .controller('StaffGridController', StaffGridController);
 
     function StaffGridController() {
-        "ngInject";
+        'ngInject';
         var vm = this;
         var staffDataSource = {
             standard: 'YiiSoft',

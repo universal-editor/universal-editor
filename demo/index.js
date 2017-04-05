@@ -5,7 +5,7 @@
         .config(routerConfig);
 
     function routerConfig($stateProvider, $urlRouterProvider) {
-        "ngInject";
+        'ngInject';
         $stateProvider
             .state('components', {
                 url: '/components',
@@ -94,7 +94,7 @@ angular
     .run(demoAppRun);
 
 function demoAppRun($rootScope) {
-    "ngInject";
+    'ngInject';
     var itemsSelector = document.querySelectorAll('.nav.nav-tabs li');
     $rootScope.$on('$stateChangeSuccess', function(event, toState) {
         var stateParamEntityId = toState.name;
