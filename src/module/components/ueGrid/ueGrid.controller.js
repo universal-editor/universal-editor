@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeGridController', UeGridController);
 
-    function UeGridController($scope, $rootScope, ApiBaseService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, $translate, $element, $compile, EditEntityStorage, $controller) {
+    function UeGridController($scope, $rootScope, ApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, $translate, $element, $compile, EditEntityStorage, $controller) {
         /* jshint validthis: true */
         'ngInject';
         $element.addClass('ue-grid');
@@ -270,7 +270,7 @@
             vm.request.childId = vm.parent;
             if (vm.request.childId) {
                 vm.options.isLoading = true;
-                ApiBaseService.getItemById(vm.request.childId, vm.options)
+                ApiService.getItemById(vm.request.childId, vm.options)
                     .then(function(item) {
                         var parentId = item[vm.request.parentField] || null;
                         $location.search(prefixParentKey, parentId);
@@ -316,7 +316,7 @@
 
         function refreshTableRecords(notGoToState, request) {
             setInitialQueryParams();
-            return ApiBaseService.getItemsList(request || vm.request, notGoToState);
+            return ApiService.getItemsList(request || vm.request, notGoToState);
         }
 
 
@@ -385,7 +385,7 @@
                         $id: vm.$componentId,
                         standart: vm.dataSource.standart
                     };
-                    ApiBaseService.extendData(options).then(function(data) {
+                    ApiService.extendData(options).then(function(data) {
                         var eventObject = {
                             editorEntityType: 'exist',
                             $componentId: vm.$componentId,

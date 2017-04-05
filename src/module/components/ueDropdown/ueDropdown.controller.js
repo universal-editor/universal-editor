@@ -4,7 +4,7 @@
     angular
         .module('universal-editor')
         .controller('UeDropdownController', UeDropdownController);
-    function UeDropdownController($rootScope, $scope, EditEntityStorage, ApiBaseService, $timeout, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
+    function UeDropdownController($rootScope, $scope, EditEntityStorage, ApiService, $timeout, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this,
@@ -78,7 +78,7 @@
                     vm.parentValue = false;
                     vm.optionValues = [];
 
-                    var url = ApiBaseService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                    var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                     var request = {
                         url: url,
                         method: 'GET',
@@ -88,7 +88,7 @@
 
                     config.standard = $scope.getParentDataSource().standard;
 
-                    ApiBaseService
+                    ApiService
                         .getUrlResource(config)
                         .then(function(response) {
                             angular.forEach(response.data.items, function(v) {
@@ -203,7 +203,7 @@
 
                 config.standard = $scope.getParentDataSource().standard;
 
-                return ApiBaseService
+                return ApiService
                     .getUrlResource(config)
                     .then(function(response) {
                         fillControl(response.data.items);
@@ -256,7 +256,7 @@
 
                     config.standard = $scope.getParentDataSource().standard;
 
-                    ApiBaseService
+                    ApiService
                         .getUrlResource(config)
                         .then(function(response) {
                             if (!item.childOpts) {

@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
-    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, ApiBaseService, $timeout, FilterFieldsStorage, $controller, $translate, $q) {
+    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, ApiService, $timeout, FilterFieldsStorage, $controller, $translate, $q) {
         'ngInject';
         /* jshint validthis: true */
         var vm = this,
@@ -222,7 +222,7 @@
                 urlParam.filter = {};
                 urlParam.filter[vm.fieldSearch] = "%" + searchString + "%";
 
-                var url = ApiBaseService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
+                var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
                 var config = {
                     url: url,
                     method: 'GET',
@@ -230,7 +230,7 @@
                     serverPagination: vm.serverPagination
                 };
                 config.standard = $scope.getParentDataSource().standard;
-                ApiBaseService
+                ApiService
                     .getUrlResource(config)
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {
@@ -318,7 +318,7 @@
                 }];
                 config.standard = $scope.getParentDataSource().standard;
 
-                ApiBaseService
+                ApiService
                     .getUrlResource(config)
                     .then(function(response) {
                         fillControl(response.data.items);
@@ -371,7 +371,7 @@
 
                 config.standard = $scope.getParentDataSource().standard;
 
-                return ApiBaseService
+                return ApiService
                     .getUrlResource(config)
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {

@@ -3,9 +3,9 @@
 
     angular
         .module('universal-editor')
-        .service('ApiBaseService', ApiBaseService);
+        .service('ApiService', ApiService);
 
-    function ApiBaseService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
+    function ApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
         'ngInject';
         var self = this,
             itemsKey = 'items',
@@ -830,8 +830,8 @@
         };
 
         function getCustomService(standard) {
-            if ($injector.has(standard + 'ApiTypeService')) {
-                return $injector.get(standard + 'ApiTypeService');
+            if ($injector.has(standard + 'ApiService')) {
+                return $injector.get(standard + 'ApiService');
             }
             return undefined;
         }

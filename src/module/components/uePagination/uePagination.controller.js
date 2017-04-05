@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UePaginationController', UePaginationController);
 
-    function UePaginationController($scope, ApiBaseService, $httpParamSerializer, $sce, $location, $element) {
+    function UePaginationController($scope, ApiService, $httpParamSerializer, $sce, $location, $element) {
         'ngInject';
         $element.addClass('ue-pagination');
 
@@ -159,7 +159,7 @@
             vm.parent = parentEntity || null;
             vm.request.childId = vm.parent;
             $location.search(getKeyPrefix('page'), pageItem.page);
-            ApiBaseService.getItemsList(vm.request, true);
+            ApiService.getItemsList(vm.request, true);
         }
 
         function getKeyPrefix(key) {

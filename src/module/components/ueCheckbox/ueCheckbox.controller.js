@@ -19,7 +19,7 @@
             };
         });
 
-    function UeCheckboxController($scope, $element, EditEntityStorage, ApiBaseService, FilterFieldsStorage, $controller) {
+    function UeCheckboxController($scope, $element, EditEntityStorage, ApiService, FilterFieldsStorage, $controller) {
         'ngInject';
         /* jshint validthis: true */
         var vm = this,
@@ -116,7 +116,7 @@
             if (dependValue && dependValue !== '') {
                 vm.loadingData = true;
 
-                var url = ApiBaseService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                 var config = {
                     method: 'GET',
                     url: url,
@@ -124,7 +124,7 @@
                     serverPagination: vm.serverPagination
                 };
                 config.standard = $scope.getParentDataSource().standard;
-                ApiBaseService
+                ApiService
                     .getUrlResource(config)
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {

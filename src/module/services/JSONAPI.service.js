@@ -3,9 +3,9 @@
 
     angular
         .module('universal-editor')
-        .service('JSONAPIApiTypeService', JSONAPITypeService);
+        .service('JSONAPIApiService', JSONAPIApiService);
 
-    function JSONAPITypeService() {
+    function JSONAPIApiService() {
         var self = this;
 
         self.getHeaders = function(config) {

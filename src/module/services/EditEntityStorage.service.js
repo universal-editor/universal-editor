@@ -5,7 +5,7 @@
         .module('universal-editor')
         .service('EditEntityStorage', EditEntityStorage);
 
-    function EditEntityStorage($rootScope, $timeout, configData, $location, $state, $translate, ApiBaseService) {
+    function EditEntityStorage($rootScope, $timeout, configData, $location, $state, $translate, ApiService) {
         'ngInject';
         var fieldControllers = [],
             self = this,
@@ -80,10 +80,10 @@
                 request.data = entityObject;
                 switch (type) {
                     case 'create':
-                        ApiBaseService.addNewItem(request);
+                        ApiService.addNewItem(request);
                         break;
                     case 'update':
-                        ApiBaseService.updateItem(request);
+                        ApiService.updateItem(request);
                         break;
                 }
             }
@@ -95,7 +95,7 @@
             if (request.isError) {
                 request.data = entityObject;
                 request.action = 'presave';
-                ApiBaseService.presaveItem(request);
+                ApiService.presaveItem(request);
             }
         };
 

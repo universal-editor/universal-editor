@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeButtonController', UeButtonController);
 
-    function UeButtonController($scope, $rootScope, $element, $state, $location, EditEntityStorage, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, ApiBaseService, FilterFieldsStorage) {
+    function UeButtonController($scope, $rootScope, $element, $state, $location, EditEntityStorage, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, ApiService, FilterFieldsStorage) {
         'ngInject';
         $element.addClass('ue-button');
 
@@ -158,7 +158,7 @@
                         if (confirm(translation.replace('%id', vm.entityId))) {
                             request.entityId = vm.entityId;
                             request.setting = vm.setting;
-                            ApiBaseService.deleteItemById(request, vm.setting.buttonClass === 'context');
+                            ApiService.deleteItemById(request, vm.setting.buttonClass === 'context');
                         }
                     });
                     break;
@@ -186,7 +186,7 @@
                 method: vm.method
             };
             angular.merge(request, handlers);
-            ApiBaseService.actionRequest(request);
+            ApiService.actionRequest(request);
         }
 
         vm.$postLink = function() {

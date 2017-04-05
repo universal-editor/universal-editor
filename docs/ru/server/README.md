@@ -16,7 +16,7 @@
 * Обрабатывать ответы от сервера;
 
 Интерфейс взаимодействия редактора с сервисом следующий:
-1. Название сервиса {type}ApiTypeService, где {type} – кодовое имя типа, используемое в конфигурации dataSource(свойство type).
+1. Название сервиса {type}ApiService, где {type} – кодовое имя типа, используемое в конфигурации dataSource(свойство type).
 2. Функции сервиса:
     * getHeaders(config) – обрабатывает заголовки запроса, возвращает объект типа { 'key1': 'value1', 'key2': 'value2'...};
     * getMethod(config) – задает тип запроса ('GET', 'PUT', 'POST'..);
@@ -25,7 +25,7 @@
     * getURL(config) – обрабатывает URL запроса, возвращает строку;
     * processResponse(response, success, fail) – обрабатывает ответ от сервера;  
 
-В ядре редактора по заданной маске({type}ApiTypeService) будет производиться инжект сервиса. При отправке данные запроса обрабатываются этим сервисом, оперируя выше приведенным интерфейсом, а затем исполняются. 
+В ядре редактора по заданной маске({type}ApiService) будет производиться инжект сервиса. При отправке данные запроса обрабатываются этим сервисом, оперируя выше приведенным интерфейсом, а затем исполняются. 
 Все функции сервиса имеют необязательный характер и, в случае отсутствия, не вызываются (исполняется логика по-умолчанию).
 Полученный ответ передается в функцию для обработки ответа `processResponse`.
 В рамках контекста(исполнения) `processResponse` доступны функции `fail` и `success` (передаются из редактора при вызове `processResponse`). Функция `success` вызывается при удачной обработке ответа, а `fail` – при неудачной.
@@ -34,7 +34,7 @@
 ```javascript
 
 // Модуль с подключаемым сервисом
-angular.module('ModuleWithService', []).service('NewFormatApiTypeService', function() {
+angular.module('ModuleWithService', []).service('NewFormatApiService', function() {
   var self = this;
 
   self.getHeaders = getHeaders;
@@ -62,7 +62,7 @@ angular.module('demoApp', ['universal.editor', 'ModuleWithService'])
   .controller('NewsController', function () {
       var vm = this;
       var newsDataSource = {
-          standard: 'NewFormat',  // задаем тип API (Имя Сервиса будет складываться как 'NewFormatApiTypeService')
+          standard: 'NewFormat',  // задаем тип API (Имя Сервиса будет складываться как 'NewFormatApiService')
           url: '//universal-backend.dev/rest/v1/news',
           fields: [ /* fields */ ]
       };

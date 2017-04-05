@@ -21,7 +21,7 @@
 
 У `JSON API` нет строгой спецификации на [фильтрацию](http://jsonapi.org/format/#fetching-filtering) и [пагинацию](http://jsonapi.org/format/#fetching-pagination). В редакторе по-умолчанию используется пагинация со смещением (based-offset).
 
-Действующий сервис для работы с JSON API (JSONAPIApiTypeService) логику по заданию фильтров осуществляет в рамках функции `setFiltering`, а пагинации – в рамках функции `setPagination`. Обе функции в качестве аргумента принимают объект `config`, описанный в разделе [Правила взаимодействия с API](typeOfApi.md);
+Действующий сервис для работы с JSON API (JSONAPIApiService) логику по заданию фильтров осуществляет в рамках функции `setFiltering`, а пагинации – в рамках функции `setPagination`. Обе функции в качестве аргумента принимают объект `config`, описанный в разделе [Правила взаимодействия с API](typeOfApi.md);
 
 Чтобы переопределить правила задания фильтрации и пагинации рекомендуется воспользоваться декорированием методов сервиса в Angular (https://docs.angularjs.org/guide/decorators).
 Пример: 
@@ -29,7 +29,7 @@
 ```javascript
   angular.module('MyEditor', ['universal-editor'])
     .config(function($provide) {
-      $provide.decorator('JSONAPIApiTypeService', function($delegate) {
+      $provide.decorator('JSONAPIApiService', function($delegate) {
 
         $delegate.setFiltering = function(config) {
           config.params.filter = { /* Содержимое фильтра */};

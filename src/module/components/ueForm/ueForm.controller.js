@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeFormController', UeFormController);
 
-    function UeFormController($scope, ApiBaseService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller) {
+    function UeFormController($scope, ApiService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this,
@@ -144,7 +144,7 @@
 
             if (dataSource) {
                 if (pk !== 'new') {
-                    ApiBaseService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
+                    ApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
                         vm.options.isLoading = false;
                     });
                 }

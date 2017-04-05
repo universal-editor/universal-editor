@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('FieldsController', FieldsController);
 
-    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, ApiBaseService, moment, EditEntityStorage, $q, $translate) {
+    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, ApiService, moment, EditEntityStorage, $q, $translate) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this;
@@ -76,7 +76,7 @@
                             };
                             var dataSource = $scope.getParentDataSource();
                             config.standard = dataSource.standard;
-                            componentSettings.$loadingPromise = ApiBaseService
+                            componentSettings.$loadingPromise = ApiService
                                 .getUrlResource(config)
                                 .then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
                         } else {

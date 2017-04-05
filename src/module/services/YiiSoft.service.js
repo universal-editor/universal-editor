@@ -3,9 +3,9 @@
 
     angular
         .module('universal-editor')
-        .service('YiiSoftApiTypeService', YiiSoftApiTypeService);
+        .service('YiiSoftApiService', YiiSoftApiService);
 
-    function YiiSoftApiTypeService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
+    function YiiSoftApiService($q, $rootScope, $http, $location, $state, $httpParamSerializer, $document, FilterFieldsStorage, toastr, $translate, $httpParamSerializerJQLike, $window, $injector) {
         'ngInject';
         var self = this;
 
