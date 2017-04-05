@@ -5,9 +5,9 @@
         .module('universal-editor')
         .controller('UeFormController', UeFormController);
 
-    function UeFormController($scope, YiiSoftApiService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller) {
+    function UeFormController($scope, ApiBaseService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this,
             mixEntityObject,
             pkKey,
@@ -144,7 +144,7 @@
 
             if (dataSource) {
                 if (pk !== 'new') {
-                    YiiSoftApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
+                    ApiBaseService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
                         vm.options.isLoading = false;
                     });
                 }

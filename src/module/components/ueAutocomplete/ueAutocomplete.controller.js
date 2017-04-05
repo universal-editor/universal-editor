@@ -5,8 +5,8 @@
         .module('universal-editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
-    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, YiiSoftApiService, $timeout, FilterFieldsStorage, $controller, $translate, $q) {
-        "ngInject";
+    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, ApiBaseService, $timeout, FilterFieldsStorage, $controller, $translate, $q) {
+        'ngInject';
         /* jshint validthis: true */
         var vm = this,
             inputTimeout,
@@ -222,7 +222,7 @@
                 urlParam.filter = {};
                 urlParam.filter[vm.fieldSearch] = "%" + searchString + "%";
 
-                var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
+                var url = ApiBaseService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
                 var config = {
                     url: url,
                     method: 'GET',
@@ -230,7 +230,7 @@
                     serverPagination: vm.serverPagination
                 };
                 config.standard = $scope.getParentDataSource().standard;
-                YiiSoftApiService
+                ApiBaseService
                     .getUrlResource(config)
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {
@@ -314,11 +314,11 @@
                 };
                 config.filter[vm.fieldId] = [{
                     operator: 'value',
-                    value: vm.fieldValue
+                    value: angular.isObject(vm.fieldValue) ? vm.fieldValue[vm.fieldId] : vm.fieldValue[vm.fieldSearch]
                 }];
                 config.standard = $scope.getParentDataSource().standard;
 
-                YiiSoftApiService
+                ApiBaseService
                     .getUrlResource(config)
                     .then(function(response) {
                         fillControl(response.data.items);
@@ -347,7 +347,9 @@
                         }
                         return id;
                     });
-                }
+                } else if(angular.isObject(ids)) {
+                    ids = ids[vm.fieldId];
+                } 
                 var config = {
                     method: 'GET',
                     url: componentSettings.valuesRemote.url,
@@ -369,7 +371,7 @@
 
                 config.standard = $scope.getParentDataSource().standard;
 
-                return YiiSoftApiService
+                return ApiBaseService
                     .getUrlResource(config)
                     .then(function(response) {
                         angular.forEach(response.data.items, function(v) {

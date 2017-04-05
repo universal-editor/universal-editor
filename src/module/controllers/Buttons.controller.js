@@ -7,7 +7,7 @@
 
     function ButtonsController($scope, $controller) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this;
         var baseController = $controller('BaseController', { $scope: $scope });
         angular.extend(vm, baseController);

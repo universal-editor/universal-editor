@@ -5,9 +5,9 @@
         .module('universal-editor')
         .controller('UeGroupController', UeGroupController);
 
-    function UeGroupController($scope, EditEntityStorage, $timeout, YiiSoftApiService, $controller, $translate) {
+    function UeGroupController($scope, EditEntityStorage, $timeout, $controller, $translate) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this,
             componentSettings,
             baseController,

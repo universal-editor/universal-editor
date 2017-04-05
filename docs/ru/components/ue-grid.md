@@ -10,7 +10,7 @@ settings: {
         paramsPrefix: 'mix'
     }
     dataSource: {        
-        type: 'YiiSoft',
+        standard: 'YiiSoft',
         url: '//universal-backend.dev/rest/v1/staff',
         sortBy: '-id',
         primaryKey: 'id',
@@ -84,7 +84,7 @@ settings: {
 | settings[routing] | object | Объект настройки взаимодествия компонента с URL. | - | - |
 | settings[routing][paramsPrefix] | object | Префикс, который добавляеться к query параметрам(parent, filter, sort, page), требующим для работы компонента. | - | - |
 | settings[dataSource] | object | Объект настройки компонента по работе с бекендом. | + | - |
-| settings[dataSource][type] | string | Cтиль построения архитектуры.  | + | - |
+| settings[dataSource][standard] | string | Cтиль построения архитектуры.  | + | - |
 | settings[dataSource][url] | string | URL в RESTful-сервисе. | + | - |
 | settings[dataSource][sortBy] | string | Поле для сортировки по-умолчанию. Направление asc задаётся знаком - перед именем поля. | - | - |
 | settings[dataSource][primaryKey] | string | Имя поля с первичным ключом, по которому редактор идентифицирует записи. | + | - |
@@ -119,7 +119,7 @@ component: {
             fieldType : 'type',
             prependIcon : 'title',
             dataSource: {
-                type: 'YiiSoft',
+                standard: 'YiiSoft',
                 url: '//universal-backend.dev/rest/v1/staff',
                 sortBy: '-id',
                 primaryKey: 'id',
@@ -203,7 +203,7 @@ component: {
 | prependIcon | string | Параметр, указывающий к какому полю прикрепить иконку смешаного режима. | + | - |
 | contextMenu | array | Массив кнопок для меню у записей со смешанного ресурса. | - | - |
 | dataSource | object | Объект настройки по работе с сервером. | + | - |
-| dataSource[type] | string | Cтиль построения архитектуры. | + | - |
+| dataSource[standard] | string | Cтиль построения архитектуры. | + | - |
 | dataSource[url] | string | URL в RESTful-сервисе. | + | - |
 | dataSource[primaryKey] | string | Имя поля с первичным ключом, по которому редактор идентифицирует записи. | + | - |
 

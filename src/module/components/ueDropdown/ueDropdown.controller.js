@@ -4,9 +4,9 @@
     angular
         .module('universal-editor')
         .controller('UeDropdownController', UeDropdownController);
-    function UeDropdownController($rootScope, $scope, EditEntityStorage, YiiSoftApiService, $timeout, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
+    function UeDropdownController($rootScope, $scope, EditEntityStorage, ApiBaseService, $timeout, $document, $element, $window, FilterFieldsStorage, $controller, $q, $translate) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this,
             possibleValues,
             componentSettings,
@@ -78,7 +78,7 @@
                     vm.parentValue = false;
                     vm.optionValues = [];
 
-                    var url = YiiSoftApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                    var url = ApiBaseService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
                     var request = {
                         url: url,
                         method: 'GET',
@@ -88,7 +88,7 @@
 
                     config.standard = $scope.getParentDataSource().standard;
 
-                    YiiSoftApiService
+                    ApiBaseService
                         .getUrlResource(config)
                         .then(function(response) {
                             angular.forEach(response.data.items, function(v) {
@@ -178,6 +178,7 @@
         function loadDataById(ids) {
             var defer = $q.defer();
             if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
+                
                 if(angular.isArray(ids)) {
                     ids = ids.map(function(id) {
                         if(angular.isObject(id) && id[vm.fieldId]) {
@@ -185,6 +186,8 @@
                         }
                         return id;
                     });
+                } else if(angular.isObject(ids)) {
+                    ids = ids[vm.fieldId]
                 }                
                 var config = {
                     method: 'GET',
@@ -200,7 +203,7 @@
 
                 config.standard = $scope.getParentDataSource().standard;
 
-                return YiiSoftApiService
+                return ApiBaseService
                     .getUrlResource(config)
                     .then(function(response) {
                         fillControl(response.data.items);
@@ -247,13 +250,13 @@
                         serverPagination: vm.serverPagination
                     };
                     config.filter[vm.treeParentField] = [{
-                        operator: 'value',
+                        operator: ':value',
                         value: item[vm.fieldId]
                     }];
 
                     config.standard = $scope.getParentDataSource().standard;
 
-                    YiiSoftApiService
+                    ApiBaseService
                         .getUrlResource(config)
                         .then(function(response) {
                             if (!item.childOpts) {

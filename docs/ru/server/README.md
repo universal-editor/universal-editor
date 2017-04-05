@@ -62,7 +62,7 @@ angular.module('demoApp', ['universal.editor', 'ModuleWithService'])
   .controller('NewsController', function () {
       var vm = this;
       var newsDataSource = {
-          type: 'NewFormat',  // задаем тип API (Имя Сервиса будет складываться как 'NewFormatApiTypeService')
+          standard: 'NewFormat',  // задаем тип API (Имя Сервиса будет складываться как 'NewFormatApiTypeService')
           url: '//universal-backend.dev/rest/v1/news',
           fields: [ /* fields */ ]
       };

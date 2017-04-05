@@ -10,7 +10,7 @@
 
 ```javascript
 var formDataSource = {        
-        type: 'YiiSoft',
+        standard: 'YiiSoft',
         url: '//universal-backend.dev/rest/v1/staff',
         sortBy: '-id',
         primaryKey: 'id',
@@ -123,7 +123,7 @@ var config = {
 | settings[header] | object | Объект настройки "шапки" формы. | + | - |
 | settings[header][toolbar] | array | Массив компонентов, выводимых в "шапке" формы. | + | - |
 | settings[dataSource] | object | Объект настройки компонента по работе с бекендом. | + | - |
-| settings[dataSource][type] | string | Cтиль построения архитектуры. | + | - |
+| settings[dataSource][standard] | string | Cтиль построения архитектуры. | + | - |
 | settings[dataSource][url] | string | URL в RESTful-сервисе. | + | - |
 | settings[dataSource][sortBy] | string | Поле для сортировки по-умолчанию. Направление asc задаётся знаком - перед именем поля. | - | - |
 | settings[dataSource][primaryKey] | string | Имя поля с первичным ключом, по которому редактор идентифицирует записи. | + | - |

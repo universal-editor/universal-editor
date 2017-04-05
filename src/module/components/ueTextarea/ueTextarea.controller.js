@@ -6,7 +6,7 @@
         .controller('UeTextareaController', UeTextareaController);
 
     function UeTextareaController($scope, $element, EditEntityStorage, FilterFieldsStorage, $controller, $templateCache) {
-        "ngInject";
+        'ngInject';
         var vm = this,
             baseController,
             componentSettings;

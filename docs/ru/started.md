@@ -35,7 +35,7 @@
         name: 'ue-grid',
         settings: {
             dataSource: {
-                type: 'YiiSoft',
+                standard: 'YiiSoft',
                 url: '//universal-backend.dev/rest/v1/staff',
                 sortBy: '-id',
                 primaryKey: 'id',

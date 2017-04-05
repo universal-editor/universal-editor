@@ -9,6 +9,7 @@
         "ngInject";
         var vm = this;
         var categoryDataSource = {
+            standard: 'YiiSoft',
             url: 'http://universal-backend.dev/rest/v1/news/categories',
             sortBy: '-id',
             fields: [

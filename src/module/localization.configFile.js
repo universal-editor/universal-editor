@@ -6,7 +6,7 @@
         .config(LocalizationMessage);
 
     function LocalizationMessage($translateProvider) {
-        "ngInject";
+        'ngInject';
 
         var constantLang = {
             'RESPONSE_ERROR': {
@@ -65,12 +65,14 @@
             'SEARCH_ELEMENTS': 'Поиск по элементам',
             'ERROR': {
                 'EditEntityStorage': 'EditEntityStorage: Сущность не доступна для проверки так как она не указана или не указан её тип',
+                'UNDEFINED_API_SERVICE': 'Не найден API-сервис',
                 'FIELD': {
                     'MAX_SIZE': 'Значение длины для поля "%label_field" превышает максимальное значение сетки (12).',
                     'MIN_SIZE':'Значение длины для поля "%label_field" ниже минимального значения сетки (1).',
                     'VALUES_REMOTE' : 'Не удалось получить значения %name_field с удаленного ресурса',
                     'TEMPLATE': 'Файл %template не найден!',
-                    'NOT_TYPE_VALUE': 'Для поля не указан ни один тип получения значений ( локальный или удаленный )'
+                    'NOT_TYPE_VALUE': 'Для поля не указан ни один тип получения значений ( локальный или удаленный )',
+                    'EMPTY': 'Отсутствует значение параметра %field в конфигурации'
                 },
                 'MULTIPLE_NAME': ' в режиме multiple обязательно должен быть указан параметр name.',
                 'NOT_FOUND_STATE': 'Стейт %state не найден в конфигурационном файле.'

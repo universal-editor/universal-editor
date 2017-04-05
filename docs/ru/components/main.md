@@ -104,7 +104,7 @@
 
 ```javascript
     var dataSource = {
-            type: 'YiiSoft',
+            standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/photos',
             fields: [
                 {

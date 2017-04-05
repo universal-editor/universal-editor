@@ -6,7 +6,7 @@
         .service('ButtonsService', ButtonsService);
 
     function ButtonsService($window) {
-        "ngInject";
+        'ngInject';
         var self = this;
         self.getCallback = getCallback;
 

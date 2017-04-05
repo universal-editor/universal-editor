@@ -5,8 +5,8 @@
         .module('universal-editor')
         .controller('UeButtonController', UeButtonController);
 
-    function UeButtonController($scope, $rootScope, $element, $state, $location, EditEntityStorage, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, YiiSoftApiService, FilterFieldsStorage) {
-        "ngInject";
+    function UeButtonController($scope, $rootScope, $element, $state, $location, EditEntityStorage, $timeout, $controller, $window, $httpParamSerializerJQLike, $translate, ApiBaseService, FilterFieldsStorage) {
+        'ngInject';
         $element.addClass('ue-button');
 
         var vm = this,
@@ -158,7 +158,7 @@
                         if (confirm(translation.replace('%id', vm.entityId))) {
                             request.entityId = vm.entityId;
                             request.setting = vm.setting;
-                            YiiSoftApiService.deleteItemById(request, vm.setting.buttonClass === 'context');
+                            ApiBaseService.deleteItemById(request, vm.setting.buttonClass === 'context');
                         }
                     });
                     break;
@@ -186,7 +186,7 @@
                 method: vm.method
             };
             angular.merge(request, handlers);
-            YiiSoftApiService.actionRequest(request);
+            ApiBaseService.actionRequest(request);
         }
 
         vm.$postLink = function() {

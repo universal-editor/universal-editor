@@ -5,8 +5,8 @@
         .module('universal-editor')
         .controller('UniversalEditorController',UniversalEditorController);
 
-    function UniversalEditorController($scope, $rootScope, $element, $compile, $translate, moment, $state, $location, YiiSoftApiService){
-        "ngInject";
+    function UniversalEditorController($scope, $rootScope, $element, $compile, $translate, moment, $state, $location){
+        'ngInject';
         var vm = this,
             component;
 

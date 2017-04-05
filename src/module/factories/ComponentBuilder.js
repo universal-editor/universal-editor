@@ -6,7 +6,7 @@
         .factory('ComponentBuilder',ComponentBuilder);
 
     function ComponentBuilder($compile){
-        "ngInject";
+        'ngInject';
         var Component = function (scope) {
             this.scope = scope.$new();
             this.scope.setting = scope.setting;

@@ -5,8 +5,8 @@
         .module('universal-editor')
         .controller('UePaginationController', UePaginationController);
 
-    function UePaginationController($scope, YiiSoftApiService, $httpParamSerializer, $sce, $location, $element) {
-        "ngInject";
+    function UePaginationController($scope, ApiBaseService, $httpParamSerializer, $sce, $location, $element) {
+        'ngInject';
         $element.addClass('ue-pagination');
 
         var vm = this;
@@ -159,7 +159,7 @@
             vm.parent = parentEntity || null;
             vm.request.childId = vm.parent;
             $location.search(getKeyPrefix('page'), pageItem.page);
-            YiiSoftApiService.getItemsList(vm.request, true);
+            ApiBaseService.getItemsList(vm.request, true);
         }
 
         function getKeyPrefix(key) {

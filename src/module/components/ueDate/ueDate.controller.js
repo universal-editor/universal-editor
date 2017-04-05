@@ -7,7 +7,7 @@
 
     function UeDateController($scope, $element, EditEntityStorage, moment, FilterFieldsStorage, $controller) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this,
             componentSettings,
             baseController;

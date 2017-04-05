@@ -7,7 +7,7 @@
 
     function UeFormTabsController($scope, $state, EditEntityStorage, $element) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         $element.addClass('ue-form-tabs');
         var vm = this,
             pkKey,

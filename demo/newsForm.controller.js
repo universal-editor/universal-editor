@@ -8,7 +8,8 @@
     function NewsFormController() {
         "ngInject";
         var vm = this;
-        var newsDataSource = {
+        var newsDataSource = {            
+            standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/news',
             sortBy: '-id',
             primaryKey: 'id',

@@ -5,9 +5,9 @@
         .module('universal-editor')
         .controller('FieldsController', FieldsController);
 
-    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, YiiSoftApiService, moment, EditEntityStorage, $q, $translate) {
+    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, ApiBaseService, moment, EditEntityStorage, $q, $translate) {
         /* jshint validthis: true */
-        "ngInject";
+        'ngInject';
         var vm = this;
         var baseController = $controller('BaseController', { $scope: $scope });
         angular.extend(vm, baseController);
@@ -76,7 +76,7 @@
                             };
                             var dataSource = $scope.getParentDataSource();
                             config.standard = dataSource.standard;
-                            componentSettings.$loadingPromise = YiiSoftApiService
+                            componentSettings.$loadingPromise = ApiBaseService
                                 .getUrlResource(config)
                                 .then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
                         } else {
