@@ -10,7 +10,12 @@
         multiname: 'new_value',
         depend: 'other_field_name',
         width: 6,
-        readonly: true,
+        useable: function(data) {
+			return data.field === 'value1';
+		},
+		readonly: function(data) {
+			return data.field === 'value2';
+		}
         templates: {
             preview: '<span> {{value}} </span>',
             edit: function(scope) {
@@ -42,7 +47,8 @@
 | settings[label] | string | Название поля (выводится в интерфейсе редактора) | + | - |
 | settings[hint] | string | Текстовая информационная подсказка, выводимая слева от заголовка поля. | - | - |
 | settings[multiple] | bool | Параметр отвечает за указание возможности поля принимать множественные значения. | - | false |
-| settings[readonly] | bool | Параметр отвечает за указание активности компонента с точки зрения взаимодействия с пользователем. | - | false |
+| settings[readonly] | bool или function | Параметр отвечает за указание активности компонента с точки зрения взаимодействия с пользователем. | - | false |
+| settings[useable] | function | Параметр отвечает отображение элемента и отправку его значения на сервер. | - | - |
 | settings[disabled] | bool | Параметр отвечает за возможность изменения значения поля и его отображение при создании/редактировании. Если true то данные отображаются как текст без возможности редактирования. | - | false |
 | settings[template] | object | Объект для настройки шаблонов. | - | - |
 | settings[templates][preview] | string или function | Строка с HTML-кодом шаблона, функция, возвращающая шаблон, или путь до шаблона в режиме просмотра (например отображение в таблице). | + | - |
@@ -52,7 +58,7 @@
 | settings[width] | int | Ширина поля в единицах bootstrap-сетки, принимаемое значении от 1 до 6. | - | 6 |
 | settings[defaultValue] | string | Значение поля по-умолчанию. | - | - |
 | settings[validators] | array | Массив, содержащий настройки для валидации компонента (см. [Валидаторы полей](validators) | - | - |
-| settings[depend] | string | Параметр отвечает за зависимость данного поля от поля с именем other_field_name. Поле с именем other_field_name должно быть описано в конфигурационном файле в рамках текущей сущности. Если поле other_field_name не заполнено, то текущее поле не активно. Если у компонентов, для которых требуется делать запрос для получения значений по API, в поле адреса запроса указаны `:dependField` и `:dependValue`(например, `/api/service/v1/json/categories?filter={:dependField::dependValue}`) , то они заменятся на имя поля указанного в depend и значение этого поля соответственно. | - | - |
+| settings[depend] | string | Параметр отвечает за зависимость данного поля от поля с именем other_field_name. Если у компонентов, для которых требуется делать запрос для получения значений по API, в поле адреса запроса указаны `:dependField` и `:dependValue`(например, `/api/service/v1/json/categories?filter={:dependField::dependValue}`) , то они заменятся на имя поля указанного в depend и значение этого поля соответственно. | - | - |
 
 
 ## Задание сложных имен компонентам
