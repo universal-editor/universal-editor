@@ -100,7 +100,7 @@ vm.ueConfig = {
             name: 'ue-group',
             settings: {
               visibility: function(data) {
-                return data.typeFrame === 'reference';
+                return data.typeFrame === 'page';
               },
               fields: [
                 {
