@@ -16,7 +16,7 @@
             $scope.options = vm.options || {};
             $scope.options.getParentElement = function() {
                 return $element;
-            }
+            };
         };
 
         $scope.__proto__.getParentDataSource = function() {

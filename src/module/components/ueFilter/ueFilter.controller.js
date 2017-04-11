@@ -21,7 +21,7 @@
             } else {
                 $element.find('.filter-component').append(templateEditorFilter);
             }
-            angular.extend(vm, $controller('BaseController', { $scope: $scope }));
+            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element  }));
 
             settings = vm.setting.component.settings;
             vm.parentComponentId = vm.options.$componentId;

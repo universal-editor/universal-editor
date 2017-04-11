@@ -1,5 +1,5 @@
-div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter, 'regim-preview': vm.regim === 'preview'}" 
-    ng-if="vm.isVisible")
+div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter, 'regim-preview': vm.regim === 'preview', 'readonly-component': vm.readonly}" 
+    ng-if="vm.isVisible", ng-show='vm.useable')
     .ue-component-body
         //-- with templates
         .component-template(

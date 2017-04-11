@@ -5,13 +5,14 @@
         .module('universal-editor')
         .controller('UePaginationController', UePaginationController);
 
-    function UePaginationController($scope, ApiService, $httpParamSerializer, $sce, $location, $element) {
+    function UePaginationController($scope, $controller, ApiService, $httpParamSerializer, $sce, $location, $element) {
         'ngInject';
         $element.addClass('ue-pagination');
 
         var vm = this;
 
         vm.$onInit = function() {
+            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element  }));
             vm.metaKey = true;
             vm.parentComponentId = vm.options.$componentId;
             vm.changePage = changePage;

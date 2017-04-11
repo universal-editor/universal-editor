@@ -1,4 +1,4 @@
-.editor-field-group(ng-class="vm.classGroupComponent")
+.editor-field-group(ng-class="[vm.classGroupComponent, {'readonly-component': vm.readonly}]"  ng-show='vm.useable')
     include ../../template/labelField/labelField
     .field-array-wrapper.editor-group.col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left
         div(data-ng-if="vm.multiple")

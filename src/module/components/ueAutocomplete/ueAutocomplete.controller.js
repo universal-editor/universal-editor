@@ -15,7 +15,7 @@
 
         vm.$onInit = function() {
             vm.optionValues = [];
-            angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
+            angular.extend(vm, $controller('FieldsController', { $scope: $scope, $element: $element }));
             componentSettings = vm.setting.component.settings;
             if (componentSettings.valuesRemote) {
                 selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
