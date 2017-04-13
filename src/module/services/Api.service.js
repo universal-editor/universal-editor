@@ -40,10 +40,6 @@
             var params = request.params || {};
             var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
 
-            if (!!request.childId) {
-                filters[request.parentField] = request.childId;
-            }
-
             var expandFields = [];
 
             angular.forEach(dataSource.fields, function(field) {
@@ -73,6 +69,13 @@
             }
 
             config.filter = FilterFieldsStorage.getFilterObject(id, filters);
+            if (!!request.childId) {
+                config.filter = config.filter || {};
+                config.filter[request.parentField] = [{
+                    operator: ':text',
+                    value: request.childId
+                }];
+            }
             config.sortFieldName = params.sort || null;
             config.pagination = {
                 perPage: 20,
