@@ -2,7 +2,7 @@
 
 Компонент `ue-grid` включает возможность перетаскивать записи, реализована на базе библиотеки https://github.com/marceljuenemann/angular-drag-and-drop-lists.
 Параметр `dragMode` позволяет программно описать поведение компонента при перетаскивании его частей. 
-Параметр включает 4 коллбека:
+Параметр включает 6 коллбеков:
 * `start` – функция вызывается, когда пользователь кликает на элемент, непосредственно перед перетаскиванием;
 * `over` – функция вызывается при перетаскивании (когда удерживается левая кнопка мыши), пока сам элемент находится над списком;
 * `drop` – функция вызывается по завершении перетаскивания (когда отпускается левая кнопка мыши), при отпускании элемента;
@@ -12,6 +12,8 @@
     Если функция вернет `true`, то элемент будет перенесен, если `false` – перенос будет отменен.
 
 * `dragDisable` – функция возвращает логическое значение. Значение `false` запрещает перенос элемента, `true` – разрешает;
+* `type` – функция возвращает строковое значение, и задает группу переносимых элементов. Допускается прописать обычное константное значение, если коллбек не нужен;
+* `allowedTypes` – функция возвращает массив типов (названий групп), которые возможно перенести внутрь текущего элемента. Допускается прописать обычное константное значение, если коллбек не нужен;
 
 Опции `type` и `allowedTypes` описывают возможный обмен между разными контейнерами. Например, в компонент `A` с `type: "phones"` нельзя будет перенести записи компонента `B` с `type: "fax"` и компонента `C` c `type: "mobiles"`. Но такой обмен записями станет возможным есть указать принимаемый тип в параметре `allowedTypes`.
 
@@ -72,23 +74,29 @@ var C = {
                 fields: []
             },
             dragMode: {
-                    start: function(e, dragElement, destElement, collection) {
+                    start: function(e, element, destElement, collection) {
                         // начало переноса элемента
                     },
-                    over: function(e, dragElement, destElement, collection) {
+                    over: function(e, element, destElement, collection) {
                         // срабатывает на протяжении переноса элемента
                     },
-                    drop: function(e, dragElement, destElement, collection) {
+                    drop: function(e, element, destElement, collection) {
                         var defer = $q.defer();
                         // срабатывает при отпускании.
                         defer.resolve();
                         return defer.promise;
                     },
-                    dragDisable: function(dragElement, collection) {
-                        // отключает возможность переноса элемента.
+                    dragDisable: function(element, collection) {
+                        // Делает переносимыми только активные записи.
+                        return element.active === 1;
                     },
-                    type: 'type',
-                    allowedTypes: ['typeValue1', 'typeValue2']
+                    type: function(element, collection) {
+                        return element.fieldType;
+                    },
+                    allowedTypes: function(element, collection) {
+                        return element.allowedType;
+                    }
+                    
                 },
             columns: []
         }
@@ -101,7 +109,7 @@ var C = {
 | Имя аргумента | Тип | Описание |
 | --- | --- | --- |
 | event | object | Объект события, передаваемый браузером (https://developer.mozilla.org/en-US/docs/Web/Events/dragstart) |
-| dragElement | object | Объект данных, который переносится |
+| element | object | Объект данных, который переносится |
 | destElement | object | Объект данных, который принимает переносимые данные |
 | collection | array | Полный список элементов компонента |
 
