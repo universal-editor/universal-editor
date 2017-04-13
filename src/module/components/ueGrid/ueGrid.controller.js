@@ -17,7 +17,7 @@
 
         vm.$onInit = function() {
             //** Nested base controller */
-            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element  }));
+            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element }));
 
             vm.dataSource = vm.setting.component.settings.dataSource;
 
@@ -296,6 +296,7 @@
         }
 
         $scope.$on('ue:parentEntitySet', function(event, request) {
+            debugger;
             if (vm.isParentComponent(request)) {
                 vm.loaded = false;
                 var data = {
@@ -308,9 +309,9 @@
                     request.id = +request.id;
                     request.childId = request.id;
                 }
-                refreshTableRecords(true, request).then(function() {
-                    $location.search(getKeyPrefix('parent'), request.childId);
-                });
+
+                $location.search(getKeyPrefix('parent'), request.childId);
+                refreshTableRecords(true, request);
             }
         });
 

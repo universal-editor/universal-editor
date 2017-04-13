@@ -99,7 +99,7 @@
             }
         };
 
-        function constructOutputValue(request, extended) {
+        function constructOutputValue(request, extended, withApiData) {
             var entityObject = {},
                 componentId = angular.isString(request) ? request : request.options.$componentId,
                 controllers = storage[componentId] || [],
@@ -109,6 +109,9 @@
                     request.isError = true;
                 }
                 angular.forEach(controllers, function(fCtrl) {
+                    if (withApiData === true && fCtrl.data) {
+                        entityObject.$apiData = entityObject.$apiData || fCtrl.data;
+                    }
                     if (angular.isObject(request)) {
                         request.isError = (fCtrl.error.length === 0) && request.isError;
                     }
@@ -138,7 +141,6 @@
                         if (angular.isString(fCtrl.fieldName)) {
                             var names = fCtrl.fieldName.split('.');
                             var tempObject = entityObject;
-                            var isArray = false;
                             var partName = '';
                             angular.forEach(names, function(name, i) {
                                 var empty = {};

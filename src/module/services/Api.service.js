@@ -41,6 +41,7 @@
             var filters = FilterFieldsStorage.getFilterQueryObject(request.options.prefixGrid ? request.options.prefixGrid + '-filter' : 'filter');
 
             if (!!request.childId) {
+                filters = filters || {};
                 filters[request.parentField] = request.childId;
             }
 
