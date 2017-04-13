@@ -296,7 +296,6 @@
         }
 
         $scope.$on('ue:parentEntitySet', function(event, request) {
-            debugger;
             if (vm.isParentComponent(request)) {
                 vm.loaded = false;
                 var data = {
