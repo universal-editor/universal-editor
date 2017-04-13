@@ -93,6 +93,7 @@ settings: {
 | settings[header] | object | Содержит настройки верхнего блока в компоненте.  | + | - |
 | settings[header][filter] | object, false | Содержит компонент фильтра.  | - | - |
 | settings[header][toolbar] | object | Содержит компоненты для верхнего блока ue-grid.  | + | - |
+| settings[dragMode] | object | Объект для настройки перетаскивания элементов в компоненте [drag&drop](dragMode.md)  | - | - |
 | settings[pagination] | object | Содержит компонент пагинации в нижнем блоке. | + | - |
 | settings[columns] | array | Массив имен столбцов которые нужно выводить. | + | - |
 | settings[contextMenu] | array | Массив кнопок для меню у записей со смешанного ресурса. | - | - |
