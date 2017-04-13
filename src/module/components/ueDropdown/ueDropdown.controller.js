@@ -51,7 +51,8 @@
             vm.deleteToSelected = deleteToSelected;
             vm.clickSelect = clickSelect;
             vm.clear = clear;
-            vm.dependUpdate = dependUpdate;
+            vm.dependUpdate = dependUpdate;            
+            vm.fillControl = fillControl;
 
             if (componentSettings.hasOwnProperty('valuesRemote') && componentSettings.tree) {
                 vm.treeParentField = componentSettings.tree.parentField;
@@ -127,7 +128,7 @@
             vm.optionValues = [];
             angular.forEach(allOptions, function(v) {
                 var v_id = v[vm.fieldId];
-                if (v_id && vm.fieldValue && (!vm.multiple || vm.isTree)) {
+                if (v_id && vm.fieldValue) {
                     if (angular.isArray(vm.fieldValue)) {
                         for (var i = vm.fieldValue.length; i--;) {
                             if (vm.fieldValue[i] == v_id) {
@@ -177,8 +178,7 @@
 
         function loadDataById(ids) {
             var defer = $q.defer();
-            if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
-                
+            if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {                
                 if(angular.isArray(ids)) {
                     ids = ids.map(function(id) {
                         if(angular.isObject(id) && id[vm.fieldId]) {
@@ -400,14 +400,14 @@
                         }
                     }
                 }
-                if (!allOptions) {
+                if (allOptions.length === 0) {
                     allOptions = angular.copy(vm.optionValues);
                 }
                 vm.possibleValues = filter(angular.copy(allOptions), vm.filterText);
                 return;
             }
             vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
-            if (!allOptions) {
+            if (allOptions.length === 0) {
                 allOptions = angular.copy(vm.optionValues);
             }
             vm.optionValues = filter(angular.copy(allOptions), vm.filterText);

@@ -155,6 +155,20 @@
                                     label: 'String',
                                     countInLine: 2,
                                     fields: [
+                                         {
+                                            component: {
+                                                name: 'ue-radiolist',
+                                                settings: {
+                                                    label: 'radiolist with local data ',
+                                                    values: {
+                                                        'a': 'Variable 1',
+                                                        'b': 'Variable 2',
+                                                        'c': 'Variable 3'
+                                                    },
+                                                    defaultValue: 'a'
+                                                }
+                                            }
+                                        },
                                         {
                                             component: {
                                                 name: 'ue-string',
@@ -1167,12 +1181,13 @@
                                             component: {
                                                 name: 'ue-checkbox',
                                                 settings: {
-                                                    label: 'checkbox with local data',
+                                                    label: 'checkbox with local data, defaultValue: "a"',
                                                     values: {
                                                         'a': 'Variable 1',
                                                         'b': 'Variable 2',
                                                         'c': 'Variable 3'
-                                                    }
+                                                    },
+                                                    defaultValue: ['a']
                                                 }
                                             }
                                         },
@@ -1180,12 +1195,13 @@
                                             component: {
                                                 name: 'ue-checkbox',
                                                 settings: {
-                                                    label: 'checkbox with local data value=array',
+                                                    label: 'checkbox with local data value=array, defaultValue: "Variable 1"',
                                                     values: [
                                                         'Variable 1',
                                                         'Variable 2',
                                                         'Variable 3'
-                                                    ]
+                                                    ],
+                                                    defaultValue: ['Variable 1']
                                                 }
                                             }
                                         },
@@ -1228,7 +1244,8 @@
                                                             label: 'name'
                                                         },
                                                         url: 'http://universal-backend.dev/rest/v1/country'
-                                                    }
+                                                    },
+                                                    defaultValue: [1, 2]
                                                 }
                                             }
                                         },
@@ -1396,6 +1413,68 @@
                                 settings: {
                                     label: 'Dropdown',
                                     fields: [
+                                        {
+                                            component: {
+                                                name: 'ue-dropdown',
+                                                settings: {
+                                                    label: 'ue-dropdown with local data value=array, defaultValue = "Variable 1"',
+                                                    values: [
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
+                                                    ],
+                                                    defaultValue: 'Variable 1'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-dropdown',
+                                                settings: {
+                                                    label: 'ue-dropdown with local data value=array (defaultValue = ["Variable 1", "Variable 2"])',
+                                                    values: [
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
+                                                    ],
+                                                    multiple: true,
+                                                    defaultValue: ['Variable 1', 'Variable 2']
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-dropdown',
+                                                settings: {
+                                                    label: 'select с valuesRemote (defaultValue = "4")',
+                                                    valuesRemote: {
+                                                        fields: {
+                                                            value: 'id',
+                                                            label: 'name'
+                                                        },
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                    },
+                                                    defaultValue: '4'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-dropdown',
+                                                settings: {
+                                                    label: 'select с valuesRemote (defaultValue = [4, 5])',
+                                                    multiple: true,
+                                                    valuesRemote: {
+                                                        fields: {
+                                                            value: 'id',
+                                                            label: 'name'
+                                                        },
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                    },
+                                                    defaultValue: [4, 5]
+                                                }
+                                            }
+                                        },
                                         {
                                             component: {
                                                 name: 'ue-dropdown',
@@ -1618,6 +1697,68 @@
                                 settings: {
                                     label: 'Autocomplete',
                                     fields: [
+                                        {
+                                            component: {
+                                                name: 'ue-autocomplete',
+                                                settings: {
+                                                    label: 'ue-autocomplete with local data value=array, defaultValue = "Variable 1"',
+                                                    values: [
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
+                                                    ],
+                                                    defaultValue: 'Variable 1'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-autocomplete',
+                                                settings: {
+                                                    label: 'ue-autocomplete with local data value=array (defaultValue = ["Variable 1", "Variable 2"])',
+                                                    values: [
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
+                                                    ],
+                                                    multiple: true,
+                                                    defaultValue: ['Variable 1', 'Variable 2']
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-autocomplete',
+                                                settings: {
+                                                    label: 'autocomplete с valuesRemote  (defaultValue = "4")',
+                                                    valuesRemote: {
+                                                        fields: {
+                                                            value: 'id',
+                                                            label: 'name'
+                                                        },
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                    },
+                                                    defaultValue: '4'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-autocomplete',
+                                                settings: {
+                                                    label: 'autocomplete с valuesRemote  (defaultValue = [4, 5])',
+                                                    multiple: true,
+                                                    valuesRemote: {
+                                                        fields: {
+                                                            value: 'id',
+                                                            label: 'name'
+                                                        },
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                    },
+                                                    defaultValue: [4, 5]
+                                                }
+                                            }
+                                        },
                                         {
                                             component: {
                                                 name: 'ue-autocomplete',

@@ -14,15 +14,13 @@
             selectedStorageComponent = [];
 
         vm.$onInit = function() {
-            vm.optionValues = [];
-            angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
+            vm.optionValues = [];            
             componentSettings = vm.setting.component.settings;
             if (componentSettings.valuesRemote) {
                 selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
             } else if (componentSettings.values) {
                 selectedStorageComponent = componentSettings.values.$selectedStorage;
             }
-
             vm.selectedValues = [];
             vm.inputValue = '';
             vm.possibleValues = [];
@@ -34,6 +32,7 @@
             vm.sizeInput = 1;
             vm.classInput = { 'width': '1px' };
             vm.showPossible = false;
+            vm.fillControl = fillControl;
 
             vm.addToSelected = addToSelected;
             vm.removeFromSelected = removeFromSelected;
@@ -41,6 +40,7 @@
             vm.deleteToAutocomplete = deleteToAutocomplete;
             vm.loadDataById = loadDataById;
             vm.clear = clear;
+            angular.extend(vm, $controller('FieldsController', { $scope: $scope, $element: $element }));
 
             if (!vm.multiple) {
                 vm.classInput.width = '99%';
@@ -270,71 +270,6 @@
                     vm.placeholder = v[vm.fieldSearch];
                 }
             });
-        }
-
-        function loadValues() {
-            vm.preloadedData = false;
-            if (componentSettings.hasOwnProperty('values')) {
-                angular.forEach(componentSettings.values, function(v, key) {
-                    if (angular.isString(v)) {
-                        var obj = {};
-                        if (Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple) {
-                            if (angular.isArray(componentSettings.values)) {
-                                obj[vm.fieldId] = v;
-                            } else {
-                                obj[vm.fieldId] = key;
-                            }
-                            obj[vm.fieldSearch] = v;
-                            vm.selectedValues.push(obj);
-                        } else if ((vm.fieldValue == key || vm.fieldValue == v) && !vm.multiple) {
-                            if (angular.isArray(componentSettings.values)) {
-                                obj[vm.fieldId] = v;
-                            } else {
-                                obj[vm.fieldId] = key;
-                            }
-                            obj[vm.fieldSearch] = v;
-                            vm.selectedValues.push(obj);
-                            vm.placeholder = obj[vm.fieldSearch];
-                        }
-                    }
-                });
-                vm.preloadedData = true;
-            } else if (componentSettings.hasOwnProperty('valuesRemote')) {
-
-                if (!vm.fieldValue) {
-                    vm.preloadedData = true;
-                    return;
-                }
-
-                var config = {
-                    method: 'GET',
-                    url: componentSettings.valuesRemote.url,
-                    $id: vm.setting.component.$id,
-                    serverPagination: vm.serverPagination
-                };
-                config.filter[vm.fieldId] = [{
-                    operator: 'value',
-                    value: angular.isObject(vm.fieldValue) ? vm.fieldValue[vm.fieldId] : vm.fieldValue[vm.fieldSearch]
-                }];
-                config.standard = $scope.getParentDataSource().standard;
-
-                ApiService
-                    .getUrlResource(config)
-                    .then(function(response) {
-                        fillControl(response.data.items);
-                        vm.preloadedData = true;
-                    }, function(reject) {
-                        vm.preloadedData = true;
-                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
-                            console.error('EditorFieldAutocompleteController: ' + translation.replace('%name_field', vm.fieldName));
-                        });
-                    });
-            } else {
-                vm.preloadedData = true;
-                $translate('ERROR.FIELD.NOT_TYPE_VALUE').then(function(translation) {
-                    console.error('EditorFieldAutocompleteController: ' + translation);
-                });
-            }
         }
 
         function loadDataById(ids) {

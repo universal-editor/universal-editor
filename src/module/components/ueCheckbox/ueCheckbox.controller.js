@@ -36,12 +36,13 @@
             vm.fieldId = 'id';
             vm.fieldSearch = 'title';
             vm.indeterminate = false;
+            vm.initDataSource = true;
 
             if (!componentSettings.valuesRemote && !componentSettings.values) {
                 componentSettings.templates = componentSettings.templates || {};
                 componentSettings.templates.preview = 'module/components/ueCheckbox/previewTemplate.html';
-            }
-
+            }            
+            
             baseController = $controller('FieldsController', { $scope: $scope });
             angular.extend(vm, baseController);
 
@@ -111,9 +112,10 @@
                 }
             }
         };
+
         function dependUpdate(dependField, dependValue) {
-            vm.optionValues = [];
             if (dependValue && dependValue !== '') {
+                vm.optionValues = [];
                 vm.loadingData = true;
 
                 var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);

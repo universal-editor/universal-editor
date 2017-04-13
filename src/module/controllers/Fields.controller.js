@@ -58,7 +58,7 @@
                             self.optionValues.push(obj);
                         }
                     });
-                    componentSettings.$loadingPromise = $q.when(self.optionValues);
+                    componentSettings.$loadingPromise = $q.when(self.optionValues).then(onLoadedItems, onErrorLoadedItem);
                 } else if (remoteValues) {
                     if (remoteValues.fields) {
                         self.fieldId = remoteValues.fields.value || self.fieldId;
@@ -86,6 +86,10 @@
                                 self.optionValues = componentSettings.$optionValues;
                             }
                         }
+                    } else {
+                        if(angular.isDefined(self.defaultValue) && angular.isFunction(self.loadDataById)) {                           
+                            self.loadDataById(self.defaultValue);
+                        }
                     }
                 }
             }
@@ -104,7 +108,7 @@
 
         function onLoadedItems(response) {
             if (response) {
-                var items = response.hasOwnProperty('data') ? response.data.items : response
+                var items = response.hasOwnProperty('data') ? response.data.items : response;
                 if (response.hasOwnProperty('data')) {
                     if (!componentSettings.depend) {
                         angular.forEach(response.data.items, function(v) {
@@ -115,6 +119,9 @@
                     self.optionValues = response;
                 }
                 componentSettings.$optionValues = self.optionValues;
+                if (angular.isFunction(self.fillControl)) {
+                    self.fillControl(self.optionValues);
+                }
             }
             return self.optionValues;
         }
