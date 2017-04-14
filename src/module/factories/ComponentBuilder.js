@@ -14,7 +14,7 @@
         };
 
         Component.prototype.build = function () {
-            var element = '<' + this.scope.setting.component.name +' class="field-wrapper-' + this.scope.setting.component.name + '" data-setting="::setting" data-options="::options"></' + this.scope.setting.component.name + '>';
+            var element = '<' + this.scope.setting.component.name +' id="' + this.scope.setting.component.$id + '" class="field-wrapper-' + this.scope.setting.component.name + '" data-setting="::setting" data-options="::options"></' + this.scope.setting.component.name + '>';
             return $compile(element)(this.scope);
         };
 
