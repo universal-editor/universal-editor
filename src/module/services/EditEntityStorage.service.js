@@ -35,18 +35,13 @@
             return groups[componentId] || [];
         };
 
-        this.newSourceEntity = function(id, parentField) {
-            var parentEntity = $location.search().parent;
-            var parent;
-            if (parentEntity) {
-                parentEntity = JSON.parse(parentEntity);
-                parent = parentEntity[id] || null;
+        this.newSourceEntity = function(id, dataSource) {
+            var parent = $location.search().parent;
+            if (parent && angular.isObject(dataSource) && dataSource.parentField) {
+                var data = { editorEntityType: 'new', $componentId: (dataSource.parentField ? undefined : id) };
+                data[dataSource.parentField] = parent;
+                $rootScope.$broadcast('ue:componentDataLoaded', data);
             }
-            var data = { editorEntityType: 'new', $componentId: (!!parentField ? undefined : id) };
-            if (!!parent && !!parentField) {
-                data[parentField] = parent;
-            }
-            $rootScope.$broadcast('ue:componentDataLoaded', data);
         };
 
         this.addFieldController = function(ctrl, isGroup) {

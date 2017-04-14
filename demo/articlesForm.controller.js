@@ -5,7 +5,9 @@
         .module('demoApp')
         .controller('ArticlesFormController', ArticlesFormController);
 
-    function ArticlesFormController() {
+    ArticlesFormController.$inject = ['$state'];
+
+    function ArticlesFormController($state) {
         var vm = this;
         var articlesDataSource = {
             standard: 'JSONAPI',
@@ -125,7 +127,13 @@
             component: {
                 name: 'ue-form',
                 settings: {
-                    dataSource: articlesDataSource,
+                    dataSource: articlesDataSource,                    
+                    primaryKeyValue: function() {
+                        if($state.params.pk === 'new') {
+                            return null;
+                        }
+                        return $state.params.pk;
+                    },
                     header: {
                         toolbar: [
                             {

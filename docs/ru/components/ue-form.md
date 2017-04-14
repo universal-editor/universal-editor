@@ -32,10 +32,14 @@ var formDataSource = {
         ]
     };
 
+
 var config = {
     name: 'ue-form',
     settings: {
         dataSource: formDataSource,
+        primaryKeyValue: function() {
+            return $state.params.element_id;
+        } 
         header: {
             toolbar: [
                 {
@@ -122,6 +126,7 @@ var config = {
 | settings | object | Объект настрокйки компонента. | + | - |
 | settings[header] | object | Объект настройки "шапки" формы. | + | - |
 | settings[header][toolbar] | array | Массив компонентов, выводимых в "шапке" формы. | + | - |
+| settings[primaryKeyValue] | function или string или number | Значение идентификатора записи, за которым будет отправляться запрос к API. | - | - |
 | settings[dataSource] | object | Объект настройки компонента по работе с бекендом. | + | - |
 | settings[dataSource][standard] | string | Cтиль построения архитектуры. | + | - |
 | settings[dataSource][url] | string | URL в RESTful-сервисе. | + | - |

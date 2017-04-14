@@ -5,7 +5,8 @@
         .module('demoApp')
         .controller('NewsFormController', NewsFormController);
 
-    function NewsFormController() {
+    NewsFormController.$inject = ['$state'];
+    function NewsFormController($state) {
         'ngInject';
         var vm = this;
         var newsDataSource = {            
@@ -137,7 +138,13 @@
             component: {
                 name: 'ue-form',
                 settings: {
-                    dataSource: newsDataSource,
+                    dataSource: newsDataSource,                    
+                    primaryKeyValue: function() {
+                        if($state.params.pk === 'new') {
+                            return null;
+                        }
+                        return $state.params.pk;
+                    },
                     header: {
                         toolbar: [
                             {

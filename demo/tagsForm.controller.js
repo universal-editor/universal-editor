@@ -5,7 +5,8 @@
         .module('demoApp')
         .controller('TagsFormController', TagsFormController);
 
-    function TagsFormController($state, $location) {
+    TagsFormController.$inject = ['$state'];
+    function TagsFormController($state) {
         'ngInject';
         var vm = this;
         var tagsDataSource = {
@@ -45,6 +46,12 @@
                 name: 'ue-form',
                 settings: {
                     dataSource: tagsDataSource,
+                    primaryKeyValue: function() {
+                        if($state.params.pk === 'new') {
+                            return null;
+                        }
+                        return $state.params.pk;
+                    },
                     header: {
                         toolbar: [
                             {

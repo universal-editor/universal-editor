@@ -13,8 +13,6 @@
             state,
             request = {},
             url,
-            pkKey = 'pk',
-            pk,
             params = {},
             handlers;
 
@@ -30,7 +28,6 @@
             vm.target = componentSettings.target;
             vm.action = componentSettings.action;
             vm.switchLoader = switchLoader;
-
             vm.isLoader = false;
 
             if (!vm.label && angular.isString(vm.action)) {
@@ -47,9 +44,8 @@
                 if (componentSettings.request) {
                     request = JSON.parse(componentSettings.request);
                 }
-                pk = $state.params[pkKey];
                 if (vm.action === 'delete') {
-                    vm.disabled = pk === 'new' || !pk;
+                    vm.disabled = vm.entityId === null || vm.entityId === undefined;
                 }
                 request.method = vm.method;
                 request.options = vm.options;
@@ -66,7 +62,7 @@
                     }
                 });
             } else {
-                vm.entityId = vm.entityId || 'new';
+                vm.entityId = vm.entityId;
                 vm.method = vm.method || 'GET';
             }
         };
@@ -75,7 +71,8 @@
             var params = {},
                 state = vm.state,
                 searchString = $location.search();
-
+            $state.params.$entityId = vm.entityId;
+            params.pk = vm.entityId;
             if (vm.options.isLoading) {
                 return;
             }
@@ -89,19 +86,21 @@
             }
 
             if (state) {
-                params[pkKey] = vm.entityId;
                 searchString.back = $state.current.name;
                 if (vm.back) {
                     delete searchString.back;
                 }
+                debugger;
+                /** handler before state is changed */
+                if (handlers && angular.isFunction(handlers.before)) {
+                    handlers.before({ params: params });
+                }
                 $state.go(state, params).then(function() {
                     $location.search(searchString);
-                    $timeout(function() {
-                        var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
-                        if (pk === 'new') {
-                            EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.options.$dataSource.parentField);
-                        }
-                    }, 0);
+                    /** handler after state was changed */
+                    if (handlers && angular.isFunction(handlers.complete)) {
+                        handlers.complete();
+                    }
                 });
             } else if (angular.isString(vm.url)) {
                 if (!!vm.target) {
@@ -109,7 +108,7 @@
                 } else if (handlers && !angular.isFunction(vm.action)) {
                     sendRequest();
                 } else {
-                    url = url.replace(':pk', vm.entityId);
+                    url = url.replace(':pk', vm.entityId || '');
                     var isReload = !~url.indexOf($location.path());
                     params = $location.search();
                     params.back = $state.current.name;
@@ -136,6 +135,7 @@
         }
 
         function clickService() {
+
             if (vm.options.isLoading || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;
             }
@@ -144,7 +144,7 @@
             switch (vm.action) {
                 case 'save':
                     request.entityId = vm.entityId;
-                    if (vm.entityId && vm.entityId !== 'new') {
+                    if (vm.entityId) {
                         vm.type = 'update';
                     }
                     if (vm.type == 'create') {

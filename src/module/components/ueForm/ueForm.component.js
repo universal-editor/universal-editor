@@ -15,7 +15,7 @@
 
     /**
      * @desc String-type field.
-     * @example <ue-form></ue-for,>
+     * @example <ue-form></ue-for>
      */
     angular
         .module('universal-editor')

@@ -20,7 +20,7 @@
                 controller: 'StaffGridController'
             })
             .state('staff_edit', {
-                url: '/staff/:pk',
+                url: '/staff/:pk1',
                 template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
                 controllerAs: 'vm',
                 controller: 'StaffFormController'
