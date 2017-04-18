@@ -308,9 +308,8 @@
                     request.id = +request.id;
                     request.childId = request.id;
                 }
-                refreshTableRecords(true, request).then(function() {
-                    $location.search(getKeyPrefix('parent'), request.childId);
-                });
+                $location.search(getKeyPrefix('parent'), request.childId);
+                refreshTableRecords(true, request);
             }
         });
 
