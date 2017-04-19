@@ -96,10 +96,7 @@
                                     name: 'ue-button',
                                     settings: {
                                         label: 'Add',
-                                        sref: 'articles_edit', 
-                                        handlers: {
-                                            before: function(config) { }
-                                        }
+                                        sref: 'articles_edit'
                                     }
                                 }
                             }
