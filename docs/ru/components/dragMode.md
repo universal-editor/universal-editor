@@ -76,7 +76,6 @@ var C = {
                     over: function(e, element, destElement, collection) {
                     },
                     drop: function(e, element, destElement, collection) {
-                        debugger;
                         return true;
                     },
                     dragDisable: function(element, collection) {

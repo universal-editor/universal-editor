@@ -85,6 +85,9 @@ settings: {
 | settings[routing][paramsPrefix] | object | Префикс, который добавляеться к query параметрам(parent, filter, sort, page), требующим для работы компонента. | - | - |
 | settings[dataSource] | object | Объект настройки компонента по работе с бекендом. | + | - |
 | settings[dataSource][standard] | string | Cтиль построения архитектуры.  | + | - |
+| settings[dataSource][childrenField] | string | Имя поля для указания дочерних узлов (нужен для отображения в режиме дерева). | + | - |
+| settings[dataSource][childrenCountField] | string | Имя поля для указания количества дочерних узлов (нужен для отображения в режиме дерева). | + | - |
+| settings[dataSource][selfField] | string | Имя поля для указания объекта сущности, к которому привязан узел (нужен для отображения в режиме дерева). | + | - |
 | settings[dataSource][url] | string | URL в RESTful-сервисе. | + | - |
 | settings[dataSource][sortBy] | string | Поле для сортировки по-умолчанию. Направление asc задаётся знаком - перед именем поля. | - | - |
 | settings[dataSource][primaryKey] | string | Имя поля с первичным ключом, по которому редактор идентифицирует записи. | + | - |
