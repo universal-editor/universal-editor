@@ -48,9 +48,9 @@
                 settings: {
                     dataSource: categoryDataSource,                    
                     primaryKeyValue: function() {
-                       /* if($state.params.pk === 'new') {
+                       if($state.params.pk === 'new') {
                             return null;
-                        }*/
+                        }
                         return $state.params.pk;
                     },
                     header: {
