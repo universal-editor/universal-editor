@@ -8,7 +8,6 @@
     CountryFormController.$inject = ['$state'];
     function CountryFormController($state) {
         'ngInject';
-        debugger;
         var vm = this;
         var countryDataSource = {
             standard: 'YiiSoft',

@@ -22,7 +22,7 @@
                                             data-ng-if="item[vm.subType] !== vm.collectionType || !vm.isMixMode",
                                             data-ng-class="{'component-separator': link.separator}")
                                 component-wrapper(data-setting="link", 
-                                                data-entity-id="{{::item[vm.idField]}}", 
+                                                data-entity-id="{{::item[vm.idField]}}",
                                                 data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.options")
                             .context-menu-item(data-ng-repeat="link in vm.mixContextLinks track by $index", data-ng-if="vm.collectionType && item[vm.subType] === vm.collectionType", data-ng-class="{'component-separator': link.separator}")
                                 component-wrapper(data-setting="link", data-entity-id="{{::item[vm.idField]}}",

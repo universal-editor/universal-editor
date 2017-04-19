@@ -165,7 +165,12 @@
                                 name: 'ue-button',
                                 settings: {
                                     label: 'Edit',
-                                    sref: 'staff_edit'
+                                    sref: {
+                                        name: 'staff_edit',
+                                        parameters: function(id, primaryKey, records) {
+                                            return {'pk': id};
+                                        }
+                                    }
                                 }
                             }
                         },

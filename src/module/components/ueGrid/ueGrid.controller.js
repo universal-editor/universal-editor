@@ -343,7 +343,8 @@
                     var list = {};
                     list[itemsKey] = vm.items;
                     $rootScope.$broadcast('ue:collectionLoaded', list);
-                }
+                } 
+                vm.options.$records = vm.items;              
             }
         });
         $scope.$on('ue:afterEntityDelete', function(event, data) {
@@ -359,6 +360,7 @@
                     if (data.items) {
                         vm.items = data.items;
                     }
+                    vm.options.$records = vm.items;   
                 });
             }
         });
@@ -402,6 +404,7 @@
                     angular.forEach(vm.listFooterBar, function(control) {
                         control.paginationData = data;
                     });
+                    vm.options.$records = vm.items;   
                 }
             }
         });

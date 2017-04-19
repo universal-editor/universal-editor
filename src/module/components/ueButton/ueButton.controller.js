@@ -29,6 +29,11 @@
             vm.action = componentSettings.action;
             vm.switchLoader = switchLoader;
             vm.isLoader = false;
+            vm.stateParams = {};
+
+            if (angular.isString(vm.state)) {
+                vm.stateName = vm.state;
+            }
 
             if (!vm.label && angular.isString(vm.action)) {
                 $translate('BUTTON.ACTIONS.' + vm.action.toUpperCase()).then(function(translation) {
@@ -68,39 +73,43 @@
         };
 
         function clickLink() {
-            var params = {},
+            var params = {
+                pk: vm.entityId
+            },
                 state = vm.state,
                 searchString = $location.search();
             $state.params.$entityId = vm.entityId;
-            params.pk = vm.entityId;
+            vm.stateParams = { pk: vm.entityId || 'new' };
+            if (angular.isObject(vm.state)) {
+                vm.stateName = vm.state.name;
+                vm.stateParams = vm.state.parameters;
+                if (angular.isFunction(vm.state.parameters)) {
+                    var key;
+                    if (vm.options.$dataSource) {
+                        key = vm.options.$dataSource.primaryKey;
+                    }
+                    vm.stateParams = vm.stateParams(vm.entityId, key, vm.options.$records || []);
+                }
+            }
             if (vm.options.isLoading) {
                 return;
             }
 
             if (vm.back && searchString && searchString.back) {
-                state = searchString.back;
+                vm.stateName = searchString.back;
             }
 
             if (angular.isFunction(vm.action) && vm.options) {
                 vm.action(vm.options.$componentId);
             }
 
-            if (state) {
+            if (vm.stateName) {
                 searchString.back = $state.current.name;
                 if (vm.back) {
                     delete searchString.back;
                 }
-                debugger;
-                /** handler before state is changed */
-                if (handlers && angular.isFunction(handlers.before)) {
-                    handlers.before({ params: params });
-                }
-                $state.go(state, params).then(function() {
+                $state.go(vm.stateName, vm.stateParams).then(function() {
                     $location.search(searchString);
-                    /** handler after state was changed */
-                    if (handlers && angular.isFunction(handlers.complete)) {
-                        handlers.complete();
-                    }
                 });
             } else if (angular.isString(vm.url)) {
                 if (!!vm.target) {
