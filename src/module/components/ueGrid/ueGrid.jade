@@ -9,10 +9,52 @@
             thead
                 tr
                     td.actions-header.context-column(ng-if="vm.isContextMenu")
-                    td( data-ng-repeat="fieldItem in vm.tableFields",
+                    td( data-ng-repeat="fieldItem in vm.tableFields track by $index",
                     data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection}",
                     data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)") {{fieldItem.displayName}}
-            tbody(data-ng-if="vm.loaded")
+            tbody(data-ng-if="vm.loaded && vm.dragMode" 
+                  dnd-list="vm.items" 
+                  dnd-dragover="vm.dragover(event, index, type)" 
+                  dnd-drop="vm.drop(item, index, event)"               
+                  dnd-disable-if="vm.dragMode.dragDisable()")
+                tr.dndPlaceholder
+                    td(colspan="{{vm.tableFields.length + vm.isContextMenu}}") Вставить элемент как соседний
+                tr.row-draggable(data-ng-repeat="item in vm.items", 
+                    data-ng-class="{'zhs-item' : item[vm.subType] && item[vm.subType] !== undefined}", 
+                    data-ng-mousedown="vm.toggleContextViewByEvent(item[vm.idField], $event)", 
+                    oncontextmenu='return false;'                                        
+                    dnd-draggable="item"
+                    dnd-type="vm.dragMode.type()",                 
+                    dnd-dragstart="vm.dragstart(event, item, $index)"
+                    data-parent-id="{{item.$options.$dndParentId}}",
+                    data-id="{{item[vm.dataSource.primaryKey]}}",
+                    data-level="{{item.$options.$level}}"
+                    title="{{item.$options.$level + '; ' + item.$options.$dndParentId}}")
+                    td.context-column(ng-if="vm.isContextMenu")
+                        span.context-toggle(data-ng-click="vm.toggleContextView(item[vm.idField])", 
+                                            data-ng-show="(vm.contextLinks.length && (item[vm.subType] || item[vm.subType] == undefined)) || (vm.mixContextLinks.length && vm.collectionType)") Toggle buttons
+                        .context-menu-wrapper(data-ng-show="vm.contextId == item[vm.idField]" , data-ng-style='vm.styleContextMenu')
+                            .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index",
+                                            data-ng-if="item[vm.subType] !== vm.collectionType || !vm.isMixMode",
+                                            data-ng-class="{'component-separator': link.separator}")
+                                component-wrapper(data-setting="link", 
+                                                data-entity-id="{{::(item.$frame ? item.$frame[vm.idField] : item.$frame[vm.idField])}}", 
+                                                data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.options")
+                            .context-menu-item(data-ng-repeat="link in vm.mixContextLinks track by $index", data-ng-if="vm.collectionType && item[vm.subType] === vm.collectionType", data-ng-class="{'component-separator': link.separator}")
+                                component-wrapper(data-setting="link", data-entity-id="{{::item[vm.idField]}}",
+                                    data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.mixOption")
+                    td(data-ng-repeat="fieldItem in vm.tableFields track by $index"
+                        style="padding-left: {{$index == 0 ? item.$options.$level*20 : 10}}px")
+                        span.glyphicon(
+                        data-ng-class="{'glyphicon-folder-open icon-mix-mode' : vm.isMixMode && item[vm.subType] !== vm.collectionType}",
+                        data-ng-if='vm.prependIcon === fieldItem.field'
+                        )
+                        component-wrapper(data-setting="fieldItem.component", 
+                                        data-options="item.$options")
+                tr(data-ng-if="vm.items.length == 0")
+                    td(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
+                        | {{'ELEMENT_NO' | translate}}
+            tbody(data-ng-if="vm.loaded && !vm.dragMode")
                 tr(data-ng-repeat="item in vm.items", data-ng-class="{'zhs-item' : item[vm.subType] && item[vm.subType] !== undefined}", data-ng-mousedown="vm.toggleContextViewByEvent(item[vm.idField], $event)", oncontextmenu='return false;')
                     td.context-column(ng-if="vm.isContextMenu")
                         span.context-toggle(data-ng-click="vm.toggleContextView(item[vm.idField])", 

@@ -13,6 +13,10 @@
       }
       & .ue-grid {
           padding: 10px 0;
+          .dndPlaceholder {
+              height: 30px;
+              list-style: none;
+          }
           .field-wrapper-ue-button {
               & .ue-button-body {
                   .button-loading {

@@ -57,6 +57,255 @@
                 $dataSource: vm.dataSource
             };
 
+            vm.dragMode = vm.setting.component.settings.dragMode;
+            vm.dragstart = function(event, item, index) {
+                if (angular.isFunction(vm.dragMode.start)) {
+                    vm.dragMode.start(event, item, vm.items);
+                }
+                vm.draggingEl = item;
+                vm.draggingIndex = index;
+            };
+            vm.dragover = function(event, index, type) {
+                var currentElement = $(event.target || event.srcElement).closest('tr');
+                var dndPlaceholder = currentElement.closest('tbody').find('tr.dndPlaceholder td');
+                if (currentElement.hasClass('row-draggable') || (currentElement.hasClass('dndPlaceholder') && currentElement.prev('tr').length === 0)) {
+                    dndPlaceholder.text('Вставить элемент как соседний');
+                } else {
+                    dndPlaceholder.text('Вставить элемент как дочерний');
+                }
+
+                if (angular.isFunction(vm.dragMode.over)) {
+                    var dest = getDestItem(event),
+                        destEl;
+                    if (dest.item) {
+                        destEl = getItemByPrimaryKey(dest.item.$options.$dndParentId).item;
+                    }
+                    vm.dragMode.over(event, vm.draggingEl, destEl, vm.items);
+                }
+
+                var accordingType = !angular.isFunction(vm.dragMode.allowedTypes) || ~vm.dragMode.allowedTypes().indexOf(type);
+
+                return (!isParent(vm.items[index], vm.draggingEl)) && accordingType;
+            };
+
+            function replaceChilds(index, oldLevel, item) {
+                var childs = [];
+                while (vm.items[index] && vm.items[index].$options.$level > oldLevel) {
+                    childs.push(vm.items[index]);
+                    vm.items.splice(index, 1);
+                }
+                return childs;
+            }
+            vm.drop = function(item, index, event) {
+                if (!angular.isObject(item.$options)) {
+                    let newInputs = [], entity;
+                    if (vm.dataSource.selfField) {
+                        entity = item[vm.dataSource.selfField];
+                        entity.$frame = angular.merge({}, item);
+                        delete entity.$frame[vm.dataSource.childrenField];
+                    } else {
+                        entity = item;
+                    }
+                    entity.$options = {
+                        $componentId: vm.$componentId,
+                        regim: 'preview',
+                        isSendRequest: true,
+                        $level: 1,
+                        $dndParentId: null
+                    };
+                    newInputs.push(entity);
+                    convertToTable(item, 1, newInputs);
+                    angular.forEach(newInputs, function(newItem, i) {
+                        vm.items.splice(vm.items.length, 0, newItem);
+                    });
+                }
+
+                var currentElement = $(event.target || event.srcElement).closest('tr');
+                var regimChild = currentElement.hasClass('dndPlaceholder');
+                var regimNext = currentElement.hasClass('row-draggable');
+
+                if (regimChild && currentElement.prev('tr').length === 0 && currentElement.next('tr').length > 0) {
+                    regimChild = false;
+                    regimNext = true;
+                    currentElement = currentElement.next('tr');
+                }
+
+                var insertTop = currentElement.prev('tr.dndPlaceholder').length;
+                var insertBottom = currentElement.next('tr.dndPlaceholder').length;
+                if (regimNext) {
+                    let key = currentElement.data().id,
+                        dataElement = getItemByPrimaryKey(key),
+                        oldLevel = item.$options.$level;
+                    if (checkCallback(dataElement.item.$options.$dndParentId)) {
+                        modifyPreviousParentChildCount(item.$options.$dndParentId);
+                        item.$options.$dndParentId = dataElement.item.$options.$dndParentId;
+                        item.$options.$level = dataElement.item.$options.$level;
+                        if (insertTop) {
+                            vm.droppedElement = { index: dataElement.index, item: item };
+                        } else if (insertBottom) {
+                            vm.droppedElement = { index: dataElement.index + 1, item: item };
+                        }
+                        let oldIndex = getItemByPrimaryKey(item[vm.dataSource.primaryKey]).index;
+                        vm.items.splice(oldIndex, 1);
+                        var childs = replaceChilds(oldIndex, oldLevel);
+                        /** dataElement recalculate */
+                        dataElement = getItemByPrimaryKey(key);
+                        var dataElementChilds = replaceChilds(dataElement.index + 1, dataElement.item.$options.$level);
+                        dataElement = getItemByPrimaryKey(key);
+                        if (insertTop) {
+                            vm.droppedElement = { index: dataElement.index, item: item };
+                        } else if (insertBottom) {
+                            vm.droppedElement = { index: dataElement.index + 1, item: item };
+                        }
+                        vm.items.splice(vm.droppedElement.index, 0, vm.droppedElement.item);
+                        var newEndex = getItemByPrimaryKey(item[vm.dataSource.primaryKey]).index + 1;
+                        angular.forEach(childs, function(child, i) {
+                            vm.items.splice(newEndex + i, 0, child);
+                            child.$options.$level += (item.$options.$level - oldLevel);
+                        });
+
+                        dataElement = getItemByPrimaryKey(key);
+                        angular.forEach(dataElementChilds, function(child, i) {
+                            vm.items.splice(dataElement.index + i + 1, 0, child);
+                        });
+                        modifyPreviousParentChildCount(item.$options.$dndParentId, true);
+                    }
+                }
+
+                if (regimChild) {
+                    let parentTr = currentElement.prev('tr');
+                    let key = parentTr.data().id,
+                        dataElement = getItemByPrimaryKey(key),
+                        oldLevel = item.$options.$level;
+                    if (checkCallback(dataElement.item)) {
+                        modifyPreviousParentChildCount(item.$options.$dndParentId);
+                        item.$options.$dndParentId = dataElement.item[vm.dataSource.primaryKey];
+                        item.$options.$level = dataElement.item.$options.$level + 1;
+                        let oldIndex = getItemByPrimaryKey(item[vm.dataSource.primaryKey]).index;
+                        vm.items.splice(oldIndex, 1);
+                        let childs = replaceChilds(oldIndex, oldLevel);
+                        /** dataElement recalculate */
+                        dataElement = getItemByPrimaryKey(key);
+                        vm.items.splice(dataElement.index + 1, 0, item);
+                        let newEndex = getItemByPrimaryKey(item[vm.dataSource.primaryKey]).index + 1;
+                        angular.forEach(childs, function(child, i) {
+                            vm.items.splice(newEndex + i, 0, child);
+                            child.$options.$level += (item.$options.$level - oldLevel);
+                        });
+                        modifyPreviousParentChildCount(dataElement, true);
+                    }
+                }
+                $timeout(function() {
+                    angular.forEach(vm.items, function(item, index) {
+                        item.$options.$dataIndex = index;
+                    });
+                    $scope.$digest();
+                    vm.data.switchLoaderOff = true;
+                    $rootScope.$broadcast('ue:componentDataLoaded', vm.data);
+                });
+
+                function modifyPreviousParentChildCount(key, plus) {
+                    var previousParent = key;
+                    if (!angular.isObject(key)) {
+                        previousParent = getItemByPrimaryKey(key);
+                    }
+                    var childCountField = vm.dataSource.childrenCountField;
+                    if (previousParent && previousParent.item) {
+                        if (previousParent.item.$frame) {
+                            if (plus) {
+                                previousParent.item.$frame[childCountField]++;
+                            } else {
+                                previousParent.item.$frame[childCountField]--;
+                            }
+                        }
+                        if (previousParent.item[childCountField]) {
+                            if (plus) {
+                                previousParent.item[childCountField]++;
+                            } else {
+                                previousParent.item[childCountField]--;
+                            }
+                        }
+                    }
+                }
+
+                function checkCallback(parentItem) {
+                    if (!angular.isObject(getItemByPrimaryKey)) {
+                        parentItem = getItemByPrimaryKey(parentItem);
+                    }
+                    if (angular.isFunction(vm.dragMode.drop)) {
+                        var drop = vm.dragMode.drop(event, item, parentItem, vm.items);
+                        return !!drop;
+                    }
+                    return true;
+                }
+                /* var element = getDestItem(event);
+                 var isDifferentElement = element.item[vm.dataSource.primaryKey] !== item[vm.dataSource.primaryKey];
+                 if (isDifferentElement) {
+                     var dataElement = element.htmlEl.data();
+                     var level, parentId;
+                     if (element.htmlEl.length && dataElement.id !== item[vm.dataSource.primaryKey]) {
+                         level = dataElement.level;
+                         parentId = dataElement.parentId;
+                         var elementNext = vm.items[index];
+                         if (angular.isObject(elementNext)) {
+                             var levelNext = elementNext.$options.$level;
+                             var parentIdNext = elementNext.$options.$dndParentId;
+                             if (levelNext > level) {
+                                 level = levelNext;
+                                 parentId = parentIdNext;
+                             }
+                         }
+                     }
+                     if (angular.isFunction(vm.dragMode.drop)) {
+                         var drop = vm.dragMode.drop(event, item, getItemByPrimaryKey(parentId), vm.items);
+                         if (drop) {
+                             item.$options.$dndParentId = parentId;
+                             var i = vm.draggingIndex + 1;
+                             var dLevel = level - item.$options.$level;
+                             while (vm.items[i] && vm.items[i].$options.$level > item.$options.$level) {
+                                 vm.items[i].$options.$dLevel = level - item.$options.$level;
+                                 i++;
+                             }
+                             item.$options.$level = level;
+                         }
+                         return drop ? item : false;
+                     }
+                 }*/
+
+                return false;
+            };
+
+            function getItemByPrimaryKey(id) {
+                var i = null, output = null;
+                vm.items.forEach(function(item, index) {
+                    if (item[vm.dataSource.primaryKey] == id) {
+                        i = index;
+                        output = item;
+                    }
+                });
+                return { item: output, index: i };
+            }
+
+            function getDestItem(event) {
+                var target = $(event.target || event.srcElement).closest('tr');
+                var element = $(target).closest('tr');
+                if (target.hasClass('dndPlaceholder')) {
+                    let next = target.next('tr');
+                    if (next.length === 0) {
+                        element = target.prev('tr');
+                    } else {
+                        element = next;
+                    }
+                }
+                var item;
+                if (element.data().id) {
+                    item = vm.items.filter(function(item) {
+                        return item[vm.dataSource.primaryKey] == element.data().id;
+                    })[0];
+                }
+                return { htmlEl: element, item: item };
+            }
+
             vm.mixOption = angular.merge({}, vm.options);
             vm.mixOption.isMix = true;
             vm.editFooterBarNew = [];
@@ -363,20 +612,91 @@
             }
         });
 
-        $scope.$on('ue:componentDataLoaded', function(event, data) {
+        function convertToTable(data, level, newInputs) {
+            if (angular.isArray(data[vm.dataSource.childrenField]) || data[vm.dataSource.childrenCountField > 0]) {
+                level++;
+                angular.forEach(data[vm.dataSource.childrenField], function(item, index) {
+                    var entity;
+                    if (vm.dataSource.selfField) {
+                        entity = item[vm.dataSource.selfField];
+                        entity.$options = {
+                            $componentId: vm.$componentId,
+                            regim: 'preview',
+                            isSendRequest: true,
+                            $level: level,
+                            $dndParentId: data[vm.dataSource.selfField][vm.dataSource.primaryKey]
+                        };
+                        entity.$frame = angular.merge({}, item);
+                        delete entity.$frame[vm.dataSource.childrenField];
+                    } else {
+                        item.$options = {
+                            $componentId: vm.$componentId,
+                            regim: 'preview',
+                            isSendRequest: true,
+                            $level: level,
+                            $dndParentId: data[vm.dataSource.primaryKey]
+                        };
+                        entity = item;
+                    }
+                    newInputs.push(entity);
+                    convertToTable(item, level, newInputs);
+                });
+            }
+        }
+
+
+
+        function isParent(child, parent) {
+            var output = false;
+            if (child) {
+                var childId = child[vm.dataSource.primaryKey];
+                angular.forEach(parent[vm.dataSource.childrenField], function(item) {
+                    if (item[vm.dataSource.primaryKey] == childId) {
+                        output = true;
+                    }
+                    if (output === false) {
+                        output = isParent(childId, item);
+                    }
+                });
+            }
+            return output;
+        }
+
+        $scope.$on('ue:componentDataLoaded', componentLoadedHandler);
+        function componentLoadedHandler(event, data) {
             if (vm.isComponent(data) && !data.hasOwnProperty('$items') && !event.defaultPrevented) {
-                vm.loaded = false;
+                if (!data.switchLoaderOff) {
+                    vm.loaded = false;
+                }
+                vm.data = data;
                 vm.items = data[itemsKey];
                 if (vm.items) {
                     var components = vm.tableFields.map(function(f) { return f.component; });
                     if (angular.isObject(vm.items)) {
+                        var newInputs = [];
                         angular.forEach(vm.items, function(item, index) {
-                            item.$options = {
+                            var entity;
+                            if (vm.dataSource.selfField) {
+                                entity = item[vm.dataSource.selfField];
+                                entity.$frame = angular.merge({}, item);
+                                delete entity.$frame[vm.dataSource.childrenField];
+                            } else {
+                                entity = item;
+                            }
+                            entity.$options = {
                                 $componentId: vm.$componentId,
                                 regim: 'preview',
                                 $dataIndex: index,
-                                isSendRequest: true
+                                isSendRequest: true,
+                                $level: 1,
+                                $dndParentId: null
                             };
+                            newInputs.push(entity);
+                            convertToTable(item, 1, newInputs);
+                        });
+                        vm.items = newInputs;
+                        angular.forEach(vm.items, function(item, index) {
+                            item.$options.$dataIndex = index;
                         });
                     }
                     var options = {
@@ -394,6 +714,7 @@
                         $timeout(function() {
                             $rootScope.$broadcast('ue:componentDataLoaded', eventObject);
                         });
+                        vm.data = eventObject;
                     }).finally(switchLoaderOff);
 
                     vm.parentButton = !!vm.parent;
@@ -404,7 +725,8 @@
                     });
                 }
             }
-        });
+        }
+
 
         $document.on('click', function(evt) {
             if (!angular.element(evt.target).hasClass('context-toggle')) {
@@ -432,7 +754,7 @@
         }
 
         function toggleContextViewByEvent(id, event) {
-            var left = event.pageX - $element.find('table')[0].getBoundingClientRect().left;
+            var left = event.pageX - $element.find('.table')[0].getBoundingClientRect().left;
             if (event.which === 3) {
                 vm.styleContextMenu = {
                     'top': event.offsetY,

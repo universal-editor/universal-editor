@@ -1,0 +1,269 @@
+{
+  "items": [
+    {
+      "id": 1098,
+      "type": "news",
+      "entity_id": 3,
+      "self": {
+        "id": 3,
+        "title": "dfgdfgdfg",
+        "description": "fdgdfgdfg",
+        "text": null,
+        "category_id": 3,
+        "created_at": 1492424555,
+        "updated_at": 1492424555,
+        "authors": [],
+        "tags": []
+      },
+      "childs_count": 3,
+      "childs": [
+        {
+          "id": 1099,
+          "type": "news",
+          "entity_id": 105,
+          "self": {
+            "id": 105,
+            "title": "dfgdfgdfg",
+            "description": "fdgdfgdfg",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 1100,
+              "type": "news",
+              "entity_id": 8,
+              "self": {
+                "id": 8,
+                "title": "dfgdfgdfg",
+                "description": "fdgdfgdfg",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 0
+            }
+          ]
+        },
+        {
+          "id": 1101,
+          "type": "news",
+          "entity_id": 106,
+          "self": {
+            "id": 106,
+            "title": "dsfsdf",
+            "description": "zxczxc",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 1152,
+              "type": "news",
+              "entity_id": 89,
+              "self": {
+                "id": 89,
+                "title": "sdfsf",
+                "description": "ghjghjghj",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 0
+            }
+          ]
+        },
+        {
+          "id": 1158,
+          "type": "news",
+          "entity_id": 165,
+          "self": {
+            "id": 165,
+            "title": "asdasdfhghj",
+            "description": "sdfsdcrgrth",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 1152,
+              "type": "news",
+              "entity_id": 8969,
+              "self": {
+                "id": 8969,
+                "title": "sdfsf",
+                "description": "ghjghjghj",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7526,
+      "type": "news",
+      "entity_id": 145,
+      "self": {
+        "id": 145,
+        "title": "fdgerfsd",
+        "description": "dfgdfgjy",
+        "text": null,
+        "category_id": 3,
+        "created_at": 1492424555,
+        "updated_at": 1492424555,
+        "authors": [],
+        "tags": []
+      },
+      "childs_count": 3,
+      "childs": [
+        {
+          "id": 1546,
+          "type": "news",
+          "entity_id": 899,
+          "self": {
+            "id": 899,
+            "title": "Entity555",
+            "description": "Entity555",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 8459,
+              "type": "news",
+              "entity_id": 366,
+              "self": {
+                "id": 366,
+                "title": "sdfsdcer",
+                "description": "fsdfdghtr",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 0
+            }
+          ]
+        },
+        {
+          "id": 8547,
+          "type": "news",
+          "entity_id": 1563,
+          "self": {
+            "id": 1563,
+            "title": "sdfsdf",
+            "description": "dfsdfsdczxc",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 1478,
+              "type": "news",
+              "entity_id": 963,
+              "self": {
+                "id": 963,
+                "title": "ergdfgdfgtr",
+                "description": "khggfhjgh",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 0
+            }
+          ]
+        },
+        {
+          "id": 9663,
+          "type": "news",
+          "entity_id": 487,
+          "self": {
+            "id": 487,
+            "title": "fhgjghjgh",
+            "description": "sdfsdgghdf",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 7843,
+              "type": "news",
+              "entity_id": 2544,
+              "self": {
+                "id": 2544,
+                "title": "apsdopkaskd",
+                "description": "nhbvnl;vln",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "http://universal-backend.dev/rest/v1/news?expand=authors%2Ctags&page=1&sort=-id"
+    }
+  },
+  "_meta": {
+    "totalCount": 3,
+    "pageCount": 1,
+    "currentPage": 1,
+    "perPage": 20
+  }
+}

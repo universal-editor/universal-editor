@@ -1,0 +1,297 @@
+{
+  "items": [
+    {
+      "id": 3,
+      "title": "dfgdfgdfg",
+      "description": "fdgdfgdfg",
+      "text": null,
+      "category_id": 3,
+      "created_at": 1492424555,
+      "updated_at": 1492424555,
+      "authors": [],
+      "tags": [],
+      "childs_count": 3,
+      "childs": [
+        {
+          "id": 105,
+          "title": "dfgdfgdfg",
+          "description": "fdgdfgdfg",
+          "text": null,
+          "category_id": 3,
+          "created_at": 1492424555,
+          "updated_at": 1492424555,
+          "authors": [],
+          "tags": [],
+          "childs_count": 3,
+          "childs": [
+            {
+              "id": 155,
+              "title": "sdfsdfsdfs",
+              "description": "dfsdf",
+              "text": null,
+              "category_id": null,
+              "created_at": 1492413846,
+              "updated_at": 1492413846,
+              "authors": [],
+              "tags": [
+                {
+                  "id": 2,
+                  "name": "tag2",
+                  "created_at": 1490855228,
+                  "updated_at": 1490855228
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 1485,
+          "title": "sdfsdf",
+          "description": "sdfsdfd",
+          "text": null,
+          "category_id": 2,
+          "created_at": 1491913610,
+          "updated_at": 1492182534,
+          "authors": [
+            {
+              "staff_id": 4,
+              "staff": [
+                {
+                  "id": 4,
+                  "parent_id": 3,
+                  "name": "Николай",
+                  "email": "nikolay@mail.ru",
+                  "gender": null,
+                  "created_at": 1490855431,
+                  "updated_at": 1492170943
+                }
+              ]
+            }
+          ],
+          "tags": [
+            {
+              "id": 2,
+              "name": "tag2",
+              "created_at": 1490855228,
+              "updated_at": 1490855228
+            },
+            {
+              "id": 4,
+              "name": "tag4",
+              "created_at": 1490855240,
+              "updated_at": 1490855240
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "sdfsdfsdfs",
+      "description": "dfsdf",
+      "text": null,
+      "category_id": null,
+      "created_at": 1492413846,
+      "updated_at": 1492413846,
+      "authors": [],
+      "tags": [
+        {
+          "id": 2,
+          "name": "tag2",
+          "created_at": 1490855228,
+          "updated_at": 1490855228
+        }
+      ],
+      "childs": [
+        {
+          "id": 111,
+          "title": "dfgdfgdfg",
+          "description": "fdgdfgdfg",
+          "text": null,
+          "category_id": 3,
+          "created_at": 1492424555,
+          "updated_at": 1492424555,
+          "authors": [],
+          "tags": []
+        },
+        {
+          "id": 222,
+          "title": "sdfsdfsdfs",
+          "description": "dfsdf",
+          "text": null,
+          "category_id": null,
+          "created_at": 1492413846,
+          "updated_at": 1492413846,
+          "authors": [],
+          "tags": [
+            {
+              "id": 2,
+              "name": "tag2",
+              "created_at": 1490855228,
+              "updated_at": 1490855228
+            }
+          ]
+        },
+        {
+          "id": 333,
+          "title": "sdfsdf",
+          "description": "sdfsdfd",
+          "text": null,
+          "category_id": 2,
+          "created_at": 1491913610,
+          "updated_at": 1492182534,
+          "authors": [
+            {
+              "staff_id": 4,
+              "staff": [
+                {
+                  "id": 4,
+                  "parent_id": 3,
+                  "name": "Николай",
+                  "email": "nikolay@mail.ru",
+                  "gender": null,
+                  "created_at": 1490855431,
+                  "updated_at": 1492170943
+                }
+              ]
+            }
+          ],
+          "tags": [
+            {
+              "id": 2,
+              "name": "tag2",
+              "created_at": 1490855228,
+              "updated_at": 1490855228
+            },
+            {
+              "id": 4,
+              "name": "tag4",
+              "created_at": 1490855240,
+              "updated_at": 1490855240
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "title": "sdfsdf",
+      "description": "sdfsdfd",
+      "text": null,
+      "category_id": 2,
+      "created_at": 1491913610,
+      "updated_at": 1492182534,
+      "authors": [
+        {
+          "staff_id": 4,
+          "staff": [
+            {
+              "id": 4,
+              "parent_id": 3,
+              "name": "Николай",
+              "email": "nikolay@mail.ru",
+              "gender": null,
+              "created_at": 1490855431,
+              "updated_at": 1492170943
+            }
+          ]
+        }
+      ],
+      "tags": [
+        {
+          "id": 2,
+          "name": "tag2",
+          "created_at": 1490855228,
+          "updated_at": 1490855228
+        },
+        {
+          "id": 4,
+          "name": "tag4",
+          "created_at": 1490855240,
+          "updated_at": 1490855240
+        }
+      ],
+      "childs": [
+        {
+          "id": 10568,
+          "title": "dfgdfgdfg",
+          "description": "fdgdfgdfg",
+          "text": null,
+          "category_id": 3,
+          "created_at": 1492424555,
+          "updated_at": 1492424555,
+          "authors": [],
+          "tags": []
+        },
+        {
+          "id": 5485,
+          "title": "sdfsdfsdfs",
+          "description": "dfsdf",
+          "text": null,
+          "category_id": null,
+          "created_at": 1492413846,
+          "updated_at": 1492413846,
+          "authors": [],
+          "tags": [
+            {
+              "id": 2,
+              "name": "tag2",
+              "created_at": 1490855228,
+              "updated_at": 1490855228
+            }
+          ]
+        },
+        {
+          "id": 562638,
+          "title": "sdfsdf",
+          "description": "sdfsdfd",
+          "text": null,
+          "category_id": 2,
+          "created_at": 1491913610,
+          "updated_at": 1492182534,
+          "authors": [
+            {
+              "staff_id": 4,
+              "staff": [
+                {
+                  "id": 4,
+                  "parent_id": 3,
+                  "name": "Николай",
+                  "email": "nikolay@mail.ru",
+                  "gender": null,
+                  "created_at": 1490855431,
+                  "updated_at": 1492170943
+                }
+              ]
+            }
+          ],
+          "tags": [
+            {
+              "id": 2,
+              "name": "tag2",
+              "created_at": 1490855228,
+              "updated_at": 1490855228
+            },
+            {
+              "id": 4,
+              "name": "tag4",
+              "created_at": 1490855240,
+              "updated_at": 1490855240
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "http://universal-backend.dev/rest/v1/news?expand=authors%2Ctags&page=1&sort=-id"
+    }
+  },
+  "_meta": {
+    "totalCount": 3,
+    "pageCount": 1,
+    "currentPage": 1,
+    "perPage": 20
+  }
+}
