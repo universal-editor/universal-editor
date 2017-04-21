@@ -1944,6 +1944,20 @@
                                             component: {
                                                 name: 'ue-button',
                                                 settings: {
+                                                    label: 'Send request to server and reject',
+                                                    href: '//universal-backend.dev/rest/v1/staff',
+                                                    handlers: {
+                                                        before: function(config) {
+                                                            return false;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-button',
+                                                settings: {
                                                     label: 'Open Yandex.com',
                                                     href: 'https://www.yandex.com',
                                                     target: '_blank'
