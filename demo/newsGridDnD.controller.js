@@ -170,15 +170,6 @@
                                 component: {
                                     name: 'ue-filter'
                                 }
-                            },
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Add news',
-                                        sref: 'news_edit'
-                                    }
-                                }
                             }
                         ]
                     },
@@ -188,28 +179,18 @@
                     }, 
                     {
                         name: 'title',
-                        width: "30%"
+                        width: "300px"
                     },
                     {
                         name: 'authors',
-                        width: "20%"
+                        width: "200px"
                     },
                     {
                         name: 'category_id',
-                        width: "30%"
+                        width: "200px"
                     }],
                     contextMenu: [
                         {
-                            component: {
-                                name: 'ue-button',
-                                settings: {
-                                    label: 'Edit',
-                                    sref: 'news_edit'
-                                }
-                            }
-                        },
-                        {
-                            separator: true,
                             component: {
                                 name: 'ue-button',
                                 settings: {

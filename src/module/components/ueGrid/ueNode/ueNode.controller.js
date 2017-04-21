@@ -63,7 +63,6 @@
                   $componentId: vm.options.$componentId,
                   $items: data
                 };
-
                 $timeout(function() {
                   vm.$stop = true;
                   $scope.$broadcast('ue:componentDataLoaded', eventObject);
@@ -161,7 +160,7 @@
       vm.drop = function(item, index, event) {
         var placeholder = $(".dndPlaceholder");
         vm.isCancelDrop = placeholder.length === 0 || placeholder.css('display') === 'none';
-        if(vm.isCancelDrop === true) {
+        if (vm.isCancelDrop === true) {
           return false;
         }
         if (vm.dragMode && angular.isFunction(vm.dragMode.drop)) {
@@ -208,6 +207,7 @@
         }
         return null;
       };
+
     };
   }
 })();

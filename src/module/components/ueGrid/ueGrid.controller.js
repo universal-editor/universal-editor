@@ -19,6 +19,8 @@
             //** Nested base controller */
             angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
 
+            
+
             vm.componentSettings = vm.setting.component.settings;
 
             vm.dataSource = vm.setting.component.settings.dataSource;
@@ -258,7 +260,7 @@
         vm.drop = function(item, index, event) {
             if (vm.dragMode && angular.isFunction(vm.dragMode.drop)) {
                 var drop = vm.dragMode.drop(event, item, null, vm.items);
-                if(drop === false) {
+                if (drop === false) {
                     return false;
                 }
             }
