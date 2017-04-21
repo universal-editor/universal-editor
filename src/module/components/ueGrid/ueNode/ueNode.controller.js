@@ -13,7 +13,6 @@
       vm.dataSource = vm.setting.component.settings.dataSource;
       vm.loaded = false;
       vm.treeSource = vm.dataSource.tree;
-      vm.needMoving = false;
       if (vm.treeSource) {
         vm.childrenField = vm.treeSource.childrenField;
         vm.childrenCountField = vm.treeSource.childrenCountField;
@@ -129,21 +128,21 @@
         });
       };
 
+
       vm.moved = function(index) {
-        if (!vm.needMoving) {
+        if (!vm.isCancelDrop) {
           vm.items.splice(index, 1);
           if (vm.childrenCountField && vm.parentNode) {
             vm.parentNode[vm.childrenCountField]--;
           }
           vm.updateNode();
         }
-        vm.needMoving = false;
       };
 
       vm.dragStart = function(event, item, index) {
         vm.options.$dnd = vm.options.$dnd || {};
         vm.options.$dnd.dragging = item;
-        if (angular.isFunction(vm.dragMode.start)) {
+        if (vm.dragMode && angular.isFunction(vm.dragMode.start)) {
           vm.dragMode.start(event, item, vm.collection);
         }
       };
@@ -160,17 +159,14 @@
       };
 
       vm.drop = function(item, index, event) {
+        var placeholder = $(".dndPlaceholder");
+        vm.isCancelDrop = placeholder.length === 0 || placeholder.css('display') === 'none';
+        if(vm.isCancelDrop === true) {
+          return false;
+        }
         if (vm.dragMode && angular.isFunction(vm.dragMode.drop)) {
           var drop = vm.dragMode.drop(event, item, null, vm.collection);
           if (drop === false) {
-            return false;
-          }
-        }
-        if (vm.parentNode) {
-          var elOver = $(event.target || event.srcElement).closest('li.row-draggable[data-frame-id="' + vm.parentNode[vm.dataSource.primaryKey] + '"]');
-
-          if (elOver.length) {
-            vm.needMoving = true;
             return false;
           }
         }
