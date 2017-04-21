@@ -1,13 +1,20 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('demoApp')
         .controller('StaffGridController', StaffGridController);
 
-    function StaffGridController() {
+    StaffGridController.$inject = ['$rootScope'];
+    function StaffGridController($rootScope) {
         'ngInject';
         var vm = this;
+        var contextRecordId;
+
+        $rootScope.$on('ue-grid:сontextMenu', function(e, data) {
+            contextRecordId = data.id;
+        });
+
         var staffDataSource = {
             standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/staff',
@@ -18,7 +25,7 @@
                 items: 'items',
                 meta: '_meta'
             },
-            fields:[
+            fields: [
                 {
                     name: 'name',
                     component: {
@@ -130,7 +137,7 @@
                 }
             ]
         };
-        
+
         vm.ueConfig = {
             component: {
                 name: 'ue-grid',
@@ -167,8 +174,8 @@
                                     label: 'Edit',
                                     sref: {
                                         name: 'staff_edit',
-                                        parameters: function(id, primaryKey, records) {
-                                            return {'pk': id};
+                                        parameters: function() {
+                                            return { 'pk': contextRecordId };
                                         }
                                     }
                                 }

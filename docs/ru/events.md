@@ -61,3 +61,20 @@ Cобытие вызывается перед удалением записи.
 ### ue:errorLoadingData
 
 Событие вызывается при ошибочном запросе на получение данных.
+
+### ue-grid:ContextMenu
+
+Событие инициируется при клике по контекстному меню в компоненте `ue-grid`
+Доступные аргументы аргумента `data`:
+
++ `id` – идентификатор записи в таблице;
++ `primaryKey` – имя поля с идентификатором;
++ `records` – полный перечень записей;
+
+```javascript
+$rootScope.$on('ue-grid:ContextMenu', function(e, data) {
+   var contextRecordId = data.id;
+   var primaryKey = data.primaryKey;
+   var records = data.records;
+});
+```

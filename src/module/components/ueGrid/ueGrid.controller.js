@@ -343,8 +343,8 @@
                     var list = {};
                     list[itemsKey] = vm.items;
                     $rootScope.$broadcast('ue:collectionLoaded', list);
-                } 
-                vm.options.$records = vm.items;              
+                }
+                vm.options.$records = vm.items;
             }
         });
         $scope.$on('ue:afterEntityDelete', function(event, data) {
@@ -360,7 +360,7 @@
                     if (data.items) {
                         vm.items = data.items;
                     }
-                    vm.options.$records = vm.items;   
+                    vm.options.$records = vm.items;
                 });
             }
         });
@@ -404,7 +404,7 @@
                     angular.forEach(vm.listFooterBar, function(control) {
                         control.paginationData = data;
                     });
-                    vm.options.$records = vm.items;   
+                    vm.options.$records = vm.items;
                 }
             }
         });
@@ -426,6 +426,11 @@
         }
 
         function toggleContextView(id) {
+            $rootScope.$broadcast('ue-grid:сontextMenu', {
+                id: id,
+                primaryKey: vm.idField,
+                records: vm.items
+            });
             vm.styleContextMenu = {};
             if (vm.contextId == id) {
                 vm.contextId = undefined;
@@ -435,6 +440,11 @@
         }
 
         function toggleContextViewByEvent(id, event) {
+            $rootScope.$broadcast('ue-grid:сontextMenu', {
+                id: id,
+                primaryKey: vm.idField,
+                records: vm.items
+            });
             var left = event.pageX - $element.find('table')[0].getBoundingClientRect().left;
             if (event.which === 3) {
                 vm.styleContextMenu = {
