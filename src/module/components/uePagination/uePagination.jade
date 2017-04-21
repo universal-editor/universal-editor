@@ -3,4 +3,4 @@ div
         li(data-ng-repeat="pageItem in vm.pageItemsArray", data-ng-class="pageItem.self ? 'active' : ''", ng-if="vm.pageItemsArray && vm.pageItemsArray.length > 1")
             a(data-ng-if="!pageItem.self", href="#", data-ng-click="vm.changePage($event, pageItem)") {{pageItem.label}}
             span(data-ng-if="pageItem.self") {{pageItem.label}}
-    .meta-info.col-lg-2.col-md-2.col-sm-2.col-xs-2(data-ng-if="vm.metaKey && vm.metaData.toItem" ) {{'ELEMENTS' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{'FROM' | translate}} {{vm.metaData.totalCount}}
+    .meta-info.col-lg-2.col-md-2.col-sm-2.col-xs-2(data-ng-if="vm.metaKey && vm.metaData.toItem && !vm.dataSource.tree" ) {{'ELEMENTS' | translate}} {{vm.metaData.fromItem}} - {{vm.metaData.toItem}} {{'FROM' | translate}} {{vm.metaData.totalCount}}

@@ -6,8 +6,8 @@
       "entity_id": 3,
       "self": {
         "id": 3,
-        "title": "dfgdfgdfg",
-        "description": "fdgdfgdfg",
+        "title": "Узел 1",
+        "description": "Описание",
         "text": null,
         "category_id": 3,
         "created_at": 1492424555,
@@ -23,8 +23,8 @@
           "entity_id": 105,
           "self": {
             "id": 105,
-            "title": "dfgdfgdfg",
-            "description": "fdgdfgdfg",
+            "title": "Узел 1.1",
+            "description": "Описание",
             "text": null,
             "category_id": 3,
             "created_at": 1492424555,
@@ -40,8 +40,8 @@
               "entity_id": 8,
               "self": {
                 "id": 8,
-                "title": "dfgdfgdfg",
-                "description": "fdgdfgdfg",
+                "title": "Узел 1.1.1",
+                "description": "Описание",
                 "text": null,
                 "category_id": 3,
                 "created_at": 1492424555,
@@ -49,7 +49,7 @@
                 "authors": [],
                 "tags": []
               },
-              "childs_count": 0
+              "childs_count": 3
             }
           ]
         },
@@ -59,8 +59,8 @@
           "entity_id": 106,
           "self": {
             "id": 106,
-            "title": "dsfsdf",
-            "description": "zxczxc",
+            "title": "Узел 1.2",
+            "description": "Описание",
             "text": null,
             "category_id": 3,
             "created_at": 1492424555,
@@ -71,13 +71,13 @@
           "childs_count": 1,
           "childs": [
             {
-              "id": 1152,
+              "id": 1158,
               "type": "news",
               "entity_id": 89,
               "self": {
                 "id": 89,
-                "title": "sdfsf",
-                "description": "ghjghjghj",
+                "title": "Узел 1.2.1",
+                "description": "Описание",
                 "text": null,
                 "category_id": 3,
                 "created_at": 1492424555,
@@ -90,13 +90,13 @@
           ]
         },
         {
-          "id": 1158,
+          "id": 1546,
           "type": "news",
           "entity_id": 165,
           "self": {
             "id": 165,
-            "title": "asdasdfhghj",
-            "description": "sdfsdcrgrth",
+            "title": "Узел 1.3",
+            "description": "Описание",
             "text": null,
             "category_id": 3,
             "created_at": 1492424555,
@@ -112,8 +112,8 @@
               "entity_id": 8969,
               "self": {
                 "id": 8969,
-                "title": "sdfsf",
-                "description": "ghjghjghj",
+                "title": "Узел 1.3.1",
+                "description": "Описание",
                 "text": null,
                 "category_id": 3,
                 "created_at": 1492424555,
@@ -133,8 +133,8 @@
       "entity_id": 145,
       "self": {
         "id": 145,
-        "title": "fdgerfsd",
-        "description": "dfgdfgjy",
+        "title": "Узел 2",
+        "description": "Описание",
         "text": null,
         "category_id": 3,
         "created_at": 1492424555,
@@ -150,8 +150,8 @@
           "entity_id": 899,
           "self": {
             "id": 899,
-            "title": "Entity555",
-            "description": "Entity555",
+            "title": "Узел 2.1",
+            "description": "Описание",
             "text": null,
             "category_id": 3,
             "created_at": 1492424555,
@@ -167,8 +167,8 @@
               "entity_id": 366,
               "self": {
                 "id": 366,
-                "title": "sdfsdcer",
-                "description": "fsdfdghtr",
+                "title": "Узел 2.1.1",
+                "description": "Описание",
                 "text": null,
                 "category_id": 3,
                 "created_at": 1492424555,
@@ -186,8 +186,8 @@
           "entity_id": 1563,
           "self": {
             "id": 1563,
-            "title": "sdfsdf",
-            "description": "dfsdfsdczxc",
+            "title": "Узел 2.2",
+            "description": "Описание",
             "text": null,
             "category_id": 3,
             "created_at": 1492424555,
@@ -203,8 +203,8 @@
               "entity_id": 963,
               "self": {
                 "id": 963,
-                "title": "ergdfgdfgtr",
-                "description": "khggfhjgh",
+                "title": "Узел 2.2.1",
+                "description": "Описание",
                 "text": null,
                 "category_id": 3,
                 "created_at": 1492424555,
@@ -222,8 +222,8 @@
           "entity_id": 487,
           "self": {
             "id": 487,
-            "title": "fhgjghjgh",
-            "description": "sdfsdgghdf",
+            "title": "Узел 2.3",
+            "description": "Описание",
             "text": null,
             "category_id": 3,
             "created_at": 1492424555,
@@ -239,8 +239,8 @@
               "entity_id": 2544,
               "self": {
                 "id": 2544,
-                "title": "apsdopkaskd",
-                "description": "nhbvnl;vln",
+                "title": "Узел 2.3.1",
+                "description": "Описание",
                 "text": null,
                 "category_id": 3,
                 "created_at": 1492424555,

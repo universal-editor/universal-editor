@@ -1,0 +1,124 @@
+.table.items-list.drag-mode {
+    list-style-type: none;
+    margin: 10px 0;
+    padding: 0;
+    .tree-body {
+        padding: 5px;
+    }
+    ul.dnd-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .row-empty {
+        width: 100%;
+        padding: 5px;        
+    }
+    .dndPlaceholder {
+        height: 30px;
+        margin: 5px 0;
+        list-style: none;
+        text-align: center;
+        border: 1px solid #e1e1e8;
+    }
+    .row {
+        margin-right: 0;
+        margin-left: 0;
+        display: flex;
+        align-items: flex-start;
+        &.header {
+            border-bottom: 2px solid #ddd;
+            font-weight: 700;
+            cursor: pointer;
+            .table-cell {
+                padding: 5px 10px;
+                &.active.asc:after {
+                    content: "";
+                    width: 0;
+                    height: 0;
+                    border-left: 5px solid transparent;
+                    border-right: 5px solid transparent;
+                    border-bottom: 7px solid #000000;
+                    display: block;
+                    float: right;
+                    transform: scale(-1, -1);
+                    margin-top: 3px;
+                }
+                &.active.desc:after {
+                    content: "";
+                    width: 0;
+                    height: 0;
+                    border-left: 5px solid transparent;
+                    border-right: 5px solid transparent;
+                    border-top: 7px solid #000000;
+                    display: block;
+                    float: right;
+                    transform: scale(-1, -1);
+                    margin-top: 3px;
+                }
+            }
+        }
+        &.footer {
+            .table-cell {
+                width: 100%;
+                background-color: #cbd6da !important;
+                padding: 8px;
+            }
+        }
+        .column {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        .table-cell.context-column {
+            height: 0;
+            position: absolute;
+        }
+    }
+    .row-draggable {
+        padding: 0;
+        margin: 0;
+        &.dndDragging {
+            .dndPlaceholder {
+            display: none;
+            }
+        }
+        .children-frames {
+            margin-left: 10px;
+            .empty-child-area {
+                .dnd-list {
+                    padding: 5px;
+                    padding-right: 0;
+                }
+            }
+        }
+        .dnd-expand-item.glyphicon {
+            padding: 0 8px;
+            cursor: pointer;
+            flex-basis: 15px;
+            &.icon-collapse {
+                cursor: default;
+                &:before {
+                    content: '';
+                }
+            }
+        }
+        >.row:hover {
+            border: 1px solid #e1e1e8;
+        }
+        .row {
+            border: 1px solid transparent;
+            margin-right: 0;
+            margin-left: 0;
+            display: flex;
+            align-items: baseline;
+            .column {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            .table-cell.context-column {
+                height: 0;
+                position: absolute;
+            }
+        }
+    }
+}

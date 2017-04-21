@@ -57,6 +57,10 @@
                 }
             });
 
+            if (dataSource && angular.isObject(dataSource.tree) && angular.isString(dataSource.tree.childrenField)) {
+                expandFields.push(dataSource.tree.childrenField);
+            }
+
             if (expandFields.length > 0) {
                 params.expand = expandFields.join(',');
             }
@@ -369,6 +373,9 @@
                         }
                     }
                 });
+                if (dataSource && angular.isObject(dataSource.tree) && angular.isString(dataSource.tree.childrenField)) {
+                    expandFields.push(dataSource.tree.childrenField);
+                }
                 if (expandFields.length > 0) {
                     qParams.expand = expandFields.join(',');
                 }

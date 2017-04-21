@@ -5,7 +5,7 @@
         .module('demoApp')
         .controller('newsGridDnDController', newsGridDnDController);
 
-    function newsGridDnDController() {
+    function newsGridDnDController($http) {
         'ngInject';
         var vm = this;
         var newsDataSource = {
@@ -13,9 +13,11 @@
             url: '/assets/dragAndDrop.1.json',
             sortBy: '-id',
             primaryKey: 'id',
-            childrenField: 'childs',
-            childrenCountField: 'childs_count',
-            selfField: 'self',
+            tree: {
+                childrenField: 'childs',
+                childrenCountField: 'childs_count',
+                selfField: 'self'
+            },
             fields: [
                 {
                     name: 'id',
@@ -23,6 +25,7 @@
                         name: 'ue-string',
                         settings: {
                             label: 'ID',
+                            template: '',
                             validators: [
                                 {
                                     type: 'number'
@@ -139,7 +142,7 @@
                 settings: {
                     dataSource: newsDataSource,
                     dragMode: {
-                        start: function(e, element, collection) {     
+                        start: function(e, element, collection) {
                         },
                         over: function(e, element, destElement, collection) {
                         },
@@ -154,6 +157,11 @@
                         },
                         allowedTypes: function(element, collection) {
                             return ['news'];
+                        },
+                        expandHandler: function(dataSource, element) {
+                            return $http.get('/assets/dragAndDrop.childs.json').then(function(response) {
+                                return response.data.items;
+                            });
                         }
                     },
                     header: {
@@ -174,8 +182,22 @@
                             }
                         ]
                     },
-
-                    columns: ['id', 'title', 'authors', 'category_id'],
+                    columns: [{
+                        name: 'id',
+                        width: "20%"
+                    }, 
+                    {
+                        name: 'title',
+                        width: "30%"
+                    },
+                    {
+                        name: 'authors',
+                        width: "20%"
+                    },
+                    {
+                        name: 'category_id',
+                        width: "30%"
+                    }],
                     contextMenu: [
                         {
                             component: {

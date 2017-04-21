@@ -407,51 +407,51 @@
                 }
 
                 $scope.data = self.data = ((self.options.$dataIndex >= 0) && angular.isObject(data.$items)) ? data.$items[self.options.$dataIndex] : data;
+                if (angular.isObject($scope.data)) {
+                    var apiValue;
+                    if (angular.isString(self.fieldName)) {
+                        var names = self.fieldName.split('.');
+                        var tempObject = self.data;
+                        var partName = '';
+                        angular.forEach(names, function(name, i) {
+                            if (angular.isObject(tempObject)) {
+                                var empty = {};
+                                partName = partName ? (partName + '.' + name) : name;
+                                if (name.lastIndexOf('[]') === (name.length - 2)) {
+                                    name = name.substr(0, name.length - 2);
+                                }
+                                if (angular.isArray(tempObject)) {
+                                    let component = self.getParentComponent(partName);
+                                    if (component) {
+                                        var parentIndex = component.parentFieldIndex || 0;
+                                        tempObject = tempObject[parentIndex];
+                                    }
+                                }
 
-                var apiValue;
-                if (angular.isString(self.fieldName)) {
-                    var names = self.fieldName.split('.');
-                    var tempObject = self.data;
-                    var partName = '';
-                    angular.forEach(names, function(name, i) {
-                        if (angular.isObject(tempObject)) {
-                            var empty = {};
-                            partName = partName ? (partName + '.' + name) : name;
-                            if (name.lastIndexOf('[]') === (name.length - 2)) {
-                                name = name.substr(0, name.length - 2);
-                            }
-                            if (angular.isArray(tempObject)) {
-                                let component = self.getParentComponent(partName);
-                                if (component) {
-                                    var parentIndex = component.parentFieldIndex || 0;
-                                    tempObject = tempObject[parentIndex];
+                                if (i !== (names.length - 1)) {
+                                    tempObject = tempObject[name];
+                                } else {
+                                    apiValue = tempObject[name];
                                 }
                             }
-
-                            if (i !== (names.length - 1)) {
-                                tempObject = tempObject[name];
-                            } else {
-                                apiValue = tempObject[name];
-                            }
-                        }
-                    });
-                }
-
-                if (!self.multiple) {
-                    self.fieldValue = apiValue;
-                } else {
-                    if (angular.isArray(apiValue)) {
-                        self.fieldValue = [];
-                        apiValue.forEach(function(item) {
-                            self.fieldValue.push(self.multiname ? item[self.multiname] : item);
                         });
                     }
-                }
-                if (angular.isFunction(callback)) {
-                    callback();
-                }
 
-                equalPreviewValue($scope.data['$' + self.fieldName]);
+                    if (!self.multiple) {
+                        self.fieldValue = apiValue;
+                    } else {
+                        if (angular.isArray(apiValue)) {
+                            self.fieldValue = [];
+                            apiValue.forEach(function(item) {
+                                self.fieldValue.push(self.multiname ? item[self.multiname] : item);
+                            });
+                        }
+                    }
+                    if (angular.isFunction(callback)) {
+                        callback();
+                    }
+                    equalPreviewValue($scope.data['$' + self.fieldName]);
+                }
             }
         }
 

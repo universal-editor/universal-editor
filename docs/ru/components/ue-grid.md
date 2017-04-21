@@ -15,6 +15,11 @@ settings: {
         sortBy: '-id',
         primaryKey: 'id',
         parentField: 'parent_id',
+        tree: {
+                childrenField: 'childs',
+                childrenCountField: 'childs_count',
+                selfField: 'self'
+        },
         fields: [
             {
                 name: 'id',
@@ -85,22 +90,24 @@ settings: {
 | settings[routing][paramsPrefix] | object | Префикс, который добавляеться к query параметрам(parent, filter, sort, page), требующим для работы компонента. | - | - |
 | settings[dataSource] | object | Объект настройки компонента по работе с бекендом. | + | - |
 | settings[dataSource][standard] | string | Cтиль построения архитектуры.  | + | - |
-| settings[dataSource][childrenField] | string | Имя поля для указания дочерних узлов (нужен для отображения в режиме дерева). | + | - |
-| settings[dataSource][childrenCountField] | string | Имя поля для указания количества дочерних узлов (нужен для отображения в режиме дерева). | + | - |
-| settings[dataSource][selfField] | string | Имя поля для указания объекта сущности, к которому привязан узел (нужен для отображения в режиме дерева). | + | - |
 | settings[dataSource][url] | string | URL в RESTful-сервисе. | + | - |
 | settings[dataSource][sortBy] | string | Поле для сортировки по-умолчанию. Направление asc задаётся знаком - перед именем поля. | - | - |
 | settings[dataSource][primaryKey] | string | Имя поля с первичным ключом, по которому редактор идентифицирует записи. | + | - |
 | settings[dataSource][parentField] | string | Имя поля с идентификатором родительской записи. Данный параметр требуется указывать, если поле является разделом», т. е. может иметь дочерние объекты, которые будут связаны по этому полю. Можно использовать в связке со смешанным режимом. | - | - |
 | settings[dataSource][fields] | array | Массив настроек полей, используемых при создании и редактировании записи. | + | - |
 | settings[header] | object | Содержит настройки верхнего блока в компоненте.  | + | - |
+| settings[dataSource][tree] | object | Секция конфига для задания имен полей, используемы при выводе иерархического дерева в компоненте.  | + | - |
+| settings[dataSource][tree][childrenField] | string | Имя поля c перечнем дочерних узлов.  | + | - |
+| settings[dataSource][tree][childrenCountField] | string | Имя поля с количеством дочерних узлов.  | + | - |
+| settings[dataSource][tree][selfField] | string | Имя поля с объектом, к которому привязан узел.  | + | - |
 | settings[header][filter] | object, false | Содержит компонент фильтра.  | - | - |
 | settings[header][toolbar] | object | Содержит компоненты для верхнего блока ue-grid.  | + | - |
 | settings[dragMode] | object | Объект для настройки перетаскивания элементов в компоненте [drag&drop](dragMode.md)  | - | - |
 | settings[pagination] | object | Содержит компонент пагинации в нижнем блоке. | + | - |
-| settings[columns] | array | Массив имен столбцов которые нужно выводить. | + | - |
+| settings[columns] | array или string | Массив объектов для описания столбцов или имя поля из конфигурации ресурса.  | + | - |
+| settings[columns][name] | string | Имя поля из конфигурации ресурса (dataSource). | + | - |
+| settings[columns][width] | string | Длина колонки в % или px. | + | 100% – означает, что все колонки будут равные по длине. (разделены в соотношении 1 к 1) |
 | settings[contextMenu] | array | Массив кнопок для меню у записей со смешанного ресурса. | - | - |
-
 
 ## Смешанный режим отображения данных
 

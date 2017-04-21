@@ -76,8 +76,6 @@
         self.listeners = [];
         self.listeners.push($scope.$on('ue:componentError', onErrorApiHandler));
 
-
-
         self.isParentComponent = function isParentComponent(id, scope) {
             scope = scope || $scope;
             if (angular.isObject(id)) {

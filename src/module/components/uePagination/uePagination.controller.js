@@ -37,6 +37,8 @@
                 url: url
             };
 
+            vm.dataSource = vm.setting.component.settings.dataSource;
+
             vm.pageItemsArray = [];
             vm.items = vm.setting.paginationData[itemsKey];
             var label = {
