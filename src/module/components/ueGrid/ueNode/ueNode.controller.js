@@ -88,7 +88,7 @@
 
       vm.expand = function(item) {
         item.$isExpand = !item.$isExpand;
-        if (angular.isFunction(vm.dragMode.expandHandler) && vm.childrenField && !angular.isArray(item[vm.childrenField]) && !item.$sendRequest) {
+        if (vm.dragMode && angular.isFunction(vm.dragMode.expandHandler) && vm.childrenField && !angular.isArray(item[vm.childrenField]) && !item.$sendRequest) {
           item.$sendRequest = true;
           vm.dragMode.expandHandler(vm.dataSource, item).then(function(childrens) {
             if (angular.isArray(childrens)) {
@@ -149,7 +149,7 @@
       };
 
       vm.dragover = function(event, index, type) {
-        if (angular.isFunction(vm.dragMode.over)) {
+        if (vm.dragMode && angular.isFunction(vm.dragMode.over)) {
           var dragging = null;
           if (vm.options.$dnd && vm.options.$dnd.dragging) {
             dragging = vm.options.$dnd.dragging;
@@ -160,10 +160,12 @@
       };
 
       vm.drop = function(item, index, event) {
-        if (angular.isFunction(vm.dragMode.drop)) {
-          vm.dragMode.drop(event, item, vm.parentNode, vm.collection);
+        if (vm.dragMode && angular.isFunction(vm.dragMode.drop)) {
+          var drop = vm.dragMode.drop(event, item, null, vm.collection);
+          if (drop === false) {
+            return false;
+          }
         }
-
         if (vm.parentNode) {
           var elOver = $(event.target || event.srcElement).closest('li.row-draggable[data-frame-id="' + vm.parentNode[vm.dataSource.primaryKey] + '"]');
 
@@ -182,30 +184,30 @@
       };
 
       vm.getType = function(item, collection) {
-        if (angular.isFunction(vm.dragMode.type)) {
+        if (vm.dragMode && angular.isFunction(vm.dragMode.type)) {
           return vm.dragMode.type(item, collection);
         }
-        if (angular.isString(vm.dragMode.type)) {
+        if (vm.dragMode && angular.isString(vm.dragMode.type)) {
           return vm.dragMode.type;
         }
         return null;
       };
 
       vm.allowedTypes = function(item, collection) {
-        if (angular.isFunction(vm.dragMode.type)) {
+        if (vm.dragMode && angular.isFunction(vm.dragMode.type)) {
           return vm.dragMode.allowedTypes(item, collection);
         }
-        if (angular.isArray(vm.dragMode.allowedTypes)) {
+        if (vm.dragMode && angular.isArray(vm.dragMode.allowedTypes)) {
           return vm.dragMode.allowedTypes;
         }
         return null;
       };
 
       vm.dragDisable = function(item, collection) {
-        if (angular.isFunction(vm.dragMode.dragDisable)) {
+        if (vm.dragMode && angular.isFunction(vm.dragMode.dragDisable)) {
           return vm.dragMode.dragDisable(item, collection);
         }
-        if (angular.isArray(vm.dragMode.dragDisable)) {
+        if (vm.dragMode && angular.isArray(vm.dragMode.dragDisable)) {
           return vm.dragMode.dragDisable;
         }
         return null;
