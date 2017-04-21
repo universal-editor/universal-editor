@@ -41,9 +41,9 @@
             if (!componentSettings.valuesRemote && !componentSettings.values) {
                 componentSettings.templates = componentSettings.templates || {};
                 componentSettings.templates.preview = 'module/components/ueCheckbox/previewTemplate.html';
-            }            
-            
-            baseController = $controller('FieldsController', { $scope: $scope });
+            }
+
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element  });
             angular.extend(vm, baseController);
 
             vm.singleValue = !componentSettings.hasOwnProperty('values') && !componentSettings.hasOwnProperty('valuesRemote');

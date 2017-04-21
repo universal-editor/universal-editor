@@ -5,11 +5,11 @@
         .module('universal-editor')
         .controller('FieldsController', FieldsController);
 
-    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, ApiService, moment, EditEntityStorage, $q, $translate) {
+    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, ApiService, moment, EditEntityStorage, $q, $translate, $element ) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this;
-        var baseController = $controller('BaseController', { $scope: $scope });
+        var baseController = $controller('BaseController', { $scope: $scope, $element: $element  });
         angular.extend(vm, baseController);
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
@@ -27,7 +27,6 @@
         }
         self.isVisible = true;
 
-        self.readonly = componentSettings.readonly === true;
         self.multiname = componentSettings.multiname || null;
         self.depend = componentSettings.depend || null;
         self.width = !isNaN(+componentSettings.width) ? componentSettings.width : null;
@@ -171,6 +170,8 @@
                     self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : !!value;
                 }
                 var parameters = componentSettings.valuesRemote || componentSettings.values;
+
+                /** logic for connected components */
                 if (angular.isObject(parameters)) {
                     var selected = parameters.$selectedStorage;
                     if (angular.isArray(oldValue)) {
@@ -218,7 +219,6 @@
             }, true)
         );
 
-
         self.clear = clear;
         self.getFieldValue = getFieldValue;
         self.equalPreviewValue = equalPreviewValue;
@@ -227,37 +227,6 @@
 
         function clear() {
             self.fieldValue = self.multiple ? [] : null;
-        }
-
-        function transformToValue(object) {
-            var value;
-            if (componentSettings.$fieldType === 'date') {
-                if (object) {
-                    if (self.multiple) {
-                        if (angular.isArray(object)) {
-                            value = [];
-                            object.forEach(function(date, index) {
-                                value[index] = moment(date, angular.isString(self.format) ? self.format : 'DD.MM.YYYY HH:mm:ss');
-                            });
-                        }
-                    } else {
-                        if (object) {
-                            value = moment(object, angular.isString(self.format) ? self.format : 'DD.MM.YYYY HH:mm:ss');
-                        }
-                    }
-                    return value;
-                }
-                return self.multiple ? [] : null;
-            }
-            if (angular.isObject(object) && !angular.isArray(object) && self.fieldId) {
-                value = object[self.fieldId];
-            } else {
-                value = object;
-            }
-            if (value == 0) {
-                return value;
-            }
-            return angular.copy(value) || (self.multiple ? [] : null);
         }
 
         function equalPreviewValue(source) {
@@ -307,7 +276,45 @@
             }
         }
 
-        function getFieldValue() {
+        function transformToValue(object, isExtended) {
+            var value;
+            if (componentSettings.$fieldType === 'date') {
+                if (object) {
+                    if (self.multiple) {
+                        if (angular.isArray(object)) {
+                            value = [];
+                            object.forEach(function(date, index) {
+                                value[index] = moment(date, angular.isString(self.format) ? self.format : 'DD.MM.YYYY HH:mm:ss');
+                            });
+                        }
+                    } else {
+                        if (object) {
+                            value = moment(object, angular.isString(self.format) ? self.format : 'DD.MM.YYYY HH:mm:ss');
+                        }
+                    }
+                    return value;
+                }
+                return self.multiple ? [] : null;
+            }
+            if (angular.isObject(object) && !angular.isArray(object) && self.fieldId) {
+                value = object[self.fieldId];
+            } else {
+                value = object;
+            }
+            if (value == 0) {
+                return value;
+            }
+            if (isExtended === true && self.hasOwnProperty('fieldId') && remoteValues) {
+                values = self.optionValues;
+                if (angular.isArray(self.selectedValues)) {
+                    values = self.selectedValues;
+                }
+                value = values.filter(function(option) { return option[self.fieldId] == value; })[0];
+            }
+            return angular.copy(value) || (self.multiple ? [] : null);
+        }
+
+        function getFieldValue(isExtended) {
             var field = {},
                 wrappedFieldValue;
 
@@ -315,7 +322,7 @@
                 wrappedFieldValue = [];
                 self.fieldValue.forEach(function(value) {
                     var temp;
-                    var output = transformToValue(value);
+                    var output = transformToValue(value, isExtended);
 
                     if (self.multiname) {
                         temp = {};
@@ -324,7 +331,7 @@
                     wrappedFieldValue.push(temp || output);
                 });
             } else {
-                wrappedFieldValue = transformToValue(self.fieldValue);
+                wrappedFieldValue = transformToValue(self.fieldValue, isExtended);
             }
             field[self.fieldName] = wrappedFieldValue;
             return field;

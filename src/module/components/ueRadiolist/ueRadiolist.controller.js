@@ -17,7 +17,10 @@
             vm.inputValue = '';
             vm.newEntityLoaded = newEntityLoaded;
             vm.dependUpdate = dependUpdate;
-            vm.initDataSource = true;            
+            vm.initDataSource = true;
+            vm.dependUpdate = dependUpdate;            
+
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
             componentSettings = vm.setting.component.settings;
             vm.inline = componentSettings.inline === true;

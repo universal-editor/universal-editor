@@ -3,6 +3,7 @@
 * [Общие настройки](main.md)
 * [Режимы работы](mode.md)
 * [Шаблоны](templates.md)
+* [Управление отображением](visualization.md)
 * Штатные компоненты Универсального редактора:
     * [ue-grid](ue-grid.md)
     * [ue-filter](ue-filter.md)

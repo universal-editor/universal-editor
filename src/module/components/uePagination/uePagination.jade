@@ -1,4 +1,4 @@
-div
+div(ng-class="{'readonly-component': vm.readonly}")
     ul.pagination.col-lg-10.col-md-10.col-sm-10.col-xs-10
         li(data-ng-repeat="pageItem in vm.pageItemsArray", data-ng-class="pageItem.self ? 'active' : ''", ng-if="vm.pageItemsArray && vm.pageItemsArray.length > 1")
             a(data-ng-if="!pageItem.self", href="#", data-ng-click="vm.changePage($event, pageItem)") {{pageItem.label}}

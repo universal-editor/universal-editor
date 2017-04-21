@@ -17,7 +17,7 @@
 
         vm.$onInit = function() {
             //** Nested base controller */
-            angular.extend(vm, $controller('BaseController', { $scope: $scope }));
+            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element }));
 
             vm.dataSource = vm.setting.component.settings.dataSource;
 

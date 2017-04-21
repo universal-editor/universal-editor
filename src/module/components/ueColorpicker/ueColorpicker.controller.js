@@ -15,7 +15,7 @@
         vm.$onInit = function() {
             componentSettings = vm.setting.component.settings;
             componentSettings.defaultValue = componentSettings.multiple ? (componentSettings.defaultValue || ['#000000']) : (componentSettings.defaultValue || '#000000');
-            baseController = $controller('FieldsController', { $scope: $scope });
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element  });
             angular.extend(vm, baseController);
 
             vm.addItem = addItem;

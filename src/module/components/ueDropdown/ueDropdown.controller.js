@@ -20,7 +20,7 @@
             vm.possibleValues = [];
             vm.initDataSource = true;
             componentSettings = vm.setting.component.settings;
-            baseController = $controller('FieldsController', { $scope: $scope });
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element  });
             angular.extend(vm, baseController);
 
             if (componentSettings.valuesRemote) {

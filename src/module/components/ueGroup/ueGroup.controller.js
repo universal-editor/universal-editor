@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeGroupController', UeGroupController);
 
-    function UeGroupController($scope, EditEntityStorage, $timeout, $controller, $translate) {
+    function UeGroupController($scope, EditEntityStorage, $timeout, $controller, $translate, $element) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this,
@@ -17,7 +17,7 @@
             componentSettings = vm.setting.component.settings;
             vm.fieldName = componentSettings.name;
 
-            baseController = $controller('BaseController', { $scope: $scope });
+            baseController = $controller('BaseController', { $scope: $scope, $element: $element });
             vm.resourceType = vm.setting.resourceType;
             angular.extend(vm, baseController);
             EditEntityStorage.addFieldController(vm, true);
