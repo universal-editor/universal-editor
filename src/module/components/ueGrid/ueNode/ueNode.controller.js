@@ -13,6 +13,8 @@
       vm.dataSource = vm.setting.component.settings.dataSource;
       vm.loaded = false;
       vm.treeSource = vm.dataSource.tree;
+      vm.nodeId = getRandomId();
+
       if (vm.treeSource) {
         vm.childrenField = vm.treeSource.childrenField;
         vm.childrenCountField = vm.treeSource.childrenCountField;
@@ -24,57 +26,52 @@
 
       $scope.$on('ue:nodeDataLoaded', componentLoadedHandler);
       function componentLoadedHandler(event, data) {
-        if (!vm.$stop) {
-          if (vm.items) {
-            var components = vm.tableFields.map(function(f) { return f.component; }),
-              extendedData = [];
-            angular.forEach(vm.items, function(item, index) {
-              item.$options = item.$options || {
-                $componentId: vm.options.$componentId,
-                regim: 'preview',
-                $dataIndex: index,
-                isSendRequest: true
-              };
-              item.$isExpand = true;
-              if (!angular.isArray(item[vm.childrenField]) && item[vm.childrenCountField] > 0) {
-                item.$isExpand = false;
-              }
-              if (item[vm.childrenCountField] === 0) {
-                item[vm.childrenField] = [];
-              }
-
-              if (vm.selfField) {
-                var self = item[vm.selfField];
-                self.$options = item.$options;
-                extendedData.push(self);
-              } else {
-                extendedData.push(item);
-              }
-            });
-            if (extendedData.length > 0) {
-              ApiService.extendData({
-                data: extendedData,
-                components: components,
-                $id: vm.options.$componentId,
-                standart: vm.dataSource.standart
-              }).then(function(data) {
-                var eventObject = {
-                  editorEntityType: 'exist',
-                  $componentId: vm.options.$componentId,
-                  $items: data
-                };
-                $timeout(function() {
-                  vm.$stop = true;
-                  $scope.$broadcast('ue:componentDataLoaded', eventObject);
-                  $scope.$broadcast('ue:nodeDataLoaded', eventObject);
-                  vm.$stop = false;
-                });
-                vm.data = eventObject;
-              }).finally(function() { vm.loaded = true; });
+        if (vm.items && !vm.$stop) {
+          var components = vm.tableFields.map(function(f) { return f.component; }),
+            extendedData = [];
+          angular.forEach(vm.items, function(item, index) {
+            item.$options = item.$options || {
+              $componentId: vm.options.$componentId,
+              regim: 'preview',
+              $dataIndex: index,
+              isSendRequest: true
+            };
+            item.$isExpand = true;
+            if (!angular.isArray(item[vm.childrenField]) && item[vm.childrenCountField] > 0) {
+              item.$isExpand = false;
             }
-          }
+            if (item[vm.childrenCountField] === 0) {
+              item[vm.childrenField] = [];
+            }
+
+            if (vm.selfField) {
+              var self = item[vm.selfField];
+              self.$options = item.$options;
+              extendedData.push(self);
+            } else {
+              extendedData.push(item);
+            }
+          });         
+
+          $timeout(function() {
+            vm.data = {
+              editorEntityType: 'exist',
+              $componentId: vm.options.$componentId,
+              $items: extendedData,
+              $nodeId: vm.nodeId
+            };
+            vm.$stop = true;
+            $scope.$broadcast('nodeRowUpdate', vm.data);
+            $scope.$broadcast('ue:nodeDataLoaded', vm.data);
+            vm.$stop = false;
+          });
+          vm.loaded = true;
         }
       }
+
+      vm.onUpdate = function(data) {
+
+      };
 
       function getRandomId() {
         return 'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
@@ -114,19 +111,19 @@
       };
 
       vm.updateNode = function() {
-        vm.data = vm.data || {
-          editorEntityType: 'exist',
-          $componentId: vm.options.$componentId,
-          $items: vm.items
-        };
         $timeout(function() {
+          vm.data = vm.data || {
+            editorEntityType: 'exist',
+            $componentId: vm.options.$componentId,
+            $items: vm.items,
+            $nodeId: vm.nodeId
+          };
           angular.forEach(vm.items, function(item, index) {
             item.$options.$dataIndex = index;
           });
           $scope.$broadcast('ue:nodeDataLoaded', vm.data);
         });
       };
-
 
       vm.moved = function(index) {
         if (!vm.isCancelDrop) {

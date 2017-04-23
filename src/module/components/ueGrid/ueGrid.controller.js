@@ -17,13 +17,17 @@
 
         vm.$onInit = function() {
             //** Nested base controller */
-            angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
-
-            
+            angular.extend(vm, $controller('FieldsController', { $scope: $scope }));            
 
             vm.componentSettings = vm.setting.component.settings;
 
             vm.dataSource = vm.setting.component.settings.dataSource;
+            if(vm.dataSource.tree) {
+                vm.childrenField  = vm.dataSource.tree.childrenField;
+                vm.childrenCountField = vm.dataSource.tree.childrenCountField;
+                vm.selfField = vm.dataSource.tree.selfField;
+            }
+
             url = vm.dataSource.url;
             parentField = vm.dataSource.parentField;
             vm.correctEntityType = true;
@@ -474,26 +478,23 @@
                                 $dataIndex: index,
                                 isSendRequest: true
                             };
-                            if (vm.dataSource.selfField) {
-                                var self = item[vm.dataSource.selfField];
-                                self.$options = item.$options;
-                                extendedData.push(self);
-                            } else {
-                                extendedData.push(item);
-                            }
+                            extendedData.push(item);
                         });
                     }
                     var options = {
                         data: extendedData,
                         components: components,
                         $id: vm.$componentId,
-                        standart: vm.dataSource.standart
+                        standart: vm.dataSource.standart,
+                        childrenField: vm.childrenField,
+                        selfField: vm.selfField
                     };
                     ApiService.extendData(options).then(function(data) {
                         var eventObject = {
                             editorEntityType: 'exist',
                             $componentId: vm.$componentId,
-                            $items: data
+                            $items: data,
+                            $nodeId: 'all'
                         };
                         $timeout(function() {
                             $rootScope.$broadcast('ue:nodeDataLoaded', eventObject);
@@ -511,6 +512,8 @@
                 }
             }
         }
+
+
 
 
         function getFieldValue() {

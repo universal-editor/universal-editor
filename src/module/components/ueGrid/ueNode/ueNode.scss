@@ -122,6 +122,11 @@
     .row-draggable {
         padding: 0;
         margin: 0;
+        margin-bottom: 10px;
+        .dndPlaceholder {
+            height: 2px;
+            background-color: #cbd6da;
+        }
         &.dndDragging {
             .dndPlaceholder {
                 display: none;
@@ -131,7 +136,7 @@
             margin-left: 10px;
             .empty-child-area {
                 .dnd-list {
-                    padding: 5px;
+                    margin: 5px 0 5px 5px;
                     padding-right: 0;
                 }
             }

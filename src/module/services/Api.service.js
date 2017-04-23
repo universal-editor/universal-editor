@@ -625,10 +625,40 @@
             return config.defer.promise;
         };
 
+        function takeRemoteValuesInTree(data = [], component, childrenField, selfField, filter = []) {
+            data.forEach(function(item) {
+                var value = selfField ? item[selfField][component.name] : item[component.name];
+                if (angular.isArray(value)) {
+                    value.forEach(function(valueItem) {
+                        if (angular.isString(component.component.settings.multiname)) {
+                            valueItem = valueItem[component.component.settings.multiname];
+                        } else {
+                            if (angular.isObject(valueItem) && keyValue) {
+                                valueItem = valueItem[keyValue];
+                            }
+                        }
+                        if (valueItem !== undefined && valueItem !== null && filter.indexOf(valueItem) === -1) {
+                            filter.push(valueItem);
+                        }
+                    });
+                } else {
+                    if (value !== undefined && value !== null && filter.indexOf(value) === -1) {
+                        filter.push(value);
+                    }
+                }
+                if(angular.isArray(item[childrenField]) && item[childrenField].length > 0) {
+                    takeRemoteValuesInTree(item[childrenField], component, childrenField, selfField, filter);
+                }
+            });
+            return filter;
+        }
+
         this.extendData = function extendData(options) {
             var data = options.data,
                 components = options.components,
-                $id = options.$id;
+                $id = options.$id,
+                childrenField = options.childrenField,
+                selfField = options.selfField;
             var remoteComponents = components.filter(function(component) {
                 return angular.isObject(component.component.settings.valuesRemote);
             });
@@ -648,27 +678,7 @@
                 fields = fields.join(',');
                 if (angular.isString(options.url)) {
                     var keyValue = component.component.settings.valuesRemote.fields.value;
-                    data.forEach(function(item) {
-                        var value = item[component.name];
-                        if (angular.isArray(value)) {
-                            value.forEach(function(valueItem) {
-                                if (angular.isString(component.component.settings.multiname)) {
-                                    valueItem = valueItem[component.component.settings.multiname];
-                                } else {
-                                    if (angular.isObject(valueItem) && keyValue) {
-                                        valueItem = valueItem[keyValue];
-                                    }
-                                }
-                                if (valueItem !== undefined && valueItem !== null && filter.indexOf(valueItem) === -1) {
-                                    filter.push(valueItem);
-                                }
-                            });
-                        } else {
-                            if (value !== undefined && value !== null && filter.indexOf(value) === -1) {
-                                filter.push(value);
-                            }
-                        }
-                    });
+                    filter = takeRemoteValuesInTree(data, component, childrenField, selfField);
                     if (filter.length > 0) {
                         var filterObject = {};
                         filterObject[keyValue] = [];
