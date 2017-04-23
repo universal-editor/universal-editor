@@ -4,7 +4,7 @@
     .module('universal-editor')
     .controller('UeNodeController', UeNodeController);
 
-  function UeNodeController($scope, ApiService, $timeout, $rootScope, $element) {
+  function UeNodeController($scope, ApiService, $timeout, $rootScope, $element, $translate, toastr) {
     /* jshint validthis: true */
     'ngInject';
     var vm = this;
@@ -51,7 +51,7 @@
             } else {
               extendedData.push(item);
             }
-          });         
+          });
 
           $timeout(function() {
             vm.data = {
@@ -69,10 +69,6 @@
         }
       }
 
-      vm.onUpdate = function(data) {
-
-      };
-
       function getRandomId() {
         return 'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
           function(c) {
@@ -86,14 +82,9 @@
         if (vm.dragMode && angular.isFunction(vm.dragMode.expandHandler) && vm.childrenField && !angular.isArray(item[vm.childrenField]) && !item.$sendRequest) {
           item.$sendRequest = true;
           vm.dragMode.expandHandler(vm.dataSource, item).then(function(childrens) {
+            getExpanded(childrens);
             if (angular.isArray(childrens)) {
               angular.forEach(childrens, function(child, index) {
-                child.$options = {
-                  $componentId: vm.options.$componentId,
-                  regim: 'preview',
-                  $dataIndex: index,
-                  isSendRequest: true
-                };
                 child.$isExpand = child.$isExpand || true;
                 if (!angular.isArray(child[vm.childrenField]) && child[vm.childrenCountField] > 0) {
                   child.$isExpand = false;
@@ -104,11 +95,41 @@
             }
           }, function() {
             item.$isExpand = false;
+            item[vm.childrenCountField] = 0;
+            $translate('UE-GRID.TREE.EXPAND_ERROR').then(function(translation) {
+              toastr.error(translation);
+            });
           }).finally(function() {
             delete item.$sendRequest;
           });
         }
       };
+
+      function getExpanded(items) {
+        var components = vm.tableFields.map(function(f) { return f.component; });
+        if (angular.isObject(items)) {
+          angular.forEach(items, function(item, index) {
+            item.$options = item.$options || {
+              $componentId: vm.$componentId,
+              regim: 'preview',
+              $dataIndex: index,
+              isSendRequest: true
+            };
+          });
+        }
+        var options = {
+          data: items,
+          components: components,
+          $id: vm.$componentId,
+          standart: vm.dataSource.standart,
+          childrenField: vm.childrenField,
+          selfField: vm.selfField
+        };
+        ApiService.extendData(options).then(function(data) {
+          vm.data.$item = data;
+          vm.updateNode();
+        });
+      }
 
       vm.updateNode = function() {
         $timeout(function() {
