@@ -14,7 +14,7 @@
             sortBy: '-id',
             primaryKey: 'id',
             tree: {
-                childrenField: 'childs',
+                childrenField: 'childs' ,
                 childrenCountField: 'childs_count',
                 selfField: 'self'
             },
