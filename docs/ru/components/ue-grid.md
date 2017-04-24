@@ -102,6 +102,7 @@ settings: {
 | settings[dataSource][tree][selfField] | string | Имя поля с объектом, к которому привязан узел.  | + | - |
 | settings[header][filter] | object, false | Содержит компонент фильтра.  | - | - |
 | settings[header][toolbar] | object | Содержит компоненты для верхнего блока ue-grid.  | + | - |
+| settings[displayHeaderColumns] | boolean | Флаг отображения блока с заголовками колонок.  | - | true |
 | settings[dragMode] | object | Объект для настройки перетаскивания элементов в компоненте [drag&drop](dragMode.md)  | - | - |
 | settings[pagination] | object | Содержит компонент пагинации в нижнем блоке. | + | - |
 | settings[columns] | array или string | Массив объектов для описания столбцов или имя поля из конфигурации ресурса.  | + | - |
