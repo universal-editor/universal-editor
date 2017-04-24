@@ -13,8 +13,6 @@
             state,
             request = {},
             url,
-            pkKey = 'pk',
-            pk,
             params = {},
             handlers;
 
@@ -30,8 +28,12 @@
             vm.target = componentSettings.target;
             vm.action = componentSettings.action;
             vm.switchLoader = switchLoader;
-
             vm.isLoader = false;
+            vm.stateParams = {};
+
+            if (angular.isString(vm.state)) {
+                vm.stateName = vm.state;
+            }
 
             if (!vm.label && angular.isString(vm.action)) {
                 $translate('BUTTON.ACTIONS.' + vm.action.toUpperCase()).then(function(translation) {
@@ -47,9 +49,8 @@
                 if (componentSettings.request) {
                     request = JSON.parse(componentSettings.request);
                 }
-                pk = $state.params[pkKey];
                 if (vm.action === 'delete') {
-                    vm.disabled = pk === 'new' || !pk;
+                    vm.disabled = vm.entityId === null || vm.entityId === undefined;
                 }
                 request.method = vm.method;
                 request.options = vm.options;
@@ -66,42 +67,58 @@
                     }
                 });
             } else {
-                vm.entityId = vm.entityId || 'new';
+                vm.entityId = vm.entityId;
                 vm.method = vm.method || 'GET';
             }
+
+            $rootScope.$on('ue-grid:сontextMenu', function(e, data) {
+                if (vm.setting.buttonClass == 'context') {                    
+                    if(!vm.setting.component.settings.useable || !angular.isFunction(vm.setting.component.settings.useable) ) return;
+                    var showBtn = vm.setting.component.settings.useable(data);
+                    var elemStyle = $element[0].parentElement.style;
+                    elemStyle.display = showBtn ? 'block' : 'none';
+                }
+            });
         };
 
         function clickLink() {
-            var params = {},
+            var params = {
+                pk: vm.entityId
+            },
                 state = vm.state,
                 searchString = $location.search();
-
+            $state.params.$entityId = vm.entityId;
+            vm.stateParams = { pk: vm.entityId || 'new' };
+            if (angular.isObject(vm.state)) {
+                vm.stateName = vm.state.name;
+                vm.stateParams = vm.state.parameters;
+                if (angular.isFunction(vm.state.parameters)) {
+                    var key;
+                    if (vm.options.$dataSource) {
+                        key = vm.options.$dataSource.primaryKey;
+                    }
+                    vm.stateParams = vm.stateParams(vm.entityId, key, vm.options.$records || []);
+                }
+            }
             if (vm.options.isLoading) {
                 return;
             }
 
             if (vm.back && searchString && searchString.back) {
-                state = searchString.back;
+                vm.stateName = searchString.back;
             }
 
             if (angular.isFunction(vm.action) && vm.options) {
                 vm.action(vm.options.$componentId);
             }
 
-            if (state) {
-                params[pkKey] = vm.entityId;
+            if (vm.stateName) {
                 searchString.back = $state.current.name;
                 if (vm.back) {
                     delete searchString.back;
                 }
-                $state.go(state, params).then(function() {
+                $state.go(vm.stateName, vm.stateParams).then(function() {
                     $location.search(searchString);
-                    $timeout(function() {
-                        var pk = $state.params['pk' + EditEntityStorage.getLevelChild($state.current.name)];
-                        if (pk === 'new') {
-                            EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.options.$dataSource.parentField);
-                        }
-                    }, 0);
                 });
             } else if (angular.isString(vm.url)) {
                 if (!!vm.target) {
@@ -109,7 +126,7 @@
                 } else if (handlers && !angular.isFunction(vm.action)) {
                     sendRequest();
                 } else {
-                    url = url.replace(':pk', vm.entityId);
+                    url = url.replace(':pk', vm.entityId || '');
                     var isReload = !~url.indexOf($location.path());
                     params = $location.search();
                     params.back = $state.current.name;
@@ -136,6 +153,7 @@
         }
 
         function clickService() {
+
             if (vm.options.isLoading || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                 return;
             }
@@ -144,7 +162,7 @@
             switch (vm.action) {
                 case 'save':
                     request.entityId = vm.entityId;
-                    if (vm.entityId && vm.entityId !== 'new') {
+                    if (vm.entityId) {
                         vm.type = 'update';
                     }
                     if (vm.type == 'create') {

@@ -160,7 +160,10 @@
                                 name: 'ue-button',
                                 settings: {
                                     label: 'Edit',
-                                    sref: 'news_edit'
+                                    sref: 'news_edit',
+                                    useable: function(data) {
+                                       return true;
+                                    }
                                 }
                             }
                         },
@@ -170,7 +173,11 @@
                                 name: 'ue-button',
                                 settings: {
                                     label: 'Delete',
-                                    action: 'delete'
+                                    action: 'delete',
+                                    useable: function(data) {
+                                        if(data.id == 3) return true;
+                                        return false;
+                                    }
                                 }
                             }
                         }

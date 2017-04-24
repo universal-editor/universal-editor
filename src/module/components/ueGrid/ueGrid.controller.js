@@ -38,6 +38,7 @@
             vm.sortingDirection = true;
             vm.pageItemsArray = [];
             vm.contextLinks = [];
+            vm.contextLinksOrigin = [];
             vm.mixContextLinks = [];
             vm.listHeaderBar = [];
             vm.$componentId = vm.setting.component.$id;
@@ -139,6 +140,7 @@
                 newValue.headComponent = vm.setting.headComponent;
                 vm.contextLinks.push(newValue);
             });
+            vm.contextLinksOrigin = angular.copy(vm.contextLinks);
 
             if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.toolbar) {
                 angular.forEach(vm.setting.component.settings.header.toolbar, function(control) {
@@ -344,6 +346,7 @@
                     list[itemsKey] = vm.items;
                     $rootScope.$broadcast('ue:collectionLoaded', list);
                 }
+                vm.options.$records = vm.items;
             }
         });
         $scope.$on('ue:afterEntityDelete', function(event, data) {
@@ -359,6 +362,7 @@
                     if (data.items) {
                         vm.items = data.items;
                     }
+                    vm.options.$records = vm.items;
                 });
             }
         });
@@ -402,6 +406,7 @@
                     angular.forEach(vm.listFooterBar, function(control) {
                         control.paginationData = data;
                     });
+                    vm.options.$records = vm.items;
                 }
             }
         });
@@ -423,6 +428,11 @@
         }
 
         function toggleContextView(id) {
+            $rootScope.$broadcast('ue-grid:сontextMenu', {
+                id: id,
+                primaryKey: vm.idField,
+                records: vm.items
+            });
             vm.styleContextMenu = {};
             if (vm.contextId == id) {
                 vm.contextId = undefined;
@@ -432,6 +442,14 @@
         }
 
         function toggleContextViewByEvent(id, event) {
+            var obj = {
+                id: id,
+                primaryKey: vm.idField,
+                records: vm.items
+            };
+            _filterContextMenuItem(obj);
+
+            $rootScope.$broadcast('ue-grid:сontextMenu', obj);
             var left = event.pageX - $element.find('table')[0].getBoundingClientRect().left;
             if (event.which === 3) {
                 vm.styleContextMenu = {
@@ -440,6 +458,28 @@
                 };
                 vm.contextId = id;
             }
+        }
+
+        function _filterContextMenuItem(obj) {
+            vm.contextLinks = angular.copy(vm.contextLinksOrigin);
+            var result = [];
+            var firstVisibleElem = false;
+
+            angular.forEach(vm.contextLinks, function(value) {
+                var showContextMenuItem = value.component.settings.useable && angular.isFunction(value.component.settings.useable) ? value.component.settings.useable(obj) : true;
+                if(showContextMenuItem) {
+                    if(!firstVisibleElem && value.separator){
+                        delete value.separator;
+                    } else if(firstVisibleElem && !value.separator) {
+                        value.separator = true;
+                    }
+                    result.push(value);
+                    firstVisibleElem = true;
+                } else {
+                    result.push(null);
+                }
+            });
+            vm.contextLinks = result;
         }
     }
 })();
