@@ -28,7 +28,7 @@
             return false;
         };
 
-        this.getComponentById = function(id) {
+        this.getComponentBySetting = function(id) {
             var model = null;
             if(angular.isObject(id) && id.component) {
                 id = id.component.$id;
