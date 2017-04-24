@@ -164,18 +164,6 @@
                             });
                         }
                     },
-                    header: {
-                        toolbar: [
-                            {
-                                component: {
-                                    name: 'ue-filter',
-                                    settings: {
-                                        fields: ['title', 'authors', 'category_id']
-                                    }
-                                }
-                            }
-                        ]
-                    },
                     columns: [
                     {
                         name: 'title',
