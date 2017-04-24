@@ -547,7 +547,7 @@
 
         function toggleContextViewByEvent(item, e) {
             var id = item[vm.idField];
-            if (angular.isDefined) {
+            if (angular.isDefined(id)) {
                 var node = !vm.dragMode ? $element.find('.table')[0] : e.currentTarget;
                 var left = event.pageX - node.getBoundingClientRect().left;
                 if (event.which === 3) {

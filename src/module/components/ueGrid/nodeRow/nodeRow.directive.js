@@ -19,6 +19,7 @@
                 controllerAs: 'vm',
                 controller: function($scope) {
                     var vm = this;
+                    vm.dataSource = $scope.dataSource;
                     vm.treeSource = $scope.dataSource.tree;
                     if (vm.treeSource) {
                         vm.childrenField = vm.treeSource.childrenField;
@@ -28,6 +29,7 @@
                     vm.options = $scope.options;
                     vm.expand = $scope.expand;
                     vm.tableFields = $scope.tableFields;
+                    vm.contextLinks = $scope.contextLinks;
                     $scope.$on('nodeRowUpdate', function(e, data) {
                         if (data.$nodeId && data.$nodeId === $scope.nodeId) {
                             $scope.$broadcast('ue:componentDataLoaded', data);
