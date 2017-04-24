@@ -97,9 +97,9 @@
               .row.header
                 .table-cell( data-ng-repeat="fieldItem in vm.tableFields track by $index",
                     ng-style="fieldItem.ngStyle"
-                    ng-class="{'first-column': $index===0}"
-                    data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection}",
-                    data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)") {{fieldItem.displayName}}
+                    data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection, 'first-column': $index===0}",
+                    data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)")  
+                    span {{fieldItem.displayName}}
             li.tree-body(ng-if="vm.loaded")    
                 ue-node(
                     data-collection="vm.items",

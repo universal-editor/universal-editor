@@ -193,6 +193,7 @@
         if (vm.childrenCountField && vm.parentNode) {
           vm.parentNode[vm.childrenCountField]++;
         }
+        $(".dndPlaceholder").remove();
         vm.updateNode();
       };
 

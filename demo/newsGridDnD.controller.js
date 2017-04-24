@@ -44,23 +44,6 @@
                     }
                 },
                 {
-                    name: 'category_id',
-                    component: {
-                        name: 'ue-dropdown',
-                        settings: {
-                            label: 'Category',
-                            valuesRemote: {
-                                fields: {
-                                    value: 'id',
-                                    label: 'title'
-                                },
-                                url: 'http://universal-backend.dev/rest/v1/news/categories'
-                            },
-                            search: true
-                        }
-                    }
-                },
-                {
                     name: 'title',
                     component: {
                         name: 'ue-string',
@@ -132,6 +115,23 @@
                             label: 'Updated'
                         }
                     }
+                },                
+                {
+                    name: 'category_id',
+                    component: {
+                        name: 'ue-dropdown',
+                        settings: {
+                            label: 'Category',
+                            valuesRemote: {
+                                fields: {
+                                    value: 'id',
+                                    label: 'title'
+                                },
+                                url: 'http://universal-backend.dev/rest/v1/news/categories'
+                            },
+                            search: true
+                        }
+                    }
                 }
             ]
         };
@@ -168,22 +168,22 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-filter'
+                                    name: 'ue-filter',
+                                    settings: {
+                                        fields: ['title', 'authors', 'category_id']
+                                    }
                                 }
                             }
                         ]
                     },
-                    columns: [{
-                        name: 'id',
-                        width: "20%"
-                    }, 
+                    columns: [
                     {
                         name: 'title',
-                        width: "300px"
+                        width: "20%"
                     },
                     {
                         name: 'authors',
-                        width: "200px"
+                        width: "300px"
                     },
                     {
                         name: 'category_id',

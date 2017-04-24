@@ -80,30 +80,32 @@
             font-weight: 700;
             cursor: pointer;
             .table-cell {
-                padding: 5px 10px;
-                &.active.asc:after {
+                padding: 5px 12px;
+                &.active.asc:before {
                     content: "";
                     width: 0;
                     height: 0;
                     border-left: 5px solid transparent;
                     border-right: 5px solid transparent;
                     border-bottom: 7px solid #000000;
-                    display: block;
-                    float: right;
                     transform: scale(-1, -1);
                     margin-top: 3px;
+                    position: absolute;
+                    left: 0;
+                    display: inline-flex;
                 }
-                &.active.desc:after {
+                &.active.desc:before {
                     content: "";
                     width: 0;
                     height: 0;
                     border-left: 5px solid transparent;
                     border-right: 5px solid transparent;
                     border-top: 7px solid #000000;
-                    display: block;
-                    float: right;
                     transform: scale(-1, -1);
                     margin-top: 3px;
+                    position: absolute;
+                    left: 0;
+                    display: inline-flex;
                 }
             }
         }
@@ -135,13 +137,12 @@
             .dndPlaceholder {
                 display: none;
             }
-        }
+        }        
         .children-frames {
             margin-left: 10px;
             .empty-child-area {
                 .dnd-list {
-                    margin: 5px 0 5px 5px;
-                    padding-right: 0;
+                    padding: 5px 0 0 5px;
                 }
             }
         }
