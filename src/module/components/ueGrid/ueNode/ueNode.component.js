@@ -3,7 +3,7 @@
 
     var ueNode = {
         bindings : {
-            collections: '=',
+            collection: '=',
             parentNode: '=',
             items: '=',
             tableFields: '=',

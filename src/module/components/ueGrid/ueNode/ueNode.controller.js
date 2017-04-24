@@ -182,7 +182,7 @@
           return false;
         }
         if (vm.dragMode && angular.isFunction(vm.dragMode.drop)) {
-          var drop = vm.dragMode.drop(event, item, null, vm.collection);
+          var drop = vm.dragMode.drop(event, item, vm.parentNode, vm.collection);
           if (drop === false) {
             return false;
           }
