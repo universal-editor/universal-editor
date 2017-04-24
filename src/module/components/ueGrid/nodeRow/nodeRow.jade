@@ -6,7 +6,7 @@
                                         data-entity-id="{{::item[vm.dataSource.primaryKey]}}", 
                                         data-button-class="context", 
                                         data-options="vm.options")
-    span.dnd-expand-item.glyphicon(
+    .dnd-expand-item.glyphicon(
         ng-if="vm.treeSource && (vm.childrenCountField!==undefined || (item[vm.childrenField] && item[vm.childrenField].length))"
         ng-class="{'glyphicon-collapse-down': item.$isExpand,'glyphicon-expand': (!item.$isExpand || (item[vm.childrenCountField] > 0 && !item[vm.childrenField])), 'icon-collapse': vm.childrenCountField !== undefined && !item[vm.childrenCountField]}" 
         ng-click="vm.expand({item: item})")   
