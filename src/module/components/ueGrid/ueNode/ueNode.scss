@@ -8,7 +8,6 @@
 }
 
 .table.items-list.drag-mode .row-draggable .row .column {
-    width: 200px;
     flex-direction: column;
     align-items: flex-start;
     display: flex;
@@ -33,7 +32,6 @@
 }
 
 .table.items-list.drag-mode .row.header .table-cell {
-    width: 200px;
     flex-direction: column;
     align-items: flex-start;
     display: flex;
@@ -47,6 +45,14 @@
     list-style-type: none;
     margin: 10px 0;
     padding: 0;
+    .dndDraggingSource {
+        background-color: rgba(99, 99, 99, 0.5);
+        color: transparent;
+        opacity: 0.5;
+        -webkit-box-shadow: 0px 1px 19px 0px rgba(99, 99, 99, 1);
+        -moz-box-shadow: 0px 1px 19px 0px rgba(99, 99, 99, 1);
+        box-shadow: 0px 1px 19px 0px rgba(99, 99, 99, 1);
+    }
     .row.header {
         padding: 5px;
     }
@@ -70,7 +76,11 @@
         text-align: center;
         border: 1px solid #e1e1e8;
     }
+    .no-drag {
+        flex-basis: 100%;
+    }
     .row {
+        flex-basis: 100%;
         margin-right: 0;
         margin-left: 0;
         display: flex;
@@ -81,6 +91,9 @@
             cursor: pointer;
             .table-cell {
                 padding: 5px 12px;
+                &.glyphicon {
+                    width: 30px;
+                }
                 &.active.asc:before {
                     content: "";
                     width: 0;
@@ -137,7 +150,7 @@
             .dndPlaceholder {
                 display: none;
             }
-        }        
+        }
         .children-frames {
             margin-left: 10px;
             .empty-child-area {
@@ -157,9 +170,6 @@
                     content: '';
                 }
             }
-        }
-        >.row:hover {
-            border: 1px solid #e1e1e8;
         }
         .row {
             border: 1px solid transparent;

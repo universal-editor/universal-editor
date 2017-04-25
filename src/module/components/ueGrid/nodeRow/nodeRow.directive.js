@@ -13,7 +13,8 @@
                     'dataSource': '=',
                     'tableFields': '=',
                     'item': '=',
-                    'expand': '&'
+                    'expand': '&',
+                    'dragIcon': '='
                 },
                 templateUrl: 'module/components/ueGrid/nodeRow/nodeRow.html',
                 controllerAs: 'vm',
@@ -21,6 +22,7 @@
                     var vm = this;
                     vm.dataSource = $scope.dataSource;
                     vm.treeSource = $scope.dataSource.tree;
+                    vm.dragIcon = $scope.dragIcon;
                     if (vm.treeSource) {
                         vm.childrenField = vm.treeSource.childrenField;
                         vm.childrenCountField = vm.treeSource.childrenCountField;

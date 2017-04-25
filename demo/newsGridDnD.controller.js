@@ -162,7 +162,8 @@
                             return $http.get('/assets/dragAndDrop.childs.json').then(function(response) {
                                 return response.data.items;
                             });
-                        }
+                        },
+                        dragIcon: true
                     },
                     columns: [
                     {
