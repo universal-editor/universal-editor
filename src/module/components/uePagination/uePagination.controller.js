@@ -155,8 +155,10 @@
 
         function changePage(event, pageItem) {
             event.preventDefault();
+            var searchParameters = $location.search();
             vm.request.params.page = pageItem.page;
-            var parentEntity = $location.search()[getKeyPrefix('parent')];
+            vm.request.params.sort = searchParameters[getKeyPrefix('sort')];
+            var parentEntity = searchParameters[getKeyPrefix('parent')];
             vm.parent = parentEntity || null;
             vm.request.childId = vm.parent;
             $location.search(getKeyPrefix('page'), pageItem.page);
