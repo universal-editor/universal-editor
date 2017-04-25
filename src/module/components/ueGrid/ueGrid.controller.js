@@ -17,13 +17,13 @@
 
         vm.$onInit = function() {
             //** Nested base controller */
-            angular.extend(vm, $controller('FieldsController', { $scope: $scope }));            
+            angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
 
             vm.componentSettings = vm.setting.component.settings;
 
             vm.dataSource = vm.setting.component.settings.dataSource;
-            if(vm.dataSource.tree) {
-                vm.childrenField  = vm.dataSource.tree.childrenField;
+            if (vm.dataSource.tree) {
+                vm.childrenField = vm.dataSource.tree.childrenField;
                 vm.childrenCountField = vm.dataSource.tree.childrenCountField;
                 vm.selfField = vm.dataSource.tree.selfField;
             }
@@ -410,8 +410,10 @@
         });
 
         function refreshTableRecords(notGoToState, request) {
-            setInitialQueryParams();
-            return ApiService.getItemsList(request || vm.request, notGoToState);
+            if (angular.isString(request.url)) {
+                setInitialQueryParams();
+                return ApiService.getItemsList(request || vm.request, notGoToState);
+            }
         }
 
 
