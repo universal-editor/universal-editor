@@ -410,9 +410,10 @@
         });
 
         function refreshTableRecords(notGoToState, request) {
+            request = request || vm.request;
             if (angular.isString(request.url)) {
                 setInitialQueryParams();
-                return ApiService.getItemsList(request || vm.request, notGoToState);
+                return ApiService.getItemsList(request, notGoToState);
             }
         }
 

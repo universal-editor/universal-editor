@@ -44,6 +44,9 @@
             vm.countInLine = componentSettings.countInLine || 1;
             widthBootstrap = Math.ceil(12 / vm.countInLine);
             vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
+            if(vm.countInLine > 1) {
+                vm.className += ' auto-width';
+            }
 
             if (vm.multiple === true && !vm.setting.name) {
                 $translate('ERROR.MULTIPLE_NAME').then(function(translation) {
