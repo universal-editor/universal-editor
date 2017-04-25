@@ -13,6 +13,9 @@
       }
       & .ue-grid {
           padding: 10px 0;
+          .component-wrapper {
+              width: auto;
+          }
           .field-wrapper-ue-button {
               & .ue-button-body {
                   .button-loading {
