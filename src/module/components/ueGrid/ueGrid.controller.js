@@ -49,6 +49,7 @@
             vm.$componentId = vm.setting.component.$id;
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
             vm.prefixGrid = undefined;
+            vm.refreshTableRecords = refreshTableRecords;
 
             if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix) {
                 vm.prefixGrid = vm.setting.component.settings.routing.paramsPrefix;
@@ -410,9 +411,10 @@
         });
 
         function refreshTableRecords(notGoToState, request) {
-            if (angular.isString(request.url)) {
+            request = request || vm.request;
+            if (angular.isObject(request) && angular.isString(request.url)) {
                 setInitialQueryParams();
-                return ApiService.getItemsList(request || vm.request, notGoToState);
+                return ApiService.getItemsList(request, notGoToState);
             }
         }
 
