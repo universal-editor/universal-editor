@@ -4,7 +4,7 @@ tr(ng-if="!vm.dragMode.dragIcon" data-ng-repeat="item in vm.items", data-ng-clas
     dnd-disable-if="vm.dragDisable(item, vm.collection)",  
     dnd-draggable="item",
     dnd-moved="vm.moved($index)",
-    dnd-type="vm.getType(item, vm.collection)",                 
+    dnd-type="vm.getContainerName(item, vm.collection)",                 
     dnd-dragstart="vm.dragStart(event, item, $index)"
     dnd-effect-allowed="move")        
         td.table-cell.context-column(ng-if="vm.isContextMenu")

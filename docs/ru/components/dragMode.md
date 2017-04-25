@@ -9,12 +9,12 @@
     Если функция вернет `true`, то элемент будет перенесен, если `false` – перенос будет отменен.
 
 * `dragDisable` – функция возвращает логическое значение. Значение `false` запрещает перенос элемента, `true` – разрешает;
-* `type` – функция возвращает строковое значение, и задает группу переносимых элементов. Допускается прописать обычное константное значение, если коллбек не нужен;
-* `allowedTypes` – функция возвращает массив типов (названий групп), которые возможно перенести внутрь текущего элемента. Допускается прописать обычное константное значение, если коллбек не нужен;
-* `expandHandler` – функция возвращает Promise объект. Является обработчиком иконки для раскрытия узлов. Доступные аргументы `parentElement` – родительский объект, для которого подгружаются дочерние узлы, `dataSource` – текущий конфиг ресурса.
+* `containerName` – функция возвращает строковое значение, и задает группу переносимых элементов. Допускается прописать обычное константное значение, если коллбек не нужен;
+* `allowedContainers` – функция возвращает массив типов (названий групп), которые возможно перенести внутрь текущего элемента. Допускается прописать обычное константное значение, если коллбек не нужен;
+* `expand` – функция возвращает Promise объект. Является обработчиком иконки для раскрытия узлов. Доступные аргументы `parentElement` – родительский объект, для которого подгружаются дочерние узлы, `dataSource` – текущий конфиг ресурса.
 * `dragIcon` – флаг наличия иконки для перетаскивания. Иконка расположена в конце. Перетаскивать узел можно только с помощью неё.
 
-Опции `type` и `allowedTypes` описывают возможный обмен между разными контейнерами. Например, в компонент `A` с `type: "phones"` нельзя будет перенести записи компонента `B` с `type: "fax"` и компонента `C` c `type: "mobiles"`. Но такой обмен записями станет возможным есть указать принимаемый тип в параметре `allowedTypes`.
+Опции `containerName` и `allowedContainers` описывают возможный обмен между разными контейнерами. Например, в компонент `A` с `containerName: "phones"` нельзя будет перенести записи компонента `B` с `containerName: "fax"` и компонента `C` c `containerName: "mobiles"`. Но такой обмен записями станет возможным есть указать принимаемый тип в параметре `allowedContainers`.
 
 ```javascript
 var A = {
@@ -23,8 +23,8 @@ var A = {
         settings: {            
             dataSource: source,
             dragMode: {
-                    type: 'phones',
-                    allowedTypes: ['fax', 'mobiles']
+                    containerName: 'phones',
+                    allowedContainers: ['fax', 'mobiles']
                 },
             columns: ['...']
         }
@@ -37,7 +37,7 @@ var B = {
         settings: {            
             dataSource: source,
             dragMode: {
-                    type: 'fax'
+                    containerName: 'fax'
                 },
             columns: ['...']
         }
@@ -50,7 +50,7 @@ var C = {
         settings: {            
             dataSource: source,
             dragMode: {
-                    type: 'mobiles'
+                    containerName: 'mobiles'
                 },
             columns: ['...']
         }
@@ -83,13 +83,13 @@ var C = {
                     dragDisable: function(element, collection) {
                         return element.active === 1;
                     },
-                    type: function(element, collection) {
+                    containerName: function(element, collection) {
                         return element.fieldType;
                     },
-                    allowedTypes: function(element, collection) {
+                    allowedContainers: function(element, collection) {
                         return element.allowedType;
                     },
-                    expandHandler: function(dataSource, parentElement) {
+                    expand: function(dataSource, parentElement) {
                         return $http.get('/assets/dragAndDrop.childs.json').then(function(response) {
                             return response.data.items;
                         });

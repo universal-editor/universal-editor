@@ -185,13 +185,7 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-pagination',
-                                    settings: {
-                                        label: {
-                                            last: '>>',
-                                            next: '>'
-                                        }
-                                    }
+                                    name: 'ue-pagination'
                                 }
                             }
                         ]

@@ -4,7 +4,7 @@ tr(dnd-nodrag ng-if="vm.dragMode.dragIcon" data-ng-repeat="item in vm.items", da
     dnd-disable-if="vm.dragDisable(item, vm.collection)",  
     dnd-draggable="item",
     dnd-moved="vm.moved($index)",
-    dnd-type="vm.getType(item, vm.collection)",                 
+    dnd-type="vm.getContainerName(item, vm.collection)",                 
     dnd-dragstart="vm.dragStart(event, item, $index)"
     dnd-effect-allowed="move")        
         td.table-cell.context-column(ng-if="vm.isContextMenu")
@@ -30,4 +30,4 @@ tr(dnd-nodrag ng-if="vm.dragMode.dragIcon" data-ng-repeat="item in vm.items", da
             component-wrapper(data-setting="fieldItem.component", 
                             data-options="item.$options")
         td.table-cell.dragIcon
-            .dnd-expand-item.glyphicon.glyphicon-align-justify(dnd-handle) 
+            .dnd-expand-item.glyphicon.glyphicon-align-justify.dragIcon(dnd-handle) 

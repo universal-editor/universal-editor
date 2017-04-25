@@ -1,7 +1,7 @@
 ul.dnd-list(
     ng-if="vm.loaded"
     dnd-list="vm.items" 
-    dnd-allowed-types="vm.getAllowedTypes(vm.parentNode, vm.collection)"
+    dnd-allowed-types="vm.getAllowedContainers(vm.parentNode, vm.collection)"
     dnd-dragover="vm.dragover(event, index, type)" 
     dnd-drop="vm.drop(item, index, event)"      
     dnd-inserted="vm.inserted(index, external, type)")
@@ -11,7 +11,7 @@ ul.dnd-list(
             dnd-disable-if="vm.dragDisable(item, vm.collection)",  
             dnd-draggable="item",
             dnd-moved="vm.moved($index)",
-            dnd-type="vm.getType(item, vm.collection)",                 
+            dnd-type="vm.getContainerName(item, vm.collection)",                 
             dnd-dragstart="vm.dragStart(event, item, $index)"
             dnd-effect-allowed="move",
             data-frame-id="{{item[vm.dataSource.primaryKey]}}")

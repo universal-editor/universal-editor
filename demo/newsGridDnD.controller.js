@@ -152,12 +152,8 @@
                         dragDisable: function(element, collection) {
                             return false;
                         },
-                        type: function(element, collection) {
-                            return 'news';
-                        },
-                        allowedTypes: function(element, collection) {
-                            return ['news'];
-                        },
+                        containerName: 'news',
+                        allowedContainers: ['news'],
                         expandHandler: function(dataSource, element) {
                             return $http.get('/assets/dragAndDrop.childs.json').then(function(response) {
                                 return response.data.items;
@@ -193,13 +189,7 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-pagination',
-                                    settings: {
-                                        label: {
-                                            last: '>>',
-                                            next: '>'
-                                        }
-                                    }
+                                    name: 'ue-pagination'
                                 }
                             }
                         ]

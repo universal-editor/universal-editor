@@ -170,6 +170,9 @@
                     content: '';
                 }
             }
+            &.dragIcon {
+                cursor: -webkit-grab;
+            }
         }
         .row {
             border: 1px solid transparent;

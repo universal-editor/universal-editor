@@ -79,9 +79,9 @@
 
       vm.expand = function(item) {
         item.$isExpand = !item.$isExpand;
-        if (vm.dragMode && angular.isFunction(vm.dragMode.expandHandler) && vm.childrenField && !angular.isArray(item[vm.childrenField]) && !item.$sendRequest) {
+        if (vm.dragMode && angular.isFunction(vm.dragMode.expand) && vm.childrenField && !angular.isArray(item[vm.childrenField]) && !item.$sendRequest) {
           item.$sendRequest = true;
-          vm.dragMode.expandHandler(vm.dataSource, item).then(function(childrens) {
+          vm.dragMode.expand(vm.dataSource, item).then(function(childrens) {
             getExpanded(childrens);
             if (angular.isArray(childrens)) {
               angular.forEach(childrens, function(child, index) {
@@ -159,6 +159,7 @@
       vm.dragStart = function(event, item, index) {
         vm.options.$dnd = vm.options.$dnd || {};
         vm.options.$dnd.dragging = item;
+        //document.body.style.cursor = '-webkit-grabbing';
         if (vm.dragMode && angular.isFunction(vm.dragMode.start)) {
           vm.dragMode.start(event, item, vm.collection);
         }
@@ -197,22 +198,22 @@
         vm.updateNode();
       };
 
-      vm.getType = function(item, collection) {
-        if (vm.dragMode && angular.isFunction(vm.dragMode.type)) {
-          return vm.dragMode.type(item, collection);
+      vm.getContainerName = function(item, collection) {
+        if (vm.dragMode && angular.isFunction(vm.dragMode.containerName)) {
+          return vm.dragMode.containerName(item, collection);
         }
-        if (vm.dragMode && angular.isString(vm.dragMode.type)) {
-          return vm.dragMode.type;
+        if (vm.dragMode && angular.isString(vm.dragMode.containerName)) {
+          return vm.dragMode.containerName;
         }
         return null;
       };
 
-      vm.allowedTypes = function(item, collection) {
-        if (vm.dragMode && angular.isFunction(vm.dragMode.type)) {
-          return vm.dragMode.allowedTypes(item, collection);
+      vm.allowedContainers = function(item, collection) {
+        if (vm.dragMode && angular.isFunction(vm.dragMode.allowedContainers)) {
+          return vm.dragMode.allowedContainers(item, collection);
         }
-        if (vm.dragMode && angular.isArray(vm.dragMode.allowedTypes)) {
-          return vm.dragMode.allowedTypes;
+        if (vm.dragMode && angular.isArray(vm.dragMode.allowedContainers)) {
+          return vm.dragMode.allowedContainers;
         }
         return null;
       };

@@ -45,7 +45,7 @@
                         | {{'ELEMENT_NO' | translate}}           
             tbody(data-ng-if="vm.loaded && vm.dragMode"
                   dnd-list="vm.items" 
-                  dnd-allowed-types="vm.getAllowedTypes(vm.parentNode, vm.collection)"
+                  dnd-allowed-types="vm.getAllowedContainers(vm.parentNode, vm.collection)"
                   dnd-dragover="vm.dragover(event, index, type)" 
                   dnd-drop="vm.drop(item, index, event)")
                 tr.dndPlaceholder
@@ -72,7 +72,7 @@
                     data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection, 'first-column': $index===0}",
                     data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)")  
                     span {{fieldItem.displayName}}
-                .table-cell.dnd-expand-item.glyphicon(ng-if="vm.dragMode.dragIcon")
+                .table-cell.dnd-expand-item.glyphicon.dragIcon(ng-if="vm.dragMode.dragIcon")
             li.tree-body(ng-if="vm.loaded")    
                 ue-node(
                     data-collection="vm.items",

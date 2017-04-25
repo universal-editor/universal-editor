@@ -272,22 +272,22 @@
             return item;
         };
 
-        vm.getType = function(item, collection) {
-            if (vm.dragMode && angular.isFunction(vm.dragMode.type)) {
-                return vm.dragMode.type(item, collection);
+        vm.getContainerName = function(item, collection) {
+            if (vm.dragMode && angular.isFunction(vm.dragMode.containerName)) {
+                return vm.dragMode.containerName(item, collection);
             }
-            if (vm.dragMode && angular.isString(vm.dragMode.type)) {
-                return vm.dragMode.type;
+            if (vm.dragMode && angular.isString(vm.dragMode.containerName)) {
+                return vm.dragMode.containerName;
             }
             return null;
         };
 
-        vm.allowedTypes = function(item, collection) {
-            if (vm.dragMode && angular.isFunction(vm.dragMode.type)) {
-                return vm.dragMode.allowedTypes(item, collection);
+        vm.allowedContainers = function(item, collection) {
+            if (vm.dragMode && angular.isFunction(vm.dragMode.allowedContainers)) {
+                return vm.dragMode.allowedContainers(item, collection);
             }
-            if (vm.dragMode && angular.isArray(vm.dragMode.allowedTypes)) {
-                return vm.dragMode.allowedTypes;
+            if (vm.dragMode && angular.isArray(vm.dragMode.allowedContainers)) {
+                return vm.dragMode.allowedContainers;
             }
             return null;
         };

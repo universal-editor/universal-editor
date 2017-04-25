@@ -153,27 +153,11 @@
                             }
                         ]
                     },
-                    displayHeaderColumns: true,
-                    dragMode: {
-                        start: function(e, element, collection) {
-                        },
-                        over: function(e, element, destElement, collection) {
-                        },
-                        drop: function(e, element, destElement, collection) {
-                            return true;
-                        },
-                        dragDisable: function(element, collection) {
-                            return false;
-                        },
-                        type: function(element, collection) {
-                            return 'news';
-                        },
-                        allowedTypes: function(element, collection) {
-                            return ['news'];
-                        }
-                    },
                     columns: [
-                        { name: 'id', width: '20%' }, { name: 'title', width: '30%' }, { name: 'authors', width: '30%' }, { name: 'category_id', width: '30%' }],
+                        { name: 'id', width: '20%' }, 
+                        { name: 'title', width: '30%' }, 
+                        { name: 'authors', width: '30%' }, 
+                        { name: 'category_id', width: '30%' }],
                     contextMenu: [
                         {
                             component: {
@@ -199,13 +183,7 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-pagination',
-                                    settings: {
-                                        label: {
-                                            last: '>>',
-                                            next: '>'
-                                        }
-                                    }
+                                    name: 'ue-pagination'
                                 }
                             }
                         ]

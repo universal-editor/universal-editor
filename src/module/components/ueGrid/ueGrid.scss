@@ -180,6 +180,9 @@
                       &.td-loading {
                           padding: 12px
                       }
+                      &.dragIcon {
+                          cursor: -webkit-grab;
+                      }
                   }
               }
               & tfoot {

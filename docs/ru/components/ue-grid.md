@@ -97,9 +97,9 @@ settings: {
 | settings[dataSource][fields] | array | Массив настроек полей, используемых при создании и редактировании записи. | + | - |
 | settings[header] | object | Содержит настройки верхнего блока в компоненте.  | + | - |
 | settings[dataSource][tree] | object | Секция конфига для задания имен полей, используемы при выводе иерархического дерева в компоненте.  | + | - |
-| settings[dataSource][tree][childrenField] | string | Имя поля c перечнем дочерних узлов.  | + | - |
-| settings[dataSource][tree][childrenCountField] | string | Имя поля с количеством дочерних узлов.  | + | - |
-| settings[dataSource][tree][selfField] | string | Имя поля с объектом, к которому привязан узел.  | + | - |
+| settings[dataSource][tree][childrenField] | string | Имя поля c перечнем дочерних узлов.  | - | - |
+| settings[dataSource][tree][childrenCountField] | string | Имя поля с количеством дочерних узлов.  | - | - |
+| settings[dataSource][tree][selfField] | string | Если узлы содержат сущность в отдельном поле и эта сущность выводится в дереве. Пример узла, {id: 1, self: { сущность дерева }, children: [  массив узлов ]} | - | - |
 | settings[header][filter] | object, false | Содержит компонент фильтра.  | - | - |
 | settings[header][toolbar] | object | Содержит компоненты для верхнего блока ue-grid.  | + | - |
 | settings[displayHeaderColumns] | boolean | Флаг отображения блока с заголовками колонок.  | - | true |

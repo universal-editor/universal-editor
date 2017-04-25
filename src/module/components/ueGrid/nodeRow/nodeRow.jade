@@ -14,7 +14,7 @@ div
                 ng-click="vm.expand({item: item})")   
             .column(data-ng-repeat="fieldItem in vm.tableFields track by $index"  ng-style="fieldItem.ngStyle" ng-class="{'first-column': $index===0}")       
                 component-wrapper(data-setting="fieldItem.component", data-options="item.$options")
-            .dnd-expand-item.glyphicon.glyphicon-align-justify(dnd-handle)   
+            .dnd-expand-item.glyphicon.glyphicon-align-justify.dragIcon(dnd-handle)   
     .row(ng-if="!vm.dragIcon")
             .table-cell.context-column
                 .context-menu-wrapper(data-ng-show="vm.options.contextId == item[vm.dataSource.primaryKey]" , data-ng-style='vm.options.styleContextMenu')
