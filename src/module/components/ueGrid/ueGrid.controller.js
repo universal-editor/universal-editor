@@ -241,6 +241,12 @@
             vm.items.splice(index, 1);
             $timeout(function() {
                 angular.forEach(vm.items, function(item, index) {
+                    item.$options = item.$options || {
+                        $componentId: vm.$componentId,
+                        regim: 'preview',
+                        $dataIndex: index,
+                        isSendRequest: true
+                    }
                     item.$options.$dataIndex = index;
                 });
                 vm.data.switchLoaderOff = true;

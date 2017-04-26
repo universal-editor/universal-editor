@@ -140,6 +140,12 @@
             $nodeId: vm.nodeId
           };
           angular.forEach(vm.items, function(item, index) {
+            item.$options = item.$options || {
+              $componentId: vm.$componentId,
+              regim: 'preview',
+              $dataIndex: index,
+              isSendRequest: true
+            };
             item.$options.$dataIndex = index;
           });
           $scope.$broadcast('ue:nodeDataLoaded', vm.data);
