@@ -60,7 +60,7 @@
                     td.table-cell.td.table-cell-loading(colspan="{{vm.tableFields.length + vm.isContextMenu + !!vm.dragMode.dragIcon}}")
                         .processing-status-wrapper
                             .processing-status {{'PERFORMS_ACTIONS' | translate}}
-            tfoot
+            tfoot(ng-if="vm.listFooterBar.length")
                 tr
                     td.table-cell(colspan="{{vm.tableFields.length + vm.isContextMenu + !!vm.dragMode.dragIcon}}")
                         component-wrapper(data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component", data-options="vm.options")
@@ -88,7 +88,7 @@
                 .column.td-loading
                    .processing-status-wrapper
                       .processing-status {{'PERFORMS_ACTIONS' | translate}}
-            li
+            li(ng-if="vm.listFooterBar.length")
               .row.footer
                 .table-cell
                     component-wrapper(data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component", data-options="vm.options")
