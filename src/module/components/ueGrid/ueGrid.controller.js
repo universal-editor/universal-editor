@@ -312,7 +312,7 @@
             return null;
         };
 
-        vm.allowedContainers = function(item, collection) {
+        vm.getAllowedContainers = function(item, collection) {
             if (vm.dragMode && angular.isFunction(vm.dragMode.allowedContainers)) {
                 return vm.dragMode.allowedContainers(item, collection);
             }

@@ -46,149 +46,160 @@
     margin: 10px 0;
     padding: 0;
     .dndDraggingSource {
-        background-color: rgba(99, 99, 99, 0.5);
+        background-color: rgba(99, 99, 99, 0.2);
         color: transparent;
         opacity: 0.5;
-        -webkit-box-shadow: 0px 1px 19px 0px rgba(99, 99, 99, 1);
-        -moz-box-shadow: 0px 1px 19px 0px rgba(99, 99, 99, 1);
-        box-shadow: 0px 1px 19px 0px rgba(99, 99, 99, 1);
+        -webkit-box-shadow: 0px 1px 8px 0px #636363;
+        -moz-box-shadow: 0px 1px 8px 0px #636363;
+        box-shadow: 0px 1px 8px 0px #636363;
     }
-    .row.header {
-        padding: 5px;
+
+
+.row.header {
+    padding: 5px;
+}
+
+.tree-body {
+    padding: 5px;
+}
+
+ul.dnd-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.row-empty {
+    width: 100%;
+    padding: 5px;
+}
+
+.dndPlaceholder {
+    height: 2px;
+    background-color: #cbd6da;
+    margin: 5px 0;
+    list-style: none;
+    text-align: center;
+    border: 1px solid #e1e1e8;
+}
+
+.no-drag {
+    flex-basis: 100%;
+}
+
+.row {
+    flex-basis: 100%;
+    margin-right: 0;
+    margin-left: 0;
+    display: flex;
+    align-items: flex-start;
+    &.header {
+        border-bottom: 2px solid #ddd;
+        font-weight: 700;
+        cursor: pointer;
+        .table-cell {
+            padding: 5px 12px;
+            &.glyphicon {
+                width: 30px;
+            }
+            &.active.asc:before {
+                content: "";
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 7px solid #000000;
+                transform: scale(-1, -1);
+                margin-top: 3px;
+                position: absolute;
+                left: 0;
+                display: inline-flex;
+            }
+            &.active.desc:before {
+                content: "";
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 7px solid #000000;
+                transform: scale(-1, -1);
+                margin-top: 3px;
+                position: absolute;
+                left: 0;
+                display: inline-flex;
+            }
+        }
     }
-    .tree-body {
-        padding: 5px;
+    &.footer {
+        .table-cell {
+            width: 100%;
+            background-color: #cbd6da !important;
+            padding: 8px;
+        }
     }
-    ul.dnd-list {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
+    .column {
+        padding-left: 5px;
+        padding-right: 5px;
     }
-    .row-empty {
-        width: 100%;
-        padding: 5px;
+    .table-cell.context-column {
+        height: 0;
+        position: absolute;
     }
+}
+
+.row-draggable {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
     .dndPlaceholder {
         height: 2px;
         background-color: #cbd6da;
-        margin: 5px 0;
-        list-style: none;
-        text-align: center;
-        border: 1px solid #e1e1e8;
     }
-    .no-drag {
-        flex-basis: 100%;
+    &.dndDragging {
+        .dndPlaceholder {
+            display: none;
+        }
+    }
+    .children-frames {
+        margin-left: 10px;
+        .empty-child-area {
+            .dnd-list {
+                padding: 5px 0 0 5px;
+            }
+        }
+    }
+    .dnd-expand-item.glyphicon {
+        padding: 0 8px;
+        margin-bottom: 5px;
+        cursor: pointer;
+        flex-basis: 15px;
+        &.icon-collapse {
+            cursor: default;
+            &:before {
+                content: '';
+            }
+        }
+        &.dragIcon {
+            cursor: -webkit-grab;
+        }
     }
     .row {
-        flex-basis: 100%;
+        border: 1px solid transparent;
         margin-right: 0;
         margin-left: 0;
         display: flex;
-        align-items: flex-start;
-        &.header {
-            border-bottom: 2px solid #ddd;
-            font-weight: 700;
-            cursor: pointer;
-            .table-cell {
-                padding: 5px 12px;
-                &.glyphicon {
-                    width: 30px;
-                }
-                &.active.asc:before {
-                    content: "";
-                    width: 0;
-                    height: 0;
-                    border-left: 5px solid transparent;
-                    border-right: 5px solid transparent;
-                    border-bottom: 7px solid #000000;
-                    transform: scale(-1, -1);
-                    margin-top: 3px;
-                    position: absolute;
-                    left: 0;
-                    display: inline-flex;
-                }
-                &.active.desc:before {
-                    content: "";
-                    width: 0;
-                    height: 0;
-                    border-left: 5px solid transparent;
-                    border-right: 5px solid transparent;
-                    border-top: 7px solid #000000;
-                    transform: scale(-1, -1);
-                    margin-top: 3px;
-                    position: absolute;
-                    left: 0;
-                    display: inline-flex;
-                }
-            }
-        }
-        &.footer {
-            .table-cell {
-                width: 100%;
-                background-color: #cbd6da !important;
-                padding: 8px;
-            }
-        }
+        align-items: center;
         .column {
-            padding-left: 5px;
-            padding-right: 5px;
+            padding-left: 10px;
+            padding-right: 10px;
         }
         .table-cell.context-column {
             height: 0;
             position: absolute;
+            left: 10px;
         }
     }
-    .row-draggable {
-        padding: 0;
-        margin: 0;
-        margin-bottom: 10px;
-        .dndPlaceholder {
-            height: 2px;
-            background-color: #cbd6da;
-        }
-        &.dndDragging {
-            .dndPlaceholder {
-                display: none;
-            }
-        }
-        .children-frames {
-            margin-left: 10px;
-            .empty-child-area {
-                .dnd-list {
-                    padding: 5px 0 0 5px;
-                }
-            }
-        }
-        .dnd-expand-item.glyphicon {
-            padding: 0 8px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            flex-basis: 15px;
-            &.icon-collapse {
-                cursor: default;
-                &:before {
-                    content: '';
-                }
-            }
-            &.dragIcon {
-                cursor: -webkit-grab;
-            }
-        }
-        .row {
-            border: 1px solid transparent;
-            margin-right: 0;
-            margin-left: 0;
-            display: flex;
-            align-items: center;
-            .column {
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-            .table-cell.context-column {
-                height: 0;
-                position: absolute;
-                left: 10px;
-            }
-        }
-    }
+}
+
+
 }
