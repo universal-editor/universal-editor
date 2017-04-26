@@ -286,12 +286,10 @@
 
         vm.updateTable = function() {
             $timeout(function() {
-                if (vm.data) {
-                    angular.forEach(vm.items, function(item, index) {
-                        item.$options.$dataIndex = index;
-                    });
-                    $scope.$broadcast('ue:componentDataLoaded', vm.data);
-                }
+                $scope.$broadcast('ue:componentDataLoaded', {
+                    $componentId: vm.$componentId,
+                    items: vm.items
+                });
             });
         };
 
@@ -485,7 +483,6 @@
             }
         });
 
-
         $scope.$on('ue:componentDataLoaded', componentLoadedHandler);
         function componentLoadedHandler(event, data) {
             if (vm.isComponent(data) && !data.hasOwnProperty('$items') && !event.defaultPrevented) {
@@ -539,9 +536,6 @@
                 }
             }
         }
-
-
-
 
         function getFieldValue() {
             return vm.items || [];

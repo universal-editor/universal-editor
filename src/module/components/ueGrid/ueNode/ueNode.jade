@@ -13,7 +13,7 @@ ul.dnd-list(
             dnd-moved="vm.moved($index)",
             dnd-type="vm.getContainerName(item, vm.collection)",                 
             dnd-dragstart="vm.dragStart(event, item, $index)"
-            dnd-effect-allowed="move",
+            dnd-effect-allowed="{{vm.dragMode.mode || 'move'}}",
             data-frame-id="{{item[vm.dataSource.primaryKey]}}")
             .row(data-node-row="", data-drag-icon="vm.dragMode.dragIcon" data-node-id="vm.nodeId", data-options="vm.options", data-table-fields="vm.tableFields",  data-context-links="vm.contextLinks", data-data-source="vm.dataSource", data-item="item", data-expand="vm.expand(item)" data-ng-mousedown="vm.toggleContextViewByEvent({item: item, e: $event})")     
             .children-frames(ng-show="item.$isExpand" ng-if="vm.treeSource" ng-class="{'empty-child-area': item[vm.childrenField]}")
