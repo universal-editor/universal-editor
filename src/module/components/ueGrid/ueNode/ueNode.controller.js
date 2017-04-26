@@ -187,6 +187,9 @@
           if (drop === false) {
             return false;
           }
+          if (angular.isObject(drop)) {
+            return drop;
+          }
         }
         return item;
       };
