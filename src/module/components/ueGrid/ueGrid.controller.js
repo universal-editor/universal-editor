@@ -28,6 +28,10 @@
                 vm.selfField = vm.dataSource.tree.selfField;
             }
 
+            if(!vm.componentSettings.width) {
+                vm.classComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
+            }
+
             url = vm.dataSource.url;
             parentField = vm.dataSource.parentField;
             vm.correctEntityType = true;
