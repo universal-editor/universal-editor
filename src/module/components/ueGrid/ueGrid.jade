@@ -1,4 +1,4 @@
-.ue-grid
+.ue-grid(data-ng-class="vm.classComponent")
     .ue-grid-body.ue-component-body(ng-if="!vm.warnings.length && !vm.dangers.length")
         .grid-toolbar
             component-wrapper.header-action-button(ng-repeat="button in vm.listHeaderBar track by $index", data-setting="button", data-button-class="header", data-options="vm.options")
@@ -49,7 +49,7 @@
                   dnd-dragover="vm.dragover(event, index, type)" 
                   dnd-drop="vm.drop(item, index, event)")
                 tr.dndPlaceholder
-                     td(colspan="{{vm.tableFields.length + vm.isContextMenu + !!vm.dragMode.dragIcon}}")
+                     td
                 include template/trWithDragIcon.jade
                 include template/trWithoutDragIcon.jade
                 tr.row-empty(data-ng-if="vm.items.length == 0")

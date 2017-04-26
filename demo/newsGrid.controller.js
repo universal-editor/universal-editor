@@ -153,10 +153,15 @@
                             }
                         ]
                     },
+                    width: 11,
+                    dragMode: {
+                        containerName: 'news',
+                        allowedContainers: ['news']
+                    },
                     columns: [
-                        { name: 'id', width: '20%' }, 
-                        { name: 'title', width: '30%' }, 
-                        { name: 'authors', width: '30%' }, 
+                        { name: 'id', width: '20%' },
+                        { name: 'title', width: '30%' },
+                        { name: 'authors', width: '30%' },
                         { name: 'category_id', width: '30%' }],
                     contextMenu: [
                         {

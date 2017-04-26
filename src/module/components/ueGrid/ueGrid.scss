@@ -16,6 +16,11 @@
           .component-wrapper {
               width: auto;
           }
+          .dndPlaceholder{
+              td {
+                  flex-basis: 100%;
+              }
+          }
           .field-wrapper-ue-button {
               & .ue-button-body {
                   .button-loading {
