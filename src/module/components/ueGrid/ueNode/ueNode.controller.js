@@ -140,13 +140,11 @@
             $nodeId: vm.nodeId
           };
           angular.forEach(vm.items, function(item, index) {
-            item.$options = item.$options || {
-              $componentId: vm.$componentId,
-              regim: 'preview',
-              $dataIndex: index,
-              isSendRequest: true
-            };
+            item.$options = item.$options || {};
+            item.$options.$componentId = vm.options.$componentId;
+            item.$options.regim = 'preview';
             item.$options.$dataIndex = index;
+            item.$options.isSendRequest = true;
           });
           $scope.$broadcast('ue:nodeDataLoaded', vm.data);
         });
@@ -236,7 +234,6 @@
         }
         return null;
       };
-
     };
   }
 })();
