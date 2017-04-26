@@ -21,8 +21,10 @@
 
 ```javascript
 var contextRecordId;
-$rootScope.$on('ue-grid:ContextMenu', function(e, data) {
-		contextRecordId = data.id;
+$rootScope.$on('ue-grid:contextMenu', function(e, data) {
+	var record = data.record;
+  var primaryKey = data.primaryKey;
+	contextRecordId = record[primaryKey];
 });
 {
 	label: 'Text',

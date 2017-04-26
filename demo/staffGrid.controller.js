@@ -11,8 +11,10 @@
         var vm = this;
         var contextRecordId;
 
-        $rootScope.$on('ue-grid:сontextMenu', function(e, data) {
-            contextRecordId = data.id;
+        $rootScope.$on('ue-grid:contextMenu', function(e, data) {
+            var record = data.record;
+            var primaryKey = data.primaryKey;
+            contextRecordId = record[primaryKey];
         });
 
         var staffDataSource = {

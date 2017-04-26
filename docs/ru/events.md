@@ -67,14 +67,12 @@ Cобытие вызывается перед удалением записи.
 Событие инициируется при клике по контекстному меню в компоненте `ue-grid`
 Доступные свойства аргумента `data`:
 
-+ `id` – идентификатор записи в таблице;
 + `primaryKey` – имя поля с идентификатором;
-+ `records` – полный перечень записей;
++ `record` – полная запись из компонента, на которой вызвано меню;
 
 ```javascript
-$rootScope.$on('ue-grid:ContextMenu', function(e, data) {
-   var contextRecordId = data.id;
+$rootScope.$on('ue-grid:contextMenu', function(e, data) {
+   var record = data.record;
    var primaryKey = data.primaryKey;
-   var records = data.records;
 });
 ```

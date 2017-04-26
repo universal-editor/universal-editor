@@ -425,11 +425,11 @@
             return index !== -1;
         }
 
-        function toggleContextView(id) {
-            $rootScope.$broadcast('ue-grid:сontextMenu', {
-                id: id,
-                primaryKey: vm.idField,
-                records: vm.items
+        function toggleContextView(record) {
+            var id = record[vm.idField];
+            $rootScope.$broadcast('ue-grid:contextMenu', {
+                record: record,
+                primaryKey: vm.idField
             });
             vm.styleContextMenu = {};
             if (vm.contextId == id) {
@@ -439,11 +439,11 @@
             }
         }
 
-        function toggleContextViewByEvent(id, event) {
-            $rootScope.$broadcast('ue-grid:сontextMenu', {
-                id: id,
-                primaryKey: vm.idField,
-                records: vm.items
+        function toggleContextViewByEvent(record, event) {
+            var id = record[vm.idField];
+            $rootScope.$broadcast('ue-grid:contextMenu', {
+                record: record,
+                primaryKey: vm.idField
             });
             var left = event.pageX - $element.find('table')[0].getBoundingClientRect().left;
             if (event.which === 3) {
