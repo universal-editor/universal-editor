@@ -153,7 +153,6 @@
                             }
                         ]
                     },
-                    width: 11,
                     dragMode: {
                         containerName: 'news',
                         allowedContainers: ['news']
