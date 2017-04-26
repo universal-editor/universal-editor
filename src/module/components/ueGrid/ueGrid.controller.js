@@ -272,11 +272,16 @@
         };
         vm.drop = function(item, index, event) {
             if (vm.dragMode && angular.isFunction(vm.dragMode.drop)) {
+                var $options = item.$options;
                 var drop = vm.dragMode.drop(event, item, null, vm.items);
                 if (drop === false) {
                     return false;
                 }
                 if (angular.isObject(drop)) {
+                    drop.$options = $options;
+                    if (vm.selfField) {
+                        drop[vm.selfField].$options = drop.$options;
+                    }
                     return drop;
                 }
             }

@@ -136,18 +136,15 @@
           vm.data = vm.data || {
             editorEntityType: 'exist',
             $componentId: vm.options.$componentId,
-            $items: vm.items,
             $nodeId: vm.nodeId
           };
+          vm.data.$items = vm.items;
           angular.forEach(vm.items, function(item, index) {
             item.$options = item.$options || {};
             item.$options.$componentId = vm.options.$componentId;
             item.$options.regim = 'preview';
             item.$options.$dataIndex = index;
             item.$options.isSendRequest = true;
-            if(vm.selfField) {
-              item[vm.selfField].$options = item.$options;
-            }
           });
           $scope.$broadcast('ue:nodeDataLoaded', vm.data);
         });
@@ -189,12 +186,17 @@
         if (vm.isCancelDrop === true) {
           return false;
         }
+        var $options = item.$options;
         if (vm.dragMode && angular.isFunction(vm.dragMode.drop)) {
           var drop = vm.dragMode.drop(event, item, vm.parentNode, vm.collection);
           if (drop === false) {
             return false;
           }
           if (angular.isObject(drop)) {
+            drop.$options = $options;
+            if (vm.selfField) {
+              drop[vm.selfField].$options = drop.$options;
+            }
             return drop;
           }
         }
