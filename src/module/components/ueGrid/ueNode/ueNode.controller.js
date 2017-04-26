@@ -146,7 +146,7 @@
             item.$options.$dataIndex = index;
             item.$options.isSendRequest = true;
             if(vm.selfField) {
-              item[vm.selfField] = item.$options;
+              item[vm.selfField].$options = item.$options;
             }
           });
           $scope.$broadcast('ue:nodeDataLoaded', vm.data);
