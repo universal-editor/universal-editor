@@ -28,7 +28,7 @@
                 vm.selfField = vm.dataSource.tree.selfField;
             }
 
-            if(!vm.componentSettings.width) {
+            if (!vm.componentSettings.width) {
                 vm.classComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
             }
 
@@ -272,11 +272,27 @@
                 if (drop === false) {
                     return false;
                 }
-                if(angular.isObject(drop)) {
+                if (angular.isObject(drop)) {
                     return drop;
                 }
             }
             return item;
+        };
+
+        vm.inserted = function(index, external, type) {
+            $(".dndPlaceholder").remove();
+            vm.updateTable();
+        };
+
+        vm.updateTable = function() {
+            $timeout(function() {
+                if (vm.data) {
+                    angular.forEach(vm.items, function(item, index) {
+                        item.$options.$dataIndex = index;
+                    });
+                    $scope.$broadcast('ue:componentDataLoaded', vm.data);
+                }
+            });
         };
 
         vm.getContainerName = function(item, collection) {

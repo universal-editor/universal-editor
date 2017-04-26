@@ -47,7 +47,8 @@
                   dnd-list="vm.items" 
                   dnd-allowed-types="vm.getAllowedContainers(vm.parentNode, vm.collection)"
                   dnd-dragover="vm.dragover(event, index, type)" 
-                  dnd-drop="vm.drop(item, index, event)")
+                  dnd-drop="vm.drop(item, index, event)"
+                  dnd-inserted="vm.inserted(index, external, type)")
                 tr.dndPlaceholder
                      td
                 include template/trWithDragIcon.jade
