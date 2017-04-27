@@ -154,7 +154,7 @@
                         },
                         containerName: 'news',
                         allowedContainers: ['news'],
-                        expandHandler: function(dataSource, element) {
+                        expand: function(dataSource, element) {
                             return $http.get('/assets/dragAndDrop.childs.json').then(function(response) {
                                 return response.data.items;
                             });
