@@ -76,15 +76,14 @@
                 .table-cell.dnd-expand-item.glyphicon.dragIcon(ng-if="vm.dragMode.dragIcon")
             li.tree-body(ng-if="vm.loaded")    
                 ue-node(
+                    data-is-first-level="true"
                     data-collection="vm.items",
                     data-items="vm.items",
                     data-table-fields="vm.tableFields",
                     data-setting="vm.setting",
                     data-options="vm.options",
                     data-context-links="vm.contextLinks"
-                    toggle-context-view-by-event="vm.toggleContextViewByEvent(item, e)")
-            li.row-empty(data-ng-if="vm.items.length == 0")
-                .column {{'ELEMENT_NO' | translate}}
+                    toggle-context-view-by-event="vm.toggleContextViewByEvent(item, e)")            
             li(data-ng-show="!vm.loaded")
                 .column.td-loading
                    .processing-status-wrapper

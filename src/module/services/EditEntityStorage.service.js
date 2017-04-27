@@ -122,10 +122,15 @@
             }
         };
 
-        function constructOutputValue(request) {
-            var entityObject = {};
-            var controllers = storage[request.options.$componentId] || [],
-                groupControllers = groups[request.options.$componentId] || [];
+        this.constructOutputValue = function constructOutputValue(request) {
+            var entityObject = {}, componentId;
+            if(angular.isString(request)) {
+                componentId = request;
+            } else if(angular.isObject(request)) {
+                componentId = request.$componentId || request.options.$componentId;
+            }
+            var controllers = storage[componentId] || [],
+                groupControllers = groups[componentId] || [];
             request.isError = true;
 
             angular.forEach(controllers, function(fCtrl) {

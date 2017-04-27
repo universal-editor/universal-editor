@@ -45,7 +45,7 @@
         self.dangers = [];
         self.warnings = [];
 
-        self.templates = componentSettings.templates;
+        self.templates = angular.merge({}, componentSettings.templates);
 
         /** if template is set as a html-file */
         var htmlPattern = /[^\s]+(?=\.(html|jade)$)/;

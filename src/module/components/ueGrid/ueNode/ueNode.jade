@@ -4,7 +4,10 @@ ul.dnd-list(
     dnd-allowed-types="vm.getAllowedContainers(vm.parentNode, vm.collection)"
     dnd-dragover="vm.dragover(event, index, type)" 
     dnd-drop="vm.drop(item, index, event)"      
-    dnd-inserted="vm.inserted(index, external, type)")
+    dnd-inserted="vm.inserted(index, external, type)"
+    data-ng-class="{'dnd-list-empty': vm.isFirstLevel && vm.items.length == 0}")
+        li.row-empty
+                .column {{'ELEMENT_NO' | translate}}
         li.row-draggable(
             data-ng-repeat="item in vm.items",
             oncontextmenu='return false;'     

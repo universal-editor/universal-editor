@@ -3,6 +3,7 @@
 
     var ueNode = {
         bindings : {
+            isFirstLevel: '=',
             collection: '=',
             parentNode: '=',
             items: '=',

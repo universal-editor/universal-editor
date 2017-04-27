@@ -162,6 +162,12 @@
             $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
             $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
             $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
+
+            EditEntityStorage.addFieldController(vm);
+
+            vm.getFieldValue = function() {
+                return EditEntityStorage.constructOutputValue(vm.options);
+            };
         };
 
         function updateButton() {
