@@ -57,7 +57,7 @@
         self.dangers = [];
         self.warnings = [];
 
-        self.templates = componentSettings.templates;
+        self.templates = angular.merge({}, componentSettings.templates);
 
         /** if template is set as a html-file */
         var htmlPattern = /[^\s]+(?=\.(html|jade)$)/;
@@ -137,7 +137,6 @@
         self.listeners.push(forceReadonlyHandler);
         self.listeners.push(componentValueChangedHandler);
         self.listeners.push(valueWatcher);
-
         self.isParentComponent = function isParentComponent(id, scope) {
             scope = scope || $scope;
             if (angular.isObject(id)) {

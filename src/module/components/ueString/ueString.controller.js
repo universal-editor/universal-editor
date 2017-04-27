@@ -22,7 +22,7 @@
                 vm.typeInput = 'password';
             }
 
-            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {                
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {  
                 if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
                     vm.equalPreviewValue();

@@ -3,16 +3,21 @@
 
     angular
         .module('demoApp')
-        .controller('NewsGridController', NewsGridController);
+        .controller('newsGridDnDController', newsGridDnDController);
 
-    function NewsGridController() {
+    function newsGridDnDController($http) {
         'ngInject';
         var vm = this;
         var newsDataSource = {
             standard: 'YiiSoft',
-            url: '//universal-backend.dev/rest/v1/news',
+            url: '/assets/dragAndDrop.1.json',
             sortBy: '-id',
             primaryKey: 'id',
+            tree: {
+                childrenField: 'childs' ,
+                childrenCountField: 'childs_count',
+                selfField: 'self'
+            },
             fields: [
                 {
                     name: 'id',
@@ -20,6 +25,7 @@
                         name: 'ue-string',
                         settings: {
                             label: 'ID',
+                            template: '',
                             validators: [
                                 {
                                     type: 'number'
@@ -34,23 +40,6 @@
                         name: 'ue-date',
                         settings: {
                             label: 'Publication date'
-                        }
-                    }
-                },
-                {
-                    name: 'category_id',
-                    component: {
-                        name: 'ue-dropdown',
-                        settings: {
-                            label: 'Category',
-                            valuesRemote: {
-                                fields: {
-                                    value: 'id',
-                                    label: 'title'
-                                },
-                                url: 'http://universal-backend.dev/rest/v1/news/categories'
-                            },
-                            search: true
                         }
                     }
                 },
@@ -126,6 +115,23 @@
                             label: 'Updated'
                         }
                     }
+                },                
+                {
+                    name: 'category_id',
+                    component: {
+                        name: 'ue-dropdown',
+                        settings: {
+                            label: 'Category',
+                            valuesRemote: {
+                                fields: {
+                                    value: 'id',
+                                    label: 'title'
+                                },
+                                url: 'http://universal-backend.dev/rest/v1/news/categories'
+                            },
+                            search: true
+                        }
+                    }
                 }
             ]
         };
@@ -135,45 +141,41 @@
                 name: 'ue-grid',
                 settings: {
                     dataSource: newsDataSource,
-                    header: {
-                        toolbar: [
-                            {
-                                component: {
-                                    name: 'ue-filter'
-                                }
-                            },
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Add news',
-                                        sref: 'news_edit'
-                                    }
-                                }
-                            }
-                        ]
-                    },
                     dragMode: {
+                        start: function(e, element, collection) {
+                        },
+                        over: function(e, element, destElement, collection) {
+                        },
+                        drop: function(e, element, destElement, collection) {
+                            return true;
+                        },
+                        dragDisable: function(element, collection) {
+                            return false;
+                        },
                         containerName: 'news',
-                        allowedContainers: ['news']
+                        allowedContainers: ['news'],
+                        expand: function(dataSource, element) {
+                            return $http.get('/assets/dragAndDrop.childs.json').then(function(response) {
+                                return response.data.items;
+                            });
+                        },
+                        dragIcon: true
                     },
                     columns: [
-                        { name: 'id', width: '20%' },
-                        { name: 'title', width: '30%' },
-                        { name: 'authors', width: '30%' },
-                        { name: 'category_id', width: '30%' }],
+                    {
+                        name: 'title',
+                        width: "20%"
+                    },
+                    {
+                        name: 'authors',
+                        width: "300px"
+                    },
+                    {
+                        name: 'category_id',
+                        width: "200px"
+                    }],
                     contextMenu: [
                         {
-                            component: {
-                                name: 'ue-button',
-                                settings: {
-                                    label: 'Edit',
-                                    sref: 'news_edit'
-                                }
-                            }
-                        },
-                        {
-                            separator: true,
                             component: {
                                 name: 'ue-button',
                                 settings: {

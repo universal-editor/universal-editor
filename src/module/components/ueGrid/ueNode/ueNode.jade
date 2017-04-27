@@ -1,0 +1,31 @@
+ul.dnd-list(
+    ng-if="vm.loaded"
+    dnd-list="vm.items" 
+    dnd-allowed-types="vm.getAllowedContainers(vm.parentNode, vm.collection)"
+    dnd-dragover="vm.dragover(event, index, type)" 
+    dnd-drop="vm.drop(item, index, event)"      
+    dnd-inserted="vm.inserted(index, external, type)"
+    data-ng-class="{'dnd-list-empty': !vm.items || vm.items.length == 0}")
+        li.row-empty(ng-if="vm.isFirstLevel && vm.items.length == 0")
+                .column {{'ELEMENT_NO' | translate}}
+        li.row-draggable(
+            data-ng-repeat="item in vm.items",
+            oncontextmenu='return false;'     
+            dnd-disable-if="vm.dragDisable(item, vm.collection)",  
+            dnd-draggable="item",
+            dnd-moved="vm.moved($index)",
+            dnd-type="vm.getContainerName(item, vm.collection)",                 
+            dnd-dragstart="vm.dragStart(event, item, $index)"
+            dnd-effect-allowed="{{vm.dragMode.mode || 'move'}}",
+            data-frame-id="{{item[vm.dataSource.primaryKey]}}")
+            .row(data-node-row="", data-drag-icon="vm.dragMode.dragIcon" data-node-id="vm.nodeId", data-options="vm.options", data-table-fields="vm.tableFields",  data-context-links="vm.contextLinks", data-data-source="vm.dataSource", data-item="item", data-expand="vm.expand(item)" data-ng-mousedown="vm.toggleContextViewByEvent({item: item, e: $event})")     
+            .children-frames(ng-show="item.$isExpand" ng-if="vm.treeSource" ng-class="{'empty-child-area': item[vm.childrenField]}")
+                ue-node(
+                    data-collection="vm.collection",
+                    data-parent-node="item",
+                    data-items="item[vm.childrenField]",
+                    data-table-fields="vm.tableFields",
+                    data-setting="vm.setting",
+                    data-options="vm.options",
+                    data-context-links="vm.contextLinks",
+                    toggle-context-view-by-event="vm.toggleContextViewByEvent({item: item, e: e})")
