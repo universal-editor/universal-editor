@@ -30,7 +30,7 @@
 
         this.getComponentBySetting = function(id) {
             var model = null;
-            if(angular.isObject(id) && id.component) {
+            if (angular.isObject(id) && id.component) {
                 id = id.component.$id;
             }
             if (id) {
@@ -122,11 +122,13 @@
             }
         };
 
-        this.constructOutputValue = function constructOutputValue(request) {
+        this.constructOutputValue = constructOutputValue;
+        
+        function constructOutputValue(request) {
             var entityObject = {}, componentId;
-            if(angular.isString(request)) {
+            if (angular.isString(request)) {
                 componentId = request;
-            } else if(angular.isObject(request)) {
+            } else if (angular.isObject(request)) {
                 componentId = request.$componentId || request.options.$componentId;
             }
             var controllers = storage[componentId] || [],
