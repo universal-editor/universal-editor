@@ -547,7 +547,28 @@
         }
 
         function getFieldValue() {
-            return vm.items || [];
+            var output = angular.merge({}, vm.items);
+            moveThroughTree(output, function(item) {
+                delete item.$options;
+                delete item.$isExpand;
+                delete item.$componentId;
+                if (vm.selfField && angular.isObject(item[vm.selfField])) {
+                    delete item[vm.selfField].$options;
+                    delete item[vm.selfField].$isExpand;
+                    delete item[vm.selfField].$componentId;
+                }
+            });
+            return output || [];
+        }
+        function moveThroughTree(data = [], callback) {            
+            angular.forEach(data, function(item, index, collection) {
+                if (angular.isFunction(callback)) {
+                    callback(item, index, collection);
+                }
+                if (vm.childrenField && angular.isArray(item[vm.childrenField]) && item[vm.childrenField].length > 0) {
+                    moveThroughTree(item[vm.childrenField], callback);
+                }
+            });
         }
 
         $document.on('click', function(evt) {
