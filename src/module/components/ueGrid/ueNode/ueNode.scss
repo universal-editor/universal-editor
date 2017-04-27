@@ -64,12 +64,8 @@
     .dndPlaceholder {
         height: 30px;
         list-style: none;
-         background-color: #f7f7f7;
+        background-color: #bababa;
         color: transparent;
-        opacity: 0.5;
-        -webkit-box-shadow: 0px 1px 8px 0px #636363;
-        -moz-box-shadow: 0px 1px 8px 0px #636363;
-        box-shadow: 0px 1px 8px 0px #636363;
     }
     .no-drag {
         flex-basis: 100%;
