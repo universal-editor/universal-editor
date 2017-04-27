@@ -46,8 +46,6 @@
     list-style-type: none;
     margin: 10px 0;
     padding: 0;
-
-  
     .row.header {
         padding: 5px;
     }
@@ -66,7 +64,7 @@
     .dndPlaceholder {
         height: 30px;
         list-style: none;
-         background-color: rgba(99, 99, 99, 0.2);
+         background-color: #f7f7f7;
         color: transparent;
         opacity: 0.5;
         -webkit-box-shadow: 0px 1px 8px 0px #636363;
@@ -149,7 +147,7 @@
         padding-bottom: 2px;
         .dndPlaceholder {
             height: 30px;
-            background-color: rgba(99, 99, 99, 0.2);
+            background-color: #f7f7f7;
         }
         &.dndDragging {
             .dndPlaceholder {
@@ -157,10 +155,10 @@
             }
         }
         .children-frames {
-            margin-left: 10px;
+            padding-left: 10px;
             &.empty-child-area {
                 .dnd-list {
-                    min-height: 10px;
+                    min-height: 7px;
                 }
             }
         }
