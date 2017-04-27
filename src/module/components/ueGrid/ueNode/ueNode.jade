@@ -5,7 +5,7 @@ ul.dnd-list(
     dnd-dragover="vm.dragover(event, index, type)" 
     dnd-drop="vm.drop(item, index, event)"      
     dnd-inserted="vm.inserted(index, external, type)"
-    data-ng-class="{'dnd-list-empty': vm.isFirstLevel && vm.items.length == 0}")
+    data-ng-class="{'dnd-list-empty': !vm.items || vm.items.length == 0}")
         li.row-empty(ng-if="vm.isFirstLevel && vm.items.length == 0")
                 .column {{'ELEMENT_NO' | translate}}
         li.row-draggable(
