@@ -41,7 +41,6 @@
     flex: 1 1 auto !important;
 }
 
-
 .table.items-list.drag-mode {
     list-style-type: none;
     margin: 10px 0;
@@ -64,8 +63,12 @@
     .dndPlaceholder {
         height: 30px;
         list-style: none;
-        background-color: #bababa;
+        background-color: #f7f7f7;
         color: transparent;
+        opacity: 0.5;
+        -webkit-box-shadow: 0px 1px 8px 0px #636363;
+        -moz-box-shadow: 0px 1px 8px 0px #636363;
+        box-shadow: 0px 1px 8px 0px #636363;
     }
     .no-drag {
         flex-basis: 100%;
