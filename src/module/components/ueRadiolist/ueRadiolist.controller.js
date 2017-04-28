@@ -19,13 +19,12 @@
             vm.dependUpdate = dependUpdate;
             vm.initDataSource = true;
             vm.dependUpdate = dependUpdate;            
-
-            baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
-            angular.extend(vm, baseController);
+            
             componentSettings = vm.setting.component.settings;
             vm.inline = componentSettings.inline === true;
 
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
+            angular.extend(vm, baseController);
 
             vm.listeners.push($scope.$watch('vm.fieldValue',
                 function(value) {

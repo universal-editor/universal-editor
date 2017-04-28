@@ -46,7 +46,9 @@
 
             if (vm.selfField) {
               var self = item[vm.selfField];
-              self.$options = item.$options;
+              if (self) {
+                self.$options = item.$options;
+              }
               extendedData.push(self);
             } else {
               extendedData.push(item);
@@ -194,7 +196,7 @@
           }
           if (angular.isObject(drop)) {
             drop.$options = $options;
-            if (vm.selfField) {
+            if (vm.selfField && drop[vm.selfField]) {
               drop[vm.selfField].$options = drop.$options;
             }
             return drop;
