@@ -67,7 +67,7 @@
         };
 
         this.addFieldController = function(ctrl, isGroup) {
-            var id = ctrl.parentComponentId;
+            var id = ctrl.parentComponentId || ctrl.$componentId;
             collection.push(ctrl);
             if (id) {
                 if (isGroup === true) {
