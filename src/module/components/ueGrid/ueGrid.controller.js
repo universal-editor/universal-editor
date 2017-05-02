@@ -16,6 +16,7 @@
             parentField;
 
         vm.$onInit = function() {
+            vm.$componentId = vm.setting.component.$id;
             //** Nested base controller */
             angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
 
@@ -49,8 +50,7 @@
             vm.pageItemsArray = [];
             vm.contextLinks = [];
             vm.mixContextLinks = [];
-            vm.listHeaderBar = [];
-            vm.$componentId = vm.setting.component.$id;
+            vm.listHeaderBar = [];            
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
             vm.prefixGrid = undefined;
             vm.refreshTableRecords = refreshTableRecords;
