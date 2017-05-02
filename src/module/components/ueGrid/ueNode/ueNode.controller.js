@@ -202,12 +202,15 @@
         }
         return item;
       };
-      vm.inserted = function(index, external, type) {
+      vm.inserted = function(item, index, external, type) {
         if (vm.childrenCountField && vm.parentNode) {
           vm.parentNode[vm.childrenCountField]++;
         }
         $(".dndPlaceholder").remove();
         vm.updateNode();
+        if (vm.dragMode && angular.isFunction(vm.dragMode.inserted)) {
+          vm.dragMode.inserted(event, index, item, vm.parentNode, vm.collection);
+        }
       };
 
       vm.getContainerName = function(item, collection) {

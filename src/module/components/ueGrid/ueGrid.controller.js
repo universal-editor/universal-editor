@@ -288,9 +288,12 @@
             return item;
         };
 
-        vm.inserted = function(index, external, type) {
+        vm.inserted = function(item, index, external, type) {
             $(".dndPlaceholder").remove();
             vm.updateTable();
+            if (vm.dragMode && angular.isFunction(vm.dragMode.inserted)) {
+                vm.dragMode.inserted(event, index, item, null, vm.items);
+            }
         };
 
         vm.updateTable = function() {
@@ -560,7 +563,7 @@
             });
             return output || [];
         }
-        function moveThroughTree(data = [], callback) {            
+        function moveThroughTree(data = [], callback) {
             angular.forEach(data, function(item, index, collection) {
                 if (angular.isFunction(callback)) {
                     callback(item, index, collection);
