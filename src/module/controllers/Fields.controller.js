@@ -107,6 +107,7 @@
                 var items = response.hasOwnProperty('data') ? response.data.items : response
                 if (response.hasOwnProperty('data')) {
                     if (!componentSettings.depend) {
+                        self.optionValues = [];
                         angular.forEach(response.data.items, function(v) {
                             self.optionValues.push(v);
                         });
