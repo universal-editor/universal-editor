@@ -50,7 +50,7 @@
             vm.pageItemsArray = [];
             vm.contextLinks = [];
             vm.mixContextLinks = [];
-            vm.listHeaderBar = [];            
+            vm.listHeaderBar = [];
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
             vm.prefixGrid = undefined;
             vm.refreshTableRecords = refreshTableRecords;
@@ -236,9 +236,11 @@
                 }
             });
         };
-
         vm.moved = function(index) {
-            vm.items.splice(index, 1);
+            var disabled = vm.dragMode.dragDisable(vm.items[index], vm.collection);
+            if (!disabled) {
+                vm.items.splice(index, 1);
+            }
             $timeout(function() {
                 angular.forEach(vm.items, function(item, index) {
                     item.$options = item.$options || {};
