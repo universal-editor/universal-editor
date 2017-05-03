@@ -165,7 +165,6 @@
       vm.dragStart = function(event, item, index) {
         vm.options.$dnd = vm.options.$dnd || {};
         vm.options.$dnd.dragging = item;
-        //document.body.style.cursor = '-webkit-grabbing';
         if (vm.dragMode && angular.isFunction(vm.dragMode.start)) {
           vm.dragMode.start(event, item, vm.collection);
         }
