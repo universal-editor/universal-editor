@@ -153,10 +153,13 @@
       };
 
       vm.moved = function(index) {
+        var disabled = vm.dragMode.dragDisable(vm.items[index], vm.collection);
         if (!vm.isCancelDrop) {
-          vm.items.splice(index, 1);
-          if (vm.childrenCountField && vm.parentNode) {
-            vm.parentNode[vm.childrenCountField]--;
+          if (!disabled) {
+            vm.items.splice(index, 1);
+            if (vm.childrenCountField && vm.parentNode) {
+              vm.parentNode[vm.childrenCountField]--;
+            }
           }
           vm.updateNode();
         }
