@@ -149,8 +149,11 @@
                         drop: function(e, element, destElement, collection) {
                             return true;
                         },
+                        inserted: function() {
+                            console.log(arguments);
+                        },
                         dragDisable: function(element, collection) {
-                            return element.id === 1098;
+                            return false;
                         },
                         containerName: 'news',
                         allowedContainers: ['news'],

@@ -1,10 +1,10 @@
 (function() {
   'use strict';
   angular
-    .module('universal-editor')
+    .module('universal-editor')    
     .controller('UeNodeController', UeNodeController);
 
-  function UeNodeController($scope, ApiService, $timeout, $rootScope, $element, $translate, toastr) {
+  function UeNodeController($scope, ApiService, $timeout, $rootScope, $element, $translate, toastr, dragOptions) {
     /* jshint validthis: true */
     'ngInject';
     var vm = this;
@@ -151,12 +151,20 @@
       };
 
       vm.moved = function(index) {
-        var disabled = vm.dragMode.dragDisable(vm.items[index], vm.collection);
+        //  console.log('moved');
+        var disabled = angular.isFunction(vm.dragMode.dragDisable) ? vm.dragMode.dragDisable(vm.items[index], vm.collection) : false;
         if (!vm.isCancelDrop) {
           if (!disabled) {
             vm.items.splice(index, 1);
             if (vm.childrenCountField && vm.parentNode) {
               vm.parentNode[vm.childrenCountField]--;
+            }
+
+            if (vm.dragMode && angular.isFunction(vm.dragMode.inserted)) {
+              if (dragOptions.insertedNode.parentNode === vm.parentNode && index <= dragOptions.insertedNode.index) {
+                dragOptions.insertedNode.index--;
+              }
+              vm.dragMode.inserted(event, dragOptions.insertedNode.index, dragOptions.insertedNode.item, dragOptions.insertedNode.parentNode, vm.collection);
             }
           }
           vm.updateNode();
@@ -206,12 +214,17 @@
         return item;
       };
       vm.inserted = function(item, index, external, type) {
+        //  console.log('inserted');
+        //  console.log(vm.collection.length);
+        dragOptions.insertedNode.index = index;
+        dragOptions.insertedNode.parentNode = vm.parentNode;
+        dragOptions.insertedNode.item = item;
         if (vm.childrenCountField && vm.parentNode) {
           vm.parentNode[vm.childrenCountField]++;
         }
         $(".dndPlaceholder").remove();
         vm.updateNode();
-        if (vm.dragMode && angular.isFunction(vm.dragMode.inserted)) {
+        if (vm.dragMode && vm.dragMode.mode === 'copy' && angular.isFunction(vm.dragMode.inserted)) {
           vm.dragMode.inserted(event, index, item, vm.parentNode, vm.collection);
         }
       };
