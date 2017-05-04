@@ -15,6 +15,7 @@
 
         vm.$onInit = function() {
             vm.optionValues = [];
+            angular.extend(vm, $controller('FieldsController', { $scope: $scope, $element: $element }));
             componentSettings = vm.setting.component.settings;
             if (componentSettings.valuesRemote) {
                 selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
@@ -40,7 +41,7 @@
             vm.deleteToAutocomplete = deleteToAutocomplete;
             vm.loadDataById = loadDataById;
             vm.clear = clear;
-            angular.extend(vm, $controller('FieldsController', { $scope: $scope, $element: $element }));
+            
 
             if (!vm.multiple) {
                 vm.classInput.width = '99%';
