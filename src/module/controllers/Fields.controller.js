@@ -5,11 +5,11 @@
         .module('universal-editor')
         .controller('FieldsController', FieldsController);
 
-    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, ApiService, moment, EditEntityStorage, $q, $translate, $element ) {
+    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, ApiService, moment, EditEntityStorage, $q, $translate, $element) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this;
-        var baseController = $controller('BaseController', { $scope: $scope, $element: $element  });
+        var baseController = $controller('BaseController', { $scope: $scope, $element: $element });
         angular.extend(vm, baseController);
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
@@ -302,7 +302,9 @@
                 if (angular.isArray(self.selectedValues)) {
                     values = self.selectedValues;
                 }
-                value = values.filter(function(option) { return option[self.fieldId] == value; })[0];
+                if (angular.isArray(values)) {
+                    value = values.filter(function(option) { return angular.isObject(option) ? (option[self.fieldId] == value) : false; })[0];
+                }
             }
             return angular.copy(value) || (self.multiple ? [] : null);
         }
