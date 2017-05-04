@@ -151,7 +151,6 @@
       };
 
       vm.moved = function(index) {
-        //  console.log('moved');
         var disabled = angular.isFunction(vm.dragMode.dragDisable) ? vm.dragMode.dragDisable(vm.items[index], vm.collection) : false;
         if (!vm.isCancelDrop) {
           if (!disabled) {
@@ -214,8 +213,6 @@
         return item;
       };
       vm.inserted = function(item, index, external, type) {
-        //  console.log('inserted');
-        //  console.log(vm.collection.length);
         dragOptions.insertedNode.index = index;
         dragOptions.insertedNode.parentNode = vm.parentNode;
         dragOptions.insertedNode.item = item;

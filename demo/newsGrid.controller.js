@@ -154,9 +154,6 @@
                         ]
                     },
                     dragMode: {
-                        inserted: function() {
-                            console.log(arguments);
-                        },
                         containerName: 'news',
                         allowedContainers: ['news']
                     },

@@ -149,9 +149,6 @@
                         drop: function(e, element, destElement, collection) {
                             return true;
                         },
-                        inserted: function() {
-                            console.log(arguments);
-                        },
                         dragDisable: function(element, collection) {
                             return false;
                         },
