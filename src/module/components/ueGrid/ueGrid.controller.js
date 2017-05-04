@@ -232,9 +232,9 @@
                     if (!FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
                         var filterName = vm.paramsPefix ? vm.paramsPefix + '-filter' : 'filter',
                             filter = JSON.parse(newVal[filterName]);
-                        if (!$.isEmptyObject(filter)) {
-                            FilterFieldsStorage.fillFilterComponent(vm.$componentId, filter);
+                        if (!$.isEmptyObject(filter)) {                            
                             $timeout(function() {
+                                FilterFieldsStorage.fillFilterComponent(vm.$componentId, filter);
                                 FilterFieldsStorage.calculate(vm.$componentId, filterName);
                                 refreshTableRecords();
                             }, 0);
