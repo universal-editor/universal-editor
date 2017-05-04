@@ -888,6 +888,7 @@
         function successAnswer(data) {
             var config = this, params, paramName;
             var parentComponentId = config.parentComponentId;
+            var searchString = $location.search();
             switch (config.action) {
                 case 'list':
                     data.$componentId = parentComponentId;
@@ -921,7 +922,7 @@
                     }
                     if (state) {
                         $state.go(state, params).then(function() {
-                            $location.search(params);
+                            $location.search(searchString);
                             $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
                     } else {
@@ -951,11 +952,12 @@
                         state = config.request.state;
                     }
                     if (state) {
+                        debugger;
                         $state.go(state, params).then(function() {
                             if (params.back) {
                                 delete params.back;
                             }
-                            $location.search(params);
+                            $location.search(searchString);
                             $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
                     } else {
@@ -969,7 +971,6 @@
                     var newId = data[config.idField];
                     var par = {};
                     par['pk'] = newId;
-                    var searchString = $location.search();
                     $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                         $location.search(searchString);
                         $rootScope.$broadcast('ue:afterEntityUpdate', {
@@ -1016,7 +1017,7 @@
                     if (!config.notGoToState) {
                         if (state) {
                             $state.go(state, params).then(function() {
-                                $location.search(params);
+                                $location.search(searchString);
                                 $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                             });
                         } else {
