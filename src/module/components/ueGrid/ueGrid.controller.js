@@ -227,7 +227,7 @@
             $scope.$watch(function() {
                 return FilterFieldsStorage.getFilterController(vm.$componentId).isReady;
             }, function(filterReady) {
-                if (filterReady) {
+                if (filterReady) {                    
                     var newVal = $location.search();
                     if (!FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
                         var filterName = vm.paramsPefix ? vm.paramsPefix + '-filter' : 'filter',

@@ -1036,7 +1036,6 @@
                         state = config.request.state;
                     }
                     if (state) {
-                        debugger;
                         $state.go(state, params).then(function() {
                             if (params.back) {
                                 delete params.back;
