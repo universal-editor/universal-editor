@@ -150,7 +150,7 @@
                             return true;
                         },
                         dragDisable: function(element, collection) {
-                            return element.id === 1098;
+                            return false;
                         },
                         containerName: 'news',
                         allowedContainers: ['news'],

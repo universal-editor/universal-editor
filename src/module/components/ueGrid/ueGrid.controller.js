@@ -3,9 +3,16 @@
 
     angular
         .module('universal-editor')
+        .value('dragOptions', {
+            insertedNode: {
+                index: null,
+                parentNode: null,
+                item: null
+            }
+        })
         .controller('UeGridController', UeGridController);
 
-    function UeGridController($scope, $rootScope, ApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, $translate, $element, $compile, EditEntityStorage, $controller) {
+    function UeGridController($scope, $rootScope, ApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, $translate, $element, $compile, EditEntityStorage, $controller, dragOptions) {
         /* jshint validthis: true */
         'ngInject';
         $element.addClass('ue-grid');
@@ -237,9 +244,15 @@
             });
         };
         vm.moved = function(index) {
-            var disabled = vm.dragMode.dragDisable(vm.items[index], vm.collection);
+            var disabled = angular.isFunction(vm.dragMode.dragDisable) ? vm.dragMode.dragDisable(vm.items[index], vm.items) : false;
             if (!disabled) {
                 vm.items.splice(index, 1);
+                if (vm.dragMode && angular.isFunction(vm.dragMode.inserted)) {
+                    if (index <= dragOptions.insertedNode.index) {
+                        dragOptions.insertedNode.index--;
+                    }
+                    vm.dragMode.inserted(event, dragOptions.insertedNode.index, dragOptions.insertedNode.item, null, vm.items);
+                }
             }
             $timeout(function() {
                 angular.forEach(vm.items, function(item, index) {
@@ -292,8 +305,10 @@
 
         vm.inserted = function(item, index, external, type) {
             $(".dndPlaceholder").remove();
+            dragOptions.insertedNode.index = index;
+            dragOptions.insertedNode.item = item;
             vm.updateTable();
-            if (vm.dragMode && angular.isFunction(vm.dragMode.inserted)) {
+            if (vm.dragMode && vm.dragMode.mode === 'copy' && angular.isFunction(vm.dragMode.inserted)) {
                 vm.dragMode.inserted(event, index, item, null, vm.items);
             }
         };
