@@ -461,7 +461,7 @@
                             });
                         }
                     }
-                    if (self.fieldId) {                       
+                    if (self.fieldId && self.fieldValue) {
                         var output;
                         if (angular.isArray(self.fieldValue)) {
                             output = [];
@@ -478,14 +478,13 @@
                         } else {
                             if (angular.isObject(self.fieldValue) && angular.isDefined(self.fieldValue[self.fieldId])) {
                                 self.fieldValue = self.fieldValue[self.fieldId];
-                            } else if (!angular.isObject(self.fieldValue)) {
-                                self.fieldValue = self.fieldValue;
                             }
                         }
                     }
                     if (angular.isFunction(callback)) {
                         callback();
                     }
+
                     equalPreviewValue($scope.data['$' + self.fieldName]);
                 }
             }
