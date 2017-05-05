@@ -5,11 +5,11 @@
         .module('universal-editor')
         .controller('FieldsController', FieldsController);
 
-    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, ApiService, moment, EditEntityStorage, $q, $translate, $element ) {
+    function FieldsController($scope, $rootScope, $location, $controller, $timeout, FilterFieldsStorage, ApiService, moment, EditEntityStorage, $q, $translate, $element) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this;
-        var baseController = $controller('BaseController', { $scope: $scope, $element: $element  });
+        var baseController = $controller('BaseController', { $scope: $scope, $element: $element });
         angular.extend(vm, baseController);
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
@@ -86,7 +86,7 @@
                             }
                         }
                     } else {
-                        if(angular.isDefined(self.defaultValue) && angular.isFunction(self.loadDataById)) {                           
+                        if (angular.isDefined(self.defaultValue) && angular.isFunction(self.loadDataById)) {
                             self.loadDataById(self.defaultValue);
                         }
                     }
@@ -361,7 +361,7 @@
         }
 
         function onLoadDataHandler(event, data, callback) {
-            if (self.isParentComponent(data.$componentId) && !self.options.filter) {
+            if (self.isParentComponent(data) && !self.options.filter) {
                 //-- functional for required fields
                 if (componentSettings.depend) {
                     $scope.$watch(function() {
@@ -451,7 +451,6 @@
                             }
                         });
                     }
-
                     if (!self.multiple) {
                         self.fieldValue = apiValue;
                     } else {
@@ -460,6 +459,28 @@
                             apiValue.forEach(function(item) {
                                 self.fieldValue.push(self.multiname ? item[self.multiname] : item);
                             });
+                        }
+                    }
+                    if (self.fieldId) {                       
+                        var output;
+                        if (angular.isArray(self.fieldValue)) {
+                            output = [];
+                            self.fieldValue.forEach(function(value) {
+                                if (angular.isObject(value) && angular.isDefined(value[self.fieldId])) {
+                                    output.push(value[self.fieldId]);
+                                } else if (!angular.isObject(value)) {
+                                    output.push(value);
+                                }
+                            });
+                            if (output.length) {
+                                self.fieldValue = output;
+                            }
+                        } else {
+                            if (angular.isObject(self.fieldValue) && angular.isDefined(self.fieldValue[self.fieldId])) {
+                                self.fieldValue = self.fieldValue[self.fieldId];
+                            } else if (!angular.isObject(self.fieldValue)) {
+                                self.fieldValue = self.fieldValue;
+                            }
                         }
                     }
                     if (angular.isFunction(callback)) {
