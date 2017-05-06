@@ -191,10 +191,7 @@
                                 settings: {
                                     label: 'Delete',
                                     action: 'delete',
-                                    sref: 'staff',
-                                    useable: function() {
-                                        return record && record.id === 3;                                        
-                                    }
+                                    sref: 'staff'
                                 }
                             }
                         }

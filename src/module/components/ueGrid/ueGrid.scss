@@ -19,10 +19,14 @@
           .component-wrapper {
               width: auto;
           }
-          tfoot .component-wrapper {
-              width: 100%;
+          tfoot,
+          .context-menu-item,
+          .row.footer {
+              .component-wrapper {
+                  width: 100%;
+              }
           }
-          .dndPlaceholder{
+          .dndPlaceholder {
               td {
                   flex-basis: 100%;
               }
