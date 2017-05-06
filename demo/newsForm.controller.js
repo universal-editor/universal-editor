@@ -79,6 +79,27 @@
                         name: 'ue-autocomplete',
                         settings: {
                             label: 'Authors',
+                            placeholder: 'Autors',
+                            valuesRemote: {
+                                fields: {
+                                    value: 'id',
+                                    label: 'name'
+                                },
+                                url: 'http://universal-backend.dev/rest/v1/staff'
+                            },
+                            //multiple: true,
+                            expandable: true,
+                            multiname: 'staff_id'
+                        }
+                    }
+                },
+                 {
+                    name: 'authors1',
+                    component: {
+                        name: 'ue-autocomplete',
+                        settings: {
+                            label: 'Authors',
+                            placeholder: 'Autors',
                             valuesRemote: {
                                 fields: {
                                     value: 'id',
@@ -164,6 +185,7 @@
                                         {
                                             label: 'Description',
                                             fields: [
+                                                'authors', 'authors1',
                                                 'id',
                                                 'published_at',
                                                 'category_id',
@@ -173,8 +195,7 @@
                                         },
                                         {
                                             label: 'Place',
-                                            fields: [
-                                                'authors',
+                                            fields: [                                                
                                                 'tags'
                                             ]
                                         },
