@@ -310,7 +310,9 @@
                 if (angular.isArray(self.selectedValues)) {
                     values = self.selectedValues;
                 }
-                value = values.filter(function(option) { return option[self.fieldId] == value; })[0];
+                if (angular.isArray(values)) {
+                    value = values.filter(function(option) { return angular.isObject(option) ? (option[self.fieldId] == value) : false; })[0];
+                }
             }
             return angular.copy(value) || (self.multiple ? [] : null);
         }
