@@ -9,47 +9,52 @@
         /* jshint validthis: true */
         'ngInject';
         var vm = this,
-            mixEntityObject,
-            pkKey,
-            pk;
-
-        var defaultEditFooterBar = [
-            {
-                component: {
-                    name: 'ue-button',
-                    settings: {
-                        label: $translate.instant('BUTTON.ACTIONS.SAVE'),
-                        action: 'save',
-                        useBackUrl: true,
+            pk,
+            defaultEditFooterBar = [
+                {
+                    component: {
+                        name: 'ue-button',
+                        settings: {
+                            label: $translate.instant('BUTTON.ACTIONS.SAVE'),
+                            action: 'save',
+                            useBackUrl: true,
+                        }
+                    }
+                },
+                {
+                    component: {
+                        name: 'ue-button',
+                        settings: {
+                            label: $translate.instant('BUTTON.ACTIONS.DELETE'),
+                            action: 'delete',
+                            useBackUrl: true,
+                        }
+                    }
+                },
+                {
+                    component: {
+                        name: 'ue-button',
+                        settings: {
+                            label: $translate.instant('BUTTON.ACTIONS.PRESAVE'),
+                            action: 'presave'
+                        }
                     }
                 }
-            },
-            {
-                component: {
-                    name: 'ue-button',
-                    settings: {
-                        label: $translate.instant('BUTTON.ACTIONS.DELETE'),
-                        action: 'delete',
-                        useBackUrl: true,
-                    }
-                }
-            },
-            {
-                component: {
-                    name: 'ue-button',
-                    settings: {
-                        label: $translate.instant('BUTTON.ACTIONS.PRESAVE'),
-                        action: 'presave'
-                    }
-                }
-            }
-        ];
+            ];
 
         vm.$onInit = function() {
+
             //** Nested base controller */
             angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element }));
 
             vm.componentSettings = vm.setting.component.settings;
+            vm.entityLoaded = false;
+            vm.errors = [];
+            vm.entityId = '';
+            vm.editorEntityType = 'new';
+            vm.editFooterBar = [];
+            vm.idField = 'id';
+
             var dataSource = vm.componentSettings.dataSource;
             var header = vm.componentSettings.header;
             if (angular.isObject(header)) {
@@ -58,16 +63,6 @@
                     vm.toolbar = [];
                 }
             }
-            vm.entityLoaded = false;
-            vm.loaded = false;
-            vm.errors = [];
-            vm.entityId = '';
-            vm.editorEntityType = 'new';
-            vm.editFooterBar = [];
-            vm.editFooterBarNew = [];
-            vm.editFooterBarExist = [];
-            vm.idField = 'id';
-            vm.empty = vm.componentSettings === true;
 
             vm.width = !isNaN(+vm.componentSettings.width) ? vm.componentSettings.width : null;
             vm.classFormComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
@@ -89,15 +84,18 @@
                 $dataSource: dataSource
             });
 
-            pkKey = 'pk';
-            pk = $state.params[pkKey];
-
-            vm.options.isNewRecord = pk === 'new';
+            if (angular.isFunction(vm.componentSettings.primaryKeyValue)) {
+                pk = vm.componentSettings.primaryKeyValue();
+            } else {
+                pk = vm.componentSettings.primaryKeyValue;
+            }
+            vm.isNewRecord = pk === null || pk === undefined;
 
             if (dataSource && dataSource.hasOwnProperty('primaryKey')) {
                 vm.idField = dataSource.primaryKey || vm.idField;
             }
 
+            /** Filling footer section */
             if (!!vm.componentSettings.footer && !!vm.componentSettings.footer.toolbar) {
                 angular.forEach(vm.componentSettings.footer.toolbar, function(control) {
                     var newControl = angular.merge({}, control);
@@ -109,6 +107,7 @@
                 });
             }
 
+            /** Default components for the footer bar */
             if (vm.editFooterBar.length === 0 && !vm.componentSettings.footer) {
                 angular.forEach(defaultEditFooterBar, function(control) {
                     var newControl = angular.merge({}, control);
@@ -120,10 +119,8 @@
                 });
             }
 
-            updateButton();
-
+            /** Default components for the footer bar */
             vm.components = [];
-
             angular.forEach(vm.componentSettings.body, function(componentObject) {
                 if (angular.isObject(componentObject) && componentObject.component) {
                     vm.components.push(componentObject);
@@ -143,25 +140,58 @@
 
 
             if (dataSource) {
-                if (pk !== 'new') {
-                    ApiService.getItemById(pk || vm.setting.pk || null, vm.options).finally(function() {
-                        vm.options.isLoading = false;
-                    });
-                }
-
-                if (pk === 'new') {
+                if (vm.isNewRecord) {
                     vm.entityLoaded = true;
                     $timeout(function() {
-                        EditEntityStorage.newSourceEntity(vm.options.$componentId, vm.setting.component.settings.dataSource.parentField);
+                        EditEntityStorage.newSourceEntity(vm.options.$componentId, dataSource);
+                    });
+                } else {
+                    ApiService.getItemById(pk, vm.options).finally(function() {
+                        vm.options.isLoading = false;
                     });
                 }
             } else {
                 vm.entityLoaded = true;
             }
 
-            $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
-            $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
-            $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
+
+
+            /** Watcher for value of primary key */
+            if (angular.isFunction(vm.componentSettings.primaryKeyValue)) {
+                var primaryKeyWatcher = $scope.$watch(function() {
+                    return vm.componentSettings.primaryKeyValue();
+                }, function(newVal) {
+                    updateButton(newVal);
+                });
+                vm.listeners.push(primaryKeyWatcher);
+            }
+
+            /** Event Handlers */
+            var componentDataLoadedHandler = $scope.$on('ue:componentDataLoaded', function(event, data) {
+                if (vm.isParentComponent(data) && !event.defaultPrevented) {
+                    vm.editorEntityType = data.editorEntityType;
+                    vm.entityId = data[vm.idField];
+                    vm.data = data;
+                    vm.entityLoaded = true;
+                }
+            });
+
+            var afterEntityUpdateHandler = $scope.$on('ue:afterEntityUpdate', function(event, data) {
+                if (data.action === 'presave') {
+                    vm.entityId = data;
+                    vm.editorEntityType = 'exist';
+                }
+            });
+
+            var beforeEntityCreateHandler = $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
+            var beforeEntityUpdateHandler = $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
+            var beforeEntityDeleteHandler = $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
+
+            vm.listeners.push(beforeEntityCreateHandler);
+            vm.listeners.push(beforeEntityDeleteHandler);
+            vm.listeners.push(componentDataLoadedHandler);
+            vm.listeners.push(componentDataLoadedHandler);
+            vm.listeners.push(afterEntityUpdateHandler);
 
             EditEntityStorage.addFieldController(vm);
 
@@ -170,39 +200,11 @@
             };
         };
 
-        function updateButton() {
-            pkKey = 'pk';
-            pk = $state.params[pkKey];
-            angular.forEach(vm.editFooterBar, function(button, index) {
+        function updateButton(pk) {
+            angular.forEach(vm.editFooterBar, function(button) {
                 button.entityId = pk;
-                if (pk === 'new') {
-                    button.type = 'create';
-                } else {
-                    button.type = 'update';
-                }
+                button.type = vm.isNewRecord ? 'create' : 'update';
             });
         }
-
-        $scope.$watch(function() {
-            return $state.params;
-        }, function(newVal) {
-            updateButton();
-        });
-
-        $scope.$on('ue:componentDataLoaded', function(event, data) {
-            if (vm.isParentComponent(data) && !event.defaultPrevented) {
-                vm.editorEntityType = data.editorEntityType;
-                vm.entityId = data[vm.idField];
-                vm.entityLoaded = true;
-                vm.data = data;
-            }
-        });
-
-        $scope.$on('ue:afterEntityUpdate', function(event, data) {
-            if (data.action === 'presave') {
-                vm.entityId = data;
-                vm.editorEntityType = 'exist';
-            }
-        });
     }
 })();

@@ -1030,7 +1030,6 @@
                         params.parent = $location.search()[paramName];
                     }
                     if ($location.search().back && config.request.useBackUrl) {
-                        params.state = $location.search().back;
                         state = $location.search().back;
                     } else {
                         state = config.request.state;
@@ -1053,7 +1052,8 @@
                     }
                     var newId = data[config.idField];
                     var par = {};
-                    par['pk'] = newId;
+                    par.pk = newId;
+                    var searchString = $location.search();
                     $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                         $location.search(searchString);
                         $rootScope.$broadcast('ue:afterEntityUpdate', {

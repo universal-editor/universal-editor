@@ -5,7 +5,8 @@
         .module('demoApp')
         .controller('CategoryFormController', CategoryFormController);
 
-    function CategoryFormController($state, $location) {
+    CategoryFormController.$inject = ['$state'];
+    function CategoryFormController($state) {
         'ngInject';
         var vm = this;
         var categoryDataSource = {
@@ -45,7 +46,13 @@
             component: {
                 name: 'ue-form',
                 settings: {
-                    dataSource: categoryDataSource,
+                    dataSource: categoryDataSource,                    
+                    primaryKeyValue: function() {
+                       if($state.params.pk === 'new') {
+                            return null;
+                        }
+                        return $state.params.pk;
+                    },
                     header: {
                         toolbar: [
                             {

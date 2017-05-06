@@ -227,12 +227,12 @@
             $scope.$watch(function() {
                 return FilterFieldsStorage.getFilterController(vm.$componentId).isReady;
             }, function(filterReady) {
-                if (filterReady) {                    
+                if (filterReady) {
                     var newVal = $location.search();
                     if (!FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
                         var filterName = vm.paramsPefix ? vm.paramsPefix + '-filter' : 'filter',
                             filter = JSON.parse(newVal[filterName]);
-                        if (!$.isEmptyObject(filter)) {                            
+                        if (!$.isEmptyObject(filter)) {
                             $timeout(function() {
                                 FilterFieldsStorage.fillFilterComponent(vm.$componentId, filter);
                                 FilterFieldsStorage.calculate(vm.$componentId, filterName);
@@ -492,6 +492,7 @@
                     list[itemsKey] = vm.items;
                     $rootScope.$broadcast('ue:collectionLoaded', list);
                 }
+                vm.options.$records = vm.items;
             }
         });
         $scope.$on('ue:afterEntityDelete', function(event, data) {
@@ -507,6 +508,7 @@
                     if (data.items) {
                         vm.items = data.items;
                     }
+                    vm.options.$records = vm.items;
                 });
             }
         });
@@ -561,6 +563,7 @@
                     angular.forEach(vm.listFooterBar, function(control) {
                         control.paginationData = data;
                     });
+                    vm.options.$records = vm.items;
                 }
             }
         }
@@ -606,17 +609,26 @@
             return index !== -1;
         }
 
-        function toggleContextView(id) {
-            vm.options.styleContextMenu = {};
-            if (vm.options.contextId == id) {
-                vm.options.contextId = undefined;
+        function toggleContextView(record) {
+            var id = record[vm.idField];
+            $rootScope.$broadcast('ue-grid:contextMenu', {
+                record: record,
+                primaryKey: vm.idField
+            });
+            vm.styleContextMenu = {};
+            if (vm.contextId == id) {
+                vm.contextId = undefined;
             } else {
                 vm.options.contextId = id;
             }
         }
 
-        function toggleContextViewByEvent(item, e) {
-            var id = item[vm.idField];
+        function toggleContextViewByEvent(record, event) {
+            var id = record[vm.idField];
+            $rootScope.$broadcast('ue-grid:contextMenu', {
+                record: record,
+                primaryKey: vm.idField
+            });
             if (angular.isDefined(id)) {
                 var node = !vm.dragMode ? $element.find('.table')[0] : e.currentTarget;
                 var left = event.pageX - node.getBoundingClientRect().left;
