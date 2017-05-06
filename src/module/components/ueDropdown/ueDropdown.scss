@@ -28,6 +28,7 @@
     .field-wrapper-ue-dropdown {
         & select[multiple] {
             min-height: 150px;
+            padding-left: 8px;
         }
         & .processing-status-wrapper {
             margin: -24px 0 0 20px;
@@ -367,6 +368,7 @@
             }
         }
         .select-input {
+            padding-left: 8px;
             padding-right: 35px;
             min-height: 28px;
             overflow: hidden;

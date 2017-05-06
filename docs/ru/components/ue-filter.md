@@ -8,7 +8,7 @@ var filterComponent = {
                 dataSource: staffDataSource,
                 header: {
                     label: 'Фильтр',
-                    controls: [
+                    toolbar: [
                         {
                             component: {
                                 name: 'ue-button',
@@ -22,7 +22,7 @@ var filterComponent = {
                 },                
                 fields: ['field1', 'field2'...],
                 footer: {
-                    controls: [ //если controls не описан, то по умолчанию выводим кнопки Применить и Очистить
+                    toolbar: [ //если toolbar не описан, то по умолчанию выводим кнопки Применить и Очистить
                         {
                         component: {
                                 name: 'ue-button',

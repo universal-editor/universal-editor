@@ -15,7 +15,7 @@
         vm.$onInit = function() {
             componentSettings = vm.setting.component.settings;
             componentSettings.$fieldType = 'date';
-            baseController = $controller('FieldsController', { $scope: $scope });
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element  });
             angular.extend(vm, baseController);
 
             vm.format = vm.format || 'DD.MM.YYYY HH:mm:ss';

@@ -1,0 +1,161 @@
+{
+  "items": [
+    {
+      "id": 3,
+      "title": "Узел 1",
+      "description": "Описание",
+      "text": null,
+      "category_id": 3,
+      "created_at": 1492424555,
+      "updated_at": 1492424555,
+      "authors": [],
+      "tags": [],
+      "childs": [
+        {
+          "id": 105,
+          "title": "Узел 1.1",
+          "description": "Описание",
+          "text": null,
+          "category_id": 3,
+          "created_at": 1492424555,
+          "updated_at": 1492424555,
+          "authors": [],
+          "tags": [],
+          "childs": [
+            {
+              "id": 8,
+              "title": "Узел 1.1.1",
+              "description": "Описание",
+              "text": null,
+              "category_id": 3,
+              "created_at": 1492424555,
+              "updated_at": 1492424555,
+              "authors": [],
+              "tags": []
+            }
+          ]
+        },
+        {
+          "id": 106,
+          "title": "Узел 1.2",
+          "description": "Описание",
+          "text": null,
+          "category_id": 3,
+          "created_at": 1492424555,
+          "updated_at": 1492424555,
+          "authors": [],
+          "tags": [],
+          "childs": [
+            {
+              "id": 89,
+              "title": "Узел 1.2.1",
+              "description": "Описание",
+              "text": null,
+              "category_id": 3,
+              "created_at": 1492424555,
+              "updated_at": 1492424555,
+              "authors": [],
+              "tags": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 145,
+      "title": "Узел 2",
+      "description": "Описание",
+      "text": null,
+      "category_id": 3,
+      "created_at": 1492424555,
+      "updated_at": 1492424555,
+      "authors": [],
+      "tags": [],
+      "childs": [
+        {
+          "id": 899,
+          "title": "Узел 2.1",
+          "description": "Описание",
+          "text": null,
+          "category_id": 3,
+          "created_at": 1492424555,
+          "updated_at": 1492424555,
+          "authors": [],
+          "tags": [],
+          "childs": [
+            {
+              "id": 366,
+              "title": "Узел 2.1.1",
+              "description": "Описание",
+              "text": null,
+              "category_id": 3,
+              "created_at": 1492424555,
+              "updated_at": 1492424555,
+              "authors": [],
+              "tags": []
+            }
+          ]
+        },
+        {
+          "id": 1563,
+          "title": "Узел 2.2",
+          "description": "Описание",
+          "text": null,
+          "category_id": 3,
+          "created_at": 1492424555,
+          "updated_at": 1492424555,
+          "authors": [],
+          "tags": [],
+          "childs": [
+            {
+              "id": 963,
+              "title": "Узел 2.2.1",
+              "description": "Описание",
+              "text": null,
+              "category_id": 3,
+              "created_at": 1492424555,
+              "updated_at": 1492424555,
+              "authors": [],
+              "tags": []
+            }
+          ]
+        },
+        {
+          "id": 487,
+          "title": "Узел 2.3",
+          "description": "Описание",
+          "text": null,
+          "category_id": 3,
+          "created_at": 1492424555,
+          "updated_at": 1492424555,
+          "authors": [],
+          "tags": [],
+          "childs": [
+            {
+              "id": 2544,
+              "title": "Узел 2.3.1",
+              "description": "Описание",
+              "text": null,
+              "category_id": 3,
+              "created_at": 1492424555,
+              "updated_at": 1492424555,
+              "authors": [],
+              "tags": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "http://universal-backend.dev/rest/v1/news?expand=authors%2Ctags&page=1&sort=-id"
+    }
+  },
+  "_meta": {
+    "totalCount": 3,
+    "pageCount": 1,
+    "currentPage": 1,
+    "perPage": 20
+  }
+}

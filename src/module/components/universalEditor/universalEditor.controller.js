@@ -40,7 +40,6 @@
                 }
             }
             moment.locale(locale);
-
         };
 
         /**

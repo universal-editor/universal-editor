@@ -15,14 +15,13 @@
 
         vm.$onInit = function() {
             vm.optionValues = [];
-            angular.extend(vm, $controller('FieldsController', { $scope: $scope }));
+            angular.extend(vm, $controller('FieldsController', { $scope: $scope, $element: $element }));
             componentSettings = vm.setting.component.settings;
             if (componentSettings.valuesRemote) {
                 selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
             } else if (componentSettings.values) {
                 selectedStorageComponent = componentSettings.values.$selectedStorage;
             }
-
             vm.selectedValues = [];
             vm.inputValue = '';
             vm.possibleValues = [];
@@ -34,6 +33,7 @@
             vm.sizeInput = 1;
             vm.classInput = { 'width': '1px' };
             vm.showPossible = false;
+            vm.fillControl = fillControl;
 
             vm.addToSelected = addToSelected;
             vm.removeFromSelected = removeFromSelected;
@@ -41,6 +41,7 @@
             vm.deleteToAutocomplete = deleteToAutocomplete;
             vm.loadDataById = loadDataById;
             vm.clear = clear;
+            
 
             if (!vm.multiple) {
                 vm.classInput.width = '99%';
@@ -66,20 +67,22 @@
             vm.listeners.push($scope.$watch(function() {
                 return vm.inputValue;
             }, function(newValue) {
+                if (vm.multiple) {                    
+                    var input = $element.find('input'), spanValue = newValue || '';
+                    if (vm.placeholder && !spanValue) {
+                        spanValue = vm.placeholder;
+                    }
+                    var $span = $('<span>').append(spanValue).appendTo('body');
+                    vm.classInput.width = ($span.width() + 10) + 'px';
+                    $span.remove();
+                }
                 if (newValue) {
+                    vm.sizeInput = newValue.length || 1;
                     if (inputTimeout) {
                         $timeout.cancel(inputTimeout);
                     }
                     vm.showPossible = true;
                     vm.possibleValues = [];
-                    if (vm.multiple) {
-                        vm.sizeInput = newValue.length || 1;
-                        if (vm.sizeInput === 1 && (newValue.length != 1)) {
-                            vm.classInput.width = '1px';
-                        } else {
-                            vm.classInput.width = '100%';
-                        }
-                    }
                     inputTimeout = $timeout(function() {
                         vm.autocompleteSearch(newValue);
                     }, 300);
@@ -272,71 +275,6 @@
             });
         }
 
-        function loadValues() {
-            vm.preloadedData = false;
-            if (componentSettings.hasOwnProperty('values')) {
-                angular.forEach(componentSettings.values, function(v, key) {
-                    if (angular.isString(v)) {
-                        var obj = {};
-                        if (Array.isArray(vm.fieldValue) && vm.fieldValue.indexOf(key) >= 0 && vm.multiple) {
-                            if (angular.isArray(componentSettings.values)) {
-                                obj[vm.fieldId] = v;
-                            } else {
-                                obj[vm.fieldId] = key;
-                            }
-                            obj[vm.fieldSearch] = v;
-                            vm.selectedValues.push(obj);
-                        } else if ((vm.fieldValue == key || vm.fieldValue == v) && !vm.multiple) {
-                            if (angular.isArray(componentSettings.values)) {
-                                obj[vm.fieldId] = v;
-                            } else {
-                                obj[vm.fieldId] = key;
-                            }
-                            obj[vm.fieldSearch] = v;
-                            vm.selectedValues.push(obj);
-                            vm.placeholder = obj[vm.fieldSearch];
-                        }
-                    }
-                });
-                vm.preloadedData = true;
-            } else if (componentSettings.hasOwnProperty('valuesRemote')) {
-
-                if (!vm.fieldValue) {
-                    vm.preloadedData = true;
-                    return;
-                }
-
-                var config = {
-                    method: 'GET',
-                    url: componentSettings.valuesRemote.url,
-                    $id: vm.setting.component.$id,
-                    serverPagination: vm.serverPagination
-                };
-                config.filter[vm.fieldId] = [{
-                    operator: 'value',
-                    value: angular.isObject(vm.fieldValue) ? vm.fieldValue[vm.fieldId] : vm.fieldValue[vm.fieldSearch]
-                }];
-                config.standard = $scope.getParentDataSource().standard;
-
-                ApiService
-                    .getUrlResource(config)
-                    .then(function(response) {
-                        fillControl(response.data.items);
-                        vm.preloadedData = true;
-                    }, function(reject) {
-                        vm.preloadedData = true;
-                        $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
-                            console.error('EditorFieldAutocompleteController: ' + translation.replace('%name_field', vm.fieldName));
-                        });
-                    });
-            } else {
-                vm.preloadedData = true;
-                $translate('ERROR.FIELD.NOT_TYPE_VALUE').then(function(translation) {
-                    console.error('EditorFieldAutocompleteController: ' + translation);
-                });
-            }
-        }
-
         function loadDataById(ids) {
             var defer = $q.defer();
             if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
@@ -347,9 +285,9 @@
                         }
                         return id;
                     });
-                } else if(angular.isObject(ids)) {
+                } else if (angular.isObject(ids)) {
                     ids = ids[vm.fieldId];
-                } 
+                }
                 var config = {
                     method: 'GET',
                     url: componentSettings.valuesRemote.url,
@@ -414,9 +352,7 @@
         }
 
         function deleteToAutocomplete(event) {
-            if (event.which == 8 && !!vm.selectedValues && !!vm.selectedValues.length && !vm.inputValue &&
-                vm.multiple
-            ) {
+            if (event.which == 8 && !!vm.selectedValues && !!vm.selectedValues.length && !vm.inputValue && vm.multiple) {
                 vm.removeFromSelected(event, vm.selectedValues[vm.selectedValues.length - 1]);
             }
         }

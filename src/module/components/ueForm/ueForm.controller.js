@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeFormController', UeFormController);
 
-    function UeFormController($scope, ApiService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller) {
+    function UeFormController($scope, ApiService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller, $element) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this,
@@ -47,7 +47,7 @@
 
         vm.$onInit = function() {
             //** Nested base controller */
-            angular.extend(vm, $controller('BaseController', { $scope: $scope }));
+            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element }));
 
             vm.componentSettings = vm.setting.component.settings;
             var dataSource = vm.componentSettings.dataSource;
@@ -162,6 +162,12 @@
             $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
             $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
             $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
+
+            EditEntityStorage.addFieldController(vm);
+
+            vm.getFieldValue = function() {
+                return EditEntityStorage.constructOutputValue(vm.options);
+            };
         };
 
         function updateButton() {
@@ -188,6 +194,7 @@
                 vm.editorEntityType = data.editorEntityType;
                 vm.entityId = data[vm.idField];
                 vm.entityLoaded = true;
+                vm.data = data;
             }
         });
 

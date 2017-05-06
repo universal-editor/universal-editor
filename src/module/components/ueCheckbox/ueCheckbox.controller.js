@@ -36,13 +36,14 @@
             vm.fieldId = 'id';
             vm.fieldSearch = 'title';
             vm.indeterminate = false;
+            vm.initDataSource = true;
 
             if (!componentSettings.valuesRemote && !componentSettings.values) {
                 componentSettings.templates = componentSettings.templates || {};
                 componentSettings.templates.preview = 'module/components/ueCheckbox/previewTemplate.html';
             }
 
-            baseController = $controller('FieldsController', { $scope: $scope });
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element  });
             angular.extend(vm, baseController);
 
             vm.singleValue = !componentSettings.hasOwnProperty('values') && !componentSettings.hasOwnProperty('valuesRemote');
@@ -111,9 +112,10 @@
                 }
             }
         };
+
         function dependUpdate(dependField, dependValue) {
-            vm.optionValues = [];
             if (dependValue && dependValue !== '') {
+                vm.optionValues = [];
                 vm.loadingData = true;
 
                 var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);

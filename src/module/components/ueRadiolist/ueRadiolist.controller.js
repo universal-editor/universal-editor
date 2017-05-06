@@ -16,22 +16,25 @@
             vm.optionValues = [];
             vm.inputValue = '';
             vm.newEntityLoaded = newEntityLoaded;
+            vm.dependUpdate = dependUpdate;
+            vm.initDataSource = true;
             vm.dependUpdate = dependUpdate;            
-
-            baseController = $controller('FieldsController', { $scope: $scope });
-            angular.extend(vm, baseController);
+            
             componentSettings = vm.setting.component.settings;
             vm.inline = componentSettings.inline === true;
 
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
+            angular.extend(vm, baseController);
+
             vm.listeners.push($scope.$watch('vm.fieldValue',
                 function(value) {
-                    if(angular.isNumber(value) && !isNaN(value)) {
+                    if (angular.isNumber(value) && !isNaN(value)) {
                         vm.fieldValue = value.toString();
                     }
                 }, true)
             );
 
-            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {                
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
                 if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
                     componentSettings.$loadingPromise.then(function(optionValues) {

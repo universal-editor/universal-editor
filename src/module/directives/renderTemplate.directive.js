@@ -7,7 +7,9 @@ angular
       link: function(scope, element, attr) {
         var vm = scope.vm;
         $timeout(function() {
-          if (angular.isObject(vm.templates)) {
+          if (angular.isString(vm.template)) {
+            insertHtml(element, vm.template);
+          } else if (angular.isObject(vm.templates)) {
             if (vm.templates.filter && element.hasClass('component-filter')) {
               insertHtml(element, vm.templates.filter);
             } else if (vm.templates.edit && element.hasClass('component-edit')) {
@@ -19,8 +21,6 @@ angular
             } else {
               element.remove();
             }
-          } else if (angular.isString(vm.template)) {
-            insertHtml(element, vm.template);
           } else {
             element.remove();
           }
