@@ -1,0 +1,221 @@
+{
+  "items": [
+    {
+      "id": 1098,
+      "type": "news",
+      "self": {
+        "id": 3,
+        "title": "Узел 1",
+        "description": "Описание",
+        "text": null,
+        "category_id": 3,
+        "created_at": 1492424555,
+        "updated_at": 1492424555,
+        "authors": [],
+        "tags": []
+      },
+      "childs_count": 2,
+      "childs": [
+        {
+          "id": 1099,
+          "type": "news",
+          "self": {
+            "id": 105,
+            "title": "Узел 1.1",
+            "description": "Описание",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 1100,
+              "type": "news",
+              "self": {
+                "id": 8,
+                "title": "Узел 1.1.1",
+                "description": "Описание",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 1
+            }
+          ]
+        },
+        {
+          "id": 1101,
+          "type": "news",
+          "self": {
+            "id": 106,
+            "title": "Узел 1.2",
+            "description": "Описание",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 1158,
+              "type": "news",
+              "self": {
+                "id": 89,
+                "title": "Узел 1.2.1",
+                "description": "Описание",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7526,
+      "type": "news",
+      "self": {
+        "id": 145,
+        "title": "Узел 2",
+        "description": "Описание",
+        "text": null,
+        "category_id": 3,
+        "created_at": 1492424555,
+        "updated_at": 1492424555,
+        "authors": [],
+        "tags": []
+      },
+      "childs_count": 3,
+      "childs": [
+        {
+          "id": 1546,
+          "type": "news",
+          "self": {
+            "id": 899,
+            "title": "Узел 2.1",
+            "description": "Описание",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 8459,
+              "type": "news",
+              "self": {
+                "id": 366,
+                "title": "Узел 2.1.1",
+                "description": "Описание",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 0
+            }
+          ]
+        },
+        {
+          "id": 8547,
+          "type": "news",
+          "self": {
+            "id": 1563,
+            "title": "Узел 2.2",
+            "description": "Описание",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 1478,
+              "type": "news",
+              "self": {
+                "id": 963,
+                "title": "Узел 2.2.1",
+                "description": "Описание",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 0
+            }
+          ]
+        },
+        {
+          "id": 9663,
+          "type": "news",
+          "self": {
+            "id": 487,
+            "title": "Узел 2.3",
+            "description": "Описание",
+            "text": null,
+            "category_id": 3,
+            "created_at": 1492424555,
+            "updated_at": 1492424555,
+            "authors": [],
+            "tags": []
+          },
+          "childs_count": 1,
+          "childs": [
+            {
+              "id": 7843,
+              "type": "news",
+              "self": {
+                "id": 2544,
+                "title": "Узел 2.3.1",
+                "description": "Описание",
+                "text": null,
+                "category_id": 3,
+                "created_at": 1492424555,
+                "updated_at": 1492424555,
+                "authors": [],
+                "tags": []
+              },
+              "childs_count": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "http://universal-backend.dev/rest/v1/news?expand=authors%2Ctags&page=1&sort=-id"
+    }
+  },
+  "_meta": {
+    "totalCount": 3,
+    "pageCount": 1,
+    "currentPage": 1,
+    "perPage": 20
+  }
+}

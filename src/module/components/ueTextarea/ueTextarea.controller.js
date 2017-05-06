@@ -16,7 +16,7 @@
             if(!componentSettings.width) {
                 componentSettings.width = 12;
             }
-            baseController = $controller('FieldsController', { $scope: $scope });
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
             vm.rows = componentSettings.height || 7;
             vm.addItem = addItem;

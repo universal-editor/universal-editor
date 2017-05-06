@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeFormController', UeFormController);
 
-    function UeFormController($scope, ApiService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller) {
+    function UeFormController($scope, ApiService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller, $element) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this,
@@ -45,7 +45,7 @@
         vm.$onInit = function() {
 
             //** Nested base controller */
-            angular.extend(vm, $controller('BaseController', { $scope: $scope }));
+            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element }));
 
             vm.componentSettings = vm.setting.component.settings;
             vm.entityLoaded = false;
@@ -154,7 +154,7 @@
                 vm.entityLoaded = true;
             }
 
-            updateButton(pk);
+
 
             /** Watcher for value of primary key */
             if (angular.isFunction(vm.componentSettings.primaryKeyValue)) {
@@ -182,7 +182,7 @@
                     vm.editorEntityType = 'exist';
                 }
             });
-            
+
             var beforeEntityCreateHandler = $scope.$on('ue:beforeEntityCreate', vm.resetErrors);
             var beforeEntityUpdateHandler = $scope.$on('ue:beforeEntityUpdate', vm.resetErrors);
             var beforeEntityDeleteHandler = $scope.$on('ue:beforeEntityDelete', vm.resetErrors);
@@ -192,6 +192,12 @@
             vm.listeners.push(componentDataLoadedHandler);
             vm.listeners.push(componentDataLoadedHandler);
             vm.listeners.push(afterEntityUpdateHandler);
+
+            EditEntityStorage.addFieldController(vm);
+
+            vm.getFieldValue = function() {
+                return EditEntityStorage.constructOutputValue(vm.options);
+            };
         };
 
         function updateButton(pk) {

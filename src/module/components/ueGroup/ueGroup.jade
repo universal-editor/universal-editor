@@ -1,9 +1,9 @@
-.editor-field-group(ng-class="vm.classGroupComponent")
+.editor-field-group(ng-class="[vm.classGroupComponent, {'readonly-component': vm.readonly}]"  ng-show='vm.useable')
     include ../../template/labelField/labelField
     .field-array-wrapper.editor-group.col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left
         div(data-ng-if="vm.multiple")
             .col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left.item-array-wrapper(data-ng-repeat="fields in vm.fieldsArray track by $index" data-ng-init="outerIndex = $index")
-                data-component-wrapper(ng-class="vm.className" data-ng-repeat="field in fields" data-setting="field" data-options="vm.options")
+                data-component-wrapper(ng-class="vm.className" data-ng-repeat="field in fields track by $index" data-setting="field" data-options="vm.options")
                 div
                     .btn.btn-primary.btn-xs.btn-add-item(data-ng-click="vm.removeItem(outerIndex)", data-ng-if="!vm.readonly") {{'BUTTON.DELETE' | translate}}
             div

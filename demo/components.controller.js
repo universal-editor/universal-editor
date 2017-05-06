@@ -1167,12 +1167,13 @@
                                             component: {
                                                 name: 'ue-checkbox',
                                                 settings: {
-                                                    label: 'checkbox with local data',
+                                                    label: 'checkbox with local data, defaultValue: "a"',
                                                     values: {
                                                         'a': 'Variable 1',
                                                         'b': 'Variable 2',
                                                         'c': 'Variable 3'
-                                                    }
+                                                    },
+                                                    defaultValue: ['a']
                                                 }
                                             }
                                         },
@@ -1180,12 +1181,13 @@
                                             component: {
                                                 name: 'ue-checkbox',
                                                 settings: {
-                                                    label: 'checkbox with local data value=array',
+                                                    label: 'checkbox with local data value=array, defaultValue: "Variable 1"',
                                                     values: [
                                                         'Variable 1',
                                                         'Variable 2',
                                                         'Variable 3'
-                                                    ]
+                                                    ],
+                                                    defaultValue: ['Variable 1']
                                                 }
                                             }
                                         },
@@ -1228,7 +1230,8 @@
                                                             label: 'name'
                                                         },
                                                         url: 'http://universal-backend.dev/rest/v1/country'
-                                                    }
+                                                    },
+                                                    defaultValue: [1, 2]
                                                 }
                                             }
                                         },
@@ -1396,6 +1399,68 @@
                                 settings: {
                                     label: 'Dropdown',
                                     fields: [
+                                        {
+                                            component: {
+                                                name: 'ue-dropdown',
+                                                settings: {
+                                                    label: 'ue-dropdown with local data value=array, defaultValue = "Variable 1"',
+                                                    values: [
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
+                                                    ],
+                                                    defaultValue: 'Variable 1'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-dropdown',
+                                                settings: {
+                                                    label: 'ue-dropdown with local data value=array (defaultValue = ["Variable 1", "Variable 2"])',
+                                                    values: [
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
+                                                    ],
+                                                    multiple: true,
+                                                    defaultValue: ['Variable 1', 'Variable 2']
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-dropdown',
+                                                settings: {
+                                                    label: 'select с valuesRemote (defaultValue = "4")',
+                                                    valuesRemote: {
+                                                        fields: {
+                                                            value: 'id',
+                                                            label: 'name'
+                                                        },
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                    },
+                                                    defaultValue: '4'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-dropdown',
+                                                settings: {
+                                                    label: 'select с valuesRemote (defaultValue = [4, 5])',
+                                                    multiple: true,
+                                                    valuesRemote: {
+                                                        fields: {
+                                                            value: 'id',
+                                                            label: 'name'
+                                                        },
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                    },
+                                                    defaultValue: [4, 5]
+                                                }
+                                            }
+                                        },
                                         {
                                             component: {
                                                 name: 'ue-dropdown',
@@ -1622,6 +1687,68 @@
                                             component: {
                                                 name: 'ue-autocomplete',
                                                 settings: {
+                                                    label: 'ue-autocomplete with local data value=array, defaultValue = "Variable 1"',
+                                                    values: [
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
+                                                    ],
+                                                    defaultValue: 'Variable 1'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-autocomplete',
+                                                settings: {
+                                                    label: 'ue-autocomplete with local data value=array (defaultValue = ["Variable 1", "Variable 2"])',
+                                                    values: [
+                                                        'Variable 1',
+                                                        'Variable 2',
+                                                        'Variable 3'
+                                                    ],
+                                                    multiple: true,
+                                                    defaultValue: ['Variable 1', 'Variable 2']
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-autocomplete',
+                                                settings: {
+                                                    label: 'autocomplete с valuesRemote  (defaultValue = "4")',
+                                                    valuesRemote: {
+                                                        fields: {
+                                                            value: 'id',
+                                                            label: 'name'
+                                                        },
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                    },
+                                                    defaultValue: '4'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-autocomplete',
+                                                settings: {
+                                                    label: 'autocomplete с valuesRemote  (defaultValue = [4, 5])',
+                                                    multiple: true,
+                                                    valuesRemote: {
+                                                        fields: {
+                                                            value: 'id',
+                                                            label: 'name'
+                                                        },
+                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                    },
+                                                    defaultValue: [4, 5]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-autocomplete',
+                                                settings: {
                                                     label: 'Component autocomplete',
                                                     valuesRemote: {
                                                         fields: {
@@ -1803,6 +1930,20 @@
                                             component: {
                                                 name: 'ue-button',
                                                 settings: {
+                                                    label: 'Send request to server and reject',
+                                                    href: '//universal-backend.dev/rest/v1/staff',
+                                                    handlers: {
+                                                        before: function(config) {
+                                                            return false;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-button',
+                                                settings: {
                                                     label: 'Open Yandex.com',
                                                     href: 'https://www.yandex.com',
                                                     target: '_blank'
@@ -1863,11 +2004,47 @@
                                                                                             label: 'Groups',
                                                                                             fields: [
                                                                                                 {
+                                                                                                    name: 'blocks',
+                                                                                                    component: {
+                                                                                                        name: 'ue-radiolist',
+                                                                                                        settings: {
+                                                                                                            label: 'Useable block',
+                                                                                                            values: {
+                                                                                                                'block1': 'Field Name',
+                                                                                                                'block2': 'Contacts person №1',
+                                                                                                                'block3': 'Contacts person №2'
+                                                                                                            }
+                                                                                                        }
+
+                                                                                                    }
+                                                                                                },
+                                                                                                {
+                                                                                                    name: 'readonlyBlocks',
+                                                                                                    component: {
+                                                                                                        name: 'ue-radiolist',
+                                                                                                        settings: {
+                                                                                                            label: 'Readonly block',
+                                                                                                            values: {
+                                                                                                                'block1': 'Field Name',
+                                                                                                                'block2': 'Contacts person №1',
+                                                                                                                'block3': 'Contacts person №2'
+                                                                                                            }
+                                                                                                        }
+
+                                                                                                    }
+                                                                                                },
+                                                                                                {
                                                                                                     name: 'group.name',
                                                                                                     component: {
                                                                                                         name: 'ue-string',
                                                                                                         settings: {
-                                                                                                            label: 'Name'
+                                                                                                            label: 'Name',
+                                                                                                            useable: function(data) {
+                                                                                                                return data.blocks === 'block1';
+                                                                                                            },
+                                                                                                            readonly: function(data) {
+                                                                                                                return data.readonlyBlocks === 'block1';
+                                                                                                            }
                                                                                                         }
                                                                                                     }
                                                                                                 },
@@ -1876,7 +2053,13 @@
                                                                                                     component: {
                                                                                                         name: 'ue-group',
                                                                                                         settings: {
-                                                                                                            label: 'Contacts',
+                                                                                                            label: 'Contacts person №1',
+                                                                                                            readonly: function(data) {
+                                                                                                                return data.readonlyBlocks === 'block2';
+                                                                                                            },
+                                                                                                            useable: function(data) {
+                                                                                                                return data.blocks === 'block2';
+                                                                                                            },
                                                                                                             multiple: true,
                                                                                                             fields: [
                                                                                                                 {
@@ -1909,7 +2092,13 @@
                                                                                                     component: {
                                                                                                         name: 'ue-group',
                                                                                                         settings: {
-                                                                                                            label: 'Contacts',
+                                                                                                            label: 'Contacts person №2',
+                                                                                                            useable: function(data) {
+                                                                                                                return data.blocks === 'block3';
+                                                                                                            },
+                                                                                                            readonly: function(data) {
+                                                                                                                return data.readonlyBlocks === 'block3';
+                                                                                                            },
                                                                                                             fields: [
                                                                                                                 {
                                                                                                                     name: 'rootSingle.phone',
@@ -1917,6 +2106,140 @@
                                                                                                                         name: 'ue-string',
                                                                                                                         settings: {
                                                                                                                             label: 'Phone'
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.stringMultiple',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-string',
+                                                                                                                        settings: {
+                                                                                                                            label: 'String Multiple',
+                                                                                                                            multiple: true
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.singleAutocomplete',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-autocomplete',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Single Autocomplete',
+                                                                                                                            values: {
+                                                                                                                                'key1': 'value1',
+                                                                                                                                'key2': 'value2',
+                                                                                                                                'key3': 'value3',
+                                                                                                                                'key4': 'value4'
+                                                                                                                            },
+                                                                                                                            useable: function(data) {
+                                                                                                                                return data.readonlyBlocks === 'block1';
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.multipleAutocomplete',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-autocomplete',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Multiple Autocomplete',
+                                                                                                                            multiple: true,
+                                                                                                                            values: {
+                                                                                                                                'key1': 'value1',
+                                                                                                                                'key2': 'value2',
+                                                                                                                                'key3': 'value3',
+                                                                                                                                'key4': 'value4'
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.singleDropDown',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-dropdown',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Single DropDown',
+                                                                                                                            values: {
+                                                                                                                                'key1': 'value1',
+                                                                                                                                'key2': 'value2',
+                                                                                                                                'key3': 'value3',
+                                                                                                                                'key4': 'value4'
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.multipleDropDown',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-dropdown',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Multiple DropDown',
+                                                                                                                            multiple: true,
+                                                                                                                            values: {
+                                                                                                                                'key1': 'value1',
+                                                                                                                                'key2': 'value2',
+                                                                                                                                'key3': 'value3',
+                                                                                                                                'key4': 'value4'
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.checkbox',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-checkbox',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Checkbox',
+                                                                                                                            values: {
+                                                                                                                                'key1': 'value1',
+                                                                                                                                'key2': 'value2',
+                                                                                                                                'key3': 'value3',
+                                                                                                                                'key4': 'value4'
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.radiolist',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-radiolist',
+                                                                                                                        settings: {
+                                                                                                                            label: 'radiolist',
+                                                                                                                            values: {
+                                                                                                                                'key1': 'value1',
+                                                                                                                                'key2': 'value2',
+                                                                                                                                'key3': 'value3',
+                                                                                                                                'key4': 'value4'
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.color',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-colorpicker',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Colorpicker'
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.color',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-colorpicker',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Multiple Colorpicker',
+                                                                                                                            multiple: true
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    name: 'rootSingle.date',
+                                                                                                                    component: {
+                                                                                                                        name: 'ue-date',
+                                                                                                                        settings: {
+                                                                                                                            label: 'Date',
+                                                                                                                            multiple: true
                                                                                                                         }
                                                                                                                     }
                                                                                                                 },

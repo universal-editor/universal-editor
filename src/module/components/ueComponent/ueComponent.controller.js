@@ -12,7 +12,7 @@
             baseController;
 
         vm.$onInit = function() {
-            baseController= $controller('BaseController', {$scope: $scope});
+            baseController= $controller('BaseController', {$scope: $scope, $element: $element });
             angular.extend(vm, baseController);
         };
     }

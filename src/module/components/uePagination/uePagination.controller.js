@@ -5,13 +5,14 @@
         .module('universal-editor')
         .controller('UePaginationController', UePaginationController);
 
-    function UePaginationController($scope, ApiService, $httpParamSerializer, $sce, $location, $element) {
+    function UePaginationController($scope, $controller, ApiService, $httpParamSerializer, $sce, $location, $element) {
         'ngInject';
         $element.addClass('ue-pagination');
 
         var vm = this;
 
         vm.$onInit = function() {
+            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element  }));
             vm.metaKey = true;
             vm.parentComponentId = vm.options.$componentId;
             vm.changePage = changePage;
@@ -36,6 +37,8 @@
                 parentField: parentField,
                 url: url
             };
+
+            vm.dataSource = vm.setting.component.settings.dataSource;
 
             vm.pageItemsArray = [];
             vm.items = vm.setting.paginationData[itemsKey];
@@ -154,8 +157,10 @@
 
         function changePage(event, pageItem) {
             event.preventDefault();
+            var searchParameters = $location.search();
             vm.request.params.page = pageItem.page;
-            var parentEntity = $location.search()[getKeyPrefix('parent')];
+            vm.request.params.sort = searchParameters[getKeyPrefix('sort')];
+            var parentEntity = searchParameters[getKeyPrefix('parent')];
             vm.parent = parentEntity || null;
             vm.request.childId = vm.parent;
             $location.search(getKeyPrefix('page'), pageItem.page);

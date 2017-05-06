@@ -1,23 +1,27 @@
-.ue-grid
+.ue-grid(ng-class="[vm.classComponent, {'readonly-component': vm.readonly}]")
     .ue-grid-body.ue-component-body(ng-if="!vm.warnings.length && !vm.dangers.length")
         .grid-toolbar
             component-wrapper.header-action-button(ng-repeat="button in vm.listHeaderBar track by $index", data-setting="button", data-button-class="header", data-options="vm.options")
         .grid-filter-edit
         .groups-action(data-ng-if="vm.parentButton")
             button.btn.btn-sm.btn-default(data-ng-click="vm.getParent()" ng-disabled="vm.options.isLoading") {{'BUTTON.HIGHER_LEVEL' | translate}}            
-        table.table.table-bordered(class="items-list")
-            thead
+        table.table.table-bordered(class="items-list"  data-ng-if="!vm.dataSource.tree")
+            thead(ng-if="vm.displayHeaderColumns")
                 tr
-                    td.actions-header.context-column(ng-if="vm.isContextMenu")
-                    td( data-ng-repeat="fieldItem in vm.tableFields",
-                    data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection}",
-                    data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)") {{fieldItem.displayName}}
-            tbody(data-ng-if="vm.loaded")
-                tr(data-ng-repeat="item in vm.items", data-ng-class="{'zhs-item' : item[vm.subType] && item[vm.subType] !== undefined}", data-ng-mousedown="vm.toggleContextViewByEvent(item, $event)", oncontextmenu='return false;')
-                    td.context-column(ng-if="vm.isContextMenu")
-                        span.context-toggle(data-ng-click="vm.toggleContextView(item)", 
+                    td.table-cell.actions-header.context-column(ng-if="vm.isContextMenu")
+                    td.table-cell(data-ng-repeat="fieldItem in vm.tableFields track by $index",
+                        ng-style="fieldItem.ngStyle"
+                        data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection}",
+                        data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)") {{fieldItem.displayName}} 
+                    td.table-cell.dragIcon.glyphicon.glyphicon-align-justify(dnd-handle ng-if="vm.dragMode.dragIcon")
+            tbody(data-ng-if="vm.loaded && !vm.dragMode")
+                tr(data-ng-repeat="item in vm.items", data-ng-class="{'zhs-item' : item[vm.subType] && item[vm.subType] !== undefined}", 
+                    data-ng-mousedown="vm.toggleContextViewByEvent(item, $event)", 
+                    oncontextmenu='return false;')
+                    td.table-cell.context-column(ng-if="vm.isContextMenu")
+                        span.context-toggle(data-ng-click="vm.toggleContextView(item[vm.idField])",
                                             data-ng-show="(vm.contextLinks.length && (item[vm.subType] || item[vm.subType] == undefined)) || (vm.mixContextLinks.length && vm.collectionType)") Toggle buttons
-                        .context-menu-wrapper(data-ng-show="vm.contextId == item[vm.idField]" , data-ng-style='vm.styleContextMenu')
+                        .context-menu-wrapper(data-ng-show="vm.options.contextId == item[vm.idField]" , data-ng-style='vm.options.styleContextMenu')
                             .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index",
                                             data-ng-if="item[vm.subType] !== vm.collectionType || !vm.isMixMode",
                                             data-ng-class="{'component-separator': link.separator}")
@@ -26,24 +30,65 @@
                                                 data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.options")
                             .context-menu-item(data-ng-repeat="link in vm.mixContextLinks track by $index", data-ng-if="vm.collectionType && item[vm.subType] === vm.collectionType", data-ng-class="{'component-separator': link.separator}")
                                 component-wrapper(data-setting="link", data-entity-id="{{::item[vm.idField]}}",
-                                    data-button-class="context", data-scope-id-parent="{{vm.scopeIdParent}}", data-options="vm.mixOption")
-                    td(data-ng-repeat="fieldItem in vm.tableFields track by $index")
+                                    data-button-class="context",
+                                    data-options="vm.mixOption")
+                    td.table-cell(data-ng-repeat="fieldItem in vm.tableFields track by $index" ng-style="fieldItem.ngStyle")
                         span.glyphicon(
                         data-ng-class="{'glyphicon-folder-open icon-mix-mode' : vm.isMixMode && item[vm.subType] !== vm.collectionType}",
                         data-ng-if='vm.prependIcon === fieldItem.field'
                         )
                         component-wrapper(data-setting="fieldItem.component", 
                                         data-options="item.$options")
-                tr(data-ng-if="vm.items.length == 0")
-                    td(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
+                tr.row-empty(data-ng-if="vm.items.length == 0")
+                    td.table-cell(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
+                        | {{'ELEMENT_NO' | translate}}           
+            tbody(data-ng-if="vm.loaded && vm.dragMode"
+                  dnd-list="vm.items" 
+                  dnd-allowed-types="vm.getAllowedContainers(vm.parentNode, vm.collection)"
+                  dnd-dragover="vm.dragover(event, index, type)" 
+                  dnd-drop="vm.drop(item, index, event)"
+                  dnd-inserted="vm.inserted(item, index, external, type)")
+                tr.dndPlaceholder
+                     td
+                include template/trWithDragIcon.jade
+                include template/trWithoutDragIcon.jade
+                tr.row-empty(data-ng-if="vm.items.length == 0")
+                    td.table-cell(colspan="{{vm.tableFields.length + vm.isContextMenu + !!vm.dragMode.dragIcon}}")
                         | {{'ELEMENT_NO' | translate}}
             tbody(data-ng-show="!vm.loaded")
                 tr
-                    td.td-loading(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
+                    td.table-cell.td.table-cell-loading(colspan="{{vm.tableFields.length + vm.isContextMenu + !!vm.dragMode.dragIcon}}")
                         .processing-status-wrapper
                             .processing-status {{'PERFORMS_ACTIONS' | translate}}
-            tfoot
+            tfoot(ng-if="vm.listFooterBar.length")
                 tr
-                    td(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
+                    td.table-cell(colspan="{{vm.tableFields.length + vm.isContextMenu + !!vm.dragMode.dragIcon}}")
                         component-wrapper(data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component", data-options="vm.options")
+        ul.table.items-list.drag-mode(data-ng-if="vm.dragMode && vm.dataSource.tree")
+            li(ng-if="vm.displayHeaderColumns")
+              .row.header
+                .table-cell( data-ng-repeat="fieldItem in vm.tableFields track by $index",
+                    ng-style="fieldItem.ngStyle"
+                    data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection, 'first-column': $index===0}",
+                    data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)")  
+                    span {{fieldItem.displayName}}
+                .table-cell.dnd-expand-item.glyphicon.dragIcon(ng-if="vm.dragMode.dragIcon")
+            li.tree-body(ng-if="vm.loaded")    
+                ue-node(
+                    data-is-first-level="true"
+                    data-collection="vm.items",
+                    data-items="vm.items",
+                    data-table-fields="vm.tableFields",
+                    data-setting="vm.setting",
+                    data-options="vm.options",
+                    data-context-links="vm.contextLinks"
+                    toggle-context-view-by-event="vm.toggleContextViewByEvent(item, e)")            
+            li(data-ng-show="!vm.loaded")
+                .column.td-loading
+                   .processing-status-wrapper
+                      .processing-status {{'PERFORMS_ACTIONS' | translate}}
+            li(ng-if="vm.listFooterBar.length")
+              .row.footer
+                .table-cell
+                    component-wrapper(data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component", data-options="vm.options")
     include ../../template/errorMessages/template

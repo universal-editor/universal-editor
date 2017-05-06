@@ -19,7 +19,7 @@
         vm.$onInit = function() {
             var componentSettings = vm.setting.component.settings;
             handlers = componentSettings.handlers;
-            angular.extend(vm, $controller('ButtonsController', { $scope: $scope }));
+            angular.extend(vm, $controller('ButtonsController', { $scope: $scope, $element: $element  }));
             vm.parentComponentId = vm.options.$componentId;
             vm.back = componentSettings.useBackUrl === true;
             vm.state = componentSettings.sref;

@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -9,13 +9,13 @@
     function NewsFormController($state) {
         'ngInject';
         var vm = this;
-        var newsDataSource = {            
+        var newsDataSource = {
             standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/news',
             sortBy: '-id',
             primaryKey: 'id',
             fields: [
-                 {
+                {
                     name: 'id',
                     component: {
                         name: 'ue-string',
@@ -80,6 +80,7 @@
                         name: 'ue-autocomplete',
                         settings: {
                             label: 'Authors',
+                            placeholder: 'Autors',
                             valuesRemote: {
                                 fields: {
                                     value: 'id',
