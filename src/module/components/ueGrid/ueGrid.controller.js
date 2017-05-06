@@ -613,9 +613,9 @@
 
         function toggleContextView(record) {
             var id = record[vm.idField];
-            vm.styleContextMenu = {};
-            if (vm.contextId == id) {
-                vm.contextId = undefined;
+            vm.options.styleContextMenu = {};
+            if (vm.options.contextId == id) {
+                vm.options.contextId = undefined;
             } else {
                 vm.options.contextId = id;
             }
@@ -627,26 +627,24 @@
                 id: id,
                 primaryKey: vm.idField,
                 records: vm.items
-            };            
+            };
             $rootScope.$broadcast('ue-grid:contextMenu', {
                 record: record,
                 primaryKey: vm.idField
             });
             _filterContextMenuItem(obj);
             if (angular.isDefined(id)) {
-                var node = !vm.dragMode ? $element.find('.table')[0] : e.currentTarget;
+                var node = !vm.dragMode ? $element.find('.table')[0] : event.currentTarget;
                 var left = event.pageX - node.getBoundingClientRect().left;
                 if (event.which === 3) {
                     vm.options.styleContextMenu = {
                         'top': event.offsetY,
                         'left': left
                     };
-                } else {
-                    vm.styleContextMenu = {};
+                    event.stopPropagation();
+                    vm.options.contextId = id;
                 }
-                vm.options.contextId = id;                
             }
-            event.stopPropagation();
         }
 
         function _filterContextMenuItem(obj) {
@@ -656,10 +654,10 @@
 
             angular.forEach(vm.contextLinks, function(value) {
                 var showContextMenuItem = value.component.settings.useable && angular.isFunction(value.component.settings.useable) ? value.component.settings.useable(obj) : true;
-                if(showContextMenuItem) {
-                    if(!firstVisibleElem && value.separator){
+                if (showContextMenuItem) {
+                    if (!firstVisibleElem && value.separator) {
                         delete value.separator;
-                    } else if(firstVisibleElem && !value.separator) {
+                    } else if (firstVisibleElem && !value.separator) {
                         value.separator = true;
                     }
                     result.push(value);
