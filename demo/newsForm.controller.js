@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -8,13 +8,13 @@
     function NewsFormController() {
         'ngInject';
         var vm = this;
-        var newsDataSource = {            
+        var newsDataSource = {
             standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/news',
             sortBy: '-id',
             primaryKey: 'id',
             fields: [
-                 {
+                {
                     name: 'id',
                     component: {
                         name: 'ue-string',
@@ -75,26 +75,6 @@
                 },
                 {
                     name: 'authors',
-                    component: {
-                        name: 'ue-autocomplete',
-                        settings: {
-                            label: 'Authors',
-                            placeholder: 'Autors',
-                            valuesRemote: {
-                                fields: {
-                                    value: 'id',
-                                    label: 'name'
-                                },
-                                url: 'http://universal-backend.dev/rest/v1/staff'
-                            },
-                            //multiple: true,
-                            expandable: true,
-                            multiname: 'staff_id'
-                        }
-                    }
-                },
-                 {
-                    name: 'authors1',
                     component: {
                         name: 'ue-autocomplete',
                         settings: {
@@ -185,7 +165,6 @@
                                         {
                                             label: 'Description',
                                             fields: [
-                                                'authors', 'authors1',
                                                 'id',
                                                 'published_at',
                                                 'category_id',
@@ -195,7 +174,8 @@
                                         },
                                         {
                                             label: 'Place',
-                                            fields: [                                                
+                                            fields: [
+                                                'authors',
                                                 'tags'
                                             ]
                                         },
