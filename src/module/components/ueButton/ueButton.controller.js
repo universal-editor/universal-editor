@@ -50,7 +50,7 @@
                     request = JSON.parse(componentSettings.request);
                 }
                 if (vm.action === 'delete') {
-                    vm.disabled = vm.entityId === null || vm.entityId === undefined;
+                    vm.disabled = vm.entityId === null || vm.entityId === undefined || vm.entityId === '';
                 }
                 request.method = vm.method;
                 request.options = vm.options;

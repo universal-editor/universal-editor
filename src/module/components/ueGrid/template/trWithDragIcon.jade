@@ -8,7 +8,7 @@ tr(dnd-nodrag ng-if="vm.dragMode.dragIcon" data-ng-repeat="item in vm.items", da
     dnd-dragstart="vm.dragStart(event, item, $index)"
     dnd-effect-allowed="{{vm.dragMode.mode || 'move'}}")        
         td.table-cell.context-column(ng-if="vm.isContextMenu")
-            span.context-toggle(data-ng-click="vm.toggleContextView(item[vm.idField])", 
+            span.context-toggle(data-ng-click="vm.toggleContextView(item)", 
                                 data-ng-show="(vm.contextLinks.length && (item[vm.subType] || item[vm.subType] == undefined)) || (vm.mixContextLinks.length && vm.collectionType)") Toggle buttons
             .context-menu-wrapper(data-ng-show="vm.options.contextId == item[vm.idField]" , data-ng-style='vm.options.styleContextMenu')
                 .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index",
