@@ -9,6 +9,11 @@
         'ngInject';
 
         var constantLang = {
+            'UE-GRID': {
+                'TREE': {
+                    'EXPAND_ERROR': 'Сервер временно недоступен.'
+                }
+            },
             'RESPONSE_ERROR': {
                 'INVALID_DATA': 'Неправильно заполнена форма',
                 'SERVICE_UNAVAILABLE': 'Сервис временно недоступен',

@@ -5,7 +5,8 @@
         .module('demoApp')
         .controller('StaffFormController', StaffFormController);
 
-    function StaffFormController($state, $location) {
+    StaffFormController.$inject = ['$state'];
+    function StaffFormController($state) {
         'ngInject';
         var vm = this;
         var staffDataSource = {
@@ -133,6 +134,12 @@
                 name: 'ue-form',
                 settings: {
                     dataSource: staffDataSource,
+                    primaryKeyValue: function() {
+                        if($state.params.pk === 'new') {
+                            return null;
+                        }
+                        return $state.params.pk;
+                    },
                     header: {
                         toolbar: [
                             {

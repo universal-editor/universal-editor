@@ -15,6 +15,11 @@ settings: {
         sortBy: '-id',
         primaryKey: 'id',
         parentField: 'parent_id',
+        tree: {
+                childrenField: 'childs',
+                childrenCountField: 'childs_count',
+                selfField: 'self'
+        },
         fields: [
             {
                 name: 'id',
@@ -91,12 +96,19 @@ settings: {
 | settings[dataSource][parentField] | string | Имя поля с идентификатором родительской записи. Данный параметр требуется указывать, если поле является разделом», т. е. может иметь дочерние объекты, которые будут связаны по этому полю. Можно использовать в связке со смешанным режимом. | - | - |
 | settings[dataSource][fields] | array | Массив настроек полей, используемых при создании и редактировании записи. | + | - |
 | settings[header] | object | Содержит настройки верхнего блока в компоненте.  | + | - |
+| settings[dataSource][tree] | object | Секция конфига для задания имен полей, используемы при выводе иерархического дерева в компоненте.  | + | - |
+| settings[dataSource][tree][childrenField] | string | Имя поля c перечнем дочерних узлов.  | - | - |
+| settings[dataSource][tree][childrenCountField] | string | Имя поля с количеством дочерних узлов.  | - | - |
+| settings[dataSource][tree][selfField] | string | Если узлы содержат сущность в отдельном поле и эта сущность выводится в дереве. Пример узла, {id: 1, self: { сущность дерева }, children: [  массив узлов ]} | - | - |
 | settings[header][filter] | object, false | Содержит компонент фильтра.  | - | - |
 | settings[header][toolbar] | object | Содержит компоненты для верхнего блока ue-grid.  | + | - |
+| settings[displayHeaderColumns] | boolean | Флаг отображения блока с заголовками колонок.  | - | true |
+| settings[dragMode] | object | Объект для настройки перетаскивания элементов в компоненте [drag&drop](dragMode.md)  | - | - |
 | settings[pagination] | object | Содержит компонент пагинации в нижнем блоке. | + | - |
-| settings[columns] | array | Массив имен столбцов которые нужно выводить. | + | - |
+| settings[columns] | array или string | Массив объектов для описания столбцов или имя поля из конфигурации ресурса.  | + | - |
+| settings[columns][name] | string | Имя поля из конфигурации ресурса (dataSource). | + | - |
+| settings[columns][width] | string | Длина колонки в % или px. | + | 100% – означает, что все колонки будут равные по длине. (разделены в соотношении 1 к 1) |
 | settings[contextMenu] | array | Массив кнопок для меню у записей со смешанного ресурса. | - | - |
-
 
 ## Смешанный режим отображения данных
 

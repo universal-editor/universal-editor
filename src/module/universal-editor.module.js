@@ -15,7 +15,8 @@
             'ui.mask',
             'toastr',
             'pascalprecht.translate',
-            'ui.bootstrap'
+            'ui.bootstrap',
+            'dndLists'
         ]);
 
     angular
@@ -27,17 +28,13 @@
         return {
             'request': function(config) {
                 if (config.beforeSend) {
-                    config.beforeSend(config);
+                    var defer = $q.defer();
+                    config.timeout = defer.promise;
+                    var success = config.beforeSend(config);
+                    if(success === false) {
+                        defer.resolve();
+                    }
                 }
-                // Заменяем пустые массивы на null так как при отправке такие массивы игнорируются
-                if (config.data && typeof config.data === 'object') {
-                    angular.forEach(config.data, function(value, key) {
-                        if (angular.isArray(value) && value.length === 0) {
-                            config.data[key] = null;
-                        }
-                    });
-                }
-
                 return config;
             }
         };

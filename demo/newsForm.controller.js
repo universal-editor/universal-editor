@@ -1,20 +1,21 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('demoApp')
         .controller('NewsFormController', NewsFormController);
 
-    function NewsFormController() {
+    NewsFormController.$inject = ['$state'];
+    function NewsFormController($state) {
         'ngInject';
         var vm = this;
-        var newsDataSource = {            
+        var newsDataSource = {
             standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/news',
             sortBy: '-id',
             primaryKey: 'id',
             fields: [
-                 {
+                {
                     name: 'id',
                     component: {
                         name: 'ue-string',
@@ -79,6 +80,7 @@
                         name: 'ue-autocomplete',
                         settings: {
                             label: 'Authors',
+                            placeholder: 'Autors',
                             valuesRemote: {
                                 fields: {
                                     value: 'id',
@@ -137,7 +139,13 @@
             component: {
                 name: 'ue-form',
                 settings: {
-                    dataSource: newsDataSource,
+                    dataSource: newsDataSource,                    
+                    primaryKeyValue: function() {
+                        if($state.params.pk === 'new') {
+                            return null;
+                        }
+                        return $state.params.pk;
+                    },
                     header: {
                         toolbar: [
                             {

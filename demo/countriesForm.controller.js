@@ -5,7 +5,8 @@
         .module('demoApp')
         .controller('CountryFormController', CountryFormController);
 
-    function CountryFormController($state, $location) {
+    CountryFormController.$inject = ['$state'];
+    function CountryFormController($state) {
         'ngInject';
         var vm = this;
         var countryDataSource = {
@@ -46,6 +47,12 @@
                 name: 'ue-form',
                 settings: {
                     dataSource: countryDataSource,
+                    primaryKeyValue: function() {
+                        if($state.params.pk === 'new') {
+                            return null;
+                        }
+                        return $state.params.pk;
+                    },
                     header: {
                         toolbar: [
                             {
