@@ -622,7 +622,6 @@
         }
 
         function toggleContextViewByEvent(record, event) {
-            debugger;
             var id = record[vm.idField];
             var obj = {
                 id: id,
