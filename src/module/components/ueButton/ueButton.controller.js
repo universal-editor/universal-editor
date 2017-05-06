@@ -70,6 +70,15 @@
                 vm.entityId = vm.entityId;
                 vm.method = vm.method || 'GET';
             }
+
+            $rootScope.$on('ue-grid:сontextMenu', function(e, data) {
+                if (vm.setting.buttonClass == 'context') {                    
+                    if(!vm.setting.component.settings.useable || !angular.isFunction(vm.setting.component.settings.useable) ) return;
+                    var showBtn = vm.setting.component.settings.useable(data);
+                    var elemStyle = $element[0].parentElement.style;
+                    elemStyle.display = showBtn ? 'block' : 'none';
+                }
+            });
         };
 
         function clickLink() {

@@ -56,6 +56,7 @@
             vm.sortingDirection = true;
             vm.pageItemsArray = [];
             vm.contextLinks = [];
+            vm.contextLinksOrigin = [];
             vm.mixContextLinks = [];
             vm.listHeaderBar = [];
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
@@ -177,6 +178,7 @@
                 newValue.headComponent = vm.setting.headComponent;
                 vm.contextLinks.push(newValue);
             });
+            vm.contextLinksOrigin = angular.copy(vm.contextLinks);
 
             if (!!vm.setting.component.settings.header && !!vm.setting.component.settings.header.toolbar) {
                 angular.forEach(vm.setting.component.settings.header.toolbar, function(control) {
@@ -611,10 +613,6 @@
 
         function toggleContextView(record) {
             var id = record[vm.idField];
-            $rootScope.$broadcast('ue-grid:contextMenu', {
-                record: record,
-                primaryKey: vm.idField
-            });
             vm.styleContextMenu = {};
             if (vm.contextId == id) {
                 vm.contextId = undefined;
@@ -624,11 +622,18 @@
         }
 
         function toggleContextViewByEvent(record, event) {
+            debugger;
             var id = record[vm.idField];
+            var obj = {
+                id: id,
+                primaryKey: vm.idField,
+                records: vm.items
+            };            
             $rootScope.$broadcast('ue-grid:contextMenu', {
                 record: record,
                 primaryKey: vm.idField
             });
+            _filterContextMenuItem(obj);
             if (angular.isDefined(id)) {
                 var node = !vm.dragMode ? $element.find('.table')[0] : e.currentTarget;
                 var left = event.pageX - node.getBoundingClientRect().left;
@@ -637,10 +642,32 @@
                         'top': event.offsetY,
                         'left': left
                     };
-                    vm.options.contextId = id;
+                } else {
+                    vm.styleContextMenu = {};
                 }
+                vm.options.contextId = id;                
             }
-            e.stopPropagation();
+            event.stopPropagation();
+        }
+
+        function _filterContextMenuItem(obj) {
+            vm.contextLinks = angular.copy(vm.contextLinksOrigin);
+            var result = [];
+            var firstVisibleElem = false;
+
+            angular.forEach(vm.contextLinks, function(value) {
+                var showContextMenuItem = value.component.settings.useable && angular.isFunction(value.component.settings.useable) ? value.component.settings.useable(obj) : true;
+                if(showContextMenuItem) {
+                    if(!firstVisibleElem && value.separator){
+                        delete value.separator;
+                    } else if(firstVisibleElem && !value.separator) {
+                        value.separator = true;
+                    }
+                    result.push(value);
+                    firstVisibleElem = true;
+                }
+            });
+            vm.contextLinks = result;
         }
     }
 })();

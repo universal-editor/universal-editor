@@ -10,9 +10,10 @@
         'ngInject';
         var vm = this;
         var contextRecordId;
+        var record;
 
         $rootScope.$on('ue-grid:contextMenu', function(e, data) {
-            var record = data.record;
+            record = data.record;
             var primaryKey = data.primaryKey;
             contextRecordId = record[primaryKey];
         });
@@ -190,7 +191,10 @@
                                 settings: {
                                     label: 'Delete',
                                     action: 'delete',
-                                    sref: 'staff'
+                                    sref: 'staff',
+                                    useable: function() {
+                                        return record && record.id === 3;                                        
+                                    }
                                 }
                             }
                         }

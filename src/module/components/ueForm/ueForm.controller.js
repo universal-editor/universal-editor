@@ -154,8 +154,6 @@
                 vm.entityLoaded = true;
             }
 
-
-
             /** Watcher for value of primary key */
             if (angular.isFunction(vm.componentSettings.primaryKeyValue)) {
                 var primaryKeyWatcher = $scope.$watch(function() {
@@ -199,7 +197,7 @@
                 return EditEntityStorage.constructOutputValue(vm.options);
             };
         };
-
+        
         function updateButton(pk) {
             angular.forEach(vm.editFooterBar, function(button) {
                 button.entityId = pk;
