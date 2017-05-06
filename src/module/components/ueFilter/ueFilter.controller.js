@@ -43,6 +43,8 @@
             });
             function proccessField(field) {
                 var fieldSettings = field.component.settings;
+                var validators = fieldSettings.validators || [];
+                var typeValidatorNumber = validators.filter(function(item) { return item.type === 'number'; }).length;                
                 var group = {
                     label: fieldSettings.label,
                     operators: [],
@@ -50,7 +52,7 @@
                         field: field,
                         options: {
                             filterParameters: {
-                                operator: '%:text%',
+                                operator: !typeValidatorNumber ? '%:text%' : ':text',
                                 index: 0
                             },
                             filter: true,

@@ -67,20 +67,22 @@
             vm.listeners.push($scope.$watch(function() {
                 return vm.inputValue;
             }, function(newValue) {
+                if (vm.multiple) {                    
+                    var input = $element.find('input'), spanValue = newValue || '';
+                    if (vm.placeholder && !spanValue) {
+                        spanValue = vm.placeholder;
+                    }
+                    var $span = $('<span>').append(spanValue).appendTo('body');
+                    vm.classInput.width = ($span.width() + 10) + 'px';
+                    $span.remove();
+                }
                 if (newValue) {
+                    vm.sizeInput = newValue.length || 1;
                     if (inputTimeout) {
                         $timeout.cancel(inputTimeout);
                     }
                     vm.showPossible = true;
                     vm.possibleValues = [];
-                    if (vm.multiple) {
-                        vm.sizeInput = newValue.length || 1;
-                        if (vm.sizeInput === 1 && (newValue.length != 1)) {
-                            vm.classInput.width = '1px';
-                        } else {
-                            vm.classInput.width = '100%';
-                        }
-                    }
                     inputTimeout = $timeout(function() {
                         vm.autocompleteSearch(newValue);
                     }, 300);
@@ -283,9 +285,9 @@
                         }
                         return id;
                     });
-                } else if(angular.isObject(ids)) {
+                } else if (angular.isObject(ids)) {
                     ids = ids[vm.fieldId];
-                } 
+                }
                 var config = {
                     method: 'GET',
                     url: componentSettings.valuesRemote.url,
@@ -350,9 +352,7 @@
         }
 
         function deleteToAutocomplete(event) {
-            if (event.which == 8 && !!vm.selectedValues && !!vm.selectedValues.length && !vm.inputValue &&
-                vm.multiple
-            ) {
+            if (event.which == 8 && !!vm.selectedValues && !!vm.selectedValues.length && !vm.inputValue && vm.multiple) {
                 vm.removeFromSelected(event, vm.selectedValues[vm.selectedValues.length - 1]);
             }
         }
