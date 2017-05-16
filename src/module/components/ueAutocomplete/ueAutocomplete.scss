@@ -6,11 +6,22 @@
     }
     .field-wrapper-ue-dropdown,
     .field-wrapper-ue-autocomplete {
+        & .drag-enabled {
+            .autocomplete-selected {
+                cursor: -webkit-grab;
+            }
+        }
         .autocomplete-selected {
             position: relative;
             display: inline-block;
             float: left;
             max-width: 100%;
+            &.dndPlaceholder {
+                .autocomplete-item {
+                    width: 100px;
+                }
+                opacity: 0.5;
+            }
             .autocomplete-item {
                 background: #CBD6DA;
                 border: 1px solid #959EA9;

@@ -80,7 +80,7 @@
                         name: 'ue-autocomplete',
                         settings: {
                             label: 'Authors',
-                            placeholder: 'Autors',
+                            draggable: true,
                             valuesRemote: {
                                 fields: {
                                     value: 'id',

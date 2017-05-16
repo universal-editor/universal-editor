@@ -34,6 +34,7 @@
             vm.classInput = { 'width': '1px' };
             vm.showPossible = false;
             vm.fillControl = fillControl;
+            vm.draggable = componentSettings.draggable === true;
 
             vm.addToSelected = addToSelected;
             vm.removeFromSelected = removeFromSelected;
@@ -41,7 +42,19 @@
             vm.deleteToAutocomplete = deleteToAutocomplete;
             vm.loadDataById = loadDataById;
             vm.clear = clear;
-            
+            vm.moved = function(i) {
+                vm.selectedValues.splice(i, 1);
+                vm.fieldValue.splice(0);
+                angular.forEach(vm.selectedValues, function(value) {
+                    if (vm.fieldId) {
+                        vm.fieldValue.push(value[vm.fieldId]);
+                    }
+                });
+            };
+            vm.drop = function(item) {
+                return item;
+            };
+
 
             if (!vm.multiple) {
                 vm.classInput.width = '99%';
@@ -67,7 +80,7 @@
             vm.listeners.push($scope.$watch(function() {
                 return vm.inputValue;
             }, function(newValue) {
-                if (vm.multiple) {                    
+                if (vm.multiple) {
                     var input = $element.find('input'), spanValue = newValue || '';
                     if (vm.placeholder && !spanValue) {
                         spanValue = vm.placeholder;
@@ -262,17 +275,7 @@
         }
 
         function fillControl(options) {
-            angular.forEach(options, function(v) {
-                if (Array.isArray(vm.fieldValue) &&
-                    (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
-                    vm.multiple && !alreadyIn(v, vm.selectedValues)
-                ) {
-                    vm.selectedValues.push(v);
-                } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
-                    vm.selectedValues.push(v);
-                    vm.placeholder = v[vm.fieldSearch];
-                }
-            });
+            angular.forEach(options, insertToSelectedCollection);
         }
 
         function loadDataById(ids) {
@@ -312,17 +315,7 @@
                 return ApiService
                     .getUrlResource(config)
                     .then(function(response) {
-                        angular.forEach(response.data.items, function(v) {
-                            if (angular.isArray(vm.fieldValue) &&
-                                (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
-                                vm.multiple && !alreadyIn(v, vm.selectedValues)
-                            ) {
-                                vm.selectedValues.push(v);
-                            } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
-                                vm.selectedValues.push(v);
-                                vm.placeholder = v[vm.fieldSearch];
-                            }
-                        });
+                        angular.forEach(response.data.items, insertToSelectedCollection);
                         if (!vm.optionValues.length) {
                             vm.optionValues = angular.copy(vm.selectedValues);
                         }
@@ -331,6 +324,25 @@
                 defer.resolve();
             }
             return defer.promise;
+        }
+
+        function insertToSelectedCollection(v) {
+            if (angular.isArray(vm.fieldValue) && vm.multiple) {
+                var id = v[vm.fieldId], id_string = String(id), i = vm.fieldValue.indexOf(id);
+                if (i === -1) {
+                    id = vm.fieldValue.indexOf(id_string);
+                }
+                if (i >= 0 && !alreadyIn(v, vm.selectedValues)) {
+                    vm.selectedValues[i] = v;
+                }
+            } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
+                vm.selectedValues.push(v);
+                vm.placeholder = v[vm.fieldSearch];
+            }
+        }
+
+        function isDefined(value) {
+            return typeof value !== 'undefined' && value !== null;
         }
 
         function focusPossible(isActive) {

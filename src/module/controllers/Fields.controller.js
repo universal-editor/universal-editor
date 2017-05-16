@@ -362,7 +362,7 @@
             return result;
         }
 
-        function onLoadDataHandler(event, data, callback) {
+        function onLoadDataHandler(event, data) {
             if (self.isParentComponent(data) && !self.options.filter) {
                 //-- functional for required fields
                 if (componentSettings.depend) {
@@ -416,9 +416,6 @@
                         if (data.hasOwnProperty(self.fieldName)) {
                             self.fieldValue = data[self.fieldName];
                         }
-                    }
-                    if (angular.isFunction(callback)) {
-                        callback();
                     }
                     equalPreviewValue();
                 }
@@ -483,10 +480,6 @@
                             }
                         }
                     }
-                    if (angular.isFunction(callback)) {
-                        callback();
-                    }
-
                     equalPreviewValue($scope.data['$' + self.fieldName]);
                 }
             }

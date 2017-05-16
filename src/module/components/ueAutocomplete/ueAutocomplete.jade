@@ -5,12 +5,23 @@ block append content
     .components-body(ng-if="!vm.warnings.length && !vm.dangers.length" ng-class="{'disabled-field': vm.disabled}")
       div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}", ng-style="{'overflow:auto':vm.multiple}", ng-if="!vm.disabled || vm.options.filter")
         div(ng-class='vm.classComponent')
-            .autocomplete-input-wrapper.form-control(data-ng-class='{"active" : vm.isActivePossible, "disabled-input": vm.readonly, "multiple": vm.multiple}', data-ng-click="inputFocus()")
-                .autocomplete-selected(data-ng-repeat="acItem in vm.selectedValues track by $index", 
-                                    data-ng-show="acItem[vm.fieldSearch]",
-                                    data-ng-if="vm.multiple") 
+            .autocomplete-input-wrapper.form-control(dnd-list="vm.selectedValues", 
+                dnd-disable-if="!vm.draggable", 
+                dnd-drop="vm.drop(item)", 
+                data-ng-class='{"active" : vm.isActivePossible, "disabled-input": vm.readonly, "multiple": vm.multiple, "drag-enabled": vm.draggable}', 
+                data-ng-click="inputFocus()")
+                .autocomplete-selected(
+                    data-ng-repeat="acItem in vm.selectedValues", 
+                    dnd-draggable="acItem",                   
+                    dnd-moved="vm.moved($index)",
+                    data-ng-show="acItem[vm.fieldSearch]",
+                    data-ng-if="vm.multiple",
+                    dnd-effect-allowed="move"
+                ) 
                     .autocomplete-item {{acItem[vm.fieldSearch]}}
                     span.remove-from-selected(data-ng-click="vm.removeFromSelected($event, acItem)", data-ng-if="!vm.readonly") ×
+                .autocomplete-selected.dndPlaceholder
+                    .autocomplete-item 
                 input.autocomplete-field-search( 
                     ng-show="!vm.loadingData"
                     type="text",
