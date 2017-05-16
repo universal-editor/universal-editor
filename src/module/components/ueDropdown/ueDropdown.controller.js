@@ -21,17 +21,19 @@
             vm.initDataSource = true;
             componentSettings = vm.setting.component.settings;
 
-            if (componentSettings.valuesRemote) {
-                selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
-            } else if (componentSettings.values) {
-                selectedStorageComponent = componentSettings.values.$selectedStorage;
-            }
+            
             vm.search = componentSettings.search === true;
             if (typeof componentSettings.serverPagination !== 'boolean') {
                 vm.serverPagination = true;
             }
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
+
+            if (componentSettings.valuesRemote) {
+                selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
+            } else if (componentSettings.values) {
+                selectedStorageComponent = componentSettings.values.$selectedStorage;
+            }
 
             possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
