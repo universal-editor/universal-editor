@@ -8,6 +8,7 @@
     name: 'ue-autocomplete',
     settings: {
         label: 'Autocomplete label',
+        serverPagination: false,
         hint: 'Это поле автозаполнения',
         multiple: true,
         multiname: 'new_value',
@@ -44,6 +45,7 @@
 | settings | object | Объект настройки компонента | + | - |
 | settings[label] | string | Название поля (выводится в интерфейсе редактора) | + | - |
 | settings[hint] | string | Текстовая информационная подсказка, выводимая слева от заголовка поля. | - | - |
+| settings[serverPagination] | boolean | Флаг серверной пагинации. Если принимает значение `true`, то компонент будет делать запросы за всеми страницами с данными. | - | `false` |
 | settings[multiple] | bool | Параметр отвечает за указание возможности поля принимать множественные значения. | - | false |
 | settings[readonly] | bool | Параметр отвечает за указание активности компонента с точки зрения взаимодействия с пользователем. | - | false |
 | settings[template] | object | Объект для настройки шаблонов. | - | - |
