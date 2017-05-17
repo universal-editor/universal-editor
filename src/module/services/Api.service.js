@@ -552,9 +552,6 @@
                 config.params.filter = FilterFieldsStorage.convertFilterToString(config.filter);
             }
 
-            if (config.fromP === 12) {
-                config.fromP = 11;
-            }
             if (!config.toP) {
                 promiseStack.push(getPromise(config.url));
             } else {
@@ -565,16 +562,10 @@
 
             //-- read items from one page
             function getPromise(url, page) {
-                if (defaultStandard) {
-                    options.params = options.params || {};
-                    options.params.page = page || 1;
-                    options.params['per-page'] = 50;
-                } else {
-                    config.pagination = {};
-                    config.pagination.page = page || 1;
-                    config.pagination.perPage = 50;
-                }
-                options = getAjaxOptionsByTypeService(config);
+                config.pagination = {};
+                config.pagination.page = page || 1;
+                config.pagination.perPage = 50;
+                options = angular.merge({}, getAjaxOptionsByTypeService(config, config.standard));
                 return $http(options);
             }
 
@@ -922,7 +913,7 @@
 
         function getAjaxOptionsByTypeService(config, standard) {
 
-            standard = standard || config.standard;
+            standard = standard || config.standard || 'YiiSoft';
 
             var serviceApi = getCustomService(standard);
 

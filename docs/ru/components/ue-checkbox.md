@@ -14,6 +14,7 @@
         multiple: true,
         multiname: 'new_value',
         depend: 'other_field_name',
+        serverPagination: false,
         width: 6,
         templates: {
             preview: '<span> {{value}} </span>',
@@ -49,6 +50,7 @@
 | settings[label] | string | Название поля (выводится в интерфейсе редактора) | + | - |
 | settings[hint] | string | Текстовая информационная подсказка, выводимая слева от заголовка поля. | - | - |
 | settings[multiple] | bool | Параметр отвечает за указание возможности поля принимать множественные значения. | - | false |
+| settings[serverPagination] | boolean | Флаг серверной пагинации. Если принимает значение `true`, то компонент будет делать запросы за всеми страницами с данными. | - | `false` |
 | settings[readonly] | bool | Параметр отвечает за указание активности компонента с точки зрения взаимодействия с пользователем. | - | false |
 | settings[templates] | object | Объект для настройки шаблонов. | - | - |
 | settings[templates][preview] | string или function | Строка с HTML-кодом шаблона, функция, возвращающая шаблон, или путь до шаблона в режиме просмотра (например отображение в таблице). | + | - |
