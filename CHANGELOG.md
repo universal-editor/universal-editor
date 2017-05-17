@@ -1,5 +1,22 @@
 # Change log
 
+## 1.0.0-alpha6 
+### Added
+* Added rejecting requests for `ue-button` for `ue-form`.
+* Added drag and drop for `ue-grid` component.
+* Added `useable` parameter for components.
+* Added new parameter `primaryKeyValue` for configuring of ue-form.
+
+### Changed
+* Components with `valuesRemote` parameter can get values from API as objects and as ID.
+* `sref` setting of `ue-button` can be as an objects with own parameters.
+
+### Fixed
+* Fixed bug with `parent_id` parameters of `dataSource` in `ue-grid`.
+* Corrected work with `defaultValue` parameters and working of ue-dropdown with search parameter.
+* Bug with sending of numerical `ue-string `in filter.
+* Fixed bug with saving values of filters if you come back to the list from the form.
+
 ## 1.0.0-alpha5 - 2017-04-05
 ### Added
 * Added an opportunity `ue-dropdown` and `ue-autocomplete` components to be connected with the same reference on configuration.
