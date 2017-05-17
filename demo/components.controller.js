@@ -1554,7 +1554,7 @@
                                             component: {
                                                 name: 'ue-dropdown',
                                                 settings: {
-                                                    label: 'Поиск',
+                                                    label: 'Search',
                                                     valuesRemote: {
                                                         fields: {
                                                             value: 'id',
@@ -1562,7 +1562,7 @@
                                                         },
                                                         url: 'http://universal-backend.dev/rest/v1/country'
                                                     },
-                                                    placeholder: 'Найти',
+                                                    placeholder: 'Country',
                                                     search: true
                                                 }
                                             }
@@ -1571,7 +1571,7 @@
                                             component: {
                                                 name: 'ue-dropdown',
                                                 settings: {
-                                                    label: 'Дерево',
+                                                    label: 'Tree',
                                                     valuesRemote: {
                                                         fields: {
                                                             value: 'id',
