@@ -1539,7 +1539,6 @@
                                                 name: 'ue-dropdown',
                                                 settings: {
                                                     label: 'Multiple regim',
-                                                    filterable: true,
                                                     values: {
                                                         '1': 'Apple',
                                                         '2': 'Orage',
@@ -1556,7 +1555,6 @@
                                                 name: 'ue-dropdown',
                                                 settings: {
                                                     label: 'Поиск',
-                                                    filterable: true,
                                                     valuesRemote: {
                                                         fields: {
                                                             value: 'id',

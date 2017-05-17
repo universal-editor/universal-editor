@@ -30,6 +30,7 @@
             vm.switchLoader = switchLoader;
             vm.isLoader = false;
             vm.stateParams = {};
+            vm.type = vm.type || 'create';
 
             if (angular.isString(vm.state)) {
                 vm.stateName = vm.state;
