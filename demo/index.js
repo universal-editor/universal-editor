@@ -41,7 +41,7 @@
                 url: '/DnD',
                 template: '<universal-editor ue-config="vm.ueConfig"></universal-editor>',
                 controllerAs: 'vm',
-                controller: 'newsGridDnDController'
+                controller: 'DnDController'
             })
             .state('articles', {
                 url: '/articles',
