@@ -42,7 +42,7 @@
                 {
                     name: 'category_id',
                     component: {
-                        name: 'ue-dropdown',
+                        name: 'ue-autocomplete',
                         settings: {
                             label: 'Category',
                             valuesRemote: {

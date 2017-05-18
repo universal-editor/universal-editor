@@ -874,7 +874,7 @@
             }
             if (angular.isArray(dependValue)) {
                 dependValue = dependValue.filter(function(item) {
-                    return !!item;
+                    return item !== null && item !== undefined;
                 });
                 dependValue = '"' + dependValue.join(',') + '"';
             }

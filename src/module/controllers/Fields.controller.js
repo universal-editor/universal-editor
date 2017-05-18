@@ -273,6 +273,24 @@
                     } else {
                         self.previewValue = option[self.fieldSearch];
                     }
+                    if (angular.isFunction(self.addToSelected)) {
+                        if (angular.isArray(self.fieldValue)) {
+                            if (!self.fieldValue.some(function(s) {
+                                if (angular.isObject(s)) {
+                                    return option[self.fieldId] == s[self.fieldId];
+                                } else {
+                                    return option[self.fieldId] == s;
+                                }
+                            })) {
+                                self.addToSelected(option);
+                            }
+                        } else {
+                            var t = angular.isObject(self.fieldValue) ? self.fieldValue[self.fieldId] : self.fieldValue;
+                            if (!angular.isArray(self.fieldValue) && t !== option[self.fieldId]) {
+                                self.addToSelected(option);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -386,10 +404,7 @@
                     }, function(value) {
                         if (!value) {
                             self.clear();
-                            self.readonly = true;
                             self.loadingData = false;
-                        } else {
-                            self.readonly = componentSettings.readonly || false;
                         }
                     }, true);
                 }

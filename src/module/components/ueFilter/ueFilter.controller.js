@@ -139,7 +139,7 @@
                         if (model.addToSelected && value) {
                             model.fieldValue = {};
                             model.fieldValue[model.fieldId] = value;
-                            model.addToSelected(null, model.fieldValue);
+                            model.addToSelected(model.fieldValue);
                             if (angular.isFunction(model.loadDataById)) {
                                 model.loadDataById(value);
                             }

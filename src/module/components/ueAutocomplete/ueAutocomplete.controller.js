@@ -22,6 +22,7 @@
             } else if (componentSettings.values) {
                 selectedStorageComponent = componentSettings.values.$selectedStorage;
             }
+            vm.$id = vm.setting.component.$id;
             vm.selectedValues = [];
             vm.inputValue = '';
             vm.possibleValues = [];
@@ -37,6 +38,7 @@
             vm.draggable = componentSettings.draggable === true;
 
             vm.addToSelected = addToSelected;
+            vm.insertToSelectedCollection = insertToSelectedCollection;
             vm.removeFromSelected = removeFromSelected;
             vm.focusPossible = focusPossible;
             vm.deleteToAutocomplete = deleteToAutocomplete;
@@ -60,12 +62,18 @@
                 vm.classInput.width = '99%';
                 vm.classInput['padding-right'] = '25px';
             }
+            vm.dragOver = function(event) {
+                var target = $(event.target).closest('.autocomplete-input-wrapper'),
+                    dragging = target.find('.dndDragging.dndDraggingSource');
+                target.find('.dndPlaceholder').width(dragging.width());
+                return true;
+            };
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(event, data) {
                 if (vm.isParentComponent(data) && !vm.options.filter && !event.defaultPrevented) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
-                    if (!vm.options.isSendRequest) {
+                    if (!vm.options.isSendRequest && needRequested()) {
                         vm.loadDataById(vm.fieldValue).then(function() {
                             vm.equalPreviewValue();
                         }).finally(function() {
@@ -76,6 +84,14 @@
                     }
                 }
             }));
+
+            function needRequested() {
+                var values = !angular.isArray(vm.fieldValue) ? [vm.fieldValue] : vm.fieldValue;
+                return values.some(function(value) {
+                    return value !== null && value !== undefined && !vm.selectedValues.some(
+                        function(selected) { return (angular.isObject(value) ? value[vm.fieldId] : value) == selected[vm.fieldId]; });
+                });
+            }
 
             vm.listeners.push($scope.$watch(function() {
                 return vm.inputValue;
@@ -113,7 +129,7 @@
                     }
 
                     $timeout(function() {
-                        vm.addToSelected(event, vm.possibleValues[vm.activeElement]);
+                        vm.addToSelected(vm.possibleValues[vm.activeElement], event);
                     }, 0);
 
                     break;
@@ -172,7 +188,7 @@
 
         /* PUBLIC METHODS */
 
-        function addToSelected(event, obj) {
+        function addToSelected(obj, event) {
             //** if you know only id  of the record            
             if (!vm.multiple) {
                 vm.selectedValues = [];

@@ -7,12 +7,16 @@ block append content
         div(ng-class='vm.classComponent')
             .autocomplete-input-wrapper.form-control(dnd-list="vm.selectedValues", 
                 dnd-disable-if="!vm.draggable", 
-                dnd-drop="vm.drop(item)", 
+                dnd-drop="vm.drop(item)",
+                dnd-allowed-types='[vm.$id]',
+                dnd-dragover="vm.dragOver(event)"
                 data-ng-class='{"active" : vm.isActivePossible, "disabled-input": vm.readonly, "multiple": vm.multiple, "drag-enabled": vm.draggable}', 
                 data-ng-click="inputFocus()")
                 .autocomplete-selected(
                     data-ng-repeat="acItem in vm.selectedValues", 
-                    dnd-draggable="acItem",                   
+                    dnd-type="vm.$id"
+                    dnd-draggable="acItem",
+                    dnd-dragOver="vm.dragOver(event)"                   
                     dnd-moved="vm.moved($index)",
                     data-ng-show="acItem[vm.fieldSearch]",
                     data-ng-if="vm.multiple",
@@ -45,7 +49,7 @@ block append content
                     .possible-scroll
                         .possible-value-item(data-ng-repeat="possible in vm.possibleValues", 
                                             data-ng-mouseover="vm.activeElement = $index", 
-                                            data-ng-mousedown="vm.addToSelected($event, possible)",
+                                            data-ng-mousedown="vm.addToSelected(possible, $event)",
                                             data-ng-class="vm.activeElement == $index ? 'active' : ''") {{::possible[vm.fieldSearch]}}
 
             .loader-search-wrapper(data-ng-show="vm.searching || vm.loadingData")

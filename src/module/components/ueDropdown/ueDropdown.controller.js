@@ -491,7 +491,7 @@
             }
         }
 
-        function addToSelected(event, val) {
+        function addToSelected(val, event) {
             if (vm.multiple) {
                 vm.fieldValue.push(val);
             } else {
@@ -567,7 +567,7 @@
                         }
                         $timeout(function() {
                             if ((!vm.multiple && !vm.isTree)) {
-                                vm.addToSelected(null, vm.optionValues[vm.activeElement]);
+                                vm.addToSelected(vm.optionValues[vm.activeElement]);
                             } else if (vm.isTree) {
                                 vm.toggle(undefined, vm.optionValues[vm.activeElement], true);
                             }
