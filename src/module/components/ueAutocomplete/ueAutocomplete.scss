@@ -11,15 +11,17 @@
                 cursor: -webkit-grab;
             }
         }
+        .dndDragover {
+            .autocomplete-field-search {
+                display: none;
+            }
+        }
         .autocomplete-selected {
             position: relative;
             display: inline-block;
             float: left;
             max-width: 100%;
             &.dndPlaceholder {
-                .autocomplete-item {
-                    width: 100px;
-                }
                 opacity: 0.5;
                 margin-right: 5px;
             }

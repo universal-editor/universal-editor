@@ -64,8 +64,8 @@
             }
             vm.dragOver = function(event) {
                 var target = $(event.target).closest('.autocomplete-input-wrapper'),
-                    dragging = target.find('.dndDragging.dndDraggingSource');
-                target.find('.dndPlaceholder').width(dragging.width());
+                    dragging = target.find('.dndDragging.dndDraggingSource .autocomplete-item');
+                target.find('.dndPlaceholder .autocomplete-item').width(dragging.width());
                 return true;
             };
 
