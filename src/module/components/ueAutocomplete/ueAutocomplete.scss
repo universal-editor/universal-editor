@@ -11,9 +11,9 @@
                 cursor: -webkit-grab;
             }
         }
-        .dndDragover {
-            .autocomplete-field-search {
-                display: none;
+        .dndDragover.autocomplete-input-wrapper {
+            &>.autocomplete-field-search {
+                display: none !important;
             }
         }
         .autocomplete-selected {

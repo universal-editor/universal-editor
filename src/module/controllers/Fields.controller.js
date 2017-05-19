@@ -217,6 +217,9 @@
                         }
                     }
                 }
+                if(angular.isFunction(componentSettings.change) && value !== oldValue) {
+                    componentSettings.change(value, oldValue, getExtendedValue(value));
+                }
             }, true)
         );
 
@@ -323,16 +326,27 @@
             if (value == 0) {
                 return value;
             }
-            if (isExtended === true && self.hasOwnProperty('fieldId') && remoteValues) {
+            if (isExtended === true) {
+                value = getExtendedValue(value);
+            }
+            return angular.copy(value) || (self.multiple ? [] : null);
+        }
+
+        function getExtendedValue(id) {
+            var value = id;
+            if(self.hasOwnProperty('fieldId') && remoteValues) {
                 values = self.optionValues;
                 if (angular.isArray(self.selectedValues)) {
                     values = self.selectedValues;
+                }
+                if(angular.isArray(value)) {
+                    return self.selectedValues;
                 }
                 if (angular.isArray(values)) {
                     value = values.filter(function(option) { return angular.isObject(option) ? (option[self.fieldId] == value) : false; })[0];
                 }
             }
-            return angular.copy(value) || (self.multiple ? [] : null);
+            return value;
         }
 
         function getFieldValue(isExtended) {
