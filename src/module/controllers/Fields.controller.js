@@ -217,7 +217,7 @@
                         }
                     }
                 }
-                if(angular.isFunction(componentSettings.change) && value !== oldValue) {
+                if (angular.isFunction(componentSettings.change) && value !== oldValue) {
                     componentSettings.change(value, oldValue, getExtendedValue(value));
                 }
             }, true)
@@ -276,23 +276,8 @@
                     } else {
                         self.previewValue = option[self.fieldSearch];
                     }
-                    if (angular.isFunction(self.addToSelected)) {
-                        if (angular.isArray(self.fieldValue)) {
-                            if (!self.fieldValue.some(function(s) {
-                                if (angular.isObject(s)) {
-                                    return option[self.fieldId] == s[self.fieldId];
-                                } else {
-                                    return option[self.fieldId] == s;
-                                }
-                            })) {
-                                self.addToSelected(option);
-                            }
-                        } else {
-                            var t = angular.isObject(self.fieldValue) ? self.fieldValue[self.fieldId] : self.fieldValue;
-                            if (!angular.isArray(self.fieldValue) && t !== option[self.fieldId]) {
-                                self.addToSelected(option);
-                            }
-                        }
+                    if (angular.isArray(self.selectedValues) && !self.selectedValues.some(function(v) { return v[self.fieldId] === option[self.fieldId] })) {
+                        self.addToSelected(option);
                     }
                 }
             }
@@ -334,12 +319,12 @@
 
         function getExtendedValue(id) {
             var value = id;
-            if(self.hasOwnProperty('fieldId') && remoteValues) {
+            if (self.hasOwnProperty('fieldId') && remoteValues) {
                 values = self.optionValues;
                 if (angular.isArray(self.selectedValues)) {
                     values = self.selectedValues;
                 }
-                if(angular.isArray(value)) {
+                if (angular.isArray(value)) {
                     return self.selectedValues;
                 }
                 if (angular.isArray(values)) {

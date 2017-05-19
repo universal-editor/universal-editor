@@ -512,8 +512,7 @@
             }, 0);
             if (event) {
                 event.stopPropagation();
-            }
-            vm.equalPreviewValue();
+            }           
         }
 
         function convertToObject(items) {
