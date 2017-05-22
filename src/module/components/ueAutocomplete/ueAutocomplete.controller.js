@@ -406,7 +406,6 @@
             vm.inputValue = '';
             vm.sizeInput = 1;
             vm.selectedValues = [];
-            vm.placeholder = '';
         }
     }
 })();
