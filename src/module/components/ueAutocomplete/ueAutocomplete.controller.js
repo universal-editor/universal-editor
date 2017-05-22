@@ -210,6 +210,7 @@
         function removeFromSelected(event, obj) {
             if (!vm.multiple) {
                 clear();
+                vm.placeholder = componentSettings.placeholder || '';
             } else {
                 angular.forEach(vm.selectedValues, function(val, key) {
                     if (val[vm.fieldId] == obj[vm.fieldId]) {
