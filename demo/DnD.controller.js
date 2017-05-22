@@ -3,9 +3,9 @@
 
     angular
         .module('demoApp')
-        .controller('newsGridDnDController', newsGridDnDController);
+        .controller('DnDController', DnDController);
 
-    function newsGridDnDController($http) {
+    function DnDController($http) {
         'ngInject';
         var vm = this;
         var newsDataSource = {

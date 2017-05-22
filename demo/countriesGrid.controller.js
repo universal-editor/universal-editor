@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -58,7 +58,7 @@
                             }
                         ]
                     },
-                    columns: ['id','name'],
+                    columns: ['name'],
                     contextMenu: [
                         {
                             component: {
