@@ -8,6 +8,7 @@ block append content
                 .input-group
                     input.form-control.input-sm(
                         data-date-time="",
+                        auto-close="true",
                         name="{{vm.fieldName}}",
                         data-ng-disabled="vm.readonly",
                         data-ng-model="vm.fieldValue[$index]",
@@ -28,6 +29,7 @@ block append content
             input.form-control.input-sm(
                 data-date-time="",
                 name="{{vm.fieldName}}",
+                auto-close="true",
                 data-ng-disabled="vm.readonly",
                 data-ng-model="vm.fieldValue",
                 data-format="{{vm.format}}",
