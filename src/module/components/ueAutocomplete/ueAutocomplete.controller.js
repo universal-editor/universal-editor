@@ -195,7 +195,9 @@
                 vm.placeholder = obj[vm.fieldSearch];
                 vm.fieldValue = obj[vm.fieldId];
             } else {
-                vm.fieldValue.push(obj[vm.fieldId]);
+                if (!~vm.fieldValue.indexOf(obj[vm.fieldId])) {
+                    vm.fieldValue.push(obj[vm.fieldId]);
+                }
             }
             vm.selectedValues.push(obj);
             $element.find('.autocomplete-field-search').removeClass('hidden');
