@@ -20,7 +20,7 @@
             vm.possibleValues = [];
             vm.initDataSource = true;
             componentSettings = vm.setting.component.settings;
-            
+
             vm.search = componentSettings.search === true;
             if (typeof componentSettings.serverPagination !== 'boolean') {
                 vm.serverPagination = true;
@@ -128,31 +128,26 @@
         function fillControl(allOptions) {
             angular.forEach(allOptions, function(v) {
                 var v_id = v[vm.fieldId];
-                if (vm.optionValues.filter(function(option) { return v_id == option[vm.fieldId]; }).length === 0) {
-                    if (v_id && vm.fieldValue) {
-                        if (angular.isArray(vm.fieldValue)) {
-                            for (var i = vm.fieldValue.length; i--;) {
-                                if (vm.fieldValue[i] == v_id) {
-                                    vm.fieldValue[i] = v;
-                                    if(vm.isTree) {
-                                        v.checked = true;
-                                    }
-                                    break;
-                                }
+                if (v_id && vm.fieldValue) {
+                    if (angular.isArray(vm.fieldValue)) {
+                        for (var i = vm.fieldValue.length; i--;) {
+                            if (vm.fieldValue[i] == v_id) {
+                                vm.fieldValue[i] = v;
+                                break;
                             }
-                        } else if (v_id == vm.fieldValue) {
-                            vm.fieldValue = v;
-                            vm.isSpanSelectDelete = true;
                         }
+                    } else if (v_id == vm.fieldValue) {
+                        vm.fieldValue = v;
+                        vm.isSpanSelectDelete = true;
                     }
-                    if (vm.optionValues !== allOptions) {
-                        if (vm.isTree) {
-                            if (!v[vm.treeParentField]) {
-                                vm.optionValues.push(angular.copy(v));
-                            }
-                        } else {
+                }
+                if (vm.optionValues !== allOptions) {
+                    if (vm.isTree) {
+                        if (!v[vm.treeParentField]) {
                             vm.optionValues.push(angular.copy(v));
                         }
+                    } else {
+                        vm.optionValues.push(angular.copy(v));
                     }
                 }
             });
@@ -393,7 +388,7 @@
                     }
                     vm.placeholder = (!!vm.fieldValue && !!vm.fieldValue[vm.fieldSearch]) ? vm.fieldValue[vm.fieldSearch] : componentSettings.placeholder;
                 } else if (!vm.multiple && vm.isTree) {
-                    vm.placeholder = (!!vm.fieldValue.length && !!vm.fieldValue[0][vm.fieldSearch]) ? vm.fieldValue[0][vm.fieldSearch] : componentSettings.placeholder;
+                    vm.placeholder = (vm.fieldValue && !!vm.fieldValue.length && !!vm.fieldValue[0][vm.fieldSearch]) ? vm.fieldValue[0][vm.fieldSearch] : componentSettings.placeholder;
                 }
 
                 if (vm.fieldValue) {
@@ -514,7 +509,7 @@
             }, 0);
             if (event) {
                 event.stopPropagation();
-            }           
+            }
         }
 
         function convertToObject(items) {
@@ -568,7 +563,7 @@
                         }
                         $timeout(function() {
                             if ((!vm.multiple && !vm.isTree)) {
-                                vm.addToSelected(vm.optionValues[vm.activeElement]);
+                                vm.addToSelected(vm.possibleValues[vm.activeElement], null);
                             } else if (vm.isTree) {
                                 vm.toggle(undefined, vm.optionValues[vm.activeElement], true);
                             }
