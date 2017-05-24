@@ -388,7 +388,7 @@
                     }
                     vm.placeholder = (!!vm.fieldValue && !!vm.fieldValue[vm.fieldSearch]) ? vm.fieldValue[vm.fieldSearch] : componentSettings.placeholder;
                 } else if (!vm.multiple && vm.isTree) {
-                    vm.placeholder = (!!vm.fieldValue.length && !!vm.fieldValue[0][vm.fieldSearch]) ? vm.fieldValue[0][vm.fieldSearch] : componentSettings.placeholder;
+                    vm.placeholder = (vm.fieldValue && !!vm.fieldValue.length && !!vm.fieldValue[0][vm.fieldSearch]) ? vm.fieldValue[0][vm.fieldSearch] : componentSettings.placeholder;
                 }
 
                 if (vm.fieldValue) {
