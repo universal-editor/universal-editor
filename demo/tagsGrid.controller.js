@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -57,7 +57,7 @@
                             }
                         ]
                     },
-                    columns: ['id','name'],
+                    columns: ['name'],
                     contextMenu: [
                         {
                             component: {
@@ -84,13 +84,7 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-pagination',
-                                    settings: {
-                                        label: {
-                                            last: '>>',
-                                            next: '>'
-                                        }
-                                    }
+                                    name: 'ue-pagination'
                                 }
                             }
                         ]

@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeGroupController', UeGroupController);
 
-    function UeGroupController($scope, EditEntityStorage, $timeout, $controller, $translate) {
+    function UeGroupController($scope, EditEntityStorage, $timeout, $controller, $translate, $element) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this,
@@ -17,7 +17,7 @@
             componentSettings = vm.setting.component.settings;
             vm.fieldName = componentSettings.name;
 
-            baseController = $controller('BaseController', { $scope: $scope });
+            baseController = $controller('BaseController', { $scope: $scope, $element: $element });
             vm.resourceType = vm.setting.resourceType;
             angular.extend(vm, baseController);
             EditEntityStorage.addFieldController(vm, true);
@@ -44,6 +44,9 @@
             vm.countInLine = componentSettings.countInLine || 1;
             widthBootstrap = Math.ceil(12 / vm.countInLine);
             vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
+            if(vm.countInLine > 1) {
+                vm.className += ' auto-width';
+            }
 
             if (vm.multiple === true && !vm.setting.name) {
                 $translate('ERROR.MULTIPLE_NAME').then(function(translation) {

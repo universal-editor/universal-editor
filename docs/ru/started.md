@@ -95,7 +95,7 @@
             },
             header: {
                 filter: false, // Если `filter` не описан, по-умолчанию выводим фильтр.
-                controls: [ // кнопки справа над таблицей
+                toolbar: [ // кнопки справа над таблицей
                     {
                         component: {
                             name: 'ue-button',
@@ -144,7 +144,7 @@
                 },
             },
             footer: {
-                controls: [
+                toolbar: [
                     component: {
                         name: 'ue-pagination',
                         settings: {

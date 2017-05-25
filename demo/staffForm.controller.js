@@ -5,7 +5,8 @@
         .module('demoApp')
         .controller('StaffFormController', StaffFormController);
 
-    function StaffFormController($state, $location) {
+    StaffFormController.$inject = ['$state'];
+    function StaffFormController($state) {
         'ngInject';
         var vm = this;
         var staffDataSource = {
@@ -133,6 +134,12 @@
                 name: 'ue-form',
                 settings: {
                     dataSource: staffDataSource,
+                    primaryKeyValue: function () {
+                        if ($state.params.pk === 'new') {
+                            return null;
+                        }
+                        return $state.params.pk;
+                    },
                     header: {
                         toolbar: [
                             {
@@ -147,34 +154,15 @@
                         ]
                     },
                     body: [
-                        {
-                            component: {
-                                name: 'ue-form-tabs',
-                                settings: {
-                                    tabs: [
-                                        {
-                                            label: 'Bio',
-                                            fields: [
-                                                'name',
-                                                'email',
-                                                'gender',
-                                                'country',
-                                                'parent_id',
-                                                'colors'
-                                            ]
-                                        },
-                                        {
-                                            label: 'System',
-                                            fields: [
-                                                'fired',
-                                                'created_at',
-                                                'updated_at'
-                                            ]
-                                        }
-                                    ]
-                                }
-                            }
-                        }
+                        'fired',
+                        'name',
+                        'email',
+                        'gender',
+                        'country',
+                        'parent_id',
+                        'colors',
+                        'created_at',
+                        'updated_at'
                     ],
                     footer: {
                         toolbar: [

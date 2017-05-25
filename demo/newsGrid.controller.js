@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -8,13 +8,13 @@
     function NewsGridController() {
         'ngInject';
         var vm = this;
-        var newsDataSource = {            
+        var newsDataSource = {
             standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/news',
             sortBy: '-id',
             primaryKey: 'id',
             fields: [
-                 {
+                {
                     name: 'id',
                     component: {
                         name: 'ue-string',
@@ -129,7 +129,7 @@
                 }
             ]
         };
-        
+
         vm.ueConfig = {
             component: {
                 name: 'ue-grid',
@@ -153,14 +153,25 @@
                             }
                         ]
                     },
-                    columns: ['id', 'title', 'authors', 'category_id'],
+                    dragMode: {
+                        containerName: 'news',
+                        allowedContainers: ['news']
+                    },
+                    columns: [
+                        { name: 'id', width: '20%' },
+                        { name: 'title', width: '30%' },
+                        { name: 'authors', width: '30%' },
+                        { name: 'category_id', width: '30%' }],
                     contextMenu: [
                         {
                             component: {
                                 name: 'ue-button',
                                 settings: {
                                     label: 'Edit',
-                                    sref: 'news_edit'
+                                    sref: 'news_edit',
+                                    useable: function(data) {
+                                       return true;
+                                    }
                                 }
                             }
                         },
@@ -170,7 +181,11 @@
                                 name: 'ue-button',
                                 settings: {
                                     label: 'Delete',
-                                    action: 'delete'
+                                    action: 'delete',
+                                    useable: function(data) {
+                                        if(data.id == 3) return true;
+                                        return false;
+                                    }
                                 }
                             }
                         }
@@ -179,13 +194,7 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-pagination',
-                                    settings: {
-                                        label: {
-                                            last: '>>',
-                                            next: '>'
-                                        }
-                                    }
+                                    name: 'ue-pagination'
                                 }
                             }
                         ]

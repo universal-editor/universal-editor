@@ -1,13 +1,23 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('demoApp')
         .controller('StaffGridController', StaffGridController);
 
-    function StaffGridController() {
+    StaffGridController.$inject = ['$rootScope'];
+    function StaffGridController($rootScope) {
         'ngInject';
         var vm = this;
+        var contextRecordId;
+        var record;
+
+        $rootScope.$on('ue-grid:contextMenu', function(e, data) {
+            record = data.record;
+            var primaryKey = data.primaryKey;
+            contextRecordId = record[primaryKey];
+        });
+
         var staffDataSource = {
             standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/staff',
@@ -18,7 +28,7 @@
                 items: 'items',
                 meta: '_meta'
             },
-            fields:[
+            fields: [
                 {
                     name: 'name',
                     component: {
@@ -130,7 +140,7 @@
                 }
             ]
         };
-        
+
         vm.ueConfig = {
             component: {
                 name: 'ue-grid',
@@ -165,7 +175,12 @@
                                 name: 'ue-button',
                                 settings: {
                                     label: 'Edit',
-                                    sref: 'staff_edit'
+                                    sref: {
+                                        name: 'staff_edit',
+                                        parameters: function() {
+                                            return { 'pk': contextRecordId };
+                                        }
+                                    }
                                 }
                             }
                         },
@@ -185,13 +200,7 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-pagination',
-                                    settings: {
-                                        label: {
-                                            last: '>>',
-                                            next: '>'
-                                        }
-                                    }
+                                    name: 'ue-pagination'
                                 }
                             }
                         ]

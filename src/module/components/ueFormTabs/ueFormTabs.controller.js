@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeFormTabsController', UeFormTabsController);
 
-    function UeFormTabsController($scope, $state, EditEntityStorage, $element) {
+    function UeFormTabsController($scope, $state, EditEntityStorage, $element, $controller) {
         /* jshint validthis: true */
         'ngInject';
         $element.addClass('ue-form-tabs');
@@ -15,7 +15,8 @@
             componentSettings;
 
 
-        vm.$onInit = function() {
+        vm.$onInit = function() {            
+            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element  }));
             pkKey = 'pk';
             pk = $state.params[pkKey];
             componentSettings = vm.setting.component.settings;

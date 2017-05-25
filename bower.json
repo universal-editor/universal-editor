@@ -1,7 +1,7 @@
 {
   "name": "universal-editor",
   "description": "Universal editor to edit the entities from RESTful service",
-  "version": "1.0.0-alpha5",
+  "version": "1.0.0-alpha6",
   "main": [
     "./dist/ue.min.js"
   ],
@@ -37,7 +37,8 @@
     "angular-translate-loader-static-files": "^2.11.0",
     "bootstrap": "~3.1.1",
     "angular-bootstrap": "^2.1.4",
-    "bootstrap-sass": "^3.3.7"
+    "bootstrap-sass": "^3.3.7",
+    "angular-drag-and-drop-lists": "^2.1.0"
   },
   "resolutions": {
     "angular": "~1.6.1",

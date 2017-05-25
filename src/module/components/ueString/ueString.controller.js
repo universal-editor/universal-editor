@@ -12,7 +12,7 @@
         var baseController;
 
         vm.$onInit = function() {
-            baseController = $controller('FieldsController', {$scope: $scope});
+            baseController = $controller('FieldsController', {$scope: $scope, $element: $element});
 
             angular.extend(vm, baseController);
             vm.addItem = addItem;
@@ -22,7 +22,7 @@
                 vm.typeInput = 'password';
             }
 
-            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {                
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {  
                 if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
                     vm.equalPreviewValue();
