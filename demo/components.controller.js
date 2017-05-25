@@ -1969,7 +1969,7 @@
                                                                 name: 'ue-grid',
                                                                 settings: {
                                                                     dataSource: demoDataSource,
-                                                                    columns: ['title', 'status', 'date']
+                                                                    columns: [{name: 'title', sortable: false}, 'status', 'date']
                                                                 }
                                                             }
                                                         }
