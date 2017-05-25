@@ -10,6 +10,7 @@
         multiname: 'new_value',
         depend: 'other_field_name',
         width: 6,
+        whiteSpace: false,
         useable: function(data) {
 			return data.field === 'value1';
 		},
@@ -50,6 +51,7 @@
 | settings[readonly] | bool или function | Параметр отвечает за указание активности компонента с точки зрения взаимодействия с пользователем. см. [Управление отображением](visualization.md). | - | false |
 | settings[useable] | function | Параметр отвечает за отображение элемента и отправку его значения на сервер.  см. [Управление отображением](visualization.md) | - | - |
 | settings[disabled] | bool | Параметр отвечает за возможность изменения значения поля и его отображение при создании/редактировании. см. [Управление отображением](visualization.md) | - | false |
+| settings[whiteSpace] | boolean | Включает/выключает переносы строк и лишние пробелы при выводе текста в режиме disabled. | - | - |
 | settings[templates] | object | Объект для настройки шаблонов. | - | - |
 | settings[templates][preview] | string или function | Строка с HTML-кодом шаблона, функция, возвращающая шаблон, или путь до шаблона в режиме просмотра (например отображение в таблице). | + | - |
 | settings[templates][edit] | string или function  | Строка с HTML-кодом шаблона, функция, возвращающая шаблон, или путь до шаблона в режиме редактирования (например отображение на форме редактирования). | + | - |

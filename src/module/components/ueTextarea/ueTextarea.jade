@@ -16,5 +16,5 @@ block append content
                 textarea.form-control(ng-if="!vm.options.filter", name="{{vm.fieldName}}", rows="{{vm.rows}}", data-ng-disabled="vm.readonly", data-ng-model="vm.fieldValue", class="editor-textarea", data-ng-blur="vm.inputLeave(vm.fieldValue)", data-ng-trim="false", data-ui-mask="{{vm.mask}}", data-ui-options="{maskDefinitions : vm.maskDefinitions}")
                 input.form-control(ng-if="vm.options.filter", name="{{vm.fieldName}}", data-ng-disabled="vm.readonly", data-ng-model="vm.fieldValue", class="editor-textarea", data-ng-blur="vm.inputLeave(vm.fieldValue)", data-ng-trim="false", data-ui-mask="{{vm.mask}}", data-ui-options="{maskDefinitions : vm.maskDefinitions}")
             include ../../template/errorField/errorClient
-    .disabled-field(ng-if="vm.disabled && !vm.options.filter")
+    .disabled-field(ng-if="vm.disabled && !vm.options.filter" ng-class="{'pre-style': vm.whiteSpace}")
         include ../../template/disabledField/default
