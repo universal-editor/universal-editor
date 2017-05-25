@@ -62,6 +62,9 @@
             .disabled-field {
                 margin-right: 10px;
                 display: inline-block;
+                &.pre-style {
+                    display: block;
+                }
             }
         }
         .component-wrapper .regim-preview.field-wrapper,
