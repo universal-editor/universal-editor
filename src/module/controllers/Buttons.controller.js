@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('ButtonsController', ButtonsController);
 
-    function ButtonsController($scope, $controller, $element) {
+    function ButtonsController($scope, $controller, $element, EditEntityStorage) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this;
@@ -18,6 +18,7 @@
         self.label = componentSettings.label;
         self.type = self.setting.type;
         self.entityId = self.setting.entityId;
+        self.readonly = componentSettings.readonly;
 
         /** if template is set as a html-file */
         var htmlPattern = /[^\s]+(?=\.html$)/;
@@ -35,6 +36,13 @@
                     });
                 }
             }
+        }
+
+        EditEntityStorage.addButtonController(self);
+
+        $scope.$on("$destroy", onDestroyHandler);
+        function onDestroyHandler() {
+            EditEntityStorage.deleteButtonController(self);
         }
     }
 })();
