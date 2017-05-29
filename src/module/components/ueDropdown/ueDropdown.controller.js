@@ -20,7 +20,7 @@
             vm.possibleValues = [];
             vm.initDataSource = true;
             componentSettings = vm.setting.component.settings;
-            baseController = $controller('FieldsController', { $scope: $scope, $element: $element  });
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
 
             if (componentSettings.valuesRemote) {
@@ -51,7 +51,7 @@
             vm.deleteToSelected = deleteToSelected;
             vm.clickSelect = clickSelect;
             vm.clear = clear;
-            vm.dependUpdate = dependUpdate;            
+            vm.dependUpdate = dependUpdate;
             vm.fillControl = fillControl;
 
             if (componentSettings.hasOwnProperty('valuesRemote') && componentSettings.tree) {
@@ -125,29 +125,30 @@
         };
 
         function fillControl(allOptions) {
-            vm.optionValues = [];
             angular.forEach(allOptions, function(v) {
                 var v_id = v[vm.fieldId];
-                if (v_id && vm.fieldValue) {
-                    if (angular.isArray(vm.fieldValue)) {
-                        for (var i = vm.fieldValue.length; i--;) {
-                            if (vm.fieldValue[i] == v_id) {
-                                vm.fieldValue[i] = v;
-                                break;
+                if (vm.optionValues.filter(function(option) { return v_id == option[vm.fieldId]; }).length === 0) {
+                    if (v_id && vm.fieldValue) {
+                        if (angular.isArray(vm.fieldValue)) {
+                            for (var i = vm.fieldValue.length; i--;) {
+                                if (vm.fieldValue[i] == v_id) {
+                                    vm.fieldValue[i] = v;
+                                    break;
+                                }
                             }
+                        } else if (v_id == vm.fieldValue) {
+                            vm.fieldValue = v;
+                            vm.isSpanSelectDelete = true;
                         }
-                    } else if (v_id == vm.fieldValue) {
-                        vm.fieldValue = v;
-                        vm.isSpanSelectDelete = true;
                     }
-                }
-                if (vm.optionValues !== allOptions) {
-                    if (vm.isTree) {
-                        if (!v[vm.treeParentField]) {
+                    if (vm.optionValues !== allOptions) {
+                        if (vm.isTree) {
+                            if (!v[vm.treeParentField]) {
+                                vm.optionValues.push(angular.copy(v));
+                            }
+                        } else {
                             vm.optionValues.push(angular.copy(v));
                         }
-                    } else {
-                        vm.optionValues.push(angular.copy(v));
                     }
                 }
             });
@@ -178,17 +179,17 @@
 
         function loadDataById(ids) {
             var defer = $q.defer();
-            if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {                
-                if(angular.isArray(ids)) {
+            if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
+                if (angular.isArray(ids)) {
                     ids = ids.map(function(id) {
-                        if(angular.isObject(id) && id[vm.fieldId]) {
+                        if (angular.isObject(id) && id[vm.fieldId]) {
                             return id[vm.fieldId];
                         }
                         return id;
                     });
-                } else if(angular.isObject(ids)) {
+                } else if (angular.isObject(ids)) {
                     ids = ids[vm.fieldId]
-                }                
+                }
                 var config = {
                     method: 'GET',
                     url: componentSettings.valuesRemote.url,

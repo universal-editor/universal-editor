@@ -20,7 +20,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
             div(ng-if="vm.warnings.length === 0 && vm.dangers.length === 0") 
                 .loader-search-wrapper(data-ng-show="vm.loadingData")
                     .loader-search {{'LOADING' | translate}}
-                span(ng-bind="::vm.previewValue", data-ng-show="!vm.loadingData && vm.previewValue", ng-if = "!vm.multiple")
+                div(ng-bind="::vm.previewValue", data-ng-show="!vm.loadingData && vm.previewValue", ng-if = "!vm.multiple")
                 div(ng-repeat="value in vm.previewValue track by $index", data-ng-show="!vm.loadingData", ng-if = "vm.multiple")
                     span(ng-bind="value")
         include ../../template/errorField/errorField

@@ -57,6 +57,10 @@
                 }
             });
 
+            if (dataSource && angular.isObject(dataSource.tree) && angular.isString(dataSource.tree.childrenField)) {
+                expandFields.push(dataSource.tree.childrenField);
+            }
+
             if (expandFields.length > 0) {
                 params.expand = expandFields.join(',');
             }
@@ -376,6 +380,9 @@
                         }
                     }
                 });
+                if (dataSource && angular.isObject(dataSource.tree) && angular.isString(dataSource.tree.childrenField)) {
+                    expandFields.push(dataSource.tree.childrenField);
+                }
                 if (expandFields.length > 0) {
                     qParams.expand = expandFields.join(',');
                 }
@@ -625,19 +632,98 @@
             return config.defer.promise;
         };
 
+        function takeRemoteValuesInTree(data = [], component, childrenField, selfField, filter = []) {
+            data.forEach(function(item) {
+                var value = selfField ? item[selfField][component.name] : item[component.name];
+                if (angular.isArray(value)) {
+                    value.forEach(function(valueItem) {
+                        if (angular.isString(component.component.settings.multiname)) {
+                            valueItem = valueItem[component.component.settings.multiname];
+                        } else {
+                            if (angular.isObject(valueItem) && keyValue) {
+                                valueItem = valueItem[keyValue];
+                            }
+                        }
+                        if (valueItem !== undefined && valueItem !== null && filter.indexOf(valueItem) === -1) {
+                            filter.push(valueItem);
+                        }
+                    });
+                } else {
+                    if (value !== undefined && value !== null && filter.indexOf(value) === -1) {
+                        filter.push(value);
+                    }
+                }
+                if (angular.isArray(item[childrenField]) && item[childrenField].length > 0) {
+                    takeRemoteValuesInTree(item[childrenField], component, childrenField, selfField, filter);
+                }
+            });
+            return filter;
+        }
+
+        var storageRemotedComponents = {};
+        this.saveToStorage = saveToStorage;
+        this.getFromStorage = getFromStorage;
+
+        function saveToStorage(component, list) {
+            var url = component.component.settings.valuesRemote.url;
+            var keyValue = component.component.settings.valuesRemote.fields.value;
+            var storage = storageRemotedComponents[url] || [];
+            if (angular.isArray(list)) {
+                angular.forEach(list, checkExisting);
+            } else if (angular.isObject(list)) {
+                checkExisting(list);
+            }
+            storageRemotedComponents[url] = storage;
+            function checkExisting(listItem) {
+                var id = listItem[keyValue];
+                if (id !== undefined && id !== null) {
+                    var isExist = storage.some(function(storageItem) {
+                        return storageItem[keyValue] === listItem[keyValue];
+                    });
+                    if (!isExist) {
+                        storage.push(listItem);
+                    }
+                }
+            }
+        }
+
+        function getFromStorage(component, list) {
+            var url = component.component.settings.valuesRemote.url;
+            var keyValue = component.component.settings.valuesRemote.fields.value;
+            var storage = storageRemotedComponents[url] || [];
+            var outputSet = [];
+            angular.forEach(storage, function(storageItem) {
+                var index = list.indexOf(storageItem[keyValue]);
+                if (index !== -1) {
+                    outputSet.push(storageItem);
+                }
+            });
+            if (outputSet.length === list.length && list.length > 0) {
+                return outputSet;
+            } else {
+                return false;
+            }
+        }
+
         this.extendData = function extendData(options) {
             var data = options.data,
                 components = options.components,
-                $id = options.$id;
+                $id = options.$id,
+                childrenField = options.childrenField,
+                selfField = options.selfField;
+            var configs = [];
             var remoteComponents = components.filter(function(component) {
                 return angular.isObject(component.component.settings.valuesRemote);
             });
             var defaultStandard = !options.standard || options.standard === 'YiiSoft';
             var promiseStack = [];
+
+            /** Generate promise stacks */
             remoteComponents.forEach(function(component) {
                 var fields = [];
                 var filter = [];
                 var options = component.component.settings.valuesRemote;
+
                 if (angular.isObject(options.fields)) {
                     angular.forEach(options.fields, function(value, key) {
                         if (angular.isString(value)) {
@@ -648,28 +734,15 @@
                 fields = fields.join(',');
                 if (angular.isString(options.url)) {
                     var keyValue = component.component.settings.valuesRemote.fields.value;
-                    data.forEach(function(item) {
-                        var value = item[component.name];
-                        if (angular.isArray(value)) {
-                            value.forEach(function(valueItem) {
-                                if (angular.isString(component.component.settings.multiname)) {
-                                    valueItem = valueItem[component.component.settings.multiname];
-                                } else {
-                                    if (angular.isObject(valueItem) && keyValue) {
-                                        valueItem = valueItem[keyValue];
-                                    }
-                                }
-                                if (valueItem !== undefined && valueItem !== null && filter.indexOf(valueItem) === -1) {
-                                    filter.push(valueItem);
-                                }
-                            });
-                        } else {
-                            if (value !== undefined && value !== null && filter.indexOf(value) === -1) {
-                                filter.push(value);
-                            }
-                        }
-                    });
+                    filter = takeRemoteValuesInTree(data, component, childrenField, selfField);
+
                     if (filter.length > 0) {
+                        var casheValues = getFromStorage(component, filter);
+                        if (casheValues !== false) {
+                            return promiseStack.push($q.when(injectIntoData(component, data, casheValues)));;
+                        }
+
+
                         var filterObject = {};
                         filterObject[keyValue] = [];
                         filterObject[keyValue].push({
@@ -691,43 +764,23 @@
                                 perPage: 50
                             }
                         };
+                        configs.push(config);
                         promiseStack.push($http(getAjaxOptionsByTypeService(config)));
                     }
                 }
             });
-            var service = getCustomService(options.standard);
+            var service = getCustomService(options.standard || 'YiiSoft');
             return $q.all(promiseStack).then(function(allResp) {
-                allResp.forEach(function(response) {
-                    var list = [];
-                    if (defaultStandard) {
-                        list = response.data.items;
-                    } else {
-                        list = service.processResponse(config, resp).items || [];
-                    }
-                    var component = remoteComponents.filter(function(component) {
-                        return component.component.settings.valuesRemote.url === response.config.url;
-                    })[0];
-                    if (component) {
-                        var name = component.component.settings.valuesRemote.fields.value;
-                        data.forEach(function(item) {
-                            var value = item[component.name];
-                            if (value) {
-                                if (angular.isArray(value)) {
-                                    value = value.map(function(valueItem) {
-                                        if (angular.isString(component.component.settings.multiname)) {
-                                            valueItem = valueItem[component.component.settings.multiname];
-                                        }
-                                        return valueItem;
-                                    });
-                                }
-                                item['$' + component.name] = list.filter(function(i) {
-                                    return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
-                                });
-                            }
-                        });
+                allResp.forEach(function(response, index) {
+                    if (response.data) {
+                        var list = service.processResponse(configs[index], response).items || [];
+                        var component = remoteComponents.filter(function(component) {
+                            return component.component.settings.valuesRemote.url === response.config.url;
+                        })[0];
+                        saveToStorage(component, list);
+                        injectIntoData(component, data, list);
                     }
                 });
-
                 return data;
             }, function(reject) {
                 reject.$componentId = $id;
@@ -744,7 +797,31 @@
                     failAnswer.bind(config)(reject);
                 }
             });
+
+            function injectIntoData(component, intoData, list) {
+                if (component) {
+                    var name = component.component.settings.valuesRemote.fields.value;
+                    intoData.forEach(function(item) {
+                        var value = item[component.name];
+                        if (value) {
+                            if (angular.isArray(value)) {
+                                value = value.map(function(valueItem) {
+                                    if (angular.isString(component.component.settings.multiname)) {
+                                        valueItem = valueItem[component.component.settings.multiname];
+                                    }
+                                    return valueItem;
+                                });
+                            }
+                            item['$' + component.name] = list.filter(function(i) {
+                                return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
+                            });
+                        }
+                    });
+                }
+                return intoData;
+            }
         };
+
 
         this.actionRequest = function(request) {
             var deferred = $q.defer();
@@ -895,6 +972,7 @@
         function successAnswer(data) {
             var config = this, params, paramName;
             var parentComponentId = config.parentComponentId;
+            var searchString = $location.search();
             switch (config.action) {
                 case 'list':
                     data.$componentId = parentComponentId;
@@ -928,7 +1006,7 @@
                     }
                     if (state) {
                         $state.go(state, params).then(function() {
-                            $location.search(params);
+                            $location.search(searchString);
                             $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
                     } else {
@@ -962,7 +1040,7 @@
                             if (params.back) {
                                 delete params.back;
                             }
-                            $location.search(params);
+                            $location.search(searchString);
                             $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
                     } else {
@@ -976,7 +1054,6 @@
                     var newId = data[config.idField];
                     var par = {};
                     par['pk'] = newId;
-                    var searchString = $location.search();
                     $state.go($state.current.name, par, { reload: false, notify: false }).then(function() {
                         $location.search(searchString);
                         $rootScope.$broadcast('ue:afterEntityUpdate', {
@@ -1023,7 +1100,7 @@
                     if (!config.notGoToState) {
                         if (state) {
                             $state.go(state, params).then(function() {
-                                $location.search(params);
+                                $location.search(searchString);
                                 $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                             });
                         } else {

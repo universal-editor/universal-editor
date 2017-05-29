@@ -16,6 +16,17 @@
       }
       & .ue-grid {
           padding: 10px 0;
+          .component-wrapper {
+              width: auto;
+          }
+          tfoot .component-wrapper {
+              width: 100%;
+          }
+          .dndPlaceholder{
+              td {
+                  flex-basis: 100%;
+              }
+          }
           .field-wrapper-ue-button {
               & .ue-button-body {
                   .button-loading {
@@ -26,10 +37,13 @@
                   }
               }
           }
-          & table.items-list {
+          & .table.items-list {
               background-color: #FFFFFF;
+              &.drag-mode {
+                  border: 1px solid #ddd;
+              }
               border-spacing: 0;
-              & td {
+              & .table-cell {
                   .field-name-label {
                       display: none;
                   }
@@ -121,12 +135,13 @@
                       }
                   }
               }
+              tr {
+                  display: flex;
+              }
               & thead td {
                   font-weight: 700;
                   cursor: pointer;
-                  &.actions-header {
-                      cursor: default;
-                  }
+                  border-bottom-width: 1px;
                   &.active.asc:after {
                       content: "";
                       width: 0;
@@ -151,10 +166,24 @@
                       transform: scale(-1, -1);
                       margin-top: 3px;
                   }
+                  &.dragIcon {
+                      width: 30px;
+                      &:before {
+                          // display: none;
+                          visibility: hidden;
+                      }
+                  }
               }
               & tbody {
+                  .row-empty .table-cell,
+                  .table-cell-loading {
+                      width: 100%;
+                  }
                   & td {
                       font-size: 12px;
+                      &.dragIcon {
+                          cursor: pointer;
+                      }
                       & .field-wrapper.row {
                           margin: 0;
                           padding: 0;
@@ -162,11 +191,15 @@
                       &.td-loading {
                           padding: 12px
                       }
+                      &.dragIcon {
+                          cursor: -webkit-grab;
+                      }
                   }
               }
               & tfoot {
                   & tr {
                       & td {
+                          width: 100%;
                           background-color: #cbd6da !important;
                       }
                   }

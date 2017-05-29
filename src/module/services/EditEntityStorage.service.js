@@ -10,7 +10,8 @@
         var fieldControllers = [],
             self = this,
             storage = {},
-            groups = {};
+            groups = {},
+            collection = [];
 
         this.getLevelChild = function(stateName) {
             return stateName.split('.').length;
@@ -25,6 +26,22 @@
                 }
             }
             return false;
+        };
+
+        this.getComponentBySetting = function(id) {
+            var model = null;
+            if (angular.isObject(id) && id.component) {
+                id = id.component.$id;
+            }
+            if (id) {
+                angular.forEach(collection, function(controller, ind) {
+                    var componentId = controller.setting && controller.setting.component && controller.setting.component.$id;
+                    if (componentId && componentId === id) {
+                        model = controller;
+                    }
+                });
+            }
+            return model;
         };
 
         this.getChildFieldComponents = function(componentId) {
@@ -50,7 +67,8 @@
         };
 
         this.addFieldController = function(ctrl, isGroup) {
-            var id = ctrl.parentComponentId;
+            var id = ctrl.parentComponentId || ctrl.$componentId;
+            collection.push(ctrl);
             if (id) {
                 if (isGroup === true) {
                     groups[id] = groups[id] || [];
@@ -65,6 +83,11 @@
 
         this.deleteFieldController = function(ctrl) {
             var controllers = storage[ctrl.parentComponentId];
+            angular.forEach(collection, function(controller, ind) {
+                if (controller.$fieldHash === ctrl.$fieldHash) {
+                    collection.splice(ind, 1);
+                }
+            });
             if (controllers) {
                 angular.forEach(controllers, function(controller, ind) {
                     if (controller.$fieldHash === ctrl.$fieldHash) {
@@ -99,11 +122,17 @@
             }
         };
 
+        this.constructOutputValue = constructOutputValue;
         function constructOutputValue(request, extended, withApiData) {
-            var entityObject = {},
-                componentId = angular.isString(request) ? request : request.options.$componentId,
-                controllers = storage[componentId] || [],
+            var entityObject = {}, componentId;
+            if (angular.isString(request)) {
+                componentId = request;
+            } else if (angular.isObject(request)) {
+                componentId = request.$componentId || request.options.$componentId;
+            }
+            var controllers = storage[componentId] || [],
                 groupControllers = groups[componentId] || [];
+            
             if (request) {
                 if (angular.isObject(request)) {
                     request.isError = true;

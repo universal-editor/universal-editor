@@ -155,20 +155,6 @@
                                     label: 'String',
                                     countInLine: 2,
                                     fields: [
-                                         {
-                                            component: {
-                                                name: 'ue-radiolist',
-                                                settings: {
-                                                    label: 'radiolist with local data ',
-                                                    values: {
-                                                        'a': 'Variable 1',
-                                                        'b': 'Variable 2',
-                                                        'c': 'Variable 3'
-                                                    },
-                                                    defaultValue: 'a'
-                                                }
-                                            }
-                                        },
                                         {
                                             component: {
                                                 name: 'ue-string',

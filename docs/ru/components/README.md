@@ -56,13 +56,13 @@ angular.module('moduleWithComponents', [])
     .controller('ueCustomComponentController', ['$scope', '$controller', function($scope, $controller) {
         var vm = this;
         vm.$onInit = function() {
-            var baseController = $controller('FieldsController', {$scope: $scope});
+            var baseController = $controller('FieldsController', {$scope: $scope, $element: $element});
             var settings = vm.setting.component.settings;
             angular.extend(vm, baseController);
             
 
             // Пример переопределения $scope-события
-            vm.listeners.push($scope.$on('editor:entity_loaded', function(e, data) {
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
                 $scope.onLoadDataHandler(e, data);
                 // Логика
             }));
@@ -74,11 +74,6 @@ angular.module('moduleWithComponents', [])
                 // Логика
                 alert('Clicked to component.');
             };
-
-            vm.listeners.push($scope.$on('editor:api_error_field_' + vm.fieldName, function(e, data) {
-                $scope.onErrorApiHandler(e, data);
-                // Логика
-            }));
         }
     }]);
 
@@ -98,10 +93,9 @@ angular.module('moduleWithComponents', [])
 * `vm.fieldValue` – значение компонента компонента;
 * `vm.error` – массив текстов ошибок.
 
-На компоненте можно обработать два события:
+На компоненте можно события:
 
-* серверная валидация – событие `editor:api_error_field_[fieldName]` (по-умолчанию функция-обработки `$scope.onErrorApiHandler`)
-* событие ответа от сервера – `editor:entity_loaded` (по-умолчанию функция-обработки `$scope.onLoadDataHandler`)
+* серверная валидация – событие `ue:componentError` (по-умолчанию функция-обработки `$scope.onErrorApiHandler`)
 
 Созданный компонент подключается в конфигурации редактора: 
 
@@ -159,11 +153,12 @@ angular.module('moduleWithComponents', [])
     }]);
 
     // Контроллер компонента
-    angular.module('universal.editor').controller('ComponentController', ['$controller', '$scope', function($controller, $scope) {
+    angular.module('universal.editor').controller('ComponentController', ['$controller', '$scope', function($controller, $scope, $element) {
       
       // Расширяем контроллер и получаем экземпляр для дальнейшего использования
       var BaseController = $controller('BaseController', {
-          $scope: $scope
+          $scope: $scope,
+          $element: $element
       });
 
       // Логика компонента

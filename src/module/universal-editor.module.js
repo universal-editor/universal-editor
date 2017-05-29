@@ -15,7 +15,8 @@
             'ui.mask',
             'toastr',
             'pascalprecht.translate',
-            'ui.bootstrap'
+            'ui.bootstrap',
+            'dndLists'
         ]);
 
     angular

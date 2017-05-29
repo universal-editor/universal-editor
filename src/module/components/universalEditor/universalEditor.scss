@@ -3,6 +3,9 @@
         font-size: 14px;
         background-color: #E1E9EB;
     }
+    .component-wrapper {
+        width: 100%;
+    }
     
     .universal-editor {
         .field-wrapper-ue-file {
@@ -23,8 +26,7 @@
         }
         .component-wrapper {
             padding: 0 !important;
-            display: inline-block;
-            width: 100%;
+            display: inline-block;  
             &.unuseable {
                 display: inline;
             }
