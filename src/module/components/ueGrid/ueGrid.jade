@@ -69,8 +69,8 @@
               .row.header
                 .table-cell( data-ng-repeat="fieldItem in vm.tableFields track by $index",
                     ng-style="fieldItem.ngStyle"
-                    data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection, 'first-column': $index===0}",
-                    data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)")  
+                    data-ng-class="{ 'active' : fieldItem.field == vm.sortField && fieldItem.sortable, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection, 'first-column': $index===0}",
+                    data-ng-click="fieldItem.sortable ? vm.changeSortField(fieldItem.field, fieldItem.sorted) : null") 
                     span {{fieldItem.displayName}}
                 .table-cell.dnd-expand-item.glyphicon.dragIcon(ng-if="vm.dragMode.dragIcon")
             li.tree-body(ng-if="vm.loaded")    

@@ -164,7 +164,7 @@
                     columns: [
                     {
                         name: 'title',
-                        width: "20%"
+                        width: "20%",
                     },
                     {
                         name: 'authors',
@@ -172,7 +172,8 @@
                     },
                     {
                         name: 'category_id',
-                        width: "200px"
+                        width: "200px",
+                        sortable: false
                     }],
                     contextMenu: [
                         {

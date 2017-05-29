@@ -211,7 +211,9 @@
                 });
             }
 
-            vm.sortField = vm.setting.component.settings.dataSource.sortBy || getFirsSortableCol();
+            vm.sortField = getFirsSortableCol();
+
+            if (!vm.sortField) vm.sortField = vm.setting.component.settings.dataSource.sortBy;
 
             vm.toggleContextView = toggleContextView;
             vm.toggleContextViewByEvent = toggleContextViewByEvent;
