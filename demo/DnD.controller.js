@@ -172,7 +172,8 @@
                     },
                     {
                         name: 'category_id',
-                        width: "200px"
+                        width: "200px",
+                        sortable: false
                     }],
                     contextMenu: [
                         {

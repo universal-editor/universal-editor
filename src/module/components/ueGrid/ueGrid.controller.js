@@ -129,7 +129,7 @@
             if (angular.isArray(colSettings)) {
                 var widthDefault = '100%';
                 colSettings.forEach(function(col) {
-                    var tableField, width, name;
+                    var tableField, width, name, sortable;
                     if (angular.isObject(col)) {
                         width = col.width;
                         if (angular.isString(col.name)) {
@@ -144,12 +144,15 @@
                     var component = vm.setting.component.settings.dataSource.fields.filter(function(field) {
                         return name && field.name === name;
                     });
+                    sortable = col.hasOwnProperty('sortable') ? col.sortable : true
+
                     if (component.length) {
                         col = angular.merge({}, component[0]);
                     }
                     if (angular.isObject(col)) {
                         tableField = {
                             field: col.name || null,
+                            sortable: sortable,
                             sorted: col.component.settings.multiple !== true,
                             displayName: col.component.settings.label || col.name,
                             component: col,
@@ -208,7 +211,9 @@
                 });
             }
 
-            vm.sortField = vm.setting.component.settings.dataSource.sortBy || vm.tableFields[0].field;
+            vm.sortField = getFirsSortableCol();
+
+            if (!vm.sortField) vm.sortField = vm.setting.component.settings.dataSource.sortBy;
 
             vm.toggleContextView = toggleContextView;
             vm.toggleContextViewByEvent = toggleContextViewByEvent;
@@ -245,6 +250,11 @@
                 }
             });
         };
+        function getFirsSortableCol() {
+            for (var i = 0, len = vm.tableFields.length; i < len; i++) {
+                if (vm.tableFields[i].sortable) return vm.tableFields[i].field
+            }
+        }
         vm.moved = function(index) {
             var disabled = angular.isFunction(vm.dragMode.dragDisable) ? vm.dragMode.dragDisable(vm.items[index], vm.items) : false;
             if (!disabled) {
