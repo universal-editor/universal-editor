@@ -10,7 +10,6 @@
         multiname: 'new_value',
         depend: 'other_field_name',
         width: 6,
-        whiteSpace: false,
         useable: function(data) {
 			return data.field === 'value1';
 		},

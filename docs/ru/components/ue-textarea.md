@@ -11,7 +11,6 @@
         multiple: true,
         multiname: 'new_value',
         depend: 'other_field_name',
-        whiteSpace: true,
         width: 6,
         height: 7,
         templates: {
@@ -54,7 +53,6 @@
 | settings[width] | int | Ширина поля в единицах bootstrap-сетки, принимаемое значении от 1 до 6. | - | 6 |
 | settings[height] | int | Минимальная высота текстового поля, которое определяется количеством отображаемых строк без прокрутки содержимого. | - | 7 |
 | settings[defaultValue] | string | Значение поля по-умолчанию. | - | - |
-| settings[whiteSpace] | boolean | Включает/выключает переносы строк и лишние пробелы при выводе текста в режиме disabled. | - | - |
 | settings[validators] | array | Массив, содержащий настройки для валидации компонента. Более подробно описано ниже. | - | - |
 | settings[depend] | string | Параметр отвечает за зависимость данного поля от поля с именем other_field_name. Поле с именем other_field_name должно быть описано в конфигурационном файле в рамках текущей сущности. Если поле other_field_name не заполнено, то текущее поле не активно. Если у компонентов, для которых требуется делать запрос для получения значений по API, в поле адреса запроса указаны `:dependField` и `:dependValue`(например, `/api/service/v1/json/categories?filter={:dependField::dependValue}`) , то они заменятся на имя поля указанного в depend и значение этого поля соответственно. | - | - |
 

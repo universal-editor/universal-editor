@@ -22,7 +22,6 @@
             vm.addItem = addItem;
             vm.removeItem = removeItem;
 
-            vm.whiteSpace = componentSettings.whiteSpace === true;
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
                 if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {
