@@ -785,8 +785,7 @@
                                                 name: 'ue-textarea',
                                                 settings: {
                                                     label: 'textarea with break lines.',
-                                                    defaultValue: 'Строка с переносами. \n Перенос.',
-                                                    whiteSpace: true,
+                                                    defaultValue: 'Text with line breaks. \n Break.',
                                                     disabled: true
                                                 }
                                             }
