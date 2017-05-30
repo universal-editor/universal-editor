@@ -1,0 +1,16 @@
+.row(data-ng-mousedown="vm.toggleContextViewByEvent({item: item, e: $event})")
+    .table-cell.context-column
+        .context-menu-wrapper(data-ng-show="vm.options.contextId == item[vm.dataSource.primaryKey]" , data-ng-style='vm.options.styleContextMenu')
+            .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index", data-ng-class="{'component-separator': link.separator}")
+                component-wrapper(data-setting="link", 
+                    data-entity-id="{{::item[vm.dataSource.primaryKey]}}", 
+                    data-button-class="context", 
+                    data-options="vm.options")
+    .dnd-expand-item.glyphicon(
+        ng-class="{'glyphicon-collapse-down': item.$$expand === true,'glyphicon-expand': item.$$expand === false, 'icon-collapse': item.$$expand === undefined}" 
+        ng-click="vm.expand(item)")   
+    .column(data-ng-repeat="fieldItem in vm.tableFields track by $index"  ng-style="fieldItem.ngStyle" ng-class="{'first-column': $index===0}")       
+        component-wrapper(data-setting="fieldItem.component", data-options="item.$options")
+
+
+

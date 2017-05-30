@@ -362,6 +362,7 @@
             return result;
         }
 
+
         function onLoadDataHandler(event, data, callback) {
             if (self.isParentComponent(data) && !self.options.filter) {
                 //-- functional for required fields
@@ -395,12 +396,10 @@
                 }
 
                 if (data.editorEntityType === 'new' && self.regim !== 'preview') {
-
                     if (!!self.newEntityLoaded) {
                         self.newEntityLoaded();
                         return;
                     }
-
                     var obj = {};
                     self.fieldValue = transformToValue(componentSettings.defaultValue);
                     if (self.fieldId) {
@@ -417,13 +416,12 @@
                             self.fieldValue = data[self.fieldName];
                         }
                     }
-                    if (angular.isFunction(callback)) {
-                        callback();
-                    }
                     equalPreviewValue();
                 }
-
-                $scope.data = self.data = ((self.options.$dataIndex >= 0) && angular.isObject(data.$items)) ? data.$items[self.options.$dataIndex] : data;
+                if (data.$value) {
+                    data = data.$value;
+                }
+                $scope.data = self.data = data;
                 if (angular.isObject($scope.data)) {
                     var apiValue;
                     if (angular.isString(self.fieldName)) {
@@ -483,11 +481,11 @@
                             }
                         }
                     }
-                    if (angular.isFunction(callback)) {
-                        callback();
+                    var extended = remoteValues ? ApiService.getFromStorage(self.setting, apiValue) : apiValue;
+                    if (extended !== false) {
+                        self.options.isSendRequest = true;
                     }
-
-                    equalPreviewValue($scope.data['$' + self.fieldName]);
+                    equalPreviewValue(extended);
                 }
             }
         }

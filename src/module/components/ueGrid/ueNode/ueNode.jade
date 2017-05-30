@@ -7,7 +7,7 @@ ul.dnd-list(
     dnd-inserted="vm.inserted(item, index, external, type)"
     data-ng-class="{'dnd-list-empty': !vm.items || vm.items.length == 0}")
         li.row-empty(ng-if="vm.isFirstLevel && vm.items.length == 0")
-                .column {{'ELEMENT_NO' | translate}}
+            .column {{'ELEMENT_NO' | translate}}
         li.row-draggable(
             data-ng-repeat="item in vm.items",
             oncontextmenu='return false;'     
@@ -16,11 +16,18 @@ ul.dnd-list(
             dnd-moved="vm.moved($index)",
             dnd-type="vm.getContainerName(item, vm.collection)",                 
             dnd-dragstart="vm.dragStart(event, item, $index)"
-            dnd-effect-allowed="{{vm.dragMode.mode || 'move'}}",
-            data-frame-id="{{item[vm.dataSource.primaryKey]}}")
-            .row(data-node-row="", data-drag-icon="vm.dragMode.dragIcon" data-node-id="vm.nodeId", data-options="vm.options", data-table-fields="vm.tableFields",  data-context-links="vm.contextLinks", data-data-source="vm.dataSource", data-item="item", data-expand="vm.expand(item)" data-ng-mousedown="vm.toggleContextViewByEvent({item: item, e: $event})")     
-            .children-frames(ng-show="item.$isExpand" ng-if="vm.treeSource" ng-class="{'empty-child-area': item[vm.childrenField]}")
+            dnd-effect-allowed="{{vm.dragMode.mode || 'move'}}")
+            .row(data-ng-set-value-replace="",
+                    data-vm = "vm",
+                    data-item='item',
+                    data-component-id="{{vm.$componentId}}")
+            .children-frames(ng-show="item.$$expand" ng-if="vm.treeSource" ng-class="{'empty-child-area': item[vm.childrenField]}")
+                .loading(ng-show="item.$$expand === 'pending'")
+                    .column.td-loading
+                    .processing-status-wrapper
+                        .processing-status {{'PERFORMS_ACTIONS' | translate}}
                 ue-node(
+                    ng-show="item.$$expand !== 'pending'"
                     data-collection="vm.collection",
                     data-parent-node="item",
                     data-items="item[vm.childrenField]",

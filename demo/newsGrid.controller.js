@@ -139,11 +139,6 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-filter'
-                                }
-                            },
-                            {
-                                component: {
                                     name: 'ue-button',
                                     settings: {
                                         label: 'Add news',
@@ -155,7 +150,8 @@
                     },
                     dragMode: {
                         containerName: 'news',
-                        allowedContainers: ['news']
+                        allowedContainers: ['news'],
+                        dragIcon: true,
                     },
                     columns: [
                         { name: 'id', width: '20%' },

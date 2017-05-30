@@ -683,6 +683,13 @@
             var keyValue = component.component.settings.valuesRemote.fields.value;
             var storage = storageRemotedComponents[url] || [];
             var outputSet = [];
+            if (!angular.isArray(list)) {
+                list = [list];
+            }
+            if (component.component.settings.multiname) {
+                var multiname = component.component.settings.multiname;
+                list = list.map(function(item) { return item[multiname]; });
+            }
             angular.forEach(storage, function(storageItem) {
                 var index = list.indexOf(storageItem[keyValue]);
                 if (index !== -1) {
@@ -730,9 +737,8 @@
                     if (filter.length > 0) {
                         var casheValues = getFromStorage(component, filter);
                         if (casheValues !== false) {
-                            return promiseStack.push($q.when(injectIntoData(component, data, casheValues)));;
+                            return promiseStack.push($q.when(data));
                         }
-
 
                         var filterObject = {};
                         filterObject[keyValue] = [];
@@ -769,7 +775,7 @@
                             return component.component.settings.valuesRemote.url === response.config.url;
                         })[0];
                         saveToStorage(component, list);
-                        injectIntoData(component, data, list);
+                        // injectIntoData(component, data, list);
                     }
                 });
                 return data;
@@ -789,28 +795,28 @@
                 }
             });
 
-            function injectIntoData(component, intoData, list) {
-                if (component) {
-                    var name = component.component.settings.valuesRemote.fields.value;
-                    intoData.forEach(function(item) {
-                        var value = item[component.name];
-                        if (value) {
-                            if (angular.isArray(value)) {
-                                value = value.map(function(valueItem) {
-                                    if (angular.isString(component.component.settings.multiname)) {
-                                        valueItem = valueItem[component.component.settings.multiname];
-                                    }
-                                    return valueItem;
-                                });
-                            }
-                            item['$' + component.name] = list.filter(function(i) {
-                                return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
-                            });
-                        }
-                    });
-                }
-                return intoData;
-            }
+            /* function injectIntoData(component, intoData, list) {
+                 if (component) {
+                     var name = component.component.settings.valuesRemote.fields.value;
+                     intoData.forEach(function(item) {
+                         var value = item[component.name];
+                         if (value) {
+                             if (angular.isArray(value)) {
+                                 value = value.map(function(valueItem) {
+                                     if (angular.isString(component.component.settings.multiname)) {
+                                         valueItem = valueItem[component.component.settings.multiname];
+                                     }
+                                     return valueItem;
+                                 });
+                             }
+                             item['$' + component.name] = list.filter(function(i) {
+                                 return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
+                             });
+                         }
+                     });
+                 }
+                 return intoData;
+             }*/
         };
 
 

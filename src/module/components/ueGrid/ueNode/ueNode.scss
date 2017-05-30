@@ -154,6 +154,15 @@
         }
         .children-frames {
             padding-left: 10px;
+            .loading {
+                height: 30px;
+                .processing-status-wrapper {
+                    display: block;
+                    position: relative;
+                    height: 12px;
+                    margin: 25px auto 10px 100px;
+                }
+            }
             &.empty-child-area {
                 .dnd-list {
                     min-height: 7px;
