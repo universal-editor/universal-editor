@@ -217,6 +217,12 @@
             return deferred.promise;
         };
 
+        function removePrimaryKey(ds, data) {
+            if (ds && ds.primaryKey && data && data[ds.primaryKey]) {
+                delete data[ds.primaryKey];
+            }
+        }
+
         this.updateItem = function(request) {
             if (request.options.isLoading) {
                 return;
@@ -227,7 +233,8 @@
             request.options.isLoading = true;
 
             var _url = dataSource.url + '/' + request.entityId;
-            var idField = 'id';
+            var idField = dataSource.primaryKey || 'id';
+            removePrimaryKey(dataSource, request.data);
             request.data.id = request.entityId;
             var config = {
                 action: 'update',
@@ -283,7 +290,6 @@
         };
 
         this.presaveItem = function(request) {
-            var idField = 'id';
             var isCreate = true;
             if (request.options.isLoading) {
                 return;
@@ -292,7 +298,8 @@
             var service = getCustomService(dataSource.standard);
             checkStandardParameter(dataSource.standard, service);
             request.options.isLoading = true;
-
+            var idField = dataSource.primaryKey || 'id';
+            removePrimaryKey(dataSource, request.data);
             var config = {
                 action: 'create',
                 method: 'POST',
