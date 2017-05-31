@@ -265,7 +265,6 @@
             vm.toggleContextView = toggleContextView;
             vm.toggleContextViewByEvent = toggleContextViewByEvent;
             vm.getParent = getParent;
-            vm.getScope = getScope;
             vm.changeSortField = changeSortField;
 
             vm.request.childId = vm.parent;
@@ -416,10 +415,6 @@
                 return vm.options.prefixGrid;
             }
             return vm.options.prefixGrid ? (vm.options.prefixGrid + '-' + key) : key;
-        }
-
-        function getScope() {
-            return $scope;
         }
 
         function changeSortField(field, sorted) {

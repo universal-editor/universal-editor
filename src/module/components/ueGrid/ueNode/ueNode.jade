@@ -21,13 +21,13 @@ ul.dnd-list(
                     data-vm = "vm",
                     data-item='item',
                     data-component-id="{{vm.$componentId}}")
-            .children-frames(ng-show="item.$$expand" ng-if="vm.treeSource" ng-class="{'empty-child-area': item[vm.childrenField]}")
-                .loading(ng-show="item.$$expand === 'pending'")
+            .children-frames(ng-if="vm.treeSource && item.$$expand" ng-class="{'empty-child-area': item[vm.childrenField]}")
+                .loading(ng-if="item.$$expand === 'pending'")
                     .column.td-loading
                     .processing-status-wrapper
                         .processing-status {{'PERFORMS_ACTIONS' | translate}}
                 ue-node(
-                    ng-show="item.$$expand !== 'pending'"
+                    ng-if="item.$$expand !== 'pending'"
                     data-collection="vm.collection",
                     data-parent-node="item",
                     data-items="item[vm.childrenField]",
