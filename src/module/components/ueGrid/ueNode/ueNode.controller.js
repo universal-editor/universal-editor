@@ -75,8 +75,22 @@
             vm.dragMode.expand(vm.dataSource, item).then(function(childrens) {
               getExpanded(childrens).then(function() {
                 if (angular.isArray(childrens)) {
-                  item[vm.childrenField] = childrens;
-                  vm.updateTable();
+                  if (childrens.length > 50) {
+                    item[vm.childrenField] = [];
+                    var i = -1;
+                    (function queue(i) {
+                      i++;
+                      item[vm.childrenField].push(childrens[i]);
+                      var promise = vm.updateTable(childrens[i], 0);
+                      return promise.then(
+                        function() {
+                          queue(i);
+                        }
+                      );
+                    })(i);
+                  } else {
+                    item[vm.childrenField] = childrens;
+                  }
                 }
               }, reject);
             }, reject).finally(function() {
@@ -106,15 +120,16 @@
         return ApiService.extendData(options);
       }
 
-      vm.updateTable = function(item) {
-        $timeout(function() {
+      vm.updateTable = function(item, delay) {
+        var t = $timeout(function() {
           if (item) {
             $scope.$broadcast('childrenReadyToLoaded', item);
             $scope.$broadcast('readyToLoaded', item);
           } else {
             $scope.$broadcast('readyToLoaded');
           }
-        });
+        }, delay || 0);
+        return t;
       };
       $scope.$on('childrenReadyToLoaded', function(event, item) {
         if (vm.parentNode == item) {

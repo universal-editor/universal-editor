@@ -485,7 +485,7 @@
                     if (extended !== false) {
                         self.options.isSendRequest = true;
                     }
-                    equalPreviewValue(extended);
+                    equalPreviewValue(extended);                    
                 }
             }
         }
