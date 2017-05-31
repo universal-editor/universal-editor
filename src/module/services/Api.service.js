@@ -857,21 +857,23 @@
         };
 
         function replaceToURL(url, entityId) {
-            if (entityId) {
-                url = url.replace(':pk', entityId);
-            }
-            var params = $location.search();
-            if (params.back) {
-                delete params.back;
-            }
-            var isReload = !~url.indexOf($location.path());
-            var searchParams = $httpParamSerializerJQLike(params);
-            if (searchParams) {
-                searchParams = '?' + searchParams;
-            }
-            $window.location.href = url + searchParams;
-            if (isReload) {
-                $window.location.reload();
+            if (url) {
+                if (entityId) {
+                    url = url.replace(':pk', entityId);
+                }
+                var params = $location.search();
+                if (params.back) {
+                    delete params.back;
+                }
+                var isReload = !~url.indexOf($location.path());
+                var searchParams = $httpParamSerializerJQLike(params);
+                if (searchParams) {
+                    searchParams = '?' + searchParams;
+                }
+                $window.location.href = url + searchParams;
+                if (isReload) {
+                    $window.location.reload();
+                }
             }
         }
 
@@ -992,18 +994,9 @@
                         $componentId: parentComponentId
                     });
                     successUpdateMessage();
-                    params = {};
-                    paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
-                    if ($location.search()[paramName]) {
-                        params.parent = $location.search()[paramName];
-                    }
-                    if ($location.search().back && config.request.useBackUrl) {
-                        state = $location.search().back;
-                    } else {
-                        state = config.request.state;
-                    }
-                    if (state) {
-                        $state.go(state, params).then(function() {
+                    state = getState(config);
+                    if (state.name) {
+                        $state.go(state.name, state.params).then(function() {
                             $location.search(searchString);
                             $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
@@ -1021,19 +1014,9 @@
                         $componentId: parentComponentId
                     });
                     successCreateMessage();
-
-                    params = {};
-                    paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
-                    if ($location.search()[paramName]) {
-                        params.parent = $location.search()[paramName];
-                    }
-                    if ($location.search().back && config.request.useBackUrl) {
-                        state = $location.search().back;
-                    } else {
-                        state = config.request.state;
-                    }
-                    if (state) {
-                        $state.go(state, params).then(function() {
+                    state = getState(config);
+                    if (state.name) {
+                        $state.go(state.name, state.params).then(function() {
                             if (params.back) {
                                 delete params.back;
                             }
@@ -1061,11 +1044,6 @@
                             id: newId
                         });
                     });
-                    $rootScope.$broadcast('ue:afterEntityUpdate', {
-                        id: newId,
-                        action: 'presave',
-                        $componentId: parentComponentId
-                    });
                     if (config.isCreate) {
                         successPresaveCreateMessage();
                     } else {
@@ -1082,22 +1060,11 @@
                         entityId: config.request.entityId
                     });
                     successDeleteMessage();
-                    params = {};
-                    paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
-                    if ($location.search()[paramName]) {
-                        params[paramName] = $location.search()[paramName];
-                    }
-                    if ($location.search().back && config.request.useBackUrl) {
-                        state = $location.search().back;
-                    } else {
-                        state = config.request.state;
-                    }
-
-                    state = state || $state.current.name;
-
+                    state = getState(config);
+                    state.name = state.name || $state.current.name;
                     if (!config.notGoToState) {
-                        if (state) {
-                            $state.go(state, params).then(function() {
+                        if (state.name) {
+                            $state.go(state.name, state.params).then(function() {
                                 $location.search(searchString);
                                 $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                             });
@@ -1107,6 +1074,34 @@
                     }
                     break;
             }
+        }
+
+        function getState(config) {
+            var state = {
+                name: null,
+                params: {}
+            },
+                paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent',
+                locationSearch = $location.search();
+            if (locationSearch[paramName]) {
+                state.params.parent = locationSearch[paramName];
+            }
+            if (locationSearch.back && config.request.useBackUrl) {
+                state.name = locationSearch.back;
+            }
+            if (angular.isObject(config.request.state)) {
+               state.name = config.request.state.name;
+               var parameters = config.request.state.parameters;
+               if(angular.isObject(parameters)) {
+                   angular.merge(state.params, parameters);
+               } else if(angular.isFunction(parameters)) {
+                   angular.merge(state.params, parameters());
+               }
+            }
+            if (angular.isString(config.request.state)) {
+                state.name = config.request.state;
+            }
+            return state;
         }
 
         function failAnswer(reject) {
