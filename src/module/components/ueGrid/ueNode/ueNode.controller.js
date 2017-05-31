@@ -60,6 +60,7 @@
       vm.loaded = true;
       vm.treeSource = vm.dataSource.tree;
       vm.$componentId = vm.options.$componentId;
+      vm.options.$dnd = {};
 
       if (vm.treeSource) {
         vm.childrenField = vm.treeSource.childrenField;
@@ -90,6 +91,7 @@
                     })(i);
                   } else {
                     item[vm.childrenField] = childrens;
+                    vm.updateTable(item);
                   }
                 }
               }, reject);
@@ -180,8 +182,8 @@
         vm.isCancelDrop = placeholder.length === 0 || placeholder.css('display') === 'none';
         if (vm.isCancelDrop === true) {
           return false;
-        }
-        if (typeof vm.options.$dnd.dragging.$$expand === 'boolean') {
+        }        
+        if (angular.isObject(vm.options.$dnd.dragging) && typeof vm.options.$dnd.dragging.$$expand === 'boolean') {
           item.$$expand = vm.options.$dnd.dragging.$$expand;
         }
         if (vm.dragMode && angular.isFunction(vm.dragMode.drop)) {
@@ -190,6 +192,9 @@
             return false;
           }
           if (angular.isObject(drop)) {
+            if(!drop.hasOwnProperty('$$expand')) {
+              drop.$$expand = true;
+            }
             return drop;
           }
         }

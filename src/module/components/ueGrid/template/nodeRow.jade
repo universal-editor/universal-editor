@@ -7,7 +7,7 @@
                     data-button-class="context", 
                     data-options="vm.options")
     .dnd-expand-item.glyphicon(
-        ng-class="{'glyphicon-collapse-down': item.$$expand === true,'glyphicon-expand': item.$$expand === false, 'icon-collapse': item.$$expand === undefined}" 
+        ng-class="{'glyphicon-collapse-down': item.$$expand === true,'glyphicon-expand': item.$$expand === false, 'icon-collapse': item.$$expand === undefined || item[vm.childrenField].length===0}" 
         ng-click="vm.expand(item)")   
     .column(data-ng-repeat="fieldItem in vm.tableFields track by $index"  ng-style="fieldItem.ngStyle" ng-class="{'first-column': $index===0}")       
         component-wrapper(data-setting="fieldItem.component", data-options="item.$options")
