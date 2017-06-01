@@ -235,7 +235,6 @@
             var _url = dataSource.url + '/' + request.entityId;
             var idField = dataSource.primaryKey || 'id';
             removePrimaryKey(dataSource, request.data);
-            request.data.id = request.entityId;
             var config = {
                 action: 'update',
                 url: request.url || _url,
