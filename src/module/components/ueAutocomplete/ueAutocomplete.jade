@@ -3,16 +3,14 @@ block append content
     include ../../template/labelField/labelField
     include ../../template/errorMessages/template
     .components-body(ng-if="!vm.warnings.length && !vm.dangers.length" ng-class="{'disabled-field': vm.disabled}")
-      div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}", ng-style="{'overflow:auto':vm.multiple}", ng-if="!vm.disabled || vm.options.filter")
+      div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter, 'multiple': vm.multiple}", ng-if="!vm.disabled || vm.options.filter")
         div(ng-class='vm.classComponent')
             .autocomplete-input-wrapper.form-control(data-ng-class='{"active" : vm.isActivePossible, "disabled-input": vm.readonly, "multiple": vm.multiple}', data-ng-click="inputFocus()")
-                .autocomplete-selected(data-ng-repeat="acItem in vm.selectedValues track by $index", 
-                                    data-ng-show="acItem[vm.fieldSearch]",
-                                    data-ng-if="vm.multiple") 
-                    .autocomplete-item {{acItem[vm.fieldSearch]}}
+                .autocomplete-selected(data-ng-repeat="acItem in vm.selectedValues track by $index",  data-ng-if="vm.multiple && acItem[vm.fieldSearch]") 
+                    .autocomplete-item(ng-bind = "acItem[vm.fieldSearch]")
                     span.remove-from-selected(data-ng-click="vm.removeFromSelected($event, acItem)", data-ng-if="!vm.readonly") ×
                 input.autocomplete-field-search( 
-                    ng-show="!vm.loadingData"
+                    ng-if="!vm.loadingData"
                     type="text",
                     ng-disabled="vm.readonly",
                     data-ng-model="vm.inputValue",
@@ -22,7 +20,7 @@ block append content
                     data-ng-style='vm.classInput',
                     data-ng-keydown="vm.deleteToAutocomplete($event)",
                     placeholder="{{vm.placeholder}}",
-                    data-ng-class='!vm.isActivePossible ? "color-placeholder" : ""'
+                    data-ng-class="{'color-placeholder': !vm.isActivePossible}"
                     )
                 span.select-delete.select-delete-autocomplete(
                     data-ng-if="!vm.multiple && !!vm.selectedValues.length && !vm.readonly",
@@ -37,7 +35,7 @@ block append content
                                             data-ng-mousedown="vm.addToSelected($event, possible)",
                                             data-ng-class="vm.activeElement == $index ? 'active' : ''") {{::possible[vm.fieldSearch]}}
 
-            .loader-search-wrapper(data-ng-show="vm.searching || vm.loadingData")
-                .loader-search {{'LOADING' | translate}}
+            .loader-search-wrapper(ng-if="vm.searching || vm.loadingData")
+                .loader-search(translate="LOADING")
       .disabled-field(ng-if="vm.disabled && !vm.options.filter")
         include ../../template/disabledField/default

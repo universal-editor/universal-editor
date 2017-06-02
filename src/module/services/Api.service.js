@@ -688,7 +688,7 @@
             }
             if (component.component.settings.multiname) {
                 var multiname = component.component.settings.multiname;
-                list = list.map(function(item) { return item[multiname]; });
+                list = list.map(function(item) { return angular.isObject(item) ? item[multiname] : null; });
             }
             angular.forEach(storage, function(storageItem) {
                 var index = list.indexOf(storageItem[keyValue]);
@@ -1001,10 +1001,12 @@
                     } else {
                         state = config.request.state;
                     }
+                    debugger;
                     if (state) {
+                        //console.log('$state.go');
                         $state.go(state, params).then(function() {
                             $location.search(searchString);
-                            $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                           // $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
                     } else {
                         replaceToURL(config.request.href);
@@ -1032,12 +1034,13 @@
                         state = config.request.state;
                     }
                     if (state) {
+                        debugger;
                         $state.go(state, params).then(function() {
                             if (params.back) {
                                 delete params.back;
                             }
                             $location.search(searchString);
-                            $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                            //$rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
                     } else {
                         replaceToURL(config.request.href);

@@ -16,13 +16,12 @@ table.table.table-bordered.items-list
         data-item='item',
         data-component-id="{{vm.$componentId}}")
     tr.row-empty(data-ng-if="vm.items.length == 0")
-      td.table-cell(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
-        | {{'ELEMENT_NO' | translate}}                
-  tbody(data-ng-show="!vm.loaded")
+      td.table-cell(colspan="{{vm.tableFields.length + vm.isContextMenu}}" translate="ELEMENT_NO")               
+  tbody(data-ng-if="!vm.loaded")
     tr
       td.table-cell.td.table-cell-loading(colspan="{{vm.tableFields.length + vm.isContextMenu}}")
         .processing-status-wrapper
-          .processing-status {{'PERFORMS_ACTIONS' | translate}}
+          .processing-status(translate="PERFORMS_ACTIONS")
   tfoot(ng-if="vm.listFooterBar.length")
     tr
       td.table-cell(colspan="{{vm.tableFields.length + vm.isContextMenu}}")

@@ -1,4 +1,4 @@
-table.table.table-bordered(class="items-list")
+table.table.table-bordered.items-list
             thead(ng-if="vm.displayHeaderColumns")
                 tr
                     td.table-cell.actions-header.context-column(ng-if="vm.isContextMenu")
@@ -37,11 +37,11 @@ table.table.table-bordered(class="items-list")
                     data-component-id="{{vm.$componentId}}"
                     )
                 
-            tbody(data-ng-show="!vm.loaded")
+            tbody(data-ng-if="!vm.loaded")
                 tr
                     td.table-cell.td.table-cell-loading(colspan="{{vm.tableFields.length + vm.isContextMenu + !!vm.dragMode.dragIcon}}")
                         .processing-status-wrapper
-                            .processing-status {{'PERFORMS_ACTIONS' | translate}}
+                            .processing-status(translate="PERFORMS_ACTIONS")
             tfoot(ng-if="vm.listFooterBar.length")
                 tr
                     td.table-cell(colspan="{{vm.tableFields.length + vm.isContextMenu + !!vm.dragMode.dragIcon}}")

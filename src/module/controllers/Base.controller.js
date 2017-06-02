@@ -89,54 +89,58 @@
         self.listeners.push($scope.$on('ue:componentError', onErrorApiHandler));
 
         /** logic for usable and readonly parameters */
-        var valueWatcher = $scope.$watch(
-            function() { return self.fieldValue; },
-            function(value, oldValue) {
-                if (self.options && self.options.$componentId) {
-                    EditEntityStorage.updateComponents(self.options.$componentId);
-                }
-            }, true);
-
-        var componentValueChangedHandler = $scope.$on('ue:componentValueChanged', function(event, data) {
-            if (self.isParentComponent(data)) {
-                if (angular.isFunction(self.useableCallback)) {
-                    self.useable = self.useableCallback(data);
-                    var rootElement = $element.closest('.component-wrapper');
-                    if (self.useable === false) {
-                        rootElement.addClass('unuseable');
-                    } else {
-                        rootElement.removeClass('unuseable');
+        if (componentSettings.mode !== 'preview') {
+            var valueWatcher = $scope.$watch(
+                function() { return self.fieldValue; },
+                function(value, oldValue) {
+                    if (self.options && self.options.$componentId) {
+                        EditEntityStorage.updateComponents(self.options.$componentId);
                     }
-                    $scope.$broadcast('ue-group:forceUseable', {
-                        $componentId: self.setting.component.$id,
-                        value: self.useable
-                    });
+                }, true);
+            self.listeners.push(valueWatcher);
+        }
+
+        if (angular.isFunction(self.useableCallback) || angular.isFunction(self.readonlyCallback)) {
+            var componentValueChangedHandler = $scope.$on('ue:componentValueChanged', function(event, data) {
+                if (self.isParentComponent(data)) {
+                    if (angular.isFunction(self.useableCallback)) {
+                        self.useable = self.useableCallback(data);
+                        var rootElement = $element.closest('.component-wrapper');
+                        if (self.useable === false) {
+                            rootElement.addClass('unuseable');
+                        } else {
+                            rootElement.removeClass('unuseable');
+                        }
+                        $scope.$broadcast('ue-group:forceUseable', {
+                            $componentId: self.setting.component.$id,
+                            value: self.useable
+                        });
+                    }
+                    if (angular.isFunction(self.readonlyCallback)) {
+                        self.readonly = self.readonlyCallback(data);
+                        $scope.$broadcast('ue-group:forceReadonly', {
+                            $componentId: self.setting.component.$id,
+                            value: self.readonly
+                        });
+                    }
                 }
-                if (angular.isFunction(self.readonlyCallback)) {
-                    self.readonly = self.readonlyCallback(data);
-                    $scope.$broadcast('ue-group:forceReadonly', {
-                        $componentId: self.setting.component.$id,
-                        value: self.readonly
-                    });
+            });
+
+            var forceReadonlyHandler = $scope.$on('ue-group:forceReadonly', function(event, data) {
+                if (self.isParentComponent(data) && componentSettings.readonly !== true) {
+                    self.readonly = data.value;
                 }
-            }
-        });
+            });
 
-        var forceReadonlyHandler = $scope.$on('ue-group:forceReadonly', function(event, data) {
-            if (self.isParentComponent(data) && componentSettings.readonly !== true) {
-                self.readonly = data.value;
-            }
-        });
+            var forceUseableHandler = $scope.$on('ue-group:forceUseable', function(event, data) {
+                if (self.isParentComponent(data)) {
+                    self.useable = data.value;
+                }
+            });
 
-        var forceUseableHandler = $scope.$on('ue-group:forceUseable', function(event, data) {
-            if (self.isParentComponent(data)) {
-                self.useable = data.value;
-            }
-        });
-
-        self.listeners.push(forceReadonlyHandler);
-        self.listeners.push(componentValueChangedHandler);
-        self.listeners.push(valueWatcher);
+            self.listeners.push(forceReadonlyHandler);
+            self.listeners.push(componentValueChangedHandler);
+        }
         self.isParentComponent = function isParentComponent(id, scope) {
             scope = scope || $scope;
             if (angular.isObject(id)) {

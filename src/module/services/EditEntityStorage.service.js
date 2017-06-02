@@ -127,7 +127,7 @@
             }
             var controllers = storage[componentId] || [],
                 groupControllers = groups[componentId] || [];
-            
+
             if (request) {
                 if (angular.isObject(request)) {
                     request.isError = true;
@@ -148,18 +148,20 @@
                             value = null;
                         }
 
-                        if (!fCtrl.multiple) {
-                            fCtrl.inputLeave(fCtrl.fieldValue);
-                        } else {
-                            var flagError = true;
-                            angular.forEach(fCtrl.fieldValue, function(val, index) {
-                                if (flagError) {
-                                    fCtrl.inputLeave(val, index);
-                                    if (fCtrl.error.length !== 0) {
-                                        flagError = false;
+                        if (angular.isFunction(fCtrl.inputLeave)) {
+                            if (!fCtrl.multiple) {
+                                fCtrl.inputLeave(fCtrl.fieldValue);
+                            } else {
+                                var flagError = true;
+                                angular.forEach(fCtrl.fieldValue, function(val, index) {
+                                    if (flagError) {
+                                        fCtrl.inputLeave(val, index);
+                                        if (fCtrl.error.length !== 0) {
+                                            flagError = false;
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
 
                         if (angular.isString(fCtrl.fieldName)) {

@@ -9,7 +9,7 @@ block append content
                 label.radio
                     input(type="radio", data-ng-disabled="vm.readonly" data-ng-model="vm.fieldValue", value="{{::item[vm.fieldId]}}")
                     span(ng-bind = "::item[vm.fieldSearch]")
-            .processing-status-wrapper(data-ng-show="vm.loadingData")
-                .processing-status {{'PERFORMS_ACTIONS' | translate}}
+            .processing-status-wrapper(ng-if="vm.loadingData")
+                .processing-status(translate="PERFORMS_ACTIONS")
         .disabled-field(ng-if="vm.disabled && !vm.options.filter")
             include ../../template/disabledField/default

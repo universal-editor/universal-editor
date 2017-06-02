@@ -45,6 +45,7 @@
 
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element  });
             angular.extend(vm, baseController);
+            delete vm.inputLeave;
 
             vm.singleValue = !componentSettings.hasOwnProperty('values') && !componentSettings.hasOwnProperty('valuesRemote');
 

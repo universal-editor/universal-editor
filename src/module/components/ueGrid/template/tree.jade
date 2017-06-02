@@ -16,10 +16,10 @@ ul.table.items-list.drag-mode
       data-options="vm.options",
       data-context-links="vm.contextLinks"
       toggle-context-view-by-event="vm.toggleContextViewByEvent(item, e)")            
-  li.loading(data-ng-show="!vm.loaded")
+  li.loading(data-ng-if="!vm.loaded")
     .column.td-loading
       .processing-status-wrapper
-        .processing-status {{'PERFORMS_ACTIONS' | translate}}
+        .processing-status(translate="PERFORMS_ACTIONS")
   li(ng-if="vm.listFooterBar.length")
     .row.footer
       .table-cell

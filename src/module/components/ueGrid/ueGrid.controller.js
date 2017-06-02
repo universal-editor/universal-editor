@@ -57,11 +57,8 @@
             url,
             parentField;
 
-        function loadtBody() {
-
-        }
-
         vm.$postLink = function() {
+            console.log('postLink');
             var table;
             if (angular.isObject(vm.componentSettings.dragMode)) {
                 if (vm.dataSource.tree) {
@@ -83,9 +80,11 @@
         };
 
         vm.$onInit = function() {
+            console.log('OnInit');
             vm.$componentId = vm.setting.component.$id;
             //** Nested base controller */
             angular.extend(vm, $controller('FieldsController', { $scope: $scope, $element: $element }));
+            delete vm.inputLeave;
 
             vm.componentSettings = vm.setting.component.settings;
 
@@ -99,6 +98,9 @@
             if (!vm.componentSettings.width) {
                 vm.classComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
             }
+            vm.log = function(m) {
+                    console.log(m);               
+            };
 
             url = vm.dataSource.url;
             parentField = vm.dataSource.parentField;
@@ -272,7 +274,7 @@
             vm.request.parentField = parentField;
             vm.request.url = url;
 
-            if (FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
+            if (FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {                
                 refreshTableRecords();
             }
 

@@ -13,8 +13,8 @@
 
         vm.$onInit = function() {
             baseController = $controller('FieldsController', {$scope: $scope, $element: $element});
-
             angular.extend(vm, baseController);
+
             vm.addItem = addItem;
             vm.removeItem = removeItem;
 

@@ -18,9 +18,9 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
         .component-preview(ng-if="!vm.templates.preview && vm.regim === 'preview'")             
             include ../../template/errorMessages/template
             div(ng-if="vm.warnings.length === 0 && vm.dangers.length === 0") 
-                .loader-search-wrapper(data-ng-show="vm.loadingData")
-                    .loader-search {{'LOADING' | translate}}
-                div(ng-bind="::vm.previewValue", data-ng-show="!vm.loadingData && vm.previewValue", ng-if = "!vm.multiple")
-                div(ng-repeat="value in vm.previewValue track by $index", data-ng-show="!vm.loadingData", ng-if = "vm.multiple")
+                .loader-search-wrapper(ng-if="vm.loadingData")
+                    .loader-search(translate="LOADING")
+                div(ng-bind="::vm.previewValue", ng-if="!vm.multiple && !vm.loadingData && vm.previewValue")
+                div(ng-repeat="value in vm.previewValue track by $index", ng-if = "vm.multiple && !vm.loadingData")
                     span(ng-bind="value")
         include ../../template/errorField/errorField

@@ -177,11 +177,7 @@
                                 name: 'ue-button',
                                 settings: {
                                     label: 'Delete',
-                                    action: 'delete',
-                                    useable: function(data) {
-                                        if(data.id == 3) return true;
-                                        return false;
-                                    }
+                                    action: 'delete'
                                 }
                             }
                         }
