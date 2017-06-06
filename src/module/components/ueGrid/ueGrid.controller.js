@@ -319,7 +319,7 @@
             vm.options.$dnd = vm.options.$dnd || {};
             vm.options.$dnd.dragging = item;
             if (vm.dragMode && angular.isFunction(vm.dragMode.start)) {
-                vm.dragMode.start(event, item, vm.items);
+                vm.dragMode.start(event, item, vm.items, null, index);
             }
         };
         vm.dragover = function(event, index, type) {
@@ -497,10 +497,11 @@
         });
 
         function refreshTableRecords(notGoToState, request) {
+            vm.loaded = false;
             request = request || vm.request;
             if (angular.isObject(request) && angular.isString(request.url)) {
                 setInitialQueryParams();
-                return ApiService.getItemsList(request, notGoToState);
+                return ApiService.getItemsList(request, notGoToState).finally(switchLoaderOff);
             }
         }
 
@@ -569,8 +570,8 @@
                         vm.items = data;
                         if (!vm.dataSource.tree) {
                             vm.updateTable();
+                            fillDraggingOptions(data);
                         }
-                        fillDraggingOptions(data);
                     }).finally(switchLoaderOff);
 
                     vm.parentButton = !!vm.parent;
@@ -588,15 +589,26 @@
             }
             angular.forEach(items, function(item) {
                 if (angular.isObject(item)) {
-                    item.$disable = vm.dragDisable(item, vm.collection);
-                    vm.$allowed = vm.getAllowedContainers(null, vm.collection);
-                    item.$type = vm.getContainerName(item, vm.collection);
+                    item.$disable = vm.dragDisable(item, vm.items);
+                    vm.$allowed = vm.getAllowedContainers(null, vm.items);
+                    item.$type = vm.getContainerName(item, vm.items);
                 }
             });
         }
 
         function getFieldValue() {
             var output = angular.merge({}, vm.items);
+            (function deleteInfo(output) {
+                angular.forEach(output, function(item) {
+                    if (angular.isObject(item)) {
+                        delete item.$disable;
+                        delete item.$allowed;
+                        delete item.$type;
+                        delete item.$$expand;
+                        deleteInfo(item);
+                    }
+                });
+            })(output);
             return output || [];
         }
 

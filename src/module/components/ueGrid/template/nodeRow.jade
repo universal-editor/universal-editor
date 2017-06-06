@@ -9,7 +9,7 @@
     .dnd-expand-item.glyphicon(
         ng-class="{'glyphicon-collapse-down': item.$$expand === true,'glyphicon-expand': item.$$expand === false, 'icon-collapse': item.$$expand === undefined || item[vm.childrenField].length===0}" 
         ng-click="vm.expand(item)")
-.children-frames(ng-if="vm.treeSource && item.$$expand" ng-class="{'empty-child-area': item[vm.childrenField]}")
+.children-frames(ng-if="vm.treeSource && (item.$$expand || item[vm.childrenField].length === 0)" ng-class="{'empty-child-area': item[vm.childrenField]}")
                 .loading(ng-show="item.$$expand === 'pending'")
                     .column.td-loading
                       .processing-status-wrapper

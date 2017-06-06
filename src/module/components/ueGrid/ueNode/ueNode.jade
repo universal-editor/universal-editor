@@ -1,6 +1,6 @@
 ul.dnd-list(
     dnd-list="vm.items" 
-    dnd-allowed-types="vm.parentNode.$allowed"
+    dnd-allowed-types="vm.parentNode ? vm.parentNode.$allowed : vm.$allowed"
     dnd-dragover="vm.dragover(event, index, type)" 
     dnd-drop="vm.drop(item, index, event)"      
     dnd-inserted="vm.inserted(item, index, external, type)")

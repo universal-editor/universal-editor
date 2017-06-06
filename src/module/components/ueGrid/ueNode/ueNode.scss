@@ -51,6 +51,16 @@
             min-height: 70px;
         }
     }
+    .children-frames {
+        &>.loading {
+            &>.column {
+                &>.processing-status-wrapper {
+                    margin-top: 20px;
+                    min-height: 30px;
+                }
+            }
+        }
+    }
     .row.header {
         padding: 5px;
     }
