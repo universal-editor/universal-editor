@@ -6,4 +6,4 @@
             span.glyphicon.glyphicon-remove(ng-if="vm.setting.component.settings.action == 'delete'")
             | {{::vm.label}}
         button.editor-action-button(data-ng-if="vm.setting.buttonClass == 'context'", ng-click="vm.click()") {{::vm.label}}        
-    .ue-button-template(data-ng-if="vm.template", on-render-template="")
+    .ue-button-template(on-render-template="")

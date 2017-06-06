@@ -75,7 +75,7 @@ var C = {
             },
             dragMode: {
                     mode: 'copy' || 'move',
-                    start: function(e, element, collection) {
+                    start: function(e, element, collection, parentElement, index) {
                     },
                     over: function(e, element, destElement, collection) {
                     },
@@ -85,7 +85,7 @@ var C = {
                     inserted: function(e, index, element, destElement, collection) {
                         
                     },
-                    dragDisable: function(element, collection) {
+                    dragDisable: function(element, collection, parentElement) {
                         return element.active === 1;
                     },
                     containerName: function(element, collection) {
@@ -116,4 +116,5 @@ var C = {
 | element | object | Объект данных, который переносится |
 | destElement | object | Объект данных, который принимает переносимые данные |
 | collection | array | Полный список элементов компонента |
+| parentElement | object | Родительский элемент |
 

@@ -14,7 +14,6 @@
         vm.$onInit = function() {
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
-            vm.loadingData = true;
 
             vm.addItem = addItem;
             vm.removeItem = removeItem;
@@ -27,7 +26,6 @@
                 if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {                    
                     $scope.onLoadDataHandler(e, data);
                     vm.equalPreviewValue();
-                    $timeout(function() {vm.loadingData = false;});
                 }
             }));
         };

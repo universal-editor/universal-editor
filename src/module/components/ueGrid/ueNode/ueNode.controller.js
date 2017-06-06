@@ -18,7 +18,7 @@
           if (vm.dataSource.tree) {
             tr = angular.element($templateCache.get('module/components/ueGrid/template/nodeRow.html'));
             var colHtml = '<div class="column"> </div>',
-            row = tr.filter('.row');
+              row = tr.filter('.row');
             angular.forEach(vm.tableFields, function(column, index) {
               var col = $(colHtml);
               col.css(column.ngStyle);
@@ -102,31 +102,22 @@
               });
             }
           } else {
-            outputChild(item[vm.childrenField], item);
             item.$$expand = nextValueExtend;
+            var children = item[vm.childrenField];
+            if (angular.isArray(childrens)) {
+              item[vm.childrenField] = childrens;
+              $timeout(function() {
+                vm.updateTable(item);
+              });
+            }
           }
         }
       };
 
       function outputChild(childrens, item) {
         if (angular.isArray(childrens)) {
-          if (childrens.length > 30) {
-            item[vm.childrenField] = [];
-            var i = -1;
-            (function queue(i) {
-              i++;
-              item[vm.childrenField].push(childrens[i]);
-              var promise = vm.updateTable(childrens[i], 0);
-              return promise.then(
-                function() {
-                  queue(i);
-                }
-              );
-            })(i);
-          } else {
-            item[vm.childrenField] = childrens;
-            vm.updateTable(item);
-          }
+          item[vm.childrenField] = childrens;
+          vm.updateTable(item);
         }
       }
 
@@ -161,7 +152,7 @@
       });
 
       vm.moved = function(index) {
-        var disabled = angular.isFunction(vm.dragMode.dragDisable) ? vm.dragMode.dragDisable(vm.items[index], vm.collection) : false;
+        var disabled = angular.isFunction(vm.dragMode.dragDisable) ? vm.dragMode.dragDisable(vm.items[index], vm.collection, vm.parentNode) : false;
         if (!vm.isCancelDrop) {
           if (!disabled) {
             vm.items.splice(index, 1);
@@ -183,7 +174,7 @@
         vm.options.$dnd = vm.options.$dnd || {};
         vm.options.$dnd.dragging = item;
         if (vm.dragMode && angular.isFunction(vm.dragMode.start)) {
-          vm.dragMode.start(event, item, vm.collection);
+          vm.dragMode.start(event, item, vm.collection, vm.parentNode, index);
         }
       };
 
@@ -262,7 +253,7 @@
 
       vm.dragDisable = function(item, collection) {
         if (vm.dragMode && angular.isFunction(vm.dragMode.dragDisable)) {
-          return vm.dragMode.dragDisable(item, collection);
+          return vm.dragMode.dragDisable(item, collection, vm.parentNode);
         }
         if (vm.dragMode && angular.isArray(vm.dragMode.dragDisable)) {
           return vm.dragMode.dragDisable;
@@ -276,13 +267,19 @@
         }
         angular.forEach(items, function(item) {
           if (angular.isObject(item)) {
-            item.$disable = vm.dragDisable(item, vm.collection);
+            item.$disable = vm.dragDisable(item, vm.collection, vm.parentNode);
             item.$allowed = vm.getAllowedContainers(item, vm.collection);
             item.$type = vm.getContainerName(item, vm.collection);
+            if (!angular.isArray(item[vm.childrenField]) && item[vm.childrenCountField] === 0) {
+              item.children = [];
+              item.$$expand = true;
+            }
           }
         });
       }
       fillDraggingOptions(vm.items);
+
+      vm.$allowed = vm.getAllowedContainers(null, vm.collection);
     };
   }
 })();

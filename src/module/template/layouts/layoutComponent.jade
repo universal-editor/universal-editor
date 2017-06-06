@@ -2,10 +2,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
     ng-if="vm.isVisible && vm.regim !== 'preview'", ng-show='vm.useable')
     .ue-component-body
         //-- with templates
-        .component-template(
-            on-render-template,
-            ng-class="{'component-filter': vm.templates.filter && vm.regim === 'filter',\
-                'component-edit': vm.templates.edit  && vm.regim === 'edit'}")
+        .component-template(on-render-template)
         //-- without templates
         //-- filter or edit default template
         .component-edit(
@@ -14,7 +11,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
             )
             block content        
         include ../../template/errorField/errorField
-.component-template.component-preview(on-render-template, ng-if = "vm.templates.preview && vm.regim === 'preview'")
+.component-template.component-preview(on-render-template)
 //-- preview default template
 .component-preview.field-wrapper.row(ng-if="!vm.templates.preview && vm.regim === 'preview'")             
     include ../../template/errorMessages/template
