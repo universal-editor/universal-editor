@@ -1,8 +1,8 @@
 extends ../../template/layouts/layoutComponent
 
 block append content
-    include ../../template/labelField/labelField
-    .field-wrapper(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter, 'multiple': vm.multiple}" ng-if="!vm.disabled || vm.options.filter")
+    include ../../template/labelField/labelField.jade
+    div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}"  ng-style="{'overflow:auto':vm.multiple}", ng-if="!vm.disabled || vm.options.filter")
         div(data-ng-if="vm.multiple", ng-class="{'col-lg-2 col-md-2 col-sm-3 col-xs-3 clear-padding-left': (!vm.options.isGroup && !vm.options.filter)}")
             .item-colorpicker-wrapper.input-group(data-ng-repeat="field_item in vm.fieldValue track by $index")
                 input.form-control.input-sm(type="text", data-ng-disabled="vm.readonly", data-minicolors="", data-ng-model="vm.fieldValue[$index]")
@@ -12,4 +12,4 @@ block append content
         div(data-ng-if="!vm.multiple", ng-class="{'col-lg-2 col-md-2 col-sm-3 col-xs-3 clear-padding-left': (!vm.options.isGroup && !vm.options.filter)}")
             input.form-control.input-sm(type="text", data-ng-disabled="vm.readonly" data-minicolors="{position: 'bottom left'}", data-ng-model="vm.fieldValue")
     div(ng-if="vm.disabled && !vm.options.filter")
-        include ../../template/disabledField/colorpicker
+        include ../../template/disabledField/colorpicker.jade

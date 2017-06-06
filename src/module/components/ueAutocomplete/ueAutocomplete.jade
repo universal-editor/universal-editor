@@ -1,7 +1,7 @@
 extends ../../template/layouts/layoutComponent
 block append content
-    include ../../template/labelField/labelField
-    include ../../template/errorMessages/template
+    include ../../template/labelField/labelField.jade
+    include ../../template/errorMessages/template.jade
     .components-body(ng-if="!vm.warnings.length && !vm.dangers.length" ng-class="{'disabled-field': vm.disabled}")
       div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter, 'multiple': vm.multiple}", ng-if="!vm.disabled || vm.options.filter")
         div(ng-class='vm.classComponent')
@@ -55,4 +55,4 @@ block append content
             .loader-search-wrapper(ng-if="vm.searching || vm.loadingData")
                 .loader-search(translate="LOADING")
       .disabled-field(ng-if="vm.disabled && !vm.options.filter")
-        include ../../template/disabledField/default
+        include ../../template/disabledField/default.jade

@@ -36,7 +36,6 @@
         self.inputLeave = inputLeave;
         self.disabled = componentSettings.disabled;
         self.clientErrors = [];
-        self.whiteSpace = componentSettings.whiteSpace === true;
 
         if(vm.multiple) {
             self.fieldValue = [];
