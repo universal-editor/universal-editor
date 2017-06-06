@@ -3,7 +3,7 @@
   angular
     .module('universal-editor')
     .controller('UeNodeController', UeNodeController)
-    .directive('ngSetValueReplace', function($templateCache, $compile) {
+    .directive('ngTreeItem', function($templateCache, $compile, $rootScope, $timeout, $q) {
       'ngInject';
       return {
         restrict: 'A',
@@ -11,24 +11,38 @@
         scope: {
           item: '=',
           componentId: '@',
-          settings: '=',
           vm: '='
         },
         link: function(scope, element, attr) {
           var vm = scope.vm, tr;
           if (vm.dataSource.tree) {
             tr = angular.element($templateCache.get('module/components/ueGrid/template/nodeRow.html'));
+            var colHtml = '<div class="column"> </div>',
+            row = tr.filter('.row');
+            angular.forEach(vm.tableFields, function(column, index) {
+              var col = $(colHtml);
+              col.css(column.ngStyle);
+              if (index === 0) {
+                col.addClass('first-column');
+              }
+              col.html('<component-wrapper data-setting="vm.tableFields[' + index + '].component", data-options="vm.tableFields[' + index + '].options"> </component-wrapper>');
+              row.append(col);
+            });
+
             if (vm.dragMode && vm.dragMode.dragIcon) {
-              tr.attr('dnd-nodrag', '').append('<div class="dnd-expand-item glyphicon glyphicon-align-justify dragIcon" dnd-handle> </div>');
+              tr.attr('dnd-nodrag', '');
+              row.append('<div class="dnd-expand-item glyphicon glyphicon-align-justify dragIcon" dnd-handle> </div>');
             }
           }
-          element.append($compile(angular.element(tr))(scope));
+          element.replaceWith($compile(angular.element(tr))(scope));
 
           if (scope.item[vm.childrenCountField] > 0) {
             if (typeof scope.item.$$expand !== 'boolean') {
               scope.item.$$expand = angular.isArray(scope.item[vm.childrenField]);
             }
           }
+          emitLoading();
+          //$timeout(emitLoading, 0);
 
           scope.$on('readyToLoaded', function(event, data) {
             if (data) {
@@ -57,10 +71,11 @@
     vm.$onInit = function() {
       vm.dragMode = vm.setting.component.settings.dragMode;
       vm.dataSource = vm.setting.component.settings.dataSource;
-      vm.loaded = true;
+
       vm.treeSource = vm.dataSource.tree;
       vm.$componentId = vm.options.$componentId;
       vm.options.$dnd = {};
+      vm.mode = vm.dragMode.mode || 'move';
 
       if (vm.treeSource) {
         vm.childrenField = vm.treeSource.childrenField;
@@ -70,34 +85,15 @@
 
       vm.expand = function(item) {
         if (typeof item.$$expand === 'boolean') {
-          item.$$expand = !item.$$expand;
+          var nextValueExtend = !item.$$expand;
+          item.$$expand = 'pending';
           if (vm.dragMode && angular.isFunction(vm.dragMode.expand) && vm.childrenField && !angular.isArray(item[vm.childrenField])) {
-            item.$$expand = 'pending';
             vm.dragMode.expand(vm.dataSource, item).then(function(childrens) {
               getExpanded(childrens).then(function() {
-                if (angular.isArray(childrens)) {
-                  if (childrens.length > 50) {
-                    item[vm.childrenField] = [];
-                    var i = -1;
-                    (function queue(i) {
-                      i++;
-                      item[vm.childrenField].push(childrens[i]);
-                      var promise = vm.updateTable(childrens[i], 0);
-                      return promise.then(
-                        function() {
-                          queue(i);
-                        }
-                      );
-                    })(i);
-                  } else {
-                    item[vm.childrenField] = childrens;
-                    vm.updateTable(item);
-                  }
-                }
+                outputChild(childrens, item);
+                item.$$expand = true;
               }, reject);
-            }, reject).finally(function() {
-              item.$$expand = true;
-            });
+            }, reject);
             function reject() {
               item.$$expand = false;
               item[vm.childrenCountField] = 0;
@@ -105,9 +101,34 @@
                 toastr.error(translation);
               });
             }
+          } else {
+            outputChild(item[vm.childrenField], item);
+            item.$$expand = nextValueExtend;
           }
         }
       };
+
+      function outputChild(childrens, item) {
+        if (angular.isArray(childrens)) {
+          if (childrens.length > 30) {
+            item[vm.childrenField] = [];
+            var i = -1;
+            (function queue(i) {
+              i++;
+              item[vm.childrenField].push(childrens[i]);
+              var promise = vm.updateTable(childrens[i], 0);
+              return promise.then(
+                function() {
+                  queue(i);
+                }
+              );
+            })(i);
+          } else {
+            item[vm.childrenField] = childrens;
+            vm.updateTable(item);
+          }
+        }
+      }
 
       function getExpanded(items) {
         var components = vm.tableFields.map(function(f) { return f.component; });
@@ -125,8 +146,8 @@
       vm.updateTable = function(item, delay) {
         var t = $timeout(function() {
           if (item) {
-            $scope.$broadcast('childrenReadyToLoaded', item);
             $scope.$broadcast('readyToLoaded', item);
+            $scope.$broadcast('childrenReadyToLoaded', item);
           } else {
             $scope.$broadcast('readyToLoaded');
           }
@@ -182,7 +203,7 @@
         vm.isCancelDrop = placeholder.length === 0 || placeholder.css('display') === 'none';
         if (vm.isCancelDrop === true) {
           return false;
-        }        
+        }
         if (angular.isObject(vm.options.$dnd.dragging) && typeof vm.options.$dnd.dragging.$$expand === 'boolean') {
           item.$$expand = vm.options.$dnd.dragging.$$expand;
         }
@@ -192,7 +213,7 @@
             return false;
           }
           if (angular.isObject(drop)) {
-            if(!drop.hasOwnProperty('$$expand')) {
+            if (!drop.hasOwnProperty('$$expand')) {
               drop.$$expand = true;
             }
             return drop;
@@ -212,6 +233,10 @@
         vm.updateTable(item);
         if (vm.dragMode && vm.dragMode.mode === 'copy' && angular.isFunction(vm.dragMode.inserted)) {
           vm.dragMode.inserted(event, index, item, vm.parentNode, vm.collection);
+        }
+        fillDraggingOptions(item);
+        if (!item.hasOwnProperty('$$expand')) {
+          item.$$expand = true;
         }
       };
 
@@ -244,6 +269,20 @@
         }
         return null;
       };
+
+      function fillDraggingOptions(items) {
+        if (!angular.isArray(items) && angular.isObject(items)) {
+          items = [items];
+        }
+        angular.forEach(items, function(item) {
+          if (angular.isObject(item)) {
+            item.$disable = vm.dragDisable(item, vm.collection);
+            item.$allowed = vm.getAllowedContainers(item, vm.collection);
+            item.$type = vm.getContainerName(item, vm.collection);
+          }
+        });
+      }
+      fillDraggingOptions(vm.items);
     };
   }
 })();

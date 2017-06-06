@@ -1001,12 +1001,9 @@
                     } else {
                         state = config.request.state;
                     }
-                    debugger;
                     if (state) {
-                        //console.log('$state.go');
                         $state.go(state, params).then(function() {
                             $location.search(searchString);
-                           // $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
                     } else {
                         replaceToURL(config.request.href);
@@ -1034,13 +1031,11 @@
                         state = config.request.state;
                     }
                     if (state) {
-                        debugger;
                         $state.go(state, params).then(function() {
                             if (params.back) {
                                 delete params.back;
                             }
                             $location.search(searchString);
-                            //$rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
                     } else {
                         replaceToURL(config.request.href);

@@ -12,7 +12,6 @@ block append content
                                                 ng-options="option[vm.fieldSearch] for option in vm.optionValues track by option[vm.fieldId]")
                     div(data-ng-if="!vm.multiple && !vm.isTree" )
                         div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='{"but-for-search": !vm.search, "disabled-input": vm.readonly}' )
-                            //--span {{vm.optionValues}}
                             input.form-control.select-input(
                                 data-ng-if="vm.search",
                                 ng-disabled="vm.readonly"

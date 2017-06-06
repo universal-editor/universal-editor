@@ -10,7 +10,7 @@
                 item: null
             }
         })
-        .directive('ngSetValue', function($templateCache, $compile) {
+        .directive('ngTableItem', function($templateCache, $compile) {
             'ngInject';
             return {
                 restrict: 'A',
@@ -58,7 +58,6 @@
             parentField;
 
         vm.$postLink = function() {
-            console.log('postLink');
             var table;
             if (angular.isObject(vm.componentSettings.dragMode)) {
                 if (vm.dataSource.tree) {
@@ -80,7 +79,6 @@
         };
 
         vm.$onInit = function() {
-            console.log('OnInit');
             vm.$componentId = vm.setting.component.$id;
             //** Nested base controller */
             angular.extend(vm, $controller('FieldsController', { $scope: $scope, $element: $element }));
@@ -98,9 +96,6 @@
             if (!vm.componentSettings.width) {
                 vm.classComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
             }
-            vm.log = function(m) {
-                    console.log(m);               
-            };
 
             url = vm.dataSource.url;
             parentField = vm.dataSource.parentField;
@@ -143,7 +138,7 @@
             vm.options.contextId = undefined;
             vm.idField = 'id';
             vm.parentButton = false;
-            vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty('pagination') ? vm.setting.component.settings.dataSource.pagination : true;           
+            vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty('pagination') ? vm.setting.component.settings.dataSource.pagination : true;
             vm.entityType = vm.setting.component.settings.entityType;
             vm.parent = null;
             vm.isMixMode = !!vm.setting.component.settings.mixedMode;
@@ -199,7 +194,7 @@
                     if (component.length) {
                         col = angular.merge({}, component[0]);
                     }
-                    col.component.settings.mode = 'preview';
+                    //col.component.settings.mode = 'preview';
                     if (angular.isObject(col)) {
                         tableField = {
                             field: col.name || null,
@@ -274,7 +269,7 @@
             vm.request.parentField = parentField;
             vm.request.url = url;
 
-            if (FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {                
+            if (FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
                 refreshTableRecords();
             }
 
@@ -349,6 +344,7 @@
                 vm.dragMode.inserted(event, index, item, null, vm.items);
             }
             vm.updateTable(item);
+            fillDraggingOptions(item);
         };
 
         vm.updateTable = function(item) {
@@ -543,16 +539,15 @@
 
         $scope.$on('ue:componentDataLoaded', componentLoadedHandler);
         function componentLoadedHandler(event, data) {
-            if (vm.isComponent(data) && !data.hasOwnProperty('$items') && !event.defaultPrevented && vm.tableFields.length > 0) {
+            if (vm.isComponent(data) && !event.defaultPrevented && vm.tableFields.length > 0) {
                 if (!data.switchLoaderOff) {
                     vm.loaded = false;
                 }
-                vm.data = data;
-                vm.items = data[itemsKey];
+                vm.data = data[itemsKey];
                 if (vm.items) {
                     var components = vm.tableFields.map(function(f) { return f.component; });
                     var options = {
-                        data: vm.items,
+                        data: vm.data,
                         components: components,
                         $id: vm.$componentId,
                         standart: vm.dataSource.standart,
@@ -561,7 +556,11 @@
                     };
                     ApiService.extendData(options).then(function(data) {
                         vm.data = data;
-                        vm.updateTable();
+                        vm.items = data;
+                        if (!vm.dataSource.tree) {
+                            vm.updateTable();
+                        }
+                        fillDraggingOptions(data);
                     }).finally(switchLoaderOff);
 
                     vm.parentButton = !!vm.parent;
@@ -572,6 +571,18 @@
                     });
                 }
             }
+        }
+        function fillDraggingOptions(items) {
+            if (!angular.isArray(items) && angular.isObject(items)) {
+                items = [items];
+            }
+            angular.forEach(items, function(item) {
+                if (angular.isObject(item)) {
+                    item.$disable = vm.dragDisable(item, vm.collection);
+                    vm.$allowed = vm.getAllowedContainers(null, vm.collection);
+                    item.$type = vm.getContainerName(item, vm.collection);
+                }
+            });
         }
 
         function getFieldValue() {

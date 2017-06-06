@@ -66,7 +66,6 @@
             }));
 
             if (componentSettings.mode !== 'preview') {
-                debugger
                 vm.listeners.push($scope.$watch(function() {
                     return vm.inputValue;
                 }, function(newValue) {

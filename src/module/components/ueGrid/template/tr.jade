@@ -13,9 +13,9 @@ td.table-cell.context-column(ng-if="vm.isContextMenu")
                 component-wrapper(data-setting="link", data-entity-id="{{::item[vm.idField]}}",
                     data-button-class="context",
                     data-options="vm.mixOption")
-td.table-cell(data-ng-repeat="fieldItem in vm.tableFields track by $index" ng-style="fieldItem.ngStyle")
+td.table-cell(data-ng-repeat="fieldItem in ::vm.tableFields track by $index" ng-style="fieldItem.ngStyle")
         span.glyphicon(
         data-ng-class="{'glyphicon-folder-open icon-mix-mode' : vm.isMixMode && item[vm.subType] !== vm.collectionType}",
         data-ng-if='vm.prependIcon === fieldItem.field'
         )
-        component-wrapper(data-setting="fieldItem.component")    
+        component-wrapper(data-setting="fieldItem.component", data-options="fieldItem.options")    

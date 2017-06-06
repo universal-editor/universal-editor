@@ -1,11 +1,11 @@
 ul.table.items-list.drag-mode
   li(ng-if="vm.displayHeaderColumns")
     .row.header
-      .table-cell( data-ng-repeat="fieldItem in vm.tableFields track by $index",
+      .table-cell( data-ng-repeat="fieldItem in ::vm.tableFields track by $index",
         ng-style="fieldItem.ngStyle"
         data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection, 'first-column': $index===0}",
         data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)")  
-        span {{fieldItem.displayName}}      
+        span {{::fieldItem.displayName}}      
   li.tree-body(ng-if="vm.loaded")    
     ue-node(
       data-is-first-level="true"
@@ -23,4 +23,4 @@ ul.table.items-list.drag-mode
   li(ng-if="vm.listFooterBar.length")
     .row.footer
       .table-cell
-        component-wrapper(data-ng-repeat="component in vm.listFooterBar track by $index" data-setting="component", data-options="vm.options")
+        component-wrapper(data-ng-repeat="component in ::vm.listFooterBar track by $index" data-setting="component", data-options="vm.options")

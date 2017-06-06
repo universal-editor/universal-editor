@@ -1,38 +1,22 @@
 ul.dnd-list(
-    ng-if="vm.loaded"
     dnd-list="vm.items" 
-    dnd-allowed-types="vm.getAllowedContainers(vm.parentNode, vm.collection)"
+    dnd-allowed-types="vm.parentNode.$allowed"
     dnd-dragover="vm.dragover(event, index, type)" 
     dnd-drop="vm.drop(item, index, event)"      
-    dnd-inserted="vm.inserted(item, index, external, type)"
-    data-ng-class="{'dnd-list-empty': !vm.items || vm.items.length == 0}")
-        li.row-empty(ng-if="vm.isFirstLevel && vm.items.length == 0")
-            .column {{'ELEMENT_NO' | translate}}
+    dnd-inserted="vm.inserted(item, index, external, type)")
+        li.row-empty(ng-if="!vm.parentNode && vm.items.length == 0")
+            .column(translate="ELEMENT_NO")
         li.row-draggable(
             data-ng-repeat="item in vm.items",
             oncontextmenu='return false;'     
-            dnd-disable-if="vm.dragDisable(item, vm.collection)",  
+            dnd-disable-if="item.$disable",  
             dnd-draggable="item",
             dnd-moved="vm.moved($index)",
-            dnd-type="vm.getContainerName(item, vm.collection)",                 
+            dnd-type="item.$type",                 
             dnd-dragstart="vm.dragStart(event, item, $index)"
-            dnd-effect-allowed="{{vm.dragMode.mode || 'move'}}")
-            .row(data-ng-set-value-replace="",
+            dnd-effect-allowed="{{vm.mode}}")
+            .row(data-ng-tree-item="",
                     data-vm = "vm",
                     data-item='item',
-                    data-component-id="{{vm.$componentId}}")
-            .children-frames(ng-if="vm.treeSource && item.$$expand" ng-class="{'empty-child-area': item[vm.childrenField]}")
-                .loading(ng-if="item.$$expand === 'pending'")
-                    .column.td-loading
-                    .processing-status-wrapper
-                        .processing-status {{'PERFORMS_ACTIONS' | translate}}
-                ue-node(
-                    ng-if="item.$$expand !== 'pending'"
-                    data-collection="vm.collection",
-                    data-parent-node="item",
-                    data-items="item[vm.childrenField]",
-                    data-table-fields="vm.tableFields",
-                    data-setting="vm.setting",
-                    data-options="vm.options",
-                    data-context-links="vm.contextLinks",
-                    toggle-context-view-by-event="vm.toggleContextViewByEvent({item: item, e: e})")
+                    data-component-id="{{::vm.$componentId}}")
+            

@@ -11,6 +11,7 @@
         var vm = this;
         var self = $scope.vm;
         var componentSettings = self.setting.component.settings;
+        var componentValueChangedHandler;
 
         self.useable = true;
 
@@ -99,9 +100,8 @@
                 }, true);
             self.listeners.push(valueWatcher);
         }
-
         if (angular.isFunction(self.useableCallback) || angular.isFunction(self.readonlyCallback)) {
-            var componentValueChangedHandler = $scope.$on('ue:componentValueChanged', function(event, data) {
+            componentValueChangedHandler = $scope.$on('ue:componentValueChanged', function(event, data) {
                 if (self.isParentComponent(data)) {
                     if (angular.isFunction(self.useableCallback)) {
                         self.useable = self.useableCallback(data);
@@ -125,22 +125,23 @@
                     }
                 }
             });
-
-            var forceReadonlyHandler = $scope.$on('ue-group:forceReadonly', function(event, data) {
-                if (self.isParentComponent(data) && componentSettings.readonly !== true) {
-                    self.readonly = data.value;
-                }
-            });
-
-            var forceUseableHandler = $scope.$on('ue-group:forceUseable', function(event, data) {
-                if (self.isParentComponent(data)) {
-                    self.useable = data.value;
-                }
-            });
-
-            self.listeners.push(forceReadonlyHandler);
-            self.listeners.push(componentValueChangedHandler);
         }
+
+        var forceReadonlyHandler = $scope.$on('ue-group:forceReadonly', function(event, data) {
+            if (self.isParentComponent(data) && componentSettings.readonly !== true) {
+                self.readonly = data.value;
+            }
+        });
+
+        var forceUseableHandler = $scope.$on('ue-group:forceUseable', function(event, data) {
+            if (self.isParentComponent(data)) {
+                self.useable = data.value;
+            }
+        });
+
+        self.listeners.push(forceReadonlyHandler);
+        self.listeners.push(componentValueChangedHandler);
+
         self.isParentComponent = function isParentComponent(id, scope) {
             scope = scope || $scope;
             if (angular.isObject(id)) {

@@ -2,13 +2,13 @@ table.table.table-bordered.items-list
             thead(ng-if="vm.displayHeaderColumns")
                 tr
                     td.table-cell.actions-header.context-column(ng-if="vm.isContextMenu")
-                    td.table-cell(data-ng-repeat="fieldItem in vm.tableFields track by $index",
+                    td.table-cell(data-ng-repeat="fieldItem in ::vm.tableFields track by $index",
                         ng-style="fieldItem.ngStyle"
                         data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection}",
                         data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)") {{fieldItem.displayName}}     
             tbody(data-ng-if="vm.loaded"
                   dnd-list="vm.items" 
-                  dnd-allowed-types="vm.getAllowedContainers(vm.parentNode, vm.collection)"
+                  dnd-allowed-types="vm.$allowed"
                   dnd-dragover="vm.dragover(event, index, type)" 
                   dnd-drop="vm.drop(item, index, event)"
                   dnd-inserted="vm.inserted(item, index, external, type)"
@@ -25,13 +25,13 @@ table.table.table-bordered.items-list
                     data-ng-class="{'zhs-item' : item[vm.subType] && item[vm.subType] !== undefined}", 
                     data-ng-mousedown="vm.toggleContextViewByEvent(item, $event)", 
                     oncontextmenu='return false;',                         
-                    dnd-disable-if="vm.dragDisable(item, vm.collection)",  
+                    dnd-disable-if="item.$disable",  
                     dnd-draggable="item",
                     dnd-moved="vm.moved($index)",
-                    dnd-type="vm.getContainerName(item, vm.collection)",                 
+                    dnd-type="item.$type",                 
                     dnd-dragstart="vm.dragStart(event, item, $index)"
                     dnd-effect-allowed="{{vm.dragMode.mode || 'move'}}",
-                    data-ng-set-value="",
+                    data-ng-table-item="",
                     data-vm = "vm"
                     data-item='item',
                     data-component-id="{{vm.$componentId}}"
