@@ -1,4 +1,3 @@
 div
-   div(ng-repeat="value in vm.previewValue track by $index", data-ng-show="!vm.loadingData")
-      pre(ng-bind="value", ng-if = "vm.whiteSpace")
-      span(ng-bind="value", ng-if = "!vm.whiteSpace")
+   div(ng-repeat="value in vm.previewValue track by $index", data-ng-if="!vm.loadingData")
+      span(ng-bind="value")

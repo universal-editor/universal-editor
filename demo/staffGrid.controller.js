@@ -150,6 +150,14 @@
                         toolbar: [
                             {
                                 component: {
+                                    name: 'ue-filter',
+                                    settings: {
+                                        fields: ['name', 'email', 'gender', 'parent_id']
+                                    }
+                                }
+                            },
+                            {
+                                component: {
                                     name: 'ue-button',
                                     settings: {
                                         label: 'Add',

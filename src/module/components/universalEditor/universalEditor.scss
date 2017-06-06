@@ -8,6 +8,9 @@
     }
     
     .universal-editor {
+        .field-wrapper.multiple {
+            overflow: auto;
+        }
         .field-wrapper-ue-file {
             .ue-component-errors,
             .field-error-wrapper,

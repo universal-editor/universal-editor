@@ -27,6 +27,7 @@
             }
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
+            delete vm.inputLeave;
 
             if (componentSettings.valuesRemote) {
                 selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
@@ -487,7 +488,8 @@
 
         function addToSelected(val, event) {
             if (vm.multiple) {
-                vm.fieldValue.push(val);
+                vm.fieldValue = vm.fieldValue || [];
+                vm.fieldValue.push(val);                
             } else {
                 vm.fieldValue = val;
                 if (!vm.fieldValue[vm.fieldSearch]) {

@@ -12,11 +12,12 @@
             componentSettings,
             baseController;
 
-        vm.$onInit = function() {
+        vm.$onInit = function() {            
             componentSettings = vm.setting.component.settings;
             componentSettings.defaultValue = componentSettings.multiple ? (componentSettings.defaultValue || ['#000000']) : (componentSettings.defaultValue || '#000000');
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element  });
             angular.extend(vm, baseController);
+            delete vm.inputLeave;
 
             vm.addItem = addItem;
             vm.removeItem = removeItem;

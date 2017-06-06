@@ -16,6 +16,7 @@
         vm.$onInit = function() {
             vm.optionValues = [];
             angular.extend(vm, $controller('FieldsController', { $scope: $scope, $element: $element }));
+            delete vm.inputLeave;
             componentSettings = vm.setting.component.settings;
             if (componentSettings.valuesRemote) {
                 selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
@@ -92,99 +93,104 @@
                         function(selected) { return (angular.isObject(value) ? value[vm.fieldId] : value) == selected[vm.fieldId]; });
                 });
             }
-
-            vm.listeners.push($scope.$watch(function() {
-                return vm.inputValue;
-            }, function(newValue) {
-                if (vm.multiple) {
-                    var input = $element.find('input'), spanValue = newValue || '';
-                    if (vm.placeholder && !spanValue) {
-                        spanValue = vm.placeholder;
+            if (componentSettings.mode !== 'preview') {
+                vm.listeners.push($scope.$watch(function() {
+                    return vm.inputValue;
+                }, function(newValue) {
+                    if (vm.multiple) {
+                        var input = $element.find('input'), spanValue = newValue || '';
+                        if (vm.placeholder && !spanValue) {
+                            spanValue = vm.placeholder;
+                        }
+                        var $span = $('<span>').append(spanValue).appendTo('body');
+                        vm.classInput.width = ($span.width() + 10) + 'px';
+                        $span.remove();
                     }
-                    var $span = $('<span>').append(spanValue).appendTo('body');
-                    vm.classInput.width = ($span.width() + 10) + 'px';
-                    $span.remove();
-                }
-                if (newValue) {
-                    vm.sizeInput = newValue.length || 1;
-                    if (inputTimeout) {
-                        $timeout.cancel(inputTimeout);
-                    }
-                    vm.showPossible = true;
-                    vm.possibleValues = [];
-                    inputTimeout = $timeout(function() {
-                        vm.autocompleteSearch(newValue);
-                    }, 300);
-                }
-            }, true));
-        };
-
-        $element.bind('keydown', function(event) {
-            var possibleValues;
-            switch (event.which) {
-                case 13:
-                    event.preventDefault();
-                    if (vm.possibleValues.length < 1) {
-                        break;
-                    }
-
-                    $timeout(function() {
-                        vm.addToSelected(vm.possibleValues[vm.activeElement], event);
-                    }, 0);
-
-                    break;
-                case 40:
-                    event.preventDefault();
-                    if (vm.possibleValues.length < 1) {
-                        break;
-                    }
-
-                    possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
-
-                    if (vm.activeElement < vm.possibleValues.length - 1) {
-                        $timeout(function() {
-                            vm.activeElement++;
-                        }, 0);
-
-                        $timeout(function() {
-                            var activeTop = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].offsetTop,
-                                activeHeight = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].clientHeight,
-                                wrapperScroll = possibleValues[0].scrollTop,
-                                wrapperHeight = possibleValues[0].clientHeight;
-
-                            if (activeTop >= (wrapperHeight + wrapperScroll - activeHeight)) {
-                                possibleValues[0].scrollTop += activeHeight + 1;
+                    if (newValue) {
+                        vm.sizeInput = newValue.length || 1;
+                        if (inputTimeout) {
+                            $timeout.cancel(inputTimeout);
+                        }
+                        if (newValue) {
+                            vm.sizeInput = newValue.length || 1;
+                            if (inputTimeout) {
+                                $timeout.cancel(inputTimeout);
                             }
-                        }, 1);
+                            vm.showPossible = true;
+                            vm.possibleValues = [];
+                            inputTimeout = $timeout(function() {
+                                vm.autocompleteSearch(newValue);
+                            }, 300);
+                        }
                     }
-                    break;
-                case 38:
-                    event.preventDefault();
-                    if (vm.possibleValues.length < 1) {
-                        break;
-                    }
+                }, true));
 
-                    possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
-
-                    if (vm.activeElement > 0) {
-                        $timeout(function() {
-                            vm.activeElement--;
-                        }, 0);
-
-                        $timeout(function() {
-                            var activeTop = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].offsetTop,
-                                activeHeight = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].clientHeight,
-                                wrapperScroll = possibleValues[0].scrollTop,
-                                wrapperHeight = possibleValues[0].clientHeight;
-
-                            if (activeTop < wrapperScroll) {
-                                possibleValues[0].scrollTop -= activeHeight + 1;
+                $element.bind('keydown', function(event) {
+                    var possibleValues;
+                    switch (event.which) {
+                        case 13:
+                            event.preventDefault();
+                            if (vm.possibleValues.length < 1) {
+                                break;
                             }
-                        }, 1);
+                            $timeout(function() {
+                                vm.addToSelected(vm.possibleValues[vm.activeElement], event);
+                            }, 0);
+                            break;
+                        case 40:
+                            event.preventDefault();
+                            if (vm.possibleValues.length < 1) {
+                                break;
+                            }
+
+                            possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
+
+                            if (vm.activeElement < vm.possibleValues.length - 1) {
+                                $timeout(function() {
+                                    vm.activeElement++;
+                                }, 0);
+
+                                $timeout(function() {
+                                    var activeTop = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].offsetTop,
+                                        activeHeight = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].clientHeight,
+                                        wrapperScroll = possibleValues[0].scrollTop,
+                                        wrapperHeight = possibleValues[0].clientHeight;
+
+                                    if (activeTop >= (wrapperHeight + wrapperScroll - activeHeight)) {
+                                        possibleValues[0].scrollTop += activeHeight + 1;
+                                    }
+                                }, 1);
+                            }
+                            break;
+                        case 38:
+                            event.preventDefault();
+                            if (vm.possibleValues.length < 1) {
+                                break;
+                            }
+
+                            possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
+
+                            if (vm.activeElement > 0) {
+                                $timeout(function() {
+                                    vm.activeElement--;
+                                }, 0);
+
+                                $timeout(function() {
+                                    var activeTop = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].offsetTop,
+                                        activeHeight = angular.element(possibleValues[0].getElementsByClassName('active')[0])[0].clientHeight,
+                                        wrapperScroll = possibleValues[0].scrollTop,
+                                        wrapperHeight = possibleValues[0].clientHeight;
+
+                                    if (activeTop < wrapperScroll) {
+                                        possibleValues[0].scrollTop -= activeHeight + 1;
+                                    }
+                                }, 1);
+                            }
+                            break;
                     }
-                    break;
+                });
             }
-        });
+        };
 
         /* PUBLIC METHODS */
 
@@ -195,6 +201,7 @@
                 vm.placeholder = obj[vm.fieldSearch];
                 vm.fieldValue = obj[vm.fieldId];
             } else {
+                vm.fieldValue = vm.fieldValue || [];
                 if (!~vm.fieldValue.indexOf(obj[vm.fieldId])) {
                     vm.fieldValue.push(obj[vm.fieldId]);
                 }

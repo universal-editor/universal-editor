@@ -25,6 +25,8 @@
 
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
+            
+            delete vm.inputLeave;
 
             vm.listeners.push($scope.$watch('vm.fieldValue',
                 function(value) {
