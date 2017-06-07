@@ -775,7 +775,6 @@
                             return component.component.settings.valuesRemote.url === response.config.url;
                         })[0];
                         saveToStorage(component, list);
-                        // injectIntoData(component, data, list);
                     }
                 });
                 return data;
@@ -794,29 +793,6 @@
                     failAnswer.bind(config)(reject);
                 }
             });
-
-            /* function injectIntoData(component, intoData, list) {
-                 if (component) {
-                     var name = component.component.settings.valuesRemote.fields.value;
-                     intoData.forEach(function(item) {
-                         var value = item[component.name];
-                         if (value) {
-                             if (angular.isArray(value)) {
-                                 value = value.map(function(valueItem) {
-                                     if (angular.isString(component.component.settings.multiname)) {
-                                         valueItem = valueItem[component.component.settings.multiname];
-                                     }
-                                     return valueItem;
-                                 });
-                             }
-                             item['$' + component.name] = list.filter(function(i) {
-                                 return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
-                             });
-                         }
-                     });
-                 }
-                 return intoData;
-             }*/
         };
 
 

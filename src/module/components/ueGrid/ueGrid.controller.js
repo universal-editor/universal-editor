@@ -27,15 +27,17 @@
                         tr += '<td class="table-cell dragIcon"> <div class="dnd-expand-item glyphicon glyphicon-align-justify dragIcon" dnd-handle> </div> </td>';
                     }
                     element.append($compile(angular.element(tr))(scope));
-                    scope.$on('readyToLoaded', function(event, data) {
-                        if (data) {
-                            if (scope.item === data) {
+                    if (vm.componentSettings.dragMode) {
+                        scope.$on('ue-grid:updateNodes', function(event, data) {
+                            if (data) {
+                                if (scope.item === data) {
+                                    emitLoading();
+                                }
+                            } else {
                                 emitLoading();
                             }
-                        } else {
-                            emitLoading();
-                        }
-                    });
+                        });
+                    }
                     function emitLoading() {
                         scope.$broadcast('ue:componentDataLoaded', {
                             $componentId: scope.componentId,
@@ -169,7 +171,7 @@
             if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
                 vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
             }
-            itemsKey = 'items';
+            itemsKey = vm.componentSettings.itemsKey || 'items';
 
             var colSettings = vm.setting.component.settings.columns;
 
@@ -350,9 +352,9 @@
         vm.updateTable = function(item) {
             return $timeout(function() {
                 if (item) {
-                    $scope.$broadcast('readyToLoaded', item);
+                    $scope.$broadcast('ue-grid:updateNodes', item);
                 } else {
-                    $scope.$broadcast('readyToLoaded');
+                    $scope.$broadcast('ue-grid:updateNodes');
                 }
             });
         };
@@ -465,7 +467,7 @@
         }
 
         function switchLoaderOff() {
-                vm.loaded = true;
+            vm.loaded = true;
         }
 
         $scope.$on('ue:parentEntitySet', function(event, request) {
