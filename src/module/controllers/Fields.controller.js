@@ -221,6 +221,9 @@
                             }
                         }
                     }
+                    if (angular.isFunction(componentSettings.change) && value !== oldValue) {
+                        componentSettings.change(value, oldValue, getExtendedValue(value));
+                    }
                 }, true)
             );
         }
