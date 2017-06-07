@@ -92,6 +92,21 @@
             }
         };
 
+
+        this.addButtonController = function(ctrl) {
+            var id = ctrl.parentComponentId || ctrl.$componentId;
+            ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
+            collection.push(ctrl);
+        };
+
+        this.deleteButtonController = function(ctrl) {
+            angular.forEach(collection, function(controller, ind) {
+                if (controller.$fieldHash === ctrl.$fieldHash) {
+                    collection.splice(ind, 1);
+                }
+            });
+        };
+
         this.editEntityUpdate = function(type, request) {
             var entityObject = constructOutputValue(request);
             if (request.isError) {
