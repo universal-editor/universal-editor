@@ -142,19 +142,18 @@
                 settings: {
                     dataSource: newsDataSource,
                     dragMode: {
-                        mode: 'copy',
                         start: function(e, element, collection) {
+                            console.log('Dragging is started');
                         },
                         over: function(e, element, destElement, collection) {
-
+                            console.log('Dragging is proccessing');
                         },
                         drop: function(e, element, destElement, collection) {
+                            console.log('Element is droped');
                             return true;
                         },
-                        dragDisable: function(element, collection) {
-                            return false;
-                        },
                         inserted: function(e, index, element, destElement, collection) {
+                            console.log('Element is inserted');
                         },
                         containerName: 'news',
                         allowedContainers: ['news'],

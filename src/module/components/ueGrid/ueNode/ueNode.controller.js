@@ -43,7 +43,7 @@
           }
           emitLoading();
 
-          scope.$on('readyToLoaded', function(event, data) {
+          scope.$on('ue-grid:updateNodes', function(event, data) {
             if (data) {
               if (scope.item === data) {
                 emitLoading();
@@ -102,7 +102,7 @@
             }
           } else {
             item.$$expand = nextValueExtend;
-            var children = item[vm.childrenField];
+            var childrens = item[vm.childrenField];
             if (angular.isArray(childrens)) {
               item[vm.childrenField] = childrens;
               $timeout(function() {
@@ -136,17 +136,19 @@
       vm.updateTable = function(item, delay) {
         var t = $timeout(function() {
           if (item) {
-            $scope.$broadcast('readyToLoaded', item);
-            $scope.$broadcast('childrenReadyToLoaded', item);
+            $scope.$broadcast('ue-grid:updateHierarchy', item);
           } else {
-            $scope.$broadcast('readyToLoaded');
+            $scope.$broadcast('ue-grid:updateNodes');
           }
         }, delay || 0);
         return t;
       };
-      $scope.$on('childrenReadyToLoaded', function(event, item) {
+      $scope.$on('ue-grid:updateHierarchy', function(event, item) {
         if (vm.parentNode == item) {
-          $scope.$broadcast('readyToLoaded');
+          $scope.$broadcast('ue-grid:updateNodes');
+        }
+        if((vm.parentNode === null || vm.parentNode === undefined) && (item === null || item === undefined)) {
+          $scope.$broadcast('ue-grid:updateNodes');
         }
       });
 
@@ -203,9 +205,6 @@
             return false;
           }
           if (angular.isObject(drop)) {
-            if (!drop.hasOwnProperty('$$expand')) {
-              drop.$$expand = true;
-            }
             return drop;
           }
         }
@@ -271,7 +270,7 @@
             item.$allowed = vm.getAllowedContainers(item, vm.collection);
             item.$type = vm.getContainerName(item, vm.collection);
             if (!angular.isArray(item[vm.childrenField]) && item[vm.childrenCountField] === 0) {
-              item.children = [];
+              item[vm.childrenField] = [];
               item.$$expand = true;
             }
           }
