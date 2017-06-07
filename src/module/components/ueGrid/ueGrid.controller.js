@@ -358,7 +358,7 @@
         };
 
         vm.updateTable = function(item) {
-            $timeout(function() {
+            return $timeout(function() {
                 if (item) {
                     $scope.$broadcast('readyToLoaded', item);
                 } else {
@@ -475,7 +475,7 @@
         }
 
         function switchLoaderOff() {
-            vm.loaded = true;
+                vm.loaded = true;
         }
 
         $scope.$on('ue:parentEntitySet', function(event, request) {
@@ -501,7 +501,7 @@
             request = request || vm.request;
             if (angular.isObject(request) && angular.isString(request.url)) {
                 setInitialQueryParams();
-                return ApiService.getItemsList(request, notGoToState).finally(switchLoaderOff);
+                return ApiService.getItemsList(request, notGoToState);
             }
         }
 
