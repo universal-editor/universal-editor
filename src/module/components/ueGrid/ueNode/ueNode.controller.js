@@ -42,7 +42,6 @@
             }
           }
           emitLoading();
-          //$timeout(emitLoading, 0);
 
           scope.$on('readyToLoaded', function(event, data) {
             if (data) {
@@ -265,6 +264,7 @@
         if (!angular.isArray(items) && angular.isObject(items)) {
           items = [items];
         }
+        vm.$allowed = vm.parentNode ? vm.parentNode.$allowed : vm.getAllowedContainers(null, vm.collection);
         angular.forEach(items, function(item) {
           if (angular.isObject(item)) {
             item.$disable = vm.dragDisable(item, vm.collection, vm.parentNode);
@@ -277,9 +277,7 @@
           }
         });
       }
-      fillDraggingOptions(vm.items);
-
-      vm.$allowed = vm.getAllowedContainers(null, vm.collection);
+      fillDraggingOptions(vm.items);      
     };
   }
 })();
