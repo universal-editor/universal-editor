@@ -27,17 +27,15 @@
                         tr += '<td class="table-cell dragIcon"> <div class="dnd-expand-item glyphicon glyphicon-align-justify dragIcon" dnd-handle> </div> </td>';
                     }
                     element.append($compile(angular.element(tr))(scope));
-                    if (vm.componentSettings.dragMode) {
-                        scope.$on('ue-grid:updateNodes', function(event, data) {
-                            if (data) {
-                                if (scope.item === data) {
-                                    emitLoading();
-                                }
-                            } else {
+                    scope.$on('ue-grid:updateNodes', function(event, data) {
+                        if (data) {
+                            if (scope.item === data) {
                                 emitLoading();
                             }
-                        });
-                    }
+                        } else {
+                            emitLoading();
+                        }
+                    });
                     function emitLoading() {
                         scope.$broadcast('ue:componentDataLoaded', {
                             $componentId: scope.componentId,
