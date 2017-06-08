@@ -1010,7 +1010,7 @@
                     if (!!config.request.success) {
                         config.request.success(data);
                     }
-                    var newId = data[config.idField];
+                    var newId = config.request.entityId;
                     var par = {};
                     par.pk = newId;
                     var searchString = $location.search();
