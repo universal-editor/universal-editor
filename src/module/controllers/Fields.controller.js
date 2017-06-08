@@ -346,6 +346,9 @@
                 wrappedFieldValue = transformToValue(self.fieldValue, isExtended);
             }
             field[self.fieldName] = wrappedFieldValue;
+            if (angular.isArray(field[vm.fieldName]) && field[vm.fieldName].length === 0) {
+                field[vm.fieldName] = '';
+            }
             return field;
         }
 
