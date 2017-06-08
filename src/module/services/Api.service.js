@@ -971,7 +971,7 @@
                     }
                     config.request.options.isLoading = false;
                     $rootScope.$broadcast('ue:afterEntityUpdate', {
-                        id: data[config.idField],
+                        id: config.id,
                         $componentId: parentComponentId
                     });
                     successUpdateMessage();
