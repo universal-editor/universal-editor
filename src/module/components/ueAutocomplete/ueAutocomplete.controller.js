@@ -74,7 +74,7 @@
                 if (vm.isParentComponent(data) && !vm.options.filter && !event.defaultPrevented) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
-                    if (!vm.options.isSendRequest && needRequested()) {
+                    if (!vm.isSendRequest && needRequested()) {
                         vm.loadDataById(vm.fieldValue).then(function() {
                             vm.equalPreviewValue();
                         }).finally(function() {

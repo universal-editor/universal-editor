@@ -18,14 +18,14 @@
             vm.newEntityLoaded = newEntityLoaded;
             vm.dependUpdate = dependUpdate;
             vm.initDataSource = true;
-            vm.dependUpdate = dependUpdate;            
-            
+            vm.dependUpdate = dependUpdate;
+
             componentSettings = vm.setting.component.settings;
             vm.inline = componentSettings.inline === true;
 
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
-            
+
             delete vm.inputLeave;
 
             vm.listeners.push($scope.$watch('vm.fieldValue',
@@ -39,12 +39,14 @@
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
                 if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
-                    componentSettings.$loadingPromise.then(function(optionValues) {
-                        vm.optionValues = optionValues;
-                        vm.equalPreviewValue();
-                    }).finally(function() {
-                        vm.loadingData = false;
-                    });
+                    if (componentSettings.$loadingPromise) {
+                        componentSettings.$loadingPromise.then(function(optionValues) {
+                            vm.optionValues = optionValues;
+                            vm.equalPreviewValue();
+                        }).finally(function() {
+                            vm.loadingData = false;
+                        });
+                    }
                 }
             }));
         };

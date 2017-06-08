@@ -206,8 +206,7 @@
                             component: col,
                             options: {
                                 $componentId: vm.$componentId,
-                                regim: 'preview',
-                                isSendRequest: true
+                                regim: 'preview'
                             }
                         };
                         width = width || widthDefault;

@@ -37,13 +37,17 @@
         self.disabled = componentSettings.disabled;
         self.clientErrors = [];
 
-        if(vm.multiple) {
+        if (vm.multiple) {
             self.fieldValue = [];
         }
 
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
         var timeUpdateDepend;
+
+        if (self.regim === 'preview') {
+            self.initDataSource = false;
+        }
 
         if (values || remoteValues) {
             self.fieldId = "id";
@@ -503,7 +507,7 @@
                     }
                     var extended = remoteValues ? ApiService.getFromStorage(self.setting, apiValue) : apiValue;
                     if (extended !== false) {
-                        self.options.isSendRequest = true;
+                        self.isSendRequest = true;
                     }
                     equalPreviewValue(extended);
                 }
@@ -628,6 +632,6 @@
         if (self.options.filter) {
             self.options.isReady = true;
         }
-        
+
     }
 })();
