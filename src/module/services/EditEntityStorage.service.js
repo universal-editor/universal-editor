@@ -124,7 +124,6 @@
 
         this.editEntityPresave = function(request) {
             var entityObject = constructOutputValue(request);
-
             if (request.isError) {
                 request.data = entityObject;
                 request.action = 'presave';
@@ -225,7 +224,7 @@
                             if (angular.isObject(tempObject[name])) {
                                 tempObject = tempObject[name];
                             } else {
-                                tempObject[name] = [];
+                                tempObject[name] = '';
                             }
                         });
                     }
