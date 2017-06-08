@@ -43,7 +43,7 @@
                 componentSettings.templates.preview = 'module/components/ueCheckbox/previewTemplate.html';
             }
 
-            baseController = $controller('FieldsController', { $scope: $scope, $element: $element  });
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
             delete vm.inputLeave;
 
@@ -74,12 +74,14 @@
                 if (vm.isParentComponent(data) && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
                     if (!vm.singleValue) {
-                        componentSettings.$loadingPromise.then(function(optionValues) {
-                            vm.optionValues = optionValues;
-                            vm.equalPreviewValue();
-                        }).finally(function() {
-                            vm.loadingData = false;
-                        });
+                        if (componentSettings.$loadingPromise) {
+                            componentSettings.$loadingPromise.then(function(optionValues) {
+                                vm.optionValues = optionValues;
+                                vm.equalPreviewValue();
+                            }).finally(function() {
+                                vm.loadingData = false;
+                            });
+                        }
                     } else {
                         if (vm.trueValue == vm.fieldValue) {
                             vm.fieldValue = [vm.trueValue];
