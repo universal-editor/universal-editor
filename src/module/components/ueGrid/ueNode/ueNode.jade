@@ -3,9 +3,7 @@ ul.dnd-list(
     dnd-allowed-types="vm.$allowed"
     dnd-dragover="vm.dragover(event, index, type)" 
     dnd-drop="vm.drop(item, index, event)"      
-    dnd-inserted="vm.inserted(item, index, external, type)")
-        li.row-empty(ng-if="!vm.parentNode && vm.items.length == 0 && vm.loaded")
-            .column(translate="ELEMENT_NO")
+    dnd-inserted="vm.inserted(item, index, external, type)")        
         li.row-draggable(
             data-ng-repeat="item in vm.items",
             oncontextmenu='return false;'     
