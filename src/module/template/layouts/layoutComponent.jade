@@ -11,7 +11,7 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
             )
             block content        
         include ../../template/errorField/errorField
-.component-template.component-preview(on-render-template)
+.component-template.component-preview(on-render-template, ng-if="vm.regim === 'preview'")
 //-- preview default template
 .component-preview.field-wrapper.row(ng-if="!vm.templates.preview && vm.regim === 'preview'")             
     include ../../template/errorMessages/template
