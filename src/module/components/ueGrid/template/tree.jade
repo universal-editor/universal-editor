@@ -15,7 +15,9 @@ ul.table.items-list.drag-mode
       data-setting="vm.setting",
       data-options="vm.options",
       data-context-links="vm.contextLinks"
-      toggle-context-view-by-event="vm.toggleContextViewByEvent(item, e)")            
+      toggle-context-view-by-event="vm.toggleContextViewByEvent(item, e)")
+  li.row-empty(ng-if="vm.items.length == 0 && vm.loaded")
+    .column(translate="ELEMENT_NO")           
   li.loading(data-ng-if="!vm.loaded")
     .column.td-loading
       .processing-status-wrapper
