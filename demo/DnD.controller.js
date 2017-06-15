@@ -14,7 +14,7 @@
             sortBy: '-id',
             primaryKey: 'id',
             tree: {
-                childrenField: 'childs' ,
+                childrenField: 'childs',
                 childrenCountField: 'childs_count',
                 selfField: 'self'
             },
@@ -115,7 +115,7 @@
                             label: 'Updated'
                         }
                     }
-                },                
+                },
                 {
                     name: 'category_id',
                     component: {
@@ -143,14 +143,17 @@
                     dataSource: newsDataSource,
                     dragMode: {
                         start: function(e, element, collection) {
+                            console.log('Dragging is started');
                         },
                         over: function(e, element, destElement, collection) {
+                            console.log('Dragging is proccessing');
                         },
                         drop: function(e, element, destElement, collection) {
+                            console.log('Element is droped');
                             return true;
                         },
-                        dragDisable: function(element, collection) {
-                            return false;
+                        inserted: function(e, index, element, destElement, collection) {
+                            console.log('Element is inserted');
                         },
                         containerName: 'news',
                         allowedContainers: ['news'],
@@ -162,18 +165,18 @@
                         dragIcon: true
                     },
                     columns: [
-                    {
-                        name: 'title',
-                        width: "20%"
-                    },
-                    {
-                        name: 'authors',
-                        width: "300px"
-                    },
-                    {
-                        name: 'category_id',
-                        width: "200px"
-                    }],
+                        {
+                            name: 'title',
+                            width: "20%"
+                        },
+                        {
+                            name: 'authors',
+                            width: "300px"
+                        },
+                        {
+                            name: 'category_id',
+                            width: "200px"
+                        }],
                     contextMenu: [
                         {
                             component: {

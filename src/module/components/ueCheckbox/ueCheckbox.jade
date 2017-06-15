@@ -7,9 +7,9 @@ block append content
             .checkbox(data-ng-repeat="item in vm.optionValues", data-ng-class="{'disabled': vm.readonly}")
                 label.checkbox-label
                     input(type="checkbox", data-ng-disabled="vm.readonly", data-checklist-model="vm.fieldValue", 
-                            data-checklist-value="::item[vm.fieldId]", ng-indeterminate="vm.indeterminate", ng-change="vm.switch($event)")
+                        data-checklist-value="::item[vm.fieldId]", ng-indeterminate="vm.indeterminate", ng-change="vm.switch($event)")
                     span(ng-bind="::item[vm.fieldSearch]")
-            .processing-status-wrapper(data-ng-show="vm.loadingData")
-                .processing-status {{'PERFORMS_ACTIONS' | translate}}
+            .processing-status-wrapper(ng-if="vm.loadingData")
+                .processing-status(translate="PERFORMS_ACTIONS")
         .disabled-field(ng-if="vm.disabled && !vm.options.filter")
             include ../../template/disabledField/checkBox

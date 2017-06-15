@@ -27,6 +27,7 @@
             }
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
+            delete vm.inputLeave;
 
             if (componentSettings.valuesRemote) {
                 selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
@@ -157,16 +158,18 @@
             if (vm.isParentComponent(data) && !event.defaultPrevented) {
                 vm.data = data;
                 $scope.onLoadDataHandler(event, data);
-                componentSettings.$loadingPromise.then(function(items) {
-                    allOptions = allOptions.length ? allOptions : items;
-                    vm.optionValues = [];
-                    fillControl(allOptions);
-                    vm.equalPreviewValue();
-                    return items;
-                }).finally(function() {
-                    vm.loadingData = false;
-                });
-                if (!vm.options.isSendRequest) {
+                if (componentSettings.$loadingPromise) {
+                    componentSettings.$loadingPromise.then(function(items) {
+                        allOptions = allOptions.length ? allOptions : items;
+                        vm.optionValues = [];
+                        fillControl(allOptions);
+                        vm.equalPreviewValue();
+                        return items;
+                    }).finally(function() {
+                        vm.loadingData = false;
+                    });
+                }
+                if (!vm.isSendRequest) {
                     loadDataById(vm.fieldValue).finally(function() {
                         vm.loadingData = false;
                     });
@@ -490,6 +493,7 @@
 
         function addToSelected(event, val) {
             if (vm.multiple) {
+                vm.fieldValue = vm.fieldValue || [];
                 vm.fieldValue.push(val);
             } else {
                 vm.fieldValue = val;

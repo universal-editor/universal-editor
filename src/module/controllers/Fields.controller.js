@@ -37,9 +37,17 @@
         self.disabled = componentSettings.disabled;
         self.clientErrors = [];
 
+        if (vm.multiple) {
+            self.fieldValue = [];
+        }
+
         var values = componentSettings.values;
         var remoteValues = componentSettings.valuesRemote;
         var timeUpdateDepend;
+
+        if (self.regim === 'preview') {
+            self.initDataSource = false;
+        }
 
         if (values || remoteValues) {
             self.fieldId = "id";
@@ -159,66 +167,67 @@
             EditEntityStorage.addFieldController(self);
         }
 
+        //-- listener storage for handlers  
+        if (componentSettings.mode !== 'preview') {
+            self.listeners.push($scope.$watch(
+                function() {
+                    return self.fieldValue;
+                },
+                function(value, oldValue) {
+                    self.error = [];
+                    if (self.disabled === true) {
+                        self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : !!value;
+                    }
+                    var parameters = componentSettings.valuesRemote || componentSettings.values;
 
-        //-- listener storage for handlers        
-        self.listeners.push($scope.$watch(
-            function() {
-                return self.fieldValue;
-            },
-            function(value, oldValue) {
-                self.error = [];
-                if (self.disabled === true) {
-                    self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : !!value;
-                }
-                var parameters = componentSettings.valuesRemote || componentSettings.values;
-
-                /** logic for connected components */
-                if (angular.isObject(parameters)) {
-                    var selected = parameters.$selectedStorage;
-                    if (angular.isArray(oldValue)) {
-                        oldValue.forEach(function(value) {
-                            var v = value;
-                            if (angular.isObject(value)) {
-                                v = value[self.fieldId];
+                    /** logic for connected components */
+                    if (angular.isObject(parameters)) {
+                        var selected = parameters.$selectedStorage;
+                        if (angular.isArray(oldValue)) {
+                            oldValue.forEach(function(value) {
+                                var v = value;
+                                if (angular.isObject(value)) {
+                                    v = value[self.fieldId];
+                                }
+                                var iOldValue = selected.indexOf(v);
+                                if (iOldValue !== -1) {
+                                    selected.splice(iOldValue, 1);
+                                }
+                            });
+                        } else if (oldValue) {
+                            var v = oldValue;
+                            if (angular.isObject(oldValue)) {
+                                v = oldValue[self.fieldId];
                             }
                             var iOldValue = selected.indexOf(v);
                             if (iOldValue !== -1) {
                                 selected.splice(iOldValue, 1);
                             }
-                        });
-                    } else if (oldValue) {
-                        var v = oldValue;
-                        if (angular.isObject(oldValue)) {
-                            v = oldValue[self.fieldId];
                         }
-                        var iOldValue = selected.indexOf(v);
-                        if (iOldValue !== -1) {
-                            selected.splice(iOldValue, 1);
-                        }
-                    }
 
-                    if (angular.isArray(value)) {
-                        value.forEach(function(value) {
+                        if (angular.isArray(value)) {
+                            value.forEach(function(value) {
+                                var v = value;
+                                if (angular.isObject(value)) {
+                                    v = value[self.fieldId];
+                                }
+                                if (selected.indexOf(value) === -1) {
+                                    selected.push(v);
+                                }
+                            });
+                        } else if (value) {
                             var v = value;
                             if (angular.isObject(value)) {
                                 v = value[self.fieldId];
                             }
-                            if (selected.indexOf(value) === -1) {
+                            if (selected.indexOf(v) === -1) {
                                 selected.push(v);
                             }
-                        });
-                    } else if (value) {
-                        var v = value;
-                        if (angular.isObject(value)) {
-                            v = value[self.fieldId];
-                        }
-                        if (selected.indexOf(v) === -1) {
-                            selected.push(v);
                         }
                     }
-                }
-            }, true)
-        );
+                }, true)
+            );
+        }
 
         self.clear = clear;
         self.getFieldValue = getFieldValue;
@@ -323,7 +332,7 @@
 
             if (self.multiple) {
                 wrappedFieldValue = [];
-                self.fieldValue.forEach(function(value) {
+                angular.forEach(self.fieldValue, function(value) {
                     var temp;
                     var output = transformToValue(value, isExtended);
 
@@ -337,6 +346,9 @@
                 wrappedFieldValue = transformToValue(self.fieldValue, isExtended);
             }
             field[self.fieldName] = wrappedFieldValue;
+            if (angular.isArray(field[vm.fieldName]) && field[vm.fieldName].length === 0) {
+                field[vm.fieldName] = '';
+            }
             return field;
         }
 
@@ -361,6 +373,7 @@
             }
             return result;
         }
+
 
         function onLoadDataHandler(event, data, callback) {
             if (self.isParentComponent(data) && !self.options.filter) {
@@ -395,35 +408,34 @@
                 }
 
                 if (data.editorEntityType === 'new' && self.regim !== 'preview') {
-
                     if (!!self.newEntityLoaded) {
                         self.newEntityLoaded();
                         return;
                     }
+                    if (componentSettings.defaultValue) {
+                        var obj = {};
+                        self.fieldValue = transformToValue(componentSettings.defaultValue);
+                        if (self.fieldId) {
+                            if (self.isTree) {
+                                self.fieldValue = [];
+                            }
 
-                    var obj = {};
-                    self.fieldValue = transformToValue(componentSettings.defaultValue);
-                    if (self.fieldId) {
-                        if (self.isTree) {
-                            self.fieldValue = [];
+                            if (!!componentSettings.defaultValue && !self.isTree) {
+                                obj = {};
+                                obj[self.fieldId] = componentSettings.defaultValue;
+                                self.fieldValue = obj;
+                            }
+                            if (data.hasOwnProperty(self.fieldName)) {
+                                self.fieldValue = data[self.fieldName];
+                            }
                         }
-
-                        if (!!componentSettings.defaultValue && !self.isTree) {
-                            obj = {};
-                            obj[self.fieldId] = componentSettings.defaultValue;
-                            self.fieldValue = obj;
-                        }
-                        if (data.hasOwnProperty(self.fieldName)) {
-                            self.fieldValue = data[self.fieldName];
-                        }
+                        equalPreviewValue();
                     }
-                    if (angular.isFunction(callback)) {
-                        callback();
-                    }
-                    equalPreviewValue();
                 }
-
-                $scope.data = self.data = ((self.options.$dataIndex >= 0) && angular.isObject(data.$items)) ? data.$items[self.options.$dataIndex] : data;
+                if (data.$value) {
+                    data = data.$value;
+                }
+                $scope.data = self.data = data;
                 if (angular.isObject($scope.data)) {
                     var apiValue;
                     if (angular.isString(self.fieldName)) {
@@ -483,11 +495,11 @@
                             }
                         }
                     }
-                    if (angular.isFunction(callback)) {
-                        callback();
+                    var extended = remoteValues ? ApiService.getFromStorage(self.setting, apiValue) : apiValue;
+                    if (extended !== false) {
+                        self.isSendRequest = true;
                     }
-
-                    equalPreviewValue($scope.data['$' + self.fieldName]);
+                    equalPreviewValue(extended);
                 }
             }
         }
@@ -525,8 +537,10 @@
                     break;
             }
         });
-        self.fieldValue = transformToValue(self.defaultValue);
-        equalPreviewValue();
+        if (self.defaultValue) {
+            self.fieldValue = transformToValue(self.defaultValue);
+            equalPreviewValue();
+        }
 
         /* Слушатель события на покидание инпута. Необходим для валидации*/
         function inputLeave(val, index) {
@@ -608,5 +622,6 @@
         if (self.options.filter) {
             self.options.isReady = true;
         }
+
     }
 })();

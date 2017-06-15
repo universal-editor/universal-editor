@@ -24,10 +24,15 @@ settings: {
             {
                 name: 'id',
                 component: {
-                    name: 'ue-number',
+                    name: 'ue-string',
                     settings: {
                         label: '№',
-                        validators: []
+                        validators: [
+                            {
+                                type: 'number',
+                                step: 1
+                            }
+                        ]
                     }
                 }
             },
@@ -50,7 +55,7 @@ settings: {
             }
         ]
     },
-    columns: ['name', 'email'],
+    columns: ['id', 'name', 'email'],
     contextMenu: [
         {
             component: {
@@ -65,17 +70,7 @@ settings: {
     footer: {
         pagination: {
             component: {
-                name: 'ue-pagination',
-                settings: {
-                    dataSource: formDataSource,
-                    maxSize: '5'
-                    label: {
-                        last: 'last',
-                        next: 'next',
-                        first: 'first',
-                        previous: 'previous'
-                    }
-                }
+                name: 'ue-pagination'
             }
         }
     }
@@ -323,3 +318,34 @@ URL `/rest/v1/news?mixed=categories`, в ответ клиент должен п
 События, относящиеся к компоненту
 * ue:collectionRefresh – событие вызывается для обноления записей в таблице;
 * ue:beforeParentEntitySet – событие вызвается при переходе по записям ue-grid во вложенном режиме.
+
+* ue-grid:updateNodes – cобытие слушается компонентом в режиме `drag and drop`. Если отдать событию ссылку на какую-то из отрисованных записей, то он инициирует цепочку событий `ue:componentDataLoaded` в рамках этого элемента. Т.е. если в компоненте `ue-grid` c массивом записей `items` передать ссылку на 5 запись (к примеру, предварительно изменив одно из ее значений), то обновится только эта запись, но не вся таблица.
+
+Обычный вызов события обновит все значения компонента.
+
+``` javascript
+
+vm.treeConfig = { /* конфигурация ue-grid */};
+
+var treeModel = EditEntityStorage.getComponentBySetting(vm.treeConfig);
+treeModel.items[5].title = 'Какое-то новое значение';
+$scope.$broadcast('ue-grid:updateNodes', treeModel.items[5]); /*  обновит только 5-ый элемент */
+
+$scope.$broadcast('ue-grid:updateNodes');  /*  обновит все элементы */
+
+```
+
+* ue-grid:updateHierarchy – cобытие слушается компонентом в режиме дерева. Если отдать событию ссылку на какой-то из отрисованных узлов, то он инициирует цепочку событий `ue-grid:updateNodes` в рамках этого элемента и его потомков.
+Обычный вызов события обновит все значения компонента.
+
+``` javascript
+
+vm.treeConfig = { /* конфигурация ue-grid в режиме дерево */};
+
+var treeModel = EditEntityStorage.getComponentBySetting(vm.treeConfig);
+
+$scope.$broadcast('ue-grid:updateHierarchy', treeModel.items[5]); /*  обновит только 5-ый узел и все дочерние узлы */
+
+$scope.$broadcast('ue-grid:updateHierarchy');  /*  обновит все узлы дерева */
+
+```
