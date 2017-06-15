@@ -242,7 +242,7 @@
                             operator = ':value';
                     }
                     for (var key in value) {
-                        if (!!value[key] && (!angular.isArray(value[key]) || value[key].length > 0)) {
+                        if (value[key] !== undefined && (!angular.isArray(value[key]) || value[key].length > 0)) {
                             if(originFilters && originFilters[key]) {
                                 value[key] = originFilters[key];
                             }
