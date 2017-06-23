@@ -1,26 +1,23 @@
 div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': vm.options.filter, 'regim-preview': vm.regim === 'preview', 'readonly-component': vm.readonly}" 
-    ng-if="vm.isVisible", ng-show='vm.useable')
+    ng-if="vm.isVisible && vm.regim !== 'preview'", ng-show='vm.useable')
     .ue-component-body
         //-- with templates
-        .component-template(
-            on-render-template,
-            ng-class="{'component-filter': vm.templates.filter && vm.regim === 'filter',\
-                'component-edit': vm.templates.edit  && vm.regim === 'edit',\
-                'component-preview': vm.templates.preview && vm.regim === 'preview'}")
+        .component-template(on-render-template)
         //-- without templates
         //-- filter or edit default template
         .component-edit(
             ng-if="(!vm.templates.edit && vm.regim === 'edit') || (!vm.templates.filter && vm.regim === 'filter')",
             ng-class="{'component-filter': vm.regim === 'filter'}"
             )
-            block content
-        //-- preview default template
-        .component-preview(ng-if="!vm.templates.preview && vm.regim === 'preview'")             
-            include ../../template/errorMessages/template
-            div(ng-if="vm.warnings.length === 0 && vm.dangers.length === 0") 
-                .loader-search-wrapper(data-ng-show="vm.loadingData")
-                    .loader-search {{'LOADING' | translate}}
-                div(ng-bind="::vm.previewValue", data-ng-show="!vm.loadingData && vm.previewValue", ng-if = "!vm.multiple")
-                div(ng-repeat="value in vm.previewValue track by $index", data-ng-show="!vm.loadingData", ng-if = "vm.multiple")
-                    span(ng-bind="value")
+            block content        
         include ../../template/errorField/errorField
+.component-template.component-preview(on-render-template, ng-if="vm.regim === 'preview'")
+//-- preview default template
+.component-preview.field-wrapper.row(ng-if="!vm.templates.preview && vm.regim === 'preview'")             
+    include ../../template/errorMessages/template
+    div(ng-if="vm.warnings.length === 0 && vm.dangers.length === 0") 
+        .loader-search-wrapper(ng-show="vm.loadingData")
+            .loader-search(translate="LOADING")
+        div(ng-if="!vm.multiple && !vm.loadingData && vm.previewValue") {{::vm.previewValue}}
+        div(ng-repeat="value in vm.previewValue track by $index", ng-if = "vm.multiple && !vm.loadingData")
+            span(ng-bind="value")

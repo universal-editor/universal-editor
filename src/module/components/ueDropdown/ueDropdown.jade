@@ -4,7 +4,7 @@ block append content
         include ../../template/labelField/labelField
         include ../../template/errorMessages/template
         .components-body(ng-if="!vm.warnings.length && !vm.dangers.length"  ng-class="{'disabled-field': vm.disabled}")
-            div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}", ng-style="{'overflow:auto': vm.multiple}", ng-if="!vm.disabled || vm.options.filter")
+            div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter, 'multiple': vm.multiple}", ng-if="!vm.disabled || vm.options.filter")
                 div(ng-class='vm.classComponent')
                     div(data-ng-if="vm.multiple && !vm.isTree")
                         div.select-border
@@ -37,8 +37,8 @@ block append content
                                 data-ng-if="!vm.readonly && vm.showPossible",
                                 data-ng-class='vm.possibleLocation ? "possible-bottom" : "possible-top"'
                                 )
-                                .processing-status-wrapper(data-ng-show="vm.loadingPossibleData")
-                                    .processing-status {{'PERFORMS_ACTIONS' | translate}}
+                                .processing-status-wrapper(ng-if="vm.loadingPossibleData")
+                                    .processing-status(translate="PERFORMS_ACTIONS")
                                 .possible-scroll(data-ng-hide="vm.loadingPossibleData")
                                    .possible-value-item(data-ng-repeat="option in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.fieldSearch]}}
 
@@ -94,7 +94,7 @@ block append content
                                     data-set-active-element="vm.setActiveElement",
                                     data-lvl-dropdown='1'
                                     )
-                    .processing-status-wrapper(data-ng-show="vm.loadingData")
-                        .processing-status {{'PERFORMS_ACTIONS' | translate}}
+                    .processing-status-wrapper(ng-if="vm.loadingData")
+                        .processing-status(translate="PERFORMS_ACTIONS")
             .disabled-field(ng-if="vm.disabled && !vm.options.filter")
                 include ../../template/disabledField/default

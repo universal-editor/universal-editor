@@ -7,6 +7,9 @@
             width: 135px;
         }
     }
+    .field-wrapper-ue-date div[date-picker-wrapper] {
+        z-index: 56;
+    }
 
     .field-wrapper-ue-date {
         .ue-component-body {

@@ -98,7 +98,7 @@
                     if (vm.options.$dataSource) {
                         key = vm.options.$dataSource.primaryKey;
                     }
-                    vm.stateParams = vm.stateParams(vm.entityId, key, vm.options.$records || []);
+                    vm.stateParams = vm.stateParams();
                 }
             }
             if (vm.options.isLoading) {

@@ -1,5 +1,5 @@
-div(data-ng-show="isOpen")
-    div(data-ng-class='{"dropdown-scroll" : (lvlDropdown == 1)}')
+div(ng-show="isOpen")
+    div(data-ng-class='{"dropdown-scroll" : (lvlDropdown == 1)}' ng-if="isOpen")
       .dropdown-items__item(
         data-ng-repeat="option in options track by $index",
         data-ng-class="activeElement == $index ? 'active' : ''",
@@ -19,8 +19,8 @@ div(data-ng-show="isOpen")
             span(data-ng-bind="option[fieldSearch]")
             = ' '
             span.option__child-count(data-ng-if="option[childCountField]", data-ng-class="{'option__child-count_open': option.isOpen}") ({{option[childCountField]}})
-        .processing-status-wrapper(data-ng-if="option[childCountField]", data-ng-show="!!option.loadingData")
-              .processing-status Выполняется действие
+        .processing-status-wrapper(ng-if="!!option.loadingData && option[childCountField]")
+              .processing-status(translate="PERFORMS_ACTIONS")
         .dropdown-items__children(data-ng-if="option.childOpts"
             data-dropdown-items=""
             data-options="option.childOpts"
