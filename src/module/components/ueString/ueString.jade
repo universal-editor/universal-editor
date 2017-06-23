@@ -37,7 +37,7 @@ block append content
                     )
             include ../../template/errorField/errorClient
     .disabled-field(ng-if="vm.disabled && !vm.options.filter")
-        div(data-ng-show="!vm.loadingData")
+        div(data-ng-if="!vm.loadingData")
             span(ng-bind="::vm.previewValue", ng-if = "!vm.multiple && vm.contentType !== 'url'")
             a(ng-href="{{::vm.previewValue}}", ng-if = "!vm.multiple && vm.contentType === 'url'", target="_blank") {{::vm.previewValue}}
             div(ng-repeat="value in vm.previewValue track by $index", ng-if = "vm.multiple")

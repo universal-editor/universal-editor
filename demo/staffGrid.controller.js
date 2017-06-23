@@ -60,25 +60,7 @@
                             }
                         }
                     }
-                },
-                {
-                    name: 'country',
-                    component: {
-                        name: 'ue-dropdown',
-                        settings: {
-                            label: 'Country',
-                            valuesRemote: {
-                                fields: {
-                                    value: 'id',
-                                    label: 'name'
-                                },
-                                url: 'http://universal-backend.dev/rest/v1/country'
-                            },
-                            multiple: false,
-                            placeholder: 'country of residence'
-                        }
-                    }
-                },
+                },               
                 {
                     name: 'parent_id',
                     component: {
@@ -118,13 +100,31 @@
                         }
                     }
                 },
+
                 {
                     name: 'created_at',
                     component: {
                         name: 'ue-date',
                         settings: {
-                            label: 'Created',
-                            disabled: true
+                            label: 'Created'
+                        }
+                    }
+                },
+                 {
+                    name: 'country',
+                    component: {
+                        name: 'ue-dropdown',
+                        settings: {
+                            label: 'Country',
+                            valuesRemote: {
+                                fields: {
+                                    value: 'id',
+                                    label: 'name'
+                                },
+                                url: 'http://universal-backend.dev/rest/v1/country'
+                            },
+                            multiple: false,
+                            placeholder: 'country of residence'
                         }
                     }
                 },
@@ -148,6 +148,14 @@
                     dataSource: staffDataSource,
                     header: {
                         toolbar: [
+                            {
+                                component: {
+                                    name: 'ue-filter',
+                                    settings: {
+                                        fields: ['name', 'email', 'gender', 'created_at', 'country', 'parent_id']
+                                    }
+                                }
+                            },
                             {
                                 component: {
                                     name: 'ue-button',

@@ -20,13 +20,14 @@
             vm.possibleValues = [];
             vm.initDataSource = true;
             componentSettings = vm.setting.component.settings;
-            
+
             vm.search = componentSettings.search === true;
             if (typeof componentSettings.serverPagination !== 'boolean') {
                 vm.serverPagination = true;
             }
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
+            delete vm.inputLeave;
 
             if (componentSettings.valuesRemote) {
                 selectedStorageComponent = componentSettings.valuesRemote.$selectedStorage;
@@ -128,28 +129,26 @@
         function fillControl(allOptions) {
             angular.forEach(allOptions, function(v) {
                 var v_id = v[vm.fieldId];
-                if (vm.optionValues.filter(function(option) { return v_id == option[vm.fieldId]; }).length === 0) {
-                    if (v_id && vm.fieldValue) {
-                        if (angular.isArray(vm.fieldValue)) {
-                            for (var i = vm.fieldValue.length; i--;) {
-                                if (vm.fieldValue[i] == v_id) {
-                                    vm.fieldValue[i] = v;
-                                    break;
-                                }
+                if (v_id && vm.fieldValue) {
+                    if (angular.isArray(vm.fieldValue)) {
+                        for (var i = vm.fieldValue.length; i--;) {
+                            if (vm.fieldValue[i] == v_id) {
+                                vm.fieldValue[i] = v;
+                                break;
                             }
-                        } else if (v_id == vm.fieldValue) {
-                            vm.fieldValue = v;
-                            vm.isSpanSelectDelete = true;
                         }
+                    } else if (v_id == vm.fieldValue) {
+                        vm.fieldValue = v;
+                        vm.isSpanSelectDelete = true;
                     }
-                    if (vm.optionValues !== allOptions) {
-                        if (vm.isTree) {
-                            if (!v[vm.treeParentField]) {
-                                vm.optionValues.push(angular.copy(v));
-                            }
-                        } else {
+                }
+                if (vm.optionValues !== allOptions) {
+                    if (vm.isTree) {
+                        if (!v[vm.treeParentField]) {
                             vm.optionValues.push(angular.copy(v));
                         }
+                    } else {
+                        vm.optionValues.push(angular.copy(v));
                     }
                 }
             });
@@ -159,16 +158,18 @@
             if (vm.isParentComponent(data) && !event.defaultPrevented) {
                 vm.data = data;
                 $scope.onLoadDataHandler(event, data);
-                componentSettings.$loadingPromise.then(function(items) {
-                    allOptions = allOptions.length ? allOptions : items;
-                    vm.optionValues = [];
-                    fillControl(allOptions);
-                    vm.equalPreviewValue();
-                    return items;
-                }).finally(function() {
-                    vm.loadingData = false;
-                });
-                if (!vm.options.isSendRequest) {
+                if (componentSettings.$loadingPromise) {
+                    componentSettings.$loadingPromise.then(function(items) {
+                        allOptions = allOptions.length ? allOptions : items;
+                        vm.optionValues = [];
+                        fillControl(allOptions);
+                        vm.equalPreviewValue();
+                        return items;
+                    }).finally(function() {
+                        vm.loadingData = false;
+                    });
+                }
+                if (!vm.isSendRequest) {
                     loadDataById(vm.fieldValue).finally(function() {
                         vm.loadingData = false;
                     });
@@ -390,7 +391,7 @@
                     }
                     vm.placeholder = (!!vm.fieldValue && !!vm.fieldValue[vm.fieldSearch]) ? vm.fieldValue[vm.fieldSearch] : componentSettings.placeholder;
                 } else if (!vm.multiple && vm.isTree) {
-                    vm.placeholder = (!!vm.fieldValue.length && !!vm.fieldValue[0][vm.fieldSearch]) ? vm.fieldValue[0][vm.fieldSearch] : componentSettings.placeholder;
+                    vm.placeholder = (vm.fieldValue && !!vm.fieldValue.length && !!vm.fieldValue[0][vm.fieldSearch]) ? vm.fieldValue[0][vm.fieldSearch] : componentSettings.placeholder;
                 }
 
                 if (vm.fieldValue) {
@@ -492,6 +493,7 @@
 
         function addToSelected(event, val) {
             if (vm.multiple) {
+                vm.fieldValue = vm.fieldValue || [];
                 vm.fieldValue.push(val);
             } else {
                 vm.fieldValue = val;
@@ -566,7 +568,7 @@
                         }
                         $timeout(function() {
                             if ((!vm.multiple && !vm.isTree)) {
-                                vm.addToSelected(null, vm.optionValues[vm.activeElement]);
+                                vm.addToSelected(null, vm.possibleValues[vm.activeElement]);
                             } else if (vm.isTree) {
                                 vm.toggle(undefined, vm.optionValues[vm.activeElement], true);
                             }

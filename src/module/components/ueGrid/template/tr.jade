@@ -1,0 +1,21 @@
+td.table-cell.context-column(ng-if="vm.isContextMenu")
+        span.context-toggle(data-ng-click="vm.toggleContextView(item)", 
+                            data-ng-show="(vm.contextLinks.length && (item[vm.subType] || item[vm.subType] == undefined)) || (vm.mixContextLinks.length && vm.collectionType)")
+        .context-menu-wrapper(data-ng-if="vm.options.contextId == item[vm.idField]" , data-ng-style='vm.options.styleContextMenu')
+            .context-menu-item(data-ng-repeat="link in vm.contextLinks track by $index",
+                            data-ng-if="item[vm.subType] !== vm.collectionType || !vm.isMixMode",
+                            data-ng-class="{'component-separator': link.separator}")
+                component-wrapper(data-setting="link", 
+                                data-entity-id="{{::item[vm.idField]}}", 
+                                data-button-class="context", 
+                                data-options="vm.options")
+            .context-menu-item(data-ng-repeat="link in vm.mixContextLinks track by $index", data-ng-if="vm.collectionType && item[vm.subType] === vm.collectionType", data-ng-class="{'component-separator': link.separator}")
+                component-wrapper(data-setting="link", data-entity-id="{{::item[vm.idField]}}",
+                    data-button-class="context",
+                    data-options="vm.mixOption")
+td.table-cell(data-ng-repeat="fieldItem in ::vm.tableFields track by $index" ng-style="fieldItem.ngStyle")
+        span.glyphicon(
+        data-ng-class="{'glyphicon-folder-open icon-mix-mode' : vm.isMixMode && item[vm.subType] !== vm.collectionType}",
+        data-ng-if='vm.prependIcon === fieldItem.field'
+        )
+        component-wrapper(data-setting="fieldItem.component", data-options="fieldItem.options")    

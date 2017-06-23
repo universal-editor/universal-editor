@@ -1,0 +1,28 @@
+ul.table.items-list.drag-mode
+  li(ng-if="vm.displayHeaderColumns")
+    .row.header
+      .table-cell( data-ng-repeat="fieldItem in ::vm.tableFields track by $index",
+        ng-style="fieldItem.ngStyle"
+        data-ng-class="{  'active' : fieldItem.field == vm.sortField && fieldItem.sortable, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection, 'first-column': $index===0}",
+        data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sortable)")  
+        span {{::fieldItem.displayName}}      
+  li.tree-body(ng-if="vm.loaded")    
+    ue-node(
+      data-is-first-level="true"
+      data-collection="vm.items",
+      data-items="vm.items",
+      data-table-fields="vm.tableFields",
+      data-setting="vm.setting",
+      data-options="vm.options",
+      data-context-links="vm.contextLinks"
+      toggle-context-view-by-event="vm.toggleContextViewByEvent(item, e)")
+  li.row-empty(ng-if="vm.items.length == 0 && vm.loaded")
+    .column(translate="ELEMENT_NO")           
+  li.loading(data-ng-if="!vm.loaded")
+    .column.td-loading
+      .processing-status-wrapper
+        .processing-status(translate="PERFORMS_ACTIONS")
+  li(ng-if="vm.listFooterBar.length")
+    .row.footer
+      .table-cell
+        component-wrapper(data-ng-repeat="component in ::vm.listFooterBar track by $index" data-setting="component", data-options="vm.options")

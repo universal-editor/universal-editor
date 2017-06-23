@@ -92,6 +92,21 @@
             }
         };
 
+
+        this.addButtonController = function(ctrl) {
+            var id = ctrl.parentComponentId || ctrl.$componentId;
+            ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
+            collection.push(ctrl);
+        };
+
+        this.deleteButtonController = function(ctrl) {
+            angular.forEach(collection, function(controller, ind) {
+                if (controller.$fieldHash === ctrl.$fieldHash) {
+                    collection.splice(ind, 1);
+                }
+            });
+        };
+
         this.editEntityUpdate = function(type, request) {
             var entityObject = constructOutputValue(request);
             if (request.isError) {
@@ -109,7 +124,6 @@
 
         this.editEntityPresave = function(request) {
             var entityObject = constructOutputValue(request);
-
             if (request.isError) {
                 request.data = entityObject;
                 request.action = 'presave';
@@ -127,7 +141,7 @@
             }
             var controllers = storage[componentId] || [],
                 groupControllers = groups[componentId] || [];
-            
+
             if (request) {
                 if (angular.isObject(request)) {
                     request.isError = true;
@@ -148,18 +162,20 @@
                             value = null;
                         }
 
-                        if (!fCtrl.multiple) {
-                            fCtrl.inputLeave(fCtrl.fieldValue);
-                        } else {
-                            var flagError = true;
-                            angular.forEach(fCtrl.fieldValue, function(val, index) {
-                                if (flagError) {
-                                    fCtrl.inputLeave(val, index);
-                                    if (fCtrl.error.length !== 0) {
-                                        flagError = false;
+                        if (angular.isFunction(fCtrl.inputLeave)) {
+                            if (!fCtrl.multiple) {
+                                fCtrl.inputLeave(fCtrl.fieldValue);
+                            } else {
+                                var flagError = true;
+                                angular.forEach(fCtrl.fieldValue, function(val, index) {
+                                    if (flagError) {
+                                        fCtrl.inputLeave(val, index);
+                                        if (fCtrl.error.length !== 0) {
+                                            flagError = false;
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
 
                         if (angular.isString(fCtrl.fieldName)) {
@@ -208,7 +224,7 @@
                             if (angular.isObject(tempObject[name])) {
                                 tempObject = tempObject[name];
                             } else {
-                                tempObject[name] = [];
+                                tempObject[name] = '';
                             }
                         });
                     }

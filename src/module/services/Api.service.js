@@ -683,6 +683,13 @@
             var keyValue = component.component.settings.valuesRemote.fields.value;
             var storage = storageRemotedComponents[url] || [];
             var outputSet = [];
+            if (!angular.isArray(list)) {
+                list = [list];
+            }
+            if (component.component.settings.multiname) {
+                var multiname = component.component.settings.multiname;
+                list = list.map(function(item) { return angular.isObject(item) ? item[multiname] : null; });
+            }
             angular.forEach(storage, function(storageItem) {
                 var index = list.indexOf(storageItem[keyValue]);
                 if (index !== -1) {
@@ -730,9 +737,8 @@
                     if (filter.length > 0) {
                         var casheValues = getFromStorage(component, filter);
                         if (casheValues !== false) {
-                            return promiseStack.push($q.when(injectIntoData(component, data, casheValues)));;
+                            return promiseStack.push($q.when(data));
                         }
-
 
                         var filterObject = {};
                         filterObject[keyValue] = [];
@@ -769,7 +775,6 @@
                             return component.component.settings.valuesRemote.url === response.config.url;
                         })[0];
                         saveToStorage(component, list);
-                        injectIntoData(component, data, list);
                     }
                 });
                 return data;
@@ -788,29 +793,6 @@
                     failAnswer.bind(config)(reject);
                 }
             });
-
-            function injectIntoData(component, intoData, list) {
-                if (component) {
-                    var name = component.component.settings.valuesRemote.fields.value;
-                    intoData.forEach(function(item) {
-                        var value = item[component.name];
-                        if (value) {
-                            if (angular.isArray(value)) {
-                                value = value.map(function(valueItem) {
-                                    if (angular.isString(component.component.settings.multiname)) {
-                                        valueItem = valueItem[component.component.settings.multiname];
-                                    }
-                                    return valueItem;
-                                });
-                            }
-                            item['$' + component.name] = list.filter(function(i) {
-                                return angular.isArray(value) ? (value.indexOf(i[name]) !== -1) : (i[name] == value);
-                            });
-                        }
-                    });
-                }
-                return intoData;
-            }
         };
 
 
@@ -850,21 +832,23 @@
         };
 
         function replaceToURL(url, entityId) {
-            if (entityId) {
-                url = url.replace(':pk', entityId);
-            }
-            var params = $location.search();
-            if (params.back) {
-                delete params.back;
-            }
-            var isReload = !~url.indexOf($location.path());
-            var searchParams = $httpParamSerializerJQLike(params);
-            if (searchParams) {
-                searchParams = '?' + searchParams;
-            }
-            $window.location.href = url + searchParams;
-            if (isReload) {
-                $window.location.reload();
+            if (url) {
+                if (entityId) {
+                    url = url.replace(':pk', entityId);
+                }
+                var params = $location.search();
+                if (params.back) {
+                    delete params.back;
+                }
+                var isReload = !~url.indexOf($location.path());
+                var searchParams = $httpParamSerializerJQLike(params);
+                if (searchParams) {
+                    searchParams = '?' + searchParams;
+                }
+                $window.location.href = url + searchParams;
+                if (isReload) {
+                    $window.location.reload();
+                }
             }
         }
 
@@ -981,24 +965,14 @@
                     }
                     config.request.options.isLoading = false;
                     $rootScope.$broadcast('ue:afterEntityUpdate', {
-                        id: data[config.idField],
+                        id: config.id,
                         $componentId: parentComponentId
                     });
                     successUpdateMessage();
-                    params = {};
-                    paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
-                    if ($location.search()[paramName]) {
-                        params.parent = $location.search()[paramName];
-                    }
-                    if ($location.search().back && config.request.useBackUrl) {
-                        state = $location.search().back;
-                    } else {
-                        state = config.request.state;
-                    }
-                    if (state) {
-                        $state.go(state, params).then(function() {
+                    state = getState(config);
+                    if (state.name) {
+                        $state.go(state.name, state.params).then(function() {
                             $location.search(searchString);
-                            $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
                     } else {
                         replaceToURL(config.request.href);
@@ -1014,24 +988,13 @@
                         $componentId: parentComponentId
                     });
                     successCreateMessage();
-
-                    params = {};
-                    paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
-                    if ($location.search()[paramName]) {
-                        params.parent = $location.search()[paramName];
-                    }
-                    if ($location.search().back && config.request.useBackUrl) {
-                        state = $location.search().back;
-                    } else {
-                        state = config.request.state;
-                    }
-                    if (state) {
-                        $state.go(state, params).then(function() {
+                    state = getState(config);
+                    if (state.name) {
+                        $state.go(state.name, state.params).then(function() {
                             if (params.back) {
                                 delete params.back;
                             }
                             $location.search(searchString);
-                            $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                         });
                     } else {
                         replaceToURL(config.request.href);
@@ -1041,7 +1004,7 @@
                     if (!!config.request.success) {
                         config.request.success(data);
                     }
-                    var newId = data[config.idField];
+                    var newId = config.request.entityId;
                     var par = {};
                     par.pk = newId;
                     var searchString = $location.search();
@@ -1053,11 +1016,6 @@
                             value: data,
                             id: newId
                         });
-                    });
-                    $rootScope.$broadcast('ue:afterEntityUpdate', {
-                        id: newId,
-                        action: 'presave',
-                        $componentId: parentComponentId
                     });
                     if (config.isCreate) {
                         successPresaveCreateMessage();
@@ -1075,22 +1033,11 @@
                         entityId: config.request.entityId
                     });
                     successDeleteMessage();
-                    params = {};
-                    paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
-                    if ($location.search()[paramName]) {
-                        params[paramName] = $location.search()[paramName];
-                    }
-                    if ($location.search().back && config.request.useBackUrl) {
-                        state = $location.search().back;
-                    } else {
-                        state = config.request.state;
-                    }
-
-                    state = state || $state.current.name;
-
+                    state = getState(config);
+                    state.name = state.name || $state.current.name;
                     if (!config.notGoToState) {
-                        if (state) {
-                            $state.go(state, params).then(function() {
+                        if (state.name) {
+                            $state.go(state.name, state.params).then(function() {
                                 $location.search(searchString);
                                 $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
                             });
@@ -1100,6 +1047,34 @@
                     }
                     break;
             }
+        }
+
+        function getState(config) {
+            var state = {
+                name: null,
+                params: {}
+            },
+                paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent',
+                locationSearch = $location.search();
+            if (locationSearch[paramName]) {
+                state.params.parent = locationSearch[paramName];
+            }
+            if (locationSearch.back && config.request.useBackUrl) {
+                state.name = locationSearch.back;
+            }
+            if (angular.isObject(config.request.state)) {
+               state.name = config.request.state.name;
+               var parameters = config.request.state.parameters;
+               if(angular.isObject(parameters)) {
+                   angular.merge(state.params, parameters);
+               } else if(angular.isFunction(parameters)) {
+                   angular.merge(state.params, parameters());
+               }
+            }
+            if (angular.isString(config.request.state)) {
+                state.name = config.request.state;
+            }
+            return state;
         }
 
         function failAnswer(reject) {
