@@ -21,7 +21,7 @@ block append content
                     data-ng-show="acItem[vm.fieldSearch]",
                     data-ng-if="vm.multiple && acItem[vm.fieldSearch]",
                     dnd-effect-allowed="move"
-                ) 
+                )
                     .autocomplete-item(ng-bind = "acItem[vm.fieldSearch]")
                     span.remove-from-selected(data-ng-click="vm.removeFromSelected($event, acItem)", data-ng-if="!vm.readonly") ×
                 .autocomplete-selected.dndPlaceholder
