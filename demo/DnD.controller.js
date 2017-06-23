@@ -167,7 +167,7 @@
                     columns: [
                     {
                         name: 'title',
-                        width: "20%",
+                        width: "20%"
                     },
                     {
                         name: 'authors',
