@@ -124,7 +124,6 @@
                         }
                     }
                 }, true));
-
                 $element.bind('keydown', function(event) {
                     var possibleValues;
                     switch (event.which) {
