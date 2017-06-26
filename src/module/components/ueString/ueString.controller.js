@@ -41,6 +41,7 @@
         }
 
         function addItem() {
+            vm.fieldValue = vm.fieldValue || [];
             vm.fieldValue.push('');
         }
     }
