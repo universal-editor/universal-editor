@@ -210,6 +210,7 @@
                     .getUrlResource(config)
                     .then(function(response) {
                         fillControl(response.data.items);
+                        ApiService.saveToStorage(vm.setting, response.data.items);
                         vm.equalPreviewValue();
                         defer.resolve(response.data.items);
                     }, function(reject) {
