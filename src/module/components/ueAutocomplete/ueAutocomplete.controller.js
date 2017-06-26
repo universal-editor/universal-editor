@@ -339,6 +339,7 @@
                     .getUrlResource(config)
                     .then(function(response) {
                         angular.forEach(response.data.items, insertToSelectedCollection);
+                        ApiService.saveToStorage(vm.setting, response.data.items);
                         if (!vm.optionValues.length) {
                             vm.optionValues = angular.copy(vm.selectedValues);
                         }
