@@ -69,7 +69,8 @@
                 action: 'list',
                 url: _url,
                 method: _method,
-                data: {}
+                data: {},
+                $dataSource: dataSource
             };
 
             if (dataSource.resourceType) {
@@ -104,33 +105,38 @@
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             options.beforeSend = request.before;
 
-            var objectBind = { action: 'list', parentComponentId: request.options.$componentId, notGoToState: notGoToState };
+            var objectBind = {
+                action: 'list',
+                parentComponentId: request.options.$componentId,
+                notGoToState: notGoToState
+            };
 
-            $http(options).then(function(response) {
-                var data;
-                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    data = service.processResponse(
-                        config,
-                        response,
-                        successAnswer.bind(objectBind),
-                        failAnswer.bind(objectBind));
-                }
-                deferred.resolve(data);
-            }, function(reject) {
-                reject.canceled = canceler.promise.$$state.status === 1;
-                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    var data = service.processResponse(config, reject,
-                        successAnswer.bind(objectBind),
-                        failAnswer.bind(objectBind));
-                    reject.data = data;
-                } else {
-                    reject.$componentId = request.options.$componentId;
-                    failAnswer.bind(objectBind)(reject);
-                }
-                deferred.reject(reject);
-            }).finally(function() {
-                request.options.isLoading = false;
-            });
+            
+                $http(options).then(function(response) {
+                    var data;
+                    if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
+                        data = service.processResponse(
+                            config,
+                            response,
+                            successAnswer.bind(objectBind),
+                            failAnswer.bind(objectBind));
+                    }
+                    deferred.resolve(data);
+                }, function(reject) {
+                    reject.canceled = canceler.promise.$$state.status === 1;
+                    if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
+                        var data = service.processResponse(config, reject,
+                            successAnswer.bind(objectBind),
+                            failAnswer.bind(objectBind));
+                        reject.data = data;
+                    } else {
+                        reject.$componentId = request.options.$componentId;
+                        failAnswer.bind(objectBind)(reject);
+                    }
+                    deferred.reject(reject);
+                }).finally(function() {
+                    request.options.isLoading = false;
+                });
             return deferred.promise;
         };
 
@@ -1069,13 +1075,13 @@
                 state.name = locationSearch.back;
             }
             if (angular.isObject(config.request.state)) {
-               state.name = config.request.state.name;
-               var parameters = config.request.state.parameters;
-               if(angular.isObject(parameters)) {
-                   angular.merge(state.params, parameters);
-               } else if(angular.isFunction(parameters)) {
-                   angular.merge(state.params, parameters());
-               }
+                state.name = config.request.state.name;
+                var parameters = config.request.state.parameters;
+                if (angular.isObject(parameters)) {
+                    angular.merge(state.params, parameters);
+                } else if (angular.isFunction(parameters)) {
+                    angular.merge(state.params, parameters());
+                }
             }
             if (angular.isString(config.request.state)) {
                 state.name = config.request.state;

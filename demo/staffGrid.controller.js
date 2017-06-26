@@ -30,6 +30,15 @@
             },
             fields: [
                 {
+                    name: 'id',
+                    component: {
+                        name: 'ue-string',
+                        settings: {
+                            label: 'ID'
+                        }
+                    }
+                },
+                {
                     name: 'name',
                     component: {
                         name: 'ue-string',

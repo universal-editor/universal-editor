@@ -134,8 +134,8 @@
                         for (var i = vm.fieldValue.length; i--;) {
                             if (vm.fieldValue[i] == v_id) {
                                 vm.fieldValue[i] = v;
-                                if(vm.isTree) {
-                                   v.checked = true;
+                                if (vm.isTree) {
+                                    v.checked = true;
                                 }
                                 break;
                             }
@@ -207,7 +207,6 @@
                     .getUrlResource(config)
                     .then(function(response) {
                         fillControl(response.data.items);
-                        ApiService.saveToStorage(vm.setting, response.data.items);
                         vm.equalPreviewValue();
                         defer.resolve(response.data.items);
                     }, function(reject) {

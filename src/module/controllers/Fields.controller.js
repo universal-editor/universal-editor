@@ -469,11 +469,12 @@
                                         tempObject = tempObject[parentIndex];
                                     }
                                 }
-
-                                if (i !== (names.length - 1)) {
-                                    tempObject = tempObject[name];
-                                } else {
-                                    apiValue = tempObject[name];
+                                if (tempObject) {
+                                    if (i !== (names.length - 1)) {
+                                        tempObject = tempObject[name];
+                                    } else {
+                                        apiValue = tempObject[name];
+                                    }
                                 }
                             }
                         });

@@ -75,6 +75,17 @@
             delete config.params.root;
             if (config.action == 'list') {
                 self.setPagination(config);
+                var fields = [];
+                if (config.$dataSource && angular.isArray(config.$dataSource.fields)) {
+                    angular.forEach(config.$dataSource.fields, function(field, index) {
+                        if (field && field.name) {
+                            fields.push(field.name);
+                        }
+                    });
+                    if(fields.length) {
+                        config.params.fields = fields.join(',');
+                    }
+                }
             }
             self.setFiltering(config);
             config.params.sort = config.sortFieldName;
