@@ -30,6 +30,20 @@
             },
             fields: [
                 {
+                    name: 'id',
+                    component: {
+                        name: 'ue-string',
+                        settings: {
+                            label: 'ID',
+                            validators: [
+                                {
+                                    type: 'number'
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
                     name: 'name',
                     component: {
                         name: 'ue-string',
@@ -60,7 +74,7 @@
                             }
                         }
                     }
-                },               
+                },
                 {
                     name: 'parent_id',
                     component: {
@@ -110,7 +124,7 @@
                         }
                     }
                 },
-                 {
+                {
                     name: 'country',
                     component: {
                         name: 'ue-dropdown',
@@ -152,7 +166,7 @@
                                 component: {
                                     name: 'ue-filter',
                                     settings: {
-                                        fields: ['name', 'email', 'gender', 'created_at', 'country', 'parent_id']
+                                        fields: ['id', 'name', 'email', 'gender', 'created_at', 'country', 'parent_id']
                                     }
                                 }
                             },
@@ -167,7 +181,7 @@
                             }
                         ]
                     },
-                    columns: ['name', 'email', 'gender', 'parent_id'],
+                    columns: ['id', 'name', 'email', 'gender', 'parent_id'],
                     contextMenu: [
                         {
                             component: {
