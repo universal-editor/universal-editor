@@ -58,7 +58,6 @@
                 return item;
             };
 
-
             if (!vm.multiple) {
                 vm.classInput.width = '99%';
                 vm.classInput['padding-right'] = '25px';
