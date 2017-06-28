@@ -53,7 +53,6 @@
             vm.deleteToSelected = deleteToSelected;
             vm.clickSelect = clickSelect;
             vm.clear = clear;
-            vm.dependUpdate = dependUpdate;
             vm.fillControl = fillControl;
 
             if (componentSettings.hasOwnProperty('valuesRemote') && componentSettings.tree) {
@@ -73,46 +72,6 @@
 
             if (vm.options.filter) {
                 vm.isTree = false;
-            }
-
-            function dependUpdate(dependField, dependValue) {
-                if (dependValue && dependValue !== '') {
-                    vm.loadingData = true;
-                    vm.parentValue = false;
-                    vm.optionValues = [];
-
-                    var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
-                    var request = {
-                        url: url,
-                        method: 'GET',
-                        $id: vm.setting.component.$id,
-                        serverPagination: vm.serverPagination
-                    };
-
-                    config.standard = $scope.getParentDataSource().standard;
-
-                    ApiService
-                        .getUrlResource(config)
-                        .then(function(response) {
-                            angular.forEach(response.data.items, function(v) {
-                                vm.category(v);
-                            });
-                            $timeout(function() {
-                                setSizeSelect();
-                            }, 0);
-                            allOptions = angular.copy(vm.optionValues);
-                            vm.parentValue = true;
-                        }, function(reject) {
-                            $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
-                                console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
-                            });
-                        })
-                        .finally(function() {
-                            vm.loadingData = false;
-                        });
-                } else {
-                    vm.parentValue = false;
-                }
             }
 
             // dropdown functions
