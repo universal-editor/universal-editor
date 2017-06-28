@@ -499,6 +499,10 @@
             request = request || vm.request;
             if (angular.isObject(request) && angular.isString(request.url)) {
                 setInitialQueryParams();
+                vm.dangers.length = 0;
+                vm.warnings.length = 0;
+                vm.items = [];
+                vm.data = [];
                 return ApiService.getItemsList(request, notGoToState);
             }
         }
