@@ -191,7 +191,7 @@
                     var component = vm.setting.component.settings.dataSource.fields.filter(function(field) {
                         return name && field.name === name;
                     });
-                    sortable = col.hasOwnProperty('sortable') ? col.sortable : true
+                    sortable = col.hasOwnProperty('sortable') ? col.sortable : true;
 
                     if (component.length) {
                         col = angular.merge({}, component[0]);
@@ -201,7 +201,6 @@
                         tableField = {
                             field: col.name || null,
                             sortable: sortable,
-                            sorted: col.component.settings.multiple !== true,
                             displayName: col.component.settings.label || col.name,
                             component: col,
                             options: {
@@ -424,8 +423,8 @@
             return vm.options.prefixGrid ? (vm.options.prefixGrid + '-' + key) : key;
         }
 
-        function changeSortField(field, sorted) {
-            if (field && sorted) {
+        function changeSortField(field, sortable) {
+            if (field && sortable) {
                 vm.loaded = false;
                 if (vm.sortField == field) {
                     vm.sortingDirection = !vm.sortingDirection;
