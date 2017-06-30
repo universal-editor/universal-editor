@@ -383,6 +383,7 @@
             vm.sizeInput = 1;
             vm.selectedValues = [];
             vm.placeholder = '';
+            vm.possibleValues = [];
         }
     }
 })();
