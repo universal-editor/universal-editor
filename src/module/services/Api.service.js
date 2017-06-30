@@ -894,7 +894,7 @@
             if (queryParams) {
                 searchObject = angular.merge(searchObject, queryParams);
             }
-            var params = $httpParamSerializer(searchObject);
+            var params = decodeURIComponent($httpParamSerializer(searchObject));
             return urlArray[0] + (params ? ('?' + params) : '');
         };
 
