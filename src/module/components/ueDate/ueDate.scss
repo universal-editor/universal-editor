@@ -10,8 +10,10 @@
     .field-wrapper-ue-date div[date-picker-wrapper] {
         z-index: 56;
     }
-
     .field-wrapper-ue-date {
+        span.input-group-addon {
+            cursor: pointer;
+        }
         .ue-component-body {
             .field-element {
                 .item-datepicker-wrapper {

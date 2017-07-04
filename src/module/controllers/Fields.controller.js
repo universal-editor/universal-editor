@@ -294,12 +294,12 @@
                         if (angular.isArray(object)) {
                             value = [];
                             object.forEach(function(date, index) {
-                                value[index] = moment(date, angular.isString(self.format) ? self.format : 'DD.MM.YYYY HH:mm:ss');
+                                value[index] = date;
                             });
                         }
                     } else {
                         if (object) {
-                            value = moment(object, angular.isString(self.format) ? self.format : 'DD.MM.YYYY HH:mm:ss');
+                            value = object;
                         }
                     }
                     return value;
@@ -540,6 +540,11 @@
         if (self.defaultValue) {
             self.fieldValue = transformToValue(self.defaultValue);
             equalPreviewValue();
+        }
+
+        
+        if (self.multiple && (typeof self.fieldValue === 'undefined' || self.fieldValue === null)) {
+            self.fieldValue = [];
         }
 
         /* Слушатель события на покидание инпута. Необходим для валидации*/
