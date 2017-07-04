@@ -22,7 +22,7 @@ block append content
                         )
                     span.input-group-btn
                         button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
-                include ../../template/errorField/errorClient
+                include ../../template/errorField/errorClient.jade
             .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-disabled="vm.readonly") {{'BUTTON.ADD' | translate}}
         div(data-ng-if="!vm.multiple")
             input.form-control.input-sm(
@@ -38,6 +38,6 @@ block append content
                 data-min-date="minDate",
                 data-max-date="maxDate"
                 )
-            include ../../template/errorField/errorClient
+            include ../../template/errorField/errorClient.jade
     .disabled-field(ng-if="vm.disabled && !vm.options.filter")
-        include ../../template/disabledField/default
+        include ../../template/disabledField/default.jade

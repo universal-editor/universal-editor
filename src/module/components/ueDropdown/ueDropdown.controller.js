@@ -101,14 +101,8 @@
                         vm.isSpanSelectDelete = true;
                     }
                 }
-                if (vm.optionValues !== allOptions) {
-                    if (vm.isTree) {
-                        if (!v[vm.treeParentField]) {
-                            vm.optionValues.push(angular.copy(v));
-                        }
-                    } else {
-                        vm.optionValues.push(angular.copy(v));
-                    }
+                if (angular.isArray(vm.optionValues) && !vm.optionValues.some(function(option) { return option[vm.fieldId] == v_id && v_id; })) {
+                    vm.optionValues.push(v);
                 }
             });
         }
