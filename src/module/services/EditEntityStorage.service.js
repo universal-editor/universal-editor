@@ -55,7 +55,7 @@
         this.newSourceEntity = function(id, dataSource) {
             var parent = $location.search().parent;
             if (parent && angular.isObject(dataSource) && dataSource.parentField) {
-                var data = { editorEntityType: 'new', $componentId: (dataSource.parentField ? undefined : id) };
+                var data = { editorEntityType: 'new', $componentId: id };
                 data[dataSource.parentField] = parent;
                 $rootScope.$broadcast('ue:componentDataLoaded', data);
             }
