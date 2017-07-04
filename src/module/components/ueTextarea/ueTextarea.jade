@@ -1,7 +1,7 @@
 extends ../../template/layouts/layoutComponent
 
 block append content
-    include ../../template/labelField/labelField
+    include ../../template/labelField/labelField.jade
     div(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter}", ng-if="!vm.disabled || vm.options.filter")
         div(data-ng-if="vm.multiple")
             .item-textarea-wrapper(data-ng-repeat="field_item in vm.fieldValue track by $index")
@@ -9,12 +9,12 @@ block append content
                     textarea.form-control(name="{{vm.fieldName}}", rows="{{vm.rows}}", data-ng-disabled="vm.readonly", data-ng-model="vm.fieldValue[$index]", class="editor-textarea", data-ng-blur="vm.inputLeave(vm.fieldValue[$index], $index)", data-ng-trim="false", data-ui-mask="{{vm.mask}}", data-ui-options="{maskDefinitions : vm.maskDefinitions}")
                     span.input-group-btn
                         button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
-                include ../../template/errorField/errorClient
+                include ../../template/errorField/errorClient.jade
             .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-disabled="vm.readonly") {{'BUTTON.ADD' | translate}}
         div(data-ng-if="!vm.multiple", data-ng-class="vm.classComponent")
             div(data-ng-class="vm.classComponent")
                 textarea.form-control(ng-if="!vm.options.filter", name="{{vm.fieldName}}", rows="{{vm.rows}}", data-ng-disabled="vm.readonly", data-ng-model="vm.fieldValue", class="editor-textarea", data-ng-blur="vm.inputLeave(vm.fieldValue)", data-ng-trim="false", data-ui-mask="{{vm.mask}}", data-ui-options="{maskDefinitions : vm.maskDefinitions}")
                 input.form-control(ng-if="vm.options.filter", name="{{vm.fieldName}}", data-ng-disabled="vm.readonly", data-ng-model="vm.fieldValue", class="editor-textarea", data-ng-blur="vm.inputLeave(vm.fieldValue)", data-ng-trim="false", data-ui-mask="{{vm.mask}}", data-ui-options="{maskDefinitions : vm.maskDefinitions}")
-            include ../../template/errorField/errorClient
-    .disabled-field(ng-if="vm.disabled && !vm.options.filter")
-        include ../../template/disabledField/default
+            include ../../template/errorField/errorClient.jade
+    .disabled-field.pre-style(ng-if="vm.disabled && !vm.options.filter")
+        include ../../template/disabledField/textarea.jade

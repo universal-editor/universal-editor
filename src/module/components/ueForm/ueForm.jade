@@ -9,4 +9,4 @@
             .error-item.alert.alert-danger(data-ng-repeat="err in vm.errors") {{err}}
         .editor-footer(data-ng-if="vm.entityLoaded")
             component-wrapper.editor-action-button(data-ng-repeat="button in vm.editFooterBar track by $index", data-entity-id="{{vm.entityId}}", data-setting="button", data-options="vm.options", data-button-class="footer")
-    include ../../template/errorMessages/template
+    include ../../template/errorMessages/template.jade
