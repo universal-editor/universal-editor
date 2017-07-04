@@ -326,6 +326,7 @@
                                 vm.placeholder = v[vm.fieldSearch];
                             }
                         });
+                        ApiService.saveToStorage(vm.setting, response.data.items);
                         if (!vm.optionValues.length) {
                             vm.optionValues = angular.copy(vm.selectedValues);
                         }

@@ -142,14 +142,8 @@
                         vm.isSpanSelectDelete = true;
                     }
                 }
-                if (vm.optionValues !== allOptions) {
-                    if (vm.isTree) {
-                        if (!v[vm.treeParentField]) {
-                            vm.optionValues.push(angular.copy(v));
-                        }
-                    } else {
-                        vm.optionValues.push(angular.copy(v));
-                    }
+                if (angular.isArray(vm.optionValues) && !vm.optionValues.some(function(option) { return option[vm.fieldId] == v_id && v_id; })) {
+                    vm.optionValues.push(v);
                 }
             });
         }
@@ -210,6 +204,7 @@
                     .getUrlResource(config)
                     .then(function(response) {
                         fillControl(response.data.items);
+                        ApiService.saveToStorage(vm.setting, response.data.items);
                         vm.equalPreviewValue();
                         defer.resolve(response.data.items);
                     }, function(reject) {

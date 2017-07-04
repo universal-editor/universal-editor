@@ -27,7 +27,7 @@ block append content
                         span.glyphicon.glyphicon-calendar
                     span.input-group-addon.icon-remove(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
                         //-- span.glyphicon.glyphicon-remove
-                include ../../template/errorField/errorClient
+                include ../../template/errorField/errorClient.jade
             .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-disabled="vm.readonly") {{'BUTTON.ADD' | translate}}
         div(data-ng-if="!vm.multiple")
             .input-group(
@@ -50,6 +50,6 @@ block append content
                         )
                     span.input-group-addon
                         span.glyphicon.glyphicon-calendar
-            include ../../template/errorField/errorClient
+            include ../../template/errorField/errorClient.jade
     .disabled-field(ng-if="vm.disabled && !vm.options.filter")
-        include ../../template/disabledField/default
+        include ../../template/disabledField/default.jade
