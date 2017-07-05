@@ -557,7 +557,7 @@
                     vm.loaded = false;
                 }
                 vm.data = data[itemsKey];
-                if (vm.items) {
+                if (vm.data) {
                     var components = vm.tableFields.map(function(f) { return f.component; });
                     var options = {
                         data: vm.data,
@@ -582,6 +582,8 @@
                     angular.forEach(vm.listFooterBar, function(control) {
                         control.paginationData = data;
                     });
+                } else {
+                    switchLoaderOff();
                 }
             }
         }
@@ -669,7 +671,6 @@
             vm.contextLinks = angular.copy(vm.contextLinksOrigin);
             var result = [];
             var firstVisibleElem = false;
-
             angular.forEach(vm.contextLinks, function(value) {
                 var showContextMenuItem = value.component.settings.useable && angular.isFunction(value.component.settings.useable) ? value.component.settings.useable(obj) : true;
                 if (showContextMenuItem) {

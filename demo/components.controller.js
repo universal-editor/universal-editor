@@ -791,7 +791,7 @@
                                                 name: 'ue-textarea',
                                                 settings: {
                                                     label: 'textarea with break lines.',
-                                                    defaultValue: 'Text with line breaks. \n Break.',
+                                                    defaultValue: 'Text with line breaks.\nBreak.',
                                                     disabled: true
                                                 }
                                             }
