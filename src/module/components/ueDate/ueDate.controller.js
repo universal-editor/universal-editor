@@ -15,13 +15,14 @@
         vm.$onInit = function() {
             componentSettings = vm.setting.component.settings;
             componentSettings.$fieldType = 'date';
-            baseController = $controller('FieldsController', { $scope: $scope, $element: $element  });
+            baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
             angular.extend(vm, baseController);
 
             vm.format = vm.format || 'DD.MM.YYYY HH:mm:ss';
             vm.maxView = vm.maxView || 'year';
             vm.minView = vm.minView || 'minutes';
-            vm.view = vm.view || 'date';
+            vm.view = vm.view || 'days';
+            vm.locale = componentSettings.locale;
 
             vm.addItem = addItem;
             vm.removeItem = removeItem;
@@ -57,12 +58,12 @@
                 if (angular.isArray(vm.fieldValue)) {
                     vm.previewValue = [];
                     vm.fieldValue.forEach(function(date, index) {
-                        vm.previewValue[index] = angular.isString(vm.format) ? date.format(vm.format) : date.toString();
+                        vm.previewValue[index] = !angular.isString(vm.format) ? date.format(vm.format) : date.toString();
                     });
                 }
             } else {
                 if (vm.fieldValue) {
-                    vm.previewValue = angular.isString(vm.format) ? vm.fieldValue.format(vm.format) : vm.fieldValue.toString();
+                    vm.previewValue = !angular.isString(vm.format) ? vm.fieldValue.format(vm.format) : vm.fieldValue.toString();
                 }
             }
         }

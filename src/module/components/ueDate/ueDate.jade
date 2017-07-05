@@ -1,45 +1,54 @@
 extends ../../template/layouts/layoutComponent
-
 block append content
     include ../../template/labelField/labelField.jade
     .field-date(ng-class="{'filter-inner-wrapper': vm.options.filter, 'field-element': !vm.options.filter, 'multiple': vm.multiple}", ng-if="!vm.disabled|| vm.options.filter")
         div(data-ng-if="vm.multiple")
             .item-datepicker-wrapper(data-ng-repeat="field_item in vm.fieldValue track by $index")
-                .input-group
+                .input-group(
+                    date-picker
+                    locale="{{::vm.locale}}"
+                    ng-model="vm.fieldValue[$index]"
+                    format='{{vm.format}}'                    
+                    max-view="{{::vm.maxView}}",
+                    min-view="{{::vm.minView}}",
+                    view="{{::vm.view}}"
+                    min-date="{{::vm.minDate}}",
+                    max-date="{{::vm.maxDate}}"
+                )
                     input.form-control.input-sm(
-                        data-date-time="",
-                        auto-close="true",
+                        date-picker-input,
                         name="{{vm.fieldName}}",
-                        data-ng-disabled="vm.readonly",
-                        data-ng-model="vm.fieldValue[$index]",
-                        min-date="vm.minDate" ,
-                        data-format="{{vm.format}}",
-                        data-max-view="{{::vm.maxView}}",
-                        data-min-view="{{::vm.minView}}",
-                        data-view="{{::vm.view}}",
-                        data-ng-blur="vm.inputLeave(vm.fieldValue[$index], $index)",
-                        data-min-date="minDate",
-                        data-max-date="maxDate"
+                        ng-model="vm.fieldValue[$index]",
+                        data-ng-blur="vm.inputLeave(vm.fieldValue[$index], $index)"
+                        ng-disabled="vm.readonly"
                         )
-                    span.input-group-btn
-                        button.btn.btn-default.btn-sm(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
-                include ../../template/errorField/errorClient.jade
+                    span.input-group-addon
+                        span.glyphicon.glyphicon-calendar
+                    span.input-group-addon.icon-remove(data-ng-click="vm.removeItem($index)", data-ng-if="!vm.readonly") x
+                        //-- span.glyphicon.glyphicon-remove
+                include ../../template/errorField/errorClient
             .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-disabled="vm.readonly") {{'BUTTON.ADD' | translate}}
         div(data-ng-if="!vm.multiple")
-            input.form-control.input-sm(
-                data-date-time="",
-                name="{{vm.fieldName}}",
-                auto-close="true",
-                data-ng-disabled="vm.readonly",
-                data-ng-model="vm.fieldValue",
-                data-format="{{vm.format}}",
-                data-max-view="{{::vm.maxView}}",
-                data-min-view="{{::vm.minView}}",
-                data-view="{{::vm.view}}",
-                data-ng-blur="vm.inputLeave(vm.fieldValue)",
-                data-min-date="minDate",
-                data-max-date="maxDate"
+            .input-group(
+                date-picker
+                locale="{{::vm.locale}}"
+                ng-model="vm.fieldValue[$index]"
+                format='{{vm.format}}'                    
+                max-view="{{::vm.maxView}}",
+                min-view="{{::vm.minView}}",
+                view="{{::vm.view}}"
+                min-date="{{::vm.minDate}}",
+                max-date="{{::vm.maxDate}}"
                 )
-            include ../../template/errorField/errorClient.jade
+                    input.form-control.input-sm(
+                        date-picker-input,
+                        name="{{vm.fieldName}}",
+                        ng-model="vm.fieldValue",
+                        data-ng-blur="vm.inputLeave(vm.fieldValue)"
+                        ng-disabled="vm.readonly"
+                        )
+                    span.input-group-addon
+                        span.glyphicon.glyphicon-calendar
+            include ../../template/errorField/errorClient
     .disabled-field(ng-if="vm.disabled && !vm.options.filter")
         include ../../template/disabledField/default.jade

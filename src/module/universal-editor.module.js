@@ -6,11 +6,9 @@
         [
             'universal-editor.templates',
             'minicolors',
-            'datePicker',
             'checklist-model',
             'angularMoment',
             'ngCookies',
-            'ngFileUpload',
             'ui.router',
             'ui.mask',
             'toastr',
@@ -68,18 +66,6 @@
 
         $httpProvider.interceptors.push('EditorHttpInterceptor');
 
-        $provide.decorator('mFormatFilter', function() {
-            return function newFilter(m, format, tz) {
-                if (!(moment.isMoment(m))) {
-                    return '';
-                }
-                if (tz) {
-                    return moment.tz(m, tz).format(format);
-                } else {
-                    return m.format(format);
-                }
-            };
-        });
     }
 
     angular
