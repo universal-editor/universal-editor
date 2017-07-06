@@ -436,6 +436,7 @@
                     data = data.$value;
                 }
                 $scope.data = self.data = data;
+                
                 if (angular.isObject($scope.data)) {
                     var apiValue;
                     if (angular.isString(self.fieldName)) {
@@ -456,11 +457,12 @@
                                         tempObject = tempObject[parentIndex];
                                     }
                                 }
-
-                                if (i !== (names.length - 1)) {
-                                    tempObject = tempObject[name];
-                                } else {
-                                    apiValue = tempObject[name];
+                                if (tempObject) {
+                                    if (i !== (names.length - 1)) {
+                                        tempObject = tempObject[name];
+                                    } else {
+                                        apiValue = tempObject[name];
+                                    }
                                 }
                             }
                         });
@@ -475,6 +477,7 @@
                             });
                         }
                     }
+                    
                     if (self.fieldId && self.fieldValue) {
                         var output;
                         if (angular.isArray(self.fieldValue)) {

@@ -30,6 +30,20 @@
             },
             fields: [
                 {
+                    name: 'id',
+                    component: {
+                        name: 'ue-string',
+                        settings: {
+                            label: 'ID',
+                            validators: [
+                                {
+                                    type: 'number'
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
                     name: 'name',
                     component: {
                         name: 'ue-string',
@@ -60,7 +74,7 @@
                             }
                         }
                     }
-                },               
+                },
                 {
                     name: 'parent_id',
                     component: {
@@ -110,7 +124,7 @@
                         }
                     }
                 },
-                 {
+                {
                     name: 'country',
                     component: {
                         name: 'ue-dropdown',
