@@ -1,4 +1,4 @@
-ul.table.items-list.drag-mode
+ul.table.items-list.drag-mode(ng-if="!vm.warnings.length && !vm.dangers.length")
   li(ng-if="vm.displayHeaderColumns")
     .row.header
       .table-cell( data-ng-repeat="fieldItem in ::vm.tableFields track by $index",

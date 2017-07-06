@@ -449,6 +449,7 @@
                     data = data.$value;
                 }
                 $scope.data = self.data = data;
+                
                 if (angular.isObject($scope.data)) {
                     var apiValue;
                     if (angular.isString(self.fieldName)) {
@@ -489,6 +490,7 @@
                             });
                         }
                     }
+                    
                     if (self.fieldId && self.fieldValue) {
                         var output;
                         if (angular.isArray(self.fieldValue)) {
@@ -509,7 +511,8 @@
                             }
                         }
                     }
-                    var extended = remoteValues ? ApiService.getFromStorage(self.setting, apiValue) : apiValue;
+                    
+                    var extended = remoteValues ? ApiService.getFromStorage(self.setting, self.multiname ? apiValue : self.fieldValue) : apiValue;
                     if (extended !== false) {
                         self.isSendRequest = true;
                     }
