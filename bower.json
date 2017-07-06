@@ -37,7 +37,7 @@
     "bootstrap-sass": "^3.3.7",
     "angular-drag-and-drop-lists": "^2.1.0",
     "angularjs-bootstrap-datetimepicker": "^0.1.0",
-    "eonasdan-bootstrap-datetimepicker": "^4.17.47"
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47" 
   },
   "resolutions": {
     "angular": "~1.6.1",
