@@ -225,6 +225,9 @@
                             }
                         }
                     }
+                    if (angular.isFunction(componentSettings.change) && value !== oldValue) {
+                        componentSettings.change(value, oldValue, getExtendedValue(value));
+                    }
                 }, true)
             );
         }
@@ -282,6 +285,9 @@
                     } else {
                         self.previewValue = option[self.fieldSearch];
                     }
+                    if (angular.isArray(self.selectedValues) && !self.selectedValues.some(function(v) { return v[self.fieldId] === option[self.fieldId] })) {
+                        self.addToSelected(option);
+                    }
                 }
             }
         }
@@ -314,16 +320,27 @@
             if (value == 0) {
                 return value;
             }
-            if (isExtended === true && self.hasOwnProperty('fieldId') && remoteValues) {
+            if (isExtended === true) {
+                value = getExtendedValue(value);
+            }
+            return angular.copy(value) || (self.multiple ? [] : null);
+        }
+
+        function getExtendedValue(id) {
+            var value = id;
+            if (self.hasOwnProperty('fieldId') && remoteValues) {
                 values = self.optionValues;
                 if (angular.isArray(self.selectedValues)) {
                     values = self.selectedValues;
+                }
+                if (angular.isArray(value)) {
+                    return self.selectedValues;
                 }
                 if (angular.isArray(values)) {
                     value = values.filter(function(option) { return angular.isObject(option) ? (option[self.fieldId] == value) : false; })[0];
                 }
             }
-            return angular.copy(value) || (self.multiple ? [] : null);
+            return value;
         }
 
         function getFieldValue(isExtended) {
@@ -374,8 +391,7 @@
             return result;
         }
 
-
-        function onLoadDataHandler(event, data, callback) {
+        function onLoadDataHandler(event, data) {
             if (self.isParentComponent(data) && !self.options.filter) {
                 //-- functional for required fields
                 if (componentSettings.depend) {
@@ -399,10 +415,7 @@
                     }, function(value) {
                         if (!value) {
                             self.clear();
-                            self.readonly = true;
                             self.loadingData = false;
-                        } else {
-                            self.readonly = componentSettings.readonly || false;
                         }
                     }, true);
                 }
@@ -436,7 +449,6 @@
                     data = data.$value;
                 }
                 $scope.data = self.data = data;
-                
                 if (angular.isObject($scope.data)) {
                     var apiValue;
                     if (angular.isString(self.fieldName)) {

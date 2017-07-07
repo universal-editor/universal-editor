@@ -23,6 +23,7 @@
             } else if (componentSettings.values) {
                 selectedStorageComponent = componentSettings.values.$selectedStorage;
             }
+            vm.$id = vm.setting.component.$id;
             vm.selectedValues = [];
             vm.inputValue = '';
             vm.possibleValues = [];
@@ -35,13 +36,33 @@
             vm.classInput = { 'width': '1px' };
             vm.showPossible = false;
             vm.fillControl = fillControl;
+            vm.draggable = componentSettings.draggable === true;
 
             vm.addToSelected = addToSelected;
+            vm.insertToSelectedCollection = insertToSelectedCollection;
             vm.removeFromSelected = removeFromSelected;
             vm.focusPossible = focusPossible;
             vm.deleteToAutocomplete = deleteToAutocomplete;
             vm.loadDataById = loadDataById;
             vm.clear = clear;
+            vm.moved = function(i) {
+                vm.selectedValues.splice(i, 1);
+                vm.fieldValue.splice(0);
+                angular.forEach(vm.selectedValues, function(value) {
+                    if (vm.fieldId) {
+                        vm.fieldValue.push(value[vm.fieldId]);
+                    }
+                });
+            };
+
+            vm.drop = function(item) {
+                return item;
+            };
+
+            vm.dragStart = function(event, item, index) {
+                vm.options.$dnd = vm.options.$dnd || {};
+                vm.options.$dnd.draggingWidth = $(event.target).closest('.autocomplete-input-wrapper').find('.dndDragging .autocomplete-item').width();
+            };
 
 
             if (!vm.multiple) {
@@ -49,11 +70,27 @@
                 vm.classInput['padding-right'] = '25px';
             }
 
+            vm.dragOver = function(event) {
+                if (vm.options.$dnd && vm.options.$dnd.draggingWidth) {
+                    var target = $(event.target).closest('.autocomplete-input-wrapper'),
+                        draggingSource = target.find('.dndDragging.dndDraggingSource');
+                    vm.options.$dnd.draggingSource = draggingSource.hide();
+                    target.find('.dndPlaceholder .autocomplete-item').width(vm.options.$dnd.draggingWidth);
+                }
+                return true;
+            };
+
+            vm.cancel = function() {
+                if (vm.options.$dnd.draggingSource) {
+                    vm.options.$dnd.draggingSource.show();
+                }
+            };
+
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(event, data) {
                 if (vm.isParentComponent(data) && !vm.options.filter && !event.defaultPrevented) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
-                    if (!vm.isSendRequest) {
+                    if (!vm.options.isSendRequest && needRequested()) {
                         vm.loadDataById(vm.fieldValue).then(function() {
                             vm.equalPreviewValue();
                         }).finally(function() {
@@ -65,6 +102,13 @@
                 }
             }));
 
+            function needRequested() {
+                var values = !angular.isArray(vm.fieldValue) ? [vm.fieldValue] : vm.fieldValue;
+                return values.some(function(value) {
+                    return value !== null && value !== undefined && !vm.selectedValues.some(
+                        function(selected) { return (angular.isObject(value) ? value[vm.fieldId] : value) == selected[vm.fieldId]; });
+                });
+            }
             if (componentSettings.mode !== 'preview') {
                 vm.listeners.push($scope.$watch(function() {
                     return vm.inputValue;
@@ -98,9 +142,8 @@
                             if (vm.possibleValues.length < 1) {
                                 break;
                             }
-
                             $timeout(function() {
-                                vm.addToSelected(event, vm.possibleValues[vm.activeElement]);
+                                vm.addToSelected(vm.possibleValues[vm.activeElement], event);
                             }, 0);
 
                             break;
@@ -161,7 +204,7 @@
 
         /* PUBLIC METHODS */
 
-        function addToSelected(event, obj) {
+        function addToSelected(obj, event) {
             //** if you know only id  of the record            
             if (!vm.multiple) {
                 vm.selectedValues = [];
@@ -169,7 +212,9 @@
                 vm.fieldValue = obj[vm.fieldId];
             } else {
                 vm.fieldValue = vm.fieldValue || [];
-                vm.fieldValue.push(obj[vm.fieldId]);
+                if (!~vm.fieldValue.indexOf(obj[vm.fieldId])) {
+                    vm.fieldValue.push(obj[vm.fieldId]);
+                }
             }
             vm.selectedValues.push(obj);
             $element.find('.autocomplete-field-search').removeClass('hidden');
@@ -179,7 +224,6 @@
             if (event && !vm.multiple) {
                 event.stopPropagation();
             }
-            vm.equalPreviewValue();
         }
 
         function removeFromSelected(event, obj) {
@@ -265,17 +309,7 @@
         }
 
         function fillControl(options) {
-            angular.forEach(options, function(v) {
-                if (Array.isArray(vm.fieldValue) &&
-                    (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
-                    vm.multiple && !alreadyIn(v, vm.selectedValues)
-                ) {
-                    vm.selectedValues.push(v);
-                } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
-                    vm.selectedValues.push(v);
-                    vm.placeholder = v[vm.fieldSearch];
-                }
-            });
+            angular.forEach(options, insertToSelectedCollection);
         }
 
         function loadDataById(ids) {
@@ -315,17 +349,7 @@
                 return ApiService
                     .getUrlResource(config)
                     .then(function(response) {
-                        angular.forEach(response.data.items, function(v) {
-                            if (angular.isArray(vm.fieldValue) &&
-                                (vm.fieldValue.indexOf(v[vm.fieldId]) >= 0 || vm.fieldValue.indexOf(String(v[vm.fieldId])) >= 0) &&
-                                vm.multiple && !alreadyIn(v, vm.selectedValues)
-                            ) {
-                                vm.selectedValues.push(v);
-                            } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
-                                vm.selectedValues.push(v);
-                                vm.placeholder = v[vm.fieldSearch];
-                            }
-                        });
+                        angular.forEach(response.data.items, insertToSelectedCollection);
                         ApiService.saveToStorage(vm.setting, response.data.items);
                         if (!vm.optionValues.length) {
                             vm.optionValues = angular.copy(vm.selectedValues);
@@ -335,6 +359,25 @@
                 defer.resolve();
             }
             return defer.promise;
+        }
+
+        function insertToSelectedCollection(v) {
+            if (angular.isArray(vm.fieldValue) && vm.multiple) {
+                var id = v[vm.fieldId], id_string = String(id), i = vm.fieldValue.indexOf(id);
+                if (i === -1) {
+                    id = vm.fieldValue.indexOf(id_string);
+                }
+                if (i >= 0 && !alreadyIn(v, vm.selectedValues)) {
+                    vm.selectedValues[i] = v;
+                }
+            } else if (vm.fieldValue == v[vm.fieldId] && !vm.multiple) {
+                vm.selectedValues.push(v);
+                vm.placeholder = v[vm.fieldSearch];
+            }
+        }
+
+        function isDefined(value) {
+            return typeof value !== 'undefined' && value !== null;
         }
 
         function focusPossible(isActive) {
@@ -383,7 +426,7 @@
             vm.inputValue = '';
             vm.sizeInput = 1;
             vm.selectedValues = [];
-            vm.placeholder = '';
+            vm.placeholder = componentSettings.placeholder || '';
         }
     }
 })();

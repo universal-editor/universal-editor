@@ -133,6 +133,9 @@
                             for (var i = vm.fieldValue.length; i--;) {
                                 if (vm.fieldValue[i] == v_id) {
                                     vm.fieldValue[i] = v;
+                                    if (vm.isTree) {
+                                        v.checked = true;
+                                    }
                                     break;
                                 }
                             }
@@ -552,7 +555,6 @@
                     return selectedStorageComponent.indexOf(v[vm.fieldId]) === -1;
                 });
             }
-
 
             $document.bind('keydown', function(event) {
                 if (vm.showPossible || $scope.isOpen) {

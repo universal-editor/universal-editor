@@ -1866,6 +1866,49 @@
                             component: {
                                 name: 'ue-group',
                                 settings: {
+                                    label: 'Draggable autocomplete',
+                                    fields: [
+                                        {
+                                            component: {
+                                                name: 'ue-autocomplete',
+                                                settings: {
+                                                    label: 'ue-autocomplete with local data',
+                                                    values: {
+                                                        'key1': 'value1',
+                                                        'key2': 'value2',
+                                                        'key3': 'value3'
+                                                    },
+                                                    multiple: true,
+                                                    draggable: true,
+                                                    defaultValue: ['key2', 'key1']
+                                                }
+                                            }
+                                        },
+                                        {
+                                            component: {
+                                                name: 'ue-autocomplete',
+                                                settings: {
+                                                    label: 'Ue-autocomplete with remote data',
+                                                    valuesRemote: {
+                                                        fields: {
+                                                            value: 'id',
+                                                            label: 'name'
+                                                        },
+                                                        url: 'http://universal-backend.dev/rest/v1/staff'
+                                                    },
+                                                    draggable: true,
+                                                    multiple: true
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            component: {
+                                name: 'ue-group',
+                                settings: {
                                     label: 'Relations of components',
                                     fields: [
                                         {

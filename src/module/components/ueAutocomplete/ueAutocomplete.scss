@@ -6,18 +6,33 @@
     }
     .field-wrapper-ue-dropdown,
     .field-wrapper-ue-autocomplete {
+        & .drag-enabled {
+            .autocomplete-selected {
+                cursor: -webkit-grab;
+            }
+        }
+        .dndDragover.autocomplete-input-wrapper {
+            &>.autocomplete-field-search {
+                display: none !important;
+            }
+        }
         .autocomplete-selected {
             position: relative;
             display: inline-block;
             float: left;
+            height: 24px;
             max-width: 100%;
+            &.dndPlaceholder {
+                opacity: 0.5;
+                margin-right: 5px;
+            }
+            margin: 2px;
             .autocomplete-item {
                 background: #CBD6DA;
                 border: 1px solid #959EA9;
                 -webkit-border-radius: 4px;
                 border-radius: 4px;
                 color: #444;
-                margin: 2px;
                 padding: 0 5px;
                 display: inline-block;
                 height: 24px;
@@ -55,7 +70,7 @@
             position: relative;
             height: 100%;
             min-height: 34px;
-            padding: 4px 5px 0 5px;
+            padding: 4px 5px;
             &.disabled-input,
             &.disabled-input input {
                 color: #c8cbcd;
