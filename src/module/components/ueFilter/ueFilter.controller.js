@@ -169,7 +169,7 @@
                             filter: true,
                             $componentId: vm.options.$componentId
                         },
-                        ngStyle: 'display: inline-block; width: 25%; margin-left: 20px;'
+                        ngStyle: 'display: inline-block; width: 25%; margin-left: 40px;'
                     });
                 }
                 vm.body.push(group);

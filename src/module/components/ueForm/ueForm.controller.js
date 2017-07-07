@@ -193,8 +193,8 @@
 
             EditEntityStorage.addFieldController(vm);
 
-            vm.getFieldValue = function() {
-                return EditEntityStorage.constructOutputValue(vm.options);
+            vm.getFieldValue = function(extended) {
+                return EditEntityStorage.constructOutputValue(vm.options, extended);
             };
         };
         

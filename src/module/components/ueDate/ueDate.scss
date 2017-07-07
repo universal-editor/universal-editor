@@ -4,14 +4,19 @@
     }
     .editor-filter-body {
         .field-date {
-            width: 135px;
+            width: 170px;
+            &:first-child {
+                margin-right: 10px;
+            }
         }
     }
     .field-wrapper-ue-date div[date-picker-wrapper] {
         z-index: 56;
     }
-
     .field-wrapper-ue-date {
+        span.input-group-addon {
+            cursor: pointer;
+        }
         .ue-component-body {
             .field-element {
                 .item-datepicker-wrapper {

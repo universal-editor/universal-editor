@@ -1077,8 +1077,9 @@
                                                         {
                                                             type: 'date',
                                                             format: 'YYYY-DD-MM',
-                                                            minDate: '2016-10-12',
-                                                            maxDate: '2016-10-11'
+                                                            minDate: '2016-10-10',
+                                                            maxDate: '2016-10-12',
+                                                            defaultValue: '2016-10-11'
                                                         }
                                                     ]
                                                 }

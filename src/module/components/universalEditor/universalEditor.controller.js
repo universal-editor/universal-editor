@@ -30,7 +30,7 @@
 
             component = ueConfig.component;
 
-            var locale = 'ru';
+            var locale = 'en';
             if (vm.ueConfig.hasOwnProperty('ui') && vm.ueConfig.ui.hasOwnProperty('language')) {
                 if (vm.ueConfig.ui.language.hasOwnProperty('path')) {
                     $translate.use(vm.ueConfig.ui.language.path);
