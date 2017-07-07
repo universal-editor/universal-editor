@@ -510,7 +510,8 @@
                             }
                         }
                     }
-                    var extended = remoteValues ? ApiService.getFromStorage(self.setting, apiValue) : apiValue;
+                    
+                    var extended = remoteValues ? ApiService.getFromStorage(self.setting, self.multiname ? apiValue : self.fieldValue) : apiValue;
                     if (extended !== false) {
                         self.isSendRequest = true;
                     }

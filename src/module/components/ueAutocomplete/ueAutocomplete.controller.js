@@ -142,6 +142,7 @@
                             if (vm.possibleValues.length < 1) {
                                 break;
                             }
+                            
                             $timeout(function() {
                                 vm.addToSelected(vm.possibleValues[vm.activeElement], event);
                             }, 0);
@@ -427,6 +428,7 @@
             vm.sizeInput = 1;
             vm.selectedValues = [];
             vm.placeholder = componentSettings.placeholder || '';
+            vm.possibleValues = [];
         }
     }
 })();

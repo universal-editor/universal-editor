@@ -48,6 +48,11 @@
                         toolbar: [
                             {
                                 component: {
+                                    name: 'ue-filter'
+                                }
+                            },
+                            {
+                                component: {
                                     name: 'ue-button',
                                     settings: {
                                         label: 'Add',
