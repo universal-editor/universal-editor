@@ -166,7 +166,7 @@
                                 component: {
                                     name: 'ue-filter',
                                     settings: {
-                                        fields: ['name', 'email', 'gender', 'created_at', 'country', 'parent_id']
+                                        fields: ['id','name', 'email', 'gender', 'created_at', 'country', 'parent_id']
                                     }
                                 }
                             },
