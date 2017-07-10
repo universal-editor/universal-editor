@@ -171,7 +171,18 @@
         }
       };
 
+      function changeDragImgPosition() {
+        var liElem = $element[0]
+        while (liElem.localName !== "li") {
+          liElem = liElem.children[0];
+        }
+        var rect = liElem.getBoundingClientRect();
+        event.dataTransfer.setDragImage(liElem, rect.width - 15, 15);
+      }
+
       vm.dragStart = function(event, item, index) {
+        if (vm.dragMode && vm.dragMode.dragIcon) changeDragImgPosition();
+
         vm.options.$dnd = vm.options.$dnd || {};
         vm.options.$dnd.dragging = item;
         if (vm.dragMode && angular.isFunction(vm.dragMode.start)) {
