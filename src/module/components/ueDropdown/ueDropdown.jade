@@ -12,6 +12,7 @@ block append content
                                                 ng-options="option[vm.fieldSearch] for option in vm.optionValues track by option[vm.fieldId]")
                     div(data-ng-if="!vm.multiple && !vm.isTree" )
                         div.select-input-wrapper(data-ng-click="vm.clickSelect()", data-ng-class='{"but-for-search": !vm.search, "disabled-input": vm.readonly}' )
+                            //--span {{vm.optionValues}}
                             input.form-control.select-input(
                                 data-ng-if="vm.search",
                                 ng-disabled="vm.readonly"
@@ -40,7 +41,7 @@ block append content
                                 .processing-status-wrapper(ng-if="vm.loadingPossibleData")
                                     .processing-status(translate="PERFORMS_ACTIONS")
                                 .possible-scroll(data-ng-hide="vm.loadingPossibleData")
-                                   .possible-value-item(data-ng-repeat="option in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.fieldSearch]}}
+                                    .possible-value-item(data-ng-repeat="option in vm.possibleValues", data-ng-mouseover="vm.activeElement = $index", data-ng-mousedown="vm.addToSelected($event, option)", data-ng-class="vm.activeElement == $index ? 'active' : ''") {{option[vm.fieldSearch]}}
 
                     .dropdown(data-ng-if="vm.isTree")
                         .dropdown__host

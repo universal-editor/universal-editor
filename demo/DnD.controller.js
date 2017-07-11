@@ -165,18 +165,19 @@
                         dragIcon: true
                     },
                     columns: [
-                        {
-                            name: 'title',
-                            width: "20%"
-                        },
-                        {
-                            name: 'authors',
-                            width: "300px"
-                        },
-                        {
-                            name: 'category_id',
-                            width: "200px"
-                        }],
+                    {
+                        name: 'title',
+                        width: '20%'
+                    },
+                    {
+                        name: 'authors',
+                        width: '300px'
+                    },
+                    {
+                        name: 'category_id',
+                        width: '200px',
+                        sortable: false
+                    }],
                     contextMenu: [
                         {
                             component: {

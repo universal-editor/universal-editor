@@ -4,8 +4,8 @@ table.table.table-bordered.items-list(ng-if="!vm.warnings.length && !vm.dangers.
                     td.table-cell.actions-header.context-column(ng-if="vm.isContextMenu")
                     td.table-cell(data-ng-repeat="fieldItem in ::vm.tableFields track by $index",
                         ng-style="fieldItem.ngStyle"
-                        data-ng-class="{ 'active' : fieldItem.field == vm.sortField, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection}",
-                        data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sorted)") {{fieldItem.displayName}}     
+                        data-ng-class="{ 'active' : fieldItem.field == vm.sortField && fieldItem.sortable, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection}",
+                        data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sortable)") {{fieldItem.displayName}}     
             tbody(data-ng-if="vm.loaded"
                   dnd-list="vm.items" 
                   dnd-allowed-types="vm.$allowed"
