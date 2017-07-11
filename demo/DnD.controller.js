@@ -167,11 +167,13 @@
                     columns: [
                     {
                         name: 'title',
-                        width: '20%'
+                        width: '20%',
+                        sortable: false
                     },
                     {
                         name: 'authors',
-                        width: '300px'
+                        width: '300px',
+                        sortable: false
                     },
                     {
                         name: 'category_id',
