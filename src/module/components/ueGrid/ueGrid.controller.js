@@ -66,8 +66,8 @@
                         table.find('.row.header').append('<div class="table-cell dnd-expand-item glyphicon dragIcon"> </div>');
                     }
                 } else {
-                    if (vm.componentSettings.dragMode.dragIcon) {
-                        table = angular.element($templateCache.get('module/components/ueGrid/template/tableDD.html'));
+                    table = angular.element($templateCache.get('module/components/ueGrid/template/tableDD.html'));
+                    if (vm.componentSettings.dragMode.dragIcon) {                        
                         table.find('thead tr').append('<td class="table-cell dragIcon glyphicon glyphicon-align-justify"> </td>');
                         table.find('tbody tr.t-row').attr('dnd-nodrag', '');
                     }

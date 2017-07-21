@@ -28,6 +28,12 @@
             minDate: scope.minDate ? moment(scope.minDate, scope.format) : false,
             viewMode: scope.view ? views[scope.view] : 'days'
           });
+
+          $(element).on("dp.change", function(e) {
+            var date = moment(e.date, scope.format);
+            ngModel.$viewValue = date.isValid() ? moment(e.date, scope.format).format(scope.format) : moment(Date.now()).format(scope.format);
+            ngModel.$commitViewValue();
+          });
         }
       };
     });

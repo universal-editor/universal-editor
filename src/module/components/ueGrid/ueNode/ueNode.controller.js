@@ -63,7 +63,7 @@
       };
     });
 
-  function UeNodeController($scope, ApiService, $timeout, $rootScope, $element, $translate, toastr, dragOptions) {
+  function UeNodeController($scope, ApiService, $timeout, $rootScope, $element, $translate, toastr, dragOptions, $document) {
     /* jshint validthis: true */
     'ngInject';
     var vm = this;
@@ -147,7 +147,7 @@
         if (vm.parentNode == item) {
           $scope.$broadcast('ue-grid:updateNodes');
         }
-        if((vm.parentNode === null || vm.parentNode === undefined) && (item === null || item === undefined)) {
+        if ((vm.parentNode === null || vm.parentNode === undefined) && (item === null || item === undefined)) {
           $scope.$broadcast('ue-grid:updateNodes');
         }
       });
@@ -172,16 +172,15 @@
       };
 
       function changeDragImgPosition() {
-        var liElem = $element[0]
-        while (liElem.localName !== "li") {
-          liElem = liElem.children[0];
+        var liElem = $(event.currentTarget).find('.tree-row')[0];
+        if (liElem) {
+          var rect = liElem.getBoundingClientRect();
+          event.dataTransfer.setDragImage(liElem, rect.width - 15, 15);
         }
-        var rect = liElem.getBoundingClientRect();
-        event.dataTransfer.setDragImage(liElem, rect.width - 15, 15);
       }
 
       vm.dragStart = function(event, item, index) {
-        if (vm.dragMode && vm.dragMode.dragIcon) changeDragImgPosition();
+        if (vm.dragMode && vm.dragMode.dragIcon) changeDragImgPosition(event);
 
         vm.options.$dnd = vm.options.$dnd || {};
         vm.options.$dnd.dragging = item;
@@ -190,7 +189,27 @@
         }
       };
 
+      vm.dndDragend = function() {
+        var elemWhithClass = $document[0].getElementsByClassName('ue-dnd-parent-node');
+        if (!elemWhithClass.length) return; 
+        for(var i=0, len = elemWhithClass.length; i < len; i++) {
+          elemWhithClass[i].classList.remove('ue-dnd-parent-node');
+        }
+      };
+
       vm.dragover = function(event, index, type) {
+        var placeholder = $document[0].getElementsByClassName('dndPlaceholder')[0];
+        var parentElement = placeholder.parentNode;
+
+        while(parentElement.localName !== 'li' && parentElement !== null ) {
+          parentElement = parentElement.parentNode;
+        }
+
+        parentElement.firstElementChild.classList.add('ue-dnd-parent-node');
+        $element.on('dragleave', function(event) {
+          parentElement.firstElementChild.classList.remove('ue-dnd-parent-node');
+        });
+
         if (vm.dragMode && angular.isFunction(vm.dragMode.over)) {
           var dragging = null;
           if (vm.options.$dnd && vm.options.$dnd.dragging) {
@@ -287,7 +306,7 @@
           }
         });
       }
-      fillDraggingOptions(vm.items);      
+      fillDraggingOptions(vm.items);
     };
   }
 })();

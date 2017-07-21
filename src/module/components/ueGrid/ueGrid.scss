@@ -144,7 +144,9 @@
               }
               & thead td {
                   font-weight: 700;
-                  cursor: pointer;
+                  &.ue-column-sortable {
+                    cursor: pointer;
+                  }
                   border-bottom-width: 1px;
                   &.active.asc:after {
                       content: "";

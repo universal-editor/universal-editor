@@ -166,7 +166,7 @@
                                 component: {
                                     name: 'ue-filter',
                                     settings: {
-                                        fields: ['id','name', 'email', 'gender', 'created_at', 'country', 'parent_id']
+                                        fields: ['id', 'name', 'email', 'gender', 'created_at', 'country', 'parent_id']
                                     }
                                 }
                             },
@@ -181,7 +181,11 @@
                             }
                         ]
                     },
-                    columns: ['name', 'email', 'gender', 'parent_id'],
+                    columns: [
+                        {
+                            name: 'name',
+                            sortable: false
+                        }, 'email', 'gender', 'parent_id'],
                     contextMenu: [
                         {
                             component: {

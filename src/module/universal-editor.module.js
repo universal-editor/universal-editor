@@ -29,7 +29,7 @@
                     var defer = $q.defer();
                     config.timeout = defer.promise;
                     var success = config.beforeSend(config);
-                    if(success === false) {
+                    if (success === false) {
                         defer.resolve();
                     }
                 }
@@ -42,9 +42,11 @@
         .module('universal-editor')
         .config(universalEditorConfig);
 
-    function universalEditorConfig(minicolorsProvider, $httpProvider, $stateProvider, $urlRouterProvider, $provide, $injector, moment) {
+    function universalEditorConfig(minicolorsProvider, $httpProvider, $stateProvider, $urlRouterProvider, $provide, $injector, moment, $qProvider) {
         'ngInject';
         var dataResolver;
+
+        $qProvider.errorOnUnhandledRejections(false);
 
         angular.extend(minicolorsProvider.defaults, {
             control: 'hue',

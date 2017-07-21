@@ -6,13 +6,13 @@ block append content
         div(data-ng-if="vm.multiple")
             .item-datepicker-wrapper(data-ng-repeat="field_item in vm.fieldValue track by $index")
                 .input-group(
-                    date-picker
-                    locale="{{::vm.locale}}"
-                    ng-model="vm.fieldValue[$index]"
-                    format='{{vm.format}}'                    
+                    date-picker,
+                    locale="{{::vm.locale}}",
+                    ng-model="vm.fieldValue[$index]",
+                    format='{{vm.format}}',              
                     max-view="{{::vm.maxView}}",
                     min-view="{{::vm.minView}}",
-                    view="{{::vm.view}}"
+                    view="{{::vm.view}}",
                     min-date="{{::vm.minDate}}",
                     max-date="{{::vm.maxDate}}"
                 )
@@ -30,13 +30,13 @@ block append content
             .btn.btn-primary.btn-sm(data-ng-click="vm.addItem()", data-ng-disabled="vm.readonly") {{'BUTTON.ADD' | translate}}
         div(data-ng-if="!vm.multiple")
             .input-group(
-                date-picker
-                locale="{{::vm.locale}}"
-                ng-model="vm.fieldValue[$index]"
-                format='{{vm.format}}'                    
+                date-picker,
+                locale="{{::vm.locale}}",
+                format='{{vm.format}}',
+                ng-model="vm.fieldValue",               
                 max-view="{{::vm.maxView}}",
                 min-view="{{::vm.minView}}",
-                view="{{::vm.view}}"
+                view="{{::vm.view}}",
                 min-date="{{::vm.minDate}}",
                 max-date="{{::vm.maxDate}}"
                 )

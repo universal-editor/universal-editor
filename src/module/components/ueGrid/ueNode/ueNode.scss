@@ -1,3 +1,7 @@
+.ue-dnd-parent-node {
+    background-color: #f5f5f5;
+}
+
 .table.items-list.drag-mode .row-draggable .row {
     border: 1px solid transparent;
     margin-right: 0;
@@ -98,9 +102,11 @@
         &.header {
             border-bottom: 2px solid #ddd;
             font-weight: 700;
-            cursor: pointer;
             .table-cell {
                 padding: 5px 12px;
+                &.ue-column-sortable {
+                    cursor: pointer;
+                }
                 &.glyphicon {
                     width: 30px;
                 }
@@ -210,4 +216,64 @@
             }
         }
     }
+
+  .row-empty {
+        padding: 10px 20px;
+    }
+    div.tree-row {
+        padding: 5px;
+        margin: 2px 0;
+    }
+    .row.header {
+        pointer-events: none;
+    }
+    .dndPlaceholder {
+        margin: 0 0 10px 0;
+    }
+    .component-wrapper {
+        width: 100%;
+        .readonly-component {
+            .components-body {
+                opacity: 0.9 !important;
+            }
+        }
+        .ue-component-body {
+            flex-basis: 100%;
+        }
+        .field-wrapper-ue-checkbox {
+            .ue-component-body {
+                flex-basis: auto;
+                margin: 0 auto;
+            }
+        }
+    }
+
+     .tree-body {
+            padding: 5px 10px;
+            .field-wrapper.row {
+                padding: 0;
+            }
+            .row.regim-preview {
+                margin-top: 0;
+                padding-top: 0;
+            }
+            .row-draggable {
+                .children-frames {
+                    padding-left: 21px;
+                }
+                .dnd-expand-item.glyphicon {
+                    padding: 0 8px 0 0;
+                    margin-top: 2px;
+                }
+                .row {
+                    align-items: flex-start;
+                    .column.first-column {
+                        padding-left: 0;
+                    }
+                }
+                .dnd-expand-item.glyphicon.glyphicon-collapse-down.icon-collapse {
+                    display: none;
+                }
+            }
+        }
 }

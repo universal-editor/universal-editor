@@ -106,7 +106,7 @@
                         /** for date is required convert into date-type (at this moment we have two fields of date) */
                         if (field.component.settings.$fieldType === 'date') {
                             output[key] = output[key] || [];
-                            output[key].push(moment.utc(value, model.format));
+                            output[key].push(moment.utc(value, model.format).format(model.format));
                         } else {
                             output[key] = value;
                         }
@@ -156,7 +156,7 @@
                 }
 
                 if (~['ue-date'].indexOf(field.component.name)) {
-                    group.filters[0].ngStyle = 'display: inline-block; width: 25%; margin-left: 5px;';
+                    group.filters[0].ngStyle = 'display: inline-block; width: 210px; margin-left: 5px;';
                     group.filters[0].options.filterParameters.operator = '>=';
                     var cloneField = angular.copy(field);
                     group.filters.push({
@@ -169,7 +169,7 @@
                             filter: true,
                             $componentId: vm.options.$componentId
                         },
-                        ngStyle: 'display: inline-block; width: 25%; margin-left: 40px;'
+                        ngStyle: 'display: inline-block; width: 210px; margin-left: 19px;'
                     });
                 }
                 vm.body.push(group);

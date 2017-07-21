@@ -32,25 +32,7 @@
             $scope.maxDate = !vm.maxDate ? vm.maxDate : moment(vm.maxDate, vm.format);
             fillPreviewValue();
 
-            vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
-                if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {
-                    $scope.onLoadDataHandler(e, data);
-                    if (vm.multiple) {
-                        if (angular.isArray(vm.fieldValue)) {
-                            vm.previewValue = [];
-                            vm.fieldValue.forEach(function(date, index) {
-                                vm.fieldValue[index] = angular.isString(vm.format) ? moment(date, vm.format) : moment(date);
-                                vm.previewValue[index] = angular.isString(vm.format) ? vm.fieldValue[index].format(vm.format) : vm.fieldValue[index].toString();
-                            });
-                        }
-                    } else {
-                        if (vm.fieldValue) {
-                            vm.fieldValue = angular.isString(vm.format) ? moment(vm.fieldValue, vm.format) : moment(vm.fieldValue);
-                            vm.previewValue = angular.isString(vm.format) ? vm.fieldValue.format(vm.format) : vm.fieldValue.toString();
-                        }
-                    }
-                }
-            }));
+            vm.listeners.push($scope.$on('ue:componentDataLoaded', $scope.onLoadDataHandler));
         };
 
         function fillPreviewValue() {
@@ -92,23 +74,26 @@
             if (vm.multiname) {
                 wrappedFieldValue = [];
                 angular.forEach(vm.fieldValue, function(valueItem) {
-                    if (!valueItem || valueItem === '' || !moment.isMoment(valueItem)) {
+                    if (isUnDefined(valueItem)) {
                         return;
                     }
                     var tempItem = {};
-                    tempItem[vm.multiname] = moment(valueItem).format(vm.format);
+                    tempItem[vm.multiname] = moment(valueItem, vm.format).format(vm.format);
                     wrappedFieldValue.push(tempItem);
                 });
             } else if (vm.multiple) {
                 wrappedFieldValue = [];
                 angular.forEach(vm.fieldValue, function(valueItem) {
-                    wrappedFieldValue.push(moment(valueItem).format(vm.format));
+                    if (isUnDefined(valueItem)) {
+                        return;
+                    }
+                    wrappedFieldValue.push(moment(valueItem, vm.format).format(vm.format));
                 });
             } else {
-                if (vm.fieldValue === undefined || vm.fieldValue === '' || !moment.isMoment(vm.fieldValue)) {
+                if (isUnDefined(vm.fieldValue)) {
                     wrappedFieldValue = '';
                 } else {
-                    wrappedFieldValue = moment(vm.fieldValue).format(vm.format);
+                    wrappedFieldValue = moment(vm.fieldValue, vm.format).format(vm.format);
                 }
             }
 
@@ -116,5 +101,7 @@
 
             return field;
         }
+
+        function isUnDefined(v) { return v === undefined || v === '' || v === null; }
     }
 })();

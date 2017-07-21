@@ -11,6 +11,7 @@ ul.dnd-list(
             dnd-draggable="item",
             dnd-moved="vm.moved($index)",
             dnd-type="item.$type",                 
+            dnd-dragend ="vm.dndDragend(event)"      
             dnd-dragstart="vm.dragStart(event, item, $index)"
             dnd-effect-allowed="{{vm.mode}}")
             .row(data-ng-tree-item="",

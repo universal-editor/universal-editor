@@ -17,6 +17,7 @@
 
 Опции `containerName` и `allowedContainers` описывают возможный обмен между разными контейнерами. Например, в компонент `A` с `containerName: "phones"` нельзя будет перенести записи компонента `B` с `containerName: "fax"` и компонента `C` c `containerName: "mobiles"`. Но такой обмен записями станет возможным есть указать принимаемый тип в параметре `allowedContainers`.
 
+При перетаскивании родительскому элементу будет присвоен класс `ue-dnd-parent-node`.
 ```javascript
 var A = {
     component: {

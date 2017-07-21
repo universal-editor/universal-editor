@@ -458,7 +458,7 @@
                 }
             }
 
-            function addToSelected(event, val) {
+            function addToSelected(val, event) {
                 if (vm.multiple) {
                     vm.fieldValue = vm.fieldValue || [];
                     vm.fieldValue.push(val);
@@ -534,7 +534,7 @@
                             }
                             $timeout(function() {
                                 if ((!vm.multiple && !vm.isTree)) {
-                                    vm.addToSelected(null, vm.possibleValues[vm.activeElement]);
+                                    vm.addToSelected(vm.possibleValues[vm.activeElement], null);
                                 } else if (vm.isTree) {
                                     vm.toggle(undefined, vm.optionValues[vm.activeElement], true);
                                 }
