@@ -543,7 +543,7 @@
         }
 
         function successCreateMessage() {
-            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {
+            $translate('CHANGE_RECORDS.CREATE').then(function(translation) {                
                 toastr.success(translation);
             });
         }
@@ -977,8 +977,7 @@
                     $rootScope.$broadcast('ue:afterEntityUpdate', {
                         id: config.id,
                         $componentId: parentComponentId
-                    });
-                    successUpdateMessage();
+                    });                    
                     params = {};
                     paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
                     if ($location.search()[paramName]) {
@@ -992,9 +991,11 @@
                     if (state) {
                         $state.go(state, params).then(function() {
                             $location.search(searchString);
+                            successUpdateMessage();
                         });
                     } else {
                         replaceToURL(config.request.href);
+                        successUpdateMessage();
                     }
                     break;
                 case 'create':
@@ -1006,7 +1007,6 @@
                         id: data[config.idField],
                         $componentId: parentComponentId
                     });
-                    successCreateMessage();
 
                     params = {};
                     paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
@@ -1024,9 +1024,11 @@
                                 delete params.back;
                             }
                             $location.search(searchString);
+                            successCreateMessage();
                         });
                     } else {
                         replaceToURL(config.request.href);
+                        successCreateMessage();
                     }
                     break;
                 case 'presave':
