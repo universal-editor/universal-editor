@@ -1067,8 +1067,7 @@
                     $rootScope.$broadcast('ue:afterEntityDelete', {
                         $componentId: config.parentComponentId,
                         entityId: config.request.entityId
-                    });
-                    successDeleteMessage();
+                    });                    
                     params = {};
                     paramName = config.request.options.prefixGrid ? config.request.options.prefixGrid + '-parent' : 'parent';
                     if ($location.search()[paramName]) {
@@ -1087,9 +1086,11 @@
                             $state.go(state, params).then(function() {
                                 $location.search(searchString);
                                 $rootScope.$broadcast('ue:collectionRefresh', parentComponentId);
+                                successDeleteMessage();
                             });
                         } else {
                             replaceToURL(config.request.href);
+                            successDeleteMessage();
                         }
                     }
                     break;
