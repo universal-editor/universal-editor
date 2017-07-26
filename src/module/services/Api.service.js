@@ -1092,6 +1092,8 @@
                             replaceToURL(config.request.href);
                             successDeleteMessage();
                         }
+                    } else {
+                        successDeleteMessage();
                     }
                     break;
             }
