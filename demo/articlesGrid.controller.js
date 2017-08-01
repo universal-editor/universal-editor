@@ -11,7 +11,9 @@
             standard: 'JSONAPI',
             resourceType: 'articles',
             url: 'http://localhost:16006/rest/articles',
-            sortBy: '-id',
+            sortBy: {
+                id: 'desc'
+            },
             primaryKey: 'id',
             keys: {
                 meta: '_meta'

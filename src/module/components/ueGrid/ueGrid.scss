@@ -123,6 +123,12 @@
                   }
                   vertical-align: top;
                   position: relative;
+                  &.ue-column-sortable {
+                      & span.glyphicon {
+                          float: right;
+                          display: inline-block;
+                      }
+                  }
                   & span.glyphicon {
                       display: none;
                       &.icon-mix-mode {
@@ -151,7 +157,14 @@
               & thead td {
                   font-weight: 700;
                   &.ue-column-sortable {
-                    cursor: pointer;
+                      cursor: pointer;
+
+                      .glyphicon-sort {
+                          color: rgba(153, 153, 153, 0.48);
+                      }
+                      .glyphicon-sort-by-attributes-alt or .glyphicon-sort-by-attributes-desc {
+                          color: #000000;
+                      }
                   }
                   border-bottom-width: 1px;
                   &.active.asc:after {

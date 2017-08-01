@@ -9,6 +9,40 @@
         'ngInject';
         var self = this;
 
+        self.convertSorting = function(sorting) {
+            var fields = sorting.split(',');
+            var result = {};
+            angular.forEach(fields, function(field) {
+                field = field.trim();
+                if(field[0] === '-') {
+                    result[field.substr(1)] = 'desc';
+                }
+                if(field[0] !== '-') {
+                    result[field] = 'asc';
+                }
+            });
+            return result;
+        };
+
+        self.getSorting = function(tableFields) {
+            if (angular.isArray(tableFields)) {
+                var parameter = '';
+                angular.forEach(tableFields, function(column) {
+                    if (column.sort.enable) {
+                        if (column.sort.direction === 'asc') {
+                            parameter += parameter === '' ? column.field : (',' + column.field);
+                        }
+                        if (column.sort.direction === 'desc') {
+                            parameter += parameter === '' ? ('-' + column.field) : (',-' + column.field);
+                        }
+                    }
+                });
+                return parameter || null;
+            } else {
+                return null;
+            }
+        };
+
         self.getHeaders = function(config) {
             var headers = config.headers || {};
             return headers;
@@ -82,7 +116,7 @@
                             fields.push(field.name);
                         }
                     });
-                    if(fields.length) {
+                    if (fields.length) {
                         config.params.fields = fields.join(',');
                     }
                 }

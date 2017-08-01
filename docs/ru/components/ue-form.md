@@ -12,7 +12,9 @@
 var formDataSource = {        
         standard: 'YiiSoft',
         url: '//universal-backend.dev/rest/v1/staff',
-        sortBy: '-id',
+        sortBy: {
+            id: 'desc'
+        },
         primaryKey: 'id',
         parentField: 'parent_id',
         fields: [
@@ -130,7 +132,6 @@ var config = {
 | settings[dataSource] | object | Объект настройки компонента по работе с бекендом. | + | - |
 | settings[dataSource][standard] | string | Cтиль построения архитектуры. | + | - |
 | settings[dataSource][url] | string | URL в RESTful-сервисе. | + | - |
-| settings[dataSource][sortBy] | string | Поле для сортировки по-умолчанию. Направление asc задаётся знаком - перед именем поля. | - | - |
 | settings[dataSource][primaryKey] | string | Имя поля с первичным ключом, по которому редактор идентифицирует записи. | + | - |
 | settings[dataSource][parentField] | string | Имя поля с идентификатором родительской записи. Данный параметр требуется указывать, если поле является разделом», т. е. может иметь дочерние объекты, которые будут связаны по этому полю. Можно использовать в связке со смешанным режимом. | - | - |
 | settings[dataSource][fields] | array | Массив настроек полей используемых при создание и редактирование записи. | + | - |

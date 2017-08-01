@@ -37,7 +37,6 @@
 .table.items-list.drag-mode .row.header .table-cell {
     flex-direction: column;
     align-items: flex-start;
-    display: flex;
 }
 
 .row.header .table-cell.first-column {
@@ -107,34 +106,14 @@
                 &.ue-column-sortable {
                     cursor: pointer;
                 }
+                &.ue-column-sortable {
+                    & span.glyphicon {
+                        float: right;
+                        display: inline-block;
+                    }
+                }
                 &.glyphicon {
                     width: 30px;
-                }
-                &.active.asc:before {
-                    content: "";
-                    width: 0;
-                    height: 0;
-                    border-left: 5px solid transparent;
-                    border-right: 5px solid transparent;
-                    border-bottom: 7px solid #000000;
-                    transform: scale(-1, -1);
-                    margin-top: 3px;
-                    position: absolute;
-                    left: 0;
-                    display: inline-flex;
-                }
-                &.active.desc:before {
-                    content: "";
-                    width: 0;
-                    height: 0;
-                    border-left: 5px solid transparent;
-                    border-right: 5px solid transparent;
-                    border-top: 7px solid #000000;
-                    transform: scale(-1, -1);
-                    margin-top: 3px;
-                    position: absolute;
-                    left: 0;
-                    display: inline-flex;
                 }
             }
         }
@@ -216,16 +195,12 @@
             }
         }
     }
-
-  .row-empty {
+    .row-empty {
         padding: 10px 20px;
     }
     div.tree-row {
         padding: 5px;
         margin: 2px 0;
-    }
-    .row.header {
-        pointer-events: none;
     }
     .dndPlaceholder {
         margin: 0 0 10px 0;
@@ -247,33 +222,32 @@
             }
         }
     }
-
-     .tree-body {
-            padding: 5px 10px;
-            .field-wrapper.row {
-                padding: 0;
+    .tree-body {
+        padding: 5px 10px;
+        .field-wrapper.row {
+            padding: 0;
+        }
+        .row.regim-preview {
+            margin-top: 0;
+            padding-top: 0;
+        }
+        .row-draggable {
+            .children-frames {
+                padding-left: 21px;
             }
-            .row.regim-preview {
-                margin-top: 0;
-                padding-top: 0;
+            .dnd-expand-item.glyphicon {
+                padding: 0 8px 0 0;
+                margin-top: 2px;
             }
-            .row-draggable {
-                .children-frames {
-                    padding-left: 21px;
+            .row {
+                align-items: flex-start;
+                .column.first-column {
+                    padding-left: 0;
                 }
-                .dnd-expand-item.glyphicon {
-                    padding: 0 8px 0 0;
-                    margin-top: 2px;
-                }
-                .row {
-                    align-items: flex-start;
-                    .column.first-column {
-                        padding-left: 0;
-                    }
-                }
-                .dnd-expand-item.glyphicon.glyphicon-collapse-down.icon-collapse {
-                    display: none;
-                }
+            }
+            .dnd-expand-item.glyphicon.glyphicon-collapse-down.icon-collapse {
+                display: none;
             }
         }
+    }
 }

@@ -23,6 +23,8 @@
             return def;
         }
 
+        this.getCustomService = getCustomService;
+
         this.getItemsList = function(request, notGoToState) {
             var deferred = $q.defer();
             var dataSource = request.options.$dataSource;

@@ -11,7 +11,9 @@
         var newsDataSource = {
             standard: 'YiiSoft',
             url: '/assets/dragAndDrop.1.json',
-            sortBy: '-id',
+            sortBy: {
+                id: 'desc'
+            },
             primaryKey: 'id',
             tree: {
                 childrenField: 'childs',
@@ -167,8 +169,7 @@
                     columns: [
                     {
                         name: 'title',
-                        width: '20%',
-                        sortable: false
+                        width: '50%'
                     },
                     {
                         name: 'authors',

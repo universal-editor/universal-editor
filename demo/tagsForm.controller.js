@@ -12,7 +12,6 @@
         var tagsDataSource = {
             standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/tags',
-            sortBy: '-id',
             fields: [
                 {
                     name: 'id',

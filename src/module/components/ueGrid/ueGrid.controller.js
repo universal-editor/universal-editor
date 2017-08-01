@@ -55,7 +55,9 @@
             itemsKey,
             mixEntityObject,
             url,
-            parentField;
+            parentField,
+            service,
+            sorting;
 
         vm.$postLink = function() {
             var table;
@@ -67,7 +69,7 @@
                     }
                 } else {
                     table = angular.element($templateCache.get('module/components/ueGrid/template/tableDD.html'));
-                    if (vm.componentSettings.dragMode.dragIcon) {                        
+                    if (vm.componentSettings.dragMode.dragIcon) {
                         table.find('thead tr').append('<td class="table-cell dragIcon glyphicon glyphicon-align-justify"> </td>');
                         table.find('tbody tr.t-row').attr('dnd-nodrag', '');
                     }
@@ -80,6 +82,7 @@
 
         vm.$onInit = function() {
             vm.$componentId = vm.setting.component.$id;
+            vm.sorting = {};
             //** Nested base controller */
             angular.extend(vm, $controller('FieldsController', { $scope: $scope, $element: $element }));
             delete vm.inputLeave;
@@ -91,6 +94,25 @@
                 vm.childrenField = vm.dataSource.tree.childrenField;
                 vm.childrenCountField = vm.dataSource.tree.childrenCountField;
                 vm.selfField = vm.dataSource.tree.selfField;
+            }
+
+            service = ApiService.getCustomService(vm.dataSource.standard);
+
+            if ($location.search()[getKeyPrefix('sort')]) {
+                vm.sorting = service.convertSorting($location.search()[getKeyPrefix('sort')]);
+            } else if (vm.dataSource.sortBy) {
+                (function circuit(sorting, fullName) {
+                    angular.forEach(sorting, function(field, key) {
+                        if (angular.isString(field)) {
+                            var name = fullName + (fullName === '' ? key : ('.' + key));
+                            vm.sorting[name] = field;
+                        }
+                        if (angular.isObject(field)) {
+                            fullName += (fullName === '' ? key : ('.' + key));
+                            circuit(field, fullName);
+                        }
+                    });
+                })(vm.dataSource.sortBy, '');                
             }
 
             if (!vm.componentSettings.width) {
@@ -105,8 +127,6 @@
             vm.items = [];
             vm.errors = [];
             vm.entityId = '';
-            vm.sortField = '';
-            vm.sortingDirection = true;
             vm.pageItemsArray = [];
             vm.contextLinks = [];
             vm.contextLinksOrigin = [];
@@ -124,7 +144,6 @@
                 $componentId: vm.$componentId,
                 prefixGrid: vm.prefixGrid,
                 mixedMode: vm.setting.component.settings.mixedMode,
-                sort: vm.setting.component.settings.dataSource.sortBy,
                 isGrid: true,
                 $dataSource: vm.dataSource
             };
@@ -200,7 +219,10 @@
                     if (angular.isObject(col)) {
                         tableField = {
                             field: col.name || null,
-                            sortable: sortable,
+                            sort: {
+                                enable: sortable,
+                                direction: vm.sorting[col.name] || 'none'
+                            },
                             displayName: col.component.settings.label || col.name,
                             component: col,
                             options: {
@@ -220,6 +242,8 @@
                     }
                 });
             }
+
+            $location.search(getKeyPrefix('sort'), setSortParameter());
 
             angular.forEach(vm.setting.component.settings.contextMenu, function(value) {
                 var newValue = angular.merge({}, value);
@@ -258,9 +282,6 @@
                 });
             }
 
-            vm.sortField = getFirsSortableCol();
-
-            if (!vm.sortField) vm.sortField = vm.setting.component.settings.dataSource.sortBy;
 
             vm.toggleContextView = toggleContextView;
             vm.toggleContextViewByEvent = toggleContextViewByEvent;
@@ -295,11 +316,6 @@
                 }
             });
         };
-        function getFirsSortableCol() {
-            for (var i = 0, len = vm.tableFields.length; i < len; i++) {
-                if (vm.tableFields[i].sortable) return vm.tableFields[i].field
-            }
-        }
         vm.moved = function(index) {
             var disabled = angular.isFunction(vm.dragMode.dragDisable) ? vm.dragMode.dragDisable(vm.items[index], vm.items) : false;
             if (!disabled) {
@@ -399,21 +415,12 @@
             var locationObject = $location.search();
             var page = locationObject[getKeyPrefix('page')] || 1;
             var parent = locationObject[getKeyPrefix('parent')];
-            var sortParameter = locationObject[getKeyPrefix('sort')];
+            var sortParameter = locationObject[getKeyPrefix('sort')] || service.getSorting(vm.tableFields);
             vm.request.childId = vm.parent;
             vm.request.params = vm.request.params || {};
             vm.request.params.page = page;
 
-            if (sortParameter) {
-                vm.sortingDirection = sortParameter[0] !== '-';
-                vm.sortField = sortParameter.replace('-', '');
-            }
-            vm.request.params.sort = sortParameter || getSortParameter();
-        }
-
-        function getSortParameter(name) {
-            name = name || vm.sortField;
-            return vm.sortingDirection ? name : ('-' + name);
+            vm.request.params.sort = sortParameter;
         }
 
         function getKeyPrefix(key) {
@@ -423,15 +430,17 @@
             return vm.options.prefixGrid ? (vm.options.prefixGrid + '-' + key) : key;
         }
 
-        function changeSortField(field, sortable) {
-            if (field && sortable) {
+        function changeSortField(field) {
+            if (field.sort.enable) {
                 vm.loaded = false;
-                if (vm.sortField == field) {
-                    vm.sortingDirection = !vm.sortingDirection;
-                } else {
-                    vm.sortField = field;
+                if (field.sort.direction === 'none') {
+                    field.sort.direction = 'desc';
+                } else if (field.sort.direction === 'desc') {
+                    field.sort.direction = 'asc';
+                } else if (field.sort.direction === 'asc') {
+                    field.sort.direction = 'none';
                 }
-                var sort = getSortParameter(field);
+                var sort = setSortParameter();
                 $location.search(getKeyPrefix('sort'), sort);
                 $location.search(getKeyPrefix('page'), null);
                 vm.request.params = {
@@ -440,6 +449,12 @@
                 };
                 refreshTableRecords(true);
             }
+        }
+
+        function setSortParameter() {
+            var sort = service.getSorting(vm.tableFields);
+            $location.search(getKeyPrefix('sort'), sort);
+            return sort;
         }
 
         function getParent() {

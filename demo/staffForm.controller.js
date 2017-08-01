@@ -12,7 +12,6 @@
         var staffDataSource = {
             standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/staff',
-            sortBy: '-id',
             primaryKey: 'id',
             parentField: 'parent_id',
             fields: [

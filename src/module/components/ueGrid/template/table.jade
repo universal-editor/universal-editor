@@ -4,8 +4,9 @@ table.table.table-bordered.items-list(ng-if="!vm.warnings.length && !vm.dangers.
       td.table-cell.actions-header.context-column(ng-if="vm.isContextMenu")
       td.table-cell(data-ng-repeat="fieldItem in ::vm.tableFields track by $index",
         ng-style="fieldItem.ngStyle"
-        data-ng-class="{ 'active' : fieldItem.field == vm.sortField && fieldItem.sortable, 'desc' : vm.sortingDirection, 'asc' : !vm.sortingDirection, 'ue-column-sortable' : fieldItem.sortable}",
-        data-ng-click="vm.changeSortField(fieldItem.field, fieldItem.sortable)") {{fieldItem.displayName}} 
+        data-ng-class="{'ue-column-sortable':fieldItem.sort.enable}"
+        data-ng-click="vm.changeSortField(fieldItem)") {{fieldItem.displayName}} 
+        span(data-ng-class="{'glyphicon glyphicon-sort': fieldItem.sort.direction === 'none', 'glyphicon glyphicon-sort-by-attributes-alt':fieldItem.sort.direction === 'desc', 'glyphicon glyphicon-sort-by-attributes':fieldItem.sort.direction === 'asc'}") 
   tbody(data-ng-if="vm.loaded")
     tr(data-ng-repeat="item in vm.items", 
       data-ng-class="{'zhs-item': item[vm.subType] && item[vm.subType] !== undefined}", 

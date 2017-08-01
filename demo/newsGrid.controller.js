@@ -11,7 +11,10 @@
         var newsDataSource = {
             standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/news',
-            sortBy: '-id',
+            sortBy: {
+                id: 'asc',
+                title: 'desc'
+            },
             primaryKey: 'id',
             fields: [
                 {
@@ -155,9 +158,9 @@
                     },
                     columns: [
                         { name: 'id', width: '20%' },
-                        { name: 'title', width: '30%', sortable: false },
+                        { name: 'title', width: '30%' },
                         { name: 'authors', width: '30%' },
-                        { name: 'category_id', width: '30%' }],
+                        { name: 'category_id', width: '30%', sortable: false }],
                     contextMenu: [
                         {
                             component: {

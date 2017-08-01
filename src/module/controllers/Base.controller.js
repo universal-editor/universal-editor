@@ -209,7 +209,11 @@
                     } else {
                         var messageCode = error.status ? ('N' + error.status) : 'UNDEFINED';
                         $translate('RESPONSE_ERROR.' + messageCode).then(function(translation) {
-                            error.text = translation.substr(0, 1).toLowerCase() + translation.substr(1);
+                            var parts = translation.replace('%code', error.status).split(':');
+                            error.label = parts[0];
+                            if (parts[1]) {
+                                error.text = ':' + parts[1];
+                            }
                         });
                     }
 
@@ -221,11 +225,9 @@
                     }
 
                     if (/^4/.test(rejection.status)) {
-                        error.label = rejection.status + ': ';
                         self.warnings.push(error);
                     }
                     if (/^5/.test(rejection.status)) {
-                        error.label = rejection.status + ': ';
                         self.dangers.push(error);
                     }
                     event.preventDefault();

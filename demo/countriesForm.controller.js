@@ -12,7 +12,6 @@
         var countryDataSource = {
             standard: 'YiiSoft',
             url: '//universal-backend.dev/rest/v1/country',
-            sortBy: '-id',
             primaryKey: 'id',
             fields: [
                 {
