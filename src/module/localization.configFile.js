@@ -64,10 +64,10 @@
             'LOADING': 'Загрузка',
             'SELECT_VALUE': 'Выберите значение',
             'PERFORMS_ACTIONS': 'Выполняется действие',
-            'ELEMENT_NO': 'Нет элементов для отображения',
-            'ELEMENTS': 'Элементы',
+            'ELEMENT_NO': 'Нет материалов для отображения',
+            'ELEMENTS': 'Материалы',
             'FROM': 'из',
-            'SEARCH_ELEMENTS': 'Поиск по элементам',
+            'SEARCH_ELEMENTS': 'Поиск по материалам',
             'ERROR': {
                 'EditEntityStorage': 'EditEntityStorage: Сущность не доступна для проверки так как она не указана или не указан её тип',
                 'UNDEFINED_API_SERVICE': 'Не найден API-сервис',

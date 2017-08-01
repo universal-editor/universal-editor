@@ -81,9 +81,12 @@
                       .context-menu-wrapper {
                           position: absolute;
                           top: 28px;
-                          background: #fff;
-                          border-radius: 5px;
-                          box-shadow: 0px 5px 6px #B9B8B8;
+                          background: #f3f3f3;
+                          border-radius: 1px;
+                          border-width: 1px;
+                          border-style: double;
+                          border-color: #d2d2d2;
+                          box-shadow: 3px 3px 10px rgba(14, 14, 14, 0.15);
                           overflow: hidden;
                           z-index: 10;
                           display: block;
@@ -91,15 +94,15 @@
                           width: auto;
                           .context-menu-item {
                               button {
-                                  padding: 3px 7px;
+                                  padding: 6px 8px 6px 12px;
                               }
                               cursor: pointer;
                               &:hover {
-                                  background-color: #eeeded;
+                                  background-color: #e0e0e0;
                               }
                               display: block;
                               position: relative;
-                              min-width: 120px;
+                              min-width: 150px;
                           }
                           .editor-action-button {
                               color: #000;
@@ -141,6 +144,9 @@
               }
               tr {
                   display: flex;
+              }
+              tr:hover {
+                  background-color: #f3f3f3;
               }
               & thead td {
                   font-weight: 700;
