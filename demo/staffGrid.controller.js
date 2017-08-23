@@ -20,7 +20,6 @@
 
         var staffDataSource = {
             standard: 'YiiSoft',
-            url: '//universal-backend.dev/rest/v1/staff',
             sortBy: {
                 id: 'desc'
             },            
@@ -30,6 +29,64 @@
                 items: 'items',
                 meta: '_meta'
             },
+            transport: {
+                url: '//universal-backend.dev/rest/v1/staff',
+                read: {
+                    url: '//universal-backend.dev/rest/v1/staff',
+                    headers: function() {
+                        return {};
+                    },
+                    params: function() {
+                        return { expand: 'field', params: 'p' };
+                    },
+                    data: function() {
+                        return { data: 'field' };
+                    },
+                    method: 'GET',
+                    handlers: {
+                        before: function(config, e) {
+                            console.log('Before handler!');
+                        },
+                        error: function(reject) {
+                            console.log('Error handler!');
+                        },
+                        success: function(response) {
+                            console.log('Success handler!');
+                        },
+                        complete: function() {
+                            console.log('Complete handler!');
+                        }
+                    }
+                },
+                one: {
+                    url: '//universal-backend.dev/rest/v1/staff',
+                    headers: function() {
+                        return {};
+                    },
+                    params: function() {
+                        return { expand: 'field', params: 'p' };
+                    },
+                    data: function() {
+                        return { data: 'field' };
+                    },
+                    method: 'GET',
+                    handlers: {
+                        before: function(config) {
+                            console.log('Before handler!');
+                        },
+                        error: function(reject) {
+                            console.log('Error handler!');
+                        },
+                        success: function(response) {
+                            console.log('Success handler!');
+                        },
+                        complete: function() {
+                            console.log('Complete handler!');
+                        }
+                    }
+                }
+            },
+
             fields: [
                 {
                     name: 'id',
@@ -161,7 +218,7 @@
             component: {
                 name: 'ue-grid',
                 settings: {
-                    dataSource: staffDataSource,                   
+                    dataSource: staffDataSource,                    
                     header: {
                         toolbar: [
                             {

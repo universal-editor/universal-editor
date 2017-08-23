@@ -14,15 +14,40 @@
             var result = {};
             angular.forEach(fields, function(field) {
                 field = field.trim();
-                if(field[0] === '-') {
+                if (field[0] === '-') {
                     result[field.substr(1)] = 'desc';
                 }
-                if(field[0] !== '-') {
+                if (field[0] !== '-') {
                     result[field] = 'asc';
                 }
             });
             return result;
         };
+
+        self.setExpands = function(config) {
+            var expandFields = [],
+                dataSource = config.$dataSource;
+            if (dataSource) {
+                angular.forEach(dataSource.fields, function(field) {
+                    if (field.component && field.component.settings && field.component.settings.expandable === true) {
+                        if (angular.isString(field.name)) {
+                            var name = field.name.split('.')[0].replace('[]', '');
+                            if (name && expandFields.indexOf(name) === -1) {
+                                expandFields.push(name);
+                            }
+                        }
+                    }
+                });
+
+                if (dataSource && angular.isObject(dataSource.tree) && angular.isString(dataSource.tree.childrenField)) {
+                    expandFields.push(dataSource.tree.childrenField);
+                }
+                if (expandFields.length) {
+                    config.params.expand = expandFields.toString();
+                }
+            }
+            return expandFields;
+        }
 
         self.getSorting = function(tableFields) {
             if (angular.isArray(tableFields)) {
@@ -62,7 +87,7 @@
                 method = 'DELETE';
             }
 
-            if (~['list', 'one'].indexOf(config.action)) {
+            if (~['read', 'one'].indexOf(config.action)) {
                 method = 'GET';
             }
 
@@ -107,8 +132,9 @@
         self.getParams = function(config) {
             config.params = config.params || {};
             delete config.params.root;
-            if (config.action == 'list') {
+            if (config.action == 'read' || config.action == 'one') {
                 self.setPagination(config);
+                self.setExpands(config);
                 var fields = [];
                 if (config.$dataSource && angular.isArray(config.$dataSource.fields)) {
                     angular.forEach(config.$dataSource.fields, function(field, index) {
@@ -120,9 +146,10 @@
                         config.params.fields = fields.join(',');
                     }
                 }
+                self.setFiltering(config);
             }
-            self.setFiltering(config);
-            config.params.sort = config.sortFieldName;
+
+            config.params.sort = config.sort;
             return config.params;
         };
 

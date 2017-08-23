@@ -12,6 +12,10 @@
         multiname: 'new_value',
         depend: 'other_field_name',
         width: 6,
+        handlers: {
+            change: function(newValue, oldValue) {
+            }
+        },
         templates: {
             preview: '<span> {{value}} </span>',
             edit: function(scope) {
@@ -31,6 +35,7 @@
 | settings | object | Объект настройки компонента | + | - |
 | settings[label] | string | Название поля (выводится в интерфейсе редактора) | + | - |
 | settings[hint] | string | Текстовая информационная подсказка, выводимая слева от заголовка поля. | - | - |
+| settings[handler][change] | function | Слушатель, который вызывается при изменении значения компонента. Функция в качестве аргументов принимает новое и старое значение. | - | - |
 | settings[multiple] | bool | Параметр отвечает за указание возможности поля принимать множественные значения. | - | false |
 | settings[readonly] | bool | Параметр отвечает за указание активности компонента с точки зрения взаимодействия с пользователем. | - | false |
 | settings[templates] | object | Объект для настройки шаблонов. | - | - |

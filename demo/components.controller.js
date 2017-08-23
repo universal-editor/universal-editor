@@ -9,7 +9,9 @@
     function ComponentsController() {
         var demoDataSource = {
             standard: 'YiiSoft',
-            url: '//universal-backend.dev/rest/v1/staff',
+            transport: {
+                url: '//universal-backend.dev/rest/v1/staff'
+            },
             fields: [
                 {
                     name: 'title',
@@ -2023,7 +2025,7 @@
                                                                 name: 'ue-grid',
                                                                 settings: {
                                                                     dataSource: demoDataSource,
-                                                                    columns: [{name: 'title', sortable: false}, 'status', 'date']
+                                                                    columns: [{ name: 'title', sortable: false }, 'status', 'date']
                                                                 }
                                                             }
                                                         }

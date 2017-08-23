@@ -62,7 +62,7 @@
                 method = 'DELETE';
             }
 
-            if (~['list', 'one'].indexOf(config.action)) {
+            if (~['read', 'one'].indexOf(config.action)) {
                 method = 'GET';
             }
 
@@ -109,7 +109,7 @@
                 data = {};
                 data.attributes = attributes;
                 data.relationships = relationships;
-                data.type = config.__type;
+                data.type = config.$dataSource.resourceType;
                 data.id = config.id || null;
             }
             return { data: data };
@@ -145,10 +145,10 @@
         self.getParams = function(config) {
             config.params = config.params || {};
             delete config.params.root;
-            if (config.action == 'list') {
+            if (config.action == 'read') {
                 self.setPagination(config);
             }
-            if (config.action == 'list' || config.action == 'one') {
+            if (config.action == 'read' || config.action == 'one') {
                 if (config.params.expand) {
                     config.params.include = config.params.expand;
                     delete config.params.expand;
@@ -194,7 +194,7 @@
             }
             var parse = proccessJsonApiElements.bind(config);
             switch (config.action) {
-                case 'list':
+                case 'read':
                     var metaPage = response.meta.page || { limit: 20, total: 0, offset: 0 };
                     output._meta = {
                         perPage: metaPage.limit,

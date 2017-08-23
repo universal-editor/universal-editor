@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -10,7 +10,9 @@
         var vm = this;
         var tagsDataSource = {
             standard: 'YiiSoft',
-            url: '//universal-backend.dev/rest/v1/tags',
+            transport: {
+                url: '//universal-backend.dev/rest/v1/tags'
+            },
             sortBy: {
                 id: 'desc'
             },

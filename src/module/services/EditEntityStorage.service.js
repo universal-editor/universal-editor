@@ -138,7 +138,7 @@
                     if (angular.isObject(request)) {
                         request.isError = (fCtrl.error.length === 0) && request.isError;
                     }
-                    if (fCtrl.disabled !== true && fCtrl.useable !== false) {
+                    if (fCtrl.disabled !== true && fCtrl.useable !== false && angular.isFunction(fCtrl.getFieldValue)) {
                         var value = {};
                         value = fCtrl.getFieldValue(extended);
                         if (fCtrl.fieldName && typeof (value[fCtrl.fieldName]) !== 'undefined' && value[fCtrl.fieldName] !== null) {

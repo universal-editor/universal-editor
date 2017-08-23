@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -11,7 +11,10 @@
         var vm = this;
         var tagsDataSource = {
             standard: 'YiiSoft',
-            url: '//universal-backend.dev/rest/v1/tags',
+
+            transport: {
+                url: '//universal-backend.dev/rest/v1/tags'
+            },
             fields: [
                 {
                     name: 'id',
@@ -46,7 +49,7 @@
                 settings: {
                     dataSource: tagsDataSource,
                     primaryKeyValue: function() {
-                        if($state.params.pk === 'new') {
+                        if ($state.params.pk === 'new') {
                             return null;
                         }
                         return $state.params.pk;

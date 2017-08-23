@@ -22,6 +22,7 @@
     "clean-webpack-plugin": "^0.1.15",
     "css-loader": "^0.23.0",
     "deasync": "^0.1.9",
+    "exports-loader": "^0.6.4",
     "gulp-util": "^3.0.8",
     "hostile": "^1.2.0",
     "html-loader": "^0.4.4",

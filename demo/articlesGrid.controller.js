@@ -10,7 +10,9 @@
         var articlesDataSource = {
             standard: 'JSONAPI',
             resourceType: 'articles',
-            url: 'http://localhost:16006/rest/articles',
+            transport: {
+                url: 'http://localhost:16006/rest/articles'
+            },
             sortBy: {
                 id: 'desc'
             },

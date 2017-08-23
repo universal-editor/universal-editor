@@ -60,7 +60,10 @@
             extensions: ['', '.js'],
             root: [
                 path.resolve(__dirname, 'bower_components')
-            ]
+            ],
+            alias: {
+                "dataSource": "./src/module/classes/dataSource.js"
+            }
         },
         resolveLoader: {
             modulesDirectories: ['node_modules'],
@@ -78,6 +81,11 @@
         },
         module: {
             loaders: [
+                {
+                    test: './src/module/classes/dataSource.js',
+                    loader: 'exports?window.DataSource'
+
+                },
                 {
                     test: /\.js$/,
                     loader: 'babel-loader',

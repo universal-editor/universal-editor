@@ -15,6 +15,20 @@
             primaryKey: 'id',
             parentField: 'parent_id',
             fields: [
+                 {
+                    name: 'id',
+                    component: {
+                        name: 'ue-string',
+                        settings: {
+                            label: 'ID',
+                            validators: [
+                                {
+                                    type: 'number'
+                                }
+                            ]
+                        }
+                    }
+                },
                 {
                     name: 'name',
                     component: {
@@ -125,7 +139,118 @@
                         }
                     }
                 }
-            ]
+            ],
+            transport: {
+                url: '//universal-backend.dev/rest/v1/staff',
+                one: {
+                    url: '//universal-backend.dev/rest/v1/staff/:id',
+                    headers: function() {
+                        return {};
+                    },
+                    params: function() {
+                        return {expand: 'field', params: 'p'};
+                    },
+                    data: function() {
+                        return {data: 'field'};
+                    },
+                    method: 'GET',
+                    handlers: {
+                        before: function(config) {
+                            console.log('Before handler!');
+                        },
+                        error: function(reject) {
+                            console.log('Error handler!');
+                        },
+                        success: function(response) {
+                            console.log('Success handler!');
+                        },
+                        complete: function() {
+                            console.log('Complete handler!');
+                        }
+                    }
+                },
+                create: {
+                    url: '//universal-backend.dev/rest/v1/staff',
+                    headers: function() {
+                        return {};
+                    },
+                    params: function() {
+                        return {expand: 'field', params: 'p'};
+                    },
+                    data: function() {
+                        return {data: 'field'};
+                    },
+                    method: 'POST',
+                    handlers: {
+                        before: function(config) {
+                            console.log('Before handler!');
+                        },
+                        error: function(reject) {
+                            console.log('Error handler!');
+                        },
+                        success: function(response) {
+                            console.log('Success handler!');
+                        },
+                        complete: function() {
+                            console.log('Complete handler!');
+                        }
+                    }
+                },
+                update: {
+                    url: '//universal-backend.dev/rest/v1/staff/:id',
+                    headers: function() {
+                        return {};
+                    },
+                    params: function() {
+                        return {expand: 'field', params: 'p'};
+                    },
+                    data: function() {
+                        return {data: 'field'};
+                    },
+                    method: 'PUT',
+                    handlers: {
+                        before: function(config) {
+                            console.log('Before handler!');
+                        },
+                        error: function(reject) {
+                            console.log('Error handler!');
+                        },
+                        success: function(response) {
+                            console.log('Success handler!');
+                        },
+                        complete: function() {
+                            console.log('Complete handler!');
+                        }
+                    }
+                },
+                delete: {
+                    url: '//universal-backend.dev/rest/v1/staff/:id',
+                    headers: function() {
+                        return {};
+                    },
+                    params: function() {
+                        return {expand: 'field', params: 'p'};
+                    },
+                    data: function() {
+                        return {data: 'field'};
+                    },
+                    method: 'DELETE',
+                    handlers: {
+                        before: function(config) {
+                            console.log('Before handler!');
+                        },
+                        error: function(reject) {
+                            console.log('Error handler!');
+                        },
+                        success: function(response) {
+                            console.log('Success handler!');
+                        },
+                        complete: function() {
+                            console.log('Complete handler!');
+                        }
+                    }
+                }
+            }
         };
 
         vm.ueConfig = {

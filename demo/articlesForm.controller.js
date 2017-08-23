@@ -12,7 +12,9 @@
         var articlesDataSource = {
             standard: 'JSONAPI',
             resourceType: 'articles',
-            url: 'http://localhost:16006/rest/articles',
+            transport: {
+                url: 'http://localhost:16006/rest/articles'
+            },
             sortBy: {
                 id: 'desc'
             },
@@ -129,9 +131,9 @@
             component: {
                 name: 'ue-form',
                 settings: {
-                    dataSource: articlesDataSource,                    
+                    dataSource: articlesDataSource,
                     primaryKeyValue: function() {
-                        if($state.params.pk === 'new') {
+                        if ($state.params.pk === 'new') {
                             return null;
                         }
                         return $state.params.pk;

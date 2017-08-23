@@ -10,7 +10,9 @@
         var vm = this;
         var newsDataSource = {
             standard: 'YiiSoft',
-            url: '/assets/dragAndDrop.1.json',
+            transport: {
+                url: '/assets/dragAndDrop.1.json'
+            },
             sortBy: {
                 id: 'desc'
             },
@@ -167,20 +169,20 @@
                         dragIcon: true
                     },
                     columns: [
-                    {
-                        name: 'title',
-                        width: '50%'
-                    },
-                    {
-                        name: 'authors',
-                        width: '300px',
-                        sortable: false
-                    },
-                    {
-                        name: 'category_id',
-                        width: '200px',
-                        sortable: false
-                    }],
+                        {
+                            name: 'title',
+                            width: '50%'
+                        },
+                        {
+                            name: 'authors',
+                            width: '300px',
+                            sortable: false
+                        },
+                        {
+                            name: 'category_id',
+                            width: '200px',
+                            sortable: false
+                        }],
                     contextMenu: [
                         {
                             component: {

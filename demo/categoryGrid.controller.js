@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -10,7 +10,9 @@
         var vm = this;
         var categoryDataSource = {
             standard: 'YiiSoft',
-            url: 'http://universal-backend.dev/rest/v1/news/categories',
+            transport: {
+                url: 'http://universal-backend.dev/rest/v1/news/categories'
+            },
             sortBy: {
                 id: 'desc'
             },

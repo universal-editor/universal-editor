@@ -15,6 +15,10 @@
         multiple: true,
         multiname: 'new_value',
         depend: 'other_field_name',
+        handlers: {
+            change: function(newValue, oldValue) {
+            }
+        },
         width: 6,
         templates: {
             preview: '<span> {{value}} </span>',
@@ -48,6 +52,7 @@
 | settings[label] | string | Название поля (выводится в интерфейсе редактора) | + | - |
 | settings[serverPagination] | boolean | Флаг серверной пагинации. Если принимает значение `true`, то компонент будет делать запросы за всеми страницами с данными. | - | `false` |
 | settings[hint] | string | Текстовая информационная подсказка, выводимая слева от заголовка поля. | - | - |
+| settings[handler][change] | function | Слушатель, который вызывается при изменении значения компонента. Функция в качестве аргументов принимает новое и старое значение. | - | - |
 | settings[multiple] | bool | Параметр отвечает за указание возможности поля принимать множественные значения. | - | false |
 | settings[required] | bool | Выделяет заголовок поля жирным, говоря об обязательности заполнения. | - | false |
 | settings[readonly] | bool | Параметр отвечает за указание активности компонента с точки зрения взаимодействия с пользователем. | - | false |

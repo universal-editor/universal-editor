@@ -174,6 +174,10 @@
                     return self.fieldValue;
                 },
                 function(value, oldValue) {
+                    
+                    if (angular.isObject(componentSettings.handlers) && angular.isFunction(componentSettings.handlers.change) && value !== oldValue) {
+                        componentSettings.change(value, oldValue, getExtendedValue(value));
+                    }
                     self.error = [];
                     if (self.disabled === true) {
                         self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : !!value;

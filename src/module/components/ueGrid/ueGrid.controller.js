@@ -1,6 +1,6 @@
+import DataSource from '../../classes/dataSource.js';
 (function() {
     'use strict';
-
     angular
         .module('universal-editor')
         .value('dragOptions', {
@@ -54,7 +54,6 @@
         var vm = this,
             itemsKey,
             mixEntityObject,
-            url,
             parentField,
             service,
             sorting;
@@ -89,7 +88,7 @@
 
             vm.componentSettings = vm.setting.component.settings;
 
-            vm.dataSource = vm.setting.component.settings.dataSource;
+            vm.dataSource = new DataSource(vm.setting.component.settings.dataSource);
             vm.multiSorting = vm.componentSettings.multiSorting === true;
             if (vm.dataSource.tree) {
                 vm.childrenField = vm.dataSource.tree.childrenField;
@@ -113,15 +112,13 @@
                             circuit(field, fullName);
                         }
                     });
-                })(vm.dataSource.sortBy, '');                
+                })(vm.dataSource.sortBy, '');
             }
 
             if (!vm.componentSettings.width) {
                 vm.classComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
             }
-
-            url = vm.dataSource.url;
-            parentField = vm.dataSource.parentField;
+            parentField = vm.dataSource.parentKey;
             vm.loaded = false;
             vm.loadingData = true;
             vm.tableFields = [];
@@ -156,41 +153,24 @@
             vm.mixOption.isMix = true;
             vm.listFooterBar = [];
             vm.options.contextId = undefined;
-            vm.idField = 'id';
+            vm.idField = vm.dataSource.primaryKey || 'id';
+            itemsKey = vm.componentSettings.itemsKey || 'items';
             vm.parentButton = false;
-            vm.pagination = vm.setting.component.settings.dataSource.hasOwnProperty('pagination') ? vm.setting.component.settings.dataSource.pagination : true;
+            vm.pagination = vm.dataSource.pagination || true;
             vm.entityType = vm.setting.component.settings.entityType;
-            vm.parent = null;
+            vm.parent = $location.search()[getKeyPrefix('parent')] || null;
             vm.isMixMode = !!vm.setting.component.settings.mixedMode;
             if (vm.isMixMode) {
                 vm.prependIcon = vm.setting.component.settings.mixedMode.prependIcon;
                 vm.entityType = vm.setting.component.settings.mixedMode.entityType;
                 vm.subType = vm.setting.component.settings.mixedMode.fieldType;
                 vm.collectionType = vm.setting.component.settings.mixedMode.collectionType;
-
-                angular.forEach(vm.setting.component.settings.mixedMode.contextMenu, function(value) {
-                    var newValue = angular.merge({}, value);
-                    newValue.url = vm.setting.component.settings.mixedMode.dataSource.url;
-                    newValue.parentField = parentField;
-                    newValue.headComponent = vm.setting.headComponent;
-                    vm.mixContextLinks.push(newValue);
-                });
             }
             vm.request = {
                 childId: vm.parent,
                 options: vm.options,
-                parentField: parentField,
-                url: url
+                dataSource: vm.dataSource
             };
-            vm.request.options.$dataSource = vm.setting.component.settings.dataSource;
-
-            vm.parent = $location.search()[getKeyPrefix('parent')];
-
-            if (vm.setting.component.settings.dataSource.hasOwnProperty('primaryKey')) {
-                vm.idField = vm.setting.component.settings.dataSource.primaryKey || vm.idField;
-            }
-            itemsKey = vm.componentSettings.itemsKey || 'items';
-
             var colSettings = vm.setting.component.settings.columns;
 
             if (angular.isArray(colSettings)) {
@@ -208,7 +188,7 @@
                         name = col;
                     }
 
-                    var component = vm.setting.component.settings.dataSource.fields.filter(function(field) {
+                    var component = vm.dataSource.fields.filter(function(field) {
                         return name && field.name === name;
                     });
                     sortable = col.hasOwnProperty('sortable') ? col.sortable : true;
@@ -216,7 +196,6 @@
                     if (component.length) {
                         col = angular.merge({}, component[0]);
                     }
-                    //col.component.settings.mode = 'preview';
                     if (angular.isObject(col)) {
                         tableField = {
                             field: col.name || null,
@@ -248,9 +227,6 @@
 
             angular.forEach(vm.setting.component.settings.contextMenu, function(value) {
                 var newValue = angular.merge({}, value);
-                newValue.url = url;
-                newValue.parentField = parentField;
-                newValue.headComponent = vm.setting.headComponent;
                 vm.contextLinks.push(newValue);
             });
             vm.contextLinksOrigin = angular.copy(vm.contextLinks);
@@ -262,7 +238,7 @@
                         newControl.component.settings = {};
                     }
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
-                        newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
+                        newControl.component.settings.dataSource = vm.dataSource;
                     }
                     newControl.paginationData = {};
                     vm.listHeaderBar.push(newControl);
@@ -276,23 +252,17 @@
                         newControl.component.settings = {};
                     }
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
-                        newControl.component.settings.dataSource = vm.setting.component.settings.dataSource;
+                        newControl.component.settings.dataSource = vm.dataSource;
                     }
                     newControl.paginationData = {};
                     vm.listFooterBar.push(newControl);
                 });
             }
 
-
             vm.toggleContextView = toggleContextView;
             vm.toggleContextViewByEvent = toggleContextViewByEvent;
             vm.getParent = getParent;
             vm.changeSortField = changeSortField;
-
-            vm.request.childId = vm.parent;
-            vm.request.options = vm.options;
-            vm.request.parentField = parentField;
-            vm.request.url = url;
 
             if (FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
                 refreshTableRecords();
@@ -316,393 +286,398 @@
                     }
                 }
             });
-        };
-        vm.moved = function(index) {
-            var disabled = angular.isFunction(vm.dragMode.dragDisable) ? vm.dragMode.dragDisable(vm.items[index], vm.items) : false;
-            if (!disabled) {
-                vm.items.splice(index, 1);
-                if (vm.dragMode && angular.isFunction(vm.dragMode.inserted)) {
-                    if (index <= dragOptions.insertedNode.index) {
-                        dragOptions.insertedNode.index--;
+            vm.moved = function(index) {
+                var disabled = angular.isFunction(vm.dragMode.dragDisable) ? vm.dragMode.dragDisable(vm.items[index], vm.items) : false;
+                if (!disabled) {
+                    vm.items.splice(index, 1);
+                    if (vm.dragMode && angular.isFunction(vm.dragMode.inserted)) {
+                        if (index <= dragOptions.insertedNode.index) {
+                            dragOptions.insertedNode.index--;
+                        }
+                        vm.dragMode.inserted(event, dragOptions.insertedNode.index, dragOptions.insertedNode.item, null, vm.items);
                     }
-                    vm.dragMode.inserted(event, dragOptions.insertedNode.index, dragOptions.insertedNode.item, null, vm.items);
+                }
+            };
+
+            vm.dragStart = function(event, item, index) {
+                vm.options.$dnd = vm.options.$dnd || {};
+                vm.options.$dnd.dragging = item;
+                if (vm.dragMode && angular.isFunction(vm.dragMode.start)) {
+                    vm.dragMode.start(event, item, vm.items, null, index);
+                }
+            };
+            vm.dragover = function(event, index, type) {
+                if (vm.dragMode && angular.isFunction(vm.dragMode.over)) {
+                    var dragging = null;
+                    if (vm.options.$dnd && vm.options.$dnd.dragging) {
+                        dragging = vm.options.$dnd.dragging;
+                    }
+                    vm.dragMode.over(event, dragging, null, vm.items);
+                }
+                return true;
+            };
+            vm.drop = function(item, index, event) {
+                if (vm.dragMode && angular.isFunction(vm.dragMode.drop)) {
+                    var drop = vm.dragMode.drop(event, item, null, vm.items);
+                    if (drop === false) {
+                        return false;
+                    }
+                    if (angular.isObject(drop)) {
+                        return drop;
+                    }
+                }
+                return item;
+            };
+            vm.inserted = function(item, index, external, type) {
+                $(".dndPlaceholder").remove();
+                dragOptions.insertedNode.index = index;
+                dragOptions.insertedNode.item = item;
+
+                if (vm.dragMode && vm.dragMode.mode === 'copy' && angular.isFunction(vm.dragMode.inserted)) {
+                    vm.dragMode.inserted(event, index, item, null, vm.items);
+                }
+                vm.updateTable(item);
+                fillDraggingOptions(item);
+            };
+
+            vm.updateTable = function(item) {
+                return $timeout(function() {
+                    if (item) {
+                        $scope.$broadcast('ue-grid:updateNodes', item);
+                    } else {
+                        $scope.$broadcast('ue-grid:updateNodes');
+                    }
+                });
+            };
+
+            vm.getContainerName = function(item, collection) {
+                if (vm.dragMode && angular.isFunction(vm.dragMode.containerName)) {
+                    return vm.dragMode.containerName(item, collection);
+                }
+                if (vm.dragMode && angular.isString(vm.dragMode.containerName)) {
+                    return vm.dragMode.containerName;
+                }
+                return null;
+            };
+
+            vm.getAllowedContainers = function(item, collection) {
+                if (vm.dragMode && angular.isFunction(vm.dragMode.allowedContainers)) {
+                    return vm.dragMode.allowedContainers(item, collection);
+                }
+                if (vm.dragMode && angular.isArray(vm.dragMode.allowedContainers)) {
+                    return vm.dragMode.allowedContainers;
+                }
+                return null;
+            };
+
+            vm.dragDisable = function(item, collection) {
+                if (vm.dragMode && angular.isFunction(vm.dragMode.dragDisable)) {
+                    return vm.dragMode.dragDisable(item, collection);
+                }
+                if (vm.dragMode && angular.isArray(vm.dragMode.dragDisable)) {
+                    return vm.dragMode.dragDisable;
+                }
+                return null;
+            };
+
+            function setInitialQueryParams() {
+                var locationObject = $location.search();
+                var page = locationObject[getKeyPrefix('page')] || 1;
+                var parent = locationObject[getKeyPrefix('parent')];
+                var sortParameter = locationObject[getKeyPrefix('sort')] || service.getSorting(vm.tableFields);
+                vm.request.childId = vm.parent;
+                vm.request.params = vm.request.params || {};
+                vm.request.params.page = page;
+                vm.request.params.sort = sortParameter;
+            }
+
+            function getKeyPrefix(key) {
+                if (!key && vm.options.prefixGrid) {
+                    return vm.options.prefixGrid;
+                }
+                return vm.options.prefixGrid ? (vm.options.prefixGrid + '-' + key) : key;
+            }
+
+            function changeSortField(field) {
+                if (field.sort.enable) {
+                    vm.loaded = false;
+                    if (!vm.multiSorting) {
+                        vm.tableFields.forEach(function(f) {
+                            if (f.field !== field.field) {
+                                f.sort.direction = 'none';
+                            }
+                        });
+                    }
+                    if (field.sort.direction === 'none') {
+                        field.sort.direction = 'desc';
+                    } else if (field.sort.direction === 'desc') {
+                        field.sort.direction = 'asc';
+                    } else if (field.sort.direction === 'asc') {
+                        field.sort.direction = 'none';
+                    }
+                    var sort = setSortParameter();
+                    $location.search(getKeyPrefix('sort'), sort);
+                    $location.search(getKeyPrefix('page'), null);
+                    vm.request.params = {
+                        sort: sort,
+                        page: 1
+                    };
+                    refreshTableRecords(true);
                 }
             }
-        };
 
-        vm.dragStart = function(event, item, index) {
-            vm.options.$dnd = vm.options.$dnd || {};
-            vm.options.$dnd.dragging = item;
-            if (vm.dragMode && angular.isFunction(vm.dragMode.start)) {
-                vm.dragMode.start(event, item, vm.items, null, index);
-            }
-        };
-        vm.dragover = function(event, index, type) {
-            if (vm.dragMode && angular.isFunction(vm.dragMode.over)) {
-                var dragging = null;
-                if (vm.options.$dnd && vm.options.$dnd.dragging) {
-                    dragging = vm.options.$dnd.dragging;
-                }
-                vm.dragMode.over(event, dragging, null, vm.items);
-            }
-            return true;
-        };
-        vm.drop = function(item, index, event) {
-            if (vm.dragMode && angular.isFunction(vm.dragMode.drop)) {
-                var drop = vm.dragMode.drop(event, item, null, vm.items);
-                if (drop === false) {
-                    return false;
-                }
-                if (angular.isObject(drop)) {
-                    return drop;
-                }
-            }
-            return item;
-        };
-
-        vm.inserted = function(item, index, external, type) {
-            $(".dndPlaceholder").remove();
-            dragOptions.insertedNode.index = index;
-            dragOptions.insertedNode.item = item;
-
-            if (vm.dragMode && vm.dragMode.mode === 'copy' && angular.isFunction(vm.dragMode.inserted)) {
-                vm.dragMode.inserted(event, index, item, null, vm.items);
-            }
-            vm.updateTable(item);
-            fillDraggingOptions(item);
-        };
-
-        vm.updateTable = function(item) {
-            return $timeout(function() {
-                if (item) {
-                    $scope.$broadcast('ue-grid:updateNodes', item);
-                } else {
-                    $scope.$broadcast('ue-grid:updateNodes');
-                }
-            });
-        };
-
-        vm.getContainerName = function(item, collection) {
-            if (vm.dragMode && angular.isFunction(vm.dragMode.containerName)) {
-                return vm.dragMode.containerName(item, collection);
-            }
-            if (vm.dragMode && angular.isString(vm.dragMode.containerName)) {
-                return vm.dragMode.containerName;
-            }
-            return null;
-        };
-
-        vm.getAllowedContainers = function(item, collection) {
-            if (vm.dragMode && angular.isFunction(vm.dragMode.allowedContainers)) {
-                return vm.dragMode.allowedContainers(item, collection);
-            }
-            if (vm.dragMode && angular.isArray(vm.dragMode.allowedContainers)) {
-                return vm.dragMode.allowedContainers;
-            }
-            return null;
-        };
-
-        vm.dragDisable = function(item, collection) {
-            if (vm.dragMode && angular.isFunction(vm.dragMode.dragDisable)) {
-                return vm.dragMode.dragDisable(item, collection);
-            }
-            if (vm.dragMode && angular.isArray(vm.dragMode.dragDisable)) {
-                return vm.dragMode.dragDisable;
-            }
-            return null;
-        };
-
-        function setInitialQueryParams() {
-            var locationObject = $location.search();
-            var page = locationObject[getKeyPrefix('page')] || 1;
-            var parent = locationObject[getKeyPrefix('parent')];
-            var sortParameter = locationObject[getKeyPrefix('sort')] || service.getSorting(vm.tableFields);
-            vm.request.childId = vm.parent;
-            vm.request.params = vm.request.params || {};
-            vm.request.params.page = page;
-
-            vm.request.params.sort = sortParameter;
-        }
-
-        function getKeyPrefix(key) {
-            if (!key && vm.options.prefixGrid) {
-                return vm.options.prefixGrid;
-            }
-            return vm.options.prefixGrid ? (vm.options.prefixGrid + '-' + key) : key;
-        }
-
-        function changeSortField(field) {
-            if (field.sort.enable) {
-                vm.loaded = false;
-                if(!vm.multiSorting) {
-                    vm.tableFields.forEach(function(f) { if(f.field !== field.field) { f.sort.direction = 'none'; } });
-                }
-                if (field.sort.direction === 'none') {
-                    field.sort.direction = 'desc';
-                } else if (field.sort.direction === 'desc') {
-                    field.sort.direction = 'asc';
-                } else if (field.sort.direction === 'asc') {
-                    field.sort.direction = 'none';
-                }
-                var sort = setSortParameter();
+            function setSortParameter() {
+                var sort = service.getSorting(vm.tableFields);
                 $location.search(getKeyPrefix('sort'), sort);
-                $location.search(getKeyPrefix('page'), null);
-                vm.request.params = {
-                    sort: sort,
-                    page: 1
-                };
-                refreshTableRecords(true);
+                return sort;
             }
-        }
 
-        function setSortParameter() {
-            var sort = service.getSorting(vm.tableFields);
-            $location.search(getKeyPrefix('sort'), sort);
-            return sort;
-        }
-
-        function getParent() {
-            vm.loaded = false;
-            var data = {
-                $componentId: vm.request.options.$componentId
-            }, prefixParentKey = getKeyPrefix('parent');
-            $location.search(getKeyPrefix('page'), null);
-            vm.request.childId = vm.parent;
-            if (vm.request.childId) {
-                vm.options.isLoading = true;
-                ApiService.getItemById(vm.request.childId, vm.options)
-                    .then(function(item) {
-                        var parentId = item[vm.request.parentField] || null;
-                        $location.search(prefixParentKey, parentId);
-                        data.parentId = parentId;
-                        $rootScope.$broadcast('ue:beforeParentEntitySet', data);
-
-                        vm.request.childId = parentId;
-                        refreshTableRecords(true);
-                    }, function(reject) {
-                        vm.options.isLoading = false;
-                    });
-            } else {
-                $rootScope.$broadcast('ue:beforeParentEntitySet', data);
-                $location.search(prefixParentKey, null);
-                vm.request.parentField = null;
-                vm.request.childId = null;
-                refreshTableRecords(true);
-            }
-        }
-
-        function switchLoaderOff() {
-            vm.loaded = true;
-        }
-
-        $scope.$on('ue:parentEntitySet', function(event, request) {
-            if (vm.isParentComponent(request)) {
+            function getParent() {
                 vm.loaded = false;
                 var data = {
-                    parentId: request.id,
-                    $componentId: request.$componentId
-                };
-                $rootScope.$broadcast('ue:beforeParentEntitySet', data);
-                request.childId = request.id;
-                if (request.id && !isNaN(+request.id)) {
-                    request.id = +request.id;
-                    request.childId = request.id;
-                }
-                $location.search(getKeyPrefix('parent'), request.childId);
-                refreshTableRecords(true, request);
-            }
-        });
-
-        function refreshTableRecords(notGoToState, request) {
-            vm.loaded = false;
-            request = request || vm.request;
-            if (angular.isObject(request) && angular.isString(request.url)) {
-                setInitialQueryParams();
-                vm.dangers.length = 0;
-                vm.warnings.length = 0;
-                vm.items = [];
-                vm.data = [];
-                return ApiService.getItemsList(request, notGoToState);
-            }
-        }
-
-        $scope.$on('ue:beforeParentEntitySet', function(event, data) {
-            if (vm.isParentComponent(data)) {
-                vm.parent = data.parentId;
-            }
-        });
-
-        $scope.$on('ue:collectionRefresh', function(event, data) {
-            refreshTableRecords();
-        });
-
-        $scope.$on('ue:afterEntityUpdate', function(event, data) {
-            if (vm.isComponent(data) && data.value) {
-                var changed = false;
-                vm.items.filter(function(item) {
-                    if (item[vm.idField] === data.value[vm.idField]) {
-                        angular.merge(item, data.value);
-                        changed = true;
-                    }
-                });
-                if (changed) {
-                    var list = {};
-                    list[itemsKey] = vm.items;
-                    $rootScope.$broadcast('ue:collectionLoaded', list);
-                }
-            }
-        });
-        $scope.$on('ue:afterEntityDelete', function(event, data) {
-            if (vm.isComponent(data)) {
-                vm.items.forEach(function(item, i, arr) {
-                    if (item[vm.idField] == data.entityId) {
-                        arr.splice(i, 1);
-                    }
-                });
-                vm.parent = $location.search()[getKeyPrefix('parent')] || null;
+                    $componentId: vm.request.options.$componentId
+                }, prefixParentKey = getKeyPrefix('parent');
+                $location.search(getKeyPrefix('page'), null);
                 vm.request.childId = vm.parent;
-                refreshTableRecords(true).then(function(data) {
-                    if (data.items) {
-                        vm.items = data.items;
-                    }
-                });
-            }
-        });
+                if (vm.request.childId) {
+                    vm.options.isLoading = true;
+                    ApiService.getItemById(vm.request.childId, vm.options)
+                        .then(function(item) {
+                            var parentId = item[vm.request.parentField] || null;
+                            $location.search(prefixParentKey, parentId);
+                            data.parentId = parentId;
+                            $rootScope.$broadcast('ue:beforeParentEntitySet', data);
 
-        $scope.$on('ue:componentDataLoaded', componentLoadedHandler);
-        function componentLoadedHandler(event, data) {
-            if (vm.isComponent(data) && !event.defaultPrevented && vm.tableFields.length > 0) {
-                if (!data.switchLoaderOff) {
-                    vm.loaded = false;
-                }
-                vm.data = data[itemsKey];
-                if (vm.data) {
-                    var components = vm.tableFields.map(function(f) { return f.component; });
-                    var options = {
-                        data: vm.data,
-                        components: components,
-                        $id: vm.$componentId,
-                        standart: vm.dataSource.standart,
-                        childrenField: vm.childrenField,
-                        selfField: vm.selfField
-                    };
-                    ApiService.extendData(options).then(function(data) {
-                        vm.data = data;
-                        vm.items = data;
-                        if (!vm.dataSource.tree) {
-                            vm.updateTable();
-                            fillDraggingOptions(data);
-                        }
-                    }).finally(switchLoaderOff);
-
-                    vm.parentButton = !!vm.parent;
-                    vm.pageItemsArray = [];
-
-                    angular.forEach(vm.listFooterBar, function(control) {
-                        control.paginationData = data;
-                    });
+                            vm.request.childId = parentId;
+                            refreshTableRecords(true);
+                        }, function(reject) {
+                            vm.options.isLoading = false;
+                        });
                 } else {
-                    switchLoaderOff();
+                    $rootScope.$broadcast('ue:beforeParentEntitySet', data);
+                    $location.search(prefixParentKey, null);
+                    vm.request.parentField = null;
+                    vm.request.childId = null;
+                    refreshTableRecords(true);
                 }
             }
-        }
-        function fillDraggingOptions(items) {
-            if (!angular.isArray(items) && angular.isObject(items)) {
-                items = [items];
+
+            function switchLoaderOff() {
+                vm.loaded = true;
             }
-            angular.forEach(items, function(item) {
-                if (angular.isObject(item)) {
-                    item.$disable = vm.dragDisable(item, vm.items);
-                    vm.$allowed = vm.getAllowedContainers(null, vm.items);
-                    item.$type = vm.getContainerName(item, vm.items);
+
+            $scope.$on('ue:parentEntitySet', function(event, request) {
+                if (vm.isParentComponent(request)) {
+                    vm.loaded = false;
+                    var data = {
+                        parentId: request.id,
+                        $componentId: request.$componentId
+                    };
+                    $rootScope.$broadcast('ue:beforeParentEntitySet', data);
+                    request.childId = request.id;
+                    request.dataSource = vm.dataSource;
+                    if (request.id && !isNaN(+request.id)) {
+                        request.id = +request.id;
+                        request.childId = request.id;
+                    }
+                    $location.search(getKeyPrefix('parent'), request.childId);
+                    refreshTableRecords(true, request);
                 }
             });
-        }
 
-        function getFieldValue() {
-            var output = angular.merge({}, vm.items);
-            (function deleteInfo(output) {
-                angular.forEach(output, function(item) {
+            function refreshTableRecords(notGoToState, request) {
+                vm.loaded = false;
+                request = request || vm.request;
+                if (angular.isObject(request)) {
+                    setInitialQueryParams();
+                    vm.dangers.length = 0;
+                    vm.warnings.length = 0;
+                    vm.items = [];
+                    vm.data = [];
+                    return ApiService.getItemsList(request, notGoToState);
+                }
+            }
+
+            $scope.$on('ue:beforeParentEntitySet', function(event, data) {
+                if (vm.isParentComponent(data)) {
+                    vm.parent = data.parentId;
+                }
+            });
+
+            $scope.$on('ue:collectionRefresh', function(event, data) {
+                refreshTableRecords();
+            });
+
+            $scope.$on('ue:afterEntityUpdate', function(event, data) {
+                if (vm.isComponent(data) && data.value) {
+                    var changed = false;
+                    vm.items.filter(function(item) {
+                        if (item[vm.idField] === data.value[vm.idField]) {
+                            angular.merge(item, data.value);
+                            changed = true;
+                        }
+                    });
+                    if (changed) {
+                        var list = {};
+                        list[itemsKey] = vm.items;
+                        $rootScope.$broadcast('ue:collectionLoaded', list);
+                    }
+                }
+            });
+
+            $scope.$on('ue:afterEntityDelete', function(event, data) {
+                if (vm.isComponent(data)) {
+                    vm.items.forEach(function(item, i, arr) {
+                        if (item[vm.idField] == data.entityId) {
+                            arr.splice(i, 1);
+                        }
+                    });
+                    vm.parent = $location.search()[getKeyPrefix('parent')] || null;
+                    vm.request.childId = vm.parent;
+                    refreshTableRecords(true).then(function(data) {
+                        if (data.items) {
+                            vm.items = data.items;
+                        }
+                    });
+                }
+            });
+
+            $scope.$on('ue:componentDataLoaded', componentLoadedHandler);
+
+            function componentLoadedHandler(event, data) {
+                if (vm.isComponent(data) && !event.defaultPrevented && vm.tableFields.length > 0) {
+                    if (!data.switchLoaderOff) {
+                        vm.loaded = false;
+                    }
+                    vm.data = data[itemsKey];
+                    if (vm.data) {
+                        var components = vm.tableFields.map(function(f) { return f.component; });
+                        var options = {
+                            data: vm.data,
+                            components: components,
+                            $id: vm.$componentId,
+                            standart: vm.dataSource.standart,
+                            childrenField: vm.childrenField,
+                            selfField: vm.selfField
+                        };
+                        ApiService.extendData(options).then(function(data) {
+                            vm.data = data;
+                            vm.items = data;
+                            if (!vm.dataSource.tree) {
+                                vm.updateTable();
+                                fillDraggingOptions(data);
+                            }
+                        }).finally(switchLoaderOff);
+
+                        vm.parentButton = !!vm.parent;
+                        vm.pageItemsArray = [];
+
+                        angular.forEach(vm.listFooterBar, function(control) {
+                            control.paginationData = data;
+                        });
+                    } else {
+                        switchLoaderOff();
+                    }
+                }
+            }
+            function fillDraggingOptions(items) {
+                if (!angular.isArray(items) && angular.isObject(items)) {
+                    items = [items];
+                }
+                angular.forEach(items, function(item) {
                     if (angular.isObject(item)) {
-                        delete item.$disable;
-                        delete item.$allowed;
-                        delete item.$type;
-                        delete item.$$expand;
-                        deleteInfo(item);
+                        item.$disable = vm.dragDisable(item, vm.items);
+                        vm.$allowed = vm.getAllowedContainers(null, vm.items);
+                        item.$type = vm.getContainerName(item, vm.items);
                     }
                 });
-            })(output);
-            return output || [];
-        }
+            }
 
-        $document.on('click', function(evt) {
-            if (!angular.element(evt.target).hasClass('context-toggle')) {
-                $timeout(function() {
+            function getFieldValue() {
+                var output = angular.merge({}, vm.items);
+                (function deleteInfo(output) {
+                    angular.forEach(output, function(item) {
+                        if (angular.isObject(item)) {
+                            delete item.$disable;
+                            delete item.$allowed;
+                            delete item.$type;
+                            delete item.$$expand;
+                            deleteInfo(item);
+                        }
+                    });
+                })(output);
+                return output || [];
+            }
+
+            $document.on('click', function(evt) {
+                if (!angular.element(evt.target).hasClass('context-toggle')) {
+                    $timeout(function() {
+                        vm.options.contextId = undefined;
+                    }, 0);
+                }
+            });
+
+            function isInTableFields(name) {
+                var index = vm.tableFields.findIndex(function(field) {
+                    return field.field === name;
+                });
+                return index !== -1;
+            }
+
+            function toggleContextView(record) {
+                var id = record[vm.idField];
+                vm.options.styleContextMenu = {};
+                if (vm.options.contextId == id) {
                     vm.options.contextId = undefined;
-                }, 0);
-            }
-        });
-
-        function isInTableFields(name) {
-            var index = vm.tableFields.findIndex(function(field) {
-                return field.field === name;
-            });
-            return index !== -1;
-        }
-
-        function toggleContextView(record) {
-            var id = record[vm.idField];
-            vm.options.styleContextMenu = {};
-            if (vm.options.contextId == id) {
-                vm.options.contextId = undefined;
-            } else {
-                vm.options.contextId = id;
-            }
-        }
-
-        function toggleContextViewByEvent(record, event) {
-            var id = record[vm.idField];
-            var obj = {
-                id: id,
-                primaryKey: vm.idField,
-                records: vm.items
-            };
-            $rootScope.$broadcast('ue-grid:contextMenu', {
-                record: record,
-                primaryKey: vm.idField
-            });
-            _filterContextMenuItem(obj);
-            if (angular.isDefined(id)) {
-                var node = !vm.dragMode ? $element.find('.table')[0] : event.currentTarget;
-                var left = event.pageX - node.getBoundingClientRect().left;
-                if (event.which === 3) {
-                    vm.options.styleContextMenu = {
-                        'top': event.offsetY,
-                        'left': left
-                    };
-                    event.stopPropagation();
+                } else {
                     vm.options.contextId = id;
                 }
             }
-        }
 
-        function _filterContextMenuItem(obj) {
-            vm.contextLinks = angular.copy(vm.contextLinksOrigin);
-            var result = [];
-            var firstVisibleElem = false;
-            angular.forEach(vm.contextLinks, function(value) {
-                var showContextMenuItem = value.component.settings.useable && angular.isFunction(value.component.settings.useable) ? value.component.settings.useable(obj) : true;
-                if (showContextMenuItem) {
-                    if (!firstVisibleElem && value.separator) {
-                        delete value.separator;
-                    } else if (firstVisibleElem && !value.separator) {
-                        value.separator = true;
+            function toggleContextViewByEvent(record, event) {
+                var id = record[vm.idField];
+                var obj = {
+                    id: id,
+                    primaryKey: vm.idField,
+                    records: vm.items
+                };
+                $rootScope.$broadcast('ue-grid:contextMenu', {
+                    record: record,
+                    primaryKey: vm.idField
+                });
+                _filterContextMenuItem(obj);
+                if (angular.isDefined(id)) {
+                    var node = !vm.dragMode ? $element.find('.table')[0] : event.currentTarget;
+                    var left = event.pageX - node.getBoundingClientRect().left;
+                    if (event.which === 3) {
+                        vm.options.styleContextMenu = {
+                            'top': event.offsetY,
+                            'left': left
+                        };
+                        event.stopPropagation();
+                        vm.options.contextId = id;
                     }
-                    result.push(value);
-                    firstVisibleElem = true;
                 }
-            });
-            vm.contextLinks = result;
+            }
+
+            function _filterContextMenuItem(obj) {
+                vm.contextLinks = angular.copy(vm.contextLinksOrigin);
+                var result = [];
+                var firstVisibleElem = false;
+                angular.forEach(vm.contextLinks, function(value) {
+                    var showContextMenuItem = value.component.settings.useable && angular.isFunction(value.component.settings.useable) ? value.component.settings.useable(obj) : true;
+                    if (showContextMenuItem) {
+                        if (!firstVisibleElem && value.separator) {
+                            delete value.separator;
+                        } else if (firstVisibleElem && !value.separator) {
+                            value.separator = true;
+                        }
+                        result.push(value);
+                        firstVisibleElem = true;
+                    }
+                });
+                vm.contextLinks = result;
+            }
         }
     }
 })();

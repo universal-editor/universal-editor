@@ -10,7 +10,10 @@
         var vm = this;
         var newsDataSource = {
             standard: 'YiiSoft',
-            url: '//universal-backend.dev/rest/v1/news',
+
+            transport: {
+                url: '//universal-backend.dev/rest/v1/news'
+            },
             sortBy: {
                 id: 'asc',
                 title: 'desc'
@@ -169,7 +172,7 @@
                                     label: 'Edit',
                                     sref: 'news_edit',
                                     useable: function(data) {
-                                       return true;
+                                        return true;
                                     }
                                 }
                             }

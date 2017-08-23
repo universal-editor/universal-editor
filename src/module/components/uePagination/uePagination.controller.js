@@ -1,3 +1,4 @@
+import DataSource from '../../classes/dataSource.js';
 (function() {
     'use strict';
 
@@ -26,19 +27,15 @@
             var itemsKey = 'items';
             var pageItems = vm.setting.component.settings.maxSize || 7;
 
-            var url = vm.setting.component.settings.dataSource.url;
-            var parentField = vm.setting.component.settings.dataSource.parentField;
             var startIndex;
             var endIndex;
+            vm.dataSource = new DataSource(vm.setting.component.settings.dataSource);
 
             vm.request = {
                 params: {},
                 options: vm.options,
-                parentField: parentField,
-                url: url
+                dataSource: vm.dataSource
             };
-
-            vm.dataSource = vm.setting.component.settings.dataSource;
 
             vm.pageItemsArray = [];
             vm.items = vm.setting.paginationData[itemsKey];
@@ -65,10 +62,10 @@
                 });
             }
 
-            if (angular.isDefined(vm.setting.component.settings.dataSource.keys)) {
-                metaKey = vm.setting.component.settings.dataSource.keys.meta || metaKey;
-                itemsKey = vm.setting.component.settings.dataSource.keys.items || itemsKey;
-                vm.metaKey = (vm.setting.component.settings.dataSource.keys.meta != false);
+            if (angular.isDefined(vm.dataSource.keys)) {
+                metaKey = vm.dataSource.keys.meta || metaKey;
+                itemsKey = vm.dataSource.keys.items || itemsKey;
+                vm.metaKey = (vm.dataSource.keys.meta != false);
             }
 
             if (!!vm.items && vm.items.length === 0) {

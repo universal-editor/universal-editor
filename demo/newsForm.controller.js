@@ -11,7 +11,10 @@
         var vm = this;
         var newsDataSource = {
             standard: 'YiiSoft',
-            url: '//universal-backend.dev/rest/v1/news',
+
+            transport: {
+                url: '//universal-backend.dev/rest/v1/news'
+            },
             primaryKey: 'id',
             fields: [
                 {
@@ -138,9 +141,9 @@
             component: {
                 name: 'ue-form',
                 settings: {
-                    dataSource: newsDataSource,                    
+                    dataSource: newsDataSource,
                     primaryKeyValue: function() {
-                        if($state.params.pk === 'new') {
+                        if ($state.params.pk === 'new') {
                             return null;
                         }
                         return $state.params.pk;

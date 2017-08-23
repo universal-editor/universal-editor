@@ -22,7 +22,9 @@
 ```javascript
 var framesDataSource = {
   type: 'YiiSoft',
-  url: 'http://api.com/frames',
+  transport: {
+    url: 'http://api.com/frames'
+  },
   fields: [
     {
       name: 'typeFrame',

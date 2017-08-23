@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -11,7 +11,9 @@
         var vm = this;
         var countryDataSource = {
             standard: 'YiiSoft',
-            url: '//universal-backend.dev/rest/v1/country',
+            transport: {
+                url: '//universal-backend.dev/rest/v1/country'
+            },
             primaryKey: 'id',
             fields: [
                 {
@@ -47,7 +49,7 @@
                 settings: {
                     dataSource: countryDataSource,
                     primaryKeyValue: function() {
-                        if($state.params.pk === 'new') {
+                        if ($state.params.pk === 'new') {
                             return null;
                         }
                         return $state.params.pk;
@@ -65,7 +67,7 @@
                             }
                         ]
                     },
-                    body: ['id','name'],
+                    body: ['id', 'name'],
                     footer: {
                         toolbar: [
                             {

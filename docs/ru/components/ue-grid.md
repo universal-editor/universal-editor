@@ -11,7 +11,6 @@ settings: {
     }
     dataSource: {        
         standard: 'YiiSoft',
-        url: '//universal-backend.dev/rest/v1/staff',
         sortBy: {
             id: 'desc'
         },
@@ -22,6 +21,9 @@ settings: {
                 childrenField: 'childs',
                 childrenCountField: 'childs_count',
                 selfField: 'self'
+        },
+        transport: {
+            url: '//universal-backend.dev/rest/v1/staff'
         },
         fields: [
             {
@@ -86,19 +88,8 @@ settings: {
 | settings | object | Объект настройки компонента. | + | - |
 | settings[routing] | object | Объект настройки взаимодествия компонента с URL. | - | - |
 | settings[routing][paramsPrefix] | object | Префикс, который добавляеться к query параметрам(parent, filter, sort, page), требующим для работы компонента. | - | - |
-| settings[dataSource] | object | Объект настройки компонента по работе с бекендом. | + | - |
-| settings[dataSource][standard] | string | Cтиль построения архитектуры.  | + | - |
-| settings[dataSource][url] | string | URL в RESTful-сервисе. | + | - |
-| settings[dataSource][sortBy] | object | Объект, именами свойств которого являются названия полей, по которым осуществляется сортировка, а значениями свойств – направление сортировки в виде символьного обозначения (`asc` – по возрастанию, `desc` – по убыванию). | - | - |
-| settings[dataSource][primaryKey] | string | Имя поля с первичным ключом, по которому редактор идентифицирует записи. | + | - |
-| settings[dataSource][parentField] | string | Имя поля с идентификатором родительской записи. Данный параметр требуется указывать, если поле является разделом», т. е. может иметь дочерние объекты, которые будут связаны по этому полю. Можно использовать в связке со смешанным режимом. | - | - |
-| settings[dataSource][fields] | array | Массив настроек полей, используемых при создании и редактировании записи. | + | - |
+| settings[dataSource] | object | Объект настройки компонента по работе с бекендом. [DataSource](dataSource.md) | + | - |
 | settings[header] | object | Содержит настройки верхнего блока в компоненте.  | + | - |
-| settings[dataSource][tree] | object | Секция конфига для задания имен полей, используемы при выводе иерархического дерева в компоненте.  | + | - |
-| settings[dataSource][tree][childrenField] | string | Имя поля c перечнем дочерних узлов.  | - | - |
-| settings[dataSource][tree][childrenCountField] | string | Имя поля с количеством дочерних узлов.  | - | - |
-| settings[dataSource][tree][selfField] | string | Если узлы содержат сущность в отдельном поле и эта сущность выводится в дереве. Пример узла, {id: 1, self: { сущность дерева }, children: [  массив узлов ]} | - | - |
-| settings[multisorting] | boolean | Разрешает / запрещает многоуровневую сортировку. (позволяет пользователю выбрать сортировку сразу по нескольким столбцам) | - | `false` |
 | settings[header][filter] | object, false | Содержит компонент фильтра.  | - | - |
 | settings[header][toolbar] | object | Содержит компоненты для верхнего блока ue-grid.  | + | - |
 | settings[displayHeaderColumns] | boolean | Флаг отображения блока с заголовками колонок.  | - | true |

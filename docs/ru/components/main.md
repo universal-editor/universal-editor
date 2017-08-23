@@ -112,7 +112,9 @@
 ```javascript
     var dataSource = {
             standard: 'YiiSoft',
-            url: '//universal-backend.dev/rest/v1/photos',
+            transport: {
+              url: '//universal-backend.dev/rest/v1/photos'
+            },
             fields: [
                 {
                     name: 'photos[].title',

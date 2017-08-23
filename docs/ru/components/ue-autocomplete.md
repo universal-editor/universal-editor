@@ -13,6 +13,10 @@
         multiple: true,
         multiname: 'new_value',
         depend: 'other_field_name',
+        handlers: {
+            change: function(newValue, oldValue) {
+            }
+        },
         draggable: true,
         width: 6,
         templates: {
@@ -46,7 +50,7 @@
 | settings | object | Объект настройки компонента | + | - |
 | settings[label] | string | Название поля (выводится в интерфейсе редактора) | + | - |
 | settings[hint] | string | Текстовая информационная подсказка, выводимая слева от заголовка поля. | - | - |
-<<<<<<< HEAD
+| settings[handler][change] | function | Слушатель, который вызывается при изменении значения компонента. Функция в качестве аргументов принимает новое и старое значение. | - | - |
 | settings[draggable] | boolean | Разрешает перенос значений компонента в множественном режиме. Имеет силу только при уставленном параметре `multiple: true` | - | `false` |
 | settings[required] | bool | Выделяет заголовок поля жирным, говоря об обязательности заполнения. | - | false |
 | settings[serverPagination] | boolean | Флаг серверной пагинации. Если принимает значение `true`, то компонент будет делать запросы за всеми страницами с данными. | - | `false` |

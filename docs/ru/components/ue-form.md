@@ -11,7 +11,9 @@
 ```javascript
 var formDataSource = {        
         standard: 'YiiSoft',
-        url: '//universal-backend.dev/rest/v1/staff',
+        transport: {
+            url: '//universal-backend.dev/rest/v1/staff'
+        },        
         sortBy: {
             id: 'desc'
         },
@@ -133,12 +135,7 @@ var config = {
 | settings[header] | object | Объект настройки "шапки" формы. | + | - |
 | settings[header][toolbar] | array | Массив компонентов, выводимых в "шапке" формы. | + | - |
 | settings[primaryKeyValue] | function или string или number | Значение идентификатора записи, за которым будет отправляться запрос к API. Если значение не задано, то никаких запросов отправляться не будет, компонент будет пустым. | - | - |
-| settings[dataSource] | object | Объект настройки компонента по работе с бекендом. | + | - |
-| settings[dataSource][standard] | string | Cтиль построения архитектуры. | + | - |
-| settings[dataSource][url] | string | URL в RESTful-сервисе. | + | - |
-| settings[dataSource][primaryKey] | string | Имя поля с первичным ключом, по которому редактор идентифицирует записи. | + | - |
-| settings[dataSource][parentField] | string | Имя поля с идентификатором родительской записи. Данный параметр требуется указывать, если поле является разделом», т. е. может иметь дочерние объекты, которые будут связаны по этому полю. Можно использовать в связке со смешанным режимом. | - | - |
-| settings[dataSource][fields] | array | Массив настроек полей используемых при создание и редактирование записи. | + | - |
+| settings[dataSource] | object | Объект настройки компонента по работе с бекендом. [DataSource](dataSource.md) | + | - |
 | settings[body] | array | Массив настроек компонентов встраиваемых в форму. | + | - |
 | settings[footer] | object | Содержит настройки "подвала" формы. | + | - |
 | settings[footer][toolbar] | array | Перечень компонентов, выводимые в нижнем блоке формы.| - | - |
