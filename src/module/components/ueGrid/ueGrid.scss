@@ -123,10 +123,16 @@
                   }
                   vertical-align: top;
                   position: relative;
-                  &.ue-column-sortable {
+                  &.ue-column-sortable { 
+                      label {
+                          margin: 0 20px 0 0;
+                      }                     
                       & span.glyphicon {
                           float: right;
                           display: inline-block;
+                          position: absolute;
+                          right: 5px;
+                          top: 10px;
                       }
                   }
                   & span.glyphicon {
@@ -158,7 +164,6 @@
                   font-weight: 700;
                   &.ue-column-sortable {
                       cursor: pointer;
-
                       .glyphicon-sort {
                           color: rgba(153, 153, 153, 0.48);
                       }

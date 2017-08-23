@@ -15,6 +15,7 @@ settings: {
         sortBy: {
             id: 'desc'
         },
+        multisorting: false,
         primaryKey: 'id',
         parentField: 'parent_id',
         tree: {
@@ -97,6 +98,7 @@ settings: {
 | settings[dataSource][tree][childrenField] | string | Имя поля c перечнем дочерних узлов.  | - | - |
 | settings[dataSource][tree][childrenCountField] | string | Имя поля с количеством дочерних узлов.  | - | - |
 | settings[dataSource][tree][selfField] | string | Если узлы содержат сущность в отдельном поле и эта сущность выводится в дереве. Пример узла, {id: 1, self: { сущность дерева }, children: [  массив узлов ]} | - | - |
+| settings[multisorting] | boolean | Разрешает / запрещает многоуровневую сортировку. (позволяет пользователю выбрать сортировку сразу по нескольким столбцам) | - | `false` |
 | settings[header][filter] | object, false | Содержит компонент фильтра.  | - | - |
 | settings[header][toolbar] | object | Содержит компоненты для верхнего блока ue-grid.  | + | - |
 | settings[displayHeaderColumns] | boolean | Флаг отображения блока с заголовками колонок.  | - | true |
@@ -163,10 +165,14 @@ component: {
                     {
                         name: 'id',
                         component: {
-                            name: 'ue-number',
+                            name: 'ue-string',
                             settings: {
                                 label: '№',
-                                validators: []
+                                validators: [
+                                    {
+                                        type: 'number'
+                                    }
+                                ]
                             }
                         }
                     },

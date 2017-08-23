@@ -1,4 +1,11 @@
  .universal-editor {
+     .ue-form {
+         .loader-search-wrapper {
+             position: relative;
+             top: 50px;
+             left: 49%;
+         }
+     }
      & .editor-body {
          & .editor-toolbar {
              margin-bottom: 10px;

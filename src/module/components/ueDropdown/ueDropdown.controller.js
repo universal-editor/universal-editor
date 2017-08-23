@@ -156,9 +156,10 @@
                             }
                             return id;
                         });
-                    } else if (angular.isObject(ids)) {
-                        ids = ids[vm.fieldId]
-                    }
+                    } else if(angular.isObject(ids)) {
+                        defer.resolve();
+                        return defer.promise;
+                    } 
                     var config = {
                         method: 'GET',
                         url: componentSettings.valuesRemote.url,

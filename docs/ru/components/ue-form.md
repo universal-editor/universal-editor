@@ -21,10 +21,14 @@ var formDataSource = {
             {
                 name: 'id',
                 component: {
-                    name: 'ue-number',
+                    name: 'ue-string',
                     settings: {
                         label: '№',
-                        validators: []
+                        validators: [
+                            {
+                                type: 'number'
+                            }
+                        ]
                     }
                 }
             },

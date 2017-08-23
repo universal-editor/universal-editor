@@ -43,6 +43,7 @@
             ];
 
         vm.$onInit = function() {
+            vm.isLoading = true;
 
             //** Nested base controller */
             angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element }));
@@ -90,6 +91,12 @@
                 pk = vm.componentSettings.primaryKeyValue;
             }
             vm.isNewRecord = pk === null || pk === undefined;
+
+            $timeout(function() {
+                if(vm.isNewRecord) {
+                    vm.isLoading = false;
+                }
+            }, 0)
 
             if (dataSource && dataSource.hasOwnProperty('primaryKey')) {
                 vm.idField = dataSource.primaryKey || vm.idField;
@@ -148,6 +155,7 @@
                 } else {
                     ApiService.getItemById(pk, vm.options).finally(function() {
                         vm.options.isLoading = false;
+                        vm.isLoading = false;
                     });
                 }
             } else {

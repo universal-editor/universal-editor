@@ -1,5 +1,7 @@
 .ue-form(ng-class="vm.classFormComponent")
-    .editor-body.ue-component-body(ng-if="!vm.warnings.length && !vm.dangers.length")
+    .loader-search-wrapper(ng-show="vm.isLoading")
+        .loader-search(translate="LOADING")    
+    .editor-body.ue-component-body(ng-if="!vm.warnings.length && !vm.dangers.length" ng-show="!vm.isLoading")
         .editor-toolbar
             component-wrapper.header-action-button(ng-repeat="control in vm.toolbar track by $index", data-setting="control", data-button-class="header", data-options="vm.options")
         .editor-content

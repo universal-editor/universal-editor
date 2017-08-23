@@ -90,6 +90,7 @@
             vm.componentSettings = vm.setting.component.settings;
 
             vm.dataSource = vm.setting.component.settings.dataSource;
+            vm.multiSorting = vm.componentSettings.multiSorting === true;
             if (vm.dataSource.tree) {
                 vm.childrenField = vm.dataSource.tree.childrenField;
                 vm.childrenCountField = vm.dataSource.tree.childrenCountField;
@@ -433,6 +434,9 @@
         function changeSortField(field) {
             if (field.sort.enable) {
                 vm.loaded = false;
+                if(!vm.multiSorting) {
+                    vm.tableFields.forEach(function(f) { if(f.field !== field.field) { f.sort.direction = 'none'; } });
+                }
                 if (field.sort.direction === 'none') {
                     field.sort.direction = 'desc';
                 } else if (field.sort.direction === 'desc') {

@@ -138,6 +138,7 @@
                 name: 'ue-grid',
                 settings: {
                     dataSource: newsDataSource,
+                    multiSorting: true,
                     header: {
                         toolbar: [
                             {
@@ -153,8 +154,7 @@
                     },
                     dragMode: {
                         containerName: 'news',
-                        allowedContainers: ['news'],
-                        dragIcon: true,
+                        allowedContainers: ['news']
                     },
                     columns: [
                         { name: 'id', width: '20%' },
