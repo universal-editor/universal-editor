@@ -4,51 +4,62 @@
 функционал для взаимодействия с ними.
 
 ```javascript
-name: 'ue-grid',
-settings: {
-    routing: {
-        paramsPrefix: 'mix'
-    }
-    dataSource: {        
-        standard: 'YiiSoft',
-        sortBy: {
-            id: 'desc'
+var grid = {
+    name: 'ue-grid',
+    settings: {
+        routing: {
+            paramsPrefix: 'mix'
         },
-        multisorting: false,
-        primaryKey: 'id',
-        parentField: 'parent_id',
-        tree: {
-                childrenField: 'childs',
-                childrenCountField: 'childs_count',
-                selfField: 'self'
-        },
-        transport: {
-            url: '//universal-backend.dev/rest/v1/staff'
-        },
-        fields: [
-            {
-                name: 'id',
-                component: {
-                    name: 'ue-string',
-                    settings: {
-                        label: '№',
-                        validators: [
-                            {
-                                type: 'number',
-                                step: 1
-                            }
-                        ]
+        dataSource: {        
+            standard: 'YiiSoft',
+            sortBy: {
+                id: 'desc'
+            },
+            multisorting: false,
+            primaryKey: 'id',
+            parentField: 'parent_id',
+            tree: {
+                    childrenField: 'childs',
+                    childrenCountField: 'childs_count',
+                    selfField: 'self'
+            },
+            transport: {
+                url: '//universal-backend.dev/rest/v1/staff'
+            },
+            fields: [
+                {
+                    name: 'id',
+                    component: {
+                        name: 'ue-string',
+                        settings: {
+                            label: '№',
+                            validators: [
+                                {
+                                    type: 'number',
+                                    step: 1
+                                }
+                            ]
+                        }
                     }
                 }
-            },
-            {
-            ...
-            }
-        ]
-    },
-    header: {
-        filter: false, 
-        toolbar: [ 
+            ]
+        },
+        header: {
+            filter: false, 
+            toolbar: [ 
+                {
+                    component: {
+                        name: 'ue-button',
+                        settings: {
+                            label: 'Создать',
+                            sref: 'create'
+                        }
+                    }
+                }
+            ]
+        },
+        columns: ['id', 'name', 'email'],
+        contextMenu: [
             {
                 component: {
                     name: 'ue-button',
@@ -58,31 +69,21 @@ settings: {
                     }
                 }
             }
-        ]
-    },
-    columns: ['id', 'name', 'email'],
-    contextMenu: [
-        {
-            component: {
-                name: 'ue-button',
-                settings: {
-                    label: 'Создать',
-                    sref: 'create'
+        ],
+        footer: {
+            toolbar: [
+                {
+                    component: {
+                        name: 'ue-pagination'
+                    }
                 }
-            }
-        }
-    ],
-    footer: {
-        pagination: {
-            component: {
-                name: 'ue-pagination'
-            }
+            ]
         }
     }
-}
+};
 ```
 
-| Параметр | Тип | Описание | Обязательный параметр? | Значение по-умолчанию |
+| Параметр | Тип | Описание | Обязательный параметр? | Значение по умолчанию |
 | --- | --- | --- | --- | --- |
 | name | string | Название копонента. | + | - |
 | settings | object | Объект настройки компонента. | + | - |
@@ -91,23 +92,23 @@ settings: {
 | settings[dataSource] | object | Объект настройки компонента по работе с бекендом. [DataSource](dataSource.md) | + | - |
 | settings[header] | object | Содержит настройки верхнего блока в компоненте.  | + | - |
 | settings[header][filter] | object, false | Содержит компонент фильтра.  | - | - |
-| settings[header][toolbar] | object | Содержит компоненты для верхнего блока ue-grid.  | + | - |
+| settings[header][toolbar] | array | Содержит массив объектов компонентов для верхнего блока. | - | - |
 | settings[displayHeaderColumns] | boolean | Флаг отображения блока с заголовками колонок.  | - | true |
 | settings[dragMode] | object | Объект для настройки перетаскивания элементов в компоненте [drag&drop](dragMode.md)  | - | - |
-| settings[pagination] | object | Содержит компонент пагинации в нижнем блоке. | + | - |
 | settings[columns] | array или string | Массив объектов для описания столбцов или имя поля из конфигурации ресурса.  | + | - |
 | settings[columns][name] | string | Имя поля из конфигурации ресурса (dataSource). | + | - |
 | settings[columns][width] | string | Длина колонки в % или px. | + | 100% – означает, что все колонки будут равные по длине. (разделены в соотношении 1 к 1) |
 | settings[columns][sortable] | boolean | Разрешает / запрещает сортировку данных по столбцу | - | true |
 | settings[contextMenu] | array | Массив кнопок для меню у записей со смешанного ресурса. | - | - |
-
+| settings[footer] | object | Содержит настройки нижнего блока в компоненте.  | - | - |
+| settings[footer][toolbar] | array | Содержит массив объектов компонентов для нижнего блока.  | - | - |
 
 ## Многоуровневая сортировка (sortBy)
 
 Настройка sortBy позволяет задать сортировку по-умолчанию. Представляет собой объект, имена свойств которого являются названия полей, по которым осуществляется сортировка, а значениями свойств – направление сортировки в виде символьного обозначения (`asc` – по возрастанию, `desc` – по убыванию).
 Например, 
 
-``` javascript
+```
 sortBy: {
     field1: 'asc',
     field2: {
@@ -118,11 +119,10 @@ sortBy: {
 все значения сначала отсортируются по возрастанию по полю `field1`, а затем каждая группа записей с одинаковым значением в поле `field1` отсортируется по убыванию по полю `field2.field3` независимо от других групп.
 Визуальная часть работает по следующему сценарию:
 1. Столбец неактивен;
-2. Кликнули, включилась сортировка по убыванию (отображается иконка с классами `glyphicon glyphicon-sort-by-attributes-alt`);
-3. Кликнули ещё раз — включилась сортировка по возрастанию (отображается иконка с классами `glyphicon glyphicon-sort-by-attributes`);
-4. Кликнули снова — отключилась сортировка (отображается иконка с классами `glyphicon glyphicon-sort-by-attributes`);
-5. Столбцы с отключенной сортировкой имеют CSS-класс `glyphicon glyphicon-sort`.
-
+1. Кликнули, включилась сортировка по убыванию (отображается иконка с классами `glyphicon glyphicon-sort-by-attributes-alt`);
+1. Кликнули ещё раз — включилась сортировка по возрастанию (отображается иконка с классами `glyphicon glyphicon-sort-by-attributes`);
+1. Кликнули снова — отключилась сортировка (отображается иконка с классами `glyphicon glyphicon-sort-by-attributes`);
+1. Столбцы с отключенной сортировкой имеют CSS-класс `glyphicon glyphicon-sort`.
 
 ## Смешанный режим отображения данных
 
@@ -137,7 +137,7 @@ sortBy: {
 Свойство __fieldType__ задает имя поля, куда записан этот идентификатор.
 
 ```javascript
-component: {
+var grid = {
     name: 'ue-grid',
     settings: {
         mixedMode: {
@@ -166,9 +166,6 @@ component: {
                                 ]
                             }
                         }
-                    },
-                    {
-                    ...
                     }
                 ]
             },
@@ -220,10 +217,7 @@ component: {
                     }
                 }
             }
-        ],
-        footer: {
-
-        }
+        ]
     }
 }
 ```
@@ -251,7 +245,7 @@ component: {
 URL `/rest/v1/news?mixed=categories`, в ответ клиент должен получить:
 
 1. Смешанный список записей из двух источников (новости и категории);
-2. Поле `type` содержит идентификатор источника записей `categories`, чтобы редактор мог отличать их.
+1. Поле `type` содержит идентификатор источника записей `categories`, чтобы редактор мог отличать их.
 
 ```json
 {
@@ -322,14 +316,12 @@ URL `/rest/v1/news?mixed=categories`, в ответ клиент должен п
 Роль "раскрытия" записи выполняет кнопка ue-button с параметром action: 'open':
 
 ```javascript
-{
-    component: {
-        name: 'ue-button',
-        settings: {
-            action: 'open'
-        }
+var button = {
+    name: 'ue-button',
+    settings: {
+        action: 'open'
     }
-}
+};
 ```
 
 При раскрытие в URL добавляется query-параметр parent или, если в ue-grid прописана настройка routing.paramsPrefix, <routing.paramsPrefix>-parent:
