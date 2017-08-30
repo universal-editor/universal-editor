@@ -53,6 +53,7 @@
             vm.deleteToSelected = deleteToSelected;
             vm.clickSelect = clickSelect;
             vm.clear = clear;
+            vm.dependUpdate = dependUpdate;
             vm.fillControl = fillControl;
 
             if (componentSettings.hasOwnProperty('valuesRemote') && componentSettings.tree) {
@@ -72,6 +73,41 @@
 
             if (vm.options.filter) {
                 vm.isTree = false;
+            }
+
+            function dependUpdate(dependField, dependValue) {
+                if (dependValue && dependValue !== '') {
+                    vm.loadingData = true;
+                    vm.parentValue = false;
+                    vm.optionValues = [];
+
+                    var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                    var config = {
+                        url: url,
+                        method: 'GET',
+                        $id: vm.setting.component.$id,
+                        serverPagination: vm.serverPagination,
+                        standard: $scope.getParentDataSource().standard
+                    };
+
+                    ApiService
+                        .getUrlResource(config)
+                        .then(function(response) {
+                            angular.forEach(response.data.items, function(v) {
+                                vm.optionValues.push(v);
+                            });
+                        }, function(reject) {
+                            $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                                console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
+                            });
+                        })
+                        .finally(function() {
+                            vm.loadingData = false;
+                        });
+                } else {
+                    vm.parentValue = false;
+                    vm.optionValues = [];
+                }
             }
 
             // dropdown functions

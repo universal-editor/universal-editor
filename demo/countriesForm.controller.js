@@ -39,6 +39,39 @@
                             label: 'Name'
                         }
                     }
+                },
+                {
+                    name: 'one',
+                    component: {
+                        name: 'ue-dropdown',
+                        settings: {
+                            label: 'one',
+                            valuesRemote: {
+                                fields: {
+                                    value: "id",
+                                    label: "name"
+                                },
+                                url: "http://universal-backend.dev/rest/v1/staff"
+                            }
+                        }
+                    }
+                },
+                {
+                    name: 'two',
+                    component: {
+                        name: 'ue-dropdown',
+                        settings: {
+                            label: 'two',
+                            depend: 'one',
+                            valuesRemote: {
+                                fields: {
+                                    value: "id",
+                                    label: "name"
+                                },
+                                url: "http://universal-backend.dev/rest/v1/staff?ololo=:dependValue"
+                            }
+                        }
+                    }
                 }
             ]
         };
@@ -67,7 +100,7 @@
                             }
                         ]
                     },
-                    body: ['id', 'name'],
+                    body: ['id', 'name', 'one', 'two'],
                     footer: {
                         toolbar: [
                             {
