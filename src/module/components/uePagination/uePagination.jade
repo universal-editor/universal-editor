@@ -10,4 +10,5 @@ div(ng-class="{'readonly-component': vm.readonly}")
                     span {{'PER-PAGE' | translate}}
                         select(ng-model="vm.perPage" ng-change="vm.changePerPage()")
                             option(data-ng-repeat="option in vm.possiblePages" data-ng-value="option") {{ option }}
-                span.possible-pages(data-ng-if="vm.metaKey && vm.metaData.toItem" ) {{'ELEMENTS' | translate}} {{vm.metaData.fromItem}} — {{vm.metaData.toItem}} {{'FROM' | translate}} {{vm.metaData.totalCount}}
+                span.possible-pages(data-ng-if="::(!vm.possiblePages || vm.possiblePages.length == 0)") {{'ELEMENTS' | translate}} 
+                span.possible-pages(data-ng-if="vm.metaKey && vm.metaData.toItem" ) {{vm.metaData.fromItem}} — {{vm.metaData.toItem}} {{'FROM' | translate}} {{vm.metaData.totalCount}}
