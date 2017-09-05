@@ -50,10 +50,6 @@ Cобытие вызывается перед удалением записи.
 
 Событие вызывается после удаления записи.
 
-### ue:componentDataLoaded
-
-Событие вызывается после загрузки данных с API.
-
 ### ue:beforeComponentDataLoaded
 
 Событие перед отправкой запроса на получение данных с API.
@@ -66,6 +62,10 @@ $rootScope.$on('ue:beforeComponentDataLoaded', function(e, data) {
    // data.$id – идентификатор компонента
 });
 ```
+
+### ue:componentDataLoaded
+
+Событие вызывается после загрузки данных с API.
 
 ### ue:componentError
 

@@ -1,7 +1,7 @@
 # Общие настройки всех компонентов редактора
 
 ```javascript
-{
+var component = {
     name: 'ue-string',
     settings: {
         label: 'String label',
@@ -15,7 +15,7 @@
 		},
 		readonly: function(data) {
 			return data.field === 'value2';
-		}
+		},
         templates: {
             preview: '<span> {{value}} </span>',
             edit: function(scope) {
@@ -37,7 +37,7 @@
             }
         ]
     }
-}
+};
 ```
 
 | Параметр | Тип | Описание | Обязательный параметр? | Значение по-умолчанию |
@@ -61,30 +61,29 @@
 | settings[validators] | array | Массив, содержащий настройки для валидации компонента (см. [Валидаторы полей](validators) | - | - |
 | settings[depend] | string | Параметр отвечает за зависимость данного поля от поля с именем other_field_name. Если у компонентов, для которых требуется делать запрос для получения значений по API, в поле адреса запроса указаны `:dependField` и `:dependValue`(например, `/api/service/v1/json/categories?filter={:dependField::dependValue}`) , то они заменятся на имя поля указанного в depend и значение этого поля соответственно. | - | - |
 
-
 ## Идентификатор компонента
 
 Все компоненты, обрабатываемые редактором, снабжаются идентификатором. Он либо автоматически генерируется в ядре редактора, либо берется из конфигурации компонента. Если указать идентификатор в конфигурации компонента, то редактором он генерироваться не будет. Указать идентификатор компонента можно в свойстве `component[$id]` (как в примере ниже).
 
 ```javascript
-{
+var field = {
     name: 'text',
     component: { 
         $id: 'text_id',
-        name: 'ue-string'
+        name: 'ue-string',
         settings: {
             label: 'Адрес'
         }
     }
-}
+};
 ```
 
-Как правило в событиях, инициируемые компонентами, содержится идентификатор этого компонента, передаваемый событию. Например, 
+Как правило в событиях, инициируемых компонентами, содержится идентификатор этого компонента, передаваемый событию. Например: 
 
 ```javascript
-    $scope.$on('ue:componentDataLoaded', function(e, data) {
-        console.log('Компонент, вызвавший событие имеет идентификатор ' + data.$id);
-    });
+$scope.$on('ue:componentDataLoaded', function(e, data) {
+    console.log('Компонент, вызвавший событие имеет идентификатор ' + data.$id);
+});
 ```
 
 ## Задание сложных имен компонентам
@@ -93,15 +92,15 @@
 Имя может быть разделено через точку, если данные сокрыты в объекте. Например, если поле описано следующим образом 
 
 ```javascript
-{
+var field = {
     name: 'root.child1.child2.child3',
     component: { /* ... */ }
-}
+};
 ```
 
 , тогда на сервер уйдет объект вида 
 
-```javascript
+```
 {
     root: {
         child1: {
@@ -113,12 +112,15 @@
 }
 
 // В окне запросов браузера данные уйдут в виде root[child1][child2][child3]: Значение поля
-
 ```
 
-Если возникает необходимость описать массив однотипных объектов, то можно воспользоваться возможностями компонента `ue-group` в режиме multiple, который поможет визуализировать повторяющиеся блоки с данными. Но при описании конфигурации компонентов в часть имени, которая описывает массив нужно прописать постфикс `[]`, чтобы редактор знал что это массив, когда будет парсить имя и формировать выходной объект с данными.
-Например, API возвращает массив объектов вида:
-```javascript
+Если возникает необходимость описать массив однотипных объектов, то можно воспользоваться возможностями компонента 
+`ue-group` в режиме multiple, который поможет визуализировать повторяющиеся блоки с данными. Но при описании 
+конфигурации компонентов в часть имени, которая описывает массив нужно прописать постфикс `[]`, чтобы редактор знал, 
+что это массив, когда будет парсить имя и формировать выходной объект с данными. Например, API возвращает массив 
+объектов вида:
+
+```
 {
     photos: [
         {
@@ -132,80 +134,78 @@
     ]
 }
 ```
+
 Соответствующие конфигурации компонентов в dataSource объекте и конфигурация формы должны выглядеть так: 
 
 ```javascript
-    var dataSource = {
-            standard: 'YiiSoft',
-            transport: {
-              url: '//universal-backend.dev/rest/v1/photos'
-            },
-            fields: [
+var dataSource = {
+    standard: 'YiiSoft',
+    transport: {
+      url: '//universal-backend.dev/rest/v1/photos'
+    },
+    fields: [
+        {
+            name: 'photos[].title',
+            component: { 
+                name: 'ue-string',
+                settings: {
+                    label: 'Заголовок'
+                }
+            }
+        },
+        {
+            name: 'photos[].src',
+            component: { 
+                name: 'ue-string',
+                settings: {
+                    label: 'Адрес'
+                }
+            }
+        }
+    ]
+};
+
+var form = {
+    component: {
+        name: 'ue-form',
+        settings: {
+            dataSource: dataSource,
+            body: [
                 {
-                    name: 'photos[].title',
+                    name: 'photos',
                     component: { 
-                        name: 'ue-string'
+                        name: 'ue-group',
                         settings: {
-                            label: 'Заголовок'
-                        }
-                    }
-                },
-                {
-                    name: 'photos[].src',
-                    component: { 
-                        name: 'ue-string'
-                        settings: {
-                            label: 'Адрес'
+                            label: 'Фотографии',
+                            multiple: true,
+                            fields: ['title', 'src']
                         }
                     }
                 }
             ]
-        };
-
-        var config = {
-            component: {
-                name: 'ue-form',
-                settings: {
-                    dataSource: dataSource,
-                    body: [
-                        {
-                            name: 'photos',
-                            component: { 
-                                name: 'ue-group'
-                                settings: {
-                                    label: 'Фотографии',
-                                    multiple: true,
-                                    fields: ['title', 'src']
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        };
-
+        }
+    }
+};
 ```
 
 Компоненту `ue-group` тоже сообщается имя. Это необходимо чтобы при получении данных `ue-group` сначала определил количество блоков, поместил их на форму (компоненты должны пройти регистрацию в редакторе) и только потом инициировал событие загрузки данных. Внутренние поля группы перечисляются без учета группового имени (`photos.title => title, photos.src => src`).
 
 # Получение модели компонента
 
-Для обращения непосредственно к компоненту, чтобы изъять значение из компонента, можно воспользоваться сервисом `EditEntityStorage`.
-Получение модели компонента по его настройкам возможно с помощью метода `getComponentBySetting`. 
-Пример, 
+Для обращения непосредственно к компоненту, чтобы изъять значение из компонента, можно воспользоваться сервисом 
+`EditEntityStorage`. Получение модели компонента по его настройкам возможно с помощью метода `getComponentBySetting`. 
+Например:
 
 ```javascript
-
- var settings =  {
-        name: 'title',
-        component: { 
-            name: 'ue-string'
-            settings: {
-                label: 'Заголовок'
-            }
+var field =  {
+    name: 'title',
+    component: { 
+        name: 'ue-string',
+        settings: {
+            label: 'Заголовок'
         }
- }
+    }
+};
 
- var model = EditEntityStorage.getComponentBySetting(settings);
+var model = EditEntityStorage.getComponentBySetting(field);
 ```
-

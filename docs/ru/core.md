@@ -19,7 +19,7 @@
 Например, настройка компонента поля:
 
 ```javascript
-{
+var field = {
     name: 'id',
     component: {
         name: 'ue-string',
@@ -31,6 +31,5 @@
 }
 ```
 
-Далее `componentWrapper` передает настройки Angular-сервису `ComponentBuilder`, 
-который в свою очередь возвращает скомпилированный по `name` нужный компонент. 
-Затем `componentWrapper` встраивает его внутри себя.
+Далее `componentWrapper` передает настройки Angular-сервису `ComponentBuilder`, который в свою очередь возвращает 
+скомпилированный по `name` нужный компонент. Затем `componentWrapper` встраивает его внутри себя.
