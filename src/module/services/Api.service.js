@@ -73,6 +73,11 @@ import DataSource from '../classes/dataSource.js';
                 delete params.page;
             }
 
+            if (params['per-page']) {
+                config.pagination.perPage = params['per-page'];
+                delete params['per-page'];
+            }
+
             if (!!request.options.mixedMode) {
                 config.mixMode = request.options.mixedMode.collectionType;
             }

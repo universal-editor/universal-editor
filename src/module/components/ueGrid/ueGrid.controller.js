@@ -47,7 +47,7 @@ import DataSource from '../../classes/dataSource.js';
         })
         .controller('UeGridController', UeGridController);
 
-    function UeGridController($scope, $templateCache, $rootScope, ApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, $translate, $element, $compile, EditEntityStorage, $controller, dragOptions) {
+    function UeGridController($scope, $templateCache, $rootScope, ApiService, FilterFieldsStorage, $location, $document, $timeout, $httpParamSerializer, $state, $translate, $element, $compile, EditEntityStorage, $controller, dragOptions, PaginationSettings) {
         /* jshint validthis: true */
         'ngInject';
         $element.addClass('ue-grid');
@@ -133,6 +133,8 @@ import DataSource from '../../classes/dataSource.js';
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
             vm.prefixGrid = undefined;
             vm.refreshTableRecords = refreshTableRecords;
+
+            $scope.$on('ue:beforeComponentDataLoaded', switchLoaderOn);
 
             if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix) {
                 vm.prefixGrid = vm.setting.component.settings.routing.paramsPrefix;
@@ -253,6 +255,9 @@ import DataSource from '../../classes/dataSource.js';
                     }
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = vm.dataSource;
+                        if (newControl.component.name == 'ue-pagination' && !PaginationSettings.get(vm.$componentId)) {
+                            PaginationSettings.set(vm.$componentId, newControl.component.settings);
+                        }
                     }
                     newControl.paginationData = {};
                     vm.listFooterBar.push(newControl);
@@ -447,7 +452,6 @@ import DataSource from '../../classes/dataSource.js';
                             $location.search(prefixParentKey, parentId);
                             data.parentId = parentId;
                             $rootScope.$broadcast('ue:beforeParentEntitySet', data);
-
                             vm.request.childId = parentId;
                             refreshTableRecords(true);
                         }, function(reject) {
@@ -464,6 +468,11 @@ import DataSource from '../../classes/dataSource.js';
 
             function switchLoaderOff() {
                 vm.loaded = true;
+            }
+            function switchLoaderOn(event, data) {
+                if (vm.isComponent(data) && !event.defaultPrevented) {
+                    vm.loaded = false;
+                }
             }
 
             $scope.$on('ue:parentEntitySet', function(event, request) {
@@ -494,6 +503,11 @@ import DataSource from '../../classes/dataSource.js';
                     vm.warnings.length = 0;
                     vm.items = [];
                     vm.data = [];
+                    var paginationSettings = PaginationSettings.get(vm.$componentId);
+                    if (paginationSettings) {
+                        request.params['per-page'] = paginationSettings.pageSize;
+                    }
+                    $rootScope.$broadcast('ue:beforeComponentDataLoaded', { $id: vm.$componentId });
                     return ApiService.getItemsList(request, notGoToState);
                 }
             }
@@ -541,7 +555,6 @@ import DataSource from '../../classes/dataSource.js';
                     });
                 }
             });
-
             $scope.$on('ue:componentDataLoaded', componentLoadedHandler);
 
             function componentLoadedHandler(event, data) {

@@ -6,7 +6,7 @@ import DataSource from '../../classes/dataSource.js';
         .module('universal-editor')
         .controller('UePaginationController', UePaginationController);
 
-    function UePaginationController($scope, $controller, ApiService, $httpParamSerializer, $sce, $location, $element) {
+    function UePaginationController($scope, $controller, ApiService, $httpParamSerializer, $sce, $location, $element, PaginationSettings, $rootScope) {
         'ngInject';
         $element.addClass('ue-pagination');
 
@@ -17,6 +17,7 @@ import DataSource from '../../classes/dataSource.js';
             vm.metaKey = true;
             vm.parentComponentId = vm.options.$componentId;
             vm.changePage = changePage;
+            vm.changePerPage = changePerPage;
         };
 
         var watchData = $scope.$watch(function() {
@@ -37,8 +38,18 @@ import DataSource from '../../classes/dataSource.js';
                 dataSource: vm.dataSource
             };
 
+            // reading settings for elements visible per page
+            var settings = PaginationSettings.get(vm.options.$componentId)
+            if(!settings) {
+                settings = PaginationSettings.set(vm.options.$componentId, vm.setting.component.settings)
+            }
+            vm.possiblePages = settings.pageSizeOptions;
+            vm.perPage = settings.pageSize;
+            //
+
             vm.pageItemsArray = [];
             vm.items = vm.setting.paginationData[itemsKey];
+
             var label = {
                 last: '>>',
                 next: '>',
@@ -152,15 +163,25 @@ import DataSource from '../../classes/dataSource.js';
             }
         });
 
+        function changePerPage() {
+            var settings = PaginationSettings.get(vm.options.$componentId);
+            settings.pageSize = vm.perPage;
+            PaginationSettings.set(vm.options.$componentId, settings, true);
+            changePage(new Event('dummy'), 1);
+        }
+
         function changePage(event, pageItem) {
             event.preventDefault();
             var searchParameters = $location.search();
             vm.request.params.page = pageItem.page;
+            vm.request.params['per-page'] = vm.perPage;
             vm.request.params.sort = searchParameters[getKeyPrefix('sort')];
             var parentEntity = searchParameters[getKeyPrefix('parent')];
             vm.parent = parentEntity || null;
             vm.request.childId = vm.parent;
             $location.search(getKeyPrefix('page'), pageItem.page);
+            $location.search(getKeyPrefix('per-page'), vm.perPage);
+            $rootScope.$broadcast('ue:beforeComponentDataLoaded', {$id: vm.parentComponentId});
             ApiService.getItemsList(vm.request, true);
         }
 

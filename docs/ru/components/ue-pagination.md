@@ -4,8 +4,10 @@
 component: {
     name: 'ue-pagination',
     settings: {
+        pageSizeOptions: [10, 20, 50],
+        pageSize: 20,
         dataSource: formDataSource,
-        maxSize: '5'
+        maxSize: '5',
         label: {
             last: 'last',
             next: 'next',
@@ -20,6 +22,8 @@ component: {
 | --- | --- | --- | --- | --- |
 | name | string | Название компонента. | + | - |
 | settings | object | Объект настройки компонента | + | - |
+| settings[pageSizeOptions] | array or boolean | Массив с вариантами количества записей отображаемых на странице. Если указать как false - отключится возможность выбора значения и сам вывод будет ограничен 20 записями. | - | [10, 20 ,50] |
+| settings[pageSize] | number | Предвыбранное значение количества записей. Если не указывать или указать значение которого нет в массиве settings[pageSizeOptions] - возьмется первое значение из массива settings[pageSizeOptions]. Если не указан вместе с settings[pageSizeOptions], то выставится по умолчанию. | - | 20 |
 | settings[dataSource] | object | Объект настройки компонента по работе с бекендом | - | Берется у родительского компонента |
 | settings[maxSize] | number | Колличество кнопок выбора страниц. | - | 7 |
 | settings[label] | object | Объект настройки техта кнопок "последняя страница", "следующая страница", "первая страница",  "предыдущая страница" | - | '>>', '>', '<<', '<' |

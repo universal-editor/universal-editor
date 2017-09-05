@@ -6,7 +6,7 @@ import DataSource from '../../classes/dataSource.js';
         .module('universal-editor')
         .controller('UeFormController', UeFormController);
 
-    function UeFormController($scope, ApiService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller, $element) {
+    function UeFormController($scope, $rootScope, ApiService, $location, $state, $translate, EditEntityStorage, $window, $timeout, $controller, $element) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this,
@@ -153,6 +153,7 @@ import DataSource from '../../classes/dataSource.js';
                         EditEntityStorage.newSourceEntity(vm.options.$componentId, dataSource);
                     });
                 } else {
+                    $rootScope.$broadcast('ue:beforeComponentDataLoaded', { $id: vm.setting.component.$id });
                     ApiService.getItemById(pk, vm.options).finally(function() {
                         vm.options.isLoading = false;
                         vm.isLoading = false;

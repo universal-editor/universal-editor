@@ -192,7 +192,11 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-pagination'
+                                    name: 'ue-pagination',
+                                    settings: {
+                                        pageSizeOptions: [20, 1, 4],
+                                        pageSize: 20
+                                    }
                                 }
                             }
                         ]

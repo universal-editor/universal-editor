@@ -285,7 +285,7 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-pagination'
+                                    name: 'ue-pagination',
                                 }
                             }
                         ]

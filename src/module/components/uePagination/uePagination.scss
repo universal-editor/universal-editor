@@ -11,4 +11,10 @@
         font-size: 11px;
         color: #6a7b8b;
     }
+    & .per-page {
+        margin-right: 20px;
+        select {
+            margin-left: 5px;
+        }
+    }
 }

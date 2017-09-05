@@ -93,7 +93,10 @@
                         toolbar: [
                             {
                                 component: {
-                                    name: 'ue-pagination'
+                                    name: 'ue-pagination',
+                                    settings: {
+                                        pageSizeOptions: false
+                                    }
                                 }
                             }
                         ]

@@ -91,6 +91,7 @@
                                 };
                                 var dataSource = $scope.getParentDataSource();
                                 config.standard = dataSource.standard;
+                                $rootScope.$broadcast('ue:beforeComponentDataLoaded', { $id: self.setting.component.$id });
                                 componentSettings.$loadingPromise = ApiService
                                     .getUrlResource(config)
                                     .then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
