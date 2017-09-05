@@ -49,57 +49,83 @@
             self.initDataSource = false;
         }
 
-        if (values || remoteValues) {
-            self.fieldId = "id";
-            self.fieldSearch = "title";
-            if (self.optionValues) {
-                if (values) {
-                    angular.forEach(componentSettings.values, function(v, key) {
-                        if (angular.isString(v)) {
-                            var obj = {};
-                            obj[self.fieldId] = key;
-                            obj[self.fieldSearch] = v;
-                            if (angular.isArray(componentSettings.values)) {
-                                obj[self.fieldId] = v;
+        setRemoteSettings();
+
+        function setRemoteSettings() {
+            if (values || remoteValues) {
+                self.fieldId = "id";
+                self.fieldSearch = "title";
+                if (remoteValues && remoteValues.fields) {
+                    self.fieldId = remoteValues.fields.value || self.fieldId;
+                    self.fieldSearch = remoteValues.fields.label || self.fieldId;
+                }
+            }
+        }
+
+        function read() {
+            if (values || remoteValues) {
+                if (self.optionValues) {
+                    if (values) {
+                        angular.forEach(componentSettings.values, function(v, key) {
+                            if (angular.isString(v)) {
+                                var obj = {};
+                                obj[self.fieldId] = key;
+                                obj[self.fieldSearch] = v;
+                                if (angular.isArray(componentSettings.values)) {
+                                    obj[self.fieldId] = v;
+                                }
+                                self.optionValues.push(obj);
                             }
-                            self.optionValues.push(obj);
-                        }
-                    });
-                    componentSettings.$loadingPromise = $q.when(self.optionValues).then(onLoadedItems, onErrorLoadedItem);
-                } else if (remoteValues) {
-                    if (remoteValues.fields) {
-                        self.fieldId = remoteValues.fields.value || self.fieldId;
-                        self.fieldSearch = remoteValues.fields.label || self.fieldId;
-                    }
-                    if (self.initDataSource) {
-                        self.loadingData = true;
-                        self.loadingPossibleData = true;
-                        if (!componentSettings.$loadingPromise) {
-                            var config = {
-                                method: 'GET',
-                                url: remoteValues.url,
-                                $id: self.setting.component.$id,
-                                serverPagination: self.serverPagination
-                            };
-                            var dataSource = $scope.getParentDataSource();
-                            config.standard = dataSource.standard;
-                            componentSettings.$loadingPromise = ApiService
-                                .getUrlResource(config)
-                                .then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
+                        });
+                        componentSettings.$loadingPromise = $q.when(self.optionValues).then(onLoadedItems, onErrorLoadedItem);
+                    } else if (remoteValues) {
+                        if (self.initDataSource) {
+                            self.loadingData = true;
+                            self.loadingPossibleData = true;
+                            if (!componentSettings.$loadingPromise) {
+                                var config = {
+                                    method: 'GET',
+                                    url: remoteValues.url,
+                                    $id: self.setting.component.$id,
+                                    serverPagination: self.serverPagination
+                                };
+                                var dataSource = $scope.getParentDataSource();
+                                config.standard = dataSource.standard;
+                                componentSettings.$loadingPromise = ApiService
+                                    .getUrlResource(config)
+                                    .then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
+                            } else {
+                                componentSettings.$loadingPromise.then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
+                                if (componentSettings.$optionValues && componentSettings.$optionValues.length) {
+                                    self.loadingData = false;
+                                    self.optionValues = componentSettings.$optionValues;
+                                }
+                            }
                         } else {
-                            componentSettings.$loadingPromise.then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
-                            if (componentSettings.$optionValues && componentSettings.$optionValues.length) {
-                                self.loadingData = false;
-                                self.optionValues = componentSettings.$optionValues;
+                            if (angular.isDefined(self.defaultValue) && angular.isFunction(self.loadDataById)) {
+                                self.loadDataById(self.defaultValue);
                             }
-                        }
-                    } else {
-                        if (angular.isDefined(self.defaultValue) && angular.isFunction(self.loadDataById)) {
-                            self.loadDataById(self.defaultValue);
                         }
                     }
                 }
             }
+        }
+
+        if (!componentSettings.depend) {
+            read();
+        } else {
+            $scope.$on('ue:changeFieldValue', function(event, data) {
+                if (data.configuration.name === componentSettings.depend) {
+                    let valuesRemote = data.configuration.component.settings.valuesRemote;
+                    self.dependValue = data.newValue;
+                    if (angular.isObject(self.dependValue) && valuesRemote && valuesRemote.fields.value) {
+                        self.dependValue = self.dependValue[valuesRemote.fields.value];
+                    }
+                    if (angular.isFunction(self.dependUpdate)) {
+                        self.dependUpdate(componentSettings.depend, self.dependValue);
+                    }
+                }
+            });
         }
 
         function onLoadedItemFinally() {
@@ -117,12 +143,10 @@
             if (response) {
                 var items = response.hasOwnProperty('data') ? response.data.items : response;
                 if (response.hasOwnProperty('data')) {
-                    if (!componentSettings.depend) {
-                        self.optionValues = [];
-                        angular.forEach(response.data.items, function(v) {
-                            self.optionValues.push(v);
-                        });
-                    }
+                    self.optionValues = [];
+                    angular.forEach(response.data.items, function(v) {
+                        self.optionValues.push(v);
+                    });
                 } else {
                     self.optionValues = response;
                 }
@@ -172,68 +196,74 @@
             self.listeners.push($scope.$watch(
                 function() {
                     return self.fieldValue;
-                },
-                function(value, oldValue) {
-                    
-                    if (angular.isObject(componentSettings.handlers) && angular.isFunction(componentSettings.handlers.change) && value !== oldValue) {
-                        componentSettings.change(value, oldValue, getExtendedValue(value));
-                    }
-                    self.error = [];
-                    if (self.disabled === true) {
-                        self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : !!value;
-                    }
-                    var parameters = componentSettings.valuesRemote || componentSettings.values;
-
-                    /** logic for connected components */
-                    if (angular.isObject(parameters)) {
-                        var selected = parameters.$selectedStorage;
-                        if (angular.isArray(oldValue)) {
-                            oldValue.forEach(function(value) {
-                                var v = value;
-                                if (angular.isObject(value)) {
-                                    v = value[self.fieldId];
-                                }
-                                var iOldValue = selected.indexOf(v);
-                                if (iOldValue !== -1) {
-                                    selected.splice(iOldValue, 1);
-                                }
-                            });
-                        } else if (oldValue) {
-                            var v = oldValue;
-                            if (angular.isObject(oldValue)) {
-                                v = oldValue[self.fieldId];
-                            }
-                            var iOldValue = selected.indexOf(v);
-                            if (iOldValue !== -1) {
-                                selected.splice(iOldValue, 1);
-                            }
-                        }
-
-                        if (angular.isArray(value)) {
-                            value.forEach(function(value) {
-                                var v = value;
-                                if (angular.isObject(value)) {
-                                    v = value[self.fieldId];
-                                }
-                                if (selected.indexOf(value) === -1) {
-                                    selected.push(v);
-                                }
-                            });
-                        } else if (value) {
-                            var v = value;
-                            if (angular.isObject(value)) {
-                                v = value[self.fieldId];
-                            }
-                            if (selected.indexOf(v) === -1) {
-                                selected.push(v);
-                            }
-                        }
-                    }
-                    if (angular.isFunction(componentSettings.change) && value !== oldValue) {
-                        componentSettings.change(value, oldValue, getExtendedValue(value));
-                    }
-                }, true)
+                }, watcherValue, true)
             );
+        }
+
+        function watcherValue(value, oldValue) {
+            if (value !== oldValue) {
+                $timeout(function() {
+                    $rootScope.$broadcast('ue:changeFieldValue', {
+                        configuration: self.setting,
+                        oldValue: oldValue,
+                        newValue: value
+                    });
+                });
+                if ((angular.isObject(componentSettings.handlers) && angular.isFunction(componentSettings.handlers.change) || angular.isFunction(componentSettings.change))) {
+                    (componentSettings.change || componentSettings.handlers.change)(value, oldValue, getExtendedValue(value));
+                }
+            }
+            self.error = [];
+            if (self.disabled === true) {
+                self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : !!value;
+            }
+            var parameters = componentSettings.valuesRemote || componentSettings.values;
+
+            /** logic for connected components */
+            if (angular.isObject(parameters)) {
+                var selected = parameters.$selectedStorage;
+                if (angular.isArray(oldValue)) {
+                    oldValue.forEach(function(value) {
+                        var v = value;
+                        if (angular.isObject(value)) {
+                            v = value[self.fieldId];
+                        }
+                        var iOldValue = selected.indexOf(v);
+                        if (iOldValue !== -1) {
+                            selected.splice(iOldValue, 1);
+                        }
+                    });
+                } else if (oldValue) {
+                    var v = oldValue;
+                    if (angular.isObject(oldValue)) {
+                        v = oldValue[self.fieldId];
+                    }
+                    var iOldValue = selected.indexOf(v);
+                    if (iOldValue !== -1) {
+                        selected.splice(iOldValue, 1);
+                    }
+                }
+
+                if (angular.isArray(value)) {
+                    value.forEach(function(value) {
+                        var v = value;
+                        if (angular.isObject(value)) {
+                            v = value[self.fieldId];
+                        }
+                        if (selected.indexOf(value) === -1) {
+                            selected.push(v);
+                        }
+                    });
+                } else if (value) {
+                    var v = value;
+                    if (angular.isObject(value)) {
+                        v = value[self.fieldId];
+                    }
+                    if (selected.indexOf(v) === -1) {
+                        selected.push(v);
+                    }
+                }
+            }
         }
 
         self.clear = clear;
@@ -397,33 +427,6 @@
 
         function onLoadDataHandler(event, data) {
             if (self.isParentComponent(data) && !self.options.filter) {
-                //-- functional for required fields
-                if (componentSettings.depend) {
-                    $scope.$watch(function() {
-                        var f_value = EditEntityStorage.getValueField(self.parentComponentId, componentSettings.depend);
-                        var result = checkForEmptyValue(f_value);
-                        var oldValue = self.dependValue;
-                        self.dependValue = undefined;
-                        if (result) {
-                            self.dependValue = f_value[componentSettings.depend];
-                        }
-                        if (!angular.equals(oldValue, self.dependValue) && angular.isFunction(self.dependUpdate)) {
-                            self.loadingData = true;
-                            $timeout.cancel(timeUpdateDepend);
-                            timeUpdateDepend = $timeout(function() {
-                                self.dependUpdate(componentSettings.depend, self.dependValue);
-                                $timeout.cancel(timeUpdateDepend);
-                            }, 500);
-                        }
-                        return result;
-                    }, function(value) {
-                        if (!value) {
-                            self.clear();
-                            self.loadingData = false;
-                        }
-                    }, true);
-                }
-
                 if (data.editorEntityType === 'new' && self.regim !== 'preview') {
                     if (!!self.newEntityLoaded) {
                         self.newEntityLoaded();
@@ -493,7 +496,7 @@
                             });
                         }
                     }
-                    
+
                     if (self.fieldId && self.fieldValue) {
                         var output;
                         if (angular.isArray(self.fieldValue)) {
@@ -514,7 +517,7 @@
                             }
                         }
                     }
-                    
+
                     var extended = remoteValues ? ApiService.getFromStorage(self.setting, self.multiname ? apiValue : self.fieldValue) : apiValue;
                     if (extended !== false) {
                         self.isSendRequest = true;
@@ -558,11 +561,15 @@
             }
         });
         if (self.defaultValue) {
+            let oldValue, newValue;
+
+            oldValue = self.fieldValue;
             self.fieldValue = transformToValue(self.defaultValue);
+            newValue = self.fieldValue;
+            watcherValue(newValue, oldValue);
             equalPreviewValue();
         }
 
-        
         if (self.multiple && (typeof self.fieldValue === 'undefined' || self.fieldValue === null)) {
             self.fieldValue = [];
         }

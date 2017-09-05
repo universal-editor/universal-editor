@@ -18,7 +18,6 @@
             vm.newEntityLoaded = newEntityLoaded;
             vm.dependUpdate = dependUpdate;
             vm.initDataSource = true;
-            vm.dependUpdate = dependUpdate;
 
             componentSettings = vm.setting.component.settings;
             vm.inline = componentSettings.inline === true;
@@ -53,6 +52,7 @@
 
 
         function dependUpdate(dependField, dependValue) {
+           
             vm.optionValues = [];
             if (dependValue && dependValue !== '') {
                 vm.loadingData = true;

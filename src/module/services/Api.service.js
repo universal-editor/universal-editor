@@ -784,6 +784,7 @@ import DataSource from '../classes/dataSource.js';
         }
 
         this.getUrlDepend = function(url, queryParams, dependField, dependValue) {
+            
             if (angular.isString(dependValue)) {
                 dependValue = '"' + dependValue + '"';
             }
