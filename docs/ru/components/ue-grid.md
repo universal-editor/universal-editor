@@ -89,7 +89,7 @@ var grid = {
 | settings | object | Объект настройки компонента. | + | - |
 | settings[routing] | object | Объект настройки взаимодествия компонента с URL. | - | - |
 | settings[routing][paramsPrefix] | object | Префикс, который добавляеться к query параметрам(parent, filter, sort, page), требующим для работы компонента. | - | - |
-| settings[dataSource] | object | Объект настройки компонента по работе с бекендом. [DataSource](dataSource.md) | + | - |
+| settings[dataSource] | object | Объект настройки компонента по работе с сервером [DataSource](dataSource.md). Если компонент не имеет `dataSource`, то следует указать значение `dataSource: false`, иначе компонент попытается прокинуть его в дочерние компоненты. | + | Передается из родительского компонента |
 | settings[header] | object | Содержит настройки верхнего блока в компоненте.  | + | - |
 | settings[header][filter] | object, false | Содержит компонент фильтра.  | - | - |
 | settings[header][toolbar] | array | Содержит массив объектов компонентов для верхнего блока. | - | - |
