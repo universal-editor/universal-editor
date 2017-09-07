@@ -14,34 +14,34 @@
             },
             fields: [
                 {
-                    name: 'title',
+                    name: 'name',
                     component: {
                         name: 'ue-string',
                         settings: {
-                            label: 'Title'
+                            label: 'name'
                         }
                     }
                 },
                 {
-                    name: 'status',
+                    name: 'email',
                     component: {
-                        name: 'ue-radio',
+                        name: 'ue-string',
                         settings: {
-                            label: 'Status',
+                            label: 'E-mail',
+                            contentType: 'email'
+                        }
+                    }
+                },
+                {
+                    name: 'gender',
+                    component: {
+                        name: 'ue-radiolist',
+                        settings: {
+                            label: 'Gender',
                             values: {
-                                0: 'Draft',
-                                10: 'Archived',
-                                100: 'Published',
+                                'male': 'Male',
+                                'female': 'Female'
                             }
-                        }
-                    }
-                },
-                {
-                    name: 'date',
-                    component: {
-                        name: 'ue-date',
-                        settings: {
-                            label: 'Date of publication'
                         }
                     }
                 }
@@ -1345,7 +1345,7 @@
                                             component: {
                                                 name: 'ue-radiolist',
                                                 settings: {
-                                                    label: 'radiolist с valuesRemote without value',
+                                                    label: 'radiolist with valuesRemote without value',
                                                     valuesRemote: {
                                                         fields: {
                                                             value: 'id'
@@ -1445,7 +1445,7 @@
                                             component: {
                                                 name: 'ue-dropdown',
                                                 settings: {
-                                                    label: 'select с valuesRemote (defaultValue = "4")',
+                                                    label: 'select with valuesRemote (defaultValue = "4")',
                                                     valuesRemote: {
                                                         fields: {
                                                             value: 'id',
@@ -1461,7 +1461,7 @@
                                             component: {
                                                 name: 'ue-dropdown',
                                                 settings: {
-                                                    label: 'select с valuesRemote (defaultValue = [4, 5])',
+                                                    label: 'select with valuesRemote (defaultValue = [4, 5])',
                                                     multiple: true,
                                                     valuesRemote: {
                                                         fields: {
@@ -1536,7 +1536,7 @@
                                             component: {
                                                 name: 'ue-dropdown',
                                                 settings: {
-                                                    label: 'select с valuesRemote',
+                                                    label: 'select with valuesRemote',
                                                     valuesRemote: {
                                                         fields: {
                                                             value: 'id',
@@ -1727,7 +1727,7 @@
                                             component: {
                                                 name: 'ue-autocomplete',
                                                 settings: {
-                                                    label: 'autocomplete с valuesRemote  (defaultValue = "4")',
+                                                    label: 'autocomplete with valuesRemote  (defaultValue = "4")',
                                                     valuesRemote: {
                                                         fields: {
                                                             value: 'id',
@@ -1743,7 +1743,7 @@
                                             component: {
                                                 name: 'ue-autocomplete',
                                                 settings: {
-                                                    label: 'autocomplete с valuesRemote  (defaultValue = [4, 5])',
+                                                    label: 'autocomplete with valuesRemote  (defaultValue = [4, 5])',
                                                     multiple: true,
                                                     valuesRemote: {
                                                         fields: {
@@ -2025,7 +2025,7 @@
                                                                 name: 'ue-grid',
                                                                 settings: {
                                                                     dataSource: demoDataSource,
-                                                                    columns: [{ name: 'title', sortable: false }, 'status', 'date']
+                                                                    columns: [{ name: 'name', sortable: false }, 'email', 'gender']
                                                                 }
                                                             }
                                                         }
@@ -2343,95 +2343,39 @@
                                         {
                                             component: {
                                                 name: 'ue-group',
-                                                $id: 'form_component',
                                                 settings: {
-                                                    label: 'Form',
+                                                    label: 'Dependencies between components',
                                                     fields: [
                                                         {
+                                                            name: 'dependencies_category',
                                                             component: {
-                                                                name: 'ue-form',
+                                                                name: 'ue-dropdown',
                                                                 settings: {
-                                                                    dataSource: false,
-                                                                    body: [
-                                                                        {
-                                                                            name: 'dropdown_depend',
-                                                                            component: {
-                                                                                name: 'ue-dropdown',
-                                                                                settings: {
-                                                                                    label: 'dropdown с valuesRemote',
-                                                                                    search: true,
-                                                                                    valuesRemote: {
-                                                                                        fields: {
-                                                                                            value: 'id',
-                                                                                            label: 'name'
-                                                                                        },
-                                                                                        url: 'http://universal-backend.dev/rest/v1/country?filter={:dependField::dependValue}'
-                                                                                    },
-                                                                                    depend: 'depend_field'
-                                                                                }
-                                                                            }
+                                                                    label: 'Category',
+                                                                    valuesRemote: {
+                                                                        fields: {
+                                                                            value: 'id',
+                                                                            label: 'title'
                                                                         },
-                                                                        {
-                                                                            component: {
-                                                                                name: 'ue-autocomplete',
-                                                                                settings: {
-                                                                                    label: 'ue-autocomplete с valuesRemote',
-                                                                                    valuesRemote: {
-                                                                                        fields: {
-                                                                                            value: 'id',
-                                                                                            label: 'name'
-                                                                                        },
-                                                                                        url: 'http://universal-backend.dev/rest/v1/country?filter={:dependField::dependValue}'
-                                                                                    },
-                                                                                    depend: 'depend_field'
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            component: {
-                                                                                name: 'ue-radiolist',
-                                                                                settings: {
-                                                                                    label: 'ue-radiolist с valuesRemote',
-                                                                                    valuesRemote: {
-                                                                                        fields: {
-                                                                                            value: 'id',
-                                                                                            label: 'name'
-                                                                                        },
-                                                                                        url: 'http://universal-backend.dev/rest/v1/country?filter={:dependField::dependValue}'
-                                                                                    },
-                                                                                    depend: 'dropdown_depend'
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            component: {
-                                                                                name: 'ue-checkbox',
-                                                                                settings: {
-                                                                                    label: 'ue-checkbox с valuesRemote',
-                                                                                    valuesRemote: {
-                                                                                        fields: {
-                                                                                            value: 'id',
-                                                                                            label: 'name'
-                                                                                        },
-                                                                                        url: 'http://universal-backend.dev/rest/v1/country?filter={:dependField::dependValue}'
-                                                                                    },
-                                                                                    depend: 'depend_field'
-                                                                                }
-                                                                            }
-                                                                        },
-                                                                        {
-                                                                            name: 'depend_field',
-                                                                            component: {
-                                                                                name: 'ue-string',
-                                                                                settings: {
-                                                                                    label: 'Depending field'
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    ],
-                                                                    footer: {
-                                                                        toolbar: []
+                                                                        url: 'http://universal-backend.dev/rest/v1/news/categories'
                                                                     }
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            name: 'dependencies_news',
+                                                            component: {
+                                                                name: 'ue-dropdown',
+                                                                settings: {
+                                                                    label: 'News',
+                                                                    valuesRemote: {
+                                                                        fields: {
+                                                                            value: 'id',
+                                                                            label: 'title'
+                                                                        },
+                                                                        url: 'http://universal-backend.dev/rest/v1/news?filter={category_id::dependValue}'
+                                                                    },
+                                                                    depend: 'dependencies_category'
                                                                 }
                                                             }
                                                         }
@@ -2447,12 +2391,5 @@
                 }
             }
         };
-        $timeout(function() {
-            $scope.$broadcast('ue:componentDataLoaded', {
-                $id: 'form_component',
-                depend_field: 'depend_field1',
-                dropdown_depend: '1'
-            });
-        });
     }
 })();
