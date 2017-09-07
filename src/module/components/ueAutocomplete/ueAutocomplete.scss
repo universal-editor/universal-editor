@@ -244,10 +244,13 @@
             height: 6px;
         }
     }
-    .loader-search-wrapper {
+    .field-wrapper-ue-autocomplete .components-body .loader-search-wrapper {
         position: absolute;
         top: 11px;
         right: -15px;
+        width: 30px;
+        height: 30px;
+        left: auto;
     }
     .ue-grid .loader-search-wrapper {
         position: relative;
