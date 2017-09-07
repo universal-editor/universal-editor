@@ -61,7 +61,7 @@
             scope.settings.component = component;
             scope.settings.pk = null;
             scope.options = {};
-            element.append($compile('<' + component.name + ' data-setting="settings" data-options="options" ></' + component.name + '>')(scope));
+            element.append($compile('<component-wrapper data-setting="settings" data-options="options" ></component-wrapper>')(scope));
         };
     }
 })();
