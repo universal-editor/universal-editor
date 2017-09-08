@@ -2,6 +2,28 @@
 
 ## [Unreleased]
 
+## 1.0.0-alpha7 - 2017-09-08 
+### Added
+* Added transport-section for `dataSource`;
+* Added single or multiple sorting in ue-grid;
+* Added sortable-setting for column of the ue-grid;
+* Added d&d for values of the multiple ue-autocomplete;
+* Added fields-parameter in requests when components load data;
+
+### Changed
+* ue-pagination can select the number of elements on the page.
+* Restyled the parent node in D&D-section.
+* Updated datepicker-library with [bootstrap-datetimepicker](https://eonasdan.github.io/bootstrap-datetimepicker/);
+* `ue-textarea` in disabled mode displays text including spaces and line breaks;
+* Optimized work of the d&d regim of the `ue-grid`;
+
+### Fixed
+* Fixed the putting id for html-element of the root component;
+* Fixed logic for depend-setting of the component with remoting data;
+* Fixed processing zero value in filter component `ue-string` with the numeric validation;
+* Fixed removing primary key from data-section of the request before updating or presaving entity in `ue-form`;
+* Fixed bug with sref parameter of component ue-button.
+
 ## 1.0.0-alpha6 - 2017-05-17 
 ### Added
 * Added rejecting requests for `ue-button` for `ue-form`.

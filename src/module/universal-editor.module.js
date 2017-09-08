@@ -30,6 +30,7 @@
                     config.timeout = defer.promise;
                     var success = config.beforeSend(config);
                     if (success === false) {
+                        config.canceled = true;
                         defer.resolve();
                     }
                 }
