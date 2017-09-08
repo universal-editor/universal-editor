@@ -61,9 +61,9 @@ import DataSource from '../classes/dataSource.js';
                 }
             };
 
-            if (!!request.childId) {
+            if (!!request.childId && dataSource.parentKey) {
                 config.filter = config.filter || {};
-                config.filter[request.parentField] = [{
+                config.filter[dataSource.parentKey] = [{
                     operator: ':text',
                     value: request.childId
                 }];
@@ -789,7 +789,7 @@ import DataSource from '../classes/dataSource.js';
         }
 
         this.getUrlDepend = function(url, queryParams, dependField, dependValue) {
-            
+
             if (angular.isString(dependValue)) {
                 dependValue = '"' + dependValue + '"';
             }
@@ -863,7 +863,7 @@ import DataSource from '../classes/dataSource.js';
                     angular.merge(options.headers, serviceApi.getHeaders(config));
                 }
                 if (angular.isFunction(serviceApi.getMethod)) {
-                    options.method =  options.method || serviceApi.getMethod(config);
+                    options.method = options.method || serviceApi.getMethod(config);
                 }
                 if (angular.isFunction(serviceApi.getData)) {
                     angular.merge(options.data, serviceApi.getData(config));
@@ -1009,7 +1009,7 @@ import DataSource from '../classes/dataSource.js';
                     break;
                 case 'delete':
                     if (!!config.request.success) {
-                        config.request.success(response);
+                        config.request.success(data);
                     }
                     config.options.isLoading = false;
                     $rootScope.$broadcast('ue:afterEntityDelete', {

@@ -59,7 +59,7 @@
                     }
                 },
                 one: {
-                    url: '//universal-backend.dev/rest/v1/staff',
+                    url: '//universal-backend.dev/rest/v1/staff/:id',
                     headers: function() {
                         return {};
                     },
