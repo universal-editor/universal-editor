@@ -197,40 +197,45 @@
                 return stack.filter(function(w) { return w.status === rejection.status; }).length > 0;
             }
             if (self.isComponent(rejection) && !rejection.canceled) {
-                self.loaded = true;
-                self.loadingData = false;
-                var isExist = compareStatus(self.warnings) || compareStatus(self.dangers);
-                if (!isExist) {
-                    var error = {};
-                    error.status = rejection.status;
+                if (rejection.config.canceled !== true) {
+                    self.loaded = true;
+                    self.loadingData = false;
+                    var isExist = compareStatus(self.warnings) || compareStatus(self.dangers);
+                    if (!isExist) {
+                        var error = {};
+                        error.status = rejection.status;
 
-                    if (rejection.data && rejection.data.message) {
-                        error.text = rejection.data.message;
-                    } else {
-                        var messageCode = error.status ? ('N' + error.status) : 'UNDEFINED';
-                        $translate('RESPONSE_ERROR.' + messageCode).then(function(translation) {
-                            var parts = translation.replace('%code', error.status).split(':');
-                            error.label = parts[0];
-                            if (parts[1]) {
-                                error.text = ':' + parts[1];
-                            }
-                        });
-                    }
+                        if (rejection.data && rejection.data.message) {
+                            error.text = rejection.data.message;
+                        } else {
+                            var messageCode = error.status ? ('N' + error.status) : 'UNDEFINED';
+                            $translate('RESPONSE_ERROR.' + messageCode).then(function(translation) {
+                                var parts = translation.replace('%code', error.status).split(':');
+                                error.label = parts[0];
+                                if (parts[1]) {
+                                    error.text = ':' + parts[1];
+                                }
+                            });
+                        }
 
-                    if (rejection.status === -1) {
-                        self.dangers.push(error);
-                        $translate('RESPONSE_ERROR.UNDEFINED').then(function(translation) {
-                            error.text = translation;
-                        });
-                    }
+                        if (rejection.status === -1) {
+                            self.dangers.push(error);
+                            $translate('RESPONSE_ERROR.UNDEFINED').then(function(translation) {
+                                error.text = translation;
+                            });
+                        }
 
-                    if (/^4/.test(rejection.status)) {
-                        self.warnings.push(error);
+                        if (/^4/.test(rejection.status)) {
+                            self.warnings.push(error);
+                        }
+                        if (/^5/.test(rejection.status)) {
+                            self.dangers.push(error);
+                        }
+                        event.preventDefault();
                     }
-                    if (/^5/.test(rejection.status)) {
-                        self.dangers.push(error);
-                    }
-                    event.preventDefault();
+                } else {
+                    self.loaded = true;
+                    self.isLoading = false;
                 }
             }
         }));
