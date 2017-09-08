@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-## 1.0.0-alpha7 - 2017-09-08 
+## 1.0.0-beta - 2017-09-08 
 ### Added
 * Added transport-section for `dataSource`;
 * Added single or multiple sorting in ue-grid;
