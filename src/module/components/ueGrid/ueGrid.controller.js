@@ -171,7 +171,8 @@ import DataSource from '../../classes/dataSource.js';
             vm.request = {
                 childId: vm.parent,
                 options: vm.options,
-                dataSource: vm.dataSource
+                dataSource: vm.dataSource,
+                parentField: vm.dataSource.parentKey
             };
             var colSettings = vm.setting.component.settings.columns;
 
@@ -446,6 +447,7 @@ import DataSource from '../../classes/dataSource.js';
                 vm.request.childId = vm.parent;
                 if (vm.request.childId) {
                     vm.options.isLoading = true;
+                    
                     ApiService.getItemById(vm.request.childId, vm.options)
                         .then(function(item) {
                             var parentId = item[vm.request.parentField] || null;
@@ -505,6 +507,7 @@ import DataSource from '../../classes/dataSource.js';
                     vm.data = [];
                     var paginationSettings = PaginationSettings.get(vm.$componentId);
                     if (paginationSettings) {
+                        request.params = request.params || {};
                         request.params['per-page'] = paginationSettings.pageSize;
                     }
                     $rootScope.$broadcast('ue:beforeComponentDataLoaded', { $id: vm.$componentId });
