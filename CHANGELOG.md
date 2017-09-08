@@ -8,14 +8,14 @@
 * Added single or multiple sorting in ue-grid;
 * Added sortable-setting for column of the ue-grid;
 * Added d&d for values of the multiple ue-autocomplete;
-* Added fields-parameter in requests when components load data;
+* Added fields-parameter in requests when components load data.
 
 ### Changed
-* ue-pagination can select the number of elements on the page.
-* Restyled the parent node in D&D-section.
+* ue-pagination can select the number of elements on the page;
+* Restyled the parent node in D&D-section;
 * Updated datepicker-library with [bootstrap-datetimepicker](https://eonasdan.github.io/bootstrap-datetimepicker/);
 * `ue-textarea` in disabled mode displays text including spaces and line breaks;
-* Optimized work of the d&d regim of the `ue-grid`;
+* Optimized work of the d&d regim of the `ue-grid`.
 
 ### Fixed
 * Fixed the putting id for html-element of the root component;
