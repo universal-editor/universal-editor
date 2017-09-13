@@ -11,7 +11,8 @@
         var vm = this,
             inputTimeout,
             componentSettings,
-            selectedStorageComponent = [];
+            selectedStorageComponent = [],
+            inCorrectValueWarning = { text: $translate.instant('UE-AUTOCOMPLETE.INCORRECT_VALUE') };
 
         vm.$onInit = function() {
             vm.optionValues = [];
@@ -37,6 +38,7 @@
             vm.showPossible = false;
             vm.fillControl = fillControl;
             vm.draggable = componentSettings.draggable === true;
+            vm.validationInputError = false;
 
             vm.addToSelected = addToSelected;
             vm.insertToSelectedCollection = insertToSelectedCollection;
@@ -129,6 +131,12 @@
                         }
                         vm.showPossible = true;
                         vm.possibleValues = [];
+                        if (!vm.multiple) {
+                            vm.warnings.length = 0;
+                            vm.dangers.length = 0;
+                            vm.fieldValue = null;
+                            vm.selectedValues = [];
+                        }
                         inputTimeout = $timeout(function() {
                             vm.autocompleteSearch(newValue);
                         }, 300);
@@ -142,7 +150,7 @@
                             if (vm.possibleValues.length < 1) {
                                 break;
                             }
-                            
+
                             $timeout(function() {
                                 vm.addToSelected(vm.possibleValues[vm.activeElement], event);
                             }, 0);
@@ -271,7 +279,11 @@
             } else {
                 var urlParam = {};
                 urlParam.filter = {};
-                urlParam.filter[vm.fieldSearch] = "%" + searchString + "%";
+                urlParam.filter[vm.fieldSearch] = "%" + encodeURIComponent(searchString) + "%";
+                vm.unShowComponentIfError = false;
+
+                vm.dangers.length = 0;
+                vm.warnings.length = 0;
 
                 var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
                 var config = {
@@ -383,6 +395,20 @@
 
         function focusPossible(isActive) {
             vm.isActivePossible = isActive;
+            vm.validationInputError = vm.inputValue && (!vm.fieldValue || vm.fieldValue.length === 0);
+            
+            if (vm.validationInputError) {
+                if (vm.warnings.indexOf(inCorrectValueWarning) === -1) {
+                    vm.warnings.push(inCorrectValueWarning);
+                }
+                vm.unShowComponentIfError = false;
+            } else {
+                let indexW = vm.warnings.indexOf(inCorrectValueWarning);
+                if (indexW !== -1) {
+                    vm.warnings.splice(indexW, 1);
+                }
+                vm.unShowComponentIfError = true;
+            }
             if (!isActive) {
                 vm.showPossible = false;
             }

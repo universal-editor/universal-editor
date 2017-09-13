@@ -18,6 +18,7 @@
         self.label = componentSettings.label;
         self.type = self.setting.type;
         self.entityId = self.setting.entityId;
+        self.disabled = componentSettings.disabled === true;
 
         /** if template is set as a html-file */
         var htmlPattern = /[^\s]+(?=\.html$)/;

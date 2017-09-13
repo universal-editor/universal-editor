@@ -21,7 +21,7 @@
             } else {
                 $element.find('.filter-component').append(templateEditorFilter);
             }
-            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element  }));
+            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element }));
 
             settings = vm.setting.component.settings;
             vm.parentComponentId = vm.options.$componentId;
@@ -44,7 +44,7 @@
             function proccessField(field) {
                 var fieldSettings = field.component.settings;
                 var validators = fieldSettings.validators || [];
-                var typeValidatorNumber = validators.filter(function(item) { return item.type === 'number'; }).length;                
+                var typeValidatorNumber = validators.filter(function(item) { return item.type === 'number'; }).length;
                 var group = {
                     label: fieldSettings.label,
                     operators: [],
@@ -185,7 +185,13 @@
                                 settings: {
                                     label: 'Применить',
                                     action: function(componentId) {
-                                        FilterFieldsStorage.apply(componentId);
+                                        let ctrls = FilterFieldsStorage.getFilterFieldController(componentId), valid = true;
+                                        if (ctrls) {
+                                            valid = !ctrls.some(ctrl => ctrl.validationInputError);
+                                        }
+                                        if (valid) {
+                                            FilterFieldsStorage.apply(componentId);
+                                        }
                                     }
                                 }
                             }

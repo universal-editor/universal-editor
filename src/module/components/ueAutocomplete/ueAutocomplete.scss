@@ -77,6 +77,9 @@
                 background-color: #eceff1;
                 border: 1px solid #ccc;
             }
+            .result-empty {
+                color: rgba(128, 128, 128, 0.74);
+            }
             &.disabled-input input {
                 border: none;
             }
@@ -91,6 +94,11 @@
             }
             .form-control {
                 display: inline-block;
+            }
+            &.validation-error {
+                border-color: #f99191;
+                outline: 0;
+                box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(233, 102, 102, 0.6);
             }
             .autocomplete-field-search {
                 display: inline-block;

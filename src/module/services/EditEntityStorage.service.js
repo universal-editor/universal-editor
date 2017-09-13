@@ -136,7 +136,7 @@
                         entityObject.$apiData = entityObject.$apiData || fCtrl.data;
                     }
                     if (angular.isObject(request)) {
-                        request.isError = (fCtrl.error.length === 0) && request.isError;
+                        request.isError = (fCtrl.error.length === 0 && !fCtrl.validationInputError) && request.isError;
                     }
                     if (fCtrl.disabled !== true && fCtrl.useable !== false && angular.isFunction(fCtrl.getFieldValue)) {
                         var value = {};
