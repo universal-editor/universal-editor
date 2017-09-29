@@ -14,6 +14,7 @@
         var componentValueChangedHandler;
 
         self.useable = true;
+        self.unShowComponentIfError = true;
 
         if (angular.isFunction(componentSettings.readonly)) {
             self.readonlyCallback = componentSettings.readonly;
@@ -197,7 +198,7 @@
                 return stack.filter(function(w) { return w.status === rejection.status; }).length > 0;
             }
             if (self.isComponent(rejection) && !rejection.canceled) {
-                if (rejection.config.canceled !== true) {
+                if (rejection.config && rejection.config.canceled !== true) {
                     self.loaded = true;
                     self.loadingData = false;
                     var isExist = compareStatus(self.warnings) || compareStatus(self.dangers);
@@ -229,7 +230,9 @@
                             self.warnings.push(error);
                         }
                         if (/^5/.test(rejection.status)) {
-                            self.dangers.push(error);
+                            $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function(translation) {
+                                toastr.error(translation);
+                            });
                         }
                         event.preventDefault();
                     }

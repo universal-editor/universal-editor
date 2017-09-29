@@ -5,13 +5,14 @@
         .module('universal-editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
-    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, ApiService, $timeout, FilterFieldsStorage, $controller, $translate, $q) {
+    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, ApiService, $timeout, FilterFieldsStorage, $controller, $translate, $q, toastr) {
         'ngInject';
         /* jshint validthis: true */
         var vm = this,
             inputTimeout,
             componentSettings,
-            selectedStorageComponent = [];
+            selectedStorageComponent = [],
+            inCorrectValueWarning = { text: $translate.instant('UE-AUTOCOMPLETE.INCORRECT_VALUE') };
 
         vm.$onInit = function() {
             vm.optionValues = [];
@@ -37,6 +38,7 @@
             vm.showPossible = false;
             vm.fillControl = fillControl;
             vm.draggable = componentSettings.draggable === true;
+            vm.validationInputError = false;
 
             vm.addToSelected = addToSelected;
             vm.insertToSelectedCollection = insertToSelectedCollection;
@@ -54,6 +56,21 @@
                     }
                 });
             };
+
+            vm.listeners.push($scope.$on('ue:errorComponentDataLoading', function(event, rejection) {
+                function compareStatus(stack) {
+                    return stack.filter(function(w) { return w.status === rejection.status; }).length > 0;
+                }
+                if (vm.isComponent(rejection) && !rejection.canceled) {
+                    if (rejection.config && rejection.config.canceled !== true) {
+                        if (/^5/.test(rejection.status)) {
+                            $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function(translation) {
+                                toastr.error(translation);
+                            });
+                        }
+                    }
+                }
+            }));
 
             vm.drop = function(item) {
                 return item;
@@ -129,6 +146,12 @@
                         }
                         vm.showPossible = true;
                         vm.possibleValues = [];
+                        if (!vm.multiple) {
+                            vm.warnings.length = 0;
+                            vm.dangers.length = 0;
+                            vm.fieldValue = null;
+                            vm.selectedValues = [];
+                        }
                         inputTimeout = $timeout(function() {
                             vm.autocompleteSearch(newValue);
                         }, 300);
@@ -142,7 +165,7 @@
                             if (vm.possibleValues.length < 1) {
                                 break;
                             }
-                            
+
                             $timeout(function() {
                                 vm.addToSelected(vm.possibleValues[vm.activeElement], event);
                             }, 0);
@@ -271,7 +294,11 @@
             } else {
                 var urlParam = {};
                 urlParam.filter = {};
-                urlParam.filter[vm.fieldSearch] = "%" + searchString + "%";
+                urlParam.filter[vm.fieldSearch] = "%" + encodeURIComponent(searchString) + "%";
+                vm.unShowComponentIfError = false;
+
+                vm.dangers.length = 0;
+                vm.warnings.length = 0;
 
                 var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, urlParam, vm.depend, vm.dependValue);
                 var config = {
@@ -383,6 +410,21 @@
 
         function focusPossible(isActive) {
             vm.isActivePossible = isActive;
+            vm.validationInputError = vm.inputValue && (vm.multiple || !vm.fieldValue);
+            if (vm.validationInputError) {
+                if (vm.warnings.indexOf(inCorrectValueWarning) === -1) {
+                    vm.warnings.push(inCorrectValueWarning);
+                }
+                vm.unShowComponentIfError = false;
+            } else {
+                let indexW = vm.warnings.indexOf(inCorrectValueWarning);
+                if (indexW !== -1) {
+                    vm.warnings.length = 0;
+                    vm.dangers.length = 0;
+                    vm.placeholder = '';
+                }
+                vm.unShowComponentIfError = true;
+            }
             if (!isActive) {
                 vm.showPossible = false;
             }

@@ -1080,6 +1080,7 @@ import DataSource from '../classes/dataSource.js';
                     config.request.error(reject);
                 }
                 reject.$componentId = parentComponentId;
+               // reject.unShowComponentIfError = config.unShowComponentIfError;
                 $rootScope.$broadcast('ue:errorComponentDataLoading', reject);
             }
         }

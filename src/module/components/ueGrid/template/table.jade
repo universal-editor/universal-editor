@@ -1,4 +1,4 @@
-table.table.table-bordered.items-list(ng-if="!vm.warnings.length && !vm.dangers.length")
+table.table.table-bordered.items-list(ng-if="!vm.unShowComponentIfError || (vm.unShowComponentIfError && !vm.warnings.length && !vm.dangers.length)")
   thead(ng-if="vm.displayHeaderColumns")
     tr
       td.table-cell.actions-header.context-column(ng-if="vm.isContextMenu")

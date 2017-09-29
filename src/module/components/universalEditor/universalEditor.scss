@@ -73,8 +73,9 @@
         .component-wrapper .regim-preview.field-wrapper,
         .filter-component .editor-filter-body {
             .ue-component-errors {
+                float: left;
                 .alert {
-                    margin: 0px;
+                    margin: 5px 0px;
                     display: block;
                     min-width: auto;
                 }
@@ -90,7 +91,7 @@
                 margin: 5px 0;
                 &.alert-warning,
                 &.alerts-danger {
-                    margin: 10px 0;
+                    margin: 5px 0;
                 }
             }
         }

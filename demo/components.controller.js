@@ -1693,9 +1693,11 @@
                                 name: 'ue-group',
                                 settings: {
                                     label: 'Autocomplete',
+                                    countInLine:2,
                                     fields: [
                                         {
                                             component: {
+                                                $id: 'autocomplete_id',
                                                 name: 'ue-autocomplete',
                                                 settings: {
                                                     label: 'ue-autocomplete with local data value=array, defaultValue = "Variable 1"',
@@ -1709,7 +1711,8 @@
                                             }
                                         },
                                         {
-                                            component: {
+                                            component: {                                                
+                                                $id: 'autocomplete_id1',
                                                 name: 'ue-autocomplete',
                                                 settings: {
                                                     label: 'ue-autocomplete with local data value=array (defaultValue = ["Variable 1", "Variable 2"])',
@@ -2391,5 +2394,8 @@
                 }
             }
         };
+      $timeout(function() {
+            $scope.$broadcast('ue:errorComponentDataLoading', {status: 400, $componentId: 'autocomplete_id', config: {canceled: false}});
+        });
     }
 })();

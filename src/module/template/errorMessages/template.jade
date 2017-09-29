@@ -1,9 +1,9 @@
 .ue-component-errors(ng-if="vm.warnings.length || vm.dangers.length")
-    .alert.alert-warning.alert-dismissible(role="alert" ng-if="vm.warnings.length")
-        p(ng-repeat="warning in vm.warnings")
+    .alert.alert-warning.alert-dismissible(role="alert" ng-if="vm.warnings.length" ng-repeat="warning in vm.warnings")
+        p
             strong(ng-bind="warning.label")
             | {{warning.text}}
-    .alert.alert-danger.alert-dismissible(role="alert" ng-if="vm.dangers.length")
-        p(ng-repeat="danger in vm.dangers")
+    .alert.alert-danger.alert-dismissible(role="alert" ng-if="vm.dangers.length" ng-repeat="danger in vm.dangers")
+        p
             strong(ng-bind="danger.label")
             | {{danger.text}}
