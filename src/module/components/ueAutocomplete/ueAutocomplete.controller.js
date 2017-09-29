@@ -62,7 +62,6 @@
                     return stack.filter(function(w) { return w.status === rejection.status; }).length > 0;
                 }
                 if (vm.isComponent(rejection) && !rejection.canceled) {
-                    debugger
                     if (rejection.config && rejection.config.canceled !== true) {
                         if (/^5/.test(rejection.status)) {
                             $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function(translation) {
