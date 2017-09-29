@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('UeAutocompleteController', UeAutocompleteController);
 
-    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, ApiService, $timeout, FilterFieldsStorage, $controller, $translate, $q) {
+    function UeAutocompleteController($scope, $element, $document, EditEntityStorage, ApiService, $timeout, FilterFieldsStorage, $controller, $translate, $q, toastr) {
         'ngInject';
         /* jshint validthis: true */
         var vm = this,
@@ -56,6 +56,22 @@
                     }
                 });
             };
+
+            vm.listeners.push($scope.$on('ue:errorComponentDataLoading', function(event, rejection) {
+                function compareStatus(stack) {
+                    return stack.filter(function(w) { return w.status === rejection.status; }).length > 0;
+                }
+                if (vm.isComponent(rejection) && !rejection.canceled) {
+                    debugger
+                    if (rejection.config && rejection.config.canceled !== true) {
+                        if (/^5/.test(rejection.status)) {
+                            $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function(translation) {
+                                toastr.error(translation);
+                            });
+                        }
+                    }
+                }
+            }));
 
             vm.drop = function(item) {
                 return item;
@@ -395,8 +411,7 @@
 
         function focusPossible(isActive) {
             vm.isActivePossible = isActive;
-            vm.validationInputError = vm.inputValue && (!vm.fieldValue || vm.fieldValue.length === 0);
-            
+            vm.validationInputError = vm.inputValue && (vm.multiple || !vm.fieldValue);
             if (vm.validationInputError) {
                 if (vm.warnings.indexOf(inCorrectValueWarning) === -1) {
                     vm.warnings.push(inCorrectValueWarning);
@@ -405,7 +420,9 @@
             } else {
                 let indexW = vm.warnings.indexOf(inCorrectValueWarning);
                 if (indexW !== -1) {
-                    vm.warnings.splice(indexW, 1);
+                    vm.warnings.length = 0;
+                    vm.dangers.length = 0;
+                    vm.placeholder = '';
                 }
                 vm.unShowComponentIfError = true;
             }
