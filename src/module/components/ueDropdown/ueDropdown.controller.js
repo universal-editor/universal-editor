@@ -211,18 +211,6 @@
                 }
             });
 
-
-            var destroyWatchFieldValue = $scope.$watch(function() {
-                return vm.fieldValue;
-            }, function(newVal) {
-                if (!vm.multiple && !vm.isTree) {
-                    if (vm.search) {
-                        vm.filterText = '';
-                        change();
-                    }
-                }
-            });
-
             function loadDataById(ids) {
                 var defer = $q.defer();
                 if (componentSettings.depend && !vm.dependValue) {

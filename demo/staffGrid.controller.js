@@ -197,6 +197,7 @@
                                 url: 'http://universal-backend.dev/rest/v1/country'
                             },
                             multiple: false,
+                            search: true,
                             placeholder: 'country of residence'
                         }
                     }
