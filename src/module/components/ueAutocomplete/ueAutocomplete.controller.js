@@ -72,6 +72,34 @@
                 }
             }));
 
+            vm.dependUpdate = function dependUpdate(dependField, dependValue) {
+                if (dependValue && dependValue !== '') {
+                    if (vm.fieldValue) {
+                        if (!componentSettings.$loadingPromise || componentSettings.$loadingPromise.$$state !== 1) {
+                            componentSettings.$loadingPromise = depend();
+                        } else {
+                            componentSettings.$loadingPromise.then(depend);
+                        }
+                        function depend() {
+                            vm.loadingData = true;
+                            return loadDataById(vm.fieldValue).then(function(result) {
+                                if (!result || result.length === 0) {
+                                    vm.fieldValue = vm.multiple ? [] : null;
+                                    vm.selectedValues.length = 0;
+                                    vm.placeholder = '';
+                                }
+                            }).finally(function() {
+                                vm.loadingData = false;
+                            });
+                        }
+                    }
+                } else {
+                    vm.fieldValue = vm.multiple ? [] : null;
+                    vm.selectedValues.length = 0;
+                    vm.placeholder = '';
+                }
+            }
+
             vm.drop = function(item) {
                 return item;
             };
@@ -107,7 +135,7 @@
                 if (vm.isParentComponent(data) && !vm.options.filter && !event.defaultPrevented) {
                     vm.loadingData = true;
                     $scope.onLoadDataHandler(event, data);
-                    if (!vm.options.isSendRequest && needRequested()) {
+                    if (!vm.options.isSendRequest && needRequested() && !vm.depend) {
                         vm.loadDataById(vm.fieldValue).then(function() {
                             vm.equalPreviewValue();
                         }).finally(function() {
@@ -294,7 +322,7 @@
             } else {
                 var urlParam = {};
                 urlParam.filter = {};
-                urlParam.filter[vm.fieldSearch] = "%" + encodeURIComponent(searchString) + "%";
+                urlParam.filter[vm.fieldSearch] = "%" + searchString + "%";
                 vm.unShowComponentIfError = false;
 
                 vm.dangers.length = 0;
@@ -311,6 +339,8 @@
                 ApiService
                     .getUrlResource(config)
                     .then(function(response) {
+                        vm.possibleValues.length = 0;
+
                         angular.forEach(response.data.items, function(v) {
                             if (!alreadyIn(v, vm.selectedValues) && !alreadyIn(v, vm.possibleValues) && selectedStorageComponent.indexOf(v[vm.fieldId]) === -1) {
                                 vm.possibleValues.push(v);
@@ -342,6 +372,11 @@
 
         function loadDataById(ids) {
             var defer = $q.defer();
+            if (componentSettings.depend && !vm.dependValue) {
+                defer.resolve();
+                vm.preloadedData = true;
+                return defer.promise;
+            }
             if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
                 if (angular.isArray(ids)) {
                     ids = ids.map(function(id) {
@@ -353,36 +388,47 @@
                 } else if (angular.isObject(ids)) {
                     ids = ids[vm.fieldId];
                 }
-                var config = {
-                    method: 'GET',
-                    url: componentSettings.valuesRemote.url,
-                    $id: vm.setting.component.$id,
-                    serverPagination: vm.serverPagination
-                };
+                let candidates = ApiService.getFromStorage(vm.setting, ids, { dependValue: vm.dependValue });
+                if (!candidates) {
+                    var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, vm.depend, vm.dependValue);
+                    var config = {
+                        method: 'GET',
+                        url: url,
+                        $id: vm.setting.component.$id,
+                        serverPagination: vm.serverPagination
+                    };
 
-                config.filter = config.filter || {};
-                config.filter[vm.fieldId] = [{
-                    operator: 'value',
-                    value: ids
-                }];
+                    config.filter = config.filter || {};
+                    config.filter[vm.fieldId] = [{
+                        operator: 'value',
+                        value: ids
+                    }];
 
-                config.filter = config.filter || {};
-                config.filter[vm.fieldId] = [{
-                    operator: 'value',
-                    value: ids
-                }];
+                    config.filter = config.filter || {};
+                    config.filter[vm.fieldId] = [{
+                        operator: 'value',
+                        value: ids
+                    }];
 
-                config.standard = $scope.getParentDataSource().standard;
+                    config.standard = $scope.getParentDataSource().standard;
 
-                return ApiService
-                    .getUrlResource(config)
-                    .then(function(response) {
-                        angular.forEach(response.data.items, insertToSelectedCollection);
-                        ApiService.saveToStorage(vm.setting, response.data.items);
-                        if (!vm.optionValues.length) {
-                            vm.optionValues = angular.copy(vm.selectedValues);
-                        }
-                    }).finally(function() { vm.preloadedData = true; });
+                    ApiService
+                        .getUrlResource(config)
+                        .then(function(response) {
+                            angular.forEach(response.data.items, insertToSelectedCollection);
+                            ApiService.saveToStorage(vm.setting, response.data.items);
+                            if (!vm.optionValues.length) {
+                                vm.optionValues = angular.copy(vm.selectedValues);
+                            }
+                            defer.resolve(response.data.items);
+                        }).finally(function() { vm.preloadedData = true; });
+                } else {
+                    angular.forEach(candidates, insertToSelectedCollection);
+                    if (!vm.optionValues.length) {
+                        vm.optionValues = angular.copy(vm.selectedValues);
+                    }
+                    defer.resolve(candidates);
+                }
             } else {
                 defer.resolve();
             }
@@ -411,6 +457,7 @@
         function focusPossible(isActive) {
             vm.isActivePossible = isActive;
             vm.validationInputError = vm.inputValue && (vm.multiple || !vm.fieldValue);
+
             if (vm.validationInputError) {
                 if (vm.warnings.indexOf(inCorrectValueWarning) === -1) {
                     vm.warnings.push(inCorrectValueWarning);
@@ -471,6 +518,9 @@
             vm.selectedValues = [];
             vm.placeholder = componentSettings.placeholder || '';
             vm.possibleValues = [];
+            vm.validationInputError = false;
+            vm.warnings.length = 0;
+            vm.dangers.length = 0;
         }
     }
 })();

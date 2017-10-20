@@ -284,7 +284,11 @@
             if (eventObject.isChildComponent) {
                 if (angular.isObject(eventObject) && angular.isArray(eventObject.fields)) {
                     var data = eventObject.fields.filter(function(f) {
-                        return f.field === self.fieldName;
+                        var fieldName = self.fieldName;
+                        if(self.setting.hasOwnProperty('parentFieldIndex')) {
+                            fieldName = self.fieldName.replace('[]', '[' + self.setting.parentFieldIndex + ']');
+                        }
+                        return f.field === fieldName;
                     });
                     if (data.length > 0) {
                         event.preventDefault();

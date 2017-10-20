@@ -20,7 +20,8 @@
             vm.possibleValues = [];
             vm.initDataSource = true;
             componentSettings = vm.setting.component.settings;
-            
+            vm.loadDataById = loadDataById;
+
             vm.search = componentSettings.search === true;
             if (typeof componentSettings.serverPagination !== 'boolean') {
                 vm.serverPagination = true;
@@ -79,34 +80,74 @@
                 if (dependValue && dependValue !== '') {
                     vm.loadingData = true;
                     vm.parentValue = false;
-                    vm.optionValues = [];
+                    if (!componentSettings.$loadingPromise || componentSettings.$loadingPromise.$$state !== 0) {
+                        componentSettings.$loadingPromise = depend();
+                    } else {
+                        componentSettings.$loadingPromise.then(depend);
+                    }
+                    componentSettings.$loadingPromise.then(function() {
+                        vm.possibleValues = filter(angular.copy(vm.optionValues), vm.filterText || '');
+                        if (vm.fieldValue) {
+                            loadDataById(vm.fieldValue).finally(function() {
+                                vm.fillControl(vm.optionValues);
+                                vm.loadingData = false;
+                            });
+                        } else {
+                            vm.loadingData = false;
+                        }
+                    });
 
-                    var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
-                    var config = {
-                        url: url,
-                        method: 'GET',
-                        $id: vm.setting.component.$id,
-                        serverPagination: vm.serverPagination,
-                        standard: $scope.getParentDataSource().standard
-                    };
+                    function depend() {
+                        var defer = $q.defer();
+                        let candidates = ApiService.getFromStorage(vm.setting, null, { dependValue: dependValue });
+                        if (!candidates) {
+                            var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                            var config = {
+                                url: url,
+                                method: 'GET',
+                                $id: vm.setting.component.$id,
+                                serverPagination: vm.serverPagination,
+                                standard: $scope.getParentDataSource().standard
+                            };
 
-                    ApiService
-                        .getUrlResource(config)
-                        .then(function(response) {
-                            angular.forEach(response.data.items, function(v) {
+                            ApiService
+                                .getUrlResource(config)
+                                .then(function(response) {
+                                    vm.optionValues = [];
+                                    angular.forEach(response.data.items, function(v) {
+                                        vm.optionValues.push(v);
+                                    });
+                                    if (vm.optionValues.length === 0) {
+                                        clear();
+                                    }
+                                    ApiService.saveToStorage(vm.setting, response.data.items, { dependValue: dependValue });
+                                    defer.resolve(response.data.items);
+                                }, function(reject) {
+                                    $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
+                                        console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
+                                    });
+                                    defer.reject(reject);
+                                })
+                                .finally(function() {
+                                    vm.loadingData = false;
+                                });
+                        } else {
+                            vm.optionValues = [];
+                            angular.forEach(candidates, function(v) {
                                 vm.optionValues.push(v);
                             });
-                        }, function(reject) {
-                            $translate('ERROR.FIELD.VALUES_REMOTE').then(function(translation) {
-                                console.error('EditorFieldDropdownController: ' + translation.replace('%name_field', vm.fieldName));
-                            });
-                        })
-                        .finally(function() {
+                            if (vm.optionValues.length === 0) {
+                                clear();
+                            }
                             vm.loadingData = false;
-                        });
+                            defer.resolve(candidates);
+                        }
+                        return defer.promise;
+                    }
                 } else {
                     vm.parentValue = false;
                     vm.optionValues = [];
+                    vm.fieldValue = vm.multiple ? [] : null;
                 }
             }
 
@@ -134,7 +175,7 @@
                                     break;
                                 }
                             }
-                        } else if (v_id == vm.fieldValue) {
+                        } else if (v_id == vm.fieldValue || vm.fieldValue && vm.fieldValue[vm.fieldId] == v_id) {
                             vm.fieldValue = v;
                             vm.isSpanSelectDelete = true;
                         }
@@ -160,7 +201,7 @@
                             vm.loadingData = false;
                         });
                     }
-                    if (!vm.isSendRequest) {
+                    if (!vm.isSendRequest && !vm.depend) {
                         loadDataById(vm.fieldValue).finally(function() {
                             vm.loadingData = false;
                         });
@@ -184,6 +225,11 @@
 
             function loadDataById(ids) {
                 var defer = $q.defer();
+                if (componentSettings.depend && !vm.dependValue) {
+                    defer.resolve();
+                    vm.loadingData = false;
+                    return defer.promise;
+                }
                 if (componentSettings.valuesRemote && ids !== undefined && ids !== null && (!angular.isArray(ids) || ids.length > 0)) {
                     if (angular.isArray(ids)) {
                         ids = ids.map(function(id) {
@@ -192,34 +238,42 @@
                             }
                             return id;
                         });
-                    } else if(angular.isObject(ids)) {
+                    } else if (angular.isObject(ids)) {
                         defer.resolve();
                         return defer.promise;
-                    } 
-                    var config = {
-                        method: 'GET',
-                        url: componentSettings.valuesRemote.url,
-                        $id: vm.setting.component.$id,
-                        serverPagination: vm.serverPagination
-                    };
-                    config.filter = config.filter || {};
-                    config.filter[vm.fieldId] = [{
-                        operator: 'value',
-                        value: ids
-                    }];
+                    }
+                    let candidates = ApiService.getFromStorage(vm.setting, ids);
+                    if (!candidates) {
+                        var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, componentSettings.depend, vm.dependValue);
+                        var config = {
+                            method: 'GET',
+                            url: url,
+                            $id: vm.setting.component.$id,
+                            serverPagination: vm.serverPagination
+                        };
+                        config.filter = config.filter || {};
+                        config.filter[vm.fieldId] = [{
+                            operator: 'value',
+                            value: ids
+                        }];
 
-                    config.standard = $scope.getParentDataSource().standard;
+                        config.standard = $scope.getParentDataSource().standard;
 
-                    return ApiService
-                        .getUrlResource(config)
-                        .then(function(response) {
-                            fillControl(response.data.items);
-                            ApiService.saveToStorage(vm.setting, response.data.items);
-                            vm.equalPreviewValue();
-                            defer.resolve(response.data.items);
-                        }, function(reject) {
-                            defer.reject(reject);
-                        });
+                        return ApiService
+                            .getUrlResource(config)
+                            .then(function(response) {
+                                fillControl(response.data.items);
+                                ApiService.saveToStorage(vm.setting, response.data.items);
+                                vm.equalPreviewValue();
+                                defer.resolve(response.data.items);
+                            }, function(reject) {
+                                defer.reject(reject);
+                            });
+                    } else {
+                        fillControl(candidates);
+                        vm.equalPreviewValue();
+                        defer.resolve(candidates);
+                    }
                 } else {
                     defer.resolve();
                 }
@@ -695,6 +749,7 @@
             function clear() {
                 vm.fieldValue = vm.multiple ? [] : null;
                 vm.isSpanSelectDelete = false;
+                uncheckAll(vm.optionValues);
             }
 
             function setSizeSelect() {

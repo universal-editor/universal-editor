@@ -2381,6 +2381,40 @@
                                                                     depend: 'dependencies_category'
                                                                 }
                                                             }
+                                                        },
+                                                        {
+                                                            name: 'dependencies_news',
+                                                            component: {
+                                                                name: 'ue-checkbox',
+                                                                settings: {
+                                                                    label: 'News',
+                                                                    valuesRemote: {
+                                                                        fields: {
+                                                                            value: 'id',
+                                                                            label: 'title'
+                                                                        },
+                                                                        url: 'http://universal-backend.dev/rest/v1/news?filter={category_id::dependValue}'
+                                                                    },
+                                                                    depend: 'dependencies_category'
+                                                                }
+                                                            }
+                                                        },
+                                                         {
+                                                            name: 'dependencies_news',
+                                                            component: {
+                                                                name: 'ue-radiolist',
+                                                                settings: {
+                                                                    label: 'News',
+                                                                    valuesRemote: {
+                                                                        fields: {
+                                                                            value: 'id',
+                                                                            label: 'title'
+                                                                        },
+                                                                        url: 'http://universal-backend.dev/rest/v1/news?filter={category_id::dependValue}'
+                                                                    },
+                                                                    depend: 'dependencies_category'
+                                                                }
+                                                            }
                                                         }
                                                     ]
                                                 }

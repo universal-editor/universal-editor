@@ -64,7 +64,7 @@
                 };
 
                 /** convert to filter object from fields*/
-                fieldSettings.$toFilter = fieldSettings.$toFilter || function(operator, fieldValue, ctrl) {
+                fieldSettings.$toFilter = (fieldSettings.$toFilter || function(operator, fieldValue, ctrl) {
                     if (ctrl.isNumber === true) {
                         operator = ':text';
                     }
@@ -87,10 +87,10 @@
                         }
                     });
                     return fieldValue;
-                };
+                }).bind(vm);
 
                 /** parse filter objects with operators*/
-                fieldSettings.$parseFilter = function(model, filterValue) {
+                fieldSettings.$parseFilter = (fieldSettings.$parseFilter || function(model, filterValue) {
                     var componentSettings = model.setting.component.settings;
                     var parentComponentId = model.parentComponentId;
                     var output = {};
@@ -147,7 +147,7 @@
                     }
                     vm.visiable = true;
                     return output;
-                };
+                }).bind(vm);
 
                 /*temprory custom logic for operators */
 

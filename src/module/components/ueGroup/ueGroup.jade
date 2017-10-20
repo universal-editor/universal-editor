@@ -2,10 +2,10 @@
     include ../../template/labelField/labelField.jade
     .field-array-wrapper.editor-group.col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left
         div(data-ng-if="vm.multiple")
-            .col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left.item-array-wrapper(data-ng-repeat="fields in vm.fieldsArray track by $index" data-ng-init="outerIndex = $index")
-                data-component-wrapper(ng-class="vm.className" data-ng-repeat="field in fields track by $index" data-setting="field" data-options="vm.options")
+            .col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left.item-array-wrapper(data-ng-repeat="fields in vm.fieldsArray track by fields.uid")
+                data-component-wrapper.ue-group-item(ng-class="vm.className" data-ng-repeat="field in fields track by $index" data-setting="field" data-options="vm.options")
                 div
-                    .btn.btn-primary.btn-xs.btn-add-item(data-ng-click="vm.removeItem(outerIndex)", data-ng-if="!vm.readonly") {{'BUTTON.DELETE' | translate}}
+                    .btn.btn-primary.btn-xs.btn-add-item(data-ng-click="vm.removeItem(fields.uid)", data-ng-if="!vm.readonly") {{'BUTTON.DELETE' | translate}}
             div
                 .btn.btn-primary.btn-sm.btn-remove-item(data-ng-click="vm.addItem()", data-ng-if="!vm.readonly") {{'BUTTON.ADD' | translate}}
         .col-md-12.col-xs-12.col-lg-12.col-sm-12.clear-padding-left(data-ng-if="!vm.multiple" data-ng-repeat="row in vm.fields")

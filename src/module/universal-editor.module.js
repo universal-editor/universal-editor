@@ -25,13 +25,25 @@
         'ngInject';
         return {
             'request': function(config) {
-                if (config.beforeSend) {
+                if (config.beforeSend || config.beforeSendButton) {
                     var defer = $q.defer();
                     config.timeout = defer.promise;
-                    var success = config.beforeSend(config);
+                    var success = true;
+                    if (config.beforeSendButton) {
+                        success = config.beforeSendButton(config);
+                    }
                     if (success === false) {
                         config.canceled = true;
                         defer.resolve();
+                    }
+                    if (!config.canceled) {
+                        if (config.beforeSend) {
+                            success = config.beforeSend(config);
+                        }
+                        if (success === false) {
+                            config.canceled = true;
+                            defer.resolve();
+                        }
                     }
                 }
                 return config;
@@ -75,7 +87,7 @@
         .module('universal-editor')
         .run(universalEditorRun);
 
-    function universalEditorRun($rootScope, $location, $state, EditEntityStorage, FilterFieldsStorage) {
+    function universalEditorRun($rootScope, $location, $state, EditEntityStorage, FilterFieldsStorage, ApiService) {
         'ngInject';
         var itemsSelector = document.querySelectorAll('.nav.nav-tabs .item');
 
@@ -95,6 +107,7 @@
             if (FilterFieldsStorage.filterSearchString) {
                 $location.search(FilterFieldsStorage.filterSearchString);
             }
+            ApiService.alreadyRequested.length = 0;
         });
         if (itemsSelector.length == 1) {
             angular.element(itemsSelector).css('display', 'none');

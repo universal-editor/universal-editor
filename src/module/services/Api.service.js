@@ -95,34 +95,39 @@ import DataSource from '../classes/dataSource.js';
                 $dataSource: dataSource
             };
 
-            $http(options).then(function(response) {
-                var data;
-                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    data = service.processResponse(
-                        config,
-                        response,
-                        successAnswer.bind(objectBind),
-                        failAnswer.bind(objectBind));
-                }
-                deferred.resolve(data);
-            }, function(reject) {
-                reject.canceled = canceler.promise.$$state.status === 1;
-                if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
-                    var data = service.processResponse(config, reject,
-                        successAnswer.bind(objectBind),
-                        failAnswer.bind(objectBind));
-                    reject.data = data;
-                } else {
-                    reject.$componentId = request.options.$componentId;
-                    failAnswer.bind(objectBind)(reject);
-                }
-                deferred.reject(reject);
-            }).finally(function() {
-                if (handlers.complete) {
-                    handlers.complete();
-                }
+            if (options.url) {
+                $http(options).then(function(response) {
+                    var data;
+                    if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
+                        data = service.processResponse(
+                            config,
+                            response,
+                            successAnswer.bind(objectBind),
+                            failAnswer.bind(objectBind));
+                    }
+                    deferred.resolve(data);
+                }, function(reject) {
+                    reject.canceled = canceler.promise.$$state.status === 1;
+                    if (angular.isDefined(service) && angular.isFunction(service.processResponse)) {
+                        var data = service.processResponse(config, reject,
+                            successAnswer.bind(objectBind),
+                            failAnswer.bind(objectBind));
+                        reject.data = data;
+                    } else {
+                        reject.$componentId = request.options.$componentId;
+                        failAnswer.bind(objectBind)(reject);
+                    }
+                    deferred.reject(reject);
+                }).finally(function() {
+                    if (handlers.complete) {
+                        handlers.complete();
+                    }
+                    request.options.isLoading = false;
+                });
+            } else {
+                deferred.resolve([]);
                 request.options.isLoading = false;
-            });
+            }
             return deferred.promise;
         };
 
@@ -142,6 +147,7 @@ import DataSource from '../classes/dataSource.js';
                 action: 'create',
                 $dataSource: dataSource,
                 params: request.params || {},
+                buttonHandlers: request.handlers,
                 data: request.data || {}
             };
 
@@ -152,6 +158,7 @@ import DataSource from '../classes/dataSource.js';
                 action: 'create',
                 parentComponentId: request.options.$componentId,
                 request: handlers,
+                buttonHandlers: request.handlers,
                 $dataSource: dataSource,
                 options: request.options,
                 state: request.state,
@@ -188,6 +195,11 @@ import DataSource from '../classes/dataSource.js';
                 if (!!handlers.complete) {
                     handlers.complete();
                 }
+
+                if (request.buttonHandlers && request.buttonHandlers.complete) {
+                    request.buttonHandlers.complete();
+                }
+
             });
             return deferred.promise;
         };
@@ -216,6 +228,7 @@ import DataSource from '../classes/dataSource.js';
                 data: request.data,
                 $dataSource: dataSource,
                 params: request.params || {},
+                buttonHandlers: request.handlers,
                 entityId: request.entityId
             };
 
@@ -225,6 +238,7 @@ import DataSource from '../classes/dataSource.js';
                 action: 'update',
                 parentComponentId: request.options.$componentId,
                 request: handlers,
+                buttonHandlers: request.handlers,
                 $dataSource: dataSource,
                 options: request.options,
                 state: request.state,
@@ -262,6 +276,9 @@ import DataSource from '../classes/dataSource.js';
                 if (!!handlers.complete) {
                     handlers.complete();
                 }
+                if (request.buttonHandlers && request.buttonHandlers.complete) {
+                    request.buttonHandlers.complete();
+                }
             });
             return deferred.promise;
         };
@@ -282,6 +299,7 @@ import DataSource from '../classes/dataSource.js';
                 action: 'create',
                 $dataSource: dataSource,
                 data: request.data || {},
+                buttonHandlers: request.handlers,
                 params: request.params || {}
             };
 
@@ -296,6 +314,7 @@ import DataSource from '../classes/dataSource.js';
                 action: 'presave',
                 isCreate: isCreate,
                 request: handlers,
+                buttonHandlers: request.handlers,
                 $dataSource: dataSource,
                 options: request.options,
                 state: request.state,
@@ -331,6 +350,9 @@ import DataSource from '../classes/dataSource.js';
             }).finally(function() {
                 if (!!request.complete) {
                     request.complete();
+                }
+                if (request.buttonHandlers && request.buttonHandlers.complete) {
+                    request.buttonHandlers.complete();
                 }
                 request.options.isLoading = false;
             });
@@ -405,6 +427,7 @@ import DataSource from '../classes/dataSource.js';
                 $dataSource: dataSource,
                 data: request.data || {},
                 params: request.params || {},
+                buttonHandlers: request.handlers,
                 idField: request.idField
             };
 
@@ -415,6 +438,7 @@ import DataSource from '../classes/dataSource.js';
                 action: 'delete',
                 notGoToState: notGoToState,
                 request: handlers,
+                buttonHandlers: request.handlers,
                 $dataSource: dataSource,
                 options: request.options,
                 state: request.state,
@@ -445,6 +469,9 @@ import DataSource from '../classes/dataSource.js';
                 request.options.isLoading = false;
                 if (!!handlers.complete) {
                     handlers.complete();
+                }
+                if (request.buttonHandlers && request.buttonHandlers.complete) {
+                    request.buttonHandlers.complete();
                 }
             });
         };
@@ -593,8 +620,16 @@ import DataSource from '../classes/dataSource.js';
             return filter;
         }
 
-        function saveToStorage(component, list) {
+        self.alreadyRequested = [];
+
+        function saveToStorage(component, list, options) {
             var url = component.component.settings.valuesRemote.url;
+            if (angular.isObject(options) && options.dependValue) {
+                var key = url + '[' + options.dependValue + ']';
+                if (self.alreadyRequested.indexOf(key) === -1) {
+                    self.alreadyRequested.push(key);
+                }
+            }
             var keyValue = component.component.settings.valuesRemote.fields.value;
             var storage = storageRemotedComponents[url] || [];
             if (angular.isArray(list)) {
@@ -616,25 +651,56 @@ import DataSource from '../classes/dataSource.js';
             }
         }
 
-        function getFromStorage(component, list) {
+        function getFromStorage(component, list, options) {
             var url = component.component.settings.valuesRemote.url;
+            if (angular.isObject(options) && options.dependValue) {
+                var key = url + '[' + options.dependValue + ']';
+                if (self.alreadyRequested.indexOf(key) === -1) {
+                    return false;
+                }
+            }
+            var dependField = component.component.settings.depend;
             var keyValue = component.component.settings.valuesRemote.fields.value;
+            if (!storageRemotedComponents.hasOwnProperty(url)) {
+                return false;
+            }
             var storage = storageRemotedComponents[url] || [];
             var outputSet = [];
-            if (!angular.isArray(list)) {
-                list = [list];
-            }
-            if (component.component.settings.multiname) {
-                var multiname = component.component.settings.multiname;
-                list = list.map(function(item) { return angular.isObject(item) ? item[multiname] : null; });
-            }
-            angular.forEach(storage, function(storageItem) {
-                var index = list.indexOf(storageItem[keyValue]);
-                if (index !== -1) {
-                    outputSet.push(storageItem);
+            if (list) {
+                if (!angular.isArray(list)) {
+                    list = [list];
                 }
-            });
-            if (outputSet.length === list.length && list.length > 0) {
+                if (component.component.settings.multiname) {
+                    var multiname = component.component.settings.multiname;
+                    list = list.map(function(item) { return angular.isObject(item) ? item[multiname] : null; });
+                }
+                angular.forEach(storage, function(storageItem) {
+                    var index = list.indexOf(storageItem[keyValue]);
+                    if (index !== -1) {
+                        if (angular.isObject(options) && options.dependValue) {
+                            if (storage[index][dependField] === options.dependValue) {
+                                outputSet.push(storageItem);
+                            }
+                        } else {
+                            outputSet.push(storageItem);
+                        }
+                    }
+                });
+            } else {
+                if (angular.isObject(options) && options.dependValue) {
+                    angular.forEach(storage, function(storageItem) {
+                        if (storageItem[dependField] == options.dependValue) {
+                            outputSet.push(storageItem);
+                        }
+                    });
+                } else {
+                    outputSet = storage;
+                }
+            }
+            if(!list) {
+                return outputSet;
+            } else if (outputSet.length === list.length && list.length > 0) {
+                outputSet = list.map(id => outputSet.filter(a => a[keyValue] === id)[0]);
                 return outputSet;
             } else {
                 return false;
@@ -816,7 +882,11 @@ import DataSource from '../classes/dataSource.js';
 
             for (var i = 0; i < search.length; i++) {
                 split = search[i].split('=');
-                searchObject[split[0]] = eval('(' + split[1] + ')');
+                try {
+                    searchObject[split[0]] = eval('(' + split[1] + ')');
+                } catch (e) {
+                    searchObject[split[0]] = split[1];
+                }
             }
             if (queryParams) {
                 searchObject = angular.merge(searchObject, queryParams);
@@ -856,6 +926,10 @@ import DataSource from '../classes/dataSource.js';
                     params: config.params || {},
                     url: config.url
                 };
+            }
+
+            if (config.buttonHandlers && config.buttonHandlers.before) {
+                options.beforeSendButton = config.buttonHandlers.before;
             }
 
             if (angular.isDefined(serviceApi)) {
@@ -922,6 +996,9 @@ import DataSource from '../classes/dataSource.js';
                     if (!!config.request.success) {
                         config.request.success(data);
                     }
+                    if (config.buttonHandlers && config.buttonHandlers.success) {
+                        config.buttonHandlers.success(data);
+                    }
                     config.options.isLoading = false;
                     $rootScope.$broadcast('ue:afterEntityUpdate', {
                         id: config.id,
@@ -949,6 +1026,9 @@ import DataSource from '../classes/dataSource.js';
                 case 'create':
                     if (!!config.request.success) {
                         config.request.success(data);
+                    }
+                    if (config.buttonHandlers && config.buttonHandlers.success) {
+                        config.buttonHandlers.success(data);
                     }
                     config.options.isLoading = false;
                     $rootScope.$broadcast('ue:afterEntityCreate', {
@@ -983,6 +1063,9 @@ import DataSource from '../classes/dataSource.js';
                     if (!!config.request.success) {
                         config.request.success(data);
                     }
+                    if (config.buttonHandlers && config.buttonHandlers.success) {
+                        config.buttonHandlers.success(data);
+                    }
                     var newId = data[idField] || config.entityId;
                     var par = {};
                     par.pk = newId;
@@ -1010,6 +1093,9 @@ import DataSource from '../classes/dataSource.js';
                 case 'delete':
                     if (!!config.request.success) {
                         config.request.success(data);
+                    }
+                    if (config.buttonHandlers && config.buttonHandlers.success) {
+                        config.buttonHandlers.success(data);
                     }
                     config.options.isLoading = false;
                     $rootScope.$broadcast('ue:afterEntityDelete', {
@@ -1051,6 +1137,9 @@ import DataSource from '../classes/dataSource.js';
                 if (!!config.request.error) {
                     config.request.error(reject);
                 }
+                if (config.buttonHandlers && config.buttonHandlers.error) {
+                    config.buttonHandlers.error(data);
+                }
                 var wrongFields = [];
                 if (angular.isArray(reject)) {
                     wrongFields = reject;
@@ -1074,13 +1163,18 @@ import DataSource from '../classes/dataSource.js';
                 if (!!config.request.error) {
                     config.request.error(reject);
                 }
+                if (config.buttonHandlers && config.buttonHandlers.error) {
+                    config.buttonHandlers.error(data);
+                }
                 config.request.options.isLoading = false;
             } else if (config.action == 'read' || config.action == 'one') {
                 if (config.request && config.request.error) {
                     config.request.error(reject);
                 }
+                if (config.buttonHandlers && config.buttonHandlers.error) {
+                    config.buttonHandlers.error(data);
+                }
                 reject.$componentId = parentComponentId;
-               // reject.unShowComponentIfError = config.unShowComponentIfError;
                 $rootScope.$broadcast('ue:errorComponentDataLoading', reject);
             }
         }

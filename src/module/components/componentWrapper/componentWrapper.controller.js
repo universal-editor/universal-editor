@@ -20,7 +20,7 @@
         };
 
         $scope.__proto__.getParentDataSource = function() {
-            var scope = $scope;
+            var scope = this;
             while(scope) {
                 if(scope.vm && scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.settings && scope.vm.setting.component.settings.dataSource) {
                     return scope.vm.setting.component.settings.dataSource;

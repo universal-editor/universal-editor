@@ -12,6 +12,7 @@
       this.fields = options.fields;
       this.resourceType = options.resourceType;
       this.keys = options.keys;
+      this.sortBy = options.sortBy;
 
       if (this.transport) {
         this.url = options.transport.url;

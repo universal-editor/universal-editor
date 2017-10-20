@@ -116,13 +116,13 @@
             read();
         } else {
             $scope.$on('ue:changeFieldValue', function(event, data) {
-                if (data.configuration.name === componentSettings.depend) {
+                if (data.configuration.name === componentSettings.depend && self.regim !== 'preview') {
                     let valuesRemote = data.configuration.component.settings.valuesRemote;
                     self.dependValue = data.newValue;
                     if (angular.isObject(self.dependValue) && valuesRemote && valuesRemote.fields.value) {
                         self.dependValue = self.dependValue[valuesRemote.fields.value];
                     }
-                    if (angular.isFunction(self.dependUpdate)) {
+                    if (angular.isFunction(self.dependUpdate) && self.dependValue != data.oldValue) {
                         self.dependUpdate(componentSettings.depend, self.dependValue);
                     }
                 }
@@ -398,8 +398,8 @@
                 wrappedFieldValue = transformToValue(self.fieldValue, isExtended);
             }
             field[self.fieldName] = wrappedFieldValue;
-            if (angular.isArray(field[vm.fieldName]) && field[vm.fieldName].length === 0) {
-                field[vm.fieldName] = '';
+            if (angular.isArray(field[self.fieldName]) && field[self.fieldName].length === 0 || field[self.fieldName] === undefined || field[self.fieldName] === null) {
+                field[self.fieldName] = '';
             }
             return field;
         }
