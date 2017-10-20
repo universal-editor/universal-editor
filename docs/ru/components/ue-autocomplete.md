@@ -13,6 +13,7 @@
         multiple: true,
         multiname: 'new_value',
         depend: 'other_field_name',
+        delay: 1000,
         handlers: {
             change: function(newValue, oldValue) {
             }
@@ -50,6 +51,7 @@
 | settings | object | Объект настройки компонента | + | - |
 | settings[label] | string | Название поля (выводится в интерфейсе редактора) | + | - |
 | settings[hint] | string | Текстовая информационная подсказка, выводимая слева от заголовка поля. | - | - |
+| settings[delay] | integer | Задержка в миллисекундах при попытке поиска по введенной строке. | - | 600 | 
 | settings[handler][change] | function | Слушатель, который вызывается при изменении значения компонента. Функция в качестве аргументов принимает новое и старое значение. | - | - |
 | settings[draggable] | boolean | Разрешает перенос значений компонента в множественном режиме. Имеет силу только при уставленном параметре `multiple: true` | - | `false` |
 | settings[required] | bool | Выделяет заголовок поля жирным, говоря об обязательности заполнения. | - | false |

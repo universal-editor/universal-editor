@@ -47,6 +47,7 @@
                         name: 'ue-autocomplete',
                         settings: {
                             label: 'Category',
+                            delay: 1000,
                             valuesRemote: {
                                 fields: {
                                     value: 'id',

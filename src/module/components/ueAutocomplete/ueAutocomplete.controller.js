@@ -39,6 +39,7 @@
             vm.fillControl = fillControl;
             vm.draggable = componentSettings.draggable === true;
             vm.validationInputError = false;
+            vm.delay = componentSettings.delay || 600;
 
             vm.addToSelected = addToSelected;
             vm.insertToSelectedCollection = insertToSelectedCollection;
@@ -181,8 +182,12 @@
                             vm.selectedValues = [];
                         }
                         inputTimeout = $timeout(function() {
+                            if (vm.searchTimeOut && vm.searchTimeOut.resolve) {
+                                vm.searchTimeOut.resolve();
+                            }
+                            vm.searchTimeOut = $q.defer();
                             vm.autocompleteSearch(newValue);
-                        }, 300);
+                        }, vm.delay);
                     }
                 }, true));
                 $element.bind('keydown', function(event) {
@@ -336,6 +341,9 @@
                     serverPagination: vm.serverPagination
                 };
                 config.standard = $scope.getParentDataSource().standard;
+                if (vm.searchTimeOut && vm.searchTimeOut.promise) {
+                    config.timeout = vm.searchTimeOut.promise;
+                }
                 ApiService
                     .getUrlResource(config)
                     .then(function(response) {

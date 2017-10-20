@@ -535,6 +535,9 @@ import DataSource from '../classes/dataSource.js';
                 config.pagination.page = page || 1;
                 config.pagination.perPage = 50;
                 options = angular.merge({}, getAjaxOptionsByTypeService(config, config.standard));
+                if (config.timeout) {
+                    options.timeout = config.timeout;
+                }
                 return $http(options);
             }
 
