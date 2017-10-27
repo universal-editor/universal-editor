@@ -10,7 +10,7 @@ table.table.table-bordered.items-list(ng-if="!vm.unShowComponentIfError || (vm.u
         span(data-ng-class="{'glyphicon glyphicon-sort': fieldItem.sort.direction === 'none', 'glyphicon glyphicon-sort-by-attributes-alt':fieldItem.sort.direction === 'desc', 'glyphicon glyphicon-sort-by-attributes':fieldItem.sort.direction === 'asc'}") 
   tbody(data-ng-if="vm.loaded")
     tr(data-ng-repeat="item in vm.items", 
-      data-ng-class="{'zhs-item': item[vm.subType] && item[vm.subType] !== undefined}", 
+      data-ng-class="[{'zhs-item' : item[vm.subType] && item[vm.subType] !== undefined}, (item[vm.subType] || 'main') + '-entity']", 
       data-ng-mousedown="vm.toggleContextViewByEvent(item, $event)", 
       oncontextmenu='return false;'
       data-ng-table-item="",

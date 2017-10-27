@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('BaseController', BaseController);
 
-    function BaseController($scope, EditEntityStorage, FilterFieldsStorage, $templateCache, $compile, $translate, $element) {
+    function BaseController($scope, EditEntityStorage, FilterFieldsStorage, $templateCache, $compile, $translate, $element, toastr) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this;

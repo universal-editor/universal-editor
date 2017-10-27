@@ -167,6 +167,9 @@ import DataSource from '../../classes/dataSource.js';
                 vm.entityType = vm.setting.component.settings.mixedMode.entityType;
                 vm.subType = vm.setting.component.settings.mixedMode.fieldType;
                 vm.collectionType = vm.setting.component.settings.mixedMode.collectionType;
+                if (vm.options.mixedMode && angular.isArray(vm.options.mixedMode.contextMenu)) {
+                    vm.mixContextLinks = vm.options.mixedMode.contextMenu;
+                }
             }
             vm.request = {
                 childId: vm.parent,
@@ -447,7 +450,7 @@ import DataSource from '../../classes/dataSource.js';
                 vm.request.childId = vm.parent;
                 if (vm.request.childId) {
                     vm.options.isLoading = true;
-                    
+
                     ApiService.getItemById(vm.request.childId, vm.options)
                         .then(function(item) {
                             var parentId = item[vm.request.parentField] || null;

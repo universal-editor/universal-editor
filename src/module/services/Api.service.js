@@ -77,12 +77,12 @@ import DataSource from '../classes/dataSource.js';
                 config.pagination.perPage = params['per-page'];
                 delete params['per-page'];
             }
+            
+            config.params = params || {};
 
             if (!!request.options.mixedMode) {
-                config.mixMode = request.options.mixedMode.collectionType;
+                config.params.mixed = request.options.mixedMode.collectionType;
             }
-
-            config.params = params || {};
 
             var options = getAjaxOptionsByTypeService(config, dataSource.standard);
             var handlers = dataSource.getHandlers('read');
