@@ -260,7 +260,7 @@ import DataSource from '../../classes/dataSource.js';
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = vm.dataSource;
                         if (newControl.component.name == 'ue-pagination' && !PaginationSettings.get(vm.$componentId)) {
-                            PaginationSettings.set(vm.$componentId, newControl.component.settings);
+                            PaginationSettings.set(vm.$componentId, newControl.component.settings, vm.options.prefixGrid, true);
                         }
                     }
                     newControl.paginationData = {};

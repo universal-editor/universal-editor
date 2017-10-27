@@ -15,11 +15,33 @@
         var paginationSettingObjects = {};
 
         return {
-            set: function (id, settings, silent) {
-                return paginationSettingObjects[id] = setPaginationSettings(settings, silent);
+            set: function (id, settings, prefixGrid, silent = false) {
+                paginationSettingObjects[id] = setPaginationSettings(settings, prefixGrid);
+                setPageSizeInLocation(id, silent);
+                return paginationSettingObjects[id];
             },
             get: function (id) {
                 return paginationSettingObjects[id];
+            },
+            setPrefix: function (id, value) {
+                return paginationSettingObjects[id].paramsPrefix = value;
+            },
+            getPrefix: function (id) {
+                return paginationSettingObjects[id].paramsPrefix;
+            },
+            setPage: function (id, page) {
+                paginationSettingObjects[id].page = page;
+                return $location.search(getKeyPrefix(id, 'page'), page);
+            },
+            getPage: function (id) {
+                return $location.search(getKeyPrefix(id, 'page'));
+            },
+            setPerPage: function (id, perPage) {
+                paginationSettingObjects[id].pageSize = perPage;
+                return $location.search(getKeyPrefix(id, 'per-page'), perPage);
+            },
+            getPerPage: function (id) {
+                return $location.search(getKeyPrefix(id, 'per-page'));
             }
         };
 
@@ -27,7 +49,7 @@
          * Выставляем настроки для пагинатора
          * @param settings
          */
-        function setPaginationSettings(newSettings, silent = false) {
+        function setPaginationSettings(newSettings, prefixGrid = '') {
             //default values
             var defaultPageSizeOptions = defaultSettings.pageSizeOptions.slice();
             var defaultPageSize = defaultSettings.pageSize;
@@ -36,6 +58,13 @@
             var pageSize = newSettings.pageSize;
 
             var settings = {};
+
+            if (prefixGrid) {
+                settings.prefixGrid = prefixGrid;
+            } else {
+                settings.prefixGrid = false;
+            }
+
             if (typeof pageSizeOptions === 'undefined') {
                 settings.pageSizeOptions = defaultPageSizeOptions;
             } else if (typeof pageSizeOptions === 'boolean' && !pageSizeOptions) {
@@ -46,26 +75,39 @@
                 console.warn('Got undocumented value in `pageSizeOptions` setting value for pagination component. Check if it type of array.');
                 settings.pageSizeOptions = defaultPageSizeOptions;
             }
+
+            var locationPerPage;
+            if (settings.prefixGrid) {
+                locationPerPage = $location.search()[settings.prefixGrid + '-per-page'];
+            } else {
+                locationPerPage = $location.search()['per-page'];
+            }
+
             if (typeof settings.pageSizeOptions === 'boolean' && !settings.pageSizeOptions) {
                 settings.pageSize = defaultPageSize;
             } else if (typeof pageSizeOptions === 'undefined' && typeof pageSize == 'undefined') {
                 settings.pageSize = defaultPageSize;
+            } else if (locationPerPage && ifValueInArray(settings.pageSizeOptions, +locationPerPage)) {
+                settings.pageSize = +locationPerPage;
             } else if ((typeof pageSize == 'string' || typeof pageSize == 'number') && ifValueInArray(settings.pageSizeOptions, +pageSize)) {
                 settings.pageSize = +pageSize;
             } else {
                 settings.pageSize = +settings.pageSizeOptions[0];
             }
 
-            if (!silent && typeof settings.pageSizeOptions !== 'boolean' && settings.pageSizeOptions) {
-                var locationpageSize = +$location.search()['per-page'];
-                if (ifValueInArray(settings.pageSizeOptions, locationpageSize)) {
-                    settings.pageSize = locationpageSize;
+            return settings;
+        }
+
+        function setPageSizeInLocation(id, silent = false) {
+            if (!silent && typeof paginationSettingObjects[id].pageSizeOptions !== 'boolean' && paginationSettingObjects[id].pageSizeOptions) {
+                var pageSize = paginationSettingObjects[id].pageSize;
+                var locationpageSize = +$location.search()[getKeyPrefix(id, 'per-page')];
+                if (ifValueInArray(paginationSettingObjects[id].pageSizeOptions, locationpageSize)) {
+                    paginationSettingObjects[id].pageSize = locationpageSize;
                 } else {
-                    $location.search('per-page', settings.pageSize);
+                    $location.search(getKeyPrefix(id, 'per-page'), pageSize);
                 }
             }
-
-            return settings;
         }
 
         function ifValueInArray(array, val) {
@@ -76,6 +118,13 @@
                 return +val === +item;
             });
             return isInSettings.length > 0;
+        }
+
+        function getKeyPrefix(id, key) {
+            if (!key && paginationSettingObjects[id].prefixGrid) {
+                return paginationSettingObjects[id].prefixGrid;
+            }
+            return paginationSettingObjects[id].prefixGrid ? (paginationSettingObjects[id].prefixGrid + '-' + key) : key;
         }
     }
 })();
