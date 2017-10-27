@@ -66,7 +66,7 @@ import DataSource from '../../classes/dataSource.js';
             }
 
             vm.width = !isNaN(+vm.componentSettings.width) ? vm.componentSettings.width : null;
-            vm.classFormComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
+            vm.classFormComponent = 'col-md-12 col-xs-12 col-sm-12 col-lg-12 clear-padding-left';
 
             if (!!vm.width) {
                 if (vm.width > 12) {

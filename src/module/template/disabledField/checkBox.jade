@@ -1,3 +1,6 @@
-div
-   div(ng-repeat="value in vm.previewValue track by $index", data-ng-if="!vm.loadingData")
-      span(ng-bind="value")
+.disabled-view
+   div(ng-if="!vm.loadingData")
+      div(ng-repeat="value in vm.previewValue track by $index", data-ng-if="!vm.loadingData")
+            span(ng-bind="value")
+   .loader-search-wrapper(ng-show="vm.loadingData")
+        .loader-search(translate="LOADING")
