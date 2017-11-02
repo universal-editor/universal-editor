@@ -680,13 +680,7 @@ import DataSource from '../classes/dataSource.js';
                 angular.forEach(storage, function(storageItem) {
                     var index = list.indexOf(storageItem[keyValue]);
                     if (index !== -1) {
-                        if (angular.isObject(options) && options.dependValue) {
-                            if (storage[index][dependField] === options.dependValue) {
-                                outputSet.push(storageItem);
-                            }
-                        } else {
-                            outputSet.push(storageItem);
-                        }
+                        outputSet.push(storageItem);
                     }
                 });
             } else {

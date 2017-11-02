@@ -82,7 +82,7 @@
                         if (self.initDataSource) {
                             self.loadingData = true;
                             self.loadingPossibleData = true;
-                            if (!componentSettings.$loadingPromise) {
+                            if (!componentSettings.$loadingPromise || componentSettings.$loadingPromise.$$state !== 0) {
                                 var config = {
                                     method: 'GET',
                                     url: remoteValues.url,
