@@ -63,7 +63,8 @@
 
         this.addFieldController = function(ctrl, isGroup) {
             var id = ctrl.parentComponentId || ctrl.$componentId;
-            collection.push(ctrl);
+            collection.push(ctrl);            
+            ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
             if (id) {
                 if (isGroup === true) {
                     groups[id] = groups[id] || [];
@@ -72,7 +73,6 @@
                     storage[id] = storage[id] || [];
                     storage[id].push(ctrl);
                 }
-                ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
             }
         };
 
