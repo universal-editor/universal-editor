@@ -162,10 +162,8 @@
         self.cols = self.width;
 
         if (self.options.filter) {
-            self.multiple = false;
             self.readonly = false;
             self.required = false;
-            self.fieldValue = null;
             self.cols = 12;
         }
 
@@ -396,6 +394,9 @@
                 });
             } else {
                 wrappedFieldValue = transformToValue(self.fieldValue, isExtended);
+                if(angular.isArray(wrappedFieldValue)) {
+                    wrappedFieldValue = wrappedFieldValue[0];
+                }
             }
             field[self.fieldName] = wrappedFieldValue;
             if (angular.isArray(field[self.fieldName]) && field[self.fieldName].length === 0 || field[self.fieldName] === undefined || field[self.fieldName] === null) {

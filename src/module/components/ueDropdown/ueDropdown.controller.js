@@ -72,10 +72,6 @@
                 vm.styleInput = { 'width': '1px', 'padding': 0 };
             }
 
-            if (vm.options.filter) {
-                vm.isTree = false;
-            }
-
             function dependUpdate(dependField, dependValue) {
                 if (dependValue && dependValue !== '') {
                     vm.loadingData = true;
@@ -227,8 +223,12 @@
                             return id;
                         });
                     } else if (angular.isObject(ids)) {
-                        defer.resolve();
-                        return defer.promise;
+                        if (ids.some(s => s[vm.fieldSearch] !== null && s[vm.fieldSearch] !== undefined)) {
+                            defer.resolve();
+                            return defer.promise;
+                        } else {
+                            ids = ids.map(m => m[vm.fieldId]);
+                        }
                     }
                     let candidates = ApiService.getFromStorage(vm.setting, ids);
                     if (!candidates) {
@@ -297,7 +297,8 @@
                         var config = {
                             url: componentSettings.valuesRemote.url,
                             $id: vm.setting.component.$id,
-                            serverPagination: vm.serverPagination
+                            serverPagination: vm.serverPagination,
+                            filter: {}
                         };
                         config.filter[vm.treeParentField] = [{
                             operator: ':value',
@@ -361,12 +362,14 @@
                         }, 0);
                     }
                 }
-                if (vm.fieldValue.length === 0 && !vm.filterText) {
-                    vm.placeholder = componentSettings.placeholder || '';
-                    vm.sizeInput = vm.placeholder.length;
-                } else {
-                    vm.placeholder = (vm.multiple) ? '' : vm.fieldValue[0][vm.fieldSearch];
-                    vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
+                if (angular.isArray(vm.fieldValue)) {
+                    if (vm.fieldValue.length === 0 && !vm.filterText) {
+                        vm.placeholder = componentSettings.placeholder || '';
+                        vm.sizeInput = vm.placeholder.length;
+                    } else {
+                        vm.placeholder = (vm.multiple) ? '' : vm.fieldValue[0][vm.fieldSearch];
+                        vm.sizeInput = !!vm.filterText ? vm.filterText.length : 1;
+                    }
                 }
                 if (!!e) {
                     e.stopPropagation();
@@ -452,6 +455,9 @@
                     }
                     if (allOptions.length === 0) {
                         allOptions = angular.copy(vm.optionValues);
+                    }
+                    if (vm.isTree) {
+                        vm.optionValues = filter(angular.copy(allOptions), vm.filterText);
                     }
                     vm.possibleValues = filter(angular.copy(allOptions), vm.filterText);
                     return;
@@ -542,7 +548,7 @@
                     vm.fieldValue = vm.fieldValue || [];
                     vm.fieldValue.push(val);
                 } else {
-                    vm.fieldValue = val;
+                    vm.fieldValue = vm.isTree ? [val] : val;
                     if (!vm.fieldValue[vm.fieldSearch]) {
                         if (vm.optionValues.length === 0 && componentSettings.$loadingPromise) {
                             componentSettings.$loadingPromise.then(convertToObject);
@@ -687,10 +693,10 @@
                 }
             });
 
-            function setActiveElement(event, index) {
+            function setActiveElement(event, option) {
                 event.stopPropagation();
                 $timeout(function() {
-                    vm.activeElement = index;
+                    vm.activeElement = option[vm.fieldId];
                 }, 0);
             }
 

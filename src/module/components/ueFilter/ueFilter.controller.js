@@ -71,7 +71,15 @@
                     angular.forEach(fieldValue, function(value, key) {
                         if (operator && operator.indexOf(':text') !== -1) {
                             if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
-                                fieldValue[key] = operator.replace(':text', value);
+                                if (angular.isArray(value)) {
+                                    fieldValue[key] = value;
+                                } else {
+                                    if (angular.isObject(value)) {
+                                        fieldValue[key] = value[ctrl.fieldId];
+                                    } else {
+                                        fieldValue[key] = operator.replace(':text', value);
+                                    }
+                                }
                                 if (ctrl.isNumber === true && !isNaN(+fieldValue[key])) {
                                     fieldValue[key] = +fieldValue[key];
                                 }
@@ -115,8 +123,11 @@
                     if (model.isNumber === true) {
                         value = +value;
                     }
-                    if (angular.isArray(value)) {
+                    if (angular.isArray(value) && model.multiple !== true) {
                         value = value[model.options.filterParameters.index];
+                    }
+                    if (model.isTree && model.multiple !== true) {
+                        value = [value];
                     }
                     if (field.component.settings.$fieldType === 'array' && value) {
                         if (model.singleValue) {
@@ -137,9 +148,16 @@
                     } else {
                         model.fieldValue = value;
                         if (model.addToSelected && value) {
-                            model.fieldValue = {};
-                            model.fieldValue[model.fieldId] = value;
-                            model.addToSelected(model.fieldValue);
+                            if (angular.isArray(value)) {
+                                model.fieldValue = [];
+                                value.forEach(function(v) {
+                                    model.addToSelected(v);
+                                });
+                            } else {
+                                model.fieldValue = {};
+                                model.fieldValue[model.fieldId] = value;
+                                model.addToSelected(model.fieldValue);
+                            }
                             if (angular.isFunction(model.loadDataById)) {
                                 model.loadDataById(value);
                             }

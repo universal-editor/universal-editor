@@ -78,7 +78,7 @@ block append content
                                     )
                                 .dropdown__selected(data-ng-if="!vm.search")
                                     .dropdown__selected-items.dropdown-tree(data-ng-class='vm.colorPlaceholder ? "color-placeholder-div" : ""', data-ng-if="!vm.loadingData") {{vm.placeholder}}
-                                span.select-delete(data-ng-if="vm.isSpanSelectDelete && !vm.readonly", data-ng-click="vm.deleteToSelected($event, false)") ×
+                                span.select-delete(data-ng-if="vm.isSpanSelectDelete && !vm.readonly && !vm.multiple", data-ng-click="vm.deleteToSelected($event, false)") ×
                                 .dropdown__items.dropdown__items_with-padding.active.dropdown-bottom(
                                     data-ng-if="::(vm.treeParentField && vm.treeChildCountField)",
                                     data-ng-class="{'dropdown__items_with-selected': vm.fieldValue.length > 2 || (vm.search && vm.fieldValue.length)}",
@@ -86,6 +86,7 @@ block append content
                                     data-options="vm.optionValues",
                                     data-is-open="isOpen && vm.optionValues.length",
                                     data-field-search="vm.fieldSearch",
+                                    data-field-id="vm.fieldId",
                                     data-child-count-field="vm.treeChildCountField",
                                     data-on-toggle="vm.toggle",
                                     data-api="vm.field.values_remote.url",
