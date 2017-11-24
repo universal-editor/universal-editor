@@ -200,40 +200,7 @@
                                 }
                             }
                         }
-                    ],
-                    footer: {
-                        toolbar: [
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Save',
-                                        action: 'save',
-                                        sref: 'news'
-                                    }
-                                }
-                            },
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Apply',
-                                        action: 'presave'
-                                    }
-                                }
-                            },
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Delete',
-                                        action: 'delete',
-                                        sref: 'news'
-                                    }
-                                }
-                            }
-                        ]
-                    }
+                    ]
                 }
             }
         };
