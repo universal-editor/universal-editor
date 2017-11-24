@@ -4,7 +4,6 @@
   "version": "1.0.0-beta",
   "scripts": {
     "dev": "webpack-dev-server --display-modules --progress --colors",
-    "dist": "webpack-dev-server -p",
     "build": "webpack -p --progress --colors"
   },
   "keywords": [

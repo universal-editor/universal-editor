@@ -16,6 +16,7 @@
         domain = localHost,
         defaultlocalHost = '127.0.0.1',
         NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development',
+        MIN_VERSION = ~JSON.parse(process.env.npm_config_argv).original.indexOf('--prod'),
         RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]),
         isProd = NODE_ENV == 'production',
         isDev = NODE_ENV == 'development',
@@ -158,7 +159,7 @@
         };
     }
 
-    if (isProd) {
+    if (isProd || MIN_VERSION) {
         webpackConfigTemplate.plugins.push(
             new webpack.optimize.UglifyJsPlugin({
                 compress: {
