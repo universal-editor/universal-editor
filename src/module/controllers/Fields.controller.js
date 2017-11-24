@@ -216,7 +216,7 @@
             }
             self.error = [];
             if (self.disabled === true) {
-                self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : !!value;
+                self.isVisible = angular.isObject(value) ? checkForEmptyValue(value) : (value !== null && value !== undefined);
             }
             var parameters = componentSettings.valuesRemote || componentSettings.values;
 
@@ -561,7 +561,7 @@
                     break;
             }
         });
-        if (self.defaultValue) {
+        if (self.defaultValue !== null && self.defaultValue !== undefined && self.defaultValue !== '') {
             let oldValue, newValue;
 
             oldValue = self.fieldValue;
