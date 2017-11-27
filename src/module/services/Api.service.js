@@ -715,6 +715,7 @@ import DataSource from '../classes/dataSource.js';
                 return angular.isObject(component.component.settings.valuesRemote);
             });
             var defaultStandard = !options.standard || options.standard === 'YiiSoft';
+            var standard = options.standard;
             var promiseStack = [];
 
             /** Generate promise stacks */
@@ -760,7 +761,8 @@ import DataSource from '../classes/dataSource.js';
                             pagination: {
                                 page: 1,
                                 perPage: 50
-                            }
+                            },
+                            standard: standard
                         };
                         configs.push(config);
                         promiseStack.push($http(getAjaxOptionsByTypeService(config)));

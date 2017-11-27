@@ -126,7 +126,7 @@
           data: items,
           components: components,
           $id: vm.$componentId,
-          standart: vm.dataSource.standart,
+          standard: vm.dataSource.standard,
           childrenField: vm.childrenField,
           selfField: vm.selfField
         };

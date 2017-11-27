@@ -16,7 +16,7 @@
         domain = localHost,
         defaultlocalHost = '127.0.0.1',
         NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development',
-        MIN_VERSION = ~JSON.parse(process.env.npm_config_argv).original.indexOf('--prod'),
+        MIN_VERSION = false,
         RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]),
         isProd = NODE_ENV == 'production',
         isDev = NODE_ENV == 'development',
@@ -25,6 +25,9 @@
         freePort = null,
         outputFile = isProd ? 'ue.min.js' : 'ue.js';
 
+    try {
+        MIN_VERSION = ~JSON.parse(process.env.npm_config_argv).original.indexOf('--prod');
+    } catch(e) {}
     require('portscanner').findAPortNotInUse(8080, 8100, defaultlocalHost, (error, port) => freePort = error ? 5555 : port);
     deasync.loopWhile(function() { return !freePort; });
 

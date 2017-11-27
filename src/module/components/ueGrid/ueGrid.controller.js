@@ -575,7 +575,7 @@ import DataSource from '../../classes/dataSource.js';
                             data: vm.data,
                             components: components,
                             $id: vm.$componentId,
-                            standart: vm.dataSource.standart,
+                            standard: vm.dataSource.standard,
                             childrenField: vm.childrenField,
                             selfField: vm.selfField
                         };

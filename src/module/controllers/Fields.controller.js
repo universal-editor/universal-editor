@@ -521,7 +521,7 @@
                     }
 
                     var extended = remoteValues ? ApiService.getFromStorage(self.setting, self.multiname ? apiValue : self.fieldValue) : apiValue;
-                    if (extended !== false) {
+                    if (extended !== false && self.regim === 'preview') {
                         self.isSendRequest = true;
                     }
                     equalPreviewValue(extended);
