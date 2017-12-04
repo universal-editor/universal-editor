@@ -159,6 +159,7 @@
                 vm.listeners.push($scope.$watch(function() {
                     return vm.inputValue;
                 }, function(newValue) {
+                    vm.validationInputError = false;
                     if (vm.multiple) {
                         var input = $element.find('input'), spanValue = newValue || '';
                         if (vm.placeholder && !spanValue) {
@@ -303,6 +304,7 @@
 
         function autocompleteSearch(searchString) {
             vm.error = [];
+
             if (searchString === '' || searchString.length <= vm.minCount) {
                 return;
             }
