@@ -25,7 +25,7 @@ var gulp = require('gulp'),
 gulp.task('html2js', function () {
     return gulp.src([root + '**/*.html'])
         .pipe(ngHtml2js({
-            moduleName: "universal.editor.templates"
+            moduleName: "universal-editor.templates"
         }))
         .pipe(plugins.rename({
             suffix: '.tpl'

@@ -78,7 +78,7 @@ angular.module('moduleWithComponents', [])
     }]);
 
     // Подключение модуля с компонентами к основному приложению
-    angular.module('testApp', ['universal.editor', 'moduleWithComponents']);
+    angular.module('testApp', ['universal-editor', 'moduleWithComponents']);
 ```
 
 Вся логика будущего компонента закладывается в контроллере. Подключение 
@@ -146,14 +146,14 @@ angular.module('moduleWithComponents', [])
 Пример наследования:
 
 ```javascript
-    angular.module('universal.editor').controller('BaseController', ['$scope', function($scope){
+    angular.module('universal-editor').controller('BaseController', ['$scope', function($scope){
       /** 
         общая логика полей
       */
     }]);
 
     // Контроллер компонента
-    angular.module('universal.editor').controller('ComponentController', ['$controller', '$scope', function($controller, $scope, $element) {
+    angular.module('universal-editor').controller('ComponentController', ['$controller', '$scope', function($controller, $scope, $element) {
       
       // Расширяем контроллер и получаем экземпляр для дальнейшего использования
       var BaseController = $controller('BaseController', {

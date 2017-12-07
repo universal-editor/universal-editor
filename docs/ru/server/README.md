@@ -58,7 +58,7 @@ angular.module('ModuleWithService', []).service('NewFormatApiService', function(
 })
 
 // Приложение, куда подключается редактор и сервис 
-angular.module('demoApp', ['universal.editor', 'ModuleWithService'])
+angular.module('demoApp', ['universal-editor', 'ModuleWithService'])
   .controller('NewsController', function () {
       var vm = this;
       var newsDataSource = {
