@@ -9,9 +9,11 @@
         /* jshint validthis: true */
         'ngInject';
         var vm = this;
+        
         var baseController = $controller('BaseController', { $scope: $scope, $element: $element });
         angular.extend(vm, baseController);
         var self = $scope.vm;
+        self.setting.inline = true;
         var componentSettings = self.setting.component.settings;
 
         self.template = self.setting.component.settings.template;

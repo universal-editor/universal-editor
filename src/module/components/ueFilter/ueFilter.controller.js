@@ -22,7 +22,7 @@
                 $element.find('.filter-component').append(templateEditorFilter);
             }
             angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element }));
-
+            vm.setting.inline = true;
             settings = vm.setting.component.settings;
             vm.parentComponentId = vm.options.$componentId;
             vm.visiable = false;

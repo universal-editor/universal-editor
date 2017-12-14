@@ -13,6 +13,7 @@
       this.resourceType = options.resourceType;
       this.keys = options.keys;
       this.sortBy = options.sortBy;
+      this.$hash = options.$hash;
 
       if (this.transport) {
         this.url = options.transport.url;
@@ -37,10 +38,7 @@
       }
       if (angular.isString(url) && angular.isObject(entity)) {
         angular.forEach(entity, function(value, key) {
-          let parameter = ':' + key;
-          if (~url.indexOf(parameter)) {
-            url = url.replace(parameter, value);
-          }
+          url = url.replace(':' + key, value);
         });
       }
       return url;

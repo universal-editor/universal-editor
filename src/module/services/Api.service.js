@@ -974,6 +974,7 @@ import DataSource from '../classes/dataSource.js';
             var parentComponentId = config.parentComponentId;
             var searchString = $location.search();
             let idField = config.$dataSource.primaryKey;
+            data.$dataSource = config.$dataSource;
             switch (config.action) {
                 case 'read':
                     if (config.request && config.request.success) {

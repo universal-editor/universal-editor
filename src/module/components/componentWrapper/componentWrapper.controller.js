@@ -1,11 +1,11 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('universal-editor')
-        .controller('ComponentWrapperController',ComponentWrapperController);
+        .controller('ComponentWrapperController', ComponentWrapperController);
 
-    function ComponentWrapperController($element, $scope, ComponentBuilder){
+    function ComponentWrapperController($element, $scope, ComponentBuilder, $timeout) {
         'ngInject';
         var vm = this;
 
@@ -21,9 +21,15 @@
 
         $scope.__proto__.getParentDataSource = function() {
             var scope = this;
-            while(scope) {
-                if(scope.vm && scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.settings && scope.vm.setting.component.settings.dataSource) {
-                    return scope.vm.setting.component.settings.dataSource;
+            while (scope) {
+                if (scope.vm && scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.settings) {
+                    let settings = scope.vm.setting.component.settings;
+                    if(settings.dataSource === false) {
+                        return null;
+                    }
+                    if (settings.dataSource) {
+                        return settings.dataSource;
+                    }
                 }
                 scope = scope.$parent;
             }
@@ -31,11 +37,16 @@
         };
 
         this.$postLink = function() {
-            $element.on('$destroy', function () {
+            $element.on('$destroy', function() {
                 $scope.$destroy();
             });
             var elem = new ComponentBuilder($scope).build();
             $element.addClass('component-wrapper');
+            $timeout(function() {
+                if ($scope.setting.inline) {
+                    $element.closest('.component-wrapper').addClass('ue-component-inline');
+                }
+            });
             $element.append(elem);
         };
     }

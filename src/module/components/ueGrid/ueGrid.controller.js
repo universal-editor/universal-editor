@@ -37,10 +37,10 @@ import DataSource from '../../classes/dataSource.js';
                         }
                     });
                     function emitLoading() {
-                        scope.$broadcast('ue:componentDataLoaded', {
+                        scope.$broadcast('ue:componentDataLoaded', angular.merge({
                             $componentId: scope.componentId,
-                            $value: scope.item
-                        });
+                            $dataSource: vm.dataSource
+                        }, scope.item));
                     }
                 }
             };

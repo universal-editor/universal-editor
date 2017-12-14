@@ -7,8 +7,12 @@
               margin-right: 10px;
               outline: none;
           }
-          .component-wrapper {
-              width: auto;
+          & .filter-connect {
+              width: 32px;
+              height: 16px;
+              position: absolute;
+              background-color: #cbd6da;
+              margin-top: 30px;
           }
       }
       & .groups-action {
@@ -16,9 +20,9 @@
       }
       & .ue-grid {
           padding: 10px 0;
-          .component-wrapper {
+          /* .component-wrapper {
               width: auto;
-          }
+          }*/
           tfoot,
           .context-menu-item,
           .row.footer {
@@ -123,10 +127,10 @@
                   }
                   vertical-align: top;
                   position: relative;
-                  &.ue-column-sortable { 
+                  &.ue-column-sortable {
                       label {
                           margin: 0 20px 0 0;
-                      }                     
+                      }
                       & span.glyphicon {
                           float: right;
                           display: inline-block;

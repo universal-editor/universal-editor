@@ -1,11 +1,11 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('universal-editor')
-        .controller('UniversalEditorController',UniversalEditorController);
+        .controller('UniversalEditorController', UniversalEditorController);
 
-    function UniversalEditorController($scope, $rootScope, $element, $compile, $translate, moment, $state, $location){
+    function UniversalEditorController($scope, $rootScope, $element, $compile, $translate, moment, $state, $location) {
         'ngInject';
         var vm = this,
             component;
@@ -21,6 +21,9 @@
                     var propValue = value[keys[i]];
                     if (keys[i] === 'component') {
                         propValue.$id = propValue.$id || getRandomId();
+                        if (propValue.settings && propValue.settings.dataSource && angular.isObject(propValue.settings.dataSource)) {
+                            propValue.settings.dataSource.$hash = getRandomId();
+                        }
                     }
                     if (angular.isObject(propValue)) {
                         check(propValue);
@@ -49,7 +52,7 @@
         function getRandomId() {
             return 'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
                 function(c) {
-                    var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);
+                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : r & 0x3 | 0x8; return v.toString(16);
                 }
             );
         }

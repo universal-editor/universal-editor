@@ -57,6 +57,7 @@
             if (parent && angular.isObject(dataSource) && dataSource.parentField) {
                 var data = { editorEntityType: 'new', $componentId: id };
                 data[dataSource.parentField] = parent;
+                data.$dataSource = dataSource;
                 $rootScope.$broadcast('ue:componentDataLoaded', data);
             }
         };

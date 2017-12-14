@@ -11,7 +11,8 @@
         var vm = this,
             componentSettings,
             baseController,
-            widthBootstrap = 12;
+            widthBootstrap = 12, 
+            dataSource;
 
         vm.$onInit = function() {
             componentSettings = vm.setting.component.settings;
@@ -21,6 +22,7 @@
             vm.resourceType = vm.setting.resourceType;
             angular.extend(vm, baseController);
             EditEntityStorage.addFieldController(vm, true);
+            dataSource = $scope.getParentDataSource();
 
             if (vm.multiple && vm.setting.name) {
                 vm.setting.name = vm.setting.name + '[]';
@@ -58,12 +60,11 @@
             vm.removeItem = removeItem;
 
             angular.forEach(componentSettings.fields, function(value, index) {
-                var field, dataSource;
+                var field;
                 if (angular.isString(value)) {
                     if (vm.setting.name && value.indexOf(vm.setting.name) === -1) {
                         value = vm.setting.name + '.' + value;
-                    }
-                    dataSource = $scope.getParentDataSource();
+                    }                    
                     if (dataSource && angular.isArray(dataSource.fields)) {
                         field = dataSource.fields.filter(function(k) {
                             return k.name == value;
@@ -107,6 +108,7 @@
                 var names = vm.setting.name.split('.');
                 var tempObject = data;
                 var partName = '';
+                data.$dataSource = dataSource;
                 angular.forEach(names, function(name, i) {
                     var empty = {};
                     partName = partName ? (partName + '.' + name) : name;
