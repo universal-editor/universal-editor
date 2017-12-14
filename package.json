@@ -4,7 +4,7 @@
   "version": "1.0.0-beta",
   "scripts": {
     "dev": "webpack-dev-server --display-modules --progress --colors",
-    "build": "webpack -p --progress --colors"
+    "build": "webpack --source --del & webpack -p --colors"
   },
   "keywords": [
     "editor",

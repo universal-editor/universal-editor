@@ -16,18 +16,21 @@
         domain = localHost,
         defaultlocalHost = '127.0.0.1',
         NODE_ENV = ~process.argv.indexOf('-p') ? 'production' : 'development',
+        SM = ~process.argv.indexOf('--source'), //source map
+        isDelete = ~process.argv.indexOf('--del'), //delete dist catalog
         MIN_VERSION = false,
         RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]),
         isProd = NODE_ENV == 'production',
         isDev = NODE_ENV == 'development',
-        mainCatalog = isProd ? 'dist' : 'app',
+        mainCatalog = 'dist',
         publicPath = path.resolve(__dirname, mainCatalog),
         freePort = null,
-        outputFile = isProd ? 'ue.min.js' : 'ue.js';
+        outputFile = isProd ? 'ue.min.js' : 'ue.js',
+        configStack = [];
 
     try {
         MIN_VERSION = ~JSON.parse(process.env.npm_config_argv).original.indexOf('--prod');
-    } catch(e) {}
+    } catch (e) { }
     require('portscanner').findAPortNotInUse(8080, 8100, defaultlocalHost, (error, port) => freePort = error ? 5555 : port);
     deasync.loopWhile(function() { return !freePort; });
 
@@ -75,9 +78,7 @@
             extensions: ['', '.js']
         },
 
-        /** Include this setting if you need source-map */
-        // devtool: 'inline-source-map',
-        // devtool: 'eval', // faster then previous type of source-map
+        devtool: 'none',
 
         watch: isDev,
         watchOptions: {
@@ -88,7 +89,6 @@
                 {
                     test: './src/module/classes/dataSource.js',
                     loader: 'exports?window.DataSource'
-
                 },
                 {
                     test: /\.js$/,
@@ -149,6 +149,22 @@
         ]
     };
 
+    if (!RUNNING_SERVER || !isProd) {
+        webpackConfigTemplate.entry.ue = [path.resolve(__dirname, 'src/main.js')];
+    }
+
+    if (!RUNNING_SERVER || (RUNNING_SERVER && !isProd)) {
+        webpackConfigTemplate.plugins.push(new InjectHtmlPlugin({
+            filename: path.resolve(__dirname, 'demo/index.html'),
+            startInjectJS: '<!-- start:bundle -->',
+            endInjectJS: '<!-- end:bundle -->',
+            chunks: ['ue']
+        }));
+        if (isDelete) {
+            webpackConfigTemplate.plugins.push(new cleanWebpackPlugin([publicPath], { verbose: true }));
+        }
+    }
+
     if (RUNNING_SERVER) {
         //-- SETTING FOR LOCAL SERVER
         webpackConfigTemplate.devServer = {
@@ -160,6 +176,10 @@
             inline: true,
             open: true
         };
+    }
+
+    if (SM) {
+        webpackConfigTemplate.devtool = '#inline-source-map';
     }
 
     if (isProd || MIN_VERSION) {
@@ -174,23 +194,10 @@
         );
     }
 
-    if (!RUNNING_SERVER || !isProd) {
-        webpackConfigTemplate.entry.ue = [path.resolve(__dirname, 'src/main.js')];
-    }
-
-    if (!RUNNING_SERVER || (RUNNING_SERVER && !isProd)) {
-        webpackConfigTemplate.plugins.push(new InjectHtmlPlugin({
-            filename: path.resolve(__dirname, 'demo/index.html'),
-            startInjectJS: '<!-- start:bundle -->',
-            endInjectJS: '<!-- end:bundle -->',
-            chunks: ['ue']
-        }));
-        webpackConfigTemplate.plugins.push(new cleanWebpackPlugin([publicPath], { verbose: true }));
-    }
-
     if (RUNNING_SERVER && webpackConfigTemplate.entry.ue) {
         webpackConfigTemplate.entry.ue.unshift('webpack-dev-server/client?http://' + localHost + ':' + freePort + '/');
         webpackConfigTemplate.entry.ue.unshift('webpack/hot/dev-server');
     }
+
     module.exports = [webpackConfigTemplate];
 })(require);
