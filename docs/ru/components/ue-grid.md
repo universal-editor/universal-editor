@@ -89,12 +89,12 @@ var grid = {
 | settings | object | Объект настройки компонента. | + | - |
 | settings[routing] | object | Объект настройки взаимодествия компонента с URL. | - | - |
 | settings[routing][paramsPrefix] | object | Префикс, который добавляеться к query параметрам(parent, filter, sort, page), требующим для работы компонента. | - | - |
-| settings[dataSource] | object | Объект настройки компонента по работе с сервером [DataSource](dataSource.md). Если компонент не имеет `dataSource`, то следует указать значение `dataSource: false`, иначе компонент попытается прокинуть его в дочерние компоненты. | + | Передается из родительского компонента |
+| settings[dataSource] | object | Объект настройки компонента по работе с сервером [dataSource](data-source.md). Если компонент не имеет `dataSource`, то следует указать значение `dataSource: false`, иначе компонент попытается прокинуть его в дочерние компоненты. | + | Передается из родительского компонента |
 | settings[header] | object | Содержит настройки верхнего блока в компоненте.  | + | - |
 | settings[header][filter] | object, false | Содержит компонент фильтра.  | - | - |
 | settings[header][toolbar] | array | Содержит массив объектов компонентов для верхнего блока. | - | - |
 | settings[displayHeaderColumns] | boolean | Флаг отображения блока с заголовками колонок.  | - | true |
-| settings[dragMode] | object | Объект для настройки перетаскивания элементов в компоненте [drag&drop](dragMode.md)  | - | - |
+| settings[dragMode] | object | Объект для настройки перетаскивания элементов в компоненте [drag&drop](ue-grid-drag-mode.md)  | - | - |
 | settings[columns] | array или string | Массив объектов для описания столбцов или имя поля из конфигурации ресурса.  | + | - |
 | settings[columns][name] | string | Имя поля из конфигурации ресурса (dataSource). | + | - |
 | settings[columns][width] | string | Длина колонки в % или px. | + | 100% – означает, что все колонки будут равные по длине. (разделены в соотношении 1 к 1) |

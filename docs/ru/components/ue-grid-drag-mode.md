@@ -63,7 +63,7 @@ var C = {
 Пример со всеми настройками параметра `dragMode`:
 
 ```javascript
-{
+var dragModeComponent = {
     component: {
         name: 'ue-grid',
         settings: {            
