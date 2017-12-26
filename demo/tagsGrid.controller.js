@@ -63,61 +63,6 @@
                                         sref: 'tags_edit'
                                     }
                                 }
-                            },
-                            {
-                                component: {
-                                    name: 'ue-form',
-                                    settings: {
-                                        primaryKeyValue: '',
-                                        dataSource: {
-                                            standard: 'YiiSoft',                                
-                                            transport: {
-                                                one: {
-                                                    url: () => '/assets/tagToolbar.json'
-                                                }
-                                            },
-                                            fields: [
-                                                {
-                                                    name: 'index',
-                                                    component: {
-                                                        $id: 'index',
-                                                        name: 'ue-dropdown',
-                                                        settings: {
-                                                            values: {
-                                                                'v1': 'title1',
-                                                                'v2': 'title2',
-                                                                'v3': 'title3'
-                                                            },
-                                                            label: 'Тип документа',
-                                                            defaultValue: 'v1',
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    name: 'lang',
-                                                    component: {
-                                                        $id: 'lang',
-                                                        name: 'ue-dropdown',
-                                                        settings: {
-                                                            values: {
-                                                                'ru': 'ru',
-                                                                'en': 'en'
-                                                            },
-                                                            defaultValue: 'ru',
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        body: [
-                                          'index',
-                                          'lang'
-                                        ],
-                                        footer: {
-                                            toolbar: []
-                                        }
-                                    }
-                                }
                             }
                         ]
                     },
