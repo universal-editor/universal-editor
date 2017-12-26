@@ -163,7 +163,8 @@
                             }
                         }
                     }
-                    vm.visiable = true;
+                    vm.visiable = true;                    
+                    elementParent.find('.filter-connect').show();
                     return output;
                 }).bind(vm);
 
@@ -248,11 +249,12 @@
                     FilterFieldsStorage.clear(vm.options.$componentId);
                 }
             };
-        };
 
-        function toggleFilterVisibility() {
-            vm.visiable = !vm.visiable;
-        }
+            function toggleFilterVisibility() {
+                vm.visiable = !vm.visiable;
+                elementParent.find('.filter-connect').toggle();
+            }
+        };
 
         $element.on('$destroy', function() {
             FilterFieldsStorage.unRegisterFilterController(vm.options);
