@@ -141,7 +141,7 @@ var field = {
 var dataSource = {
     standard: 'YiiSoft',
     transport: {
-      url: '//universal-backend.dev/rest/v1/photos'
+      url: '//universal-backend.test/rest/v1/photos'
     },
     fields: [
         {

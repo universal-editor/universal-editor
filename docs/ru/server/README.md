@@ -64,7 +64,7 @@ angular.module('demoApp', ['universal.editor', 'ModuleWithService'])
       var newsDataSource = {
           standard: 'NewFormat',  // задаем тип API (Имя Сервиса будет складываться как 'NewFormatApiService')
           transport: {
-            url: '//universal-backend.dev/rest/v1/news'
+            url: '//universal-backend.test/rest/v1/news'
           },
           fields: [ /* fields */ ]
       };
@@ -95,7 +95,7 @@ angular.module('demoApp', ['universal.editor', 'ModuleWithService'])
 
 var config = {
     action: 'list',
-    url: 'http://universal-editor.dev/staff',
+    url: 'http://universal-editor.test/staff',
     headers: {
         "Content-Type": "application/json"
     },

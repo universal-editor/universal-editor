@@ -11,7 +11,7 @@
         WebpackNotifierPlugin = require('webpack-notifier'),
         InjectHtmlPlugin = require('inject-html-webpack-plugin');
 
-    var localHost = 'universal-editor.dev',
+    var localHost = 'universal-editor.test',
         isTrySetHost = false,
         domain = localHost,
         defaultlocalHost = '127.0.0.1',

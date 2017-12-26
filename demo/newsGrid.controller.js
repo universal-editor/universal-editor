@@ -12,7 +12,7 @@
             standard: 'YiiSoft',
 
             transport: {
-                url: '//universal-backend.dev/rest/v1/news'
+                url: '//universal-backend.test/rest/v1/news'
             },
             sortBy: {
                 id: 'asc',
@@ -54,7 +54,7 @@
                                     value: 'id',
                                     label: 'title'
                                 },
-                                url: 'http://universal-backend.dev/rest/v1/news/categories'
+                                url: 'http://universal-backend.test/rest/v1/news/categories'
                             },
                             search: true
                         }
@@ -89,7 +89,7 @@
                                     value: 'id',
                                     label: 'name'
                                 },
-                                url: 'http://universal-backend.dev/rest/v1/staff'
+                                url: 'http://universal-backend.test/rest/v1/staff'
                             },
                             multiple: true,
                             expandable: true,
@@ -108,7 +108,7 @@
                                     value: 'id',
                                     label: 'name'
                                 },
-                                url: 'http://universal-backend.dev/rest/v1/tags'
+                                url: 'http://universal-backend.test/rest/v1/tags'
                             },
                             multiple: true,
                             expandable: true

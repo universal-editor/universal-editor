@@ -11,7 +11,7 @@
         var categoryDataSource = {
             standard: 'YiiSoft',
             transport: {
-                url: 'http://universal-backend.dev/rest/v1/news/categories'
+                url: 'http://universal-backend.test/rest/v1/news/categories'
             },
             sortBy: {
                 id: 'desc'
