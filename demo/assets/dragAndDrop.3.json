@@ -149,7 +149,7 @@
   ],
   "_links": {
     "self": {
-      "href": "http://universal-backend.dev/rest/v1/news?expand=authors%2Ctags&page=1&sort=-id"
+      "href": "http://universal-backend.test/rest/v1/news?expand=authors%2Ctags&page=1&sort=-id"
     }
   },
   "_meta": {

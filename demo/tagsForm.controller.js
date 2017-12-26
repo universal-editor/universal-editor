@@ -13,7 +13,7 @@
             standard: 'YiiSoft',
 
             transport: {
-                url: '//universal-backend.dev/rest/v1/tags'
+                url: '//universal-backend.test/rest/v1/tags'
             },
             fields: [
                 {

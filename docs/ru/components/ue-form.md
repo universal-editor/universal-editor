@@ -12,7 +12,7 @@
 var formDataSource = {        
     standard: 'YiiSoft',
     transport: {
-        url: '//universal-backend.dev/rest/v1/staff'
+        url: '//universal-backend.test/rest/v1/staff'
     },        
     sortBy: {
         id: 'desc'

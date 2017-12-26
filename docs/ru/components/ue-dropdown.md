@@ -40,7 +40,7 @@
                 value: "id",
                 label: "name"
             },
-            url: "http://universal-backend.dev/rest/v1/staff"
+            url: "http://universal-backend.test/rest/v1/staff"
         },
         tree: {
             parentField: "parent_id",
