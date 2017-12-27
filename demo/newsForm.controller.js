@@ -69,11 +69,12 @@
                     }
                 },
                 {
-                    name: 'description',
+                    name: 'text',
                     component: {
                         name: 'ue-textarea',
                         settings: {
-                            label: 'Text'
+                            label: 'Text',
+                            height: 17
                         }
                     }
                 },
@@ -177,9 +178,9 @@
                                             fields: [
                                                 'id',
                                                 'published_at',
-                                                'category_id',
                                                 'title',
-                                                'description'
+                                                'category_id',
+                                                'text'
                                             ]
                                         },
                                         {

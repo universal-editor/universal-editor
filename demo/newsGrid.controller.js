@@ -70,7 +70,7 @@
                     }
                 },
                 {
-                    name: 'description',
+                    name: 'text',
                     component: {
                         name: 'ue-textarea',
                         settings: {

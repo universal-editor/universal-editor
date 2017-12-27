@@ -128,8 +128,8 @@
                         settings: {
                             label: 'Gender',
                             values: {
-                                'male': 'Male',
-                                'female': 'Female'
+                                'Male': 'Male',
+                                'Female': 'Female'
                             }
                         }
                     }
