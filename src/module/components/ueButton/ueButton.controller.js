@@ -163,7 +163,7 @@
                 request.state = componentSettings.sref;
                 request.useBackUrl = componentSettings.useBackUrl === true;
                 request.href = componentSettings.href;
-                angular.merge(request, handlers);
+                request.handlers = handlers;
                 switch (vm.action) {
                     case 'save':
                         request.entityId = vm.entityId;

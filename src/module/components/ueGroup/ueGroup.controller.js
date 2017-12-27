@@ -11,7 +11,8 @@
         var vm = this,
             componentSettings,
             baseController,
-            widthBootstrap = 12;
+            widthBootstrap = 12, 
+            dataSource;
 
         vm.$onInit = function() {
             componentSettings = vm.setting.component.settings;
@@ -21,8 +22,9 @@
             vm.resourceType = vm.setting.resourceType;
             angular.extend(vm, baseController);
             EditEntityStorage.addFieldController(vm, true);
+            dataSource = $scope.getParentDataSource();
 
-            if(vm.multiple && vm.setting.name) {
+            if (vm.multiple && vm.setting.name) {
                 vm.setting.name = vm.setting.name + '[]';
             }
 
@@ -44,7 +46,7 @@
             vm.countInLine = componentSettings.countInLine || 1;
             widthBootstrap = Math.ceil(12 / vm.countInLine);
             vm.className = 'col-md-' + widthBootstrap + ' col-xs-' + widthBootstrap + ' col-sm-' + widthBootstrap + ' col-lg-' + widthBootstrap;
-            if(vm.countInLine > 1) {
+            if (vm.countInLine > 1) {
                 vm.className += ' auto-width';
             }
 
@@ -58,25 +60,24 @@
             vm.removeItem = removeItem;
 
             angular.forEach(componentSettings.fields, function(value, index) {
-                var field, dataSource;
+                var field;
                 if (angular.isString(value)) {
-                    if(vm.setting.name && value.indexOf(vm.setting.name) === -1) {
+                    if (vm.setting.name && value.indexOf(vm.setting.name) === -1) {
                         value = vm.setting.name + '.' + value;
-                    }
-                    dataSource = $scope.getParentDataSource();
+                    }                    
                     if (dataSource && angular.isArray(dataSource.fields)) {
                         field = dataSource.fields.filter(function(k) {
                             return k.name == value;
                         })[0];
                     }
-                    if(field) {
+                    if (field) {
                         field = angular.merge({}, field);
                     }
                 } else if (value && value.component) {
                     field = value;
                 }
                 if (field) {
-                    if(vm.setting.name && field.name.indexOf(vm.setting.name) === -1) {
+                    if (vm.setting.name && field.name.indexOf(vm.setting.name) === -1) {
                         field.name = vm.setting.name + '.' + field.name;
                     }
                     if (vm.fieldName && vm.resourceType) {
@@ -107,6 +108,7 @@
                 var names = vm.setting.name.split('.');
                 var tempObject = data;
                 var partName = '';
+                data.$dataSource = dataSource;
                 angular.forEach(names, function(name, i) {
                     var empty = {};
                     partName = partName ? (partName + '.' + name) : name;
@@ -136,16 +138,39 @@
             }
         }
 
-        function removeItem(ind) {
-            vm.fieldsArray.splice(ind, 1);
+        function removeItem(uid) {
+            angular.forEach(vm.fieldsArray, function(group, groupIndex, array) {
+                if (group.uid === uid) {
+                    array.splice(groupIndex, 1);
+                }
+            });
+            angular.forEach(vm.fieldsArray, function(group, groupIndex) {
+                angular.forEach(group, function(setting) {
+                    let component = EditEntityStorage.getComponentBySetting(setting);
+                    if (component) {
+                        component.setting.parentFieldIndex = groupIndex;
+                        component.parentFieldIndex = groupIndex;
+                    }
+                });
+            });
         }
 
         function addItem() {
-            var clone = vm.innerFields.map(function(field) { return angular.extend({}, field); });
+            var clone = vm.innerFields.map(function(field) { delete field.component.$id; return angular.merge({}, field); });
             angular.forEach(clone, function(value, index) {
                 value.parentFieldIndex = vm.fieldsArray.length;
             });
+            clone.uid = getRandomId();
             vm.fieldsArray.push(clone);
         }
+
+        function getRandomId() {
+            return 'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
+                function(c) {
+                    var r = Math.random() * 16 | 0, v = c == 'x' ? r : r & 0x3 | 0x8; return v.toString(16);
+                }
+            );
+        }
+
     }
 })();

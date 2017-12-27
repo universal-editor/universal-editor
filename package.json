@@ -1,11 +1,10 @@
 {
   "name": "universal-editor",
   "description": "Universal editor to edit the entities from RESTful service",
-  "version": "1.0.0-beta",
+  "version": "1.0.0",
   "scripts": {
     "dev": "webpack-dev-server --display-modules --progress --colors",
-    "dist": "webpack-dev-server -p",
-    "build": "webpack -p --progress --colors"
+    "build": "webpack --source --del & webpack -p --colors"
   },
   "keywords": [
     "editor",

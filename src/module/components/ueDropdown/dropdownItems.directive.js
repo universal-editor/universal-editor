@@ -13,7 +13,8 @@
             scope : {
                 options: '=',
                 isOpen: '=',
-                fieldSearch: '=',
+                fieldSearch: '=',                
+                fieldId: '=',
                 childCountField: '=',
                 onToggle: '=',
                 api: '=',

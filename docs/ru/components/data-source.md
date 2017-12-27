@@ -1,4 +1,4 @@
-### Источник данных (DataSource)
+### Источник данных (dataSource)
 
 Источник данных – центральная базовая структура, используемая Универсальным редактором при составлении конфигураций. DataSource имеет единый формат для описания работы с локальными и удаленными данными.
 
@@ -11,7 +11,7 @@
 Общий вид dataSource:
 
 ```javascript
-{
+var dataSource = {
     standard: 'YiiSoft',
     sortBy: {
         id: 'desc'
@@ -121,7 +121,7 @@
             },
             params: function(item) {
                 return {};
-            }
+            },
             method: 'GET',
             url: '/domain/entities'
         },
@@ -134,7 +134,7 @@
             },
             params: function(item) {
                 return {};
-            }
+            },
             method: 'GET',
             url: '/domain/entities/:id'
         }

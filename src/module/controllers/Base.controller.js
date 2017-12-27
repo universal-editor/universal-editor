@@ -5,7 +5,7 @@
         .module('universal-editor')
         .controller('BaseController', BaseController);
 
-    function BaseController($scope, EditEntityStorage, FilterFieldsStorage, $templateCache, $compile, $translate, $element) {
+    function BaseController($scope, EditEntityStorage, FilterFieldsStorage, $templateCache, $compile, $translate, $element, toastr) {
         /* jshint validthis: true */
         'ngInject';
         var vm = this;
@@ -14,6 +14,7 @@
         var componentValueChangedHandler;
 
         self.useable = true;
+        self.unShowComponentIfError = true;
 
         if (angular.isFunction(componentSettings.readonly)) {
             self.readonlyCallback = componentSettings.readonly;
@@ -197,7 +198,7 @@
                 return stack.filter(function(w) { return w.status === rejection.status; }).length > 0;
             }
             if (self.isComponent(rejection) && !rejection.canceled) {
-                if (rejection.config.canceled !== true) {
+                if (rejection.config && rejection.config.canceled !== true) {
                     self.loaded = true;
                     self.loadingData = false;
                     var isExist = compareStatus(self.warnings) || compareStatus(self.dangers);
@@ -229,7 +230,9 @@
                             self.warnings.push(error);
                         }
                         if (/^5/.test(rejection.status)) {
-                            self.dangers.push(error);
+                            $translate('RESPONSE_ERROR.SERVICE_UNAVAILABLE').then(function(translation) {
+                                toastr.error(translation);
+                            });
                         }
                         event.preventDefault();
                     }
@@ -281,7 +284,11 @@
             if (eventObject.isChildComponent) {
                 if (angular.isObject(eventObject) && angular.isArray(eventObject.fields)) {
                     var data = eventObject.fields.filter(function(f) {
-                        return f.field === self.fieldName;
+                        var fieldName = self.fieldName;
+                        if(self.setting.hasOwnProperty('parentFieldIndex')) {
+                            fieldName = self.fieldName.replace('[]', '[' + self.setting.parentFieldIndex + ']');
+                        }
+                        return f.field === fieldName;
                     });
                     if (data.length > 0) {
                         event.preventDefault();

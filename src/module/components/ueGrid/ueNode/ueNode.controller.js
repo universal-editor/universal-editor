@@ -54,10 +54,10 @@
           });
           function emitLoading() {
             var data = vm.selfField ? scope.item[vm.selfField] : scope.item;
-            scope.$broadcast('ue:componentDataLoaded', {
+            scope.$broadcast('ue:componentDataLoaded', angular.merge({
               $componentId: scope.componentId,
-              $value: data
-            });
+              $dataSource: vm.dataSource
+            }, data));
           }
         }
       };
@@ -126,7 +126,7 @@
           data: items,
           components: components,
           $id: vm.$componentId,
-          standart: vm.dataSource.standart,
+          standard: vm.dataSource.standard,
           childrenField: vm.childrenField,
           selfField: vm.selfField
         };
@@ -191,8 +191,8 @@
 
       vm.dndDragend = function() {
         var elemWhithClass = $document[0].getElementsByClassName('ue-dnd-parent-node');
-        if (!elemWhithClass.length) return; 
-        for(var i=0, len = elemWhithClass.length; i < len; i++) {
+        if (!elemWhithClass.length) return;
+        for (var i = 0, len = elemWhithClass.length; i < len; i++) {
           elemWhithClass[i].classList.remove('ue-dnd-parent-node');
         }
       };
@@ -201,7 +201,7 @@
         var placeholder = $document[0].getElementsByClassName('dndPlaceholder')[0];
         var parentElement = placeholder.parentNode;
 
-        while(parentElement.localName !== 'li' && parentElement !== null ) {
+        while (parentElement.localName !== 'li' && parentElement !== null) {
           parentElement = parentElement.parentNode;
         }
 

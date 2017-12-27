@@ -12,7 +12,8 @@
         }
     }
     & .field-wrapper-ue-group {
-        .btn-remove-item, .btn-add-item {
+        .btn-remove-item,
+        .btn-add-item {
             margin: 0 15px;
         }
         & .editor-group {
@@ -20,9 +21,12 @@
                 padding-left: 0;
             }
             & .item-array-wrapper .btn {
-              margin: 0 0 10px 15px;
+                margin: 0 0 10px 15px;
             }
             padding: 5px 0;
+        }
+        .field-error-wrapper {
+            padding-left: 15px;
         }
     }
 }

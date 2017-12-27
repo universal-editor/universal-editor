@@ -63,13 +63,13 @@ var C = {
 Пример со всеми настройками параметра `dragMode`:
 
 ```javascript
-{
+var dragModeComponent = {
     component: {
         name: 'ue-grid',
         settings: {            
             dataSource: {
                 standard: 'YiiSoft',
-                url: '//universal-backend.dev/rest/v1/staff',
+                url: '//universal-backend.test/rest/v1/staff',
                 sortBy: {
                     id: 'desc'
                 },

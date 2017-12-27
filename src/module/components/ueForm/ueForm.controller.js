@@ -26,9 +26,8 @@ import DataSource from '../../classes/dataSource.js';
                     component: {
                         name: 'ue-button',
                         settings: {
-                            label: $translate.instant('BUTTON.ACTIONS.DELETE'),
-                            action: 'delete',
-                            useBackUrl: true,
+                            label: $translate.instant('BUTTON.ACTIONS.PRESAVE'),
+                            action: 'presave'
                         }
                     }
                 },
@@ -36,8 +35,9 @@ import DataSource from '../../classes/dataSource.js';
                     component: {
                         name: 'ue-button',
                         settings: {
-                            label: $translate.instant('BUTTON.ACTIONS.PRESAVE'),
-                            action: 'presave'
+                            label: $translate.instant('BUTTON.ACTIONS.DELETE'),
+                            action: 'delete',
+                            useBackUrl: true,
                         }
                     }
                 }
@@ -54,7 +54,7 @@ import DataSource from '../../classes/dataSource.js';
             vm.errors = [];
             vm.entityId = '';
             vm.editorEntityType = 'new';
-            vm.editFooterBar = [];       
+            vm.editFooterBar = [];
             var dataSource = new DataSource(vm.componentSettings.dataSource);
             vm.idField = dataSource.primaryKey || 'id';
             var header = vm.componentSettings.header;
@@ -66,7 +66,7 @@ import DataSource from '../../classes/dataSource.js';
             }
 
             vm.width = !isNaN(+vm.componentSettings.width) ? vm.componentSettings.width : null;
-            vm.classFormComponent = '.col-md-12.col-xs-12.col-sm-12.col-lg-12 clear-padding-left';
+            vm.classFormComponent = 'col-md-12 col-xs-12 col-sm-12 col-lg-12 clear-padding-left';
 
             if (!!vm.width) {
                 if (vm.width > 12) {
@@ -93,7 +93,7 @@ import DataSource from '../../classes/dataSource.js';
             vm.isNewRecord = pk === null || pk === undefined;
 
             $timeout(function() {
-                if(vm.isNewRecord) {
+                if (vm.isNewRecord) {
                     vm.isLoading = false;
                 }
             }, 0)
@@ -206,7 +206,7 @@ import DataSource from '../../classes/dataSource.js';
                 return EditEntityStorage.constructOutputValue(vm.options, extended);
             };
         };
-        
+
         function updateButton(pk) {
             angular.forEach(vm.editFooterBar, function(button) {
                 button.entityId = pk;

@@ -41,7 +41,7 @@ import DataSource from '../../classes/dataSource.js';
             // reading settings for elements visible per page
             var settings = PaginationSettings.get(vm.options.$componentId)
             if(!settings) {
-                settings = PaginationSettings.set(vm.options.$componentId, vm.setting.component.settings)
+                settings = PaginationSettings.set(vm.options.$componentId, vm.setting.component.settings, vm.options.prefixGrid)
             }
             vm.possiblePages = settings.pageSizeOptions;
             vm.perPage = settings.pageSize;
@@ -164,10 +164,8 @@ import DataSource from '../../classes/dataSource.js';
         });
 
         function changePerPage() {
-            var settings = PaginationSettings.get(vm.options.$componentId);
-            settings.pageSize = vm.perPage;
-            PaginationSettings.set(vm.options.$componentId, settings, true);
-            changePage(new Event('dummy'), 1);
+            PaginationSettings.setPerPage(vm.options.$componentId, vm.perPage);
+            changePage(new Event('dummy'), {page: 1});
         }
 
         function changePage(event, pageItem) {
@@ -179,8 +177,7 @@ import DataSource from '../../classes/dataSource.js';
             var parentEntity = searchParameters[getKeyPrefix('parent')];
             vm.parent = parentEntity || null;
             vm.request.childId = vm.parent;
-            $location.search(getKeyPrefix('page'), pageItem.page);
-            $location.search(getKeyPrefix('per-page'), vm.perPage);
+            PaginationSettings.setPage(vm.options.$componentId, pageItem.page)
             $rootScope.$broadcast('ue:beforeComponentDataLoaded', {$id: vm.parentComponentId});
             ApiService.getItemsList(vm.request, true);
         }

@@ -13,7 +13,7 @@
             standard: 'YiiSoft',
 
             transport: {
-                url: '//universal-backend.dev/rest/v1/news'
+                url: '//universal-backend.test/rest/v1/news'
             },
             primaryKey: 'id',
             fields: [
@@ -47,12 +47,13 @@
                         name: 'ue-autocomplete',
                         settings: {
                             label: 'Category',
+                            delay: 1000,
                             valuesRemote: {
                                 fields: {
                                     value: 'id',
                                     label: 'title'
                                 },
-                                url: 'http://universal-backend.dev/rest/v1/news/categories'
+                                url: 'http://universal-backend.test/rest/v1/news/categories'
                             },
                             search: true
                         }
@@ -68,11 +69,12 @@
                     }
                 },
                 {
-                    name: 'description',
+                    name: 'text',
                     component: {
                         name: 'ue-textarea',
                         settings: {
-                            label: 'Text'
+                            label: 'Text',
+                            height: 17
                         }
                     }
                 },
@@ -88,7 +90,7 @@
                                     value: 'id',
                                     label: 'name'
                                 },
-                                url: 'http://universal-backend.dev/rest/v1/staff'
+                                url: 'http://universal-backend.test/rest/v1/staff'
                             },
                             multiple: true,
                             expandable: true,
@@ -107,7 +109,7 @@
                                     value: 'id',
                                     label: 'name'
                                 },
-                                url: 'http://universal-backend.dev/rest/v1/tags'
+                                url: 'http://universal-backend.test/rest/v1/tags'
                             },
                             multiple: true,
                             expandable: true
@@ -176,9 +178,9 @@
                                             fields: [
                                                 'id',
                                                 'published_at',
-                                                'category_id',
                                                 'title',
-                                                'description'
+                                                'category_id',
+                                                'text'
                                             ]
                                         },
                                         {
@@ -199,40 +201,7 @@
                                 }
                             }
                         }
-                    ],
-                    footer: {
-                        toolbar: [
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Save',
-                                        action: 'save',
-                                        sref: 'news'
-                                    }
-                                }
-                            },
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Apply',
-                                        action: 'presave'
-                                    }
-                                }
-                            },
-                            {
-                                component: {
-                                    name: 'ue-button',
-                                    settings: {
-                                        label: 'Delete',
-                                        action: 'delete',
-                                        sref: 'news'
-                                    }
-                                }
-                            }
-                        ]
-                    }
+                    ]
                 }
             }
         };

@@ -11,7 +11,7 @@
         var countryDataSource = {
             standard: 'YiiSoft',
             transport: {
-                url: '//universal-backend.dev/rest/v1/country'
+                url: '//universal-backend.test/rest/v1/country'
             },
             sortBy: {
                 id: 'desc'

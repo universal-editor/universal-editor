@@ -21,8 +21,8 @@
             } else {
                 $element.find('.filter-component').append(templateEditorFilter);
             }
-            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element  }));
-
+            angular.extend(vm, $controller('BaseController', { $scope: $scope, $element: $element }));
+            vm.setting.inline = true;
             settings = vm.setting.component.settings;
             vm.parentComponentId = vm.options.$componentId;
             vm.visiable = false;
@@ -44,7 +44,7 @@
             function proccessField(field) {
                 var fieldSettings = field.component.settings;
                 var validators = fieldSettings.validators || [];
-                var typeValidatorNumber = validators.filter(function(item) { return item.type === 'number'; }).length;                
+                var typeValidatorNumber = validators.filter(function(item) { return item.type === 'number'; }).length;
                 var group = {
                     label: fieldSettings.label,
                     operators: [],
@@ -64,14 +64,22 @@
                 };
 
                 /** convert to filter object from fields*/
-                fieldSettings.$toFilter = fieldSettings.$toFilter || function(operator, fieldValue, ctrl) {
+                fieldSettings.$toFilter = (fieldSettings.$toFilter || function(operator, fieldValue, ctrl) {
                     if (ctrl.isNumber === true) {
                         operator = ':text';
                     }
                     angular.forEach(fieldValue, function(value, key) {
                         if (operator && operator.indexOf(':text') !== -1) {
                             if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
-                                fieldValue[key] = operator.replace(':text', value);
+                                if (angular.isArray(value)) {
+                                    fieldValue[key] = value;
+                                } else {
+                                    if (angular.isObject(value)) {
+                                        fieldValue[key] = value[ctrl.fieldId];
+                                    } else {
+                                        fieldValue[key] = operator.replace(':text', value);
+                                    }
+                                }
                                 if (ctrl.isNumber === true && !isNaN(+fieldValue[key])) {
                                     fieldValue[key] = +fieldValue[key];
                                 }
@@ -87,10 +95,10 @@
                         }
                     });
                     return fieldValue;
-                };
+                }).bind(vm);
 
                 /** parse filter objects with operators*/
-                fieldSettings.$parseFilter = function(model, filterValue) {
+                fieldSettings.$parseFilter = (fieldSettings.$parseFilter || function(model, filterValue) {
                     var componentSettings = model.setting.component.settings;
                     var parentComponentId = model.parentComponentId;
                     var output = {};
@@ -115,8 +123,11 @@
                     if (model.isNumber === true) {
                         value = +value;
                     }
-                    if (angular.isArray(value)) {
+                    if (angular.isArray(value) && model.multiple !== true) {
                         value = value[model.options.filterParameters.index];
+                    }
+                    if (model.isTree && model.multiple !== true) {
+                        value = [value];
                     }
                     if (field.component.settings.$fieldType === 'array' && value) {
                         if (model.singleValue) {
@@ -137,17 +148,25 @@
                     } else {
                         model.fieldValue = value;
                         if (model.addToSelected && value) {
-                            model.fieldValue = {};
-                            model.fieldValue[model.fieldId] = value;
-                            model.addToSelected(model.fieldValue);
+                            if (angular.isArray(value)) {
+                                model.fieldValue = [];
+                                value.forEach(function(v) {
+                                    model.addToSelected(v);
+                                });
+                            } else {
+                                model.fieldValue = {};
+                                model.fieldValue[model.fieldId] = value;
+                                model.addToSelected(model.fieldValue);
+                            }
                             if (angular.isFunction(model.loadDataById)) {
                                 model.loadDataById(value);
                             }
                         }
                     }
-                    vm.visiable = true;
+                    vm.visiable = true;                    
+                    elementParent.find('.filter-connect').show();
                     return output;
-                };
+                }).bind(vm);
 
                 /*temprory custom logic for operators */
 
@@ -185,7 +204,13 @@
                                 settings: {
                                     label: 'Применить',
                                     action: function(componentId) {
-                                        FilterFieldsStorage.apply(componentId);
+                                        let ctrls = FilterFieldsStorage.getFilterFieldController(componentId), valid = true;
+                                        if (ctrls) {
+                                            valid = !ctrls.some(ctrl => ctrl.validationInputError);
+                                        }
+                                        if (valid) {
+                                            FilterFieldsStorage.apply(componentId);
+                                        }
                                     }
                                 }
                             }
@@ -224,11 +249,12 @@
                     FilterFieldsStorage.clear(vm.options.$componentId);
                 }
             };
-        };
 
-        function toggleFilterVisibility() {
-            vm.visiable = !vm.visiable;
-        }
+            function toggleFilterVisibility() {
+                vm.visiable = !vm.visiable;
+                elementParent.find('.filter-connect').toggle();
+            }
+        };
 
         $element.on('$destroy', function() {
             FilterFieldsStorage.unRegisterFilterController(vm.options);

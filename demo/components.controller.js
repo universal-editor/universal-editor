@@ -10,7 +10,7 @@
         var demoDataSource = {
             standard: 'YiiSoft',
             transport: {
-                url: '//universal-backend.dev/rest/v1/staff'
+                url: '//universal-backend.test/rest/v1/staff'
             },
             fields: [
                 {
@@ -90,7 +90,7 @@
                             value: 'id',
                             label: 'name'
                         },
-                        url: 'http://universal-backend.dev/rest/v1/country'
+                        url: 'http://universal-backend.test/rest/v1/country'
                     }
                 }
             }
@@ -105,7 +105,7 @@
                             value: 'id',
                             label: 'name'
                         },
-                        url: 'http://universal-backend.dev/rest/v1/country'
+                        url: 'http://universal-backend.test/rest/v1/country'
                     },
                     multiple: true
                 }
@@ -138,7 +138,7 @@
                             value: 'id',
                             label: 'name'
                         },
-                        url: 'http://universal-backend.dev/rest/v1/country'
+                        url: 'http://universal-backend.test/rest/v1/country'
                     }
                 }
             }
@@ -1242,7 +1242,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                        url: 'http://universal-backend.test/rest/v1/country'
                                                     },
                                                     defaultValue: [1, 2]
                                                 }
@@ -1257,7 +1257,7 @@
                                                         fields: {
                                                             value: 'id'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                        url: 'http://universal-backend.test/rest/v1/country'
                                                     }
                                                 }
                                             }
@@ -1336,7 +1336,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                        url: 'http://universal-backend.test/rest/v1/country'
                                                     }
                                                 }
                                             }
@@ -1350,7 +1350,7 @@
                                                         fields: {
                                                             value: 'id'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                        url: 'http://universal-backend.test/rest/v1/country'
                                                     }
                                                 }
                                             }
@@ -1451,7 +1451,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                        url: 'http://universal-backend.test/rest/v1/country'
                                                     },
                                                     defaultValue: '4'
                                                 }
@@ -1468,7 +1468,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                        url: 'http://universal-backend.test/rest/v1/country'
                                                     },
                                                     defaultValue: [4, 5]
                                                 }
@@ -1542,7 +1542,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                        url: 'http://universal-backend.test/rest/v1/country'
                                                     }
                                                 }
                                             }
@@ -1573,7 +1573,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                        url: 'http://universal-backend.test/rest/v1/country'
                                                     },
                                                     placeholder: 'Country',
                                                     search: true
@@ -1590,7 +1590,7 @@
                                                             value: 'id',
                                                             label: 'title'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/news/categories?expand=child_count'
+                                                        url: 'http://universal-backend.test/rest/v1/news/categories?expand=child_count'
                                                     },
                                                     tree: {
                                                         selectBranches: false
@@ -1608,7 +1608,7 @@
                                                             value: 'id',
                                                             label: 'title'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/news/categories?expand=child_count'
+                                                        url: 'http://universal-backend.test/rest/v1/news/categories?expand=child_count'
                                                     },
                                                     tree: {
                                                         parentField: 'parent_id',
@@ -1629,7 +1629,7 @@
                                                             value: 'id',
                                                             label: 'title'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/news/categories?expand=child_count'
+                                                        url: 'http://universal-backend.test/rest/v1/news/categories?expand=child_count'
                                                     },
                                                     tree: {
                                                         parentField: 'parent_id',
@@ -1651,7 +1651,7 @@
                                                             value: 'id',
                                                             label: 'title'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/news/categories?expand=child_count'
+                                                        url: 'http://universal-backend.test/rest/v1/news/categories?expand=child_count'
                                                     },
                                                     tree: {
                                                         parentField: 'parent_id',
@@ -1674,7 +1674,7 @@
                                                             value: 'id',
                                                             label: 'title'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/news/categories?expand=child_count'
+                                                        url: 'http://universal-backend.test/rest/v1/news/categories?expand=child_count'
                                                     },
                                                     tree: {
                                                         parentField: 'parent_id',
@@ -1693,9 +1693,11 @@
                                 name: 'ue-group',
                                 settings: {
                                     label: 'Autocomplete',
+                                    countInLine:2,
                                     fields: [
                                         {
                                             component: {
+                                                $id: 'autocomplete_id',
                                                 name: 'ue-autocomplete',
                                                 settings: {
                                                     label: 'ue-autocomplete with local data value=array, defaultValue = "Variable 1"',
@@ -1709,7 +1711,8 @@
                                             }
                                         },
                                         {
-                                            component: {
+                                            component: {                                                
+                                                $id: 'autocomplete_id1',
                                                 name: 'ue-autocomplete',
                                                 settings: {
                                                     label: 'ue-autocomplete with local data value=array (defaultValue = ["Variable 1", "Variable 2"])',
@@ -1733,7 +1736,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                        url: 'http://universal-backend.test/rest/v1/country'
                                                     },
                                                     defaultValue: '4'
                                                 }
@@ -1750,7 +1753,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/country'
+                                                        url: 'http://universal-backend.test/rest/v1/country'
                                                     },
                                                     defaultValue: [4, 5]
                                                 }
@@ -1766,7 +1769,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/staff'
+                                                        url: 'http://universal-backend.test/rest/v1/staff'
                                                     }
                                                 }
                                             }
@@ -1795,7 +1798,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/staff'
+                                                        url: 'http://universal-backend.test/rest/v1/staff'
                                                     },
                                                     multiple: true
                                                 }
@@ -1897,7 +1900,7 @@
                                                             value: 'id',
                                                             label: 'name'
                                                         },
-                                                        url: 'http://universal-backend.dev/rest/v1/staff'
+                                                        url: 'http://universal-backend.test/rest/v1/staff'
                                                     },
                                                     draggable: true,
                                                     multiple: true
@@ -1971,7 +1974,7 @@
                                                 name: 'ue-button',
                                                 settings: {
                                                     label: 'Send request to server',
-                                                    href: '//universal-backend.dev/rest/v1/staff',
+                                                    href: '//universal-backend.test/rest/v1/staff',
                                                     handlers: {
                                                         before: function() {
                                                             alert('Before trigger');
@@ -1985,7 +1988,7 @@
                                                 name: 'ue-button',
                                                 settings: {
                                                     label: 'Send request to server and reject',
-                                                    href: '//universal-backend.dev/rest/v1/staff',
+                                                    href: '//universal-backend.test/rest/v1/staff',
                                                     handlers: {
                                                         before: function(config) {
                                                             return false;
@@ -2045,7 +2048,7 @@
                                                                 settings: {
                                                                     dataSource: {
                                                                         standard: 'YiiSoft',
-                                                                        url: '//universal-backend.dev/rest/v1/staff',
+                                                                        url: '//universal-backend.test/rest/v1/staff',
                                                                         fields: []
                                                                     },
                                                                     body: [
@@ -2357,7 +2360,7 @@
                                                                             value: 'id',
                                                                             label: 'title'
                                                                         },
-                                                                        url: 'http://universal-backend.dev/rest/v1/news/categories'
+                                                                        url: 'http://universal-backend.test/rest/v1/news/categories'
                                                                     }
                                                                 }
                                                             }
@@ -2373,7 +2376,41 @@
                                                                             value: 'id',
                                                                             label: 'title'
                                                                         },
-                                                                        url: 'http://universal-backend.dev/rest/v1/news?filter={category_id::dependValue}'
+                                                                        url: 'http://universal-backend.test/rest/v1/news?filter={category_id::dependValue}'
+                                                                    },
+                                                                    depend: 'dependencies_category'
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            name: 'dependencies_news',
+                                                            component: {
+                                                                name: 'ue-checkbox',
+                                                                settings: {
+                                                                    label: 'News',
+                                                                    valuesRemote: {
+                                                                        fields: {
+                                                                            value: 'id',
+                                                                            label: 'title'
+                                                                        },
+                                                                        url: 'http://universal-backend.test/rest/v1/news?filter={category_id::dependValue}'
+                                                                    },
+                                                                    depend: 'dependencies_category'
+                                                                }
+                                                            }
+                                                        },
+                                                         {
+                                                            name: 'dependencies_news',
+                                                            component: {
+                                                                name: 'ue-radiolist',
+                                                                settings: {
+                                                                    label: 'News',
+                                                                    valuesRemote: {
+                                                                        fields: {
+                                                                            value: 'id',
+                                                                            label: 'title'
+                                                                        },
+                                                                        url: 'http://universal-backend.test/rest/v1/news?filter={category_id::dependValue}'
                                                                     },
                                                                     depend: 'dependencies_category'
                                                                 }
@@ -2391,5 +2428,8 @@
                 }
             }
         };
+      $timeout(function() {
+            $scope.$broadcast('ue:errorComponentDataLoading', {status: 400, $componentId: 'autocomplete_id', config: {canceled: false}});
+        });
     }
 })();

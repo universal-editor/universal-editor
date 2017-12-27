@@ -13,13 +13,6 @@
     }
     & .filter-wrapper-body.filter-component {
         max-width: 700px;
-        & .filter-connect {
-            width: 32px;
-            height: 16px;
-            position: absolute;
-            background-color: #cbd6da;
-            margin-top: -12px;
-        }
         & .editor-filter {
             margin-bottom: 10px;
             border-bottom: 1px solid #9ca9ae;
@@ -30,8 +23,14 @@
             min-width: 600px;
             display: inline-block;
             width: auto;
+            .dropdown .select-input {
+                height: auto;
+            }
             label {
                 padding-top: 7px;
+            }
+            .selected-item label {
+                padding-top: 0;
             }
             & .editor-filter-wrapper {
                 & .editor-filter-body {

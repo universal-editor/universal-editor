@@ -11,7 +11,7 @@
         var vm = this;
         var staffDataSource = {
             standard: 'YiiSoft',
-            url: '//universal-backend.dev/rest/v1/staff',
+            url: '//universal-backend.test/rest/v1/staff',
             primaryKey: 'id',
             parentField: 'parent_id',
             fields: [
@@ -72,7 +72,7 @@
                                     value: 'id',
                                     label: 'name'
                                 },
-                                url: 'http://universal-backend.dev/rest/v1/country'
+                                url: 'http://universal-backend.test/rest/v1/country'
                             },
                             multiple: false,
                             placeholder: 'country of residence'
@@ -90,7 +90,7 @@
                                     value: 'id',
                                     label: 'name'
                                 },
-                                url: 'http://universal-backend.dev/rest/v1/staff'
+                                url: 'http://universal-backend.test/rest/v1/staff'
                             },
                             multiple: false
                         }
@@ -141,9 +141,9 @@
                 }
             ],
             transport: {
-                url: '//universal-backend.dev/rest/v1/staff',
+                url: '//universal-backend.test/rest/v1/staff',
                 one: {
-                    url: '//universal-backend.dev/rest/v1/staff/:id',
+                    url: '//universal-backend.test/rest/v1/staff/:id',
                     headers: function() {
                         return {};
                     },
@@ -170,7 +170,7 @@
                     }
                 },
                 create: {
-                    url: '//universal-backend.dev/rest/v1/staff',
+                    url: '//universal-backend.test/rest/v1/staff',
                     headers: function() {
                         return {};
                     },
@@ -197,7 +197,7 @@
                     }
                 },
                 update: {
-                    url: '//universal-backend.dev/rest/v1/staff/:id',
+                    url: '//universal-backend.test/rest/v1/staff/:id',
                     headers: function() {
                         return {};
                     },
@@ -224,7 +224,7 @@
                     }
                 },
                 delete: {
-                    url: '//universal-backend.dev/rest/v1/staff/:id',
+                    url: '//universal-backend.test/rest/v1/staff/:id',
                     headers: function() {
                         return {};
                     },

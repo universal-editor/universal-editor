@@ -37,10 +37,10 @@ import DataSource from '../../classes/dataSource.js';
                         }
                     });
                     function emitLoading() {
-                        scope.$broadcast('ue:componentDataLoaded', {
+                        scope.$broadcast('ue:componentDataLoaded', angular.merge({
                             $componentId: scope.componentId,
-                            $value: scope.item
-                        });
+                            $dataSource: vm.dataSource
+                        }, scope.item));
                     }
                 }
             };
@@ -167,6 +167,9 @@ import DataSource from '../../classes/dataSource.js';
                 vm.entityType = vm.setting.component.settings.mixedMode.entityType;
                 vm.subType = vm.setting.component.settings.mixedMode.fieldType;
                 vm.collectionType = vm.setting.component.settings.mixedMode.collectionType;
+                if (vm.options.mixedMode && angular.isArray(vm.options.mixedMode.contextMenu)) {
+                    vm.mixContextLinks = vm.options.mixedMode.contextMenu;
+                }
             }
             vm.request = {
                 childId: vm.parent,
@@ -257,7 +260,7 @@ import DataSource from '../../classes/dataSource.js';
                     if (angular.isUndefined(newControl.component.settings.dataSource)) {
                         newControl.component.settings.dataSource = vm.dataSource;
                         if (newControl.component.name == 'ue-pagination' && !PaginationSettings.get(vm.$componentId)) {
-                            PaginationSettings.set(vm.$componentId, newControl.component.settings);
+                            PaginationSettings.set(vm.$componentId, newControl.component.settings, vm.options.prefixGrid, true);
                         }
                     }
                     newControl.paginationData = {};
@@ -447,7 +450,7 @@ import DataSource from '../../classes/dataSource.js';
                 vm.request.childId = vm.parent;
                 if (vm.request.childId) {
                     vm.options.isLoading = true;
-                    
+
                     ApiService.getItemById(vm.request.childId, vm.options)
                         .then(function(item) {
                             var parentId = item[vm.request.parentField] || null;
@@ -572,7 +575,7 @@ import DataSource from '../../classes/dataSource.js';
                             data: vm.data,
                             components: components,
                             $id: vm.$componentId,
-                            standart: vm.dataSource.standart,
+                            standard: vm.dataSource.standard,
                             childrenField: vm.childrenField,
                             selfField: vm.selfField
                         };

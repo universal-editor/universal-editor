@@ -1,4 +1,7 @@
-div(ng-if="!vm.loadingData")
-    span(ng-bind="::vm.previewValue", ng-if = "!vm.multiple")
-    div(ng-repeat="value in vm.previewValue track by $index", ng-if = "vm.multiple")
-        span(ng-bind="value")
+.disabled-view
+    .loader-search-wrapper(ng-show="vm.loadingData")
+        .loader-search(translate="LOADING")
+    div(ng-if="!vm.loadingData")
+        span(ng-bind="::vm.previewValue", ng-if = "!vm.multiple")
+        div(ng-repeat="value in vm.previewValue track by $index", ng-if = "vm.multiple")
+            span(ng-bind="value")

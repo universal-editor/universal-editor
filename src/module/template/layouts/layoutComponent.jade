@@ -18,6 +18,6 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
     div(ng-if="vm.warnings.length === 0 && vm.dangers.length === 0") 
         .loader-search-wrapper(ng-show="vm.loadingData")
             .loader-search(translate="LOADING")
-        div(ng-if="!vm.multiple && !vm.loadingData && vm.previewValue") {{::vm.previewValue}}
+        div(ng-if="!vm.multiple && !vm.loadingData && vm.previewValue !== null && vm.previewValue !== undefined") {{::vm.previewValue}}
         div(ng-repeat="value in vm.previewValue track by $index", ng-if = "vm.multiple && !vm.loadingData")
             span(ng-bind="value")

@@ -57,13 +57,15 @@
             if (parent && angular.isObject(dataSource) && dataSource.parentField) {
                 var data = { editorEntityType: 'new', $componentId: id };
                 data[dataSource.parentField] = parent;
+                data.$dataSource = dataSource;
                 $rootScope.$broadcast('ue:componentDataLoaded', data);
             }
         };
 
         this.addFieldController = function(ctrl, isGroup) {
             var id = ctrl.parentComponentId || ctrl.$componentId;
-            collection.push(ctrl);
+            collection.push(ctrl);            
+            ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
             if (id) {
                 if (isGroup === true) {
                     groups[id] = groups[id] || [];
@@ -72,7 +74,6 @@
                     storage[id] = storage[id] || [];
                     storage[id].push(ctrl);
                 }
-                ctrl.$fieldHash = Math.random().toString(36).substr(2, 15);
             }
         };
 
@@ -136,7 +137,7 @@
                         entityObject.$apiData = entityObject.$apiData || fCtrl.data;
                     }
                     if (angular.isObject(request)) {
-                        request.isError = (fCtrl.error.length === 0) && request.isError;
+                        request.isError = (fCtrl.error.length === 0 && !fCtrl.validationInputError) && request.isError;
                     }
                     if (fCtrl.disabled !== true && fCtrl.useable !== false && angular.isFunction(fCtrl.getFieldValue)) {
                         var value = {};

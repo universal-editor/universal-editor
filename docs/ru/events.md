@@ -90,9 +90,64 @@ $rootScope.$on('ue-grid:contextMenu', function(e, data) {
 });
 ```
 
-### ue-form:componentValueChanged
+### ue:componentValueChanged
 
-Событие вызывается при изменениях в модели данных в ue-form компоненте, если нужно отследить изменение значения компонентов.
+Событие вызывается при изменениях в модели данных в `ue-form` компоненте, но слушается всеми компонентами включенные в компонент формы. Оно предназначено для обновления таких динамичных свойств, как useable и readonly (если они заданы с помощью коллбеков).
+Событие принимает параметр `data` – измененное значение компонента `ue-form`. Вместе с тем `data.$componentId` хранит id компонента вызвавшее событие (а именно компонента формы)
+
+```javascript
+
+vm.ueConfig = {
+    component: {
+        $id: 'form_id',
+        name: 'ue-form',
+        settings: {
+            dataSource: false,
+            primaryKeyValue: null,
+            body: [
+                    {
+                    name: 'id',
+                    component: {
+                        name: 'ue-string',
+                        settings: {
+                            label: 'ID',
+                            validators: [
+                                {
+                                    type: 'number'
+                                }
+                            ],
+                            disabled: true
+                        }
+                    }
+                },
+                {
+                    name: 'title',
+                    component: {
+                        name: 'ue-string',
+                        settings: {
+                            label: 'Title'
+                        }
+                    }
+                }
+            ]
+        }
+    }
+};
+
+$scope.$on('ue:componentValueChanged', function(event, data) {
+    if(data.$componentId === 'form_id') {
+        // обработка события
+        /** 
+            Пример объекта 
+                data = {
+                    $componentId: 'form_id',
+                    id: 2568,
+                    title: 'Название категории'
+                }
+        */
+    } 
+});
+```
 
 ### ue-group:forceUseable и ue-group:forceReadonly
 
