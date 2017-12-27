@@ -1,6 +1,25 @@
 # Change log
 
-## [Unreleased]
+## 1.0.0 - 2017-12-27
+### Added
+* Added compressed version of the JS file and source map.
+* Run app in dev mode with production version of JS code using `prod` option: `npm run dev --prod`.
+
+### Changed
+* Hiding the error message in UI when you re-enter.
+* Improved logic for sending a requests to the server in `ue-autocomplete` component.
+* Improved errors reporting in UI for `ue-autocomplete` component.
+
+### Fixed
+* Fixed errors in documentation.
+* Corrected work of the components at toolbar section (`ue-grid` component).
+* Fixed UI bugs of tree mode in `ue-grid` component.
+* Fixed view for zero value in preview regim with `ue-string` component.
+* Fixed default order of the buttons in `ue-form` component.
+* Fixed putting component id in the children components.
+* `ue-pagination` keeps track setting `paramsPrefix` of `ue-grid` component.
+* Fixed logic of the mixed mode in `ue-grid` component.
+* Fixed work `ue-dropdown` component in filtering mode.
 
 ## 1.0.0-beta - 2017-09-08 
 ### Added
