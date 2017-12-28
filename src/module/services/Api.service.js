@@ -77,7 +77,7 @@ import DataSource from '../classes/dataSource.js';
                 config.pagination.perPage = params['per-page'];
                 delete params['per-page'];
             }
-            
+
             config.params = params || {};
 
             if (!!request.options.mixedMode) {
@@ -694,7 +694,7 @@ import DataSource from '../classes/dataSource.js';
                     outputSet = storage;
                 }
             }
-            if(!list) {
+            if (!list) {
                 return outputSet;
             } else if (outputSet.length === list.length && list.length > 0) {
                 outputSet = list.map(id => outputSet.filter(a => a[keyValue] === id)[0]);
@@ -974,7 +974,9 @@ import DataSource from '../classes/dataSource.js';
             var parentComponentId = config.parentComponentId;
             var searchString = $location.search();
             let idField = config.$dataSource.primaryKey;
-            data.$dataSource = config.$dataSource;
+            if (angular.isObject(data)) {
+                data.$dataSource = config.$dataSource;
+            }
             switch (config.action) {
                 case 'read':
                     if (config.request && config.request.success) {
