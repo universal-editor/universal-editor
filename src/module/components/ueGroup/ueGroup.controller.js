@@ -77,7 +77,7 @@
                     field = value;
                 }
                 if (field) {
-                    if (vm.setting.name && field.name.indexOf(vm.setting.name) === -1) {
+                    if (vm.setting.name && field.name && field.name.indexOf(vm.setting.name) === -1) {
                         field.name = vm.setting.name + '.' + field.name;
                     }
                     if (vm.fieldName && vm.resourceType) {

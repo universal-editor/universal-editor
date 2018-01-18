@@ -87,7 +87,7 @@
         .module('universal-editor')
         .run(universalEditorRun);
 
-    function universalEditorRun($rootScope, $location, $state, EditEntityStorage, FilterFieldsStorage, ApiService) {
+    function universalEditorRun($rootScope, $location, $state, EditEntityStorage, FilterFieldsStorage, ApiService, $timeout) {
         'ngInject';
         var itemsSelector = document.querySelectorAll('.nav.nav-tabs .item');
 
@@ -105,7 +105,9 @@
             });
 
             if (FilterFieldsStorage.filterSearchString) {
-                $location.search(FilterFieldsStorage.filterSearchString);
+                $timeout(function() {
+                    $location.search(angular.merge(FilterFieldsStorage.filterSearchString || {}, $location.search() || {}));
+                });
             }
             ApiService.alreadyRequested.length = 0;
         });

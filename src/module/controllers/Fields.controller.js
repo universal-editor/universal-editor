@@ -457,7 +457,8 @@
                         equalPreviewValue();
                     }
                 }
-                if (data.hasOwnProperty(self.fieldName)) {
+                
+                if (self.fieldName && data.hasOwnProperty(self.fieldName.split('.')[0].replace('[]', ''))) {
                     let dataSource = $scope.getParentDataSource();
                     if (dataSource && data.$dataSource && data.$dataSource.$hash === dataSource.$hash || data.$dataSource === false || dataSource === false || !data.hasOwnProperty('$dataSource')) {
                         $scope.data = self.data = data;

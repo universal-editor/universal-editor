@@ -151,7 +151,7 @@
             if (!scope.$parent) {
                 return false;
             }
-            if (scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.$id === id) {
+            if (scope.vm && scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.$id === id) {
                 return true;
             }
             return isParentComponent(id, scope.$parent);
@@ -162,7 +162,7 @@
             if (angular.isObject(id)) {
                 id = id.$componentId || id.$id;
             }
-            return scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.$id === id;
+            return scope.vm && scope.vm.setting && scope.vm.setting.component && scope.vm.setting.component.$id === id;
         };
 
         self.getParentSetting = function getParentSetting(scope) {
@@ -170,7 +170,7 @@
             if (!scope.$parent) {
                 return null;
             }
-            if (scope.vm.setting && scope.vm.setting.component) {
+            if (scope.vm && scope.vm.setting && scope.vm.setting.component) {
                 return scope.vm.setting;
             }
             return getParentSetting(scope);
@@ -181,13 +181,15 @@
             if (!scope.$parent) {
                 return null;
             }
-            if (name) {
-                if (scope.vm.setting && scope.vm.setting.name && (scope.vm.setting.name === name)) {
-                    return scope.vm;
-                }
-            } else {
-                if (scope.vm.setting && scope.vm.setting.component) {
-                    return scope.vm;
+            if (scope.vm) {
+                if (name) {
+                    if (scope.vm.setting && scope.vm.setting.name && (scope.vm.setting.name === name)) {
+                        return scope.vm;
+                    }
+                } else {
+                    if (scope.vm.setting && scope.vm.setting.component) {
+                        return scope.vm;
+                    }
                 }
             }
             return getParentComponent(name, scope.$parent);
@@ -285,7 +287,7 @@
                 if (angular.isObject(eventObject) && angular.isArray(eventObject.fields)) {
                     var data = eventObject.fields.filter(function(f) {
                         var fieldName = self.fieldName;
-                        if(self.setting.hasOwnProperty('parentFieldIndex')) {
+                        if (self.setting.hasOwnProperty('parentFieldIndex')) {
                             fieldName = self.fieldName.replace('[]', '[' + self.setting.parentFieldIndex + ']');
                         }
                         return f.field === fieldName;
