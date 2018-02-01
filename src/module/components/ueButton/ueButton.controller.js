@@ -83,7 +83,7 @@
             EditEntityStorage.addFieldController(vm);
 
 
-            function clickLink() {
+            function clickLink(e) {
                 var params = {
                     pk: vm.entityId
                 },
@@ -91,6 +91,7 @@
                     searchString = $location.search();
                 $state.params.$entityId = vm.entityId;
                 vm.stateParams = { pk: vm.entityId || 'new' };
+                vm.lastClickEvent = e;
                 if (angular.isObject(vm.state)) {
                     vm.stateName = vm.state.name;
                     vm.stateParams = vm.state.parameters;
@@ -118,10 +119,8 @@
                     searchString.back = $state.current.name;
                     if (vm.back) {
                         delete searchString.back;
-                    }
-                    $state.go(vm.stateName, vm.stateParams).then(function() {
-                        $location.search(searchString);
-                    });
+                    }                  
+                    $state.go(vm.stateName, vm.stateParams);
                 } else if (angular.isString(vm.url)) {
                     if (!!vm.target) {
                         window.open(vm.url, vm.target);
@@ -154,7 +153,7 @@
                 });
             }
 
-            function clickService() {
+            function clickService(e) {
 
                 if (vm.options.isLoading || (vm.disabled && vm.setting.buttonClass !== 'context')) {
                     return;
