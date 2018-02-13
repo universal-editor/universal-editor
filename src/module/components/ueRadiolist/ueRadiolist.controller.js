@@ -20,6 +20,8 @@
             vm.initDataSource = true;
 
             componentSettings = vm.setting.component.settings;
+            let remotePropertiesContainer = componentSettings.valuesRemote || componentSettings;
+
             vm.inline = componentSettings.inline === true;
 
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
@@ -38,8 +40,8 @@
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
                 if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
-                    if (componentSettings.$loadingPromise) {
-                        componentSettings.$loadingPromise.then(function(optionValues) {
+                    if (remotePropertiesContainer && remotePropertiesContainer.$loadingPromise) {
+                        remotePropertiesContainer.$loadingPromise.then(function(optionValues) {
                             vm.optionValues = optionValues;
                             vm.equalPreviewValue();
                         }).finally(function() {
@@ -53,10 +55,10 @@
         function dependUpdate(dependField, dependValue) {
             if (dependValue && dependValue !== '') {
                 vm.loadingData = true;
-                if (!componentSettings.$loadingPromise || componentSettings.$loadingPromise.$$state !== 0) {
-                    componentSettings.$loadingPromise = depend();
+                if (!remotePropertiesContainer.$loadingPromise || remotePropertiesContainer.$loadingPromise.$$state !== 0) {
+                    remotePropertiesContainer.$loadingPromise = depend();
                 } else {
-                    componentSettings.$loadingPromise.then(depend);
+                    remotePropertiesContainer.$loadingPromise.then(depend);
                 }
 
                 function depend() {

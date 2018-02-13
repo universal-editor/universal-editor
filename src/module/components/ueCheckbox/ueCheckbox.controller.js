@@ -28,6 +28,7 @@
 
         vm.$onInit = function() {
             componentSettings = vm.setting.component.settings;
+            let remotePropertiesContainer = componentSettings.valuesRemote || componentSettings;
             componentSettings.$fieldType = 'array';
             vm.optionValues = [];
             vm.inputValue = '';
@@ -38,7 +39,7 @@
             vm.indeterminate = false;
             vm.initDataSource = true;
 
-            if (!componentSettings.valuesRemote && !componentSettings.values) {
+            if (!remotePropertiesContainer && !componentSettings.values) {
                 componentSettings.templates = componentSettings.templates || {};
                 componentSettings.templates.preview = 'module/components/ueCheckbox/previewTemplate.html';
             }
@@ -74,8 +75,8 @@
                 if (vm.isParentComponent(data) && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
                     if (!vm.singleValue) {
-                        if (componentSettings.$loadingPromise) {
-                            componentSettings.$loadingPromise.then(function(optionValues) {
+                        if (remotePropertiesContainer && remotePropertiesContainer.$loadingPromise) {
+                            remotePropertiesContainer.$loadingPromise.then(function(optionValues) {
                                 vm.optionValues = optionValues;
                                 vm.equalPreviewValue();
                             }).finally(function() {
@@ -119,12 +120,11 @@
         function dependUpdate(dependField, dependValue) {
             if (dependValue && dependValue !== '') {
                 vm.loadingData = true;
-                if (!componentSettings.$loadingPromise || componentSettings.$loadingPromise.$$state !== 0) {
-                    componentSettings.$loadingPromise = depend();
+                if (!remotePropertiesContainer.$loadingPromise || remotePropertiesContainer.$loadingPromise.$$state !== 0) {
+                    remotePropertiesContainer.$loadingPromise = depend();
                 } else {
-                    componentSettings.$loadingPromise.then(depend);
+                    remotePropertiesContainer.$loadingPromise.then(depend);
                 }
-
                 function depend() {
                     var defer = $q.defer();
                     let candidates = ApiService.getFromStorage(vm.setting, null, { dependValue: dependValue });

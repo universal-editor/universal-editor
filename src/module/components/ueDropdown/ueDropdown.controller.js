@@ -36,6 +36,8 @@
                 selectedStorageComponent = componentSettings.values.$selectedStorage;
             }
 
+            let remotePropertiesContainer = componentSettings.valuesRemote || componentSettings;
+
             possibleValues = angular.element($element[0].getElementsByClassName('possible-scroll')[0]);
 
             vm.parentValue = !vm.depend;
@@ -76,12 +78,12 @@
                 if (dependValue && dependValue !== '') {
                     vm.loadingData = true;
                     vm.parentValue = false;
-                    if (!componentSettings.$loadingPromise || componentSettings.$loadingPromise.$$state !== 0) {
-                        componentSettings.$loadingPromise = depend();
+                    if (!remotePropertiesContainer.$loadingPromise || remotePropertiesContainer.$loadingPromise.$$state !== 0) {
+                        remotePropertiesContainer.$loadingPromise = depend();
                     } else {
-                        componentSettings.$loadingPromise.then(depend);
+                        remotePropertiesContainer.$loadingPromise.then(depend);
                     }
-                    componentSettings.$loadingPromise.then(function() {
+                    remotePropertiesContainer.$loadingPromise.then(function() {
                         vm.possibleValues = filter(angular.copy(vm.optionValues), vm.filterText || '');
                         if (vm.fieldValue) {
                             loadDataById(vm.fieldValue).finally(function() {
@@ -97,7 +99,7 @@
                         var defer = $q.defer();
                         let candidates = ApiService.getFromStorage(vm.setting, null, { dependValue: dependValue });
                         if (!candidates) {
-                            var url = ApiService.getUrlDepend(componentSettings.valuesRemote.url, {}, dependField, dependValue);
+                            var url = ApiService.getUrlDepend(remotePropertiesContainer.url, {}, dependField, dependValue);
                             var config = {
                                 url: url,
                                 method: 'GET',
@@ -186,8 +188,9 @@
                 if (vm.isParentComponent(data) && !event.defaultPrevented) {
                     vm.data = data;
                     $scope.onLoadDataHandler(event, data);
-                    if (componentSettings.$loadingPromise) {
-                        componentSettings.$loadingPromise.then(function(items) {
+
+                    if (remotePropertiesContainer && remotePropertiesContainer.$loadingPromise) {
+                        remotePropertiesContainer.$loadingPromise.then(function(items) {
                             allOptions = allOptions.length ? allOptions : items;
                             vm.optionValues = [];
                             fillControl(allOptions);
@@ -196,8 +199,7 @@
                         }).finally(function() {
                             vm.loadingData = false;
                         });
-                    }
-                    if (!vm.isSendRequest && !vm.depend) {
+                    } else  if (!vm.isSendRequest && !vm.depend) {
                         loadDataById(vm.fieldValue).finally(function() {
                             vm.loadingData = false;
                         });
@@ -550,8 +552,8 @@
                 } else {
                     vm.fieldValue = vm.isTree ? [val] : val;
                     if (!vm.fieldValue[vm.fieldSearch]) {
-                        if (vm.optionValues.length === 0 && componentSettings.$loadingPromise) {
-                            componentSettings.$loadingPromise.then(convertToObject);
+                        if (vm.optionValues.length === 0 && remotePropertiesContainer.$loadingPromise) {
+                            remotePropertiesContainer.$loadingPromise.then(convertToObject);
                         } else {
                             convertToObject(vm.optionValues);
                         }

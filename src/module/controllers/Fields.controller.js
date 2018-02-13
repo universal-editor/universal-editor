@@ -45,7 +45,7 @@
         }
 
         var values = componentSettings.values;
-        var remoteValues = componentSettings.valuesRemote;
+        var remoteValues = componentSettings.valuesRemote; 
         var timeUpdateDepend;
 
         if (self.regim === 'preview') {
@@ -85,7 +85,7 @@
                         if (self.initDataSource) {
                             self.loadingData = true;
                             self.loadingPossibleData = true;
-                            if (!componentSettings.$loadingPromise || componentSettings.$loadingPromise.$$state !== 0) {
+                            if ((!componentSettings.valuesRemote.$loadingPromise && !componentSettings.depend) || (componentSettings.depend && componentSettings.valuesRemote.$loadingPromise.$$state !== 0) ) {
                                 var config = {
                                     method: 'GET',
                                     url: remoteValues.url,
@@ -95,11 +95,11 @@
                                 var dataSource = $scope.getParentDataSource();
                                 config.standard = dataSource.standard;
                                 $rootScope.$broadcast('ue:beforeComponentDataLoaded', { $id: self.setting.component.$id });
-                                componentSettings.$loadingPromise = ApiService
+                                componentSettings.valuesRemote.$loadingPromise = ApiService
                                     .getUrlResource(config)
                                     .then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
                             } else {
-                                componentSettings.$loadingPromise.then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
+                                componentSettings.valuesRemote.$loadingPromise.then(onLoadedItems, onErrorLoadedItem).finally(onLoadedItemFinally);
                                 if (componentSettings.$optionValues && componentSettings.$optionValues.length) {
                                     self.loadingData = false;
                                     self.optionValues = componentSettings.$optionValues;

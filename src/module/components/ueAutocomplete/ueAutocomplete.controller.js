@@ -75,11 +75,12 @@
 
             vm.dependUpdate = function dependUpdate(dependField, dependValue) {
                 if (dependValue && dependValue !== '') {
-                    if (vm.fieldValue) {
-                        if (!componentSettings.$loadingPromise || componentSettings.$loadingPromise.$$state !== 1) {
-                            componentSettings.$loadingPromise = depend();
+                    if (vm.fieldValue && componentSettings.valuesRemote) {
+                        let container = componentSettings.valuesRemote || componentSettings;
+                        if (!container.$loadingPromise || container.$loadingPromise.$$state !== 1) {
+                            container.$loadingPromise = depend();
                         } else {
-                            componentSettings.$loadingPromise.then(depend);
+                            container.$loadingPromise.then(depend);
                         }
                         function depend() {
                             vm.loadingData = true;
