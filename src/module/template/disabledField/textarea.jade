@@ -1,4 +1,4 @@
 div(data-ng-show="!vm.loadingData")
-    pre(ng-bind="::vm.previewValue", ng-if = "!vm.multiple")
+    pre(ng-bind="vm.previewValue", ng-if = "!vm.multiple")
     div(ng-repeat="value in vm.previewValue track by $index", ng-if = "vm.multiple")
         pre(ng-bind="value")
