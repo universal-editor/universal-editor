@@ -82,11 +82,17 @@ import DataSource from '../../classes/dataSource.js';
         vm.$onInit = function() {
             vm.$componentId = vm.setting.component.$id;
             vm.sorting = {};
+            vm.prefixGrid = undefined;
             //** Nested base controller */
             angular.extend(vm, $controller('FieldsController', { $scope: $scope, $element: $element }));
             delete vm.inputLeave;
 
             vm.componentSettings = vm.setting.component.settings;
+            
+
+            if (vm.componentSettings.routing && vm.componentSettings.routing.paramsPrefix) {
+                vm.prefixGrid = vm.componentSettings.routing.paramsPrefix;
+            }
 
             vm.dataSource = new DataSource(vm.setting.component.settings.dataSource);
             vm.multiSorting = vm.componentSettings.multiSorting === true;
@@ -131,14 +137,9 @@ import DataSource from '../../classes/dataSource.js';
             vm.mixContextLinks = [];
             vm.listHeaderBar = [];
             vm.isContextMenu = (!!vm.setting.component.settings.contextMenu && (vm.setting.component.settings.contextMenu.length !== 0));
-            vm.prefixGrid = undefined;
             vm.refreshTableRecords = refreshTableRecords;
 
-            $scope.$on('ue:beforeComponentDataLoaded', switchLoaderOn);
-
-            if (vm.setting.component.settings.routing && vm.setting.component.settings.routing.paramsPrefix) {
-                vm.prefixGrid = vm.setting.component.settings.routing.paramsPrefix;
-            }
+            $scope.$on('ue:beforeComponentDataLoaded', switchLoaderOn);           
 
             vm.options = {
                 $componentId: vm.$componentId,
@@ -401,10 +402,10 @@ import DataSource from '../../classes/dataSource.js';
             }
 
             function getKeyPrefix(key) {
-                if (!key && vm.options.prefixGrid) {
-                    return vm.options.prefixGrid;
+                if (!key && vm.prefixGrid) {
+                    return vm.prefixGrid;
                 }
-                return vm.options.prefixGrid ? (vm.options.prefixGrid + '-' + key) : key;
+                return vm.prefixGrid ? (vm.prefixGrid + '-' + key) : key;
             }
 
             function changeSortField(field) {

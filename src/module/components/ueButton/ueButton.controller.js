@@ -120,7 +120,9 @@
                     if (vm.back) {
                         delete searchString.back;
                     }                  
-                    $state.go(vm.stateName, vm.stateParams);
+                    $state.go(vm.stateName, vm.stateParams).then(function() {
+                        $location.search(searchString);
+                    });
                 } else if (angular.isString(vm.url)) {
                     if (!!vm.target) {
                         window.open(vm.url, vm.target);

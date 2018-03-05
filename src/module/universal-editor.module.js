@@ -105,9 +105,7 @@
             });
 
             if (FilterFieldsStorage.filterSearchString) {
-                $timeout(function() {
-                    $location.search(angular.merge(FilterFieldsStorage.filterSearchString || {}, $location.search() || {}));
-                });
+                $location.search(FilterFieldsStorage.filterSearchString);
             }
             ApiService.alreadyRequested.length = 0;
         });
