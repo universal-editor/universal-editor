@@ -77,7 +77,7 @@ import DataSource from '../classes/dataSource.js';
                 config.pagination.perPage = params['per-page'];
                 delete params['per-page'];
             }
-            
+
             config.params = params || {};
 
             if (!!request.options.mixedMode) {
@@ -191,15 +191,7 @@ import DataSource from '../classes/dataSource.js';
                 }
                 deferred.reject(reject);
             }).finally(function() {
-                request.options.isLoading = false;
-                if (!!handlers.complete) {
-                    handlers.complete();
-                }
-
-                if (request.buttonHandlers && request.buttonHandlers.complete) {
-                    request.buttonHandlers.complete();
-                }
-
+                finallyCallback(request, handlers);
             });
             return deferred.promise;
         };
@@ -272,13 +264,7 @@ import DataSource from '../classes/dataSource.js';
                 deferred.reject(reject);
 
             }).finally(function() {
-                request.options.isLoading = false;
-                if (!!handlers.complete) {
-                    handlers.complete();
-                }
-                if (request.buttonHandlers && request.buttonHandlers.complete) {
-                    request.buttonHandlers.complete();
-                }
+                finallyCallback(request, handlers);
             });
             return deferred.promise;
         };
@@ -348,13 +334,7 @@ import DataSource from '../classes/dataSource.js';
 
                 deferred.reject(reject);
             }).finally(function() {
-                if (!!request.complete) {
-                    request.complete();
-                }
-                if (request.buttonHandlers && request.buttonHandlers.complete) {
-                    request.buttonHandlers.complete();
-                }
-                request.options.isLoading = false;
+                finallyCallback(request, handlers);
             });
             return deferred.promise;
         };
@@ -466,15 +446,21 @@ import DataSource from '../classes/dataSource.js';
                     failAnswer.bind(objectBind)(reject);
                 }
             }).finally(function() {
-                request.options.isLoading = false;
-                if (!!handlers.complete) {
-                    handlers.complete();
-                }
-                if (request.buttonHandlers && request.buttonHandlers.complete) {
-                    request.buttonHandlers.complete();
-                }
+                finallyCallback(request, handlers);
             });
         };
+
+        function finallyCallback(request = {}, transportHandlers = {}) {
+            if (request.options) {
+                request.options.isLoading = false;
+            }
+            if (angular.isFunction(transportHandlers.complete)) {
+                transportHandlers.complete();
+            }
+            if (angular.isObject(request.handlers) && angular.isFunction(request.handlers.complete)) {
+                request.handlers.complete();
+            }
+        }
 
         function successDeleteMessage() {
             $translate('CHANGE_RECORDS.DELETE').then(function(translation) {
