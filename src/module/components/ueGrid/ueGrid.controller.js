@@ -284,7 +284,7 @@ import DataSource from '../../classes/dataSource.js';
                 if (filterReady) {
                     var newVal = $location.search();
                     if (!FilterFieldsStorage.isFilterSearchParamEmpty(vm.prefixGrid)) {
-                        var filterName = vm.paramsPefix ? vm.paramsPefix + '-filter' : 'filter',
+                        var filterName = vm.prefixGrid ? vm.prefixGrid + '-filter' : 'filter',
                             filter = JSON.parse(newVal[filterName]);
                         if (!$.isEmptyObject(filter)) {
                             $timeout(function() {
