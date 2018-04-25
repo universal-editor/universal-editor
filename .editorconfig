@@ -1,0 +1,26 @@
+# editorconfig.org
+
+# Be careful.
+# The other parts of the project can have their own settings.
+# Use it inside the Frontend folders.
+# Or modify it if necessary.
+
+[*]
+indent_style = space
+indent_size = 2
+
+end_of_line = crlf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = 140
+
+[*.json]
+indent_size = 4
+
+# styles are more readable with large indents, IMHO
+[*.{css,scss,sass,less}]
+indent_size = 4

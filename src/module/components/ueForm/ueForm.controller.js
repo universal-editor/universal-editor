@@ -150,13 +150,15 @@ import DataSource from '../../classes/dataSource.js';
                 if (vm.isNewRecord) {
                     vm.entityLoaded = true;
                     $timeout(function() {
-                        EditEntityStorage.newSourceEntity(vm.options.$componentId, dataSource);
+                        let parentValue = $location.search().parent;
+                        EditEntityStorage.updateValueOfComponent(vm.options.$componentId, dataSource.parentKey, parentValue, { editorEntityType: 'new', $dataSource: dataSource});
                     });
                 } else {
                     $rootScope.$broadcast('ue:beforeComponentDataLoaded', { $id: vm.setting.component.$id });
                     ApiService.getItemById(pk, vm.options).finally(function() {
                         vm.options.isLoading = false;
                         vm.isLoading = false;
+                        vm.entityLoaded = true;
                     });
                 }
             } else {

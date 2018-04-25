@@ -23,6 +23,32 @@
     * getData(config) – обрабатывает данные, отправляемые данные запроса, возвращает объект с данными;
     * getParams(config) – обрабатывает данные запроса, передаваемые в URL запроса, возвращает объект с данными;
     * getURL(config) – обрабатывает URL запроса, возвращает строку;
+    * getSorting(tableFields) – обрабатывает набор данных с состоянием сортировки у компонентов и формирует строку сортировки, которая будет направляться на сервер в query-параметрах;   
+      Аргумент `tableFields` представляет собой массив объектов в формате 
+      ```json
+        [
+          {
+            "sort": {
+              "enable": true, //enable of the sorting
+              "direction": "asc", // The direction of the sorting. It can be 'asc' – ascending, 'desc' – descending
+            },
+            "field": "<name>" // The name of component
+          },
+          ...
+        ]
+      ```
+    * toConvertSortingString(sortingString) – преобразует строку сортировки из query-параметра в объект определенного формата. Например, в сервисе `YiiSoftApiService` строка `-field1.field2,field3,field4.field5` преобразуется в
+      ```json
+        {
+          "field1": {
+            "field2": "asc" //по убыванию
+          },
+          "field3": "desc",  //по возрастанию
+          "field4": {
+            "field5": "asc"
+          }
+        }
+      ```
     * processResponse(response, success, fail) – обрабатывает ответ от сервера;  
 
 В ядре редактора по заданной маске ({standard}ApiService) будет производиться инжект сервиса. При отправке данные запроса обрабатываются этим сервисом, оперируя выше приведенным интерфейсом, а затем исполняются. 
@@ -87,7 +113,7 @@ angular.module('demoApp', ['universal.editor', 'ModuleWithService'])
 | filter[\<field\>] | array | Массив объектов поля `<field>` | - | - |
 | filter[\<field\>][N][operator] | string | Значение оператора для поля `<field>` в фильтре. | - | - |
 | filter[\<field\>][N][value] | string | Значение поля `<field>` в фильтре. | - | - |
-| sortFieldName | string | Имя поля для сортировки. | - | - |
+| sort | string | Строка с сортировкой. | - | - |
 | pagination | object | Объект с данными серверной пагинации. | - | - |
 | pagination[page] | integer | Номер текущей страницы. | - | - |
 | pagination[perPage] | integer | Количество записей на странице. | - | - |
@@ -125,6 +151,6 @@ var config = {
           }
         ]  
       },
-    sortFieldName: 'title'       
+    sort: '-title'       
   }
 ```

@@ -4,8 +4,11 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "webpack-dev-server --display-modules --progress --colors",
-    "build": "webpack --source --del & webpack -p --colors"
+    "build": "webpack --source --del & webpack -p --colors",
+    "test": "karma start",
+    "eslint": "eslint src/module/controllers & eslint src/module/directives & eslint src/module/services/YiiSoft.service.js & eslint src/module/services/PaginationSettings.service.js & eslint src/module/factories"
   },
+  "pre-commit": [ "eslint" ],
   "keywords": [
     "editor",
     "RESTful"
@@ -19,6 +22,7 @@
     "babel-runtime": "^6.20.0",
     "base64-inline-loader": "0.0.2",
     "clean-webpack-plugin": "^0.1.15",
+    "coffee-script": "^1.12.7",
     "css-loader": "^0.23.0",
     "deasync": "^0.1.9",
     "exports-loader": "^0.6.4",
@@ -28,6 +32,11 @@
     "inject-html-webpack-plugin": "0.0.25",
     "jade": "^1.11.0",
     "jade-loader": "^0.8.0",
+    "jasmine-core": "^2.8.0",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.1",
+    "karma-webpack": "^2.0.6",
     "ng-annotate-webpack-plugin": "^0.2.1-pre",
     "node-sass": "^4.2.0",
     "portscanner": "^2.1.1",
@@ -37,5 +46,11 @@
     "webpack": "^1.12.13",
     "webpack-dev-server": "^1.14.1",
     "webpack-notifier": "^1.5.0"
+  },
+  "dependencies": {
+    "angular-mocks": "^1.6.7",
+    "eslint": "^4.19.0",
+    "json-loader": "^0.5.7",
+    "pre-commit": "^1.2.2"
   }
 }

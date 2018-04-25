@@ -1,4 +1,5 @@
 .universal-editor {
+    transition: max-height 1s ease;
     .field-wrapper-ue-autocomplete {
         .possible-values {
             box-sizing: content-box;

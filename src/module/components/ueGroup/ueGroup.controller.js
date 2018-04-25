@@ -11,7 +11,7 @@
         var vm = this,
             componentSettings,
             baseController,
-            widthBootstrap = 12, 
+            widthBootstrap = 12,
             dataSource;
 
         vm.$onInit = function() {
@@ -21,7 +21,7 @@
             baseController = $controller('BaseController', { $scope: $scope, $element: $element });
             vm.resourceType = vm.setting.resourceType;
             angular.extend(vm, baseController);
-            EditEntityStorage.addFieldController(vm, true);
+            EditEntityStorage.addFieldController(vm);
             dataSource = $scope.getParentDataSource();
 
             if (vm.multiple && vm.setting.name) {
@@ -64,7 +64,7 @@
                 if (angular.isString(value)) {
                     if (vm.setting.name && value.indexOf(vm.setting.name) === -1) {
                         value = vm.setting.name + '.' + value;
-                    }                    
+                    }
                     if (dataSource && angular.isArray(dataSource.fields)) {
                         field = dataSource.fields.filter(function(k) {
                             return k.name == value;

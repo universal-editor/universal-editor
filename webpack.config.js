@@ -1,6 +1,5 @@
 ; (function(require) {
     'use strict';
-    'esversion: 6';
 
     var webpack = require('webpack'),
         deasync = require('deasync'),
@@ -78,7 +77,7 @@
             extensions: ['', '.js']
         },
 
-        devtool: 'none',
+        devtool: 'eval-source-map',
 
         watch: isDev,
         watchOptions: {

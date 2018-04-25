@@ -13,8 +13,7 @@
 
         vm.$onInit = function() {
             baseController = $controller('FieldsController', { $scope: $scope, $element: $element });
-            angular.extend(vm, baseController);
-
+            
             vm.addItem = addItem;
             vm.removeItem = removeItem;
 
@@ -23,7 +22,7 @@
             }
 
             vm.listeners.push($scope.$on('ue:componentDataLoaded', function(e, data) {
-                if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {                    
+                if (vm.isParentComponent(data) && !vm.options.filter && !e.defaultPrevented) {
                     $scope.onLoadDataHandler(e, data);
                     vm.equalPreviewValue();
                 }

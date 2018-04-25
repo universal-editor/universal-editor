@@ -6,3 +6,5 @@ package-lock.json
 npm-debug.log
 /app
 /.vscode
+/yarn.lock
+/test/coverage

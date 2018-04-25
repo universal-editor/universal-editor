@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "title": "Category1"
+    },
+    {
+      "id": 2,
+      "title": "Category2"
+    },
+    {
+      "id": 3,
+      "title": "Category3"
+    },
+    {
+      "id": 4,
+      "title": "Category4"
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "/rest/v1/news/categories?fields=id%2Ctitle&page=1"
+    }
+  },
+  "_meta": {
+    "totalCount": 1,
+    "pageCount": 1,
+    "currentPage": 1,
+    "perPage": 20
+  }
+}

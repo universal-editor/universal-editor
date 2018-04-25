@@ -9,6 +9,9 @@ If don't running console this way, have to enter http://universal-editor.test in
 
 127.0.0.1 universal-editor.test
 
+For testing the application you need to install `karma-cli` globally with command
+
+`npm install -g karma-cli`
 
 Install dependences:
 
@@ -20,6 +23,7 @@ Run build:
 * `npm run dev`: build and watch sources, create web server. 
 * `npm run dev --prod`: build minified version and watch sources, create web server.
 * `npm run build`: build to `./dist` directory.
+* `npm run test`: run unit-tests of the application.
 
 ## Documentation
 

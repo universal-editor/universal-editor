@@ -16,7 +16,7 @@
         link: function(scope, element, attr) {
           var vm = scope.vm, tr;
           if (vm.dataSource.tree) {
-            tr = angular.element($templateCache.get('module/components/ueGrid/template/nodeRow.html'));
+            tr = angular.element($templateCache.get('module/components/ueGrid/template/treeTr.html'));
             var colHtml = '<div class="column"> </div>',
               row = tr.filter('.row');
             angular.forEach(vm.tableFields, function(column, index) {
@@ -64,7 +64,6 @@
     });
 
   function UeNodeController($scope, ApiService, $timeout, $rootScope, $element, $translate, toastr, dragOptions, $document) {
-    /* jshint validthis: true */
     'ngInject';
     var vm = this;
     vm.$onInit = function() {
@@ -82,6 +81,7 @@
         vm.selfField = vm.treeSource.selfField;
       }
 
+      // Expands parent node at the tree
       vm.expand = function(item) {
         if (typeof item.$$expand === 'boolean') {
           var nextValueExtend = !item.$$expand;

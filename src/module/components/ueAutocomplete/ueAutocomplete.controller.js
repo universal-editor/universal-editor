@@ -264,7 +264,7 @@
         /* PUBLIC METHODS */
 
         function addToSelected(obj, event) {
-            //** if you know only id  of the record            
+            //** if you know only id  of the record
             if (!vm.multiple) {
                 vm.selectedValues = [];
                 vm.placeholder = obj[vm.fieldSearch];

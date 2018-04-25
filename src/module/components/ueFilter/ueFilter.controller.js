@@ -52,7 +52,7 @@
                         field: field,
                         options: {
                             filterParameters: {
-                                operator: !typeValidatorNumber ? '%:text%' : ':text',
+                                operator: !typeValidatorNumber ? '%:value%' : ':value',
                                 index: 0
                             },
                             filter: true,
@@ -66,10 +66,10 @@
                 /** convert to filter object from fields*/
                 fieldSettings.$toFilter = (fieldSettings.$toFilter || function(operator, fieldValue, ctrl) {
                     if (ctrl.isNumber === true) {
-                        operator = ':text';
+                        operator = ':value';
                     }
                     angular.forEach(fieldValue, function(value, key) {
-                        if (operator && operator.indexOf(':text') !== -1) {
+                        if (operator && operator.indexOf(':value') !== -1) {
                             if (value && (!angular.isObject(value) || !$.isEmptyObject(value))) {
                                 if (angular.isArray(value)) {
                                     fieldValue[key] = value;
@@ -77,7 +77,7 @@
                                     if (angular.isObject(value)) {
                                         fieldValue[key] = value[ctrl.fieldId];
                                     } else {
-                                        fieldValue[key] = operator.replace(':text', value);
+                                        fieldValue[key] = operator.replace(':value', value);
                                     }
                                 }
                                 if (ctrl.isNumber === true && !isNaN(+fieldValue[key])) {
@@ -89,7 +89,7 @@
                             }
                         } else {
                             if (value) {
-                                fieldValue[operator + key] = fieldValue[key];
+                                fieldValue[operator.replace(/\:key/g, key)] = fieldValue[key];
                             }
                             delete fieldValue[key];
                         }
@@ -163,7 +163,7 @@
                             }
                         }
                     }
-                    vm.visiable = true;                    
+                    vm.visiable = true;
                     elementParent.find('.filter-connect').show();
                     return output;
                 }).bind(vm);
@@ -171,18 +171,18 @@
                 /*temprory custom logic for operators */
 
                 if (~['ue-dropdown', 'ue-autocomplete', 'ue-checkbox', 'ue-radiolist', 'ue-colorpicker'].indexOf(field.component.name)) {
-                    group.filters[0].options.filterParameters.operator = ':text';
+                    group.filters[0].options.filterParameters.operator = ':value';
                 }
 
                 if (~['ue-date'].indexOf(field.component.name)) {
                     group.filters[0].ngStyle = 'display: inline-block; width: 210px; margin-left: 5px;';
-                    group.filters[0].options.filterParameters.operator = '>=';
+                    group.filters[0].options.filterParameters.operator = '>=:key';
                     var cloneField = angular.copy(field);
                     group.filters.push({
                         field: cloneField,
                         options: {
                             filterParameters: {
-                                operator: '<=',
+                                operator: '<=:key',
                                 index: 1
                             },
                             filter: true,
@@ -221,7 +221,12 @@
                                 settings: {
                                     label: 'Очистить',
                                     action: function(componentId) {
-                                        FilterFieldsStorage.clear(componentId);
+                                        let filterName;
+                                        let component = EditEntityStorage.getComponentBySetting(componentId);
+                                        if (component) {
+                                          filterName = FilterFieldsStorage.generateFilterKey(component.prefixGrid);
+                                        }
+                                        FilterFieldsStorage.clear(componentId, filterName);
                                     }
                                 }
                             }

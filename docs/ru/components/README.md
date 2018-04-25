@@ -93,10 +93,6 @@ angular.module('moduleWithComponents', [])
 * `vm.fieldValue` – значение компонента компонента;
 * `vm.error` – массив текстов ошибок.
 
-На компоненте можно события:
-
-* серверная валидация – событие `ue:componentError` (по-умолчанию функция-обработки `$scope.onErrorApiHandler`)
-
 Созданный компонент подключается в конфигурации редактора: 
 
 ```javascript 
@@ -153,7 +149,7 @@ angular.module('moduleWithComponents', [])
     }]);
 
     // Контроллер компонента
-    angular.module('universal.editor').controller('ComponentController', ['$controller', '$scope', function($controller, $scope, $element) {
+    angular.module('universal.editor').controller('ComponentController', ['$controller', '$scope', '$element', function($controller, $scope, $element) {
       
       // Расширяем контроллер и получаем экземпляр для дальнейшего использования
       var BaseController = $controller('BaseController', {

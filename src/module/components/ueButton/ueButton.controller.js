@@ -96,10 +96,6 @@
                     vm.stateName = vm.state.name;
                     vm.stateParams = vm.state.parameters;
                     if (angular.isFunction(vm.state.parameters)) {
-                        var key;
-                        if (vm.options.$dataSource) {
-                            key = vm.options.$dataSource.primaryKey;
-                        }
                         vm.stateParams = vm.stateParams();
                     }
                 }
@@ -119,7 +115,7 @@
                     searchString.back = $state.current.name;
                     if (vm.back) {
                         delete searchString.back;
-                    }                  
+                    }
                     $state.go(vm.stateName, vm.stateParams).then(function() {
                         $location.search(searchString);
                     });

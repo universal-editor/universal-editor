@@ -26,7 +26,7 @@
         if (angular.isObject(this.transport[action])) {
           url = this.transport[action].url || url;
         } else {
-          if (url) {
+          if (url && entity) {
             if (action !== 'read' && action !== 'create' && entity[this.primaryKey]) {
               url += '/' + entity[this.primaryKey];
             }
@@ -61,6 +61,15 @@
       let method = null;
       if (angular.isString(action) && angular.isObject(this.transport) && angular.isObject(this.transport[action]) && angular.isString(this.transport[action].method)) {
         method = this.transport[action].method;
+      }
+      if(method === null) {
+        switch(action) {
+          case 'create': method = 'POST'; break;
+          case 'read': method = 'GET'; break;
+          case 'update': method = 'PUT'; break;
+          case 'delete': method = 'DELETE'; break;
+          default: break;
+        }
       }
       return method;
     }
