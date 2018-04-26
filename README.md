@@ -13,7 +13,7 @@ For testing the application you need to install `karma-cli` globally with comman
 
 `npm install -g karma-cli`
 
-Install dependences:
+Install dependencies:
 
 1. `npm install`
 1. `bower install`
