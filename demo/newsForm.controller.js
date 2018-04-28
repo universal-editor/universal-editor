@@ -79,6 +79,15 @@
                     }
                 },
                 {
+                    name: 'description',
+                    component: {
+                        name: 'ue-textarea',
+                        settings: {
+                            label: 'Short description'
+                        }
+                    }
+                },
+                {
                     name: 'authors',
                     component: {
                         name: 'ue-autocomplete',
@@ -180,6 +189,7 @@
                                                 'published_at',
                                                 'title',
                                                 'category_id',
+                                                'description',
                                                 'text'
                                             ]
                                         },
