@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "webpack-dev-server --display-modules --progress --colors",
     "build": "webpack --source --del & webpack -p --colors",
-    "test": "karma start",
+    "test": "karma start --single-run",
+    "test_dev": "karma start",
     "eslint": "eslint src/module/controllers & eslint src/module/directives & eslint src/module/services/YiiSoft.service.js & eslint src/module/services/PaginationSettings.service.js & eslint src/module/factories"
   },
   "pre-commit": [ "eslint" ],

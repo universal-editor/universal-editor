@@ -3,6 +3,8 @@ sudo: required
 dist: trusty
 before_script:
   - npm install
+  - npm install -g bower
+  - bower install
   - npm install -g karma-cli
   - "sudo chown root /opt/google/chrome/chrome-sandbox"
   - "sudo chmod 4755 /opt/google/chrome/chrome-sandbox"
