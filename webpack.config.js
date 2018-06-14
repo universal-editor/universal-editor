@@ -18,7 +18,7 @@
         SM = ~process.argv.indexOf('--source'), //source map
         isDelete = ~process.argv.indexOf('--del'), //delete dist catalog
         MIN_VERSION = false,
-        RUNNING_SERVER = /webpack-dev-server.js$/.test(process.argv[1]),
+        RUNNING_SERVER = /webpack-dev-server$/.test(process.argv[1]),
         isProd = NODE_ENV == 'production',
         isDev = NODE_ENV == 'development',
         mainCatalog = 'dist',
