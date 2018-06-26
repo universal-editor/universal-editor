@@ -91,6 +91,8 @@ import DataSource from '../../classes/dataSource.js';
 
             if (!!vm.items && vm.items.length === 0) {
                 vm.metaKey = false;
+            } else {
+                vm.metaKey = true;
             }
 
             if (!!data[metaKey]) {
