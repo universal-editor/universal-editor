@@ -18,6 +18,16 @@ import DataSource from '../../classes/dataSource.js';
             vm.parentComponentId = vm.options.$componentId;
             vm.changePage = changePage;
             vm.changePerPage = changePerPage;
+            vm.searchParameters = $location.search();
+            //When changing the location, we check if the user leaves the page. If not, we update the page with the current query parameters.
+            //This part is necessary for loading data when navigating through browser history.
+            $rootScope.$on('$locationChangeSuccess', function() {
+              var page = getKeyPrefix('page');
+              var searchParameters = $location.search();
+              if((vm.searchParameters.back === searchParameters.back) && (vm.searchParameters[page] !== searchParameters[page])) {
+                changePage(new Event('dummy'), {page: +searchParameters[page]});
+              }
+            });
         };
 
         var watchData = $scope.$watch(function() {
