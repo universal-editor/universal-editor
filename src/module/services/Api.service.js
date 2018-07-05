@@ -704,6 +704,7 @@ function ApiService($q, $rootScope, $http, $location, MessagesService, $state, $
         if (params.back) {
             delete params.back;
         }
+        if (!url) return;
         searchParams = $httpParamSerializerJQLike(params);
         if (url.indexOf('?') === -1) {
             searchParams = '?' + searchParams;
