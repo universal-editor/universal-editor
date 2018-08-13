@@ -10,11 +10,11 @@ div(ng-class="{'field-wrapper row':!vm.options.filter, 'filter-wrapper-field': v
             ng-class="{'component-filter': vm.regim === 'filter'}"
             )
             block content        
-        include ../../template/errorField/errorField
+        include ../../template/errorField/errorField.jade
 .component-template.component-preview(on-render-template, ng-if="vm.regim === 'preview'")
 //-- preview default template
 .component-preview.field-wrapper.row(ng-if="!vm.templates.preview && vm.regim === 'preview'")             
-    include ../../template/errorMessages/template
+    include ../../template/errorMessages/template.jade
     div(ng-if="vm.warnings.length === 0 && vm.dangers.length === 0") 
         .loader-search-wrapper(ng-show="vm.loadingData")
             .loader-search(translate="LOADING")
