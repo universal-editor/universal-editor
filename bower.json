@@ -1,7 +1,7 @@
 {
   "name": "universal-editor",
   "description": "Universal editor to edit the entities from RESTful service",
-  "version": "1.0.0",
+  "version": "1.1.0-beta",
   "main": [
     "./dist/ue.min.js"
   ],
