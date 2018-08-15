@@ -1,5 +1,21 @@
 # Change log
 
+## 1.1.0 - 2018-08-15
+### Added
+* Unit tests for core modules with Travis integration.
+### Changed
+* Changed loading of the remoted components - single request for components with the same `valuesRemote`.
+* Removed one way data bindings in disabled templates.
+* Extension for .jade files for templates.
+### Fixed
+* Fixed ue-group components and button.
+* Fixed finally callback for actions of CRUD-buttons.
+* Fixed prefix for query-parameters in ue-grid.
+* Fixed navigation back through browser history.
+* Fixed the counter in pagination.
+* Fixed request url.
+* Fixed webpack config for UNIX systems.
+
 ## 1.0.0 - 2017-12-27
 ### Added
 * Added compressed version of the JS file and source map.
